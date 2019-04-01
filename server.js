@@ -15,7 +15,7 @@ var pageDir = 'pages/';
 //users = [];
 //connections = [];
 
-server.listen(process.env.PORT || 8080, function() {
+server.listen(process.env.PORT || 3000, function() {
     console.log('Server running...');
 });
 
