@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Trienekens Automated Reporting and Analytics System</title>
+        <link rel="stylesheet" type="text/css" href="/bootstrapCSS" />
+        <link rel="stylesheet" type="text/css" href="/trienekens.css" />
+        <script>
+            //var loginLink = document.getElementById('loginLink');
+            function login() {
+                sessionStorage['position'] = "officer";
+                window.location.href = '/pages/';
+            }
+            document.getElementById
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card login-box center-box">
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <div>
+                                        <img src="/TrienekensLogo" width="10%" />
+                                    </div>
+                                    <h5 class="card-title">Trienekens (Sarawak) Sdn. Bhd.</h5>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <h6 class="card-subtitle mb-2 text-muted">Reporting and Analytics System</h6>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <span>Username: </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <span>Password: </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="password" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row text-center">
+                                <div class="col-md-12">
+<!--                                    <a href="trienekens-reporting-system/pages/" class="card-link">Login</a>-->
+                                    <button class="btn btn-success" onclick="login();">Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

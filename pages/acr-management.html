@@ -1,0 +1,296 @@
+<!-- ACR Modal -->
+<div class="modal fade" id="createACR" tabindex="-1" role="dialog" aria-labelledby="createACR" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add an ACR</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+              <label for="txtCustomerName form-label">Customer Name</label>
+              <input type="text" class="form-control" id="txtCustomerName" />
+          </div>
+          
+          <div class="form-group">
+              <label for="sltCustomerArea form-label">Area</label>
+              <select id="sltCustomerArea" class="selectpicker" data-live-search="true" data-width="100%">
+                  <optgroup label="Zone 1">
+                      <option>ARE1903250001 - Area 1</option>
+                      <option>ARE1903250002 - Area 2</option>
+                      <option>ARE1903250003 - Area 3</option>
+                  </optgroup>
+                  <optgroup label="Zone 2">
+                      <option>ARE1903250004 - Area 1</option>
+                      <option>ARE1903250005 - Area 2</option>
+                      <option>ARE1903250006 - Area 3</option>
+                  </optgroup>
+                  <optgroup label="Zone 3">
+                      <option>ARE1903250007 - Area 1</option>
+                      <option>ARE1903250008 - Area 2</option>
+                      <option>ARE1903250009 - Area 3</option>
+                  </optgroup>
+                  <optgroup label="Zone 4">
+                      <option>ARE1903250010 - Area 1</option>
+                      <option>ARE1903250011 - Area 2</option>
+                      <option>ARE1903250012 - Area 3</option>
+                  </optgroup>
+                  <optgroup label="Zone 5">
+                      <option>ARE1903250013 - Area 1</option>
+                      <option>ARE1903250014 - Area 2</option>
+                      <option>ARE1903250015 - Area 3</option>
+                  </optgroup>
+              </select>
+          </div>
+          
+          <div class="form-group">
+              <label>Collection Frequency</label>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="mon" id="mon" />
+                  <label class="form-check-label" for="mon">Monday</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="tue" id="tue" />
+                  <label class="form-check-label" for="tue">Tuesday</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="wed" id="wed" />
+                  <label class="form-check-label" for="wed">Wednesday</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="thu" id="thu" />
+                  <label class="form-check-label" for="thu">Thursday</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="fri" id="fri" />
+                  <label class="form-check-label" for="fri">Friday</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="sat" id="sat" />
+                  <label class="form-check-label" for="sat">Saturday</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="sun" id="sun" />
+                  <label class="form-check-label" for="sun">Sunday</label>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>ACR Management</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." />
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createACR"><i class="fa fa-plus"></i> New</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-clickable">
+                <thead>
+                    <tr>
+                        <th>ACR Customer</th>
+                        <th width="10%">Monday</th>
+                        <th width="10%">Tuesday</th>
+                        <th width="10%">Wednesday</th>
+                        <th width="10%">Thursday</th>
+                        <th width="10%">Friday</th>
+                        <th width="10%">Saturday</th>
+                        <th width="10%">Sunday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="clickable-row">
+                        <td>DUTA JASA SDN BHD</td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Moh Heng Co. Sdn Bhd</td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class=""></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class=""></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Lee Sing Sales &amp; Services Sdn Bhd (Colgate Palmolive)</td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class=""></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                        <td class="text-center"><i class="fa fa-check"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+    window.location.href = $(this).data('href');
+});
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>
+
+<!--
+Form validation
+
+<form class="needs-validation" novalidate>
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="validationCustom01">First name</label>
+      <input type="text" class="form-control" id="validationCustom01" placeholder="First name" value="Mark" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="validationCustom02">Last name</label>
+      <input type="text" class="form-control" id="validationCustom02" placeholder="Last name" value="Otto" required>
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="validationCustomUsername">Username</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroupPrepend">@</span>
+        </div>
+        <input type="text" class="form-control" id="validationCustomUsername" placeholder="Username" aria-describedby="inputGroupPrepend" required>
+        <div class="invalid-feedback">
+          Please choose a username.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-6 mb-3">
+      <label for="validationCustom03">City</label>
+      <input type="text" class="form-control" id="validationCustom03" placeholder="City" required>
+      <div class="invalid-feedback">
+        Please provide a valid city.
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="validationCustom04">State</label>
+      <input type="text" class="form-control" id="validationCustom04" placeholder="State" required>
+      <div class="invalid-feedback">
+        Please provide a valid state.
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="validationCustom05">Zip</label>
+      <input type="text" class="form-control" id="validationCustom05" placeholder="Zip" required>
+      <div class="invalid-feedback">
+        Please provide a valid zip.
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+      <label class="form-check-label" for="invalidCheck">
+        Agree to terms and conditions
+      </label>
+      <div class="invalid-feedback">
+        You must agree before submitting.
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-primary" type="submit">Submit form</button>
+</form>
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+
+
+
+
+
+Checkbox, radio box, select box, files validation
+
+<form class="was-validated">
+  <div class="custom-control custom-checkbox mb-3">
+    <input type="checkbox" class="custom-control-input" id="customControlValidation1" required>
+    <label class="custom-control-label" for="customControlValidation1">Check this custom checkbox</label>
+    <div class="invalid-feedback">Example invalid feedback text</div>
+  </div>
+
+  <div class="custom-control custom-radio">
+    <input type="radio" class="custom-control-input" id="customControlValidation2" name="radio-stacked" required>
+    <label class="custom-control-label" for="customControlValidation2">Toggle this custom radio</label>
+  </div>
+  <div class="custom-control custom-radio mb-3">
+    <input type="radio" class="custom-control-input" id="customControlValidation3" name="radio-stacked" required>
+    <label class="custom-control-label" for="customControlValidation3">Or toggle this other custom radio</label>
+    <div class="invalid-feedback">More example invalid feedback text</div>
+  </div>
+
+  <div class="form-group">
+    <select class="custom-select" required>
+      <option value="">Open this select menu</option>
+      <option value="1">One</option>
+      <option value="2">Two</option>
+      <option value="3">Three</option>
+    </select>
+    <div class="invalid-feedback">Example invalid custom select feedback</div>
+  </div>
+
+  <div class="custom-file">
+    <input type="file" class="custom-file-input" id="validatedCustomFile" required>
+    <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+    <div class="invalid-feedback">Example invalid custom file feedback</div>
+  </div>
+</form>
+-->

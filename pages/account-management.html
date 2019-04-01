@@ -1,0 +1,106 @@
+<!-- Modal -->
+<div class="modal fade" id="createAccount" tabindex="-1" role="dialog" aria-labelledby="createAccount" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Create Account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+              <label for="txtStaffName form-label">Staff Name</label>
+              <input type="text" class="form-control" id="txtStaffName" />
+          </div>
+          
+          <div class="form-group">
+              <label for="sltStaffPosition form-label">Staff Position</label>
+              <select id="sltStaffPosition" class="form-control">
+                  <option>Manager</option>
+                  <option>Reporting Officer</option>
+                  <option>Officer</option>
+              </select>
+          </div>
+          
+          <div class="form-group">
+              <label for="txtLoginUsername form-label">Login Username</label>
+              <input type="text" class="form-control" id="txtLoginUsername" />
+          </div>
+          
+          <div class="form-group">
+              <label for="txtLoginPassword form-label">Login Password</label>
+              <input type="password" class="form-control" id="txtLoginPassword" />
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Account Management</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." />
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createAccount"><i class="fa fa-plus"></i> New</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-clickable">
+                <thead>
+                    <tr>
+                        <th width="20%">Staff Code</th>
+                        <th width="35%">Name</th>
+                        <th width="15%">Username</th>
+                        <th width="15%">Position</th>
+                        <th width="15%">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="clickable-row" data-href="#/account/S-20190315-0001">
+                        <td>ACC1903150001</td>
+                        <td>Addison</td>
+                        <td>addison001</td>
+                        <td>Officer</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>ACC1903150002</td>
+                        <td>Abby</td>
+                        <td>abby001</td>
+                        <td>Officer</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>ACC1903150003</td>
+                        <td>Anderson</td>
+                        <td>anderson001</td>
+                        <td>Officer</td>
+                        <td>Freeze</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+    window.location.href = $(this).data('href');
+});
+</script>

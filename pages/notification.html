@@ -1,0 +1,98 @@
+<style>
+.date-separator{
+    position: relative;
+    text-align: center;
+}
+
+.date-separator .date-label{
+    background-color: #fff;
+    padding: 0 0.4em;
+    position: relative;
+    color: #AAA;
+    font-style: italic;
+}
+
+.date-separator:before{
+    content: '';
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    margin-top: -4px;
+    border-color: #AAA;
+}
+    .table-borderless td, .borderless th {
+    border: none;
+}
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Notification</h5>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="date-separator">
+            <label class="date-label"><i class="fa fa-calendar"></i> Today</label>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm table-borderless">
+                <tr class="firstRow">
+                    <td>Addison</td>
+                    <td>Zone 1 complete.</td>
+                    <td>14:24</td>
+                </tr>
+                <tr>
+                    <td>Addison</td>
+                    <td>Zone 1 complete.</td>
+                    <td>14:03</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="date-separator">
+            <label class="date-label"><i class="fa fa-calendar"></i> 24 March 2019</label>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-sm table-borderless">
+                <tr>
+                    <td>Addison</td>
+                    <td>Zone 1 complete.</td>
+                    <td>14:24</td>
+                </tr>
+                <tr>
+                    <td>Addison</td>
+                    <td>Zone 1 complete.</td>
+                    <td>14:03</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    var delay = 0, interval = 100;
+    window.sr = new ScrollReveal({reset: false, mobile: true});
+    $('.date-separator, tr').each(function(index, elem) {
+        sr.reveal(elem, {duration: 500, origin: 'bottom', distance: '5vw', delay: delay, opacity: 0.1});
+        delay += interval;
+    });
+});
+</script>
