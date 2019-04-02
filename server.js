@@ -94,6 +94,6 @@ app.get('/error', function(req, res) {
 //    //let sql = 'CREATE TABLE posts (id int AUTO_INCREMENT, title VARCHAR(255), body VARCHAR(255), PRIMARY KEY (id))';
 //});
 
-//const port = 3000;
+const port = 3000;
 
-server.listen(8080, () => console.log('Server is running on port 8080'));
+server.listen(process.env.PORT || port, () => console.log(`Server is running on port ${port}`));
