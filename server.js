@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(path.join(__dirname, 'images')));
 
 app.get('/', (req, res) => {
-    res.sendFile('index.html', {root: '../' + __dirname});
+    res.sendFile('index.html', {root: __dirname});
 });
 app.get('/pages', (req, res) => {
    res.sendFile('pages/index.html', {root: __dirname}); 
@@ -94,6 +94,6 @@ app.get('/error', function(req, res) {
 //    //let sql = 'CREATE TABLE posts (id int AUTO_INCREMENT, title VARCHAR(255), body VARCHAR(255), PRIMARY KEY (id))';
 //});
 
-const port = 3000;
+//const port = 3000;
 
-server.listen(port, () => console.log(`Server is running on port ${port}`));
+server.listen(8080, () => console.log('Server is running on port 8080'));
