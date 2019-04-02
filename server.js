@@ -53,46 +53,46 @@ app.get('/error', function(req, res) {
 });
 
 // Create connection
-const db = mysql.createConnection({
-    host: '192.168.64.2',
-    user: 'username',
-    password: 'password',
-    database: dbName
-});
+//const db = mysql.createConnection({
+//    host: '',
+//    user: '',
+//    password: '',
+//    database: dbName
+//});
 
 // Connect
-db.connect((err) => {
-    if (err) {
-        throw err;
-    }
-    console.log('MySQL Connected...');
-});
+//db.connect((err) => {
+//    if (err) {
+//        throw err;
+//    }
+//    console.log('MySQL Connected...');
+//});
 
 // Create DB
-app.get('/createdb', (req, res) => {
-    let sql = `CREATE DATABASE ${dbName}`;
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        console.log(result);
-        res.send('Database created');
-    });
-});
+//app.get('/createdb', (req, res) => {
+//    let sql = `CREATE DATABASE ${dbName}`;
+//    db.query(sql, (err, result) => {
+//        if (err) throw err;
+//        console.log(result);
+//        res.send('Database created');
+//    });
+//});
 
 // Create table
-app.get('/createtables', (req, res) => {
-    let sqls = [
-        "CREATE TABLE table1 (id int primary key auto_increment)",
-        "CREATE TABLE table2 (id int primary key auto_increment)"
-               ];
-    for (var i = 0; i < sqls.length; i++) {
-        db.query(sqls[i], (err, result) => {
-            if (err) throw err;
-            console.log(result);
-            res.send('Tables created');
-        });
-    }
-    //let sql = 'CREATE TABLE posts (id int AUTO_INCREMENT, title VARCHAR(255), body VARCHAR(255), PRIMARY KEY (id))';
-});
+//app.get('/createtables', (req, res) => {
+//    let sqls = [
+//        "CREATE TABLE table1 (id int primary key auto_increment)",
+//        "CREATE TABLE table2 (id int primary key auto_increment)"
+//               ];
+//    for (var i = 0; i < sqls.length; i++) {
+//        db.query(sqls[i], (err, result) => {
+//            if (err) throw err;
+//            console.log(result);
+//            res.send('Tables created');
+//        });
+//    }
+//    //let sql = 'CREATE TABLE posts (id int AUTO_INCREMENT, title VARCHAR(255), body VARCHAR(255), PRIMARY KEY (id))';
+//});
 
 const port = 3000;
 
