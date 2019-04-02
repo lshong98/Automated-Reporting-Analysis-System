@@ -5,7 +5,7 @@ module.exports = function(grunt) {
             myFiles: ['server.js']
         },
         nodemon: {
-            script: 'server.hs'
+            script: 'server.js'
         }
     });
     grunt.loadNpmTasks('grunt-contrib-jshint');
