@@ -1,5 +1,3 @@
-var app = angular.module('trienekens', ['ngRoute']);
-
 app.factory("routingService", function($q) {
     return {
         "auth": function ($window, $location, direct) {
@@ -58,9 +56,13 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: '/notification'
     })
     .when('/daily-report', {
-        templateUrl: '/daily-report'
+        templateUrl: '/daily-report',
+        controller: 'dailyController',
+        controllerAs: 'daily'
     })
     .otherwise({
-        templateUrl: '/error'
+        templateUrl: '/error',
+        controller: 'errorController',
+        controllerAs: 'error'
     });
 });
