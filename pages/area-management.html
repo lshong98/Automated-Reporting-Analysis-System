@@ -1,80 +1,32 @@
-<style>
-/* CSS used here will be applied after bootstrap.css */
-
-.myOptions {
-  padding: 0; 
-  margin: 0;
-}
-
-
-td[colspan]{
-	padding:0 !important;
-}
-
-.table{
-	margin-bottom:0 !important;
-}
-</style>
 <!-- ACR Modal -->
-<div class="modal fade" id="createACR" tabindex="-1" role="dialog" aria-labelledby="createACR" aria-hidden="true">
+<div class="modal fade" id="createArea" tabindex="-1" role="dialog" aria-labelledby="createArea" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Add an ACR</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Add Area</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
           <div class="form-group">
-              <label for="txtCustomerName form-label">Customer Name</label>
-              <input type="text" class="form-control" id="txtCustomerName" />
+              <label for="txtAreaName form-label">Area Name</label>
+              <input type="text" class="form-control" id="txtAreaName" data-ng-model="area.name" />
           </div>
           
           <div class="form-group">
-              <label for="sltCustomerArea form-label">Area</label>
-              <select id="sltCustomerArea" class="selectpicker" data-live-search="true" data-width="100%">
-                  <optgroup label="Zone 1">
-                      <option>ARE1903250001 - Area 1</option>
-                      <option>ARE1903250002 - Area 2</option>
-                      <option>ARE1903250003 - Area 3</option>
-                  </optgroup>
-                  <optgroup label="Zone 2">
-                      <option>ARE1903250004 - Area 1</option>
-                      <option>ARE1903250005 - Area 2</option>
-                      <option>ARE1903250006 - Area 3</option>
-                  </optgroup>
-                  <optgroup label="Zone 3">
-                      <option>ARE1903250007 - Area 1</option>
-                      <option>ARE1903250008 - Area 2</option>
-                      <option>ARE1903250009 - Area 3</option>
-                  </optgroup>
-                  <optgroup label="Zone 4">
-                      <option>ARE1903250010 - Area 1</option>
-                      <option>ARE1903250011 - Area 2</option>
-                      <option>ARE1903250012 - Area 3</option>
-                  </optgroup>
-                  <optgroup label="Zone 5">
-                      <option>ARE1903250013 - Area 1</option>
-                      <option>ARE1903250014 - Area 2</option>
-                      <option>ARE1903250015 - Area 3</option>
-                  </optgroup>
-              </select>
+              <label for="sltZoneName form-label">Zone Name</label>
+              <select id="sltZoneName" class="form-control" data-ng-model="area.zone" data-ng-options="zone as zone.name for zone in zoneList"></select>
           </div>
           
           <div class="form-group">
-              <label for="txtLoginUsername form-label">Login Username</label>
-              <input type="text" class="form-control" id="txtLoginUsername" />
-          </div>
-          
-          <div class="form-group">
-              <label for="txtLoginPassword form-label">Login Password</label>
-              <input type="password" class="form-control" id="txtLoginPassword" />
+              <label for="sltStaffName form-label">Staff Name</label>
+              <select id="sltStaffName" class="form-control" data-ng-model="area.staff" data-ng-options="staff as staff.name for staff in staffList"></select>
           </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Create</button>
+        <button type="button" class="btn btn-primary" data-ng-click="addArea();">Create</button>
       </div>
     </div>
   </div>
@@ -87,111 +39,48 @@ td[colspan]{
 </div>
 <div class="row">
     <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." />
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchAreaFilter" />
     </div>
 </div>
 <br />
 <div class="row">
     <div class="col-md-12">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createACR"><i class="fa fa-plus"></i> New</button>
+        <button class="btn btn-success" data-toggle="modal" data-target="#createArea"><i class="fa fa-plus"></i> New</button>
     </div>
 </div>
 <br />
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-hover">
-            <tbody>
-                <tr data-target="#demo" data-toggle="collapse" class="clickable" aria-expanded="false">
-                    <th>Area 1 <i class="fa fa-chevron-circle-right"></i></th>
-                </tr>
-
-                <tr>
-                    <td colspan="12">
-                        <div class="collapse myOptions" id="demo">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <td>Sub Area 1 of Area 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 2 of Area 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 3 of Area 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 4 of Area 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 5 of Area 1</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-              
-                <tr data-target="#demo2" data-toggle="collapse" class="clickable" aria-expanded="false">
-                    <th>Area 2 <i class="fa fa-chevron-circle-right"></i></th>
-                </tr>
-
-                <tr>
-                    <td colspan="12">
-                        <div class="collapse myOptions" id="demo2">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <td>Sub Area 1 of Area 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 2 of Area 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 3 of Area 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 4 of Area 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 5 of Area 2</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-                
-                <tr data-target="#demo3" data-toggle="collapse" class="clickable" aria-expanded="false">
-                    <th>Area 3 <i class="fa fa-chevron-circle-right"></i></th>
-                </tr>
-
-                <tr>
-                    <td colspan="12">
-                        <div class="collapse myOptions" id="demo3">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <td>Sub Area 1 of Area 3</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 2 of Area 3</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 3 of Area 3</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 4 of Area 3</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sub Area 5 of Area 3</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Area Code</th>
+                                <th>Area Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="a in areaList | filter: searchArea | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                <td data-ng-bind="a.id"></td>
+                                <td data-ng-bind="a.name"></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="">
+            <div class="col-md-12">
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -1,3 +1,72 @@
+<!-- Modal -->
+<div class="modal fade" id="createTruck" tabindex="-1" role="dialog" aria-labelledby="createTruck" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Create Truck</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+              <label for="txtTruckNo form-label">Truck NO.</label>
+              <input type="text" class="form-control" id="txtTruckNo" data-ng-model="truck.no" />
+          </div>
+          
+          <div class="form-group">
+              <label for="sltDriver form-label">Driver</label>
+              <select id="sltDriver" class="form-control" data-ng-model="truck.driver" data-ng-options="driver as driver.name for driver in driverList">
+              </select>
+          </div>
+          
+          <div class="form-group">
+              <label for="sltArea form-label">Area</label>
+              <select id="sltArea" data-ng-model="truck.area" class="selectpicker" data-live-search="true" data-width="100%">
+                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                      <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.id}} - {{a.name}}</option>
+                  </optgroup>
+              </select>
+              
+<!--
+              <select id="sltArea" data-ng-model="truck.area" class="selectpicker" data-live-search="true" data-width="100%">
+                  <optgroup label="Zone 1">
+                      <option>ARE1903250001 - Area 1</option>
+                      <option>ARE1903250002 - Area 2</option>
+                      <option>ARE1903250003 - Area 3</option>
+                  </optgroup>
+                  <optgroup label="Zone 2">
+                      <option>ARE1903250004 - Area 1</option>
+                      <option>ARE1903250005 - Area 2</option>
+                      <option>ARE1903250006 - Area 3</option>
+                  </optgroup>
+                  <optgroup label="Zone 3">
+                      <option>ARE1903250007 - Area 1</option>
+                      <option>ARE1903250008 - Area 2</option>
+                      <option>ARE1903250009 - Area 3</option>
+                  </optgroup>
+                  <optgroup label="Zone 4">
+                      <option>ARE1903250010 - Area 1</option>
+                      <option>ARE1903250011 - Area 2</option>
+                      <option>ARE1903250012 - Area 3</option>
+                  </optgroup>
+                  <optgroup label="Zone 5">
+                      <option>ARE1903250013 - Area 1</option>
+                      <option>ARE1903250014 - Area 2</option>
+                      <option>ARE1903250015 - Area 3</option>
+                  </optgroup>
+              </select>
+-->
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-ng-click="addTruck();">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <h5>Truck Management</h5>
@@ -11,7 +80,7 @@
 <br />
 <div class="row">
     <div class="col-md-12">
-        <button class="btn btn-success"><i class="fa fa-plus"></i> New</button>
+        <button class="btn btn-success" data-toggle="modal" data-target="#createTruck"><i class="fa fa-plus"></i> New</button>
     </div>
 </div>
 <br />
@@ -60,4 +129,7 @@
 $(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
     window.location.href = $(this).data('href');
 });
+    $(document).ready(function() {
+        $('.selectpicker').selectpicker();
+    });
 </script>

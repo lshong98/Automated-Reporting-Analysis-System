@@ -1,0 +1,310 @@
+<style>
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  float:right;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input.default:checked + .slider {
+  background-color: #444;
+}
+input.primary:checked + .slider {
+  background-color: #2196F3;
+}
+input.success:checked + .slider {
+  background-color: #8bc34a;
+}
+input.info:checked + .slider {
+  background-color: #3de0f5;
+}
+input.warning:checked + .slider {
+  background-color: #FFC107;
+}
+input.danger:checked + .slider {
+  background-color: #f44336;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+    .card {
+        margin: 15px 0;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <form>
+            <div class="form-group row">
+                <label for="roleName" class="col-sm-1 col-form-label">Role</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="roleName" data-ng-model="role.name" disabled />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+	    <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Account Management</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Create Account
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.account.create" data-ng-change="changeValue(auth.account.create, 'create account');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit Account
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.account.edit" value="editAccount" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View Account
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.account.view" value="viewAccount" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
+    <div class="col-md-6">
+	    <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Driver Management</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Create Driver
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.driver.create" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit Driver
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.driver.edit" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View Driver
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.driver.view" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
+    <div class="col-md-6">
+	    <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Truck Management</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Create Truck
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.truck.create" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit Truck
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.truck.edit" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View Truck
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.truck.view" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
+    <div class="col-md-6">
+	    <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Zone Management</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Create Zone
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.zone.create" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit Zone
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.zone.edit" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View Zone
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="zuth.zone.view" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
+    <div class="col-md-6">
+	    <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Area Management</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Create Area
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.create" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit Area
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.edit" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View Area
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.view" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Add Area Collection
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.collection.create" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit Area Collection
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.collection.edit" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
+    <div class="col-md-6">
+	    <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Bin Center Management</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Create Bin Center
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bin.create" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit Bin Center
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bin.edit" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View Bin Center
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bin.view" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
+    <div class="col-md-6">
+	    <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">ACR Management</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Create ACR
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acr.create" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit ACR
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acr.edit" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View ACR
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acr.view" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
+</div>

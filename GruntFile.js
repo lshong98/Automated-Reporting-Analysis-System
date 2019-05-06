@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-    grunt.iniConfig({
+    grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
             myFiles: ['server.js']

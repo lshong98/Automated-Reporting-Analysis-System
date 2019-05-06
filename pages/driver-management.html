@@ -1,0 +1,69 @@
+<!-- Modal -->
+<div class="modal fade" id="createDriver" tabindex="-1" role="dialog" aria-labelledby="createDriver" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Create Driver</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+              <label for="txtTruckNo form-label">Driver Name</label>
+              <input type="text" class="form-control" id="txtDriverName" data-ng-model="driver.name" />
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-ng-click="addDriver();">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Driver Management</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." />
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createDriver"><i class="fa fa-plus"></i> New</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-clickable">
+                <thead>
+                    <tr>
+                        <th width="20%">Driver Code</th>
+                        <th width="70%">Driver Name</th>
+                        <th width="10%">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="d in driverList" class="clickable-row" data-href="#/truck/T-20190318-0001">
+                        <td data-ng-bind="d.id"></td>
+                        <td data-ng-bind="d.name"></td>
+                        <td data-ng-bind="d.status"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+    window.location.href = $(this).data('href');
+});
+</script>

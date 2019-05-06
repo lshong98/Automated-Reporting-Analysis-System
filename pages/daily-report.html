@@ -22,7 +22,7 @@
                 <tr>
                     <th colspan="2">IVMW INSPECTION REPORT</th>
                     <th>DATE</th>
-                    <th colspan="2">12/03/2019</th>
+                    <th colspan="2" date-now="yyyy-MM-dd"></th>
                     <th>TIME</th>
                     <th colspan="3">0430 - 1500</th>
                 </tr>
@@ -39,7 +39,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td rowspan="5">DHH45</td>
+                    <td rowspan="5" data-ng-bind="$params_areaCode"></td>
                     <td rowspan="5">....</td>
                     <td rowspan="5">TUE &amp; FRI</td>
                     <td>&nbsp;</td>
@@ -80,7 +80,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h5>IVMW Inspection Report - (DHH45)</h5>
+        <h5>IVMW Inspection Report - (<span data-ng-bind="$params_areaCode"></span>)</h5>
     </div>
 </div>
 

@@ -354,7 +354,7 @@
 	color: #FFFFFF;
 }
 
-@media screen and (max-width: 70.75em) {
+@media screen and (max-width: 78em) {
 	.action--open,
 	.action--close {
 		display: block;

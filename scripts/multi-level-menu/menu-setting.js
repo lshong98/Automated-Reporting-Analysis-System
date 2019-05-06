@@ -6,7 +6,7 @@ var $window = $(window), $responsiveMenuContent = $('#responsiveMenuContent');
 var checkWidth = function () {
     'use strict';
     var windowSize = $window.width();
-    if (windowSize < 1133) {
+    if (windowSize < 1248) {
         $responsiveMenuContent.removeClass('col-md-9').addClass('col-md-12');
     } else {
         $responsiveMenuContent.removeClass('col-md-12').addClass('col-md-9');

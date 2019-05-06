@@ -79,7 +79,7 @@
 
 /* Chart */
 #line-chart, #bar-chart {
-    max-width: 500px;
+/*    max-width: 500px;*/
     height: 500px;
     margin: 0 auto;
 }
@@ -103,6 +103,11 @@
 }
 .footer-row {
     margin: 0px;
+    z-index: 2;
+}
+
+.col-menu-3 {
+    margin-right: -35px;
 }
 @media screen and (max-width: 70.75em) {
     .dummy-space {
@@ -113,6 +118,12 @@
 @media screen and (max-width: 45em) {
     .login-box {
         width: 22rem;
+    }
+}
+
+@media screen and (min-width: 119em) {
+    .col-menu-3 {
+        margin-right: -100px;
     }
 }
 
@@ -167,3 +178,19 @@
 }
 
 /* Error Page */
+
+/* Table Accordion */
+.myOptions {
+  padding: 0; 
+  margin: 0;
+}
+
+
+td[colspan] {
+	padding:0 !important;
+}
+
+.table {
+	margin-bottom:0 !important;
+}
+/* Table Accordion */

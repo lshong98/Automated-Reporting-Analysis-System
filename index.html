@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Trienekens Automated Reporting and Analytics System</title>
@@ -7,10 +7,24 @@
         <link rel="stylesheet" type="text/css" href="/trienekens.css" />
         <script>
             function login() {
-                sessionStorage['position'] = "manager";
-                window.location.href = '/pages/';
+                $username = $('input[name=txtusername]');
+                $password = $('input[name=txtpassword]');
+                
+                $.ajax({
+                    method: 'POST',
+                    url: '/login',
+                    contentType: 'application/json',
+                    data: JSON.stringify({"username": $username.val(), "password": $password.val()}),
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == "valid") {
+                            sessionStorage['position'] = response.details.staffPosition;
+                            sessionStorage['owner'] = response.details.staffID;
+                            window.location.href = '/pages/';
+                        }
+                    }
+                });
             }
-            document.getElementById
         </script>
     </head>
     <body>
@@ -22,7 +36,7 @@
                             <div class="row text-center">
                                 <div class="col-md-12">
                                     <div>
-                                        <img src="/TrienekensLogo.png" width="10%" />
+                                        <img src="/TrienekensLogo.png" width="10%" alt="" />
                                     </div>
                                     <h5 class="card-title">Trienekens (Sarawak) Sdn. Bhd.</h5>
                                 </div>
@@ -44,7 +58,7 @@
                                 <div class="col-md-9">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <input type="text" class="form-control" />
+                                            <input type="text" class="form-control" name="txtusername" />
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +75,7 @@
                                 <div class="col-md-9">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <input type="password" class="form-control" />
+                                            <input type="password" class="form-control" name="txtpassword" />
                                         </div>
                                     </div>
                                 </div>
@@ -78,5 +92,6 @@
                 </div>
             </div>
         </div>
+        <script src="/jquery-3.3.1/jquery-3.3.1.min.js"></script>
     </body>
 </html>

@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-md-12">
+        <h5>Role Management</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." />
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-success"><i class="fa fa-plus"></i> New</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Role Code</th>
+                    <th>Role Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ATH201904290001</td>
+                    <td>Manager</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-ng-click="editAuth('Manager');"><i class="fa fa-pencil-alt"></i></button>
+                        <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>ATH201904290002</td>
+                    <td>Officer</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-ng-click="editAuth('Officer');"><i class="fa fa-pencil-alt"></i></button>
+                        <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>ATH201904290003</td>
+                    <td>Reporting Officer</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-ng-click="editAuth('Reporting Officer');"><i class="fa fa-pencil-alt"></i></button>
+                        <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

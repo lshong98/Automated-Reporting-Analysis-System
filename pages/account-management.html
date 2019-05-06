@@ -11,31 +11,29 @@
       <div class="modal-body">
           <div class="form-group">
               <label for="txtStaffName form-label">Staff Name</label>
-              <input type="text" class="form-control" id="txtStaffName" />
+              <input type="text" class="form-control" id="txtStaffName" data-ng-model="staff.name" />
           </div>
           
           <div class="form-group">
               <label for="sltStaffPosition form-label">Staff Position</label>
-              <select id="sltStaffPosition" class="form-control">
-                  <option>Manager</option>
-                  <option>Reporting Officer</option>
-                  <option>Officer</option>
-              </select>
+              <select id="sltStaffPosition" class="form-control" data-ng-model="staff.position"
+                data-ng-options="position as position.name for position in positionList">
+            </select>
           </div>
           
           <div class="form-group">
               <label for="txtLoginUsername form-label">Login Username</label>
-              <input type="text" class="form-control" id="txtLoginUsername" />
+              <input type="text" class="form-control" id="txtLoginUsername" data-ng-model="staff.username" />
           </div>
           
           <div class="form-group">
               <label for="txtLoginPassword form-label">Login Password</label>
-              <input type="password" class="form-control" id="txtLoginPassword" />
+              <input type="password" class="form-control" id="txtLoginPassword" data-ng-model="staff.password" />
           </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Create</button>
+        <button type="button" class="btn btn-primary" data-ng-click="addUser();">Create</button>
       </div>
     </div>
   </div>
@@ -48,7 +46,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." />
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchStaffFilter" />
     </div>
 </div>
 <br />
@@ -60,47 +58,36 @@
 <br />
 <div class="row">
     <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-hover table-striped table-clickable">
                 <thead>
                     <tr>
-                        <th width="20%">Staff Code</th>
-                        <th width="35%">Name</th>
-                        <th width="15%">Username</th>
-                        <th width="15%">Position</th>
-                        <th width="15%">Status</th>
+                        <th width="20%" data-ng-click="orderBy('id');">Staff Code <i class="fas fa-sort-down"></i></th>
+                        <th width="35%" data-ng-click="orderBy('name');">Name <i class="fas fa-sort-down"></i></th>
+                        <th width="15%" data-ng-click="orderBy('username');">Username <i class="fas fa-sort-down"></i></th>
+                        <th width="20%" data-ng-click="orderBy('position');">Position <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="clickable-row" data-href="#/account/S-20190315-0001">
-                        <td>ACC1903150001</td>
-                        <td>Addison</td>
-                        <td>addison001</td>
-                        <td>Officer</td>
-                        <td>Active</td>
-                    </tr>
-                    <tr>
-                        <td>ACC1903150002</td>
-                        <td>Abby</td>
-                        <td>abby001</td>
-                        <td>Officer</td>
-                        <td>Active</td>
-                    </tr>
-                    <tr>
-                        <td>ACC1903150003</td>
-                        <td>Anderson</td>
-                        <td>anderson001</td>
-                        <td>Officer</td>
-                        <td>Freeze</td>
+                    <tr data-ng-repeat="s in staffList | filter: searchStaff | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="loadSpecificAccount(s.staffID);">
+                        <td data-ng-bind="s.id"></td>
+                        <td data-ng-bind="s.name"></td>
+                        <td data-ng-bind="s.username"></td>
+                        <td data-ng-bind="s.position"></td>
+                        <td data-ng-bind="s.status"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
+            </div>
+        </div>
+        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+            <div class="col-md-12">
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+            </div>
+        </div>
     </div>
 </div>
-
-<script>
-$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
-    window.location.href = $(this).data('href');
-});
-</script>
