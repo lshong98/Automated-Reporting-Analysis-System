@@ -1093,100 +1093,69 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
     };
     $scope.auth = {
         "account": {
-            "create": false,
-            "edit": false,
-            "view": false
+            "create": 'I',
+            "edit": 'I',
+            "view": 'I'
         },
         "driver": {
-            "create": false,
-            "edit": false,
-            "view": false
+            "create": 'I',
+            "edit": 'I',
+            "view": 'I'
+        },
+        "truck": {
+            "create": 'I',
+            "edit": 'I',
+            "view": 'I'
+        },
+        "zone": {
+            "create": 'I',
+            "edit": 'I',
+            "view": 'I'
+        },
+        "area": {
+            "create": 'I',
+            "edit": 'I',
+            "view": 'I',
+            "collection": {
+                "add": 'I',
+                "edit": 'I'
+            }
+        },
+        "bin": {
+            "create": 'I',
+            "edit": 'I',
+            "view": 'I'
+        },
+        "acr": {
+            "create": 'I',
+            "edit": 'I',
+            "view": 'I'
         }
     };
     
     $http.post('/getAllAuth', $scope.role).then(function (response) {
-        var status = false;
         $.each(response.data, function (index, value) {
-            if (value.status == 0) {
-                status = false;
-            } else if (value.status == 1) {
-                status = true;
-            }
-            
-            if (value.name.indexOf("create") != -1) {
-                if (value.name.indexOf("account") != -1) {
-                    $scope.auth.account.create = status;
-                } else if (value.name.indexOf("driver") != -1) {
-                    
-                } else if (value.name.indexOf("truck") != -1) {
-                    
-                }
-            } else if (value.name.indexOf("edit") != -1) {
-                if (value.name.indexOf("account") != -1) {
-                    $scope.auth.account.edit = status;
-                } else if (value.name.indexOf("driver") != -1) {
-                    
-                } else if (value.name.indexOf("truck") != -1) {
-                    
-                }
-            } else if (value.name.indexOf("view") != -1) {
-                if (value.name.indexOf("account") != -1) {
-                    $scope.auth.account.view = status;
-                } else if (value.name.indexOf("driver") != -1) {
-                    
-                } else if (value.name.indexOf("truck") != -1) {
-                    
-                }
-            }
-            
-            if (value.name.indexOf("account") != -1) {
-                if (value.name.indexOf("create") != -1) {
-                    $scope.auth.account.create = status;
-                }
-                if (value.name.indexOf("edit") != -1) {
-                    $scope.auth.account.edit = status;
-                }
-                if (value.name.indexOf("view") != -1) {
-                    $scope.auth.account.view = status;
-                }
-            }
-            if (value.name.indexOf("driver") != -1) {
-                if (value.name.indexOf("create") != -1) {
-                    $scope.auth.driver.create = status;
-                }
-                if (value.name.indexOf("edit") != -1) {
-                    $scope.auth.driver.edit = status;
-                }
-                if (value.name.indexOf("view") != -1) {
-                    $scope.auth.driver.view = status;
-                }
-            }
-            if (value.name.indexOf("truck") != -1) {
-                if (value.name.indexOf("create") != -1) {
-                    $scope.auth.truck.create = status;
-                }
-                if (value.name.indexOf("edit") != -1) {
-                    $scope.auth.truck.edit = status;
-                }
-                if (value.name.indexOf("view") != -1) {
-                    $scope.auth.truck.view = status;
-                }
-            }
-            if (value.name.indexOf("zone") != -1) {
-                if (value.name.indexOf("create") != -1) {
-                    $scope.auth.zone.create = status;
-                }
-                if (value.name.indexOf("edit") != -1) {
-                    $scope.auth.zone.edit = status;
-                }
-                if (value.name.indexOf("view") != -1) {
-                    $scope.auth.zone.view = status;
-                }
-            }
+            $.each($scope.auth, function (bigKey, bigValue) {
+                $.each(bigValue, function (smallKey, smallValue) {
+                    if (smallKey == "collection") {
+                        $.each(smallValue, function (xsmallKey, xsmallValue) {
+                            $scope.auth[bigKey][smallKey][xsmallKey] = value.status;
+                        });
+                    } else {
+                        if (value.name.indexOf(smallKey) != -1) {
+                            if (value.name.indexOf(bigKey) != -1) {
+                                $scope.auth[bigKey][smallKey] = value.status;
+                            }
+                        }
+                    }
+                });
+            });
         });
     });
     
-    $scope.changeValue = function (value) {
+    $scope.changeValue = function (value, key) {
+        console.log(key);
         console.log(value);
+        
     }
 });

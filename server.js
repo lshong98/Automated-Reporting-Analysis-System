@@ -381,9 +381,12 @@ app.get('/getAreaList', function (req, res) {
 app.post('/getAllAuth', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblmgmtaccess.mgmtAccessName AS name, (CASE WHEN tblstaffposaccess.status = 'A' THEN true WHEN tblstaffposaccess.status = 'I' THEN false END) AS status FROM tblstaffposaccess JOIN tblstaffposition ON tblstaffposaccess.staffPosID = tblstaffposition.staffPosID JOIN tblmgmtaccess ON tblmgmtaccess.mgmtAccessID = tblstaffposaccess.mgmtAccessID WHERE tblstaffposition.staffPositionName = '" + req.body.name + "'";
+    var sql = "SELECT tblmgmtaccess.mgmtAccessName AS name, tblstaffposaccess.status FROM tblstaffposaccess JOIN tblstaffposition ON tblstaffposaccess.staffPosID = tblstaffposition.staffPosID JOIN tblmgmtaccess ON tblmgmtaccess.mgmtAccessID = tblstaffposaccess.mgmtAccessID WHERE tblstaffposition.staffPositionName = '" + req.body.name + "'";
     
     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
         res.json(result);
     });
 });
