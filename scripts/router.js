@@ -39,7 +39,9 @@ app.config(function($routeProvider, $locationProvider){
     .when('/account/:userID', {
         templateUrl: function(params) {
             return '/account/' + params.userID;
-        }
+        },
+        controller: 'specificAccController',
+        controllerAs: 'specificAcc'
     })
     .when('/role-management', {
         templateUrl: '/role-management',

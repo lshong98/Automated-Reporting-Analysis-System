@@ -728,6 +728,30 @@ app.controller('accountController', function ($scope, $http, $filter, $window) {
     };
 });
 
+app.controller('specificAccController', function ($scope, $http, $routeParams) {
+    'use strict';
+    
+    $scope.thisAccount = {
+        "id": $routeParams.userID,
+        "name": '',
+        "ic": '',
+        "gender": '',
+        "dob": '',
+        "position": '',
+        "status": '',
+        "email": '',
+        "handphone": '',
+        "phone": '',
+        "address": ''
+    };
+    
+    $http.post('/loadSpecificAccount', $scope.thisAccount).then(function (response) {
+        $.each(response.data[0], function (index, value) {
+            $scope.thisAccount[index] = value;
+        });
+    });
+});
+
 app.controller('errorController', function ($scope, $window) {
     'use strict';
     angular.element('.error-page [data-func="go-back"]').click(function () {
@@ -802,8 +826,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams) {
 //                        }
 //                    });
     });
-                
-    //https://maps.googleapis.com/maps/api/geocode/json?address=swinburne+sarawak&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU
                 
     // JSON data returned by API above
     var myPlace = {

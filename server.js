@@ -54,6 +54,10 @@ app.get('/account-management', function (req, res) {
     'use strict';
     res.sendFile('pages/account-management.html', {root: __dirname});
 });
+app.get('/account/:account', function (req, res) {
+    'use strict';
+    res.sendFile('pages/account.html', {root: __dirname});
+});
 app.get('/truck-management', function (req, res) {
     'use strict';
     res.sendFile('pages/truck-management.html', {root: __dirname});
@@ -218,6 +222,19 @@ app.post('/addUser', function (req, res) {
             res.json({"status": "error", "message": "You have no permission to create account!"});
         }
     }, 100);
+});
+
+app.post('/loadSpecificAccount', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'F' THEN 'Freeze' END) AS status, tblstaffposition.staffPositionName AS position FROM tblstaff JOIN tblstaffposition ON tblstaff.staffPosID = tblstaffposition.staffPosID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
 });
 
 app.post('/addDriver', function (req, res) {

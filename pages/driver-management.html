@@ -46,8 +46,9 @@
                 <thead>
                     <tr>
                         <th width="20%">Driver Code</th>
-                        <th width="70%">Driver Name</th>
+                        <th width="60%">Driver Name</th>
                         <th width="10%">Status</th>
+                        <th width="10%">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +56,7 @@
                         <td data-ng-bind="d.id"></td>
                         <td data-ng-bind="d.name"></td>
                         <td data-ng-bind="d.status"></td>
+                        <td><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-alt"></i></button></td>
                     </tr>
                 </tbody>
             </table>
@@ -63,7 +65,7 @@
 </div>
 
 <script>
-$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
-    window.location.href = $(this).data('href');
-});
+//$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+//    window.location.href = $(this).data('href');
+//});
 </script>
