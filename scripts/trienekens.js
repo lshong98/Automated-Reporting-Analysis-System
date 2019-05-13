@@ -16,6 +16,68 @@ app.filter('offset', function () {
     };
 });
 
+app.directive('editable', function ($compile, $http) {
+    'use strict';
+    return function (scope) {
+        scope.sho = true;
+        scope.choose = function () {
+            scope.sho = !scope.sho;
+            
+            
+            angular.element('.btn' + scope.d.id).replaceWith($compile('<button class="btn btn-warning btn-sm btn' + scope.d.id + '" data-ng-click="save();"><i class="fa fa-save"></i></button>')(scope));
+            angular.element('.btn' + scope.d.id).parent().append(" ").append($compile('<button class="btn btn-default btn-sm btnCancel' + scope.d.id + '" data-ng-click="cancel();"><i class="fa fa-times"></i></button>')(scope));
+//            angular.element('.btnBack').replaceWith($compile('<button class="btn btn-default btnCancel" data-directive="editable" data-ng-click="cancel()">Cancel</button>')(scope));
+        };
+        
+        scope.save = function () {
+            scope.sho = true;
+
+            angular.element('.btn' + scope.d.id).replaceWith($compile('<button class="btn btn-primary btn-sm btn' + scope.d.id + '" data-ng-click="choose();"><i class="fa fa-pencil-alt"></i></button>')(scope));
+        };
+        
+        
+        
+//        scope.save = function () {
+//            $http({
+//                method: 'POST',
+//                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+//                url: '../database/backend.php?module=self&action=update',
+//                data: $.param({"id": selfDataService.self.id, "avatar": scope.self.avatar, "name": scope.self.name, "nric": scope.self.nric, "gender": scope.self.gender, "contact": scope.self.contact, "email": scope.self.email, "op": scope.self.op, "np": scope.self.np, "cp": scope.self.cp})
+//            }).then(function successCallback(response) {
+//                if (response.data.result === "success") {
+//                    $("body").overhang({
+//                        type: "success",
+//                        message: "Profile Saved!"
+//                    });
+//                    scope.sho = true;
+//                    selfDataService.self = angular.copy(scope.self);
+//                    
+//                    if (scope.self.gender === 'F') {scope.strGender = "Female";}
+//                    else if (scope.self.gender === 'M') {scope.strGender = "Male";}
+//                    else {scope.strGender = "Undefined";}
+//                    
+//                    angular.element('.btnSave').replaceWith($compile('<button class="btn btn-primary btnEdit" data-ng-click="choose()">Edit</button>')(scope));
+//                    angular.element('.btnCancel').replaceWith('<button class="btn btn-default btnBack">Back</button>');
+//                } else if (response.data.result === "fail") {
+//                    $("body").overhang({
+//                        type: "error",
+//                        message: "Something Wrong!"
+//                    });
+//                }
+//            });
+//        };
+        
+        scope.cancel = function () {
+            scope.sho = true;
+            //scope.self = angular.copy(selfDataService.self);
+            
+            angular.element('.btnSave').replaceWith($compile('<button class="btn btn-primary btnEdit" data-ng-click="choose()">Edit</button>')(scope));
+            
+            angular.element('.btnCancel').replaceWith('<button class="btn btn-default btnBack">Back</button>');
+        };
+    };
+});
+
 app.directive('dateNow', ['$filter', function ($filter) {
     'use strict';
     return {

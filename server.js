@@ -1,7 +1,7 @@
 /*jslint node:true*/
 var express = require('express');
 var sanitizer = require('sanitizer');
-var bcrypt = require('bcrypt');
+//var bcrypt = require('bcrypt');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
@@ -179,50 +179,50 @@ var checkAuthority = function (keyword, whoIs) {
     
 };
 
-app.post('/login', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblstaff.staffID, tblstaff.password, tblstaffposition.staffPositionName FROM tblstaff JOIN tblstaffposition ON tblstaffposition.staffPosID = tblstaff.staffPosID WHERE tblstaff.username = '" + req.body.username + "' AND tblstaff.staffStatus = 'A'";
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        if (result.length > 0) {
-            if (bcrypt.compareSync(req.body.password, result[0].password)) {
-                res.json({"status": "valid", details: {"staffPosition": result[0].staffPositionName, "staffID": result[0].staffID}});
-            } else {
-                res.json({"status": "invalid"});
-            }
-        } else {
-            res.json({"status": "invalid"});
-        }
-    });
-});
+//app.post('/login', function (req, res) {
+//    'use strict';
+//    
+//    var sql = "SELECT tblstaff.staffID, tblstaff.password, tblstaffposition.staffPositionName FROM tblstaff JOIN tblstaffposition ON tblstaffposition.staffPosID = tblstaff.staffPosID WHERE tblstaff.username = '" + req.body.username + "' AND tblstaff.staffStatus = 'A'";
+//    
+//    db.query(sql, function (err, result) {
+//        if (err) {
+//            throw err;
+//        }
+//        if (result.length > 0) {
+//            if (bcrypt.compareSync(req.body.password, result[0].password)) {
+//                res.json({"status": "valid", details: {"staffPosition": result[0].staffPositionName, "staffID": result[0].staffID}});
+//            } else {
+//                res.json({"status": "invalid"});
+//            }
+//        } else {
+//            res.json({"status": "invalid"});
+//        }
+//    });
+//});
 
 // Access the parse results as request.body
-app.post('/addUser', function (req, res) {
-    'use strict';
-    
-    checkAuthority("create account", req.body.owner);
-    setTimeout(function () {
-        if (obj.authStatus == 'A') {
-            makeID("account", req.body.creationDate);
-            setTimeout(function() {
-                var thePassword = bcrypt.hashSync(req.body.password, 10);
-                var sql = "INSERT INTO tblstaff (staffID, username, password, staffName, staffPosID, creationDateTime, staffStatus) VALUE ('" + obj.ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
-                db.query(sql, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    res.json({"status": "success", "message": "Account created successfully!", "details": {"staffID": obj.ID}});
-                });
-            }, 100);
-        } else {
-            res.json({"status": "error", "message": "You have no permission to create account!"});
-        }
-    }, 100);
-});
+//app.post('/addUser', function (req, res) {
+//    'use strict';
+//    
+//    checkAuthority("create account", req.body.owner);
+//    setTimeout(function () {
+//        if (obj.authStatus == 'A') {
+//            makeID("account", req.body.creationDate);
+//            setTimeout(function() {
+//                var thePassword = bcrypt.hashSync(req.body.password, 10);
+//                var sql = "INSERT INTO tblstaff (staffID, username, password, staffName, staffPosID, creationDateTime, staffStatus) VALUE ('" + obj.ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
+//                db.query(sql, function (err, result) {
+//                    if (err) {
+//                        throw err;
+//                    }
+//                    res.json({"status": "success", "message": "Account created successfully!", "details": {"staffID": obj.ID}});
+//                });
+//            }, 100);
+//        } else {
+//            res.json({"status": "error", "message": "You have no permission to create account!"});
+//        }
+//    }, 100);
+//});
 
 app.post('/loadSpecificAccount', function (req, res) {
     'use strict';
@@ -364,7 +364,7 @@ app.get('/getAllArea', function (req, res) {
 
 app.get('/getAllDriver', function (req, res) {
     'use strict';
-    var sql = "SELECT driverID AS id, driverName AS name, (CASE WHEN driverStatus = 'A' THEN 'ACTIVE' END) AS status FROM tbldriver";
+    var sql = "SELECT driverID AS id, driverName AS name, (CASE WHEN driverStatus = 'A' THEN 'ACTIVE' WHEN driverStatus = 'I' THEN 'FREEZE' END) AS status FROM tbldriver";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -416,7 +416,7 @@ emitter.on('createTable', function () {
     var sqls, i;
     sqls = [
         "CREATE TABLE tblstaff (staffID VARCHAR(15) PRIMARY KEY, username VARCHAR(20), password MEDIUMTEXT, staffName VARCHAR(50), staffIC VARCHAR(15), staffGender CHAR(1), staffDOB DATE, staffAddress VARCHAR(255), staffPosID INT(2), creationDateTime DATETIME, staffStatus CHAR(1))",
-        "CREATE TABLE tblstaffposition (staffPosID INT PRIMARY KEY AUTO_INCREMENT, staffPositionName VARCHAR(30), staffPosDescription MEDIUMTEXT, staffPosStatus CHAR(1))",
+        "CREATE TABLE tblstaffposition (staffPosID INT PRIMARY KEY AUTO_INCREMENT, staffPositionName VARCHAR(30), staffPosStatus CHAR(1))",
         "CREATE TABLE tblstaffposaccess (staffPosID INT, mgmtAccessID INT, status CHAR(1))",
         "CREATE TABLE tblmgmtaccess (mgmtAccessID INT PRIMARY KEY AUTO_INCREMENT, mgmtAccessName VARCHAR(100))",
         "CREATE TABLE tbldriver (driverID VARCHAR(15) PRIMARY KEY, driverName VARCHAR(100), driverAddress VARCHAR(200), driverDOB DATE, driverPhoneNum INT, driverLicenseExpiryDate DATE, creationDateTime DATETIME, driverStatus CHAR(1))",

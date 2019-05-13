@@ -54,9 +54,22 @@
                 <tbody>
                     <tr data-ng-repeat="d in driverList" class="clickable-row" data-href="#/truck/T-20190318-0001">
                         <td data-ng-bind="d.id"></td>
-                        <td data-ng-bind="d.name"></td>
-                        <td data-ng-bind="d.status"></td>
-                        <td><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-alt"></i></button></td>
+                        <td>
+                            <div editable>
+                                <input type="text" class="form-control txt{{d.id}}" data-ng-model="d.name" data-ng-show="!sho" />
+                                <span data-ng-show="sho" data-ng-bind="d.name"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div editable>
+                                <select class="form-control slt{{d.id}}" data-ng-model="d.status" data-ng-show="!sho">
+                                    <option value="ACTIVE">ACTIVE</option>
+                                    <option value="FREEZE">FREEZE</option>
+                                </select>
+                            </div>
+                            <span data-ng-show="sho" data-ng-bind="d.status"></span>
+                        </td>
+                        <td><button class="btn btn-primary btn-sm btn{{d.id}}" data-ng-click="choose();"><i class="fa fa-pencil-alt"></i></button></td>
                     </tr>
                 </tbody>
             </table>
