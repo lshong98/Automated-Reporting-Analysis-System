@@ -215,7 +215,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <input type="password" class="form-control" id="updatePassword" />
+                                <input type="password" class="form-control" id="updatePassword" data-ng-model="password.password" />
                             </div>
                         </div>
                         <br />
@@ -226,13 +226,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <input type="password" class="form-control" id="updatePasswordAgain" />
+                                <input type="password" class="form-control" id="updatePasswordAgain" data-ng-model="password.again" />
                             </div>
                         </div>
                         <br />
                         <div class="row">
                             <div class="col-md-12">
-                                <button class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
+                                <button class="btn btn-primary" data-ng-click="updatePassword();"><i class="fa fa-save"></i> Update</button>
                             </div>
                         </div>
                     </div>

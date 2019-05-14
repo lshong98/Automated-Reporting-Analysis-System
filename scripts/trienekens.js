@@ -807,11 +807,29 @@ app.controller('specificAccController', function ($scope, $http, $routeParams) {
         "address": ''
     };
     
+    $scope.password = {
+        "id": $routeParams.userID,
+        "password": '',
+        "again": ''
+    };
+    
     $http.post('/loadSpecificAccount', $scope.thisAccount).then(function (response) {
         $.each(response.data[0], function (index, value) {
             $scope.thisAccount[index] = value;
         });
     });
+    
+    $scope.updatePassword = function () {
+        $http.post('/updatePassword', $scope.password).then(function (response) {
+            var data = response.data;
+            angular.element('body').overhang({
+                type: data.status,
+                message: data.message
+            });
+            $scope.password.password = '';
+            $scope.password.again = '';
+        });
+    };
 });
 
 app.controller('errorController', function ($scope, $window) {
