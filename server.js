@@ -192,9 +192,9 @@ var checkAuthority = function (keyword, whoIs) {
 
 app.post('/login', function (req, res) {
     'use strict';
-    
+
     var sql = "SELECT tblstaff.staffID, tblstaff.password, tblstaffposition.staffPositionName FROM tblstaff JOIN tblstaffposition ON tblstaffposition.staffPosID = tblstaff.staffPosID WHERE tblstaff.username = '" + req.body.username + "' AND tblstaff.staffStatus = 'A'";
-    
+
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -214,7 +214,7 @@ app.post('/login', function (req, res) {
 // Access the parse results as request.body
 app.post('/addUser', function (req, res) {
     'use strict';
-    
+
     checkAuthority("create account", req.body.owner);
     setTimeout(function () {
         if (obj.authStatus == 'A') {
@@ -237,9 +237,9 @@ app.post('/addUser', function (req, res) {
 
 app.post('/updatePassword', function (req, res) {
     'use strict';
-    
+
     var thePassword = bcrypt.hashSync(req.body.password, 10);
-    
+
     var sql = "UPDATE tblstaff SET password = '" + thePassword + "' WHERE staffID = '" + req.body.id + "'";
     db.query(sql, function (err, result) {
         if (err) {

@@ -10,7 +10,9 @@ var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap']);
 app.filter('offset', function () {
     'use strict';
     return function (input, start) {
-        if (!input || !input.length) { return; }
+        if (!input || !input.length) {
+            return;
+        }
         start = +start; //parse to int
         return input.slice(start);
     };
@@ -22,57 +24,57 @@ app.directive('editable', function ($compile, $http) {
         scope.sho = true;
         scope.choose = function () {
             scope.sho = !scope.sho;
-            
-            
+
+
             angular.element('.btn' + scope.d.id).replaceWith($compile('<button class="btn btn-warning btn-sm btn' + scope.d.id + '" data-ng-click="save();"><i class="fa fa-save"></i></button>')(scope));
             angular.element('.btn' + scope.d.id).parent().append(" ").append($compile('<button class="btn btn-default btn-sm btnCancel' + scope.d.id + '" data-ng-click="cancel();"><i class="fa fa-times"></i></button>')(scope));
-//            angular.element('.btnBack').replaceWith($compile('<button class="btn btn-default btnCancel" data-directive="editable" data-ng-click="cancel()">Cancel</button>')(scope));
+            //            angular.element('.btnBack').replaceWith($compile('<button class="btn btn-default btnCancel" data-directive="editable" data-ng-click="cancel()">Cancel</button>')(scope));
         };
-        
+
         scope.save = function () {
             scope.sho = true;
 
             angular.element('.btn' + scope.d.id).replaceWith($compile('<button class="btn btn-primary btn-sm btn' + scope.d.id + '" data-ng-click="choose();"><i class="fa fa-pencil-alt"></i></button>')(scope));
         };
-        
-        
-        
-//        scope.save = function () {
-//            $http({
-//                method: 'POST',
-//                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-//                url: '../database/backend.php?module=self&action=update',
-//                data: $.param({"id": selfDataService.self.id, "avatar": scope.self.avatar, "name": scope.self.name, "nric": scope.self.nric, "gender": scope.self.gender, "contact": scope.self.contact, "email": scope.self.email, "op": scope.self.op, "np": scope.self.np, "cp": scope.self.cp})
-//            }).then(function successCallback(response) {
-//                if (response.data.result === "success") {
-//                    $("body").overhang({
-//                        type: "success",
-//                        message: "Profile Saved!"
-//                    });
-//                    scope.sho = true;
-//                    selfDataService.self = angular.copy(scope.self);
-//                    
-//                    if (scope.self.gender === 'F') {scope.strGender = "Female";}
-//                    else if (scope.self.gender === 'M') {scope.strGender = "Male";}
-//                    else {scope.strGender = "Undefined";}
-//                    
-//                    angular.element('.btnSave').replaceWith($compile('<button class="btn btn-primary btnEdit" data-ng-click="choose()">Edit</button>')(scope));
-//                    angular.element('.btnCancel').replaceWith('<button class="btn btn-default btnBack">Back</button>');
-//                } else if (response.data.result === "fail") {
-//                    $("body").overhang({
-//                        type: "error",
-//                        message: "Something Wrong!"
-//                    });
-//                }
-//            });
-//        };
-        
+
+
+
+        //        scope.save = function () {
+        //            $http({
+        //                method: 'POST',
+        //                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        //                url: '../database/backend.php?module=self&action=update',
+        //                data: $.param({"id": selfDataService.self.id, "avatar": scope.self.avatar, "name": scope.self.name, "nric": scope.self.nric, "gender": scope.self.gender, "contact": scope.self.contact, "email": scope.self.email, "op": scope.self.op, "np": scope.self.np, "cp": scope.self.cp})
+        //            }).then(function successCallback(response) {
+        //                if (response.data.result === "success") {
+        //                    $("body").overhang({
+        //                        type: "success",
+        //                        message: "Profile Saved!"
+        //                    });
+        //                    scope.sho = true;
+        //                    selfDataService.self = angular.copy(scope.self);
+        //                    
+        //                    if (scope.self.gender === 'F') {scope.strGender = "Female";}
+        //                    else if (scope.self.gender === 'M') {scope.strGender = "Male";}
+        //                    else {scope.strGender = "Undefined";}
+        //                    
+        //                    angular.element('.btnSave').replaceWith($compile('<button class="btn btn-primary btnEdit" data-ng-click="choose()">Edit</button>')(scope));
+        //                    angular.element('.btnCancel').replaceWith('<button class="btn btn-default btnBack">Back</button>');
+        //                } else if (response.data.result === "fail") {
+        //                    $("body").overhang({
+        //                        type: "error",
+        //                        message: "Something Wrong!"
+        //                    });
+        //                }
+        //            });
+        //        };
+
         scope.cancel = function () {
             scope.sho = true;
             //scope.self = angular.copy(selfDataService.self);
-            
+
             angular.element('.btnSave').replaceWith($compile('<button class="btn btn-primary btnEdit" data-ng-click="choose()">Edit</button>')(scope));
-            
+
             angular.element('.btnCancel').replaceWith('<button class="btn btn-default btnBack">Back</button>');
         };
     };
@@ -94,6 +96,7 @@ app.controller('managerController', function ($scope) {
         var sessionid = socket.io.engine.id;
         console.log(sessionid);
     });
+
     function synchronizePieSeries(event, slice) {
         //console.log($(pieChart.series[1]));
         $(pieChart.series[1].data).each(function (i, e) {
@@ -102,7 +105,7 @@ app.controller('managerController', function ($scope) {
             }
         });
     }
-    
+
     var pieChart = new Highcharts.Chart({
         chart: {
             renderTo: 'pie-chart',
@@ -296,9 +299,9 @@ app.controller('managerController', function ($scope) {
         $(chart.series[0].data).each(function (i, e) {
             e.legendItem.on('click', function (event) {
                 var legendItem = e.name;
-                
+
                 event.stopPropagation();
-                
+
                 $(chart.series).each(function (j, f) {
                     $(this.data).each(function (k, z) {
                         if (z.name == legendItem) {
@@ -313,7 +316,7 @@ app.controller('managerController', function ($scope) {
             });
         });
     });
-    
+
     var lineChart = new Highcharts.Chart({
         chart: {
             renderTo: 'line-chart'
@@ -373,7 +376,7 @@ app.controller('managerController', function ($scope) {
             }]
         }
     });
-    
+
     var barChart = new Highcharts.Chart({
         chart: {
             type: 'bar',
@@ -442,7 +445,7 @@ app.controller('managerController', function ($scope) {
             ]
         }]
     });
-    
+
 });
 
 app.controller('officerController', function ($scope) {
@@ -502,7 +505,7 @@ app.controller('officerController', function ($scope) {
             "areaName": 'Zone 3 Area 5'
         }]
     }];
-    
+
     $scope.thisArea = function (a) {
         window.location.href = '#/daily-report/' + a;
     };
@@ -510,36 +513,36 @@ app.controller('officerController', function ($scope) {
 
 app.controller('areaController', function ($scope, $http, $filter) {
     'use strict';
-    
+
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
-    
+
     $scope.area = {
         "zone": '',
         "staff": ''
     };
-    
+
     $http.get('/getAllArea').then(function (response) {
         $scope.searchAreaFilter = '';
         $scope.areaList = response.data;
         $scope.filterAreaList = [];
-        
+
         $scope.searchArea = function (area) {
             return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
         }
-        
-        $.each($scope.areaList, function(index) {
+
+        $.each($scope.areaList, function (index) {
             $scope.filterAreaList = angular.copy($scope.areaList);
         });
-    
+
         $scope.totalItems = $scope.filterAreaList.length;
-    
+
         $scope.getData = function () {
             return $filter('filter')($scope.filterAreaList, $scope.searchAreaFilter);
         };
-    
-        $scope.$watch('searchAreaFilter', function(newVal, oldVal) {
+
+        $scope.$watch('searchAreaFilter', function (newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
                 $scope.currentPage = 1;
@@ -548,7 +551,7 @@ app.controller('areaController', function ($scope, $http, $filter) {
             return vm;
         }, true);
     });
-    
+
     $scope.areaCollection = [{
         "zoneCode": 'Z1',
         "area": [{
@@ -676,29 +679,33 @@ app.controller('areaController', function ($scope, $http, $filter) {
             }]
         }]
     }];
-    
-    $http.get('/getZoneList').then(function (response){
+
+    $http.get('/getZoneList').then(function (response) {
         $scope.zoneList = response.data;
         $scope.area.zone = $scope.zoneList[0];
     });
-    
+
     $http.get('/getStaffList').then(function (response) {
         $scope.staffList = response.data;
         $scope.area.staff = $scope.staffList[0];
     });
-    
+
     $scope.addArea = function () {
         $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addArea', $scope.area).then(function (response) {
             var returnedData = response.data;
             var newAreaID = returnedData.details.areaID;
-            
+
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
                     "message": "Area added successfully!"
                 });
-                $scope.areaList.push({"id": newAreaID, "name": $scope.area.name, "zone": $scope.area.zone.name, "staff":$scope.area.staff.name, "status": 'ACTIVE'});
+                $scope.areaList.push({
+                    "id": newAreaID,
+                    "name": $scope.area.name,
+                    "status": 'ACTIVE'
+                });
                 $scope.filterAreaList = angular.copy($scope.areaList);
                 angular.element('#createArea').modal('toggle');
                 $scope.totalItems = $scope.filterAreaList.length;
@@ -731,13 +738,13 @@ app.controller('areaController', function ($scope, $http, $filter) {
 
 app.controller('accountController', function ($scope, $http, $filter, $window) {
     'use strict';
-    
+
     var asc = true;
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
-    
-    $scope.initializeStaff = function() {
+
+    $scope.initializeStaff = function () {
         $scope.staff = {
             "name": '',
             "position": $scope.positionList[0],
@@ -745,12 +752,12 @@ app.controller('accountController', function ($scope, $http, $filter, $window) {
             "password": ''
         };
     };
-    
+
     $http.get('/getPositionList').then(function (response) {
         $scope.positionList = response.data;
         $scope.initializeStaff();
     });
-    
+
     $http.get('/getAllUser').then(function (response) {
         $scope.searchStaffFilter = '';
         $scope.staffList = response.data;
@@ -758,18 +765,18 @@ app.controller('accountController', function ($scope, $http, $filter, $window) {
         $scope.searchStaff = function (staff) {
             return (staff.id + staff.name + staff.username + staff.position + staff.status).toUpperCase().indexOf($scope.searchStaffFilter.toUpperCase()) >= 0;
         }
-    
-        $.each($scope.staffList, function(index) {
+
+        $.each($scope.staffList, function (index) {
             $scope.filterStaffList = angular.copy($scope.staffList);
         });
-    
+
         $scope.totalItems = $scope.filterStaffList.length;
-    
+
         $scope.getData = function () {
             return $filter('filter')($scope.filterStaffList, $scope.searchStaffFilter);
         };
-    
-        $scope.$watch('searchStaffFilter', function(newVal, oldVal) {
+
+        $scope.$watch('searchStaffFilter', function (newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
                 $scope.currentPage = 1;
@@ -778,20 +785,26 @@ app.controller('accountController', function ($scope, $http, $filter, $window) {
             return vm;
         }, true);
     });
-    
+
     $scope.loadSpecificAccount = function (staffID) {
         window.location.href = '#/account/' + staffID;
     };
-    
+
     $scope.addUser = function () {
         $scope.staff.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.staff.owner = $window.sessionStorage.getItem('owner');
         $http.post('/addUser', $scope.staff).then(function (response) {
             var returnedData = response.data;
-            
+
             if (returnedData.status === "success") {
                 var newStaffID = returnedData.details.staffID;
-                $scope.staffList.push({"id": newStaffID, "name": $scope.staff.name, "username": $scope.staff.username, "position": $scope.staff.position.name, "status": 'ACTIVE'});
+                $scope.staffList.push({
+                    "id": newStaffID,
+                    "name": $scope.staff.name,
+                    "username": $scope.staff.username,
+                    "position": $scope.staff.position.name,
+                    "status": 'ACTIVE'
+                });
                 $scope.filterStaffList = angular.copy($scope.staffList);
                 $scope.totalItems = $scope.filterStaffList.length;
             }
@@ -805,8 +818,8 @@ app.controller('accountController', function ($scope, $http, $filter, $window) {
             console.error('error');
         });
     };
-    
-    $scope.orderBy = function(property) {
+
+    $scope.orderBy = function (property) {
         $scope.staffList = $filter('orderBy')($scope.staffList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
@@ -814,7 +827,7 @@ app.controller('accountController', function ($scope, $http, $filter, $window) {
 
 app.controller('specificAccController', function ($scope, $http, $routeParams) {
     'use strict';
-    
+
     $scope.thisAccount = {
         "id": $routeParams.userID,
         "name": '',
@@ -834,7 +847,7 @@ app.controller('specificAccController', function ($scope, $http, $routeParams) {
         "password": '',
         "again": ''
     };
-    
+
     $http.post('/loadSpecificAccount', $scope.thisAccount).then(function (response) {
         $.each(response.data[0], function (index, value) {
             $scope.thisAccount[index] = value;
@@ -863,16 +876,17 @@ app.controller('errorController', function ($scope, $window) {
 
 app.controller('dailyController', function ($scope, $window, $routeParams) {
     'use strict';
-    
+
     $scope.$params_areaCode = $routeParams.areaCode;
-    
-    var $googleMap, visualizeMap, map, lat = 0, lng = 0;
-    
+
+    var $googleMap, visualizeMap, map, lat = 0,
+        lng = 0;
+
     function timeToSeconds(time) {
         time = time.split(/:/);
         return time[0] * 3600 + time[1] * 60 + time[2];
     }
-    
+
     $googleMap = document.getElementById('googleMap');
     visualizeMap = {
         center: new google.maps.LatLng(1, 1),
@@ -890,7 +904,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams) {
     // OnClick add Marker and get address
     google.maps.event.addListener(map, "click", function (e) {
         var latLng, latitude, longtitude, circle;
-        
+
         latLng = e.latLng;
         latitude = latLng.lat();
         longtitude = latLng.lng();
@@ -904,7 +918,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams) {
             editable: true,
             draggable: true
         });
-                    
+
         google.maps.event.addListener(circle, "radius_changed", function () {
             console.log(circle.getRadius());
         });
@@ -912,135 +926,135 @@ app.controller('dailyController', function ($scope, $window, $routeParams) {
             console.log(circle.getCenter());
         });
 
-//                    var marker = new google.maps.Marker({
-//                        position: new google.maps.LatLng(latitude, longtitude),
-//                        title: 'Marker',
-//                        map: map,
-//                        draggable: true
-//                    });
-//
-//                    var geocoder = new google.maps.Geocoder();
-//                    geocoder.geocode({'address': 'Kuching, MY'}, function(results, status) {
-//                        if (status == google.maps.GeocoderStatus.OK) {
-//                            alert("Location: " + results[0].geometry.location.lat() + " " + results[0].geometry.location.lng() + " " + results[0].formatted_address);
-//                        } else {
-//                            alert("Something got wrong " + status);
-//                        }
-//                    });
+        //                    var marker = new google.maps.Marker({
+        //                        position: new google.maps.LatLng(latitude, longtitude),
+        //                        title: 'Marker',
+        //                        map: map,
+        //                        draggable: true
+        //                    });
+        //
+        //                    var geocoder = new google.maps.Geocoder();
+        //                    geocoder.geocode({'address': 'Kuching, MY'}, function(results, status) {
+        //                        if (status == google.maps.GeocoderStatus.OK) {
+        //                            alert("Location: " + results[0].geometry.location.lat() + " " + results[0].geometry.location.lng() + " " + results[0].formatted_address);
+        //                        } else {
+        //                            alert("Something got wrong " + status);
+        //                        }
+        //                    });
     });
-                
+
     // JSON data returned by API above
     var myPlace = {
-        "results" : [
+        "results": [
             {
-                "address_components" : [
+                "address_components": [
                     {
-                        "long_name" : "Jalan Simpang Tiga",
-                        "short_name" : "Q5A",
-                        "types" : [ "route" ]
+                        "long_name": "Jalan Simpang Tiga",
+                        "short_name": "Q5A",
+                        "types": ["route"]
                     },
                     {
-                        "long_name" : "Kuching",
-                        "short_name" : "Kuching",
-                        "types" : [ "locality", "political" ]
+                        "long_name": "Kuching",
+                        "short_name": "Kuching",
+                        "types": ["locality", "political"]
                     },
                     {
-                        "long_name" : "Sarawak",
-                        "short_name" : "Sarawak",
-                        "types" : [ "administrative_area_level_1", "political" ]
+                        "long_name": "Sarawak",
+                        "short_name": "Sarawak",
+                        "types": ["administrative_area_level_1", "political"]
                     },
                     {
-                        "long_name" : "马来西亚",
-                        "short_name" : "MY",
-                        "types" : [ "country", "political" ]
+                        "long_name": "马来西亚",
+                        "short_name": "MY",
+                        "types": ["country", "political"]
                     },
                     {
-                        "long_name" : "93350",
-                        "short_name" : "93350",
-                        "types" : [ "postal_code" ]
+                        "long_name": "93350",
+                        "short_name": "93350",
+                        "types": ["postal_code"]
                     }
                 ],
-                "formatted_address" : "Jalan Simpang Tiga, 93350 Kuching, Sarawak, 马来西亚",
-                "geometry" : {
-                    "location" : {
-                        "lat" : 1.5322626,
-                        "lng" : 110.3572259
+                "formatted_address": "Jalan Simpang Tiga, 93350 Kuching, Sarawak, 马来西亚",
+                "geometry": {
+                    "location": {
+                        "lat": 1.5322626,
+                        "lng": 110.3572259
                     },
-                    "location_type" : "GEOMETRIC_CENTER",
-                    "viewport" : {
-                        "northeast" : {
-                            "lat" : 1.533611580291502,
-                            "lng" : 110.3585748802915
+                    "location_type": "GEOMETRIC_CENTER",
+                    "viewport": {
+                        "northeast": {
+                            "lat": 1.533611580291502,
+                            "lng": 110.3585748802915
                         },
-                        "southwest" : {
-                            "lat" : 1.530913619708498,
-                            "lng" : 110.3558769197085
+                        "southwest": {
+                            "lat": 1.530913619708498,
+                            "lng": 110.3558769197085
                         }
                     }
                 },
-                "place_id" : "ChIJ5yzgEQun-zERt0vSz5Dyy2k",
-                "plus_code" : {
-                    "compound_code" : "G9J4+WV 马来西亚 Sarawak, 古晋",
-                    "global_code" : "6PHGG9J4+WV"
+                "place_id": "ChIJ5yzgEQun-zERt0vSz5Dyy2k",
+                "plus_code": {
+                    "compound_code": "G9J4+WV 马来西亚 Sarawak, 古晋",
+                    "global_code": "6PHGG9J4+WV"
                 },
-                "types" : [ "establishment", "point_of_interest", "university" ]
+                "types": ["establishment", "point_of_interest", "university"]
             }
         ],
-        "status" : "OK"
+        "status": "OK"
     };
     var myPlace = {
-        "results" : [
+        "results": [
             {
-                "address_components" : [
+                "address_components": [
                     {
-                        "long_name" : "Kuching",
-                        "short_name" : "Kuching",
-                        "types" : [ "locality", "political" ]
+                        "long_name": "Kuching",
+                        "short_name": "Kuching",
+                        "types": ["locality", "political"]
                     },
                     {
-                        "long_name" : "马来西亚",
-                        "short_name" : "MY",
-                        "types" : [ "country", "political" ]
+                        "long_name": "马来西亚",
+                        "short_name": "MY",
+                        "types": ["country", "political"]
                     },
                     {
-                        "long_name" : "93250",
-                        "short_name" : "93250",
-                        "types" : [ "postal_code" ]
+                        "long_name": "93250",
+                        "short_name": "93250",
+                        "types": ["postal_code"]
                     }
                 ],
-                "formatted_address" : "No. 216, Lot 2014, Jalan Sungai Tapang, Sarawak, 93250 Kuching, 马来西亚",
-                "geometry" : {
-                    "location" : {
-                        "lat" : 1.4848857,
-                        "lng" : 110.3597152
+                "formatted_address": "No. 216, Lot 2014, Jalan Sungai Tapang, Sarawak, 93250 Kuching, 马来西亚",
+                "geometry": {
+                    "location": {
+                        "lat": 1.4848857,
+                        "lng": 110.3597152
                     },
-                    "location_type" : "GEOMETRIC_CENTER",
-                    "viewport" : {
-                        "northeast" : {
-                            "lat" : 1.486234680291502,
-                            "lng" : 110.3610641802915
+                    "location_type": "GEOMETRIC_CENTER",
+                    "viewport": {
+                        "northeast": {
+                            "lat": 1.486234680291502,
+                            "lng": 110.3610641802915
                         },
-                        "southwest" : {
-                            "lat" : 1.483536719708498,
-                            "lng" : 110.3583662197085
+                        "southwest": {
+                            "lat": 1.483536719708498,
+                            "lng": 110.3583662197085
                         }
                     }
                 },
-                "place_id" : "ChIJZw7l55ug-zER2wJp6l3tqtQ",
-                "plus_code" : {
-                    "compound_code" : "F9M5+XV 马来西亚 Sarawak, 古晋",
-                    "global_code" : "6PHGF9M5+XV"
+                "place_id": "ChIJZw7l55ug-zER2wJp6l3tqtQ",
+                "plus_code": {
+                    "compound_code": "F9M5+XV 马来西亚 Sarawak, 古晋",
+                    "global_code": "6PHGF9M5+XV"
                 },
-                "types" : [ "establishment", "point_of_interest" ]
+                "types": ["establishment", "point_of_interest"]
             }
         ],
-        "status" : "OK"
+        "status": "OK"
     };
 
     // After get the place data, re-center the map
     $window.setTimeout(function () {
         var places, location;
-        
+
         places = myPlace.results[0];
         location = places.formatted_address;
         lat = places.geometry.location.lat;
@@ -1048,13 +1062,16 @@ app.controller('dailyController', function ($scope, $window, $routeParams) {
         map.panTo(new google.maps.LatLng(lat, lng));
         map.setZoom(17);
     }, 1000);
+    
+    
+
 });
 
 app.controller('truckController', function ($scope, $http, $filter) {
     'use strict';
-    
+
     $scope.areaList = [];
-    $scope.initializeTruck = function() {
+    $scope.initializeTruck = function () {
         $scope.truck = {
             "no": '',
             "driver": '',
@@ -1096,36 +1113,42 @@ app.controller('truckController', function ($scope, $http, $filter) {
         angular.element('.selectpicker').selectpicker('refresh');
         angular.element('.selectpicker').selectpicker('render');
     }
-    
+
     $http.get('/getDriverList').then(function (response) {
         $scope.driverList = response.data;
         $scope.truck.driver = $scope.driverList[0];
     });
     $http.get('/getAreaList').then(function (response) {
         renderSltPicker();
-        $.each(response.data, function(index, value) {
+        $.each(response.data, function (index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
             var area = [];
-            $.each(areaID, function(index, value) {
+            $.each(areaID, function (index, value) {
                 area.push({
                     "id": areaID[index],
                     "name": areaName[index]
                 });
             });
-            $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+            $scope.areaList.push({
+                "zone": {
+                    "id": value.zoneID,
+                    "name": value.zoneName
+                },
+                "area": area
+            });
         });
-        $('.selectpicker').on('change', function() {
+        $('.selectpicker').on('change', function () {
             renderSltPicker();
         });
     });
-    
+
     $scope.addTruck = function () {
         $scope.truck.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addTruck', $scope.truck).then(function(response) {
+        $http.post('/addTruck', $scope.truck).then(function (response) {
             var returnedData = response.data;
             var newTruckID = returnedData.details.truckID;
-            
+
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
@@ -1143,30 +1166,34 @@ app.controller('truckController', function ($scope, $http, $filter) {
 
 app.controller('driverController', function ($scope, $http, $filter) {
     'use strict';
-    
+
     $scope.initializeDriver = function () {
         $scope.driver = {
             "name": ''
         };
     };
-    
-    $http.get('/getAllDriver').then(function(response) {
+
+    $http.get('/getAllDriver').then(function (response) {
         $scope.driverList = response.data;
     });
-    
+
     $scope.addDriver = function () {
         $scope.driver.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addDriver', $scope.driver).then(function(response) {
+        $http.post('/addDriver', $scope.driver).then(function (response) {
             var returnedData = response.data;
             var newDriverID = returnedData.details.driverID;
-            
+
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
                     message: "Driver added successfully!"
                 });
                 angular.element('#createDriver').modal('toggle');
-                $scope.driverList.push({"id": newDriverID, "name": $scope.driver.name, "status": 'ACTIVE'});
+                $scope.driverList.push({
+                    "id": newDriverID,
+                    "name": $scope.driver.name,
+                    "status": 'ACTIVE'
+                });
                 $scope.initializeDriver();
             }
         });
@@ -1175,18 +1202,18 @@ app.controller('driverController', function ($scope, $http, $filter) {
 
 app.controller('zoneController', function ($scope, $http, $filter) {
     'use strict';
-    
+
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
-    
+
     $scope.initializeZone = function () {
         $scope.zone = {
             "name": '',
             "creationDate": ''
         };
     }
-    
+
     $http.get('/getAllZone').then(function (response) {
         $scope.searchZoneFilter = '';
         $scope.zoneList = response.data;
@@ -1194,18 +1221,18 @@ app.controller('zoneController', function ($scope, $http, $filter) {
         $scope.searchZone = function (zone) {
             return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
         }
-        
-        $.each($scope.zoneList, function(index) {
+
+        $.each($scope.zoneList, function (index) {
             $scope.filterZoneList = angular.copy($scope.zoneList);
         });
-    
+
         $scope.totalItems = $scope.filterZoneList.length;
-    
+
         $scope.getData = function () {
             return $filter('filter')($scope.filterZoneList, $scope.searchZoneFilter);
         };
-    
-        $scope.$watch('searchZoneFilter', function(newVal, oldVal) {
+
+        $scope.$watch('searchZoneFilter', function (newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
                 $scope.currentPage = 1;
@@ -1215,19 +1242,23 @@ app.controller('zoneController', function ($scope, $http, $filter) {
         }, true);
 
     });
-    
+
     $scope.addZone = function () {
         $scope.zone.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addZone', $scope.zone).then(function (response) {
             var returnedData = response.data;
             var newZoneID = returnedData.details.zoneID;
-            
+
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
                     message: "Zone added successfully!"
                 });
-                $scope.zoneList.push({"id": newZoneID, "name": $scope.zone.name, "status": 'ACTIVE'});
+                $scope.zoneList.push({
+                    "id": newZoneID,
+                    "name": $scope.zone.name,
+                    "status": 'ACTIVE'
+                });
                 $scope.filterZoneList = angular.copy($scope.zoneList);
                 $scope.totalItems = $scope.filterZoneList.length;
                 angular.element('#createZone').modal('toggle');
@@ -1254,7 +1285,7 @@ app.controller('zoneController', function ($scope, $http, $filter) {
 
 app.controller('roleController', function ($scope, $http, $filter) {
     'use strict';
-    
+
     $scope.editAuth = function (role) {
         window.location.href = '#/auth/' + role;
     };
@@ -1305,7 +1336,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
             "view": 'I'
         }
     };
-    
+
     $http.post('/getAllAuth', $scope.role).then(function (response) {
         $.each(response.data, function (index, value) {
             $.each($scope.auth, function (bigKey, bigValue) {
@@ -1325,11 +1356,155 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
             });
         });
     });
-    
+
     $scope.changeValue = function (value, key) {
         console.log(key);
         console.log(value);
-        
+
+    }
+
+});
+// Felix handsome boi doing reporting
+app.controller('reportingController', function ($scope, $filter) {
+    'use strict';
+    $scope.searchReportFilter = '';
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 10; //Record number each page
+    $scope.maxSize = 10; //Show the number in page
+
+    $scope.handledArea = [{
+        "zoneCode": 'Z1',
+        "area": [{
+            "areaCode": 'Z1A1',
+            "areaName": 'Zone 1 Area 1'
+        }, {
+            "areaCode": 'Z1A2',
+            "areaName": 'Zone 1 Area 2'
+        }, {
+            "areaCode": 'Z1A3',
+            "areaName": 'Zone 1 Area 3'
+        }, {
+            "areaCode": 'Z1A4',
+            "areaName": 'Zone 1 Area 4'
+        }, {
+            "areaCode": 'Z1A5',
+            "areaName": 'Zone 1 Area 5'
+        }]
+    }, {
+        "zoneCode": 'Z2',
+        "area": [{
+            "areaCode": 'Z2A1',
+            "areaName": 'Zone 2 Area 1'
+        }, {
+            "areaCode": 'Z2A2',
+            "areaName": 'Zone 2 Area 2'
+        }, {
+            "areaCode": 'Z2A3',
+            "areaName": 'Zone 2 Area 3'
+        }, {
+            "areaCode": 'Z2A4',
+            "areaName": 'Zone 2 Area 4'
+        }, {
+            "areaCode": 'Z2A5',
+            "areaName": 'Zone 2 Area 5'
+        }]
+    }, {
+        "zoneCode": 'Z3',
+        "area": [{
+            "areaCode": 'Z3A1',
+            "areaName": 'Zone 3 Area 1'
+        }, {
+            "areaCode": 'Z3A2',
+            "areaName": 'Zone 3 Area 2'
+        }, {
+            "areaCode": 'Z3A3',
+            "areaName": 'Zone 3 Area 3'
+        }, {
+            "areaCode": 'Z3A4',
+            "areaName": 'Zone 3 Area 4'
+        }, {
+            "areaCode": 'Z3A5',
+            "areaName": 'Zone 3 Area 5'
+        }]
+    }];
+
+    $scope.thisArea = function (a) {
+        angular.element('#chooseArea').modal('toggle');
+        setTimeout(function () {
+            window.location.href = '#/daily-report/' + a;
+        }, 500);
+    };
+
+    $scope.reportList = [{
+        "reportCode": '0001',
+        "reportDate": '15/05/2019',
+        "area": 'Tabuan Jaya',
+        "collection": 'Tue & Fri',
+        "status": 'Completed',
+        "garbageAmount": '50',
+        "remark": 'Sing Hong'
+    }, {
+        "reportCode": '0001',
+        "reportDate": '15/05/2019',
+        "area": 'Tabuan Jaya',
+        "collection": 'Tue & Fri',
+        "status": 'Completed',
+        "garbageAmount": '50',
+        "remark": 'Sing Hong'
+    }, {
+        "reportCode": '0001',
+        "reportDate": '15/05/2019',
+        "area": 'Tabuan Jaya',
+        "collection": 'Tue & Fri',
+        "status": 'Completed',
+        "garbageAmount": '50',
+        "remark": 'Sing Hong'
+    }, {
+        "reportCode": '0001',
+        "reportDate": '15/05/2019',
+        "area": 'Tabuan Jaya',
+        "collection": 'Tue & Fri',
+        "status": 'Completed',
+        "garbageAmount": '50',
+        "remark": 'Sing Hong'
+    }];
+
+    
+    $scope.filterReportList = [];
+    $scope.searchReport = function (report) {
+        return (report.reportCode + report.reportDate + report.area + report.collection + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+    }
+    
+    $.each($scope.reportList, function (index) {
+        $scope.filterReportList = angular.copy($scope.reportList);
+    });
+
+    $scope.totalItems = $scope.filterReportList.length;
+    console.log($scope.totalItems)
+
+    $scope.getData = function () {
+        return $filter('filter')($scope.filterReportList, $scope.searchReportFilter);
+    };
+
+    $scope.$watch('searchReportFilter', function (newVal, oldVal) {
+        var vm = this;
+        if (oldVal !== newVal) {
+            $scope.currentPage = 1;
+            $scope.totalItems = $scope.getData().length;
+        }
+        return vm;
+    }, true);
+});
+//Felix handsome boi2 doing visualization
+app.controller('visualizationController', function ($scope) {
+    'use strict';
+    $scope.chartDurationGarbageSelected = "Line";
+    $scope.changeChartDurationGarbage = function(chart){
+        if(chart === 'Line'){
+            $scope.chartDurationGarbageSelected = "Line";
+        }else if(chart === 'Bar'){
+            $scope.chartDurationGarbageSelected = "Bar";
+        }
     }
 });
 
