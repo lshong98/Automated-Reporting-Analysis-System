@@ -8,6 +8,7 @@ var io = require('socket.io').listen(server);
 var path = require('path');
 var mysql = require('mysql');
 var EventEmitter = require('events');
+var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
 var DB_HOST = '';
@@ -111,7 +112,7 @@ app.get('/bin-management', function(req, res) {
     res.sendFile('pages/bin-management.html', {root: __dirname});
 });
 var makeID = function(keyword, creationDate) {
-    var table, property, header;
+    var table, property, header, ID;
     var getDateArr, row, stringRow, prefix, i;
     var getDate = creationDate.split(' ');
     
@@ -150,6 +151,7 @@ var makeID = function(keyword, creationDate) {
             table = "tblstaffposition";
             property = "staffPosID";
             header = "ATH";
+            break;
         default: break;
     }
     
@@ -579,9 +581,9 @@ emitter.on('createTable', function () {
     'use strict';
     var sqls, i;
     sqls = [
-        "CREATE TABLE tblstaff (staffID VARCHAR(15) PRIMARY KEY, username VARCHAR(20), password MEDIUMTEXT, staffName VARCHAR(50), staffIC VARCHAR(15), staffGender CHAR(1), staffDOB DATE, staffAddress VARCHAR(255), staffPosID INT(2), creationDateTime DATETIME, staffStatus CHAR(1))",
+        "CREATE TABLE tblstaff (staffID VARCHAR(15) PRIMARY KEY, username VARCHAR(20), password MEDIUMTEXT, staffName VARCHAR(50), staffIC VARCHAR(15), staffGender CHAR(1), staffDOB DATE, staffAddress VARCHAR(255), staffPosID VARCHAR(15), creationDateTime DATETIME, staffStatus CHAR(1))",
         "CREATE TABLE tblstaffposition (staffPosID VARCHAR(15) PRIMARY KEY, staffPositionName VARCHAR(30), creationDateTime DATETIME, staffPosStatus CHAR(1))",
-        "CREATE TABLE tblstaffposaccess (staffPosID INT, mgmtAccessID INT, status CHAR(1))",
+        "CREATE TABLE tblstaffposaccess (staffPosID VARCHAR(15), mgmtAccessID INT, status CHAR(1))",
         "CREATE TABLE tblmgmtaccess (mgmtAccessID INT PRIMARY KEY AUTO_INCREMENT, mgmtAccessName VARCHAR(100))",
         "CREATE TABLE tbldriver (driverID VARCHAR(15) PRIMARY KEY, driverName VARCHAR(100), driverAddress VARCHAR(200), driverDOB DATE, driverPhoneNum INT, driverLicenseExpiryDate DATE, creationDateTime DATETIME, driverStatus CHAR(1))",
         "CREATE TABLE tbltruck (truckID VARCHAR(15) PRIMARY KEY, transporterID VARCHAR(15), truckTon INT, truckNum VARCHAR(10), truckExpiryStatus CHAR(1), creationDateTime DATETIME, truckStatus CHAR(1))",
@@ -596,8 +598,6 @@ emitter.on('createTable', function () {
 //        "CREATE TABLE tblreport (reportID, areaID, reportCollectionData, reportCreationDateTime, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, digitalMap, readStatus, reportStatus, truckID, driverID, remark)"
     ];
     
-
-    
     for (i = 0; i < sqls.length; i += 1) {
         db.query(sqls[i], function (err, result) {
             if (err) {
@@ -606,6 +606,103 @@ emitter.on('createTable', function () {
         });
     }
     console.log('Tables created...');
+});
+
+emitter.on('defaultUser', function () {
+    'use strict';
+    
+    var sqls = [
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('create account')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('edit account')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('view account')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('create driver')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('edit driver')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('view driver')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('create truck')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('edit truck')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('view truck')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('create zone')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('edit zone')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('view zone')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('create area')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('edit area')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('view area')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('add collection')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('edit collection')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('create bin')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('edit bin')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('view bin')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('create acr')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('edit acr')",
+        "INSERT INTO tblmgmtaccess (mgmtAccessName) VALUE ('view acr')"
+    ], i;
+    
+    for (i = 0; i < sqls.length; i += 1) {
+        db.query(sqls[i], function (err, result) {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+    
+    var dt = dateTime.create();
+    var formatted= dt.format('Y-m-d H:M:S');
+    
+    makeID("role", formatted);
+    setTimeout(function () {
+        var sql = "INSERT INTO tblstaffposition (staffPosID, staffPositionName, creationDateTime, staffPosStatus) VALUE ('" + obj.ID + "', 'ADMINISTRATOR', '" + formatted + "', 'A')";
+        
+        db.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            var roleID = obj.ID;
+            makeID("account", formatted);
+            setTimeout(function () {
+                var thePassword = bcrypt.hashSync('adminacc123', 10);
+                var sql = "INSERT INTO tblstaff (staffID, username, password, staffPosID, creationDateTime, staffStatus) VALUE ('" + obj.ID + "', 'trienekens@admin.com', '" + thePassword + "', '" + roleID + "', '" + formatted + "', 'A')";
+                db.query(sql, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }                    
+                    var sqls = [
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '1', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '2', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '3', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '4', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '5', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '6', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '7', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '8', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '9', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '10', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '11', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '12', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '13', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '14', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '15', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '16', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '17', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '18', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '19', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '20', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '21', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '22', 'A')",
+                        "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + roleID + "', '23', 'A')"
+                    ], j;
+                    
+                    for (j = 0; j < sqls.length; j += 1) {
+                        db.query(sqls[j], function (err, result) {
+                            if (err) {
+                                throw err;
+                            }
+                        });
+                    }
+                    console.log('Administrator generated...');
+                });
+            }, 100);
+        });
+    }, 100);
 });
 /* Emitter Registered */
 
@@ -636,6 +733,7 @@ db.connect(function (err) {
                     }
                     console.log('MySQL Connected...');
                     emitter.emit('createTable');
+                    emitter.emit('defaultUser');
                 });
             });
         } else {
