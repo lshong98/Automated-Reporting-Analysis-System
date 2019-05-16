@@ -10,9 +10,9 @@ var mysql = require('mysql');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
-var DB_PASS = '';
+var DB_HOST = '192.168.64.2';
+var DB_USER = 'username';
+var DB_PASS = 'password';
 var DB_NAME = 'trienekens';
 
 var SVR_PORT = 3000;
@@ -145,6 +145,7 @@ var makeID = function(keyword, creationDate) {
             table = "tblbin";
             property = "binID";
             header = "BIN";
+            break;
         default: break;
     }
     

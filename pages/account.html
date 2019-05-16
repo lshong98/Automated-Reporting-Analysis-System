@@ -1,3 +1,8 @@
+<style>
+    .tab-content div.row {
+        margin-bottom: 10px;
+    }
+</style>
 <div class="container emp-profile">
     <form method="post">
         <div class="row">
@@ -29,7 +34,8 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+                <input type="button" class="profile-edit-btn" name="btnEditProfile" value="Edit Profile" data-ng-click="editProfile();" data-ng-show="sho" />
+                <input type="button" class="profile-edit-btn" name="btnSaveProfile" value="Save Profile" data-ng-click="saveProfile();" data-ng-show="!sho" />
             </div>
         </div>
         <div class="row">
@@ -63,7 +69,10 @@
                                 <label>Name</label>
                             </div>
                             <div class="col-md-6">
-                                <p data-ng-bind="thisAccount.name"></p>
+                                <div editable>
+                                    <input type="text" class="form-control" data-ng-model="thisAccount.name" data-ng-show="!sho" />
+                                    <p data-ng-show="sho" data-ng-bind="thisAccount.name"></p>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -71,7 +80,10 @@
                                 <label>IC NO.</label>
                             </div>
                             <div class="col-md-6">
-                                <p data-ng-bind="thisAccount.ic"></p>
+                                <div editable>
+                                    <input type="text" class="form-control" data-ng-model="thisAccount.ic" data-ng-show="!sho" />
+                                    <p data-ng-show="sho" data-ng-bind="thisAccount.ic"></p>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -79,7 +91,19 @@
                                 <label>Gender</label>
                             </div>
                             <div class="col-md-6">
-                                <p data-ng-bind="thisAccount.gender"></p>
+                                <div editable>
+                                    <div class="form-check-inline" data-ng-show="!sho">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" name="rdoGender" data-ng-model="thisAccount.gender"> Male
+                                        </label>
+                                    </div>
+                                    <div class="form-check-inline" data-ng-show="!sho">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" name="rdoGender" data-ng-model="thisAccount.gender"> Female
+                                        </label>
+                                    </div>
+                                    <p data-ng-show="sho" data-ng-bind="thisAccount.gender"></p>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -87,7 +111,10 @@
                                 <label>Date of birth</label>
                             </div>
                             <div class="col-md-6">
-                                <p data-ng-bind="thisAccount.dob"></p>
+                                <div editable>
+                                    <input type="text" class="form-control" data-ng-model="thisAccount.dob" data-ng-show="!sho" />
+                                    <p data-ng-show="sho" data-ng-bind="thisAccount.dob"></p>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -95,33 +122,13 @@
                                 <label>Account Status</label>
                             </div>
                             <div class="col-md-6">
-                                <p data-ng-bind="thisAccount.status"></p>
-                            </div>
-                        </div>
-<!--
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Email</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>kshitighelani@gmail.com</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Phone</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>123 456 7890</p>
-                            </div>
-                        </div>
--->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Profession</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p>Web Developer and Designer</p>
+                                <div editable>
+                                    <select class="form-control" data-ng-model="thisAccount.status" data-ng-show="!sho">
+                                        <option>ACTIVE</option>
+                                        <option>FREEZE</option>
+                                    </select>
+                                    <p data-ng-show="sho" data-ng-bind="thisAccount.status"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -158,54 +165,6 @@
                                 <p data-ng-bind="thisAccount.address"></p>
                             </div>
                         </div>
-<!--
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Experience</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>Expert</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Hourly Rate</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>10$/hr</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Total Projects</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>230</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>English Level</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>Expert</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label>Availability</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p>6 months</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label>Your Bio</label><br/>
-                                        <p>Your detail description</p>
-                                    </div>
-                                </div>
--->
                     </div>
                     <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
                         <div class="row">
