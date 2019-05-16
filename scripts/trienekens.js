@@ -1285,10 +1285,38 @@ app.controller('zoneController', function ($scope, $http, $filter) {
 
 app.controller('roleController', function ($scope, $http, $filter) {
     'use strict';
+    
+    $scope.initializeRole = function () {
+        $scope.role = {
+            "name": '',
+            "creationDate": ''
+        };
+    };
+    
+    $http.get('/getAllRole').then(function (response) {
+        $scope.roleList = response.data;
+    });
 
     $scope.editAuth = function (role) {
         window.location.href = '#/auth/' + role;
     };
+    
+    $scope.addRole = function () {
+        $scope.role.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addRole', $scope.role).then(function (response) {
+            var data = response.data;
+            angular.element('body').overhang({
+                type: data.status,
+                "message": data.message
+            });
+            if (data.status == "success") {
+                $scope.roleList.push({"id": data.details.roleID, "name": $scope.role.name, "status": "ACTIVE"});
+                angular.element('#createRole').modal('toggle');
+                $scope.initializeRole();
+            }
+        });
+    };
+    
 });
 
 app.controller('specificAuthController', function ($scope, $http, $routeParams) {
@@ -1358,9 +1386,24 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
     });
 
     $scope.changeValue = function (value, key) {
+        console.log($scope.role.name);
         console.log(key);
         console.log(value);
-
+        
+        $scope.thisAuth = {
+            "name": $scope.role.name,
+            "management": key,
+            "access": value
+        };
+        
+        $http.post('/setAuth', $scope.thisAuth).then(function (response) {
+            var data = response.data;
+            angular.element('body').overhang({
+                type: data.status,
+                "message": data.message
+            });
+        });
+        
     }
 
 });

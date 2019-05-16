@@ -10,9 +10,9 @@ var mysql = require('mysql');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = '192.168.64.2';
-var DB_USER = 'username';
-var DB_PASS = 'password';
+var DB_HOST = '';
+var DB_USER = '';
+var DB_PASS = '';
 var DB_NAME = 'trienekens';
 
 var SVR_PORT = 3000;
@@ -146,6 +146,10 @@ var makeID = function(keyword, creationDate) {
             property = "binID";
             header = "BIN";
             break;
+        case "role":
+            table = "tblstaffposition";
+            property = "staffPosID";
+            header = "ATH";
         default: break;
     }
     
@@ -234,6 +238,66 @@ app.post('/addUser', function (req, res) {
             res.json({"status": "error", "message": "You have no permission to create account!"});
         }
     }, 100);
+});
+
+app.post('/addRole', function (req, res) {
+    'use strict';
+    
+    makeID("role", req.body.creationDate);
+    setTimeout(function () {
+        var sql = "INSERT INTO tblstaffposition (staffPosID, staffPositionName, creationDateTime, staffPosStatus) VALUE ('" + obj.ID + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
+        db.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            res.json({"status": "success", "message": "Role created successfully!", "details": {"roleID": obj.ID}});
+        });
+    }, 100);
+});
+
+app.get('/getAllRole', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT staffPosID AS id, staffPositionName AS name, (CASE WHEN staffPosStatus = 'A' THEN 'ACTIVE' WHEN staffPosStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblstaffposition";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.post('/setAuth', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT staffPosID AS id FROM tblstaffposition WHERE staffPositionName = '" + req.body.name + "' LIMIT 0, 1";
+    db.query(sql, function (err, result){
+        if (err) {
+            throw err;
+        }
+        var staffID = result[0].id;
+        var sql = "SELECT mgmtAccessID AS id FROM tblmgmtaccess WHERE mgmtAccessName = '" + req.body.management + "' LIMIT 0, 1";
+        db.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            var managementID = result[0].id;
+            var sql = "DELETE FROM tblstaffposaccess WHERE staffPosID = '" + staffID + "' AND mgmtAccessID = '" + managementID + "'";
+            db.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+                var sql = "INSERT INTO tblstaffposaccess (staffPosID, mgmtAccessID, status) VALUE ('" + staffID + "', '" + managementID + "', '" + req.body.access + "')";
+                db.query(sql, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                    res.json({"status": "success", "message": "Permission given."});
+                });
+            });
+        });
+        //var sql = "";
+    });
 });
 
 app.post('/updatePassword', function (req, res) {
@@ -516,7 +580,7 @@ emitter.on('createTable', function () {
     var sqls, i;
     sqls = [
         "CREATE TABLE tblstaff (staffID VARCHAR(15) PRIMARY KEY, username VARCHAR(20), password MEDIUMTEXT, staffName VARCHAR(50), staffIC VARCHAR(15), staffGender CHAR(1), staffDOB DATE, staffAddress VARCHAR(255), staffPosID INT(2), creationDateTime DATETIME, staffStatus CHAR(1))",
-        "CREATE TABLE tblstaffposition (staffPosID INT PRIMARY KEY AUTO_INCREMENT, staffPositionName VARCHAR(30), staffPosStatus CHAR(1))",
+        "CREATE TABLE tblstaffposition (staffPosID VARCHAR(15) PRIMARY KEY, staffPositionName VARCHAR(30), creationDateTime DATETIME, staffPosStatus CHAR(1))",
         "CREATE TABLE tblstaffposaccess (staffPosID INT, mgmtAccessID INT, status CHAR(1))",
         "CREATE TABLE tblmgmtaccess (mgmtAccessID INT PRIMARY KEY AUTO_INCREMENT, mgmtAccessName VARCHAR(100))",
         "CREATE TABLE tbldriver (driverID VARCHAR(15) PRIMARY KEY, driverName VARCHAR(100), driverAddress VARCHAR(200), driverDOB DATE, driverPhoneNum INT, driverLicenseExpiryDate DATE, creationDateTime DATETIME, driverStatus CHAR(1))",

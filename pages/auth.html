@@ -105,14 +105,14 @@ input:checked + .slider:before {
                 <li class="list-group-item">
                     Edit Account
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.account.edit" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.account.edit" data-ng-change="changeValue(auth.account.edit, 'edit account');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     View Account
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.account.view" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.account.view" data-ng-change="changeValue(auth.account.view, 'view account');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
@@ -127,21 +127,21 @@ input:checked + .slider:before {
                 <li class="list-group-item">
                     Create Driver
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.driver.create" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.driver.create" data-ng-change="changeValue(auth.driver.create, 'create driver');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Edit Driver
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.driver.edit" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.driver.edit" data-ng-change="changeValue(auth.driver.edit, 'edit driver');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     View Driver
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.driver.view" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.driver.view" data-ng-change="changeValue(auth.driver.view, 'view driver');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
@@ -156,21 +156,21 @@ input:checked + .slider:before {
                 <li class="list-group-item">
                     Create Truck
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.truck.create" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.truck.create" data-ng-change="changeValue(auth.truck.create, 'create truck');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Edit Truck
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.truck.edit" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.truck.edit" data-ng-change="changeValue(auth.truck.edit, 'edit truck');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     View Truck
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.truck.view" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.truck.view" data-ng-change="changeValue(auth.truck.view, 'view truck');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
@@ -185,21 +185,21 @@ input:checked + .slider:before {
                 <li class="list-group-item">
                     Create Zone
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.zone.create" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.zone.create" data-ng-change="changeValue(auth.zone.create, 'create zone');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Edit Zone
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.zone.edit" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.zone.edit" data-ng-change="changeValue(auth.zone.edit, 'edit zone');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     View Zone
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.zone.view" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.zone.view" data-ng-change="changeValue(auth.zone.view, 'view zone');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
@@ -214,35 +214,35 @@ input:checked + .slider:before {
                 <li class="list-group-item">
                     Create Area
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.area.create" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.create" data-ng-change="changeValue(auth.area.create, 'create area');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Edit Area
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.area.edit" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.edit" data-ng-change="changeValue(auth.area.edit, 'edit area');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     View Area
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.area.view" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.view" data-ng-change="changeValue(auth.area.view, 'view area');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Add Area Collection
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.area.collection.add" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.collection.add" data-ng-change="changeValue(auth.area.collection.add, 'add collection');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Edit Area Collection
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.area.collection.edit" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.area.collection.edit" data-ng-change="changeValue(auth.area.collection.edit, 'edit collection');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
@@ -257,21 +257,21 @@ input:checked + .slider:before {
                 <li class="list-group-item">
                     Create Bin Center
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.bin.create" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.bin.create" data-ng-change="changeValue(auth.bin.create, 'create bin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Edit Bin Center
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.bin.edit" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.bin.edit" data-ng-change="changeValue(auth.bin.edit, 'edit bin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     View Bin Center
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.bin.view" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.bin.view" data-ng-change="changeValue(auth.bin.view, 'view bin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
@@ -286,21 +286,21 @@ input:checked + .slider:before {
                 <li class="list-group-item">
                     Create ACR
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.acr.create" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.acr.create" data-ng-change="changeValue(auth.acr.create, 'create acr');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Edit ACR
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.acr.edit" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.acr.edit" data-ng-change="changeValue(auth.acr.edit, 'edit acr');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     View ACR
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.acr.view" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.acr.view" data-ng-change="changeValue(auth.acr.view, 'view acr');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>

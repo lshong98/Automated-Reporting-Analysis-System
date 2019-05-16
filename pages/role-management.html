@@ -47,39 +47,17 @@
                 <tr>
                     <th>Role Code</th>
                     <th>Role Name</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>ATH201904290001</td>
-                    <td>Manager</td>
+                <tr data-ng-repeat="r in roleList">
+                    <td data-ng-bind="r.id"></td>
+                    <td data-ng-bind="r.name"></td>
+                    <td data-ng-bind="r.status"></td>
                     <td>
-                        <button class="btn btn-sm btn-primary" data-ng-click="editAuth('Manager');"><i class="fa fa-pencil-alt"></i></button>
-                        <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>ATH201904290002</td>
-                    <td>Officer</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" data-ng-click="editAuth('Officer');"><i class="fa fa-pencil-alt"></i></button>
-                        <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>ATH201904290003</td>
-                    <td>Reporting Officer</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" data-ng-click="editAuth('Reporting Officer');"><i class="fa fa-pencil-alt"></i></button>
-                        <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>ATH201904290004</td>
-                    <td>Driver</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" data-ng-click="editAuth('Driver');"><i class="fa fa-pencil-alt"></i></button>
+                        <button class="btn btn-sm btn-primary" data-ng-click="editAuth(r.name);"><i class="fa fa-pencil-alt"></i></button>
                         <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
                     </td>
                 </tr>
