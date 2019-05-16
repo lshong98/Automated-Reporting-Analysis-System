@@ -698,11 +698,33 @@ app.controller('areaController', function ($scope, $http, $filter) {
                     type: "success",
                     "message": "Area added successfully!"
                 });
-                $scope.areaList.push({"id": newAreaID, "name": $scope.area.name, "status": 'ACTIVE'});
+                $scope.areaList.push({"id": newAreaID, "name": $scope.area.name, "zone": $scope.area.zone.name, "staff":$scope.area.staff.name, "status": 'ACTIVE'});
                 $scope.filterAreaList = angular.copy($scope.areaList);
                 angular.element('#createArea').modal('toggle');
                 $scope.totalItems = $scope.filterAreaList.length;
             }
+        });
+    }
+    
+    //new added 15/5
+    //inactive can't be show
+    $scope.editAreaPage = function(){
+        window.location.href = '#/area-management-edit';
+
+    }
+    
+    $scope.editArea = function(){
+        
+        $http.post('/editArea', $scope.area).then(function(response){
+            var data = response.data;
+            if(data.status === "success"){
+                angular.element('body').overhang({
+                    type: data.status,
+                    message: data.message
+                });
+                window.location.href = '#/area-management';
+            }
+            
         });
     }
 });
@@ -1040,6 +1062,36 @@ app.controller('truckController', function ($scope, $http, $filter) {
         };
     };
     
+    $http.get('/getAllTruck').then(function (response) {
+        $scope.searchTruckFilter = '';
+        $scope.truckList = response.data;
+        
+        $scope.filterTruckList = [];
+        $scope.searchTruck = function (truck) {
+            return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
+        }
+        
+        $.each($scope.truckList, function(index) {
+            $scope.filterTruckList = angular.copy($scope.truckList);
+        });
+    
+        $scope.totalItems = $scope.filterTruckList.length;
+    
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterTruckList, $scope.searchTruckFilter);
+        };
+    
+        $scope.$watch('searchTruckFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+
+    });
+    
     function renderSltPicker() {
         angular.element('.selectpicker').selectpicker('refresh');
         angular.element('.selectpicker').selectpicker('render');
@@ -1079,7 +1131,11 @@ app.controller('truckController', function ($scope, $http, $filter) {
                     type: "success",
                     message: "Truck added successfully!"
                 });
+                $scope.truckList.push({"id":newTruckID, "no":$scope.truck.no, "transporter":$scope.truck.transporter, "ton":$scope.truck.ton, "roadtax":$scope.truck.roadtax, "status":'Active'});
+                $scope.filterTruckList = angular.copy($scope.truckList);
+                $scope.totalItems = $scope.filterTruckList.length;
                 angular.element('#createTruck').modal('toggle');
+                $scope.initializeTruck();
             }
         });
     }
@@ -1179,6 +1235,21 @@ app.controller('zoneController', function ($scope, $http, $filter) {
             }
         });
     }
+    
+    //new added 15/5
+    //inactive can't be show
+    $scope.editZone = function(){
+        $http.post('/editZone', $scope.zone).then(function(response){
+            var data = response.data;
+            if(data.status === "success"){
+                angular.element('body').overhang({
+                    type: data.status,
+                    message: data.message
+                });
+            }
+            
+        });
+    }
 });
 
 app.controller('roleController', function ($scope, $http, $filter) {
@@ -1260,4 +1331,581 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
         console.log(value);
         
     }
+});
+
+app.controller('binController', function($scope, $http, $filter){
+    'use strict';
+    $scope.areaList = [];
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    
+    $scope.bin = {
+        "name": '',
+        "loc": '',
+        "area": ''
+    };
+    
+    $http.get('/getAllBin').then(function(response){
+        $scope.searchBinFilter = '';
+        $scope.binList = response.data;
+        $scope.filterBinList = [];
+        
+        $scope.searchBin = function (bin) {
+            return (bin.id + bin.name + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+        }
+        
+        $.each($scope.binList, function(index) {
+            $scope.filterBinList = angular.copy($scope.binList);
+        });
+    
+        $scope.totalItems = $scope.filterBinList.length;
+    
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
+        };
+    
+        $scope.$watch('searchBinFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+        
+        
+    });
+    
+    
+    $http.get('/getAreaList').then(function (response) {
+        renderSltPicker();
+        $.each(response.data, function(index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var area = [];
+            $.each(areaID, function(index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index]
+                });
+            });
+            $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+        });
+        $('.selectpicker').on('change', function() {
+            renderSltPicker();
+        });
+    });
+    
+    
+    function renderSltPicker() {
+        angular.element('.selectpicker').selectpicker('refresh');
+        angular.element('.selectpicker').selectpicker('render');
+    }
+    
+    $scope.addBin = function () {
+        $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addBin', $scope.bin).then(function (response) {
+            var returnedData = response.data;
+            var newBinID = returnedData.details.binID;
+            
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "Area added successfully!"
+                });
+                $scope.binList.push({"id": newBinID, "name": $scope.bin.name, "loc": $scope.bin.loc, "area":$scope.bin.area.name, "status": 'ACTIVE'});
+                $scope.filterBinList = angular.copy($scope.binList);
+                angular.element('#createBin').modal('toggle');
+                $scope.totalItems = $scope.filterBinList.length;
+            }
+        });
+    }
+    
+    $scope.editBin = function(){
+        
+        $http.post('/editBin', $scope.bin).then(function(response){
+            var data = response.data;
+            if(data.status === "success"){
+                angular.element('body').overhang({
+                    type: data.status,
+                    message: data.message
+                });
+            }
+            
+        });
+    }
+    
+});
+
+// Felix lanjiao boi doing reporting
+app.controller('reportingController', function ($scope, $filter) {
+    'use strict';
+    $scope.searchReportFilter = '';
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 10; //Record number each page
+    $scope.maxSize = 10; //Show the number in page
+
+    $scope.handledArea = [{
+        "zoneCode": 'Z1',
+        "area": [{
+            "areaCode": 'Z1A1',
+            "areaName": 'Zone 1 Area 1'
+        }, {
+            "areaCode": 'Z1A2',
+            "areaName": 'Zone 1 Area 2'
+        }, {
+            "areaCode": 'Z1A3',
+            "areaName": 'Zone 1 Area 3'
+        }, {
+            "areaCode": 'Z1A4',
+            "areaName": 'Zone 1 Area 4'
+        }, {
+            "areaCode": 'Z1A5',
+            "areaName": 'Zone 1 Area 5'
+        }]
+    }, {
+        "zoneCode": 'Z2',
+        "area": [{
+            "areaCode": 'Z2A1',
+            "areaName": 'Zone 2 Area 1'
+        }, {
+            "areaCode": 'Z2A2',
+            "areaName": 'Zone 2 Area 2'
+        }, {
+            "areaCode": 'Z2A3',
+            "areaName": 'Zone 2 Area 3'
+        }, {
+            "areaCode": 'Z2A4',
+            "areaName": 'Zone 2 Area 4'
+        }, {
+            "areaCode": 'Z2A5',
+            "areaName": 'Zone 2 Area 5'
+        }]
+    }, {
+        "zoneCode": 'Z3',
+        "area": [{
+            "areaCode": 'Z3A1',
+            "areaName": 'Zone 3 Area 1'
+        }, {
+            "areaCode": 'Z3A2',
+            "areaName": 'Zone 3 Area 2'
+        }, {
+            "areaCode": 'Z3A3',
+            "areaName": 'Zone 3 Area 3'
+        }, {
+            "areaCode": 'Z3A4',
+            "areaName": 'Zone 3 Area 4'
+        }, {
+            "areaCode": 'Z3A5',
+            "areaName": 'Zone 3 Area 5'
+        }]
+    }];
+
+    $scope.thisArea = function (a) {
+        angular.element('#chooseArea').modal('toggle');
+        setTimeout(function () {
+            window.location.href = '#/daily-report/' + a;
+        }, 500);
+    };
+
+    $scope.reportList = [{
+        "reportCode": '0001',
+        "reportDate": '15/05/2019',
+        "area": 'Tabuan Jaya',
+        "collection": 'Tue & Fri',
+        "status": 'Completed',
+        "garbageAmount": '50',
+        "remark": 'Sing Hong'
+    }, {
+        "reportCode": '0001',
+        "reportDate": '15/05/2019',
+        "area": 'Tabuan Jaya',
+        "collection": 'Tue & Fri',
+        "status": 'Completed',
+        "garbageAmount": '50',
+        "remark": 'Sing Hong'
+    }, {
+        "reportCode": '0001',
+        "reportDate": '15/05/2019',
+        "area": 'Tabuan Jaya',
+        "collection": 'Tue & Fri',
+        "status": 'Completed',
+        "garbageAmount": '50',
+        "remark": 'Sing Hong'
+    }, {
+        "reportCode": '0001',
+        "reportDate": '15/05/2019',
+        "area": 'Tabuan Jaya',
+        "collection": 'Tue & Fri',
+        "status": 'Completed',
+        "garbageAmount": '50',
+        "remark": 'Sing Hong'
+    }];
+
+    
+    $scope.filterReportList = [];
+    $scope.searchReport = function (report) {
+        return (report.reportCode + report.reportDate + report.area + report.collection + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+    }
+    
+    $.each($scope.reportList, function (index) {
+        $scope.filterReportList = angular.copy($scope.reportList);
+    });
+
+    $scope.totalItems = $scope.filterReportList.length;
+    console.log($scope.totalItems)
+
+    $scope.getData = function () {
+        return $filter('filter')($scope.filterReportList, $scope.searchReportFilter);
+    };
+
+    $scope.$watch('searchReportFilter', function (newVal, oldVal) {
+        var vm = this;
+        if (oldVal !== newVal) {
+            $scope.currentPage = 1;
+            $scope.totalItems = $scope.getData().length;
+        }
+        return vm;
+    }, true);
+});
+//Felix lanjiao boi2 doing visualization
+app.controller('visualizationController', function ($scope) {
+    'use strict';
+    $scope.chartDurationGarbageSelected = "Line";
+    $scope.changeChartDurationGarbage = function(chart){
+        if(chart === 'Line'){
+            $scope.chartDurationGarbageSelected = "Line";
+        }else if(chart === 'Bar'){
+            $scope.chartDurationGarbageSelected = "Bar";
+        }
+    }
+    //chart-line-duration-garbage
+    Highcharts.chart('chart-line-duration-garbage', {
+
+        title: {
+            text: 'Areas Collection Duration'
+        },
+
+        subtitle: {
+            text: 'Trienekens'
+        },
+
+        yAxis: {
+            title: {
+                text: 'Duration in Minutes'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart: 2010
+            }
+        },
+
+        series: [{
+            name: 'Tabuan Jaya',
+            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+    }, {
+            name: 'Padungan',
+            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+    }, {
+            name: 'Simpang Tiga',
+            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+    }, {
+            name: 'Jalan Song',
+            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
+    }, {
+            name: 'Other',
+            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+    }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+        }]
+        }
+
+    });
+    //chart-bar-duration-garbage
+    Highcharts.chart('chart-bar-duration-garbage', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Areas Collection Duration'
+    },
+    subtitle: {
+        text: 'Trienekens'
+    },
+    xAxis: {
+        categories: [
+            '5 May, 2019',
+            '6 May, 2019',
+            '7 May, 2019',
+            '8 May, 2019',
+            '9 May, 2019',
+            '10 May, 2019',
+            '11 May, 2019',
+            '12 May, 2019',
+            '13 May, 2019',
+            '14 May, 2019',
+            '15 May, 2019',
+            '16 May, 2019'
+        ],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Duration in Minutes'
+        }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'Tabuan Jaya',
+        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+    }, {
+        name: 'Padungan',
+        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+    }, {
+        name: 'Simpang Tiga',
+        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+
+    }, {
+        name: 'Jalan Song',
+        data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+
+    }]
+});
+    //chart-pie-volume-area
+    Highcharts.chart('chart-pie-volume-area', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Browser market shares in January, 2018'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: [{
+                name: 'Chrome',
+                y: 61.41,
+                sliced: true,
+                selected: true
+        }, {
+                name: 'Internet Explorer',
+                y: 11.84
+        }, {
+                name: 'Firefox',
+                y: 10.85
+        }, {
+                name: 'Edge',
+                y: 4.67
+        }, {
+                name: 'Safari',
+                y: 4.18
+        }, {
+                name: 'Sogou Explorer',
+                y: 1.64
+        }, {
+                name: 'Opera',
+                y: 1.6
+        }, {
+                name: 'QQ',
+                y: 1.2
+        }, {
+                name: 'Other',
+                y: 2.61
+        }]
+    }]
+    });
+    //chart-line-volume-day
+    {
+    $.getJSON( 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
+    function (data) {
+
+        Highcharts.chart('chart-line-volume-day', {
+            chart: {
+                zoomType: 'x'
+            },
+            title: {
+                text: 'USD to EUR exchange rate over time'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: 'Exchange rate'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+
+            series: [{
+                type: 'area',
+                name: 'USD to EUR',
+                data: data
+            }]
+        });
+    }
+);}
+    //chart-combine-durvol-day
+    Highcharts.chart('chart-combine-durvol-day', {
+    chart: {
+        zoomType: 'xy'
+    },
+    title: {
+        text: 'Average Monthly Temperature and Rainfall in Tokyo'
+    },
+    subtitle: {
+        text: 'Source: WorldClimate.com'
+    },
+    xAxis: [{
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        crosshair: true
+    }],
+    yAxis: [{ // Primary yAxis
+        labels: {
+            format: '{value}°C',
+            style: {
+                color: Highcharts.getOptions().colors[1]
+            }
+        },
+        title: {
+            text: 'Temperature',
+            style: {
+                color: Highcharts.getOptions().colors[1]
+            }
+        }
+    }, { // Secondary yAxis
+        title: {
+            text: 'Rainfall',
+            style: {
+                color: Highcharts.getOptions().colors[0]
+            }
+        },
+        labels: {
+            format: '{value} mm',
+            style: {
+                color: Highcharts.getOptions().colors[0]
+            }
+        },
+        opposite: true
+    }],
+    tooltip: {
+        shared: true
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        x: 120,
+        verticalAlign: 'top',
+        y: 100,
+        floating: true,
+        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255,255,255,0.25)'
+    },
+    series: [{
+        name: 'Rainfall',
+        type: 'column',
+        yAxis: 1,
+        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+        tooltip: {
+            valueSuffix: ' mm'
+        }
+
+    }, {
+        name: 'Temperature',
+        type: 'spline',
+        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+        tooltip: {
+            valueSuffix: '°C'
+        }
+    }]
+});
 });

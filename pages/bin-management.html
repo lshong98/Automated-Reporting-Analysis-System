@@ -1,0 +1,151 @@
+
+<!-- Modal for add new-->
+<div class="modal fade" id="createBin" tabindex="-1" role="dialog" aria-labelledby="createBin" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Create Bin Centre</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+              <label for="txtBinName form-label">Bin Centre Name</label>
+              <input type="text" class="form-control" id="txtBinName" data-ng-model="bin.name" />
+          </div>
+          
+          <div class="form-group">
+              <label for="txtBinLoc form-label">Bin Centre Location</label>
+              <input type="text" class="form-control" id="txtBinLoc" data-ng-model="bin.loc" />
+          </div>
+          
+          <div class="form-group">
+              <label for="txtBinArea form-label">Area</label>
+              <select id="txtBinArea" data-ng-model="bin.area" class="selectpicker" data-live-search="true" data-width="100%">
+                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                      <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.id}} - {{a.name}}</option>
+                  </optgroup>
+              </select>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-ng-click="addBin();">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for edit-->
+<div class="modal fade" id="editBin" tabindex="-1" role="dialog" aria-labelledby="editBin" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit Bin Centre</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          
+          <div class="form-group">
+              <label for="editBinId form-label">Bin Centre ID:</label>
+              <input type="text" class="form-control" id="editBinId" data-ng-model="bin.editBinId" />
+          </div>
+          <div class="form-group">
+              <label for="editBinName form-label">Bin Centre Name</label>
+              <input type="text" class="form-control" id="editBinName" data-ng-model="bin.editBinName" />
+          </div>
+          <div class="form-group">
+              <label for="editBinLoc form-label">Bin Centre Location</label>
+              <input type="text" class="form-control" id="editBinLoc" data-ng-model="bin.editBinLoc" />
+          </div>
+          <div class="form-group">
+              <label for="editBinArea form-label">Area</label>
+            <select id="editBinArea" class="form-control" data-ng-model="bin.editArea" data-ng-options="area as area.name for area in areaList"></select>
+          </div>
+          <div class="form-group">
+              <label for="editBinStatus form-label">Status</label>
+             <select class="form-control" id="editBinStatus" data-ng-model="bin.editBinStatus">
+                 <option value="A">Activate</option>
+                 <option value="I">Inactivate</option>
+              </select>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <!--temporary, have to remove it-->
+        <button type="button" class="btn btn-primary" data-ng-click="editBin();">Edit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Bin Centre Management</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchAreaFilter" />
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Bin Centre Code</th>
+                                <th>Bin Centre Name</th>
+                                <th>Location</th>
+                                <th>Belong Area</th>
+                                <th>Bin Centre Status</th>
+                                <th>Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="b in binList | filter: searchArea | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                <td data-ng-bind="b.id"></td>
+                                <td data-ng-bind="b.name"></td>
+                                <td data-ng-bind="b.location"></td>
+                                <td data-ng-bind="b.area"></td>
+                                <td data-ng-bind="b.status"></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editBin">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="">
+            <div class="col-md-12">
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.clickable').click(function() {
+            $(this).children().find('i').toggleClass("fa-chevron-circle-right fa-chevron-circle-down");
+            $('html, body').animate({
+                scrollTop: $(this).offset().top - 20
+            }, 'slow');
+        });
+    });
+</script>

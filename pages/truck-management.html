@@ -1,4 +1,10 @@
+<!--TODO:
+- View table - add driver and area, status word
+- Edit function
+-->
+
 <!-- Modal -->
+<!--16/5 sing hong modify-->
 <div class="modal fade" id="createTruck" tabindex="-1" role="dialog" aria-labelledby="createTruck" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -10,16 +16,33 @@
       </div>
       <div class="modal-body">
           <div class="form-group">
-              <label for="txtTruckNo form-label">Truck NO.</label>
+              <label for="txtTruckNo form-label">Truck Number</label>
               <input type="text" class="form-control" id="txtTruckNo" data-ng-model="truck.no" />
           </div>
           
+          <div class="form-group">
+              <label for="txtTransporterID form-label">Transporter ID</label>
+              <input type="text" class="form-control" id="txtTransporterID " data-ng-model="truck.transporter" />
+          </div>
+          
+          <div class="form-group">
+              <label for="txtTon form-label">Collection Ton</label>
+              <input type="text" class="form-control" id="txtTon " data-ng-model="truck.ton" />
+          </div>
+          
+          <div class="form-group">
+              <label for="txtRoadTaxStatus form-label">Road Tax Status</label>
+              <input type="text" class="form-control" id="txtRoadTaxStatus " data-ng-model="truck.roadtax" />
+          </div>
+          <!--
           <div class="form-group">
               <label for="sltDriver form-label">Driver</label>
               <select id="sltDriver" class="form-control" data-ng-model="truck.driver" data-ng-options="driver as driver.name for driver in driverList">
               </select>
           </div>
+          -->
           
+<!-- 
           <div class="form-group">
               <label for="sltArea form-label">Area</label>
               <select id="sltArea" data-ng-model="truck.area" class="selectpicker" data-live-search="true" data-width="100%">
@@ -28,7 +51,7 @@
                   </optgroup>
               </select>
               
-<!--
+
               <select id="sltArea" data-ng-model="truck.area" class="selectpicker" data-live-search="true" data-width="100%">
                   <optgroup label="Zone 1">
                       <option>ARE1903250001 - Area 1</option>
@@ -56,8 +79,9 @@
                       <option>ARE1903250015 - Area 3</option>
                   </optgroup>
               </select>
--->
+
           </div>
+-->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -86,41 +110,68 @@
 <br />
 <div class="row">
     <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-clickable">
-                <thead>
-                    <tr>
-                        <th width="20%">Truck Code</th>
-                        <th width="35%">Truck NO.</th>
-                        <th width="15%">Driver</th>
-                        <th width="15%">Truck Area</th> <!-- Truck area -->
-                        <th width="15%">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="clickable-row" data-href="#/truck/T-20190318-0001">
-                        <td>TRK1903180001</td>
-                        <td>QAA 2213</td>
-                        <td>Addison</td>
-                        <td>Jalan Song</td>
-                        <td>Active</td>
-                    </tr>
-                    <tr>
-                        <td>TRK1903180002</td>
-                        <td>QAA 2213</td>
-                        <td>Addison</td>
-                        <td>Jalan Song</td>
-                        <td>Active</td>
-                    </tr>
-                    <tr>
-                        <td>TRK1903180003</td>
-                        <td>QAA 2213</td>
-                        <td>Addison</td>
-                        <td>Jalan Song</td>
-                        <td>Active</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-clickable">
+                        <thead>
+                            <tr>
+                                <th>Truck Code</th>
+                                <th>Truck NO</th>
+                                <th>Transporter ID</th>
+                                <!--<th>Driver</th>-->
+                                <!--<th>Collect Area</th>--> <!-- Truck area -->
+                                <th>Available Collection Ton</th>
+                                <th>Road Tax Expiry</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="t in truckList | filter: searchTruck | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                <td data-ng-bind="t.id"></td>
+                                <td data-ng-bind="t.no"></td>
+                                <td data-ng-bind="t.transporter"></td>
+                                <!--<td data-ng-bing="t.driver"></td>-->
+                                <td data-ng-bind="t.ton"></td>
+                                <td data-ng-bind="t.roadtax"></td>
+                                <td data-ng-bind="t.status"></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editTruck">Edit</button>
+                                </td>
+                            </tr>
+        <!--
+                            <tr class="clickable-row" data-href="#/truck/T-20190318-0001">
+                                <td>TRK1903180001</td>
+                                <td>QAA 2213</td>
+                                <td>Addison</td>
+                                <td>Jalan Song</td>
+                                <td>Active</td>
+                            </tr>
+                            <tr>
+                                <td>TRK1903180002</td>
+                                <td>QAA 2213</td>
+                                <td>Addison</td>
+                                <td>Jalan Song</td>
+                                <td>Active</td>
+                            </tr>
+                            <tr>
+                                <td>TRK1903180003</td>
+                                <td>QAA 2213</td>
+                                <td>Addison</td>
+                                <td>Jalan Song</td>
+                                <td>Active</td>
+                            </tr>
+        -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="">
+            <div class="col-md-12">
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+            </div>
         </div>
     </div>
 </div>

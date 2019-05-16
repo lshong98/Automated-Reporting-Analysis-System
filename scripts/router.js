@@ -80,9 +80,25 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'areaController',
         controllerAs: 'area'
     })
+    .when('/area-management-edit', {
+        templateUrl: '/area-management-edit',
+        controller: 'areaController',
+        controllerAs: 'areaedit'
+    })
 //    .when('/area-management', {
 //        templateUrl: '/area-management'
 //    })
+    .when('/reporting', {
+        templateUrl: '/reporting.html',
+        controller: 'reportingController',
+        controllerAs: 'reporting'
+    })
+    .when('/datavisualization', {
+        templateUrl: '/data-visualization.html',
+        controller: 'visualizationController',
+        controllerAs: 'visualization'
+    })
+    
     .when('/acr-management', {
         templateUrl: '/acr-management'
     })
@@ -93,6 +109,11 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: '/daily-report',
         controller: 'dailyController',
         controllerAs: 'daily'
+    })
+    .when('/bin-management',{
+        templateUrl: '/bin-management',
+        controller: 'binController',
+        controllerAs: 'bin'
     })
     .otherwise({
         templateUrl: '/error',

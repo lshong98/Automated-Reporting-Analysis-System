@@ -1,0 +1,108 @@
+<!-- Modal -->
+<div class="modal fade" id="chooseArea" tabindex="-1" role="dialog" aria-labelledby="chooseArea" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Choose Zone and Area</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <tbody data-ng-repeat="z in handledArea">
+                        <tr data-target="#{{z.zoneCode}}" data-toggle="collapse" class="clickable" aria-expanded="false">
+                            <th>{{z.zoneCode}} <i class="fa fa-chevron-circle-right"></i></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="12">
+                                <div class="collapse myOptions" id="{{z.zoneCode}}">
+                                    <table class="table table-clickable">
+                                        <tbody>
+                                            <tr class="clickable-row" data-ng-repeat="a in z.area" data-ng-click="thisArea(a.areaCode);">
+                                                <td data-dismiss="modal" data-ng-bind="a.areaCode"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addDriver();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Reporting</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchReportFilter"/>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-success" data-toggle="modal" data-target="#chooseArea"><i class="fa fa-plus"></i> New</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-clickable">
+                <thead>
+                    <tr>
+                        <th width="10%">Report Code</th>
+                        <th width="10%">Report Date</th>
+                        <th width="10%">Area Name</th>
+                        <th width="10%">Collection</th>
+                        <th width="10%">Status</th>
+                        <th width="20%">Garbage Amount(ton)</th>
+                        <th width="30%">Remark</th>
+                    </tr>
+                </thead>
+                <tbody>               
+                    <tr data-ng-repeat="d in reportList | filter: searchReport | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                        <td data-ng-bind="d.reportCode"></td>
+                        <td data-ng-bind="d.reportDate"></td>
+                        <td data-ng-bind="d.area"></td>
+                        <td data-ng-bind="d.collection"></td>
+                        <td data-ng-bind="d.status"></td>
+                        <td data-ng-bind="d.garbageAmount"></td>
+                        <td data-ng-bind="d.remark"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+    <div class="col-md-12">
+        <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.clickable').click(function() {
+            $(this).children().find('i').toggleClass("fa-chevron-circle-right fa-chevron-circle-down");
+            $('html, body').animate({
+                scrollTop: $(this).offset().top - 20
+            }, 'slow');
+        });
+    });
+    //$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+    //    window.location.href = $(this).data('href');
+    //});
+
+</script>

@@ -10,9 +10,9 @@ var mysql = require('mysql');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = '192.168.64.2';
-var DB_USER = 'username';
-var DB_PASS = 'password';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
+var DB_PASS = '';
 var DB_NAME = 'trienekens';
 
 var SVR_PORT = 3000;
@@ -102,7 +102,14 @@ app.get('/auth/:auth', function(req, res) {
     'use strict';
     res.sendFile('pages/auth.html', {root: __dirname});
 });
-
+app.get('/area-management-edit', function(req, res) {
+    'use strict';
+    res.sendFile('pages/area-management-edit.html', {root: __dirname});
+});
+app.get('/bin-management', function(req, res) {
+    'use strict';
+    res.sendFile('pages/bin-management.html', {root: __dirname});
+});
 var makeID = function(keyword, creationDate) {
     var table, property, header;
     var getDateArr, row, stringRow, prefix, i;
@@ -134,6 +141,10 @@ var makeID = function(keyword, creationDate) {
             property = "areaID";
             header = "ARE";
             break;
+        case "bin":
+            table = "tblbin";
+            property = "binID";
+            header = "BIN";
         default: break;
     }
     
@@ -285,6 +296,8 @@ app.post('/addArea', function (req, res) {
     makeID("area", req.body.creationDate);
     setTimeout(function () {
         var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, areaName, creationDateTime, areaStatus) VALUE ('" + obj.ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
+        
+//        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, areaName, collection_frequency, creationDateTime, areaStatus) VALUE ('" + obj.ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.name + "', '" + req.body.collectionFrequency + "' , '" + req.body.creationDate + "', 'A')";
         db.query(sql, function (err, result) {
             if (err) {
                 throw err;
@@ -294,16 +307,32 @@ app.post('/addArea', function (req, res) {
     }, 100);
 });
 
+//16/5 sing hong modify
 app.post('/addTruck', function (req, res) {
     'use strict';
     makeID("truck", req.body.creationDate);
     setTimeout(function () {
-        var sql = "INSERT INTO tbltruck (truckID, truckNum, creationDateTime, truckStatus) VALUE ('" + obj.ID + "', '" + req.body.no + "', '" + req.body.creationDate + "', 'A')";
+        var sql = "INSERT INTO tbltruck (truckID, transporterID, truckTon, truckNum, truckExpiryStatus, creationDateTime, truckStatus) VALUE ('" + obj.ID + "', '" + req.body.transporter + "', '" + req.body.ton + "', '" + req.body.no + "', '" + req.body.roadtax + "', '" + req.body.creationDate + "', 'A')";
         db.query(sql, function(err, result) {
             if (err) {
                 throw err;
             }
             res.json({"status": "success", "details": {"truckID": obj.ID}});
+        });
+    }, 100);
+});
+
+//16/5 sing hong add
+app.post('/addBin', function (req, res) {
+    'use strict';
+    makeID("bin", req.body.creationDate);
+    setTimeout(function () {
+        var sql = "INSERT INTO tblbin (binID, areaID,binName, binLocation, binStatus, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.area + "' , '" + req.body.name + "', '" + req.body.loc + "', 'A', '" + req.body.creationDate + "')";
+        db.query(sql, function(err, result) {
+            if (err) {
+                throw err;
+            }
+            res.json({"status": "success", "details": {"binID": obj.ID}});
         });
     }, 100);
 });
@@ -357,7 +386,7 @@ app.get('/getZoneList', function (req, res) {
 
 app.get('/getAllZone', function (req, res) {
     'use strict';
-    var sql = "SELECT zoneID AS id, zoneName AS name, (CASE WHEN zoneStatus = 'A' THEN 'ACTIVE' END) AS status FROM tblzone";
+    var sql = "SELECT zoneID AS id, zoneName AS name, (CASE WHEN zoneStatus = 'A' THEN 'ACTIVE' WHEN zoneStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblzone";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -366,9 +395,10 @@ app.get('/getAllZone', function (req, res) {
     });
 });
 
+//15/5 sing hong modify
 app.get('/getAllArea', function (req, res) {
     'use strict';
-    var sql = "SELECT areaID AS id, areaName AS name FROM tblarea";
+    var sql = "SELECT areaID AS id, areaName AS name, zoneID as zone, staffID as staff, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -423,6 +453,60 @@ app.post('/getAllAuth', function (req, res) {
     });
 });
 
+//15/5 sing hong
+app.get('/getAllTruck', function(req,res){
+    'use strict';
+    
+    var sql = "SELECT truckID AS id, transporterID AS transporter, truckTon AS ton, truckNum AS no, truckExpiryStatus AS roadtax, (CASE WHEN truckStatus = 'A' THEN 'ACTIVE' WHEN truckStatus = 'I' THEN 'INACTIVE' END) AS status FROM tbltruck";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+//16/5 sing hong
+app.get('/getAllBin', function(req,res){
+    'use strict';
+    
+    var sql = "SELECT binID AS id, areaID AS area, binName as name, binLocation AS location, (CASE WHEN binStatus = 'A' THEN 'ACTIVE' WHEN binStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblbin";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+//15/5 sing hong
+app.post('/editZone',function(req,res){
+    'use strict';
+    var sql = "UPDATE tblzone SET zoneName = '" + req.body.editZoneName+ "', zoneStatus = '" + req.body.editZoneStatus + "' WHERE zoneID = '"+ req.body.editZoneId + "'";
+    db.query(sql, function (err, result) {
+        if (err) {
+            res.json({"status": "error", "message": "Update failed."});
+            throw err;
+        }
+        res.json({"status": "success", "message": "Zone Information Updated."});
+    });
+});
+
+//15/5 sing hong
+app.post('/editArea',function(req,res){
+    'use strict';
+    
+    var sql = "UPDATE tblarea SET areaName = '" + req.body.editAreaName+ "', zoneID = '" + req.body.editAreaZone.id + "', staffID = '" + req.body.editAreaStaff.id +"' , areaStatus = '" + req.body.editAreaStatus + "' WHERE areaID = '"+ req.body.editAreaId + "'";
+
+    db.query(sql, function (err, result) {
+        if (err) {
+            res.json({"status": "error", "message": "Update failed."});
+            throw err;
+        }
+        res.json({"status": "success", "message": "Area Information Updated."});
+    });
+});
+
 /* Emitter Registered */
 
 // Create Database Tables
@@ -438,13 +522,16 @@ emitter.on('createTable', function () {
         "CREATE TABLE tbltruck (truckID VARCHAR(15) PRIMARY KEY, transporterID VARCHAR(15), truckTon INT, truckNum VARCHAR(10), truckExpiryStatus CHAR(1), creationDateTime DATETIME, truckStatus CHAR(1))",
 //        "CREATE TABLE tbltransporter (transporterID, transporterName, transporterDescription, transportStatus)",
         "CREATE TABLE tblzone (zoneID VARCHAR(15) PRIMARY KEY, zoneName VARCHAR(100), creationDateTime DATETIME, zoneStatus CHAR(1))",
-        "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))"
+        "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))",
+        "CREATE TABLE tblbin(binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))"
 //        "CREATE TABLE area_collection (acID, areaID, areaAddress, areaCollStatus)",
 //        "CREATE TABLE tblbincenter (binID, areaID, binName, binLocation, binStatus)",
 //        "CREATE TABLE tblacr (acrID, acrName, acrPhoneNo, acrAddress, acrPeriod, acrStatus)",
 //        "CREATE TABLE tblacrfreq (acrID, areaID, day)",
 //        "CREATE TABLE tblreport (reportID, areaID, reportCollectionData, reportCreationDateTime, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, digitalMap, readStatus, reportStatus, truckID, driverID, remark)"
     ];
+    
+
     
     for (i = 0; i < sqls.length; i += 1) {
         db.query(sqls[i], function (err, result) {
@@ -465,7 +552,7 @@ var db = mysql.createConnection({
     password: DB_PASS
 });
 
-// Connect
+//// Connect
 db.connect(function (err) {
     'use strict';
     if (err) {

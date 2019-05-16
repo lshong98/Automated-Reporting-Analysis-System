@@ -1,4 +1,13 @@
-<!-- ACR Modal -->
+<!--
+TODO list:
+- Add new page
+- Collection frequency in add new and edit form
+- figure out how to allow user add address
+- Inactive can’t be show
+- Select specific area to edit
+- View information
+-->
+<!-- Area Modal -->
 <div class="modal fade" id="createArea" tabindex="-1" role="dialog" aria-labelledby="createArea" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -13,6 +22,18 @@
               <label for="txtAreaName form-label">Area Name</label>
               <input type="text" class="form-control" id="txtAreaName" data-ng-model="area.name" />
           </div>
+          
+          <!--new added-->
+          <!--<div class="form-group">
+              <label for="sltColFreq form-label">Collection Frequency</label>
+              <input type="checkbox" name="cf1" value="monday" data-ng-model="area.collectionFrequency"> Monday<br>
+              <input type="checkbox" name="cf2" value="tuesday" data-ng-model="area.collectionFrequency"> Tuesday<br>
+              <input type="checkbox" name="cf3" value="wednesday" data-ng-model="area.collectionFrequency"> Wednesday<br>
+              <input type="checkbox" name="cf4" value="thursday" data-ng-model="area.collectionFrequency"> Thursday<br>
+              <input type="checkbox" name="cf5" value="friday" data-ng-model="area.collectionFrequency"> Friday<br>
+              <input type="checkbox" name="cf6" value="saturday" data-ng-model="area.collectionFrequency"> Saturday<br>
+              <input type="checkbox" name="cf7" value="sunday" data-ng-model="area.collectionFrequency"> Sunday<br>
+          </div>-->
           
           <div class="form-group">
               <label for="sltZoneName form-label">Zone Name</label>
@@ -31,6 +52,12 @@
     </div>
   </div>
 </div>
+
+<!--15/5 sing hong-->
+<!--have to been changed to page-->
+<!-- edit modal-->
+
+
 
 <div class="row">
     <div class="col-md-12">
@@ -59,6 +86,11 @@
                             <tr>
                                 <th>Area Code</th>
                                 <th>Area Name</th>
+                                <!--<th>Including Address</th>-->
+                                <th>Belong Zone</th>
+                                <th>Staff</th>
+                                <!--<th>Collection Frequency</th>-->
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -66,9 +98,14 @@
                             <tr data-ng-repeat="a in areaList | filter: searchArea | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td data-ng-bind="a.id"></td>
                                 <td data-ng-bind="a.name"></td>
+                                <!--<td data-ng-bind="a.address"></td><!-- this shud be repeat-->
+                                <td data-ng-bind="a.zone"></td>
+                                <td data-ng-bind="a.staff"></td>
+                                <!--<td data-ng-bind="a.collectionFrequency"></td>-->
+                                <td data-ng-bind="a.status"></td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></button>
+<!--                                    <button class="btn btn-sm btn-primary" onclick = "window.location.href='#/area-management-edit'">Edit</button>-->
+                                    <button class="btn btn-sm btn-primary" data-ng-click="editAreaPage();">Edit</button>
                                 </td>
                             </tr>
                         </tbody>
