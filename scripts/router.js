@@ -100,7 +100,9 @@ app.config(function($routeProvider, $locationProvider){
     })
     
     .when('/acr-management', {
-        templateUrl: '/acr-management'
+        templateUrl: '/acr-management',
+        controller: 'acrController',
+        controllerAs:'acr'
     })
     .when('/notification', {
         templateUrl: '/notification'

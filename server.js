@@ -11,8 +11,8 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var DB_HOST = '';
-var DB_USER = '';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
 var DB_PASS = '';
 var DB_NAME = 'trienekens';
 
@@ -151,6 +151,11 @@ var makeID = function(keyword, creationDate) {
             table = "tblstaffposition";
             property = "staffPosID";
             header = "ATH";
+            break;
+        case "acr":
+            table = "tblacr";
+            property = "acrID";
+            header = "ACR";
             break;
         default: break;
     }
@@ -590,7 +595,9 @@ emitter.on('createTable', function () {
 //        "CREATE TABLE tbltransporter (transporterID, transporterName, transporterDescription, transportStatus)",
         "CREATE TABLE tblzone (zoneID VARCHAR(15) PRIMARY KEY, zoneName VARCHAR(100), creationDateTime DATETIME, zoneStatus CHAR(1))",
         "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))",
-        "CREATE TABLE tblbin(binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))"
+        "CREATE TABLE tblbin(binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))",
+        "CREATE TABLE tblacr(acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATETIME, creationDateTime DATETIME, acrStatus CHAR(1))",
+        "CREATE TABLE tblacrfreq(acrID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15) PRIMARY KEY, day VARCHAR(15) PRIMARY KEY)"
 //        "CREATE TABLE area_collection (acID, areaID, areaAddress, areaCollStatus)",
 //        "CREATE TABLE tblbincenter (binID, areaID, binName, binLocation, binStatus)",
 //        "CREATE TABLE tblacr (acrID, acrName, acrPhoneNo, acrAddress, acrPeriod, acrStatus)",

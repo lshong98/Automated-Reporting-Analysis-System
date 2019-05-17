@@ -11,38 +11,26 @@
       <div class="modal-body">
           <div class="form-group">
               <label for="txtCustomerName form-label">Customer Name</label>
-              <input type="text" class="form-control" id="txtCustomerName" />
+              <input type="text" class="form-control" id="txtCustomerName" data-ng-model="acr.name" />
           </div>
           
           <div class="form-group">
-              <label for="sltCustomerArea form-label">Area</label>
-              <select id="sltCustomerArea" class="selectpicker" data-live-search="true" data-width="100%">
-                  <optgroup label="Zone 1">
-                      <option>ARE1903250001 - Area 1</option>
-                      <option>ARE1903250002 - Area 2</option>
-                      <option>ARE1903250003 - Area 3</option>
-                  </optgroup>
-                  <optgroup label="Zone 2">
-                      <option>ARE1903250004 - Area 1</option>
-                      <option>ARE1903250005 - Area 2</option>
-                      <option>ARE1903250006 - Area 3</option>
-                  </optgroup>
-                  <optgroup label="Zone 3">
-                      <option>ARE1903250007 - Area 1</option>
-                      <option>ARE1903250008 - Area 2</option>
-                      <option>ARE1903250009 - Area 3</option>
-                  </optgroup>
-                  <optgroup label="Zone 4">
-                      <option>ARE1903250010 - Area 1</option>
-                      <option>ARE1903250011 - Area 2</option>
-                      <option>ARE1903250012 - Area 3</option>
-                  </optgroup>
-                  <optgroup label="Zone 5">
-                      <option>ARE1903250013 - Area 1</option>
-                      <option>ARE1903250014 - Area 2</option>
-                      <option>ARE1903250015 - Area 3</option>
+              <label for="txtAcrAddress form-label">Address</label>
+              <input type="text" class="form-control" id="txtAcrAddress" data-ng-model="acr.address" />
+          </div>
+          
+          <div class="form-group">
+              <label for="txtAcrArea form-label">Belong Area</label>
+              <select id="txtAcrArea" data-ng-model="acr.area" class="selectpicker" data-live-search="true" data-width="100%">
+                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                      <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.id}} - {{a.name}}</option>
                   </optgroup>
               </select>
+          </div>
+          
+          <div class="form-group">
+              <label for="txtAcrPhone form-label">Phone Number:</label>
+              <input type="text" class="form-control" id="txtAcrPhone" data-ng-model="acr.phone" />
           </div>
           
           <div class="form-group">
@@ -76,6 +64,12 @@
                   <label class="form-check-label" for="sun">Sunday</label>
               </div>
           </div>
+          
+          <div class="form-group">
+              <label for="txtAcrPeriod form-label">End Date of ACR:</label>
+              <input class="datepicker" data-date-format="mm/dd/yyyy">
+          </div>
+          
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -104,54 +98,78 @@
 <br />
 <div class="row">
     <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-clickable">
-                <thead>
-                    <tr>
-                        <th>ACR Customer</th>
-                        <th width="10%">Monday</th>
-                        <th width="10%">Tuesday</th>
-                        <th width="10%">Wednesday</th>
-                        <th width="10%">Thursday</th>
-                        <th width="10%">Friday</th>
-                        <th width="10%">Saturday</th>
-                        <th width="10%">Sunday</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="clickable-row">
-                        <td>DUTA JASA SDN BHD</td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Moh Heng Co. Sdn Bhd</td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class=""></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class=""></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Lee Sing Sales &amp; Services Sdn Bhd (Colgate Palmolive)</td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class=""></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                        <td class="text-center"><i class="fa fa-check"></i></td>
-                    </tr>
-                </tbody>
-            </table>
+        <ul class="nav nav-tabs" id="acrTab" role=tablist>
+            <li class="nav-item">
+                <a class="nav-link active" id="schedule-tab" data-toggle="tab" data-target="#acrSchedule" role="tab" aria-controls="acrSchedule" aria-selected="true">Schedule</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#acrInformation" role="tab" aria-controls="acrInformation" aria-selected="false">Information</a>
+            </li>
+        </ul>
+<!--
+        <nav>
+            <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-acrSchedule-tab" data-toggle="tab" data-target="#nav-acrSchedule" role="tab" aria-controls="nav-acrSchedule" aria-selected="true">Schedule</a>
+                <a class="nav-item nav-link active" id="nav-acrInformation-tab" data-toggle="tab" data-target="#nav-acrInformation" role="tab" aria-controls="nav-acrInformation" aria-selected="true">Information</a>
+            </div>
+        </nav>
+-->
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="acrSchedule" role="tabpanel" aria-labelledby="acrSchedule-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-clickable">
+                        <thead>
+                            <tr>
+                                <th>ACR Customer</th>
+                                <th width="10%">Monday</th>
+                                <th width="10%">Tuesday</th>
+                                <th width="10%">Wednesday</th>
+                                <th width="10%">Thursday</th>
+                                <th width="10%">Friday</th>
+                                <th width="10%">Saturday</th>
+                                <th width="10%">Sunday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable-row">
+                                <td>DUTA JASA SDN BHD</td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                            </tr>
+                            <tr>
+                                <td>Moh Heng Co. Sdn Bhd</td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class=""></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class=""></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                            </tr>
+                            <tr>
+                                <td>Lee Sing Sales &amp; Services Sdn Bhd (Colgate Palmolive)</td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class=""></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                                <td class="text-center"><i class="fa fa-check"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade show active" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab">
+                
+            </div>
         </div>
+
     </div>
 </div>
 

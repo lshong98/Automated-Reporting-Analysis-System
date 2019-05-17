@@ -1407,6 +1407,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
     }
 
 });
+
 // Felix handsome boi doing reporting
 app.controller('reportingController', function ($scope, $filter) {
     'use strict';
@@ -1539,255 +1540,6 @@ app.controller('reportingController', function ($scope, $filter) {
     }, true);
 });
 //Felix handsome boi2 doing visualization
-app.controller('visualizationController', function ($scope) {
-    'use strict';
-    $scope.chartDurationGarbageSelected = "Line";
-    $scope.changeChartDurationGarbage = function(chart){
-        if(chart === 'Line'){
-            $scope.chartDurationGarbageSelected = "Line";
-        }else if(chart === 'Bar'){
-            $scope.chartDurationGarbageSelected = "Bar";
-        }
-    }
-});
-
-app.controller('binController', function($scope, $http, $filter){
-    'use strict';
-    $scope.areaList = [];
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemPerPage = 8; //Record number each page
-    $scope.maxSize = 10;
-    
-    $scope.bin = {
-        "name": '',
-        "loc": '',
-        "area": ''
-    };
-    
-    $http.get('/getAllBin').then(function(response){
-        $scope.searchBinFilter = '';
-        $scope.binList = response.data;
-        $scope.filterBinList = [];
-        
-        $scope.searchBin = function (bin) {
-            return (bin.id + bin.name + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
-        }
-        
-        $.each($scope.binList, function(index) {
-            $scope.filterBinList = angular.copy($scope.binList);
-        });
-    
-        $scope.totalItems = $scope.filterBinList.length;
-    
-        $scope.getData = function () {
-            return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
-        };
-    
-        $scope.$watch('searchBinFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
-            }
-            return vm;
-        }, true);
-        
-        
-    });
-    
-    
-    $http.get('/getAreaList').then(function (response) {
-        renderSltPicker();
-        $.each(response.data, function(index, value) {
-            var areaID = value.id.split(",");
-            var areaName = value.name.split(",");
-            var area = [];
-            $.each(areaID, function(index, value) {
-                area.push({
-                    "id": areaID[index],
-                    "name": areaName[index]
-                });
-            });
-            $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
-        });
-        $('.selectpicker').on('change', function() {
-            renderSltPicker();
-        });
-    });
-    
-    
-    function renderSltPicker() {
-        angular.element('.selectpicker').selectpicker('refresh');
-        angular.element('.selectpicker').selectpicker('render');
-    }
-    
-    $scope.addBin = function () {
-        $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addBin', $scope.bin).then(function (response) {
-            var returnedData = response.data;
-            var newBinID = returnedData.details.binID;
-            
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "Area added successfully!"
-                });
-                $scope.binList.push({"id": newBinID, "name": $scope.bin.name, "loc": $scope.bin.loc, "area":$scope.bin.area.name, "status": 'ACTIVE'});
-                $scope.filterBinList = angular.copy($scope.binList);
-                angular.element('#createBin').modal('toggle');
-                $scope.totalItems = $scope.filterBinList.length;
-            }
-        });
-    }
-    
-    $scope.editBin = function(){
-        
-        $http.post('/editBin', $scope.bin).then(function(response){
-            var data = response.data;
-            if(data.status === "success"){
-                angular.element('body').overhang({
-                    type: data.status,
-                    message: data.message
-                });
-            }
-            
-        });
-    }
-    
-});
-
-// Felix lanjiao boi doing reporting
-app.controller('reportingController', function ($scope, $filter) {
-    'use strict';
-    $scope.searchReportFilter = '';
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 10; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
-
-    $scope.handledArea = [{
-        "zoneCode": 'Z1',
-        "area": [{
-            "areaCode": 'Z1A1',
-            "areaName": 'Zone 1 Area 1'
-        }, {
-            "areaCode": 'Z1A2',
-            "areaName": 'Zone 1 Area 2'
-        }, {
-            "areaCode": 'Z1A3',
-            "areaName": 'Zone 1 Area 3'
-        }, {
-            "areaCode": 'Z1A4',
-            "areaName": 'Zone 1 Area 4'
-        }, {
-            "areaCode": 'Z1A5',
-            "areaName": 'Zone 1 Area 5'
-        }]
-    }, {
-        "zoneCode": 'Z2',
-        "area": [{
-            "areaCode": 'Z2A1',
-            "areaName": 'Zone 2 Area 1'
-        }, {
-            "areaCode": 'Z2A2',
-            "areaName": 'Zone 2 Area 2'
-        }, {
-            "areaCode": 'Z2A3',
-            "areaName": 'Zone 2 Area 3'
-        }, {
-            "areaCode": 'Z2A4',
-            "areaName": 'Zone 2 Area 4'
-        }, {
-            "areaCode": 'Z2A5',
-            "areaName": 'Zone 2 Area 5'
-        }]
-    }, {
-        "zoneCode": 'Z3',
-        "area": [{
-            "areaCode": 'Z3A1',
-            "areaName": 'Zone 3 Area 1'
-        }, {
-            "areaCode": 'Z3A2',
-            "areaName": 'Zone 3 Area 2'
-        }, {
-            "areaCode": 'Z3A3',
-            "areaName": 'Zone 3 Area 3'
-        }, {
-            "areaCode": 'Z3A4',
-            "areaName": 'Zone 3 Area 4'
-        }, {
-            "areaCode": 'Z3A5',
-            "areaName": 'Zone 3 Area 5'
-        }]
-    }];
-
-    $scope.thisArea = function (a) {
-        angular.element('#chooseArea').modal('toggle');
-        setTimeout(function () {
-            window.location.href = '#/daily-report/' + a;
-        }, 500);
-    };
-
-    $scope.reportList = [{
-        "reportCode": '0001',
-        "reportDate": '15/05/2019',
-        "area": 'Tabuan Jaya',
-        "collection": 'Tue & Fri',
-        "status": 'Completed',
-        "garbageAmount": '50',
-        "remark": 'Sing Hong'
-    }, {
-        "reportCode": '0001',
-        "reportDate": '15/05/2019',
-        "area": 'Tabuan Jaya',
-        "collection": 'Tue & Fri',
-        "status": 'Completed',
-        "garbageAmount": '50',
-        "remark": 'Sing Hong'
-    }, {
-        "reportCode": '0001',
-        "reportDate": '15/05/2019',
-        "area": 'Tabuan Jaya',
-        "collection": 'Tue & Fri',
-        "status": 'Completed',
-        "garbageAmount": '50',
-        "remark": 'Sing Hong'
-    }, {
-        "reportCode": '0001',
-        "reportDate": '15/05/2019',
-        "area": 'Tabuan Jaya',
-        "collection": 'Tue & Fri',
-        "status": 'Completed',
-        "garbageAmount": '50',
-        "remark": 'Sing Hong'
-    }];
-
-    
-    $scope.filterReportList = [];
-    $scope.searchReport = function (report) {
-        return (report.reportCode + report.reportDate + report.area + report.collection + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
-    }
-    
-    $.each($scope.reportList, function (index) {
-        $scope.filterReportList = angular.copy($scope.reportList);
-    });
-
-    $scope.totalItems = $scope.filterReportList.length;
-    console.log($scope.totalItems)
-
-    $scope.getData = function () {
-        return $filter('filter')($scope.filterReportList, $scope.searchReportFilter);
-    };
-
-    $scope.$watch('searchReportFilter', function (newVal, oldVal) {
-        var vm = this;
-        if (oldVal !== newVal) {
-            $scope.currentPage = 1;
-            $scope.totalItems = $scope.getData().length;
-        }
-        return vm;
-    }, true);
-});
-//Felix lanjiao boi2 doing visualization
 app.controller('visualizationController', function ($scope) {
     'use strict';
     $scope.chartDurationGarbageSelected = "Line";
@@ -2070,7 +1822,7 @@ app.controller('visualizationController', function ($scope) {
     }],
     yAxis: [{ // Primary yAxis
         labels: {
-            format: '{value}°C',
+            format: '{value}∞C',
             style: {
                 color: Highcharts.getOptions().colors[1]
             }
@@ -2122,8 +1874,116 @@ app.controller('visualizationController', function ($scope) {
         type: 'spline',
         data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
         tooltip: {
-            valueSuffix: '°C'
+            valueSuffix: '∞C'
         }
     }]
 });
 });
+
+
+app.controller('binController', function($scope, $http, $filter){
+    'use strict';
+    $scope.areaList = [];
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    
+    $scope.bin = {
+        "name": '',
+        "loc": '',
+        "area": ''
+    };
+    
+    $http.get('/getAllBin').then(function(response){
+        $scope.searchBinFilter = '';
+        $scope.binList = response.data;
+        $scope.filterBinList = [];
+        
+        $scope.searchBin = function (bin) {
+            return (bin.id + bin.name + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+        }
+        
+        $.each($scope.binList, function(index) {
+            $scope.filterBinList = angular.copy($scope.binList);
+        });
+    
+        $scope.totalItems = $scope.filterBinList.length;
+    
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
+        };
+    
+        $scope.$watch('searchBinFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+        
+        
+    });
+    
+    
+    $http.get('/getAreaList').then(function (response) {
+        renderSltPicker();
+        $.each(response.data, function(index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var area = [];
+            $.each(areaID, function(index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index]
+                });
+            });
+            $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+        });
+        $('.selectpicker').on('change', function() {
+            renderSltPicker();
+        });
+    });
+    
+    
+    function renderSltPicker() {
+        angular.element('.selectpicker').selectpicker('refresh');
+        angular.element('.selectpicker').selectpicker('render');
+    }
+    
+    $scope.addBin = function () {
+        $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addBin', $scope.bin).then(function (response) {
+            var returnedData = response.data;
+            var newBinID = returnedData.details.binID;
+            
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "Area added successfully!"
+                });
+                $scope.binList.push({"id": newBinID, "name": $scope.bin.name, "loc": $scope.bin.loc, "area":$scope.bin.area.name, "status": 'ACTIVE'});
+                $scope.filterBinList = angular.copy($scope.binList);
+                angular.element('#createBin').modal('toggle');
+                $scope.totalItems = $scope.filterBinList.length;
+            }
+        });
+    }
+    
+    $scope.editBin = function(){
+        
+        $http.post('/editBin', $scope.bin).then(function(response){
+            var data = response.data;
+            if(data.status === "success"){
+                angular.element('body').overhang({
+                    type: data.status,
+                    message: data.message
+                });
+            }
+            
+        });
+    }
+    
+});
+
+//acr controller
