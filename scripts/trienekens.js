@@ -1994,3 +1994,96 @@ app.controller('binController', function($scope, $http, $filter){
 });
 
 //acr controller
+app.controller('acrController',function($scope, $http, $filter){
+    'use strict';
+    $scope.acrList = [];
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    
+    $scope.acr = {
+        "name": '',
+        "address": '',
+        "area": '',
+        "phone": '',
+        "enddate": '',
+        "status": ''
+    };
+    
+        
+    $http.get('/getAreaList').then(function (response) {
+        renderSltPicker();
+        $.each(response.data, function(index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var area = [];
+            $.each(areaID, function(index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index]
+                });
+            });
+            $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+        });
+        $('.selectpicker').on('change', function() {
+            renderSltPicker();
+        });
+    });
+    
+    
+    function renderSltPicker() {
+        angular.element('.selectpicker').selectpicker('refresh');
+        angular.element('.selectpicker').selectpicker('render');
+    }
+    
+    $http.get('/getAllAcr').then(function(response){
+        
+        $scope.searchAcrFilter = '';
+        $scope.acrList = response.data;
+        $scope.filterAcrList = [];
+
+        $scope.searchAcr = function (bin) {
+            return (acr.id + acr.name + acr.address + acr.area + acr.phone + acr.enddate + acr.status).toUpperCase().indexOf($scope.searchAcrFilter.toUpperCase()) >= 0;
+        }
+
+        $.each($scope.acrList, function(index) {
+            $scope.filterAcrList = angular.copy($scope.acrList);
+        });
+
+        $scope.totalItems = $scope.filterAcrList.length;
+
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterAcrList, $scope.searchAcrFilter);
+        };
+
+        $scope.$watch('searchAcrFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+
+
+    });
+    
+    $scope.addAcr = function () {
+        $scope.acr.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addAcr', $scope.acr).then(function (response) {
+            var returnedData = response.data;
+            var newAcrID = returnedData.details.acrID;
+            
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "ACR added successfully!"
+                });
+                $scope.acrList.push({"id": newAcrID, "name": $scope.acr.name, "address": $scope.acr.address, "area":$scope.area.area.name, "phone":$scope.acr.phone, "enddate":$scope.acr.enddate, "status": 'ACTIVE'});
+                $scope.filterAcrList = angular.copy($scope.acrList);
+                angular.element('#createACR').modal('toggle');
+                $scope.totalItems = $scope.filterAcrList.length;
+            }
+        });
+    }
+});

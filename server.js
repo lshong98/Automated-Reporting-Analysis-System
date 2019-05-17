@@ -409,6 +409,21 @@ app.post('/addBin', function (req, res) {
     }, 100);
 });
 
+//17/5 sing hong
+app.post('/addAcr',function(req,res){
+    'use strict';
+    makeID("acr", req.body.creationDate);
+    setTimeout(function () {
+        var sql = "INSERT INTO tblacr (acrID, acrName,acrPhoneNo, acrAddress, acrPeriod,  acrStatus, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.name + "' , '" + req.body.phone + "', '" + req.body.address + "', '" +  + "', 'A', '" + req.body.creationDate + "')";
+        db.query(sql, function(err, result) {
+            if (err) {
+                throw err;
+            }
+            res.json({"status": "success", "details": {"binID": obj.ID}});
+        });
+    }, 100);
+});
+
 app.get('/getAllUser', function (req, res) {
     'use strict';
     
@@ -578,6 +593,7 @@ app.post('/editArea',function(req,res){
         res.json({"status": "success", "message": "Area Information Updated."});
     });
 });
+
 
 /* Emitter Registered */
 
