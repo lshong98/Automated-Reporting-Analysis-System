@@ -1481,36 +1481,36 @@ app.controller('reportingController', function ($scope, $filter) {
 
     $scope.reportList = [{
         "reportCode": '0001',
-        "reportDate": '15/05/2019',
+        "reportDate": '17/05/2019',
         "area": 'Tabuan Jaya',
         "collection": 'Tue & Fri',
         "status": 'Completed',
         "garbageAmount": '50',
         "remark": 'Sing Hong'
     }, {
-        "reportCode": '0001',
-        "reportDate": '15/05/2019',
+        "reportCode": '0002',
+        "reportDate": '16/05/2019',
         "area": 'Tabuan Jaya',
         "collection": 'Tue & Fri',
         "status": 'Completed',
         "garbageAmount": '50',
-        "remark": 'Sing Hong'
+        "remark": 'Felix'
     }, {
-        "reportCode": '0001',
+        "reportCode": '0003',
         "reportDate": '15/05/2019',
         "area": 'Tabuan Jaya',
         "collection": 'Tue & Fri',
         "status": 'Completed',
         "garbageAmount": '50',
-        "remark": 'Sing Hong'
+        "remark": 'Steven'
     }, {
-        "reportCode": '0001',
-        "reportDate": '15/05/2019',
+        "reportCode": '0004',
+        "reportDate": '14/05/2019',
         "area": 'Tabuan Jaya',
         "collection": 'Tue & Fri',
         "status": 'Completed',
         "garbageAmount": '50',
-        "remark": 'Sing Hong'
+        "remark": 'Others'
     }];
 
     
@@ -1538,6 +1538,13 @@ app.controller('reportingController', function ($scope, $filter) {
         }
         return vm;
     }, true);
+    
+    //filtering by column asc and desc
+    var asc = true;
+    $scope.orderBy = function (property) {
+        $scope.reportList = $filter('orderBy')($scope.reportList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
 });
 //Felix handsome boi2 doing visualization
 app.controller('visualizationController', function ($scope) {

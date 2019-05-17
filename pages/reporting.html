@@ -62,13 +62,13 @@
             <table class="table table-hover table-striped table-clickable">
                 <thead>
                     <tr>
-                        <th width="10%">Report Code</th>
-                        <th width="10%">Report Date</th>
-                        <th width="10%">Area Name</th>
-                        <th width="10%">Collection</th>
-                        <th width="10%">Status</th>
-                        <th width="20%">Garbage Amount(ton)</th>
-                        <th width="30%">Remark</th>
+                        <th width="15%" data-ng-click="orderBy('reportCode');">Report Code <i class="fas fa-sort-down"></i></th>
+                        <th width="15%" data-ng-click="orderBy('reportDate');">Report Date <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('area');">Area Name <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('collection');">Collection <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                        <th width="17%" data-ng-click="orderBy('garbageAmount');">Garbage Amount(ton) <i class="fas fa-sort-down"></i></th>
+                        <th width="23%" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
                     </tr>
                 </thead>
                 <tbody>               
