@@ -34,46 +34,48 @@
           </div>
           
           <div class="form-group">
+              <label for="txtAcrPeriod form-label">End Date of ACR:</label>
+              <input data-provide="datepicker" type="text" id="inputDate" class="form-control datepicker" data-date-format="yyyy-mm-dd" data-ng-model="acr.enddate"/>
+          </div>
+          
+          <div class="form-group">
               <label>Collection Frequency</label>
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="mon" id="mon" />
+                  <input class="form-check-input" type="checkbox" id="mon" data-ng-model="acr.days.mon" data-ng-true-value="'A'" data-ng-false-value="'I'"/>
                   <label class="form-check-label" for="mon">Monday</label>
               </div>
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="tue" id="tue" />
+                  <input class="form-check-input" type="checkbox" id="tue" data-ng-model="acr.days.tue" data-ng-true-value="'A'" data-ng-false-value="'I'"/>
                   <label class="form-check-label" for="tue">Tuesday</label>
               </div>
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="wed" id="wed" />
+                  <input class="form-check-input" type="checkbox" id="wed" data-ng-model="acr.days.wed" data-ng-true-value="'A'" data-ng-false-value="'I'"/>
                   <label class="form-check-label" for="wed">Wednesday</label>
               </div>
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="thu" id="thu" />
+                  <input class="form-check-input" type="checkbox" id="thu" data-ng-model="acr.days.thu" data-ng-true-value="'A'" data-ng-false-value="'I'"/>
                   <label class="form-check-label" for="thu">Thursday</label>
               </div>
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="fri" id="fri" />
+                  <input class="form-check-input" type="checkbox" id="fri" data-ng-model="acr.days.fri" data-ng-true-value="'A'" data-ng-false-value="'I'"/>
                   <label class="form-check-label" for="fri">Friday</label>
               </div>
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="sat" id="sat" />
+                  <input class="form-check-input" type="checkbox" id="sat" data-ng-model="acr.days.sat" data-ng-true-value="'A'" data-ng-false-value="'I'"/>
                   <label class="form-check-label" for="sat">Saturday</label>
               </div>
               <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="sun" id="sun" />
+                  <input class="form-check-input" type="checkbox" id="sun" data-ng-model="acr.days.sun" data-ng-true-value="'A'" data-ng-false-value="'I'"/>
                   <label class="form-check-label" for="sun">Sunday</label>
               </div>
           </div>
           
-          <div class="form-group">
-              <label for="txtAcrPeriod form-label">End Date of ACR:</label>
-              <input class="datepicker" data-date-format="mm/dd/yyyy">
-          </div>
+          
           
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Create</button>
+        <button type="button" class="btn btn-primary" data-ng-click="addAcr();">Create</button>
       </div>
     </div>
   </div>
