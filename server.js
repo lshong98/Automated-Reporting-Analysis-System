@@ -11,10 +11,10 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
-var DB_PASS = '';
-var DB_NAME = 'trienekens';
+var DB_HOST = '<host>';
+var DB_USER = '<db-username>';
+var DB_PASS = '<db-password>';
+var DB_NAME = '<db-name>';
 
 var SVR_PORT = 3000;
 var obj = {
@@ -303,7 +303,6 @@ app.post('/setAuth', function (req, res) {
                 });
             });
         });
-        //var sql = "";
     });
 });
 
@@ -412,32 +411,28 @@ app.post('/addBin', function (req, res) {
 //17/5 sing hong
 app.post('/addAcr',function(req,res){
     'use strict';
+    var i, days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+    
     makeID("acr", req.body.creationDate);
     setTimeout(function () {
-        var sql = "INSERT INTO tblacr (acrID, acrName,acrPhoneNo, acrAddress, acrPeriod,  acrStatus, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.name + "' , '" + req.body.phone + "', '" + req.body.address + "', '" + req.body.enddate + "', 'A', '" + req.body.creationDate + "')";
+        var sql = "INSERT INTO tblacr (acrID, acrName, acrPhoneNo, acrAddress, acrPeriod, acrStatus, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.name + "' , '" + req.body.phone + "', '" + req.body.address + "', '" + req.body.enddate + "', 'A', '" + req.body.creationDate + "')";
         
-        var sqls = [];
-        var daylen = Object.keys(req.body.days).length;
-        for(var i = 0; i < daylen; i += 1){
-            sqls.push("INSERT INTO tblacrfreq (acrID, areaID, day) VALUE ('" + obj.ID + "', '" + req.body.area + "', '" + req.body.days[i] + "')");
-        }
-        console.log(sqls);
-        //console.log(req.body.days);
-        //console.log(Object.keys(req.body.days).length);
-//        db.query(sql, function(err, result) {
-//            if (err) {
-//                throw err;
-//            }
-//            res.json({"status": "success", "details": {"acrID": obj.ID}});
-//        });
-        
-//        for (i = 0; i < sqls.length; i += 1) {
-//            db.query(sqls[i], function (err, result) {
-//                if (err) {
-//                    throw err;
-//                }
-//            });
-//        }
+        db.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            for (i = 0; i < days.length; i += 1) {
+                if (req.body.days[days[i]] != undefined) {
+                    var sql = "INSERT INTO tblacrfreq (acrID, areaID, day) VALUE ('" + obj.ID + "', '" + req.body.area + "', '" + days[i] + "')";
+                    db.query(sql, function (err, result) {
+                        if (err) {
+                            throw err;
+                        }
+                    });
+                }
+            }
+            res.json({"status": "success", "message": "ACR created!", "details": {"acrID": obj.ID}});
+        });
     }, 100);
 });
 
@@ -630,7 +625,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))",
         "CREATE TABLE tblbin(binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))",
         "CREATE TABLE tblacr(acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATE, creationDateTime DATETIME, acrStatus CHAR(1))",
-        "CREATE TABLE tblacrfreq(acrID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15) PRIMARY KEY, day VARCHAR(15) PRIMARY KEY)"
+        "CREATE TABLE tblacrfreq(acrID VARCHAR(15), areaID VARCHAR(15), day VARCHAR(15))"
 //        "CREATE TABLE area_collection (acID, areaID, areaAddress, areaCollStatus)",
 //        "CREATE TABLE tblbincenter (binID, areaID, binName, binLocation, binStatus)",
 //        "CREATE TABLE tblacr (acrID, acrName, acrPhoneNo, acrAddress, acrPeriod, acrStatus)",

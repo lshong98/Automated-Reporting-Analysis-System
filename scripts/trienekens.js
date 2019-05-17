@@ -1887,7 +1887,6 @@ app.controller('visualizationController', function ($scope) {
 });
 });
 
-
 app.controller('binController', function($scope, $http, $filter){
     'use strict';
     $scope.areaList = [];
