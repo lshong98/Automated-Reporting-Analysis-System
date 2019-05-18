@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = '';
 var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens';
 
 var SVR_PORT = 3000;
 var obj = {

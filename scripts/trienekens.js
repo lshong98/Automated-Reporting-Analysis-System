@@ -979,10 +979,15 @@ app.controller('errorController', function ($scope, $window) {
 app.controller('dailyController', function ($scope, $window, $routeParams, $http) {
     'use strict';
 
-    $scope.$params_areaCode = $routeParams.areaCode;
+    var params = $routeParams.areaCode;
+    var areaCode = params.split("+")[0];
+    var areaName = params.split("+")[1];
+    
+    $scope.$params_areaName = areaName;
     $scope.params = {
-        "areaCode": $routeParams.areaCode
+        "areaCode": areaCode
     };
+
 
     var $googleMap, visualizeMap, map, lat = 0, lng = 0, myPlace, address;
     
@@ -1497,10 +1502,10 @@ app.controller('reportingController', function ($scope, $http, $filter) {
 //        }]
 //    }];
 
-    $scope.thisArea = function (a) {
+    $scope.thisArea = function (id,name) {
         angular.element('#chooseArea').modal('toggle');
         setTimeout(function () {
-            window.location.href = '#/daily-report/' + a;
+            window.location.href = '#/daily-report/' + id +"+"+ name;
         }, 500);
     };
 

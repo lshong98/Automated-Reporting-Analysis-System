@@ -20,7 +20,7 @@
                                 <div class="collapse myOptions" id="{{z.zone.id}}">
                                     <table class="table table-clickable">
                                         <tbody>
-                                            <tr class="clickable-row" data-ng-repeat="a in z.area" data-ng-click="thisArea(a.id);">
+                                            <tr class="clickable-row" data-ng-repeat="a in z.area" data-ng-click="thisArea(a.id,a.name);">
                                                 <td data-dismiss="modal" data-ng-bind="a.name"></td>
                                             </tr>
                                         </tbody>
@@ -33,7 +33,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-ng-click="addDriver();">Create</button>
+                <!--<button type="button" class="btn btn-primary" data-ng-click="addDriver();">Create</button>-->
             </div>
         </div>
     </div>
