@@ -85,64 +85,60 @@
 </div>
 
 <div class="form-group row">
-    <label for="inputDate" class="col-xs-3 col-form-label form-label-width">Date</label>
+    <label for="inputDate form-label" class="col-xs-3 col-form-label form-label-width">Date</label>
     <div class="col-md-9">
 <!--        <input data-provide="datepicker" type="text" id="inputDate" class="form-control mx-sm-3 datepicker" data-date-format="yyyy-mm-dd" />-->
-        <input type="date" class="form-control mx-sm-3" />
+        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="report.collectiondate"/>
     </div>
 </div>
 
 <div class="form-group row">
-    <label for="inputStartTime" class="col-xs-3 col-form-label form-label-width">Start Time</label>
+    <label for="inputStartTime form-label" class="col-xs-3 col-form-label form-label-width">Start Time</label>
     <div class="col-md-9">
 <!--        <input type="text" id="inputStartTime" class="form-control mx-sm-3 clockpicker-start" readonly />-->
-        <input type="time" class="form-control mx-sm-3" />
+        <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="report.stime" />
     </div>
 </div>
 
 <div class="form-group row">
-    <label for="inputEndTime" class="col-xs-3 col-form-label form-label-width">End Time</label>
+    <label for="inputEndTime form-label" class="col-xs-3 col-form-label form-label-width">End Time</label>
     <div class="col-md-9">
 <!--        <input type="text" id="inputEndTime" class="form-control mx-sm-3 clockpicker-end" readonly />-->
-        <input type="time" class="form-control mx-sm-3" />
+        <input type="time" id="inputEndTime" class="form-control mx-sm-3" data-ng-model="report.etime"/>
     </div>
 </div>
 
 <div class="form-group row">
-    <label for="inputTruck" class="col-xs-3 col-form-label form-label-width">Truck No.</label>
+    <label for="inputTruck" class="col-xs-3 col-form-label form-label-width">Truck No</label>
     <div class="col-md-9">
-        <select class="form-control mx-sm-3" id="inputTruck">
-            <option>ABC 123</option>
-            <option>ABC 456</option>
-            <option>ABC 789</option>
-            <option>ABC 100</option>
+        <select class="form-control mx-sm-3 " id="inputTruck" data-ng-model="report.truck" data-live-search="true" data-width="100%">
+            <option value="{{a.id}}" data-ng-repeat="a in truckList">{{a.id}} - {{a.no}}</option>
         </select>
     </div>
 </div>
+
 
 <div class="form-group row">
     <label for="inputDriver" class="col-xs-3 col-form-label form-label-width">Driver</label>
     <div class="col-md-9">
-        <select class="form-control mx-sm-3" id="inputDriver">
-            <option>ALI</option>
-            <option>BABA</option>
-            <option>ABU</option>
-            <option>BOBO</option>
+        <select class="form-control mx-sm-3 " id="inputDriver" data-ng-model="report.driver" data-live-search="true" data-width="100%">
+            <option value="{{a.id}}" data-ng-repeat="a in driverList">{{a.id}} - {{a.name}}</option>
         </select>
     </div>
 </div>
 
 <div class="form-group row">
-    <label for="inputGAmount" class="col-xs-3 col-form-label form-label-width">Garbage Amount (TON)</label>
+    <label for="inputGAmount form-label" class="col-xs-3 col-form-label form-label-width">Garbage Amount (TON)</label>
     <div class="col-md-9">
-        <input type="text" id="inputGAmount" placeholder="(ton)" class="form-control mx-sm-3" />
+        <input type="text" id="inputGAmount" placeholder="(ton)" class="form-control mx-sm-3" data-ng-model="report.amount"/>
     </div>
 </div>
 
 <div class="form-group row">
     <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
     <div class="col-md-9">
-        <input type="text" id="inputRemark" class="form-control mx-sm-3" />
+    <!--<input type="text" id="inputRemark" class="form-control mx-sm-3" />-->
+        <textarea rows="4" cols="50" id="inputRemark" class="form-control mx" data-ng-model="report.remark"></textarea>
     </div>
 </div>
 
@@ -315,7 +311,7 @@ textarea {
 <div class="row">
     <div class="col-md-12">
         <button class="btn btn-primary" data-toggle="modal" data-target="#previewReport">Preview</button>
-        <button class="btn btn-primary submit">Submit</button>
+        <button class="btn btn-primary submit" data-ng-click="addReport()">Submit</button>
     </div>
 </div>
 

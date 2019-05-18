@@ -976,9 +976,31 @@ app.controller('errorController', function ($scope, $window) {
     });
 });
 
-app.controller('dailyController', function ($scope, $window, $routeParams, $http) {
+app.controller('dailyController', function ($scope, $window, $routeParams, $http, $filter) {
     'use strict';
 
+    
+    
+    
+    $scope.report = {
+        area : '',
+        collectiondate : '',
+        stime : '',
+        etime : '',
+        truck : '',
+        driver : '',
+        amount : '',
+        remark : '',
+        ifleetimg : '',
+        glong : '',
+        glat : '',
+        address : '',
+        creationDate : ''
+    };
+    
+    $scope.truckList = [];
+    $scope.driverList = [];
+   
     var params = $routeParams.areaCode;
     var areaCode = params.split("+")[0];
     var areaName = params.split("+")[1];
@@ -987,7 +1009,16 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     $scope.params = {
         "areaCode": areaCode
     };
-
+    $scope.report.area = areaCode;
+    
+    
+    $http.get('/getTruckList').then(function (response) {
+        $scope.truckList = response.data;
+    });
+    
+    $http.get('/getDriverList').then(function (response) {
+        $scope.driverList = response.data;
+    });
 
     var $googleMap, visualizeMap, map, lat = 0, lng = 0, myPlace, address;
     
@@ -996,6 +1027,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         var area = myPlace.area.replace(" ", "+");
         var zone = myPlace.zone.replace(" ", "+");
         var concat = area + ',' + zone;
+        $scope.report.address = concat;
         
         address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
         
@@ -1038,10 +1070,10 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                 });
 
                 google.maps.event.addListener(circle, "radius_changed", function () {
-                    console.log(circle.getRadius());
+                    console.log("radius:" + circle.getRadius());
                 });
                 google.maps.event.addListener(circle, "center_changed", function () {
-                    console.log(circle.getCenter());
+                    console.log("center:" + circle.getCenter());
                 });
 
         //                    var marker = new google.maps.Marker({
@@ -1063,6 +1095,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
 
             // JSON data returned by API above
             var myPlace = response.data;
+            console.log(myPlace);
 
             // After get the place data, re-center the map
             $window.setTimeout(function () {
@@ -1074,9 +1107,36 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                 lng = places.geometry.location.lng;
                 map.panTo(new google.maps.LatLng(lat, lng));
                 map.setZoom(17);
+                 $scope.glong = lng;
+            $scope.glat = lat;
+            console.log($scope.glong);
+            console.log($scope.glat);
             }, 1000);
+            
+           
         });
+        
+
     });
+    
+    
+    
+    
+    $scope.addReport = function () {
+        $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addReport', $scope.report).then(function (response) {
+            var returnedData = response.data;
+            var newReportID = returnedData.details.reportID;
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    message: "Report added successfully!"
+                });
+                window.location.href = '#/reporting';
+            }
+        });
+    }
 });
 
 app.controller('truckController', function ($scope, $http, $filter, storeDataService) {
