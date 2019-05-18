@@ -18,10 +18,112 @@ app.filter('offset', function () {
     };
 });
 
-app.directive('editable', function ($compile, $http) {
+app.service('storeDataService', function () {
+    
+});
+
+app.service('storeDataService', function () {
+    'use strict';
+    var globalList;
+    
+    globalList = {
+        "event": {
+            "eventTitle": '',
+            "eventVenue": '',
+            "eventDesc": '',
+            "additionalNote": '',
+            "eventStartDate": '',
+            "eventEndDate": '',
+            "announcementSwitch": '',
+            "announcementContent": '',
+            "chatSwitch": '',
+            "gallerySwitch": '',
+            "fontType": '',
+            "titleSize": '',
+            "ignoreEventDate": ''
+        },
+        "activity": {
+            "activityName": '',
+            "activityDesc": '',
+            "additionalNote": '',
+            "activityLocation": '',
+            "activityDate": '',
+            "activityStartTime": '',
+            "activityEndTime": '',
+            "activityStartDate": '',
+            "activityEndDate": ''
+        },
+        "login": {
+            "username": '',
+            "password": '',
+            "rememberMe": '',
+            "role": ''
+        },
+        "truck": {
+            "id": '',
+            "no": '',
+            "transporter": '',
+            "ton": '',
+            "roadtax": '',
+            "status": ''
+        }
+    };
+    
+    return globalList;
+});
+
+app.directive('editable', function ($compile, $http, storeDataService) {
     'use strict';
     return function (scope) {
         scope.sho = true;
+        scope.showTruck = true;
+        scope.thisTruck = {
+            "id": '',
+            "no": '',
+            "transport": '',
+            "ton": '',
+            "roadtax": '',
+            "status": ''
+        };
+        
+        scope.editTruck = function (id, no, transporter, ton, tax, status) {
+            scope.showTruck = !scope.showTruck;
+            scope.thisTruck = { "id": id, "no": no, "transporter": transporter, "ton": ton, "roadtax": tax, "status": status };
+        };
+        
+        scope.saveTruck = function () {
+            scope.showTruck = !scope.showTruck;
+            $http.post('/editTruck', scope.t).then(function (response) {
+                var data = response.data;
+                
+                angular.element('body').overhang({
+                    type: data.status,
+                    message: data.message
+                });
+                
+                $.each(storeDataService.truck, function (index, value) {
+                if (storeDataService.truck[index].id == scope.thisTruck.id) {
+                    if (data.status == "success") {
+                        storeDataService.truck[index] = angular.copy(scope.t);
+                    } else {
+                        scope.t = angular.copy(storeDataService.truck[index]);
+                    }
+                }
+            });
+            });
+        };
+        
+        scope.cancelTruck = function () {
+            scope.showTruck = !scope.showTruck;
+            
+            $.each(storeDataService.truck, function (index, value) {
+                if (storeDataService.truck[index].id == scope.thisTruck.id) {
+                    scope.t = angular.copy(storeDataService.truck[index]);
+                }
+            });
+            
+        };
+        
         scope.choose = function () {
             scope.sho = !scope.sho;
 
@@ -874,57 +976,68 @@ app.controller('errorController', function ($scope, $window) {
     });
 });
 
-app.controller('dailyController', function ($scope, $window, $routeParams) {
+app.controller('dailyController', function ($scope, $window, $routeParams, $http) {
     'use strict';
 
     $scope.$params_areaCode = $routeParams.areaCode;
-
-    var $googleMap, visualizeMap, map, lat = 0,
-        lng = 0;
-
-    function timeToSeconds(time) {
-        time = time.split(/:/);
-        return time[0] * 3600 + time[1] * 60 + time[2];
-    }
-
-    $googleMap = document.getElementById('googleMap');
-    visualizeMap = {
-        center: new google.maps.LatLng(1, 1),
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: false,
-        panControl: false,
-        zoomControl: false,
-        streetViewControl: false,
-        disableDefaultUI: true,
-        editable: false
+    $scope.params = {
+        "areaCode": $routeParams.areaCode
     };
 
-    map = new google.maps.Map($googleMap, visualizeMap);
+    var $googleMap, visualizeMap, map, lat = 0, lng = 0, myPlace, address;
+    
+    $http.post('/getGoogleLocation', $scope.params).then(function (response) {
+        var myPlace = response.data[0];
+        var area = myPlace.area.replace(" ", "+");
+        var zone = myPlace.zone.replace(" ", "+");
+        var concat = area + ',' + zone;
+        
+        address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+        
+        $http.get(address).then(function (response) {
+            function timeToSeconds(time) {
+                time = time.split(/:/);
+                return time[0] * 3600 + time[1] * 60 + time[2];
+            }
 
-    // OnClick add Marker and get address
-    google.maps.event.addListener(map, "click", function (e) {
-        var latLng, latitude, longtitude, circle;
+            $googleMap = document.getElementById('googleMap');
+            visualizeMap = {
+                center: new google.maps.LatLng(1, 1),
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false,
+                panControl: false,
+                zoomControl: false,
+                streetViewControl: false,
+                disableDefaultUI: true,
+                editable: false
+            };
 
-        latLng = e.latLng;
-        latitude = latLng.lat();
-        longtitude = latLng.lng();
+            map = new google.maps.Map($googleMap, visualizeMap);
 
-        circle = new google.maps.Circle({
-            map: map,
-            center: new google.maps.LatLng(latitude, longtitude),
-            radius: 200,
-            fillColor: 'transparent',
-            strokeColor: 'red',
-            editable: true,
-            draggable: true
-        });
+            // OnClick add Marker and get address
+            google.maps.event.addListener(map, "click", function (e) {
+                var latLng, latitude, longtitude, circle;
 
-        google.maps.event.addListener(circle, "radius_changed", function () {
-            console.log(circle.getRadius());
-        });
-        google.maps.event.addListener(circle, "center_changed", function () {
-            console.log(circle.getCenter());
-        });
+                latLng = e.latLng;
+                latitude = latLng.lat();
+                longtitude = latLng.lng();
+
+                circle = new google.maps.Circle({
+                    map: map,
+                    center: new google.maps.LatLng(latitude, longtitude),
+                    radius: 200,
+                    fillColor: 'transparent',
+                    strokeColor: 'red',
+                    editable: true,
+                    draggable: true
+                });
+
+                google.maps.event.addListener(circle, "radius_changed", function () {
+                    console.log(circle.getRadius());
+                });
+                google.maps.event.addListener(circle, "center_changed", function () {
+                    console.log(circle.getCenter());
+                });
 
         //                    var marker = new google.maps.Marker({
         //                        position: new google.maps.LatLng(latitude, longtitude),
@@ -941,133 +1054,27 @@ app.controller('dailyController', function ($scope, $window, $routeParams) {
         //                            alert("Something got wrong " + status);
         //                        }
         //                    });
+            });
+
+            // JSON data returned by API above
+            var myPlace = response.data;
+
+            // After get the place data, re-center the map
+            $window.setTimeout(function () {
+                var places, location;
+
+                places = myPlace.results[0];
+                location = places.formatted_address;
+                lat = places.geometry.location.lat;
+                lng = places.geometry.location.lng;
+                map.panTo(new google.maps.LatLng(lat, lng));
+                map.setZoom(17);
+            }, 1000);
+        });
     });
-
-    // JSON data returned by API above
-    var myPlace = {
-        "results": [
-            {
-                "address_components": [
-                    {
-                        "long_name": "Jalan Simpang Tiga",
-                        "short_name": "Q5A",
-                        "types": ["route"]
-                    },
-                    {
-                        "long_name": "Kuching",
-                        "short_name": "Kuching",
-                        "types": ["locality", "political"]
-                    },
-                    {
-                        "long_name": "Sarawak",
-                        "short_name": "Sarawak",
-                        "types": ["administrative_area_level_1", "political"]
-                    },
-                    {
-                        "long_name": "马来西亚",
-                        "short_name": "MY",
-                        "types": ["country", "political"]
-                    },
-                    {
-                        "long_name": "93350",
-                        "short_name": "93350",
-                        "types": ["postal_code"]
-                    }
-                ],
-                "formatted_address": "Jalan Simpang Tiga, 93350 Kuching, Sarawak, 马来西亚",
-                "geometry": {
-                    "location": {
-                        "lat": 1.5322626,
-                        "lng": 110.3572259
-                    },
-                    "location_type": "GEOMETRIC_CENTER",
-                    "viewport": {
-                        "northeast": {
-                            "lat": 1.533611580291502,
-                            "lng": 110.3585748802915
-                        },
-                        "southwest": {
-                            "lat": 1.530913619708498,
-                            "lng": 110.3558769197085
-                        }
-                    }
-                },
-                "place_id": "ChIJ5yzgEQun-zERt0vSz5Dyy2k",
-                "plus_code": {
-                    "compound_code": "G9J4+WV 马来西亚 Sarawak, 古晋",
-                    "global_code": "6PHGG9J4+WV"
-                },
-                "types": ["establishment", "point_of_interest", "university"]
-            }
-        ],
-        "status": "OK"
-    };
-    var myPlace = {
-        "results": [
-            {
-                "address_components": [
-                    {
-                        "long_name": "Kuching",
-                        "short_name": "Kuching",
-                        "types": ["locality", "political"]
-                    },
-                    {
-                        "long_name": "马来西亚",
-                        "short_name": "MY",
-                        "types": ["country", "political"]
-                    },
-                    {
-                        "long_name": "93250",
-                        "short_name": "93250",
-                        "types": ["postal_code"]
-                    }
-                ],
-                "formatted_address": "No. 216, Lot 2014, Jalan Sungai Tapang, Sarawak, 93250 Kuching, 马来西亚",
-                "geometry": {
-                    "location": {
-                        "lat": 1.4848857,
-                        "lng": 110.3597152
-                    },
-                    "location_type": "GEOMETRIC_CENTER",
-                    "viewport": {
-                        "northeast": {
-                            "lat": 1.486234680291502,
-                            "lng": 110.3610641802915
-                        },
-                        "southwest": {
-                            "lat": 1.483536719708498,
-                            "lng": 110.3583662197085
-                        }
-                    }
-                },
-                "place_id": "ChIJZw7l55ug-zER2wJp6l3tqtQ",
-                "plus_code": {
-                    "compound_code": "F9M5+XV 马来西亚 Sarawak, 古晋",
-                    "global_code": "6PHGF9M5+XV"
-                },
-                "types": ["establishment", "point_of_interest"]
-            }
-        ],
-        "status": "OK"
-    };
-
-    // After get the place data, re-center the map
-    $window.setTimeout(function () {
-        var places, location;
-
-        places = myPlace.results[0];
-        location = places.formatted_address;
-        lat = places.geometry.location.lat;
-        lng = places.geometry.location.lng;
-        map.panTo(new google.maps.LatLng(lat, lng));
-        map.setZoom(17);
-    }, 1000);
-    
-    
-
 });
 
-app.controller('truckController', function ($scope, $http, $filter) {
+app.controller('truckController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
 
     $scope.areaList = [];
@@ -1082,6 +1089,7 @@ app.controller('truckController', function ($scope, $http, $filter) {
     $http.get('/getAllTruck').then(function (response) {
         $scope.searchTruckFilter = '';
         $scope.truckList = response.data;
+        storeDataService.truck = angular.copy(response.data);
         
         $scope.filterTruckList = [];
         $scope.searchTruck = function (truck) {

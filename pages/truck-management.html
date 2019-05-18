@@ -116,53 +116,64 @@
                     <table class="table table-hover table-striped table-clickable">
                         <thead>
                             <tr>
-                                <th>Truck Code</th>
-                                <th>Truck NO</th>
-                                <th>Transporter ID</th>
+                                <th width="20%">Truck Code</th>
+                                <th width="10%">Truck NO</th>
+                                <th width="5%">Transporter ID</th>
                                 <!--<th>Driver</th>-->
                                 <!--<th>Collect Area</th>--> <!-- Truck area -->
-                                <th>Available Collection Ton</th>
-                                <th>Road Tax Expiry</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th width="10%">Available Collection Ton</th>
+                                <th width="10%">Road Tax Expiry</th>
+                                <th width="10%">Status</th>
+                                <th width="5%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr data-ng-repeat="t in truckList | filter: searchTruck | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
-                                <td data-ng-bind="t.id"></td>
-                                <td data-ng-bind="t.no"></td>
-                                <td data-ng-bind="t.transporter"></td>
-                                <!--<td data-ng-bing="t.driver"></td>-->
-                                <td data-ng-bind="t.ton"></td>
-                                <td data-ng-bind="t.roadtax"></td>
-                                <td data-ng-bind="t.status"></td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editTruck">Edit</button>
+                                    <span data-ng-bind="t.id"></span>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="t.no" data-ng-show="!showTruck" />
+                                        <span data-ng-show="showTruck" data-ng-bind="t.no"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="t.transporter" data-ng-show="!showTruck" />
+                                        <span data-ng-show="showTruck" data-ng-bind="t.transporter"></span>
+                                    </div>
+                                </td>
+                                <!--<td data-ng-bing="t.driver"></td>-->
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="t.ton" data-ng-show="!showTruck" />
+                                        <span data-ng-show="showTruck" data-ng-bind="t.ton"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="t.roadtax" data-ng-show="!showTruck" />
+                                        <span data-ng-show="showTruck" data-ng-bind="t.roadtax"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <select class="form-control" data-ng-model="t.status" data-ng-show="!showTruck">
+                                            <option>ACTIVE</option>
+                                            <option>INACTIVE</option>
+                                        </select>
+                                        <span data-ng-show="showTruck" data-ng-bind="t.status"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showTruck" data-ng-click="editTruck(t.id, t.no, t.transporter, t.ton, t.roadtax, t.status);"><i class="fa fa-pencil-alt"></i></button>
+                                    
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showTruck" data-ng-click="saveTruck();"><i class="fa fa-save"></i></button>
+                                    
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showTruck" data-ng-click="cancelTruck();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
-        <!--
-                            <tr class="clickable-row" data-href="#/truck/T-20190318-0001">
-                                <td>TRK1903180001</td>
-                                <td>QAA 2213</td>
-                                <td>Addison</td>
-                                <td>Jalan Song</td>
-                                <td>Active</td>
-                            </tr>
-                            <tr>
-                                <td>TRK1903180002</td>
-                                <td>QAA 2213</td>
-                                <td>Addison</td>
-                                <td>Jalan Song</td>
-                                <td>Active</td>
-                            </tr>
-                            <tr>
-                                <td>TRK1903180003</td>
-                                <td>QAA 2213</td>
-                                <td>Addison</td>
-                                <td>Jalan Song</td>
-                                <td>Active</td>
-                            </tr>
-        -->
                         </tbody>
                     </table>
                 </div>

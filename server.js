@@ -11,15 +11,10 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-//var DB_HOST = '<host>';
-//var DB_USER = '<db-username>';
-//var DB_PASS = '<db-password>';
-//var DB_NAME = '<db-name>';
-
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = 'trienekens';
+var DB_NAME = '';
 
 var SVR_PORT = 3000;
 var obj = {
@@ -311,6 +306,18 @@ app.post('/setAuth', function (req, res) {
     });
 });
 
+app.post('/getGoogleLocation', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblarea.areaName AS area, tblzone.zoneName AS zone FROM tblarea INNER JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID = '" + req.body.areaCode + "' LIMIT 0, 1";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 app.post('/updatePassword', function (req, res) {
     'use strict';
 
@@ -396,6 +403,21 @@ app.post('/addTruck', function (req, res) {
             res.json({"status": "success", "details": {"truckID": obj.ID}});
         });
     }, 100);
+});
+
+app.post('/editTruck', function (req, res) {
+    'use strict';
+    
+    req.body.status = req.body.status == "ACTIVE" ? 'A' : 'I';
+    
+    var sql = "UPDATE tbltruck SET transporterID = '" + req.body.transporter + "', truckTon = '" + req.body.ton + "', truckNum = '" + req.body.no + "', truckExpiryStatus = '" + req.body.roadtax + "', truckStatus = '" + req.body.status + "' WHERE truckID = '" + req.body.id + "'";
+    db.query(sql, function (err, result) {
+        if (err) {
+            res.json({"status": "error", "message": "Something wrong!"});
+            throw err;
+        }
+        res.json({"status": "success", "message": "Truck edited!"});
+    });
 });
 
 //16/5 sing hong add
