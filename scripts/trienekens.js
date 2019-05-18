@@ -2004,6 +2004,7 @@ app.controller('acrController',function($scope, $http, $filter){
     
     function initializeAcr(){
         $scope.acr = {
+        "id": '',    
         "name": '',
         "address": '',
         "area": '',
@@ -2021,6 +2022,39 @@ app.controller('acrController',function($scope, $http, $filter){
         "status": ''
     };
     }
+    
+    $http.get('/getAllAcr').then(function (response) {
+        $scope.searchAcrFilter = '';
+        $scope.acrList = response.data;
+        
+        $scope.filterAcrList = [];
+        $scope.searchAcr = function (acr) {
+            return (acr.id + acr.name + acr.address + acr.area + acr.phone + acr.days + acr.enddate + acr.status).toUpperCase().indexOf($scope.searchAcrFilter.toUpperCase()) >= 0;
+        }
+        
+        $.each($scope.acrList, function(index) {
+            $scope.filterAcrList = angular.copy($scope.acrList);
+        });
+    
+        $scope.totalItems = $scope.filterAcrList.length;
+    
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterAcrList, $scope.searchAcrFilter);
+        };
+    
+        $scope.$watch('searchAcrFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+        
+        console.log(response.data);
+
+    });
+    
     
     $('.datepicker').datepicker();
         
@@ -2093,7 +2127,7 @@ app.controller('acrController',function($scope, $http, $filter){
                     type: "success",
                     "message": "ACR added successfully!"
                 });
-                $scope.acrList.push({"id": newAcrID, "name": $scope.acr.name, "address": $scope.acr.address, "area":$scope.area.area.name, "phone":$scope.acr.phone, "enddate":$scope.acr.enddate, "status": 'ACTIVE'});
+                $scope.acrList.push({"id": newAcrID, "name": $scope.acr.name, "address": $scope.acr.address, "area":$scope.acr.area.name, "phone":$scope.acr.phone, "enddate":$scope.acr.enddate, "status": 'ACTIVE'});
                 $scope.filterAcrList = angular.copy($scope.acrList);
                 angular.element('#createACR').modal('toggle');
                 $scope.totalItems = $scope.filterAcrList.length;

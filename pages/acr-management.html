@@ -167,8 +167,37 @@
                     </table>
                 </div>
             </div>
-            <div class="tab-pane fade show active" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab">
-                
+            <div class="tab-pane fade" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Area</th>
+                                <th>Phone No</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                                <th>Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="a in acrList | filter: searchArea | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                <td data-ng-bind="a.id"></td>
+                                <td data-ng-bind="a.name"></td>
+                                <td data-ng-bind="a.address"></td>
+                                <td data-ng-bind="a.area"></td>
+                                <td data-ng-bind="a.phone"></td>
+                                <td data-ng-bind="a.enddate"></td>
+                                <td data-ng-bind="a.status"></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editAcr">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 

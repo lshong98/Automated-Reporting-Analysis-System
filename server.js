@@ -16,6 +16,11 @@ var DB_USER = '<db-username>';
 var DB_PASS = '<db-password>';
 var DB_NAME = '<db-name>';
 
+//var DB_HOST = 'localhost';
+//var DB_USER = 'root';
+//var DB_PASS = '';
+//var DB_NAME = 'trienekens';
+
 var SVR_PORT = 3000;
 var obj = {
     "ID": '',
@@ -577,6 +582,20 @@ app.get('/getAllBin', function(req,res){
         res.json(result);
     });
 });
+
+//18/5 sing hong
+app.get('/getAllAcr', function(req,res){
+    'use strict';
+    
+    var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 
 //15/5 sing hong
 app.post('/editZone',function(req,res){
