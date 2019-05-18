@@ -11,15 +11,15 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var DB_HOST = '<host>';
-var DB_USER = '<db-username>';
-var DB_PASS = '<db-password>';
-var DB_NAME = '<db-name>';
+//var DB_HOST = '<host>';
+//var DB_USER = '<db-username>';
+//var DB_PASS = '<db-password>';
+//var DB_NAME = '<db-name>';
 
-//var DB_HOST = 'localhost';
-//var DB_USER = 'root';
-//var DB_PASS = '';
-//var DB_NAME = 'trienekens';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
+var DB_PASS = '';
+var DB_NAME = 'trienekens';
 
 var SVR_PORT = 3000;
 var obj = {
@@ -543,6 +543,7 @@ app.get('/getAreaList', function (req, res) {
         res.json(result);
     });
 });
+
 
 app.post('/getAllAuth', function (req, res) {
     'use strict';

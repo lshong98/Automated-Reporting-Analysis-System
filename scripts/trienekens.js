@@ -1408,69 +1408,86 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
 
 });
 
-// Felix handsome boi doing reporting
-app.controller('reportingController', function ($scope, $filter) {
+// Felix hamsap boi doing reporting
+app.controller('reportingController', function ($scope, $http, $filter) {
     'use strict';
     $scope.searchReportFilter = '';
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 10; //Record number each page
     $scope.maxSize = 10; //Show the number in page
+    $scope.areaList = [];
 
-    $scope.handledArea = [{
-        "zoneCode": 'Z1',
-        "area": [{
-            "areaCode": 'Z1A1',
-            "areaName": 'Zone 1 Area 1'
-        }, {
-            "areaCode": 'Z1A2',
-            "areaName": 'Zone 1 Area 2'
-        }, {
-            "areaCode": 'Z1A3',
-            "areaName": 'Zone 1 Area 3'
-        }, {
-            "areaCode": 'Z1A4',
-            "areaName": 'Zone 1 Area 4'
-        }, {
-            "areaCode": 'Z1A5',
-            "areaName": 'Zone 1 Area 5'
-        }]
-    }, {
-        "zoneCode": 'Z2',
-        "area": [{
-            "areaCode": 'Z2A1',
-            "areaName": 'Zone 2 Area 1'
-        }, {
-            "areaCode": 'Z2A2',
-            "areaName": 'Zone 2 Area 2'
-        }, {
-            "areaCode": 'Z2A3',
-            "areaName": 'Zone 2 Area 3'
-        }, {
-            "areaCode": 'Z2A4',
-            "areaName": 'Zone 2 Area 4'
-        }, {
-            "areaCode": 'Z2A5',
-            "areaName": 'Zone 2 Area 5'
-        }]
-    }, {
-        "zoneCode": 'Z3',
-        "area": [{
-            "areaCode": 'Z3A1',
-            "areaName": 'Zone 3 Area 1'
-        }, {
-            "areaCode": 'Z3A2',
-            "areaName": 'Zone 3 Area 2'
-        }, {
-            "areaCode": 'Z3A3',
-            "areaName": 'Zone 3 Area 3'
-        }, {
-            "areaCode": 'Z3A4',
-            "areaName": 'Zone 3 Area 4'
-        }, {
-            "areaCode": 'Z3A5',
-            "areaName": 'Zone 3 Area 5'
-        }]
-    }];
+    $http.get('/getAreaList').then(function (response) {
+        $.each(response.data, function(index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var area = [];
+            $.each(areaID, function(index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index]
+                });
+            });
+            $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+           
+        });
+         console.log($scope.areaList);
+    });
+//    $scope.handledArea = [{
+//        "zoneCode": 'Z1',
+//        "area": [{
+//            "areaCode": 'Z1A1',
+//            "areaName": 'Zone 1 Area 1'
+//        }, {
+//            "areaCode": 'Z1A2',
+//            "areaName": 'Zone 1 Area 2'
+//        }, {
+//            "areaCode": 'Z1A3',
+//            "areaName": 'Zone 1 Area 3'
+//        }, {
+//            "areaCode": 'Z1A4',
+//            "areaName": 'Zone 1 Area 4'
+//        }, {
+//            "areaCode": 'Z1A5',
+//            "areaName": 'Zone 1 Area 5'
+//        }]
+//    }, {
+//        "zoneCode": 'Z2',
+//        "area": [{
+//            "areaCode": 'Z2A1',
+//            "areaName": 'Zone 2 Area 1'
+//        }, {
+//            "areaCode": 'Z2A2',
+//            "areaName": 'Zone 2 Area 2'
+//        }, {
+//            "areaCode": 'Z2A3',
+//            "areaName": 'Zone 2 Area 3'
+//        }, {
+//            "areaCode": 'Z2A4',
+//            "areaName": 'Zone 2 Area 4'
+//        }, {
+//            "areaCode": 'Z2A5',
+//            "areaName": 'Zone 2 Area 5'
+//        }]
+//    }, {
+//        "zoneCode": 'Z3',
+//        "area": [{
+//            "areaCode": 'Z3A1',
+//            "areaName": 'Zone 3 Area 1'
+//        }, {
+//            "areaCode": 'Z3A2',
+//            "areaName": 'Zone 3 Area 2'
+//        }, {
+//            "areaCode": 'Z3A3',
+//            "areaName": 'Zone 3 Area 3'
+//        }, {
+//            "areaCode": 'Z3A4',
+//            "areaName": 'Zone 3 Area 4'
+//        }, {
+//            "areaCode": 'Z3A5',
+//            "areaName": 'Zone 3 Area 5'
+//        }]
+//    }];
 
     $scope.thisArea = function (a) {
         angular.element('#chooseArea').modal('toggle');
@@ -1546,7 +1563,7 @@ app.controller('reportingController', function ($scope, $filter) {
         asc == true ? asc = false : asc = true;
     };
 });
-//Felix handsome boi2 doing visualization
+//Felix hamsap boi2 doing visualization
 app.controller('visualizationController', function ($scope) {
     'use strict';
     $scope.chartDurationGarbageSelected = "Line";
@@ -2050,8 +2067,6 @@ app.controller('acrController',function($scope, $http, $filter){
             }
             return vm;
         }, true);
-        
-        console.log(response.data);
 
     });
     
@@ -2072,6 +2087,7 @@ app.controller('acrController',function($scope, $http, $filter){
             });
             $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
         });
+        console.log($scope.areaList);
         $('.selectpicker').on('change', function() {
             renderSltPicker();
         });
@@ -2127,7 +2143,11 @@ app.controller('acrController',function($scope, $http, $filter){
                     type: "success",
                     "message": "ACR added successfully!"
                 });
-                $scope.acrList.push({"id": newAcrID, "name": $scope.acr.name, "address": $scope.acr.address, "area":$scope.acr.area.name, "phone":$scope.acr.phone, "enddate":$scope.acr.enddate, "status": 'ACTIVE'});
+                
+                var area = $('.selectpicker option:selected').text();
+               var areastr = area.split(" ")[2];
+//                console.log(areastr);
+                $scope.acrList.push({"id": newAcrID, "name": $scope.acr.name, "address": $scope.acr.address, "area": areastr, "phone":$scope.acr.phone, "enddate":$scope.acr.enddate, "status": 'ACTIVE'});
                 $scope.filterAcrList = angular.copy($scope.acrList);
                 angular.element('#createACR').modal('toggle');
                 $scope.totalItems = $scope.filterAcrList.length;
