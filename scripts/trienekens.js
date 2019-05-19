@@ -66,6 +66,11 @@ app.service('storeDataService', function () {
             "ton": '',
             "roadtax": '',
             "status": ''
+        },
+        "zone": {
+            "id": '',
+            "name": '',
+            "status": ''
         }
     };
     
@@ -77,6 +82,7 @@ app.directive('editable', function ($compile, $http, storeDataService) {
     return function (scope) {
         scope.sho = true;
         scope.showTruck = true;
+        scope.showZone = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -85,12 +91,16 @@ app.directive('editable', function ($compile, $http, storeDataService) {
             "roadtax": '',
             "status": ''
         };
+        scope.thisZone = {
+            "id": '',
+            "name": '',
+            "status": ''
+        };
         
         scope.editTruck = function (id, no, transporter, ton, tax, status) {
             scope.showTruck = !scope.showTruck;
             scope.thisTruck = { "id": id, "no": no, "transporter": transporter, "ton": ton, "roadtax": tax, "status": status };
         };
-        
         scope.saveTruck = function () {
             scope.showTruck = !scope.showTruck;
             $http.post('/editTruck', scope.t).then(function (response) {
@@ -112,7 +122,6 @@ app.directive('editable', function ($compile, $http, storeDataService) {
             });
             });
         };
-        
         scope.cancelTruck = function () {
             scope.showTruck = !scope.showTruck;
             
@@ -122,6 +131,23 @@ app.directive('editable', function ($compile, $http, storeDataService) {
                 }
             });
             
+        };
+        
+        scope.editZone = function (id, name, status) {
+            scope.showZone = !scope.showZone;
+            scope.thisZone = {"id": id, "name": name, "status": status};
+        };
+        scope.saveZone = function () {
+            scope.showZone = !scope.showZone;
+        };
+        scope.cancelZone = function () {
+            scope.showZone = !scope.showZone;
+            
+            $.each(storeDataService.zone, function (index, value) {
+                if (storeDataService.zone[index].id == scope.thisZone.id) {
+                    scope.z = angular.copy(storeDataService.zone[index]);
+                }
+            });
         };
         
         scope.choose = function () {
@@ -992,38 +1018,46 @@ app.controller('errorController', function ($scope, $window) {
 app.controller('dailyController', function ($scope, $window, $routeParams, $http, $filter) {
     'use strict';
 
-    
-    
-    
     $scope.report = {
-        area : '',
-        collectiondate : '',
-        stime : '',
-        etime : '',
-        truck : '',
-        driver : '',
-        amount : '',
-        remark : '',
-        ifleetimg : '',
-        glong : '',
-        glat : '',
-        address : '',
-        creationDate : ''
+        "areaCode": $routeParams.areaCode,
+        "collectionDate": '',
+        "startTime": '',
+        "endTime": '',
+        "truck": '',
+        "driver": '',
+        "ton": '',
+        "remark": '',
+        "ifleetImg": '',
+        "lng": '',
+        "lat": '',
+        "address": '',
+        "creationDate": '',
+        "markerPosition": '',
+        "markerRadius": ''
+    };
+    
+    $scope.report.collectionDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+
+    $scope.startTimeChange = function(time) {
+        $scope.report.startTime = time.toLocaleTimeString();
+    };
+    
+    $scope.endTimeChange = function(time) {
+        $scope.report.endTime = time.toLocaleTimeString();
     };
     
     $scope.truckList = [];
     $scope.driverList = [];
    
-    var params = $routeParams.areaCode;
-    var areaCode = params.split("+")[0];
-    var areaName = params.split("+")[1];
-    
-    $scope.$params_areaName = areaName;
+//    var params = $routeParams.areaCode;
+//    var areaCode = params.split("+")[0];
+//    var areaName = params.split("+")[1];
+//    
+//    $scope.$params_areaName = areaName;
     $scope.params = {
-        "areaCode": areaCode
+        "areaCode": $routeParams.areaCode
     };
-    $scope.report.area = areaCode;
-    
+//    $scope.report.area = areaCode;
     
     $http.get('/getTruckList').then(function (response) {
         $scope.truckList = response.data;
@@ -1037,12 +1071,13 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     $http.post('/getGoogleLocation', $scope.params).then(function (response) {
         var myPlace = response.data[0];
+        console.log(myPlace);
         var area = myPlace.area.replace(" ", "+");
         var zone = myPlace.zone.replace(" ", "+");
         var concat = area + ',' + zone;
         $scope.report.address = concat;
         
-        address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<apikey>";
+        address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
         
         $http.get(address).then(function (response) {
             function timeToSeconds(time) {
@@ -1084,9 +1119,11 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
 
                 google.maps.event.addListener(circle, "radius_changed", function () {
                     console.log("radius:" + circle.getRadius());
+                    $scope.report.markerRadius = circle.getRadius();
                 });
                 google.maps.event.addListener(circle, "center_changed", function () {
                     console.log("center:" + circle.getCenter());
+                    $scope.report.markerPosition = circle.getCenter();
                 });
 
         //                    var marker = new google.maps.Marker({
@@ -1108,7 +1145,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
 
             // JSON data returned by API above
             var myPlace = response.data;
-            console.log(myPlace);
 
             // After get the place data, re-center the map
             $window.setTimeout(function () {
@@ -1120,20 +1156,14 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                 lng = places.geometry.location.lng;
                 map.panTo(new google.maps.LatLng(lat, lng));
                 map.setZoom(17);
-                 $scope.glong = lng;
-            $scope.glat = lat;
-            console.log($scope.glong);
-            console.log($scope.glat);
+                
+                $scope.report.lng = lng;
+                $scope.report.lat = lat;
             }, 1000);
-            
-           
         });
         
 
     });
-    
-    
-    
     
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
@@ -1151,7 +1181,132 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
             }
              window.location.href = '#/reporting';
         });
+    };
+    
+    (function($) {
+        var defaults;
+        $.event.fix = (function(originalFix) {
+            return function(event) {
+                event = originalFix.apply(this, arguments);
+                if (event.type.indexOf("copy") === 0 || event.type.indexOf("paste") === 0) {
+                    event.clipboardData = event.originalEvent.clipboardData;
+                }
+                return event;
+            };
+        })($.event.fix);
+        defaults = {
+            callback: $.noop,
+            matchType: /image.*/
+        };
+        return ($.fn.pasteImageReader = function(options) {
+            if (typeof options === "function") {
+                options = {
+                    callback: options
+                };
+            }
+            options = $.extend({}, defaults, options);
+            return this.each(function() {
+                var $this, element;
+                element = this;
+                $this = $(this);
+                return $this.bind("paste", function(event) {
+                    var clipboardData, found;
+                    found = false;
+                    clipboardData = event.clipboardData;
+                    return Array.prototype.forEach.call(clipboardData.types, function(type, i) {
+                        var file, reader;
+                        if (found) {
+                            return;
+                        }
+                        if (
+                            type.match(options.matchType) ||
+                            clipboardData.items[i].type.match(options.matchType)
+                        ) {
+                            file = clipboardData.items[i].getAsFile();
+                            reader = new FileReader();
+                            reader.onload = function(evt) {
+                                return options.callback.call(element, {
+                                    dataURL: evt.target.result,
+                                    event: evt,
+                                    file: file,
+                                    name: file.name
+                                });
+                            };
+                            reader.readAsDataURL(file);
+                            snapshoot();
+                            return (found = true);
+                        }
+                    });
+                });
+            });
+        });
+    })(jQuery);
+    
+    var dataURL, filename;
+    $("html").pasteImageReader(function(results) {
+        filename = results.filename, dataURL = results.dataURL;
+        $data.text(dataURL);
+        $size.val(results.file.size);
+        $type.val(results.file.type);
+        var img = document.createElement("img");
+        img.src = dataURL;
+        $scope.report.ifleetImg = dataURL;
+        var w = img.width;
+        var h = img.height;
+        $width.val(w);
+        $height.val(h);
+        return $(".active")
+            .css({
+                backgroundImage: "url(" + dataURL + ")"
+            })
+            .data({ width: w, height: h });
+    });
+
+    var $data, $size, $type, $width, $height;
+    $(function() {
+        $data = $(".data");
+        $size = $(".size");
+        $type = $(".type");
+        $width = $("#width");
+        $height = $("#height");
+        $(".target").on("click", function() {
+            var $this = $(this);
+            var bi = $this.css("background-image");
+            if (bi != "none") {
+                $data.text(bi.substr(4, bi.length - 6));
+            }
+
+            $(".active").removeClass("active");
+            $this.addClass("active");
+
+            //$this.toggleClass("contain");
+
+            $width.val($this.data("width"));
+            $height.val($this.data("height"));
+            if ($this.hasClass("contain")) {
+                $this.css({
+                    width: $this.data("500px"),
+                    height: $this.data("height"),
+                    "z-index": "10"
+                });
+            } else {
+                $this.css({ width: "", height: "", "z-index": "" });
+            }
+        });
+    });
+
+    function copy(text) {
+        var t = document.getElementById("base64");
+        t.select();
+        try {
+            var successful = document.execCommand("copy");
+            var msg = successful ? "successfully" : "unsuccessfully";
+            alert("Base64 data coppied " + msg + " to clipboard");
+        } catch (err) {
+            alert("Unable to copy text");
+        }
     }
+    
 });
 
 app.controller('truckController', function ($scope, $http, $filter, storeDataService) {
@@ -1288,7 +1443,7 @@ app.controller('driverController', function ($scope, $http, $filter) {
     }
 });
 
-app.controller('zoneController', function ($scope, $http, $filter) {
+app.controller('zoneController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
 
     $scope.currentPage = 1; //Initial current page to 1
@@ -1303,6 +1458,7 @@ app.controller('zoneController', function ($scope, $http, $filter) {
     }
 
     $http.get('/getAllZone').then(function (response) {
+        storeDataService.zone = angular.copy(response.data);
         $scope.searchZoneFilter = '';
         $scope.zoneList = response.data;
         $scope.filterZoneList = [];
@@ -1580,7 +1736,7 @@ app.controller('reportingController', function ($scope, $http, $filter) {
     $scope.thisArea = function (id,name) {
         angular.element('#chooseArea').modal('toggle');
         setTimeout(function () {
-            window.location.href = '#/daily-report/' + id +"+"+ name;
+            window.location.href = '#/daily-report/' + id; // +"+"+ name
         }, 500);
     };
 

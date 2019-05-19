@@ -80,7 +80,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h5>IVMW Inspection Report - (<span data-ng-bind="$params_areaName"></span>)</h5>
+        <h5>IVMW Inspection Report - (<span data-ng-bind="params.areaCode"></span>)</h5>
     </div>
 </div>
 
@@ -88,7 +88,7 @@
     <label for="inputDate form-label" class="col-xs-3 col-form-label form-label-width">Date</label>
     <div class="col-md-9">
 <!--        <input data-provide="datepicker" type="text" id="inputDate" class="form-control mx-sm-3 datepicker" data-date-format="yyyy-mm-dd" />-->
-        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="report.collectiondate"/>
+        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="report.collectionDate" />
     </div>
 </div>
 
@@ -96,7 +96,7 @@
     <label for="inputStartTime form-label" class="col-xs-3 col-form-label form-label-width">Start Time</label>
     <div class="col-md-9">
 <!--        <input type="text" id="inputStartTime" class="form-control mx-sm-3 clockpicker-start" readonly />-->
-        <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="report.stime" />
+        <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="report.startTime" data-ng-change="startTimeChange(report.startTime)" />
     </div>
 </div>
 
@@ -104,7 +104,7 @@
     <label for="inputEndTime form-label" class="col-xs-3 col-form-label form-label-width">End Time</label>
     <div class="col-md-9">
 <!--        <input type="text" id="inputEndTime" class="form-control mx-sm-3 clockpicker-end" readonly />-->
-        <input type="time" id="inputEndTime" class="form-control mx-sm-3" data-ng-model="report.etime"/>
+        <input type="time" id="inputEndTime" class="form-control mx-sm-3" data-ng-model="report.endTime" data-ng-change="endTimeChange(report.endTime)" />
     </div>
 </div>
 
@@ -130,7 +130,7 @@
 <div class="form-group row">
     <label for="inputGAmount form-label" class="col-xs-3 col-form-label form-label-width">Garbage Amount (TON)</label>
     <div class="col-md-9">
-        <input type="text" id="inputGAmount" placeholder="(ton)" class="form-control mx-sm-3" data-ng-model="report.amount"/>
+        <input type="text" id="inputGAmount" placeholder="(ton)" class="form-control mx-sm-3" data-ng-model="report.ton"/>
     </div>
 </div>
 
@@ -138,7 +138,7 @@
     <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
     <div class="col-md-9">
     <!--<input type="text" id="inputRemark" class="form-control mx-sm-3" />-->
-        <textarea rows="4" cols="50" id="inputRemark" class="form-control mx" data-ng-model="report.remark"></textarea>
+        <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="report.remark"></textarea>
     </div>
 </div>
 
@@ -185,128 +185,7 @@ textarea {
     // Created by STRd6
     // MIT License
     // jquery.paste_image_reader.js
-    (function($) {
-        var defaults;
-        $.event.fix = (function(originalFix) {
-            return function(event) {
-                event = originalFix.apply(this, arguments);
-                if (event.type.indexOf("copy") === 0 || event.type.indexOf("paste") === 0) {
-                    event.clipboardData = event.originalEvent.clipboardData;
-                }
-                return event;
-            };
-        })($.event.fix);
-        defaults = {
-            callback: $.noop,
-            matchType: /image.*/
-        };
-        return ($.fn.pasteImageReader = function(options) {
-            if (typeof options === "function") {
-                options = {
-                    callback: options
-                };
-            }
-            options = $.extend({}, defaults, options);
-            return this.each(function() {
-                var $this, element;
-                element = this;
-                $this = $(this);
-                return $this.bind("paste", function(event) {
-                    var clipboardData, found;
-                    found = false;
-                    clipboardData = event.clipboardData;
-                    return Array.prototype.forEach.call(clipboardData.types, function(type, i) {
-                        var file, reader;
-                        if (found) {
-                            return;
-                        }
-                        if (
-                            type.match(options.matchType) ||
-                            clipboardData.items[i].type.match(options.matchType)
-                        ) {
-                            file = clipboardData.items[i].getAsFile();
-                            reader = new FileReader();
-                            reader.onload = function(evt) {
-                                return options.callback.call(element, {
-                                    dataURL: evt.target.result,
-                                    event: evt,
-                                    file: file,
-                                    name: file.name
-                                });
-                            };
-                            reader.readAsDataURL(file);
-                            snapshoot();
-                            return (found = true);
-                        }
-                    });
-                });
-            });
-        });
-    })(jQuery);
-
-    var dataURL, filename;
-    $("html").pasteImageReader(function(results) {
-        filename = results.filename, dataURL = results.dataURL;
-        $data.text(dataURL);
-        $size.val(results.file.size);
-        $type.val(results.file.type);
-        var img = document.createElement("img");
-        img.src = dataURL;
-        var w = img.width;
-        var h = img.height;
-        $width.val(w);
-        $height.val(h);
-        return $(".active")
-            .css({
-                backgroundImage: "url(" + dataURL + ")"
-            })
-            .data({ width: w, height: h });
-    });
-
-    var $data, $size, $type, $width, $height;
-    $(function() {
-        $data = $(".data");
-        $size = $(".size");
-        $type = $(".type");
-        $width = $("#width");
-        $height = $("#height");
-        $(".target").on("click", function() {
-            var $this = $(this);
-            var bi = $this.css("background-image");
-            if (bi != "none") {
-                $data.text(bi.substr(4, bi.length - 6));
-            }
-
-            $(".active").removeClass("active");
-            $this.addClass("active");
-
-            //$this.toggleClass("contain");
-
-            $width.val($this.data("width"));
-            $height.val($this.data("height"));
-            if ($this.hasClass("contain")) {
-                $this.css({
-                    width: $this.data("500px"),
-                    height: $this.data("height"),
-                    "z-index": "10"
-                });
-            } else {
-                $this.css({ width: "", height: "", "z-index": "" });
-            }
-        });
-    });
-
-    function copy(text) {
-        var t = document.getElementById("base64");
-        t.select();
-        try {
-            var successful = document.execCommand("copy");
-            var msg = successful ? "successfully" : "unsuccessfully";
-            alert("Base64 data coppied " + msg + " to clipboard");
-        } catch (err) {
-            alert("Unable to copy text");
-        }
-    }
+    
 </script>
 <div class="row">
     <div class="col-md-12">
@@ -314,9 +193,3 @@ textarea {
         <button class="btn btn-primary submit" data-ng-click="addReport()">Submit</button>
     </div>
 </div>
-
-<script>
-            $(document).ready(function() {
-                
-            });
-        </script>

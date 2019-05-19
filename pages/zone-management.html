@@ -29,45 +29,6 @@ TODO LIST:
     </div>
   </div>
 </div>
-<!--15/5 sing hong-->
-<!-- Modal for edit-->
-<div class="modal fade" id="editZone" tabindex="-1" role="dialog" aria-labelledby="editZone" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Edit Zone</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          
-          <div class="form-group">
-              <!--<div class="col-md-4"><text>Zone ID:</text></div>
-              <div class="col-md-8"><text>id here</text></div>-->
-              <label for="editZoneId form-label">Zone ID:</label>
-              <input type="text" class="form-control" id="editZoneId" data-ng-model="zone.editZoneId" />
-          </div>
-          <div class="form-group">
-              <label for="editZoneName form-label">Zone Name</label>
-              <input type="text" class="form-control" id="editZoneName" data-ng-model="zone.editZoneName" />
-          </div>
-          <div class="form-group">
-              <label for="editZoneStatus form-label">Status</label>
-             <select class="form-control" id="editZoneStatus" data-ng-model="zone.editZoneStatus">
-                 <option value="A">Activate</option>
-                 <option value="I">Inactivate</option>
-              </select>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <!--temporary, have to remove it-->
-        <button type="button" class="btn btn-primary" data-ng-click="editZone();">Edit</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="row">
     <div class="col-md-12">
@@ -103,31 +64,28 @@ TODO LIST:
                         </thead>
                         <tbody>
                             <tr data-ng-repeat="z in zoneList | filter: searchZone | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
-                                <td data-ng-bind="z.id"></td>
-                                <td data-ng-bind="z.name">
+                                <td>
+                                    <span data-ng-bind="z.id"></span>
+                                </td>
+                                <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="z.name" data-ng-show="" />
-                                        <span data-ng-show="" data-ng-bind=""></span>
+                                        <input type="text" class="form-control" data-ng-model="z.name" data-ng-show="!showZone" />
+                                        <span data-ng-show="showZone" data-ng-bind="z.name"></span>
                                     </div>
                                 </td>
-                                <td data-ng-bind="z.status">
+                                <td>
                                     <div editable>
-                                        <select class="form-control" data-ng-model="z.status" data-ng-show="">
+                                        <select class="form-control" data-ng-model="z.status" data-ng-show="!showZone">
                                             <option>ACTIVE</option>
                                             <option>INACTIVE</option>
                                         </select>
-                                        <span data-ng-show="" data-ng-bind=""></span>
+                                        <span data-ng-show="showZone" data-ng-bind="z.status"></span>
                                     </div>
                                 </td>
-                                
-                                <!--create action button here-->
                                 <td>
-<!--                                   <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editZone">Edit</button>-->
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showTruck" data-ng-click="edit();"><i class="fa fa-pencil-alt"></i></button>
-                                    
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showTruck" data-ng-click="saveTruck();"><i class="fa fa-save"></i></button>
-                                    
-                                    <button class="btn btn-sm btn-default" data-ng-show="!showTruck" data-ng-click="cancelTruck();"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showZone" data-ng-click="editZone(z.id, z.name, z.status);"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showZone" data-ng-click="saveZone();"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showZone" data-ng-click="cancelZone();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
                         </tbody>
