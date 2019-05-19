@@ -19,40 +19,10 @@ app.filter('offset', function () {
 });
 
 app.service('storeDataService', function () {
-    
-});
-
-app.service('storeDataService', function () {
     'use strict';
     var globalList;
     
     globalList = {
-        "event": {
-            "eventTitle": '',
-            "eventVenue": '',
-            "eventDesc": '',
-            "additionalNote": '',
-            "eventStartDate": '',
-            "eventEndDate": '',
-            "announcementSwitch": '',
-            "announcementContent": '',
-            "chatSwitch": '',
-            "gallerySwitch": '',
-            "fontType": '',
-            "titleSize": '',
-            "ignoreEventDate": ''
-        },
-        "activity": {
-            "activityName": '',
-            "activityDesc": '',
-            "additionalNote": '',
-            "activityLocation": '',
-            "activityDate": '',
-            "activityStartTime": '',
-            "activityEndTime": '',
-            "activityStartDate": '',
-            "activityEndDate": ''
-        },
         "login": {
             "username": '',
             "password": '',
@@ -97,6 +67,13 @@ app.directive('editable', function ($compile, $http, storeDataService) {
             "status": ''
         };
         
+        scope.notify = function (stat, mes) {
+            angular.element('body').overhang({
+                type: stat,
+                message: mes
+            });
+        };
+        
         scope.editTruck = function (id, no, transporter, ton, tax, status) {
             scope.showTruck = !scope.showTruck;
             scope.thisTruck = { "id": id, "no": no, "transporter": transporter, "ton": ton, "roadtax": tax, "status": status };
@@ -105,21 +82,17 @@ app.directive('editable', function ($compile, $http, storeDataService) {
             scope.showTruck = !scope.showTruck;
             $http.post('/editTruck', scope.t).then(function (response) {
                 var data = response.data;
-                
-                angular.element('body').overhang({
-                    type: data.status,
-                    message: data.message
-                });
+                scope.notify(data.status, data.message);
                 
                 $.each(storeDataService.truck, function (index, value) {
-                if (storeDataService.truck[index].id == scope.thisTruck.id) {
-                    if (data.status == "success") {
-                        storeDataService.truck[index] = angular.copy(scope.t);
-                    } else {
-                        scope.t = angular.copy(storeDataService.truck[index]);
+                    if (storeDataService.truck[index].id == scope.thisTruck.id) {
+                        if (data.status == "success") {
+                            storeDataService.truck[index] = angular.copy(scope.t);
+                        } else {
+                            scope.t = angular.copy(storeDataService.truck[index]);
+                        }
                     }
-                }
-            });
+                });
             });
         };
         scope.cancelTruck = function () {
@@ -139,6 +112,20 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         };
         scope.saveZone = function () {
             scope.showZone = !scope.showZone;
+            $http.post('/editZone', scope.z).then(function (response) {
+                var data = response.data;
+                scope.notify(data.status, data.message);
+                
+                $.each(storeDataService.zone, function (index, value) {
+                    if (storeDataService.zone[index].id == scope.thisZone.id) {
+                        if (data.status == "success") {
+                            storeDataService.zone[index] = angular.copy(scope.z);
+                        } else {
+                            scope.z = angular.copy(storeDataService.zone[index]);
+                        }
+                    }
+                });
+            });
         };
         scope.cancelZone = function () {
             scope.showZone = !scope.showZone;
@@ -1017,6 +1004,9 @@ app.controller('errorController', function ($scope, $window) {
 
 app.controller('dailyController', function ($scope, $window, $routeParams, $http, $filter) {
     'use strict';
+    
+    $scope.circleID = 0;
+    var centerArray = [];
 
     $scope.report = {
         "areaCode": $routeParams.areaCode,
@@ -1031,9 +1021,8 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         "lng": '',
         "lat": '',
         "address": '',
-        "creationDate": '',
-        "markerPosition": '',
-        "markerRadius": ''
+        "marker": centerArray,
+        "creationDate": ''
     };
     
     $scope.report.collectionDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
@@ -1102,12 +1091,14 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
             // OnClick add Marker and get address
             google.maps.event.addListener(map, "click", function (e) {
                 var latLng, latitude, longtitude, circle;
+                $scope.circleID++;
 
                 latLng = e.latLng;
                 latitude = latLng.lat();
                 longtitude = latLng.lng();
 
                 circle = new google.maps.Circle({
+                    id: $scope.circleID,
                     map: map,
                     center: new google.maps.LatLng(latitude, longtitude),
                     radius: 200,
@@ -1116,14 +1107,22 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                     editable: true,
                     draggable: true
                 });
+                centerArray.push({"lat": circle.getCenter().lat(), "lng": circle.getCenter().lng(), "radius": circle.getRadius()});
 
                 google.maps.event.addListener(circle, "radius_changed", function () {
-                    console.log("radius:" + circle.getRadius());
-                    $scope.report.markerRadius = circle.getRadius();
+                    $.each(centerArray, function (index, value) {
+                        if (circle.id == (index + 1)) {
+                            centerArray[index].radius = circle.getRadius();
+                        }
+                    });
                 });
                 google.maps.event.addListener(circle, "center_changed", function () {
-                    console.log("center:" + circle.getCenter());
-                    $scope.report.markerPosition = circle.getCenter();
+                    $.each(centerArray, function (index, value) {
+                        if (circle.id == (index + 1)) {
+                            centerArray[index].lat = circle.getCenter().lat();
+                            centerArray[index].lng = circle.getCenter().lng();
+                        }
+                    });
                 });
 
         //                    var marker = new google.maps.Marker({
@@ -1398,6 +1397,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
                     message: "Truck added successfully!"
                 });
                 $scope.truckList.push({"id":newTruckID, "no":$scope.truck.no, "transporter":$scope.truck.transporter, "ton":$scope.truck.ton, "roadtax":$scope.truck.roadtax, "status":'Active'});
+                storeDataService.truck = angular.copy($scope.truckList);
                 $scope.filterTruckList = angular.copy($scope.truckList);
                 $scope.totalItems = $scope.filterTruckList.length;
                 angular.element('#createTruck').modal('toggle');
@@ -1504,25 +1504,11 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
                     "status": 'ACTIVE'
                 });
                 $scope.filterZoneList = angular.copy($scope.zoneList);
+                storeDataService.zone = angular.copy($scope.zoneList);
                 $scope.totalItems = $scope.filterZoneList.length;
                 angular.element('#createZone').modal('toggle');
                 $scope.initializeZone();
             }
-        });
-    }
-    
-    //new added 15/5
-    //inactive can't be show
-    $scope.editZone = function(){
-        $http.post('/editZone', $scope.zone).then(function(response){
-            var data = response.data;
-            if(data.status === "success"){
-                angular.element('body').overhang({
-                    type: data.status,
-                    message: data.message
-                });
-            }
-            
         });
     }
 });

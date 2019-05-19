@@ -654,7 +654,7 @@ app.get('/getAllAcr', function(req,res){
 //15/5 sing hong
 app.post('/editZone',function(req,res){
     'use strict';
-    var sql = "UPDATE tblzone SET zoneName = '" + req.body.editZoneName+ "', zoneStatus = '" + req.body.editZoneStatus + "' WHERE zoneID = '"+ req.body.editZoneId + "'";
+    var sql = "UPDATE tblzone SET zoneName = '" + req.body.name+ "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '"+ req.body.id + "'";
     db.query(sql, function (err, result) {
         if (err) {
             res.json({"status": "error", "message": "Update failed."});
