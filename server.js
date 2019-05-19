@@ -11,8 +11,8 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
 var DB_NAME = 'trienekens';
 
@@ -472,14 +472,14 @@ app.post('/addReport',function(req,res){
     'use strict';
     makeID('report',req.body.creationDate);
     setTimeout(function () {
-        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, gmLong, gmLat, readStatus, reportStatus, truckID, driverID, remark, reportCreationDateTime) VALUE ('" + obj.ID + "', '" + req.body.area + "', '" + req.body.collectiondate + "', '" + req.body.stime + "', '" + req.body.etime + "', '" + req.body.amount + "', '" + req.body.ifleetimg + "', '" + req.body.address + "', '" + req.body.glong + "', '" + req.body.glat + "', 'I', 'A','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
+        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, gmLong, gmLat, readStatus, reportStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.area + "', '" + req.body.collectiondate + "', '" + req.body.stime + "', '" + req.body.etime + "', '" + req.body.amount + "', '" + req.body.ifleetimg + "', '" + req.body.address + "', '" + req.body.glong + "', '" + req.body.glat + "', 'I', 'A','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
         
-//        db.query(sql, function(err, result) {
-//            if (err) {
-//                throw err;
-//            }
-//            res.json({"status": "success", "details": {"reportID": obj.ID}});
-//        });
+        db.query(sql, function(err, result) {
+            if (err) {
+                throw err;
+            }
+            res.json({"status": "success", "details": {"reportID": obj.ID}});
+        });
     }, 100);
 });
 
@@ -544,7 +544,7 @@ app.get('/getAllZone', function (req, res) {
 //15/5 sing hong modify
 app.get('/getAllArea', function (req, res) {
     'use strict';
-    var sql = "SELECT areaID AS id, areaName AS name, zoneID as zone, staffID as staff, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea";
+    var sql = "SELECT a.areaID AS id, a.areaName AS name, z.zoneID as zone, z.zoneName as zoneName, s.staffID as staff, s.staffName as staffName, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea a INNER JOIN tblzone z ON a.zoneID = z.zoneID INNER JOIN tblstaff s ON a.staffID = s.staffID";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -692,7 +692,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblstaffposaccess (staffPosID VARCHAR(15), mgmtAccessID INT, status CHAR(1))",
         "CREATE TABLE tblmgmtaccess (mgmtAccessID INT PRIMARY KEY AUTO_INCREMENT, mgmtAccessName VARCHAR(100))",
         "CREATE TABLE tbldriver (driverID VARCHAR(15) PRIMARY KEY, driverName VARCHAR(100), driverAddress VARCHAR(200), driverDOB DATE, driverPhoneNum INT, driverLicenseExpiryDate DATE, creationDateTime DATETIME, driverStatus CHAR(1))",
-        "CREATE TABLE tbltruck (truckID VARCHAR(15) PRIMARY KEY, transporterID VARCHAR(15), truckTon INT, truckNum VARCHAR(10), truckExpiryStatus CHAR(1), creationDateTime DATETIME, truckStatus CHAR(1))",
+        "CREATE TABLE tbltruck (truckID VARCHAR(15) PRIMARY KEY, transporterID VARCHAR(15), truckTon INT, truckNum VARCHAR(10), truckExpiryStatus DATE, creationDateTime DATETIME, truckStatus CHAR(1))",
 //        "CREATE TABLE tbltransporter (transporterID, transporterName, transporterDescription, transportStatus)",
         "CREATE TABLE tblzone (zoneID VARCHAR(15) PRIMARY KEY, zoneName VARCHAR(100), creationDateTime DATETIME, zoneStatus CHAR(1))",
         "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))",
@@ -703,8 +703,8 @@ emitter.on('createTable', function () {
 //        "CREATE TABLE tblbincenter (binID, areaID, binName, binLocation, binStatus)",
 //        "CREATE TABLE tblacr (acrID, acrName, acrPhoneNo, acrAddress, acrPeriod, acrStatus)",
 //        "CREATE TABLE tblacrfreq (acrID, areaID, day)",
-        "CREATE TABLE tblreport (reportID VARCHAR(20) PRIMARY KEY, areaID VARCHAR(15), reportCollectionDate DATE, operationTimeStart TIME, operationTimeEnd TIME, garbageAmount NUMBER(3), iFleetImg LONGBLOB, address VARCHAR(80) NOT NULL, gmLong DOUBLE(20,20), gmLat DOUBLE(20,20), readStatus CHAR(1), reportStatus CHAR(1), truckID VARCHAR(15), driverID VARCHAR(15), remark TEXT, reportCreationDateTime DATETIME)",
-        "CREATE TABLE tblmapcircle(circleID VARCHAR(15) PRIMARY KEY, radius DOUBLE(20,20), cLong DOUBLE(20,20), cLat DOUBLE(20,20), reportID VARCHAR(20))"
+        "CREATE TABLE tblreport (reportID VARCHAR(20) PRIMARY KEY, areaID VARCHAR(15), reportCollectionDate DATE, operationTimeStart TIME, operationTimeEnd TIME, garbageAmount INT(3), iFleetImg LONGBLOB, address VARCHAR(80) NOT NULL, gmLong DOUBLE(10,7), gmLat DOUBLE(10,7), readStatus CHAR(1), reportStatus CHAR(1), truckID VARCHAR(15), driverID VARCHAR(15), remark TEXT, creationDateTime DATETIME)",
+        "CREATE TABLE tblmapcircle(circleID VARCHAR(15) PRIMARY KEY, radius DOUBLE(20,20), cLong DOUBLE(10,7), cLat DOUBLE(10,7), reportID VARCHAR(20))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {

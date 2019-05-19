@@ -630,6 +630,13 @@ app.controller('areaController', function ($scope, $http, $filter) {
         $scope.areaList = response.data;
         $scope.filterAreaList = [];
 
+        for(var i =0; i<($scope.areaList).length; i++){
+            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
+            $scope.areaList[i].staffidname = $scope.areaList[i].staffName + '-' + $scope.areaList[i].staff;
+        }
+        //$scope.arealist.zoneidname = $scope.areaList.zone + $scope.areaList.zoneName;
+        console.log($scope.areaList);
+        
         $scope.searchArea = function (area) {
             return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
         }
@@ -785,11 +792,17 @@ app.controller('areaController', function ($scope, $http, $filter) {
     $http.get('/getZoneList').then(function (response) {
         $scope.zoneList = response.data;
         $scope.area.zone = $scope.zoneList[0];
+        for(var i =0; i<(response.data).length; i++){
+            $scope.zoneList[i].zoneidname =  response.data[i].name + '-' + response.data[i].id;
+        }
     });
 
     $http.get('/getStaffList').then(function (response) {
         $scope.staffList = response.data;
         $scope.area.staff = $scope.staffList[0];
+        for(var i =0; i<(response.data).length; i++){
+            $scope.staffList[i].staffidname =  response.data[i].name + '-' + response.data[i].id;
+        }
     });
 
     $scope.addArea = function () {
@@ -1029,7 +1042,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         var concat = area + ',' + zone;
         $scope.report.address = concat;
         
-        address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+        address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<apikey>";
         
         $http.get(address).then(function (response) {
             function timeToSeconds(time) {
@@ -1124,6 +1137,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        console.log($scope.report.creationDate);
         $http.post('/addReport', $scope.report).then(function (response) {
             var returnedData = response.data;
             var newReportID = returnedData.details.reportID;
@@ -1133,8 +1147,9 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                     type: "success",
                     message: "Report added successfully!"
                 });
-                window.location.href = '#/reporting';
+               
             }
+             window.location.href = '#/reporting';
         });
     }
 });

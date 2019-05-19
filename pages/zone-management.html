@@ -1,6 +1,5 @@
 <!--
 TODO LIST:
-- Inactive can’t be show
 - Select specific zone to edit
 - Show updated edit
 - View information
@@ -98,7 +97,6 @@ TODO LIST:
                             <tr>
                                 <th width="20%">Zone Code <i class="fas fa-sort-down"></i></th>
                                 <th width="25%">Zone Name <i class="fas fa-sort-down"></i></th>
-                                <th width="25%">Including Area<i class="fas fa-sort-down"></i></th>
                                 <th width="15%">Status <i class="fas fa-sort-down"></i></th>
                                 <th width="15%">Action</th>
                             </tr>
@@ -106,15 +104,31 @@ TODO LIST:
                         <tbody>
                             <tr data-ng-repeat="z in zoneList | filter: searchZone | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td data-ng-bind="z.id"></td>
-                                <td data-ng-bind="z.name"></td>
-                                <td data-ng-bind="z.includingArea"></td> <!--new added-->
-                                <td data-ng-bind="z.status"></td>
+                                <td data-ng-bind="z.name">
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="z.name" data-ng-show="" />
+                                        <span data-ng-show="" data-ng-bind=""></span>
+                                    </div>
+                                </td>
+                                <td data-ng-bind="z.status">
+                                    <div editable>
+                                        <select class="form-control" data-ng-model="z.status" data-ng-show="">
+                                            <option>ACTIVE</option>
+                                            <option>INACTIVE</option>
+                                        </select>
+                                        <span data-ng-show="" data-ng-bind=""></span>
+                                    </div>
+                                </td>
                                 
                                 <!--create action button here-->
                                 <td>
-                                   <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editZone">Edit</button>
+<!--                                   <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editZone">Edit</button>-->
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showTruck" data-ng-click="edit();"><i class="fa fa-pencil-alt"></i></button>
+                                    
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showTruck" data-ng-click="saveTruck();"><i class="fa fa-save"></i></button>
+                                    
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showTruck" data-ng-click="cancelTruck();"><i class="fa fa-times"></i></button>
                                 </td>
-                                <!---->
                             </tr>
                         </tbody>
                     </table>

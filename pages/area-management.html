@@ -37,12 +37,12 @@ TODO list:
           
           <div class="form-group">
               <label for="sltZoneName form-label">Zone Name</label>
-              <select id="sltZoneName" class="form-control" data-ng-model="area.zone" data-ng-options="zone as zone.name for zone in zoneList"></select>
+              <select id="sltZoneName" class="form-control" data-ng-model="area.zone" data-ng-options="zone as zone.zoneidname for zone in zoneList"></select>
           </div>
           
           <div class="form-group">
               <label for="sltStaffName form-label">Staff Name</label>
-              <select id="sltStaffName" class="form-control" data-ng-model="area.staff" data-ng-options="staff as staff.name for staff in staffList"></select>
+              <select id="sltStaffName" class="form-control" data-ng-model="area.staff" data-ng-options="staff as staff.staffidname for staff in staffList"></select>
           </div>
       </div>
       <div class="modal-footer">
@@ -99,8 +99,8 @@ TODO list:
                                 <td data-ng-bind="a.id"></td>
                                 <td data-ng-bind="a.name"></td>
                                 <!--<td data-ng-bind="a.address"></td><!-- this shud be repeat-->
-                                <td data-ng-bind="a.zone"></td>
-                                <td data-ng-bind="a.staff"></td>
+                                <td data-ng-bind="a.zoneidname"></td>
+                                <td data-ng-bind="a.staffidname"></td>
                                 <!--<td data-ng-bind="a.collectionFrequency"></td>-->
                                 <td data-ng-bind="a.status"></td>
                                 <td>
