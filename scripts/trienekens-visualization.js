@@ -22,23 +22,29 @@ app.controller('visualizationController', function ($scope, $http, $window) {
     var getElementList = function (element, data) {
         var objReturn = [];
         var i, j;
+        var exist = false;
+        var timeStart, timeEnd, duration;
+        var dimension = false;
+        //var countComplete, countIncomplete;
         for (i = 0; i < data.length; i += 1) {
             if (element === "reportCollectionDate") {
                 objReturn.push(data[i].reportCollectionDate);
             } else if (element === "areaID") {
                 objReturn.push(data[i].areaID);
             } else if (element === "garbageAmount") {
-                objReturn.push(data[i].garbageAmount);
-            } else if (element === "operationTimeStart") {
-                objReturn.push(data[i].operationTimeStart);
-            } else if (element === "operationTimeEnd") {
-                objReturn.push(data[i].operationTimeEnd);
-            } else if (element === "area & duration") {
-                var exist = false;
+                objReturn.push(parseInt(data[i].garbageAmount));
+            } else if (element === "duration") {
+                timeStart = stringToTime(data[i].operationTimeStart)
+                timeEnd = stringToTime(data[i].operationTimeEnd);
+                duration = (timeEnd - timeStart) / 60 / 1000;
+                
+                objReturn.push(duration);
+            }  else if (element === "area & duration") {
+                exist = false;
 
-                var timeStart = stringToTime(data[i].operationTimeStart)
-                var timeEnd = stringToTime(data[i].operationTimeEnd);
-                var duration = (timeEnd - timeStart) / 60 / 1000;
+                timeStart = stringToTime(data[i].operationTimeStart)
+                timeEnd = stringToTime(data[i].operationTimeEnd);
+                duration = (timeEnd - timeStart) / 60 / 1000;
 
 
 
@@ -55,19 +61,45 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                     });
                 }
             } else if (element === "amountGarbageOnArea") {
-                var exist2 = false;
+                exist = false;
                 for (j = 0; j < objReturn.length; j += 1) {
                     if (objReturn[j].name === data[i].areaID) {
                         objReturn[j].y += parseInt(data[i].garbageAmount);
-                        exist2 = true;
+                        exist = true;
                     }
                 }
-                if (!exist2) {
+                if (!exist) {
                     objReturn.push({
                         "name": data[i].areaID,
                         "y": parseInt(data[i].garbageAmount)
                     });
                 }
+            }else if (element === "completionStatusArea"){
+                exist = false;
+                var complete = data[i].completionStatus === "1" ? true : false;
+                
+                if(!dimension){
+                    for(var num = 0; num < 3; num+=1){
+                        objReturn[num] = [];
+                    }
+                    dimension = true;
+                }
+                
+                for(j = 0; j < objReturn[0].length; j += 1){
+                    if(objReturn[0][j] === data[i].areaID){
+                        objReturn[1][j] += complete === true ? -1 : 0;
+                        objReturn[2][j] += complete === false ? 1 : 0;
+                        
+                        exist = true;
+                    }
+                    
+                }
+                //add new area
+                if(!exist){
+                    objReturn[0].push(data[i].areaID);
+                    objReturn[1].push(complete === true ? -1 : 0);
+                    objReturn[2].push(complete === false ? 1 : 0);
+                }    
             }
         }
 
@@ -76,8 +108,8 @@ app.controller('visualizationController', function ($scope, $http, $window) {
     $http.get("/data_json/reports.json")
         .then(function (response) {
                 $scope.reportList = response.data;
-                //        var obj = getElementList("amountGarbageOnArea", $scope.reportList);
-                //        console.log(obj);
+//                var obj = getElementList("completionStatusArea", $scope.reportList);
+//                console.log(obj);
                 displayChart();
 
             },
@@ -210,7 +242,7 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 data: getElementList("amountGarbageOnArea", $scope.reportList)
     }]
         });
-    }
+    
     //chart-line-volume-day
     {
         $.getJSON('https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
@@ -280,38 +312,37 @@ app.controller('visualizationController', function ($scope, $http, $window) {
             zoomType: 'xy'
         },
         title: {
-            text: 'Average Monthly Temperature and Rainfall in Tokyo'
+            text: 'Comparison between Duration and Volume of Garbage Collection'
         },
         subtitle: {
-            text: 'Source: WorldClimate.com'
+            text: 'Trienekens'
         },
         xAxis: [{
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            categories: getElementList("reportCollectionDate", $scope.reportList),
             crosshair: true
     }],
         yAxis: [{ // Primary yAxis
             labels: {
-                format: '{value}∞C',
+                format: '{value}minutes',
                 style: {
                     color: Highcharts.getOptions().colors[1]
                 }
             },
             title: {
-                text: 'Temperature',
+                text: 'Duration',
                 style: {
                     color: Highcharts.getOptions().colors[1]
                 }
             }
     }, { // Secondary yAxis
             title: {
-                text: 'Rainfall',
+                text: 'Garbage Amount',
                 style: {
                     color: Highcharts.getOptions().colors[0]
                 }
             },
             labels: {
-                format: '{value} mm',
+                format: '{value} ton',
                 style: {
                     color: Highcharts.getOptions().colors[0]
                 }
@@ -331,45 +362,37 @@ app.controller('visualizationController', function ($scope, $http, $window) {
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255,255,255,0.25)'
         },
         series: [{
-            name: 'Rainfall',
+            name: 'Garbage Amount',
             type: 'column',
             yAxis: 1,
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+            data: getElementList("garbageAmount", $scope.reportList),
             tooltip: {
-                valueSuffix: ' mm'
+                valueSuffix: ' ton'
             }
 
     }, {
-            name: 'Temperature',
+            name: 'Duration',
             type: 'spline',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+            data: getElementList("duration", $scope.reportList),
             tooltip: {
-                valueSuffix: '∞C'
+                valueSuffix: ' minutes'
             }
     }]
     });
-    //
-    // Age categories
-    var categories = [
-    '0-4', '5-9', '10-14', '15-19',
-    '20-24', '25-29', '30-34', '35-39', '40-44',
-    '45-49', '50-54', '55-59', '60-64', '65-69',
-    '70-74', '75-79', '80-84', '85-89', '90-94',
-    '95-99', '100 + '
-];
+
     //chart-negativebar-status-area
     Highcharts.chart('chart-negativebar-status-area', {
         chart: {
             type: 'bar'
         },
         title: {
-            text: 'Population pyramid for Germany, 2018'
+            text: 'Areas Count of Completion Status'
         },
         subtitle: {
-            text: 'Source: <a href="http://populationpyramid.net/germany/2018/">Population Pyramids of the World from 1950 to 2100</a>'
+            text: 'Trienekens'
         },
         xAxis: [{
-            categories: categories,
+            categories: getElementList("completionStatusArea", $scope.reportList)[0],
             reversed: false,
             labels: {
                 step: 1
@@ -377,7 +400,7 @@ app.controller('visualizationController', function ($scope, $http, $window) {
     }, { // mirror axis on right side
             opposite: true,
             reversed: false,
-            categories: categories,
+            categories: getElementList("completionStatusArea", $scope.reportList)[0],
             linkedTo: 0,
             labels: {
                 step: 1
@@ -389,7 +412,7 @@ app.controller('visualizationController', function ($scope, $http, $window) {
             },
             labels: {
                 formatter: function () {
-                    return Math.abs(this.value) + '%';
+                    return Math.abs(this.value);
                 }
             }
         },
@@ -402,30 +425,18 @@ app.controller('visualizationController', function ($scope, $http, $window) {
 
         tooltip: {
             formatter: function () {
-                return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
-                    'Population: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+                return '<b>' + this.series.name + ', area ' + this.point.category + '</b><br/>' +
+                    'Complete/Incomplete Count: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
             }
         },
 
         series: [{
-            name: 'Male',
-            data: [
-            -2.2, -2.1, -2.2, -2.4,
-            -2.7, -3.0, -3.3, -3.2,
-            -2.9, -3.5, -4.4, -4.1,
-            -3.4, -2.7, -2.3, -2.2,
-            -1.6, -0.6, -0.3, -0.0,
-            -0.0
-        ]
+            name: 'Complete',
+            data: getElementList("completionStatusArea", $scope.reportList)[1]
     }, {
-            name: 'Female',
-            data: [
-            2.1, 2.0, 2.1, 2.3, 2.6,
-            2.9, 3.2, 3.1, 2.9, 3.4,
-            4.3, 4.0, 3.5, 2.9, 2.5,
-            2.7, 2.2, 1.1, 0.6, 0.2,
-            0.0
-        ]
+            name: 'Incomplete',
+            data: getElementList("completionStatusArea", $scope.reportList)[2]
     }]
     });
+    }
 });
