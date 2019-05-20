@@ -9,12 +9,13 @@ var path = require('path');
 var mysql = require('mysql');
 var EventEmitter = require('events');
 var dateTime = require('node-datetime');
+var bodyParser = require('body-parser');
 var emitter = new EventEmitter();
 
 var DB_HOST = '';
 var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens';
 
 var SVR_PORT = 3000;
 var obj = {
@@ -23,7 +24,8 @@ var obj = {
 };
 
 // Parse JSON bodies (as sent by API clients)
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
+//app.use(express.limit('5M'));
 // Parse URL-encoded bodies (as sent by HTML forms)
 //app.use(express.urlencoded());
 
@@ -472,7 +474,7 @@ app.post('/addReport',function(req,res){
     'use strict';
     makeID('report',req.body.creationDate);
     setTimeout(function () {
-        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, gmLong, gmLat, readStatus, reportStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.area + "', '" + req.body.collectiondate + "', '" + req.body.stime + "', '" + req.body.etime + "', '" + req.body.amount + "', '" + req.body.ifleetimg + "', '" + req.body.address + "', '" + req.body.glong + "', '" + req.body.glat + "', 'I', 'A','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
+        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, gmLong, gmLat, readStatus, reportStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '" + req.body.address + "', '" + req.body.lng + "', '" + req.body.lat + "', 'I', 'A','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
         
         db.query(sql, function(err, result) {
             if (err) {

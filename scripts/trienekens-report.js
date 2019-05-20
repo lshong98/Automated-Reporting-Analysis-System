@@ -1,3 +1,46 @@
+app.directive('appFilereader', function($q) {
+    'use strict';
+    var slice = Array.prototype.slice;
+
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        link: function(scope, element, attrs, ngModel) {
+                if (!ngModel) {return;}
+
+                ngModel.$render = function() {};
+
+                element.bind('change', function(e) {
+                    var element;
+                    element = e.target;
+                    
+                    function readFile(file) {
+                        var deferred = $q.defer(),
+                            reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            deferred.resolve(e.target.result);
+                        };
+                        reader.onerror = function(e) {
+                            deferred.reject(e);
+                        };
+                        reader.readAsDataURL(file);
+
+                        return deferred.promise;
+                    }
+
+                    $q.all(slice.call(element.files, 0).map(readFile))
+                        .then(function(values) {
+                            if (element.multiple) {ngModel.$setViewValue(values);}
+                            else {ngModel.$setViewValue(values.length ? values[0] : null);}
+                        });
+
+                }); //change
+
+            } //link
+    }; //return
+});
+
 app.controller('dailyController', function ($scope, $window, $routeParams, $http, $filter) {
     'use strict';
     
@@ -163,6 +206,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         console.log($scope.report.creationDate);
+        console.log($scope.report);
         $http.post('/addReport', $scope.report).then(function (response) {
             var returnedData = response.data;
             var newReportID = returnedData.details.reportID;
@@ -174,7 +218,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                 });
                
             }
-             window.location.href = '#/reporting';
+             //window.location.href = '#/reporting';
         });
     };
     
