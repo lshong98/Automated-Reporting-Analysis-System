@@ -4,6 +4,15 @@
 <head>
     <title>data visualization</title>
 </head>
+<div class="row">
+    <div class="col-md-3">
+        <h3>Date Range Filter: </h3>
+        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+            <i class="fa fa-calendar"></i>&nbsp;
+            <span></span> <i class="fa fa-caret-down"></i>
+        </div>
+    </div>
+</div>
 <!--First Visualization-->
 <div class="row">
     <div class="col-md-12">
@@ -30,7 +39,7 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4>Amount of Garbage on Area</h4>
+                <h4>Amount of Garbage Percentage on Area</h4>
             </div>
             <div class="panel-body">
                 <div id="chart-pie-volume-area"></div>
@@ -69,13 +78,42 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4>Completion Status on Area</h4>
+                <h4>Completion Status</h4>
+                <label for="sel2">Choose Reference type:</label>
+                <select data-ng-model="chartCompleteStatusSelected" data-ng-change="changeCompleteStatus(chartCompleteStatusSelected)" class="form-control" id="sel2">
+                    <option value="Area">Area</option>
+                    <option value="Date">Date</option>
+                </select>
             </div>
-            <div class="panel-body">
+            <div data-ng-show="chartCompleteStatusSelected == 'Area'" class="panel-body">
                 <div id="chart-negativebar-status-area"></div>
             </div>
+            <div data-ng-show="chartCompleteStatusSelected == 'Date'" class="panel-body">
+                <div id="chart-negativebar-status-date"></div>
+            </div>
+
         </div>
     </div>
 </div>
+<script>
+    $(function() {
+        var start = moment().subtract(7, 'days');
+        var end = moment();
+        function putRange(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            opens: 'right'
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            putRange(start, end);
+        });
+        putRange(start, end);
+    });
+
+</script>
 
 </html>
