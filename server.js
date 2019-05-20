@@ -696,13 +696,33 @@ emitter.on('createTable', function () {
 //        "CREATE TABLE tbltransporter (transporterID, transporterName, transporterDescription, transportStatus)",
         "CREATE TABLE tblzone (zoneID VARCHAR(15) PRIMARY KEY, zoneName VARCHAR(100), creationDateTime DATETIME, zoneStatus CHAR(1))",
         "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))",
+        
         "CREATE TABLE tblbin(binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))",
+        
         "CREATE TABLE tblacr(acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATE, creationDateTime DATETIME, acrStatus CHAR(1))",
+        
         "CREATE TABLE tblacrfreq(acrID VARCHAR(15), areaID VARCHAR(15), day VARCHAR(15))",
 //        "CREATE TABLE area_collection (acID, areaID, areaAddress, areaCollStatus)",
 //        "CREATE TABLE tblbincenter (binID, areaID, binName, binLocation, binStatus)",
 //        "CREATE TABLE tblacr (acrID, acrName, acrPhoneNo, acrAddress, acrPeriod, acrStatus)",
 //        "CREATE TABLE tblacrfreq (acrID, areaID, day)",
+        "CREATE TABLE tblreport (reportID VARCHAR(20) PRIMARY KEY, areaID VARCHAR(15), reportCollectionDate DATE, operationTimeStart TIME, operationTimeEnd TIME, garbageAmount INT(3), iFleetImg LONGBLOB, address VARCHAR(80) NOT NULL, gmLong DOUBLE(10,7), gmLat DOUBLE(10,7), readStatus CHAR(1), reportStatus CHAR(1), truckID VARCHAR(15), driverID VARCHAR(15), remark TEXT, creationDateTime DATETIME)",
+        "CREATE TABLE tblmapcircle(circleID VARCHAR(15) PRIMARY KEY, radius DOUBLE(20,20), cLong DOUBLE(10,7), cLat DOUBLE(10,7), reportID VARCHAR(20))"
+    ];
+    
+    var newTable = [
+        "CREATE TABLE tblstaff (staffID VARCHAR(15) PRIMARY KEY, username VARCHAR(20), password MEDIUMTEXT, staffName VARCHAR(50), staffIC VARCHAR(15), staffGender CHAR(1), staffDOB DATE, staffAddress VARCHAR(255), handphone VARCHAR(11), phone VARCHAR(10), email VARCHAR(50), positionID VARCHAR(15), creationDateTime DATETIME, staffStatus CHAR(1))",
+        "CREATE TABLE tblposition (positionID VARCHAR(15) PRIMARY KEY, positionName VARCHAR(30), creationDateTime DATETIME, positionStatus CHAR(1))",
+        "CREATE TABLE tblmanagement (mgmtID INT PRIMARY KEY AUTO_INCREMENT, mgmtName VARCHAR(50))",
+        "CREATE TABLE tblaccess (positionID VARCHAR(15), mgmtID VARCHAR(15))",
+        "CREATE TABLE tblzone (zoneID VARCHAR(15) PRIMARY KEY, zoneName VARCHAR(100), creationDateTime DATETIME, zoneStatus CHAR(1))",
+        "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))",
+        //area_collection
+        "CREATE TABLE tblbin (binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))",
+        "CREATE TABLE tblacr (acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATE, creationDateTime DATETIME, acrStatus CHAR(1))",
+        "CREATE TABLE tblacrfreq (acrID VARCHAR(15), areaID VARCHAR(15), day VARCHAR(15))",
+        "CREATE TABLE tbltruck (truckID VARCHAR(15) PRIMARY KEY, transporterID VARCHAR(15), truckTon INT, truckNum VARCHAR(10), truckExpiryStatus DATE, creationDateTime DATETIME, truckStatus CHAR(1))",
+        "CREATE TABLE tbltransporter (transporterID VARCHAR(15), transporterName VARCHAR(10), transporterDescription VARCHAR(100), creationDateTime DATETIME, transportStatus CHAR(1))",
         "CREATE TABLE tblreport (reportID VARCHAR(20) PRIMARY KEY, areaID VARCHAR(15), reportCollectionDate DATE, operationTimeStart TIME, operationTimeEnd TIME, garbageAmount INT(3), iFleetImg LONGBLOB, address VARCHAR(80) NOT NULL, gmLong DOUBLE(10,7), gmLat DOUBLE(10,7), readStatus CHAR(1), reportStatus CHAR(1), truckID VARCHAR(15), driverID VARCHAR(15), remark TEXT, creationDateTime DATETIME)",
         "CREATE TABLE tblmapcircle(circleID VARCHAR(15) PRIMARY KEY, radius DOUBLE(20,20), cLong DOUBLE(10,7), cLat DOUBLE(10,7), reportID VARCHAR(20))"
     ];

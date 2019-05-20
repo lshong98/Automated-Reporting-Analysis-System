@@ -53,6 +53,7 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         scope.sho = true;
         scope.showTruck = true;
         scope.showZone = true;
+        scope.showProfile = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -135,6 +136,18 @@ app.directive('editable', function ($compile, $http, storeDataService) {
                     scope.z = angular.copy(storeDataService.zone[index]);
                 }
             });
+        };
+        
+        scope.editProfile = function () {
+            scope.showProfile = !scope.showProfile;
+            scope.originalData = angular.copy(scope.thisAccount);
+        };
+        scope.saveProfile = function () {
+            scope.showProfile = !scope.showProfile;
+        };
+        scope.cancelProfile = function () {
+            scope.showProfile = !scope.showProfile;
+            scope.thisAccount = angular.copy(scope.originalData);
         };
         
         scope.choose = function () {
@@ -975,6 +988,10 @@ app.controller('specificAccController', function ($scope, $http, $routeParams) {
         "password": '',
         "again": ''
     };
+    
+    $http.get('/getPositionList').then(function (response) {
+        $scope.positionList = response.data;
+    });
 
     $http.post('/loadSpecificAccount', $scope.thisAccount).then(function (response) {
         $.each(response.data[0], function (index, value) {
