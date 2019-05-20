@@ -474,7 +474,8 @@ app.post('/addReport',function(req,res){
     'use strict';
     makeID('report',req.body.creationDate);
     setTimeout(function () {
-        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, gmLong, gmLat, readStatus, reportStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '" + req.body.address + "', '" + req.body.lng + "', '" + req.body.lat + "', 'I', 'A','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
+        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, gmLong, gmLat, readStatus, reportStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '" + req.body.address + "', '" + req.body.lng + "', '" + req.body.lat + "', 'I', '" + req.body.status+ "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
+        
         
         db.query(sql, function(err, result) {
             if (err) {
@@ -488,9 +489,49 @@ app.post('/addReport',function(req,res){
 app.post('/getReport',function(req,res){
     'use strict';
     
-    var sql = "SELECT r.reportID, r.areaID, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.truckID, r.driverID, r.remark, r.gmLong, r.gmLat, r.garbageAmount, r.iFleetImg FROM tblreport r WHERE r.reportID = '" + req.body.reportID + "'";
+    var sql = "SELECT r.reportID, r.areaID, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, t.truckNum, r.driverID, r.remark, r.gmLong, r.gmLat, r.garbageAmount, r.iFleetImg, t.transporterID, s.staffName FROM tblreport r INNER JOIN tbltruck t ON t.truckID = r.truckID INNER JOIN tblstaff s ON r.driverID = s.staffID WHERE r.reportID = '" + req.body.reportID + "'";
     
-    //console.log(sql);
+
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.post('/getReportAreaCollection',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT areaAddress FROM area_collection WHERE areaID = '" + req.body.areaID + "'";
+    
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+
+app.post('/getMapCircle',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT radius, cLong, cLat FROM tblmapcircle WHERE reportID = '" + req.body.reportID + "'";
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+        console.log(result);
+    });
+});
+
+app.post('/getReportBin',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT binName FROM tblbin WHERE areaID = '" + req.body.areaID + "'";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -503,9 +544,8 @@ app.post('/getReport',function(req,res){
 app.get('/getReportList',function(req,res){
     'use strict';
     
-    var sql ="SELECT reportID, reportCollectionDate, areaID, reportStatus, garbageAmount, remark FROM tblreport"
+    var sql ="SELECT reportID, reportCollectionDate, areaID, reportStatus, garbageAmount, remark FROM tblreport";
     
-    console.log(sql);
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -542,7 +582,7 @@ app.get('/getPositionList', function(req, res) {
 
 app.get('/getDriverList', function(req, res) {
     'use strict';
-    var sql = "SELECT driverID AS id, driverName AS name FROM tbldriver WHERE driverStatus = 'A'";
+    var sql = "SELECT staffID AS id, staffName AS name FROM tblstaff WHERE staffPosID ='ATH201905200001' AND staffStatus = 'A'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -734,7 +774,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblacr(acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATE, creationDateTime DATETIME, acrStatus CHAR(1))",
         
         "CREATE TABLE tblacrfreq(acrID VARCHAR(15), areaID VARCHAR(15), day VARCHAR(15))",
-//        "CREATE TABLE area_collection (acID, areaID, areaAddress, areaCollStatus)",
+        "CREATE TABLE area_collection (acID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), areaAddress VARCHAR(100), areaCollStatus CHAR(1))",
 //        "CREATE TABLE tblbincenter (binID, areaID, binName, binLocation, binStatus)",
 //        "CREATE TABLE tblacr (acrID, acrName, acrPhoneNo, acrAddress, acrPeriod, acrStatus)",
 //        "CREATE TABLE tblacrfreq (acrID, areaID, day)",

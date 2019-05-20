@@ -61,7 +61,8 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         "lat": '',
         "address": '',
         "marker": centerArray,
-        "creationDate": ''
+        "creationDate": '',
+        "status" : ''
     };
     
     $scope.report.collectionDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
@@ -218,7 +219,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                 });
                
             }
-             //window.location.href = '#/reporting';
+             window.location.href = '#/reporting';
         });
     };
     
@@ -465,9 +466,17 @@ app.controller('viewReportController',function($scope, $http, $routeParams, $win
         reportID : $routeParams.reportCode
     };
     
+    
     $http.post('/getReport',report).then(function(response){
         var data = response.data[0];
+        $scope.reportData = response.data[0];
+        var area = {
+            areaID : $scope.reportData.areaID
+        };
         $scope.iFleet = data.iFleetImg;
+        
+        //console.log(($scope.reportData.reportCollectionDate).getDay);
+        console.log($scope.reportData);
         
         var $googleMap = document.getElementById('googleMap');
         var visualizeMap = {
@@ -490,6 +499,22 @@ app.controller('viewReportController',function($scope, $http, $routeParams, $win
 //                $scope.report.lng = lng;
 //                $scope.report.lat = lat;
             }, 1000);
+        
+        $http.post('/getReportBin',area).then(function(response){
+            $scope.reportData.binList = response.data;
+        });
+        
+        $http.post('/getReportAreaCollection',area).then(function(response){
+            $scope.reportData.areaList = response.data;
+            //console.log(response.data);
+        });
+        
     });
+    
+    $http.post('/getMapCircle',report).then(function(response){
+        console.log(response.data);
+    });
+    
+    
     
 });

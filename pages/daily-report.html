@@ -128,6 +128,16 @@
 </div>
 
 <div class="form-group row">
+    <label for="status" class="col-xs-3 col-form-label form-label-width">Report Status</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3 " id="status" data-ng-model="report.status" data-live-search="true" data-width="100%">
+            <option value="C">Complete</option>
+            <option value="I">Incomplete</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
     <label for="inputGAmount form-label" class="col-xs-3 col-form-label form-label-width">Garbage Amount (TON)</label>
     <div class="col-md-9">
         <input type="text" id="inputGAmount" placeholder="(ton)" class="form-control mx-sm-3" data-ng-model="report.ton"/>
