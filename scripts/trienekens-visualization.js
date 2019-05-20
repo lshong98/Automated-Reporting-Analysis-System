@@ -4,11 +4,19 @@
 app.controller('visualizationController', function ($scope, $http, $window) {
     'use strict';
     $scope.chartDurationGarbageSelected = "Line";
+    $scope.chartCompleteStatusSelected = "Area";
     $scope.changeChartDurationGarbage = function (chart) {
         if (chart === 'Line') {
             $scope.chartDurationGarbageSelected = "Line";
         } else if (chart === 'Bar') {
             $scope.chartDurationGarbageSelected = "Bar";
+        }
+    }
+    $scope.changeCompleteStatus = function (chart) {
+        if (chart === 'Area') {
+            $scope.chartCompleteStatusSelected = "Area";
+        } else if (chart === 'Date') {
+            $scope.chartCompleteStatusSelected = "Date";
         }
     }
 
@@ -19,13 +27,13 @@ app.controller('visualizationController', function ($scope, $http, $window) {
 
         return d;
     }
+    //function to reshape data for fit into charts
     var getElementList = function (element, data) {
         var objReturn = [];
         var i, j;
-        var exist = false;
+        var exist = false, complete;
         var timeStart, timeEnd, duration;
         var dimension = false;
-        //var countComplete, countIncomplete;
         for (i = 0; i < data.length; i += 1) {
             if (element === "reportCollectionDate") {
                 objReturn.push(data[i].reportCollectionDate);
@@ -45,8 +53,6 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 timeStart = stringToTime(data[i].operationTimeStart)
                 timeEnd = stringToTime(data[i].operationTimeEnd);
                 duration = (timeEnd - timeStart) / 60 / 1000;
-
-
 
                 for (j = 0; j < objReturn.length; j += 1) {
                     if (objReturn[j].name === data[i].areaID) {
@@ -76,7 +82,7 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 }
             }else if (element === "completionStatusArea"){
                 exist = false;
-                var complete = data[i].completionStatus === "1" ? true : false;
+                complete = data[i].completionStatus === "1" ? true : false;
                 
                 if(!dimension){
                     for(var num = 0; num < 3; num+=1){
@@ -92,11 +98,35 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                         
                         exist = true;
                     }
-                    
                 }
                 //add new area
                 if(!exist){
                     objReturn[0].push(data[i].areaID);
+                    objReturn[1].push(complete === true ? -1 : 0);
+                    objReturn[2].push(complete === false ? 1 : 0);
+                }    
+            }else if (element === "completionStatusDate"){
+                exist = false;
+                complete = data[i].completionStatus === "1" ? true : false;
+                
+                if(!dimension){
+                    for(num = 0; num < 3; num+=1){
+                        objReturn[num] = [];
+                    }
+                    dimension = true;
+                }
+                
+                for(j = 0; j < objReturn[0].length; j += 1){
+                    if(objReturn[0][j] === data[i].reportCollectionDate){
+                        objReturn[1][j] += complete === true ? -1 : 0;
+                        objReturn[2][j] += complete === false ? 1 : 0;
+                        
+                        exist = true;
+                    }
+                }
+                //add new area
+                if(!exist){
+                    objReturn[0].push(data[i].reportCollectionDate);
                     objReturn[1].push(complete === true ? -1 : 0);
                     objReturn[2].push(complete === false ? 1 : 0);
                 }    
@@ -237,7 +267,7 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 }
             },
             series: [{
-                name: 'Amount',
+                name: 'Percentage',
                 colorByPoint: true,
                 data: getElementList("amountGarbageOnArea", $scope.reportList)
     }]
@@ -436,6 +466,64 @@ app.controller('visualizationController', function ($scope, $http, $window) {
     }, {
             name: 'Incomplete',
             data: getElementList("completionStatusArea", $scope.reportList)[2]
+    }]
+    });
+    //chart-negativebar-status-date
+    Highcharts.chart('chart-negativebar-status-date', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Date Count of Completion Status'
+        },
+        subtitle: {
+            text: 'Trienekens'
+        },
+        xAxis: [{
+            categories: getElementList("completionStatusDate", $scope.reportList)[0],
+            reversed: false,
+            labels: {
+                step: 1
+            }
+    }, { // mirror axis on right side
+            opposite: true,
+            reversed: false,
+            categories: getElementList("completionStatusDate", $scope.reportList)[0],
+            linkedTo: 0,
+            labels: {
+                step: 1
+            }
+    }],
+        yAxis: {
+            title: {
+                text: null
+            },
+            labels: {
+                formatter: function () {
+                    return Math.abs(this.value);
+                }
+            }
+        },
+
+        plotOptions: {
+            series: {
+                stacking: 'normal'
+            }
+        },
+
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.series.name + ', area ' + this.point.category + '</b><br/>' +
+                    'Complete/Incomplete Count: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+            }
+        },
+
+        series: [{
+            name: 'Complete',
+            data: getElementList("completionStatusDate", $scope.reportList)[1]
+    }, {
+            name: 'Incomplete',
+            data: getElementList("completionStatusDate", $scope.reportList)[2]
     }]
     });
     }
