@@ -1,7 +1,7 @@
 /*jslint node:true*/
 var express = require('express');
 var sanitizer = require('sanitizer');
-//var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
@@ -12,10 +12,10 @@ var dateTime = require('node-datetime');
 //var bodyParser = require('body-parser');
 var emitter = new EventEmitter();
 
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = 'trienekens';
+var DB_NAME = '';
 
 var SVR_PORT = 3000;
 var obj = {
