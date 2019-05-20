@@ -9,13 +9,13 @@ var path = require('path');
 var mysql = require('mysql');
 var EventEmitter = require('events');
 var dateTime = require('node-datetime');
-var bodyParser = require('body-parser');
+//var bodyParser = require('body-parser');
 var emitter = new EventEmitter();
 
 var DB_HOST = '';
 var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = 'trienekens';
+var DB_NAME = '';
 
 var SVR_PORT = 3000;
 var obj = {
@@ -483,6 +483,36 @@ app.post('/addReport',function(req,res){
             res.json({"status": "success", "details": {"reportID": obj.ID}});
         });
     }, 100);
+});
+
+app.post('/getReport',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT r.reportID, r.areaID, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.truckID, r.driverID, r.remark, r.gmLong, r.gmLat, r.garbageAmount, r.iFleetImg FROM tblreport r WHERE r.reportID = '" + req.body.reportID + "'";
+    
+    //console.log(sql);
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.get('/getReportList',function(req,res){
+    'use strict';
+    
+    var sql ="SELECT reportID, reportCollectionDate, areaID, reportStatus, garbageAmount, remark FROM tblreport"
+    
+    console.log(sql);
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
 });
 
 app.get('/getAllUser', function (req, res) {

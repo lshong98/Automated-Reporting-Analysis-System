@@ -117,6 +117,11 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'binController',
         controllerAs: 'bin'
     })
+    .when('/view-report/:reportCode',{
+        templateUrl:'view-report.html',
+        controller:'viewReportController',
+        controllerAs:'report'
+    })
     .otherwise({
         templateUrl: '/error',
         controller: 'errorController',

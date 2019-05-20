@@ -372,61 +372,17 @@ app.controller('reportingController', function ($scope, $http, $filter) {
         });
          console.log($scope.areaList);
     });
-//    $scope.handledArea = [{
-//        "zoneCode": 'Z1',
-//        "area": [{
-//            "areaCode": 'Z1A1',
-//            "areaName": 'Zone 1 Area 1'
-//        }, {
-//            "areaCode": 'Z1A2',
-//            "areaName": 'Zone 1 Area 2'
-//        }, {
-//            "areaCode": 'Z1A3',
-//            "areaName": 'Zone 1 Area 3'
-//        }, {
-//            "areaCode": 'Z1A4',
-//            "areaName": 'Zone 1 Area 4'
-//        }, {
-//            "areaCode": 'Z1A5',
-//            "areaName": 'Zone 1 Area 5'
-//        }]
-//    }, {
-//        "zoneCode": 'Z2',
-//        "area": [{
-//            "areaCode": 'Z2A1',
-//            "areaName": 'Zone 2 Area 1'
-//        }, {
-//            "areaCode": 'Z2A2',
-//            "areaName": 'Zone 2 Area 2'
-//        }, {
-//            "areaCode": 'Z2A3',
-//            "areaName": 'Zone 2 Area 3'
-//        }, {
-//            "areaCode": 'Z2A4',
-//            "areaName": 'Zone 2 Area 4'
-//        }, {
-//            "areaCode": 'Z2A5',
-//            "areaName": 'Zone 2 Area 5'
-//        }]
-//    }, {
-//        "zoneCode": 'Z3',
-//        "area": [{
-//            "areaCode": 'Z3A1',
-//            "areaName": 'Zone 3 Area 1'
-//        }, {
-//            "areaCode": 'Z3A2',
-//            "areaName": 'Zone 3 Area 2'
-//        }, {
-//            "areaCode": 'Z3A3',
-//            "areaName": 'Zone 3 Area 3'
-//        }, {
-//            "areaCode": 'Z3A4',
-//            "areaName": 'Zone 3 Area 4'
-//        }, {
-//            "areaCode": 'Z3A5',
-//            "areaName": 'Zone 3 Area 5'
-//        }]
-//    }];
+    
+    $http.get('/getReportList').then(function(response){
+        $scope.reportList = response.data;
+    });
+    
+    $scope.viewReport = function(reportCode){
+        setTimeout(function () {
+            window.location.href = '#/view-report/' + reportCode; // +"+"+ name
+        }, 500);
+    }
+
 
     $scope.thisArea = function (id,name) {
         angular.element('#chooseArea').modal('toggle');
@@ -501,4 +457,39 @@ app.controller('reportingController', function ($scope, $http, $filter) {
         $scope.reportList = $filter('orderBy')($scope.reportList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
+});
+
+app.controller('viewReportController',function($scope, $http, $routeParams, $window){
+    
+    var report = {
+        reportID : $routeParams.reportCode
+    };
+    
+    $http.post('/getReport',report).then(function(response){
+        var data = response.data[0];
+        $scope.iFleet = data.iFleetImg;
+        
+        var $googleMap = document.getElementById('googleMap');
+        var visualizeMap = {
+                center: new google.maps.LatLng(1, 1),
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false,
+                panControl: false,
+                zoomControl: false,
+                streetViewControl: false,
+                disableDefaultUI: true,
+                editable: false
+            };
+
+            var map = new google.maps.Map($googleMap, visualizeMap);
+        
+        $window.setTimeout(function () {
+                map.panTo(new google.maps.LatLng(data.gmLat, data.gmLong));
+                map.setZoom(17);
+                
+//                $scope.report.lng = lng;
+//                $scope.report.lat = lat;
+            }, 1000);
+    });
+    
 });

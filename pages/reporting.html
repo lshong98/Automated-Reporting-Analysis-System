@@ -72,12 +72,12 @@
                     </tr>
                 </thead>
                 <tbody>               
-                    <tr data-ng-repeat="d in reportList | filter: searchReport | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
-                        <td data-ng-bind="d.reportCode"></td>
-                        <td data-ng-bind="d.reportDate"></td>
-                        <td data-ng-bind="d.area"></td>
+                    <tr data-ng-repeat="d in reportList | filter: searchReport | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewReport(d.reportID);">
+                        <td data-ng-bind="d.reportID"></td>
+                        <td data-ng-bind="d.reportCollectionDate"></td>
+                        <td data-ng-bind="d.areaID"></td>
                         <td data-ng-bind="d.collection"></td>
-                        <td data-ng-bind="d.status"></td>
+                        <td data-ng-bind="d.reportStatus"></td>
                         <td data-ng-bind="d.garbageAmount"></td>
                         <td data-ng-bind="d.remark"></td>
                     </tr>
