@@ -206,7 +206,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        console.log($scope.report.creationDate);
         console.log($scope.report);
         $http.post('/addReport', $scope.report).then(function (response) {
             var returnedData = response.data;
@@ -376,6 +375,9 @@ app.controller('reportingController', function ($scope, $http, $filter) {
     
     $http.get('/getReportList').then(function(response){
         $scope.reportList = response.data;
+        $.each($scope.reportList, function (index, value) {
+            $scope.reportList[index].reportCollectionDate = $filter('date')($scope.reportList[index].reportCollectionDate, 'yyyy-MM-dd');
+        });
     });
     
     $scope.viewReport = function(reportCode){
@@ -392,49 +394,15 @@ app.controller('reportingController', function ($scope, $http, $filter) {
         }, 500);
     };
 
-    $scope.reportList = [{
-        "reportCode": '0001',
-        "reportDate": '17/05/2019',
-        "area": 'Tabuan Jaya',
-        "collection": 'Tue & Fri',
-        "status": 'Completed',
-        "garbageAmount": '50',
-        "remark": 'Sing Hong'
-    }, {
-        "reportCode": '0002',
-        "reportDate": '16/05/2019',
-        "area": 'Tabuan Jaya',
-        "collection": 'Tue & Fri',
-        "status": 'Completed',
-        "garbageAmount": '50',
-        "remark": 'Felix'
-    }, {
-        "reportCode": '0003',
-        "reportDate": '15/05/2019',
-        "area": 'Tabuan Jaya',
-        "collection": 'Tue & Fri',
-        "status": 'Completed',
-        "garbageAmount": '50',
-        "remark": 'Steven'
-    }, {
-        "reportCode": '0004',
-        "reportDate": '14/05/2019',
-        "area": 'Tabuan Jaya',
-        "collection": 'Tue & Fri',
-        "status": 'Completed',
-        "garbageAmount": '50',
-        "remark": 'Others'
-    }];
-
     
     $scope.filterReportList = [];
     $scope.searchReport = function (report) {
-        return (report.reportCode + report.reportDate + report.area + report.collection + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+        return (report.reportCode + report.reportDate + report.area + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
     }
     
-    $.each($scope.reportList, function (index) {
-        $scope.filterReportList = angular.copy($scope.reportList);
-    });
+//    $.each($scope.reportList, function (index) {
+//        $scope.filterReportList = angular.copy($scope.reportList);
+//    });
 
     $scope.totalItems = $scope.filterReportList.length;
     console.log($scope.totalItems)
@@ -460,61 +428,82 @@ app.controller('reportingController', function ($scope, $http, $filter) {
     };
 });
 
-app.controller('viewReportController',function($scope, $http, $routeParams, $window){
-    
-    var report = {
-        reportID : $routeParams.reportCode
+app.controller('viewReportController', function($scope, $http, $routeParams, $window, $filter){
+    $scope.bin = "";
+    $scope.acr = "";
+    var map;
+    $scope.report = {
+        "reportID": $routeParams.reportCode
     };
+    $scope.reportID = $routeParams.reportCode;
     
     
-    $http.post('/getReport',report).then(function(response){
-        var data = response.data[0];
-        $scope.reportData = response.data[0];
-        var area = {
-            areaID : $scope.reportData.areaID
-        };
-        $scope.iFleet = data.iFleetImg;
+    $http.post('/getReport', $scope.report).then(function(response){
+        $scope.thisReport = response.data[0];
         
-        //console.log(($scope.reportData.reportCollectionDate).getDay);
-        console.log($scope.reportData);
+        $scope.thisReport.date = $filter('date')($scope.thisReport.date, 'yyyy-MM-dd');
+
+        $scope.area = {
+            "areaID": $scope.thisReport.area
+        };
         
         var $googleMap = document.getElementById('googleMap');
         var visualizeMap = {
-                center: new google.maps.LatLng(1, 1),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                mapTypeControl: false,
-                panControl: false,
-                zoomControl: false,
-                streetViewControl: false,
-                disableDefaultUI: true,
-                editable: false
-            };
+            center: new google.maps.LatLng(1, 1),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false,
+            panControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+            disableDefaultUI: true,
+            editable: false
+        };
 
-            var map = new google.maps.Map($googleMap, visualizeMap);
-        
+        map = new google.maps.Map($googleMap, visualizeMap);
+
         $window.setTimeout(function () {
-                map.panTo(new google.maps.LatLng(data.gmLat, data.gmLong));
-                map.setZoom(17);
-                
-//                $scope.report.lng = lng;
-//                $scope.report.lat = lat;
-            }, 1000);
+            map.panTo(new google.maps.LatLng($scope.thisReport.lat, $scope.thisReport.lng));
+            map.setZoom(17);
+        }, 1000);
         
-        $http.post('/getReportBin',area).then(function(response){
-            $scope.reportData.binList = response.data;
+        $http.post('/getReportBin', $scope.area).then(function(response){
+            $scope.thisReport.bin = response.data;
+            $scope.row = Object.keys($scope.thisReport.bin).length;
+            $.each($scope.thisReport.bin, function (index, value) {
+                $scope.bin += value.name;
+                if ((index + 1) != $scope.row) {
+                    $scope.bin += ', ';
+                }
+            });
         });
-        
-        $http.post('/getReportAreaCollection',area).then(function(response){
-            $scope.reportData.areaList = response.data;
-            //console.log(response.data);
-        });
-        
     });
     
-    $http.post('/getMapCircle',report).then(function(response){
+    $http.post('/getReportACR', $scope.report).then(function (response) {
+        $scope.thisReport.acr = response.data;
         console.log(response.data);
+        $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+        $.each($scope.thisReport.acr, function (index, value) {
+            $scope.acr += value.name;
+            if ((index + 1) != $scope.acrRow) {
+                $scope.acr += ', ';
+            }
+        });
     });
     
-    
-    
+    $http.post('/getReportCircle', $scope.report).then(function (response) {
+        var data = response.data;
+        $.each(data, function (index, value) {
+            var circle = new google.maps.Circle({
+            map: map,
+            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+            radius: parseFloat(data[index].radius),
+            fillColor: 'transparent',
+            strokeColor: 'red',
+            editable: false,
+            draggable: false
+        });
+        });
+        
+
+    });
 });

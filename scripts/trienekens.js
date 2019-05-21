@@ -41,6 +41,12 @@ app.service('storeDataService', function () {
             "id": '',
             "name": '',
             "status": ''
+        },
+        "bin": {
+            "id": '',
+            "name": '',
+            "location": '',
+            "area": ''
         }
     };
     
@@ -50,10 +56,10 @@ app.service('storeDataService', function () {
 app.directive('editable', function ($compile, $http, storeDataService) {
     'use strict';
     return function (scope) {
-        scope.sho = true;
         scope.showTruck = true;
         scope.showZone = true;
         scope.showProfile = true;
+        scope.showBin = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -65,6 +71,13 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         scope.thisZone = {
             "id": '',
             "name": '',
+            "status": ''
+        };
+        scope.thisBin = {
+            "id": '',
+            "name": '',
+            "location": '',
+            "area": '',
             "status": ''
         };
         
@@ -109,7 +122,7 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         
         scope.editZone = function (id, name, status) {
             scope.showZone = !scope.showZone;
-            scope.thisZone = {"id": id, "name": name, "status": status};
+            scope.thisZone = { "id": id, "name": name, "status": status };
         };
         scope.saveZone = function () {
             scope.showZone = !scope.showZone;
@@ -150,60 +163,38 @@ app.directive('editable', function ($compile, $http, storeDataService) {
             scope.thisAccount = angular.copy(scope.originalData);
         };
         
-        scope.choose = function () {
-            scope.sho = !scope.sho;
-
-
-            angular.element('.btn' + scope.d.id).replaceWith($compile('<button class="btn btn-warning btn-sm btn' + scope.d.id + '" data-ng-click="save();"><i class="fa fa-save"></i></button>')(scope));
-            angular.element('.btn' + scope.d.id).parent().append(" ").append($compile('<button class="btn btn-default btn-sm btnCancel' + scope.d.id + '" data-ng-click="cancel();"><i class="fa fa-times"></i></button>')(scope));
-            //            angular.element('.btnBack').replaceWith($compile('<button class="btn btn-default btnCancel" data-directive="editable" data-ng-click="cancel()">Cancel</button>')(scope));
+        scope.editBin = function (id, name, location, area, status) {
+            scope.showBin = !scope.showBin;
+            scope.thisBin = { "id": id, "name": name, "location": location, "area": area, "status": status };
         };
-
-        scope.save = function () {
-            scope.sho = true;
-
-            angular.element('.btn' + scope.d.id).replaceWith($compile('<button class="btn btn-primary btn-sm btn' + scope.d.id + '" data-ng-click="choose();"><i class="fa fa-pencil-alt"></i></button>')(scope));
+        scope.saveBin = function () {
+            scope.showBin = !scope.showBin;
+            
+            $http.post('/editBin', scope.b).then(function (response) {
+                var data = response.data;
+                
+                scope.notify(data.status, data.message);
+                
+                $.each(storeDataService.bin, function (index, value) {
+                    if (storeDataService.bin[index].id == scope.thisBin.id) {
+                        if (data.status == "success") {
+                            storeDataService.bin[index] = angular.copy(scope.b);
+                        } else {
+                            scope.z = angular.copy(storeDataService.bin[index]);
+                        }
+                    }
+                });
+            });
         };
-
-
-
-        //        scope.save = function () {
-        //            $http({
-        //                method: 'POST',
-        //                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        //                url: '../database/backend.php?module=self&action=update',
-        //                data: $.param({"id": selfDataService.self.id, "avatar": scope.self.avatar, "name": scope.self.name, "nric": scope.self.nric, "gender": scope.self.gender, "contact": scope.self.contact, "email": scope.self.email, "op": scope.self.op, "np": scope.self.np, "cp": scope.self.cp})
-        //            }).then(function successCallback(response) {
-        //                if (response.data.result === "success") {
-        //                    $("body").overhang({
-        //                        type: "success",
-        //                        message: "Profile Saved!"
-        //                    });
-        //                    scope.sho = true;
-        //                    selfDataService.self = angular.copy(scope.self);
-        //                    
-        //                    if (scope.self.gender === 'F') {scope.strGender = "Female";}
-        //                    else if (scope.self.gender === 'M') {scope.strGender = "Male";}
-        //                    else {scope.strGender = "Undefined";}
-        //                    
-        //                    angular.element('.btnSave').replaceWith($compile('<button class="btn btn-primary btnEdit" data-ng-click="choose()">Edit</button>')(scope));
-        //                    angular.element('.btnCancel').replaceWith('<button class="btn btn-default btnBack">Back</button>');
-        //                } else if (response.data.result === "fail") {
-        //                    $("body").overhang({
-        //                        type: "error",
-        //                        message: "Something Wrong!"
-        //                    });
-        //                }
-        //            });
-        //        };
-
-        scope.cancel = function () {
-            scope.sho = true;
-            //scope.self = angular.copy(selfDataService.self);
-
-            angular.element('.btnSave').replaceWith($compile('<button class="btn btn-primary btnEdit" data-ng-click="choose()">Edit</button>')(scope));
-
-            angular.element('.btnCancel').replaceWith('<button class="btn btn-default btnBack">Back</button>');
+        scope.cancelBin = function () {
+            scope.showBin = !scope.showBin;
+            
+            $.each(storeDataService.bin, function (index, value) {
+                if (storeDataService.bin[index].id == scope.thisBin.id) {
+                    scope.b = angular.copy(storeDataService.bin[index]);
+                }
+            });
+            
         };
     };
 });
@@ -656,20 +647,18 @@ app.controller('areaController', function ($scope, $http, $filter) {
         $scope.areaList = response.data;
         $scope.filterAreaList = [];
 
-        for(var i =0; i<($scope.areaList).length; i++){
-            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
-            $scope.areaList[i].staffidname = $scope.areaList[i].staffName + '-' + $scope.areaList[i].staff;
-        }
-        //$scope.arealist.zoneidname = $scope.areaList.zone + $scope.areaList.zoneName;
-        console.log($scope.areaList);
+//        for(var i = 0; i < ($scope.areaList).length; i++){
+//            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
+//            $scope.areaList[i].staffidname = $scope.areaList[i].staffName + '-' + $scope.areaList[i].staff;
+//        }
         
         $scope.searchArea = function (area) {
             return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
         }
 
-        $.each($scope.areaList, function (index) {
-            $scope.filterAreaList = angular.copy($scope.areaList);
-        });
+//        $.each($scope.areaList, function (index) {
+//            $scope.filterAreaList = angular.copy($scope.areaList);
+//        });
 
         $scope.totalItems = $scope.filterAreaList.length;
 
@@ -854,12 +843,9 @@ app.controller('areaController', function ($scope, $http, $filter) {
         });
     }
     
-    //new added 15/5
-    //inactive can't be show
-    $scope.editAreaPage = function(){
-        window.location.href = '#/area-management-edit';
-
-    }
+    $scope.editAreaPage = function(id){
+        window.location.href = '#/area/' + id;
+    };
     
     $scope.editArea = function(){
         
@@ -875,6 +861,17 @@ app.controller('areaController', function ($scope, $http, $filter) {
             
         });
     }
+});
+
+app.controller('thisAreaController', function ($scope, $http, $routeParams) {
+    'use strict';
+    
+    var areaID = $routeParams.areaID;
+    
+    $scope.area = {
+        "id": areaID
+    };
+    
 });
 
 app.controller('accountController', function ($scope, $http, $filter, $window) {
@@ -1349,7 +1346,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
 
 });
 
-app.controller('binController', function($scope, $http, $filter){
+app.controller('binController', function($scope, $http, $filter, storeDataService){
     'use strict';
     $scope.areaList = [];
     $scope.currentPage = 1; //Initial current page to 1
@@ -1357,23 +1354,25 @@ app.controller('binController', function($scope, $http, $filter){
     $scope.maxSize = 10;
     
     $scope.bin = {
+        "id": '',
         "name": '',
-        "loc": '',
+        "location": '',
         "area": ''
     };
     
     $http.get('/getAllBin').then(function(response){
         $scope.searchBinFilter = '';
         $scope.binList = response.data;
+        storeDataService.bin = angular.copy($scope.binList);
         $scope.filterBinList = [];
         
         $scope.searchBin = function (bin) {
             return (bin.id + bin.name + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
-        }
+        };
         
-        $.each($scope.binList, function(index) {
-            $scope.filterBinList = angular.copy($scope.binList);
-        });
+//        $.each($scope.binList, function(index) {
+//            $scope.filterBinList = angular.copy($scope.binList);
+//        });
     
         $scope.totalItems = $scope.filterBinList.length;
     
@@ -1389,10 +1388,7 @@ app.controller('binController', function($scope, $http, $filter){
             }
             return vm;
         }, true);
-        
-        
     });
-    
     
     $http.get('/getAreaList').then(function (response) {
         renderSltPicker();
@@ -1413,7 +1409,6 @@ app.controller('binController', function($scope, $http, $filter){
         });
     });
     
-    
     function renderSltPicker() {
         angular.element('.selectpicker').selectpicker('refresh');
         angular.element('.selectpicker').selectpicker('render');
@@ -1421,6 +1416,7 @@ app.controller('binController', function($scope, $http, $filter){
     
     $scope.addBin = function () {
         $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        console.log($scope.bin);
         $http.post('/addBin', $scope.bin).then(function (response) {
             var returnedData = response.data;
             var newBinID = returnedData.details.binID;
@@ -1430,7 +1426,8 @@ app.controller('binController', function($scope, $http, $filter){
                     type: "success",
                     "message": "Area added successfully!"
                 });
-                $scope.binList.push({"id": newBinID, "name": $scope.bin.name, "loc": $scope.bin.loc, "area":$scope.bin.area.name, "status": 'ACTIVE'});
+                $scope.binList.push({"id": newBinID, "name": $scope.bin.name, "location": $scope.bin.location, "area":$scope.bin.area, "status": 'ACTIVE'});
+                storeDataService.bin = angular.copy($scope.binList);
                 $scope.filterBinList = angular.copy($scope.binList);
                 angular.element('#createBin').modal('toggle');
                 $scope.totalItems = $scope.filterBinList.length;
@@ -1438,19 +1435,19 @@ app.controller('binController', function($scope, $http, $filter){
         });
     }
     
-    $scope.editBin = function(){
-        
-        $http.post('/editBin', $scope.bin).then(function(response){
-            var data = response.data;
-            if(data.status === "success"){
-                angular.element('body').overhang({
-                    type: data.status,
-                    message: data.message
-                });
-            }
-            
-        });
-    }
+//    $scope.editBin = function(){
+//        
+//        $http.post('/editBin', $scope.bin).then(function(response){
+//            var data = response.data;
+//            if(data.status === "success"){
+//                angular.element('body').overhang({
+//                    type: data.status,
+//                    message: data.message
+//                });
+//            }
+//            
+//        });
+//    }
     
 });
 
@@ -1516,10 +1513,9 @@ app.controller('acrController',function($scope, $http, $filter){
     });
     
     
-    $('.datepicker').datepicker();
-        
+    angular.element('.datepicker').datepicker();
+    
     $http.get('/getAreaList').then(function (response) {
-        renderSltPicker();
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
@@ -1532,7 +1528,7 @@ app.controller('acrController',function($scope, $http, $filter){
             });
             $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
         });
-        console.log($scope.areaList);
+        renderSltPicker();
         $('.selectpicker').on('change', function() {
             renderSltPicker();
         });

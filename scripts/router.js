@@ -80,10 +80,12 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'areaController',
         controllerAs: 'area'
     })
-    .when('/area-management-edit', {
-        templateUrl: '/area-management-edit',
-        controller: 'areaController',
-        controllerAs: 'areaedit'
+    .when('/area/:areaID', {
+        templateUrl: function (params) {
+            return '/area/' + params.areaID
+        },
+        controller: 'thisAreaController',
+        controllerAs: 'thisArea'
     })
 //    .when('/area-management', {
 //        templateUrl: '/area-management'

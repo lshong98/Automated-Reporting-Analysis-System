@@ -9,7 +9,6 @@ var path = require('path');
 var mysql = require('mysql');
 var EventEmitter = require('events');
 var dateTime = require('node-datetime');
-//var bodyParser = require('body-parser');
 var emitter = new EventEmitter();
 
 var DB_HOST = '';
@@ -105,9 +104,9 @@ app.get('/auth/:auth', function(req, res) {
     'use strict';
     res.sendFile('pages/auth.html', {root: __dirname});
 });
-app.get('/area-management-edit', function(req, res) {
+app.get('/area/:areaID', function(req, res) {
     'use strict';
-    res.sendFile('pages/area-management-edit.html', {root: __dirname});
+    res.sendFile('pages/area.html', {root: __dirname});
 });
 app.get('/bin-management', function(req, res) {
     'use strict';
@@ -475,22 +474,31 @@ app.post('/addReport',function(req,res){
     makeID('report',req.body.creationDate);
     setTimeout(function () {
         var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, gmLong, gmLat, readStatus, reportStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '" + req.body.address + "', '" + req.body.lng + "', '" + req.body.lat + "', 'I', '" + req.body.status+ "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
-        
+        var i = 0;
+        var reportID = obj.ID;
         
         db.query(sql, function(err, result) {
             if (err) {
                 throw err;
+            }
+            for (i = 0; i < Object.keys(req.body.marker).length; i++) {
+                var sql = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
+                
+                db.query(sql, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                });
             }
             res.json({"status": "success", "details": {"reportID": obj.ID}});
         });
     }, 100);
 });
 
-app.post('/getReport',function(req,res){
+app.post('/getReport', function(req, res){
     'use strict';
     
-    var sql = "SELECT r.reportID, r.areaID, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, t.truckNum, r.driverID, r.remark, r.gmLong, r.gmLat, r.garbageAmount, r.iFleetImg, t.transporterID, s.staffName FROM tblreport r INNER JOIN tbltruck t ON t.truckID = r.truckID INNER JOIN tblstaff s ON r.driverID = s.staffID WHERE r.reportID = '" + req.body.reportID + "'";
-    
+    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.gmLat AS lat, tblreport.gmLong AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetImg AS ifleet, tbltruck.truckNum AS truck, tbltruck.transporterID AS transporter, tblstaff.staffName AS driver, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
 
     db.query(sql, function (err, result) {
         if (err) {
@@ -499,13 +507,24 @@ app.post('/getReport',function(req,res){
         res.json(result);
     });
 });
-
-app.post('/getReportAreaCollection',function(req,res){
+app.post('/getReportBin', function(req,res){
     'use strict';
     
-    var sql = "SELECT areaAddress FROM area_collection WHERE areaID = '" + req.body.areaID + "'";
+    var sql = "SELECT binName AS name FROM tblbin WHERE areaID = '" + req.body.areaID + "'";
     
-     db.query(sql, function (err, result) {
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+app.post('/getReportACR', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
+    
+    db.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -513,8 +532,7 @@ app.post('/getReportAreaCollection',function(req,res){
     });
 });
 
-
-app.post('/getMapCircle',function(req,res){
+app.post('/getReportCircle', function(req,res){
     'use strict';
     
     var sql = "SELECT radius, cLong, cLat FROM tblmapcircle WHERE reportID = '" + req.body.reportID + "'";
@@ -524,28 +542,13 @@ app.post('/getMapCircle',function(req,res){
             throw err;
         }
         res.json(result);
-        console.log(result);
     });
 });
 
-app.post('/getReportBin',function(req,res){
-    'use strict';
-    
-    var sql = "SELECT binName FROM tblbin WHERE areaID = '" + req.body.areaID + "'";
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-
-app.get('/getReportList',function(req,res){
+app.get('/getReportList', function(req, res){
     'use strict';
     
     var sql ="SELECT reportID, reportCollectionDate, areaID, reportStatus, garbageAmount, remark FROM tblreport";
-    
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -582,7 +585,7 @@ app.get('/getPositionList', function(req, res) {
 
 app.get('/getDriverList', function(req, res) {
     'use strict';
-    var sql = "SELECT staffID AS id, staffName AS name FROM tblstaff WHERE staffPosID ='ATH201905200001' AND staffStatus = 'A'";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaffposition JOIN tblstaff ON tblstaff.staffPosID = tblstaffposition.staffPosID WHERE tblstaffposition.staffPositionName = 'DRIVER' AND tblstaff.staffStatus = 'A'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -771,8 +774,7 @@ emitter.on('createTable', function () {
         
         "CREATE TABLE tblbin(binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))",
         
-        "CREATE TABLE tblacr(acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATE, creationDateTime DATETIME, acrStatus CHAR(1))",
-        
+        "CREATE TABLE tblacr (acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATE, creationDateTime DATETIME, acrStatus CHAR(1))",
         "CREATE TABLE tblacrfreq(acrID VARCHAR(15), areaID VARCHAR(15), day VARCHAR(15))",
         "CREATE TABLE area_collection (acID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), areaAddress VARCHAR(100), areaCollStatus CHAR(1))",
 //        "CREATE TABLE tblbincenter (binID, areaID, binName, binLocation, binStatus)",

@@ -3,10 +3,10 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th colspan="2">IVWM INSPECTION REPORT ID:{{reportData.reportID}}</th> <!--REPORT ID HERE-->
-                    <th colspan="3">Collection Date: {{reportData.reportCollectionDate}}</th>
-                    <th>Time Start: {{reportData.operationTimeStart}}</th>
-                    <th>Time End: {{reportData.operationTimeEnd}}</th>
+                    <th colspan="2" data-ng-bind="'IVWM INSPECTION REPORT ID: ' + (reportID)"></th> <!--REPORT ID HERE-->
+                    <th colspan="3" data-ng-bind="'Collection Date: ' + (thisReport.date)"></th>
+                    <th data-ng-bind="'Time Start: ' + (thisReport.startTime)"></th>
+                    <th data-ng-bind="'Time End: ' + (thisReport.endTime)"></th>
                     <th>Reporting Staff:</th>
                 </tr>
                 <tr>
@@ -22,48 +22,18 @@
             </thead>
             <tbody>
                <tr>
-                    <td rowspan="5">{{reportData.areaID}}</td>
-                    <td>
-<!--
-                        <tr data-ng-repeat="a in reportData.areaList">
-                            <td data-ng-bind="a.areaAddress"></td>
-                        </tr>
--->
-                        {{reportData.areaList}}                        
-                    </td>
-                    <td rowspan="5"></td>
-                    <td>
-<!--
-                        <tr data-ng-repeat="a in reportData.binList">
-                            <td data-ng-bind="a.binName"></td>
-                        </tr>
--->
-                        {{reportData.binList}}
-                    </td>
-                    <td></td>
-                    <td rowspan="5">{{reportData.transporterID}}</td>
-                    <td rowspan="5">{{reportData.truckNum}}</td>
-                    <td rowspan="5">{{reportData.staffName}}</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td data-ng-bind="thisReport.area"></td>
+                    <td data-ng-bind="thisReport.collection"></td>
+                    <td data-ng-bind="thisReport.frequency"></td>
+                    <td data-ng-bind="bin"></td>
+                    <td data-ng-bind="acr"></td>
+                    <td data-ng-bind="thisReport.transporter"></td>
+                    <td data-ng-bind="thisReport.truck"></td>
+                    <td data-ng-bind="thisReport.driver"></td>
                 </tr>
                 <tr>
                     <td>Remarks:</td>
-                    <td colspan="8">{{reportData.remark}}</td>
+                    <td colspan="7" data-ng-bind="thisReport.remark"></td>
                 </tr>
             </tbody>
         </table>
@@ -71,10 +41,10 @@
 
     </div>
 </div>
-
+<br /><br />
 <div class="row">
     <div class="col-md-6">
-        <img src="{{iFleet}}" width="50%" />
+        <img src="{{thisReport.ifleet}}" width="90%" />
     </div>
     <div class="col-md-6">
         <div id="googleMap" style="min-height: 300px;min-width: 300px;"></div>

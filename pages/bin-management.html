@@ -1,4 +1,3 @@
-
 <!-- Modal for add new-->
 <div class="modal fade" id="createBin" tabindex="-1" role="dialog" aria-labelledby="createBin" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -17,7 +16,7 @@
           
           <div class="form-group">
               <label for="txtBinLoc form-label">Bin Centre Location</label>
-              <input type="text" class="form-control" id="txtBinLoc" data-ng-model="bin.loc" />
+              <input type="text" class="form-control" id="txtBinLoc" data-ng-model="bin.location" />
           </div>
           
           <div class="form-group">
@@ -37,51 +36,6 @@
   </div>
 </div>
 
-<!-- Modal for edit-->
-<div class="modal fade" id="editBin" tabindex="-1" role="dialog" aria-labelledby="editBin" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Edit Bin Centre</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          
-          <div class="form-group">
-              <label for="editBinId form-label">Bin Centre ID:</label>
-              <input type="text" class="form-control" id="editBinId" data-ng-model="bin.editBinId" />
-          </div>
-          <div class="form-group">
-              <label for="editBinName form-label">Bin Centre Name</label>
-              <input type="text" class="form-control" id="editBinName" data-ng-model="bin.editBinName" />
-          </div>
-          <div class="form-group">
-              <label for="editBinLoc form-label">Bin Centre Location</label>
-              <input type="text" class="form-control" id="editBinLoc" data-ng-model="bin.editBinLoc" />
-          </div>
-          <div class="form-group">
-              <label for="editBinArea form-label">Area</label>
-            <select id="editBinArea" class="form-control" data-ng-model="bin.editArea" data-ng-options="area as area.name for area in areaList"></select>
-          </div>
-          <div class="form-group">
-              <label for="editBinStatus form-label">Status</label>
-             <select class="form-control" id="editBinStatus" data-ng-model="bin.editBinStatus">
-                 <option value="A">Activate</option>
-                 <option value="I">Inactivate</option>
-              </select>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <!--temporary, have to remove it-->
-        <button type="button" class="btn btn-primary" data-ng-click="editBin();">Edit</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="row">
     <div class="col-md-12">
         <h5>Bin Centre Management</h5>
@@ -89,7 +43,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchAreaFilter" />
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchBinFilter" />
     </div>
 </div>
 <br />
@@ -107,23 +61,47 @@
                     <table class="table table-hover table-striped">
                         <thead>
                             <tr>
-                                <th>Bin Centre Code</th>
-                                <th>Bin Centre Name</th>
-                                <th>Location</th>
-                                <th>Belong Area</th>
-                                <th>Bin Centre Status</th>
-                                <th>Activity</th>
+                                <th width="10%">Bin Centre Code</th>
+                                <th width="35%">Bin Centre Name</th>
+                                <th width="15%">Location</th>
+                                <th width="10%">Belong Area</th>
+                                <th width="20%">Bin Centre Status</th>
+                                <th width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="b in binList | filter: searchArea | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                            <tr data-ng-repeat="b in binList | filter: searchBin | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td data-ng-bind="b.id"></td>
-                                <td data-ng-bind="b.name"></td>
-                                <td data-ng-bind="b.location"></td>
-                                <td data-ng-bind="b.area"></td>
-                                <td data-ng-bind="b.status"></td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editBin">Edit</button>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.name" data-ng-show="!showBin" />
+                                        <p data-ng-show="showBin" data-ng-bind="b.name"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.location" data-ng-show="!showBin" />
+                                        <p data-ng-show="showBin" data-ng-bind="b.location"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <select class="form-control" data-ng-model="b.area" data-ng-show="!showBin">
+                                        </select>
+                                        <p data-ng-show="showBin" data-ng-bind="b.area"></p>
+                                    </div>
+                                </td>
+                                <td data-ng-bind="b.status">
+                                    <div editable>
+                                        <select class="form-control" data-ng-model="b.status" data-ng-show="!showBin">
+                                        </select>
+                                        <p data-ng-show="showBin" data-ng-bind="b.status"></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-ng-click="editBin(b.id, b.name, b.location, b.area, b.status);" data-ng-show="showBin"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-click="saveBin();" data-ng-show="!showBin"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-default" data-ng-click="cancelBin();" data-ng-show="!showBin"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
                         </tbody>

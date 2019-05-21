@@ -84,14 +84,14 @@ TODO list:
                     <table class="table table-hover table-striped">
                         <thead>
                             <tr>
-                                <th>Area Code</th>
-                                <th>Area Name</th>
+                                <th width="10%">Area Code</th>
+                                <th width="30%">Area Name</th>
                                 <!--<th>Including Address</th>-->
-                                <th>Belong Zone</th>
-                                <th>Staff</th>
+                                <th width="20%">Belong Zone</th>
+                                <th width="20%">Staff</th>
                                 <!--<th>Collection Frequency</th>-->
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th width="10%">Status</th>
+                                <th width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -99,13 +99,12 @@ TODO list:
                                 <td data-ng-bind="a.id"></td>
                                 <td data-ng-bind="a.name"></td>
                                 <!--<td data-ng-bind="a.address"></td><!-- this shud be repeat-->
-                                <td data-ng-bind="a.zoneidname"></td>
-                                <td data-ng-bind="a.staffidname"></td>
+                                <td data-ng-bind="(a.zone) + ' - ' + (a.zoneName)"></td>
+                                <td data-ng-bind="(a.staff) + ' - ' + (a.staffName)"></td>
                                 <!--<td data-ng-bind="a.collectionFrequency"></td>-->
                                 <td data-ng-bind="a.status"></td>
                                 <td>
-<!--                                    <button class="btn btn-sm btn-primary" onclick = "window.location.href='#/area-management-edit'">Edit</button>-->
-                                    <button class="btn btn-sm btn-primary" data-ng-click="editAreaPage();">Edit</button>
+                                    <button class="btn btn-sm btn-primary" data-ng-click="editAreaPage(a.id);"><i class="fa fa-pencil-alt"></i></button>
                                 </td>
                             </tr>
                         </tbody>

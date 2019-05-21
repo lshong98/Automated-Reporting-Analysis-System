@@ -122,7 +122,16 @@
     <label for="inputDriver" class="col-xs-3 col-form-label form-label-width">Driver</label>
     <div class="col-md-9">
         <select class="form-control mx-sm-3 " id="inputDriver" data-ng-model="report.driver" data-live-search="true" data-width="100%">
-            <option value="{{a.id}}" data-ng-repeat="a in driverList">{{a.id}} - {{a.name}}</option>
+            <option value="{{d.id}}" data-ng-repeat="d in driverList">{{d.id}} - {{d.name}}</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputTransporter" class="col-xs-3 col-form-label form-label-width">Transporter</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3" id="inputTransporter" data-ng-model="report.transporter">
+            <option value="TS">TS</option>
         </select>
     </div>
 </div>
@@ -191,13 +200,6 @@ textarea {
         <div id="googleMap"></div>
     </div>
 </div>
-<script>
-//Felix for paste image to page
-    // Created by STRd6
-    // MIT License
-    // jquery.paste_image_reader.js
-    
-</script>
 <div class="row">
     <div class="col-md-12">
         <button class="btn btn-primary" data-toggle="modal" data-target="#previewReport">Preview</button>

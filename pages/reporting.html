@@ -33,7 +33,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <!--<button type="button" class="btn btn-primary" data-ng-click="addDriver();">Create</button>-->
             </div>
         </div>
     </div>
@@ -62,13 +61,14 @@
             <table class="table table-hover table-striped table-clickable">
                 <thead>
                     <tr>
-                        <th width="15%" data-ng-click="orderBy('reportCode');">Report Code <i class="fas fa-sort-down"></i></th>
-                        <th width="15%" data-ng-click="orderBy('reportDate');">Report Date <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('area');">Area Name <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('collection');">Collection <i class="fas fa-sort-down"></i></th>
+                        <th width="20%" data-ng-click="orderBy('reportCode');">Report Code <i class="fas fa-sort-down"></i></th>
+                        <th width="15%" data-ng-click="orderBy('reportDate');">Date <i class="fas fa-sort-down"></i></th>
+                        <th width="20%" data-ng-click="orderBy('area');">Area Name <i class="fas fa-sort-down"></i></th>
+<!--                        <th width="10%" data-ng-click="orderBy('collection');">Collection <i class="fas fa-sort-down"></i></th>-->
+<!--                        <th width="25%" data-ng-click="orderBy('garbageAmount');">Collected Garbage(ton) <i class="fas fa-sort-down"></i></th>-->
                         <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                        <th width="17%" data-ng-click="orderBy('garbageAmount');">Garbage Amount(ton) <i class="fas fa-sort-down"></i></th>
-                        <th width="23%" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
+                        
+                        <th width="35%" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
                     </tr>
                 </thead>
                 <tbody>               
@@ -76,9 +76,10 @@
                         <td data-ng-bind="d.reportID"></td>
                         <td data-ng-bind="d.reportCollectionDate"></td>
                         <td data-ng-bind="d.areaID"></td>
-                        <td data-ng-bind="d.collection"></td>
+<!--                        <td data-ng-bind="d.collection"></td>-->
+<!--                        <td data-ng-bind="d.garbageAmount"></td>-->
                         <td data-ng-bind="d.reportStatus"></td>
-                        <td data-ng-bind="d.garbageAmount"></td>
+                        
                         <td data-ng-bind="d.remark"></td>
                     </tr>
                 </tbody>
