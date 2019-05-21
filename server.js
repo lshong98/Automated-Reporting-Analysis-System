@@ -443,6 +443,19 @@ app.post('/addBin', function (req, res) {
     }, 100);
 });
 
+app.post('/editBin', function (req, res) {
+    'use strict';
+    
+    req.body.status = req.body.status == "ACTIVE" ? 'A' : 'I';
+    var sql = "UPDATE tblbin SET binName = '" + req.body.name + "', binLocation = '" + req.body.location + "', areaID = '" + req.body.area + "', binStatus = '" + req.body.status + "' WHERE binID = '" + req.body.id + "'";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Successfully updated!"});
+    });
+});
+
 //17/5 sing hong
 app.post('/addAcr',function(req,res){
     'use strict';
