@@ -1517,6 +1517,7 @@ app.controller('acrController',function($scope, $http, $filter){
     
     $http.get('/getAreaList').then(function (response) {
         $.each(response.data, function(index, value) {
+            //console.log(response.data);
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
             var area = [];

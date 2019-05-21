@@ -438,7 +438,8 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     $scope.reportID = $routeParams.reportCode;
     
     $scope.thisReport = {
-        "acr": []
+        "acr": [],
+        "date" : ""
     };
     
     
@@ -502,7 +503,9 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     $http.post('/getReportCircle', $scope.report).then(function (response) {
         var data = response.data;
         $window.setTimeout(function () {
-            $.each(data, function (index, value) {
+            
+        
+        $.each(data, function (index, value) {
             var circle = new google.maps.Circle({
             map: map,
             center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
@@ -514,8 +517,6 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         });
         });
         }, 1000);
-        
-        
 
     });
 });
