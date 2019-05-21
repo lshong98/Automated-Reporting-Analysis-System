@@ -523,7 +523,7 @@ app.post('/getReportACR', function (req, res) {
     'use strict';
     
     var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
-    
+    console.log(sql);
     db.query(sql, function (err, result) {
         if (err) {
             throw err;

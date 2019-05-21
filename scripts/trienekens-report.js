@@ -437,6 +437,10 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     };
     $scope.reportID = $routeParams.reportCode;
     
+    $scope.thisReport = {
+        "acr": []
+    };
+    
     
     $http.post('/getReport', $scope.report).then(function(response){
         $scope.thisReport = response.data[0];
@@ -476,11 +480,16 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
                 }
             });
         });
+        
     });
     
     $http.post('/getReportACR', $scope.report).then(function (response) {
-        $scope.thisReport.acr = response.data;
-        console.log(response.data);
+        if(response.data.length != 0){
+            $scope.thisReport.acr = response.data;            
+        }
+        else{
+            $scope.thisReport.acr = [];
+        }
         $scope.acrRow = Object.keys($scope.thisReport.acr).length;
         $.each($scope.thisReport.acr, function (index, value) {
             $scope.acr += value.name;
@@ -492,7 +501,8 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     
     $http.post('/getReportCircle', $scope.report).then(function (response) {
         var data = response.data;
-        $.each(data, function (index, value) {
+        $window.setTimeout(function () {
+            $.each(data, function (index, value) {
             var circle = new google.maps.Circle({
             map: map,
             center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
@@ -503,6 +513,8 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             draggable: false
         });
         });
+        }, 1000);
+        
         
 
     });
