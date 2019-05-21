@@ -1031,6 +1031,9 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
     $http.get('/getAllTruck').then(function (response) {
         $scope.searchTruckFilter = '';
         $scope.truckList = response.data;
+        $.each($scope.truckList, function (index, value) {
+            $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
+        });
         storeDataService.truck = angular.copy(response.data);
         
         $scope.filterTruckList = [];
@@ -1095,6 +1098,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
 
     $scope.addTruck = function () {
         $scope.truck.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.truck.roadtax = $filter('date')($scope.truck.roadtax, 'yyyy-MM-dd');
         $http.post('/addTruck', $scope.truck).then(function (response) {
             var returnedData = response.data;
             var newTruckID = returnedData.details.truckID;
@@ -1104,7 +1108,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
                     type: "success",
                     message: "Truck added successfully!"
                 });
-                $scope.truckList.push({"id":newTruckID, "no":$scope.truck.no, "transporter":$scope.truck.transporter, "ton":$scope.truck.ton, "roadtax":$scope.truck.roadtax, "status":'Active'});
+                $scope.truckList.push({"id":newTruckID, "no":$scope.truck.no, "transporter":$scope.truck.transporter, "ton":$scope.truck.ton, "roadtax": $scope.truck.roadtax, "status":'Active'});
                 storeDataService.truck = angular.copy($scope.truckList);
                 $scope.filterTruckList = angular.copy($scope.truckList);
                 $scope.totalItems = $scope.filterTruckList.length;
@@ -1112,7 +1116,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
                 $scope.initializeTruck();
             }
         });
-    }
+    };
 });
 
 app.controller('driverController', function ($scope, $http, $filter) {
