@@ -296,6 +296,24 @@ app.get('/getStaffList', function (req, res) {
         res.json(result);
     });
 }); // Complete
+app.post('/updateProfile', function (req, res) {
+    'use strict';
+    
+    var dt = dateTime.create(req.body.dob);
+
+    req.body.status = req.body.status == "ACTIVE" ? 'A' : 'I';
+    req.body.gender = req.body.gender == "Male" ? 'M' : 'F';
+    req.body.dob = dt.format('Y-m-d');
+    
+    var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position.id + "', staffStatus = '" + req.body.status + "' WHERE staffID = '" + req.body.id + "'";
+    console.log(sql);
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Profile Updated!"});
+    });
+});
 
 // Role Management
 app.post('/addRole', function (req, res) {

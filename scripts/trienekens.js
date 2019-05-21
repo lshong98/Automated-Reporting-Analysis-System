@@ -157,6 +157,9 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         };
         scope.saveProfile = function () {
             scope.showProfile = !scope.showProfile;
+            $http.post('/updateProfile', scope.thisAccount).then(function (response) {
+                
+            });
         };
         scope.cancelProfile = function () {
             scope.showProfile = !scope.showProfile;

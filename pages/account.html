@@ -95,12 +95,12 @@
                                 <div editable>
                                     <div class="form-check-inline" data-ng-show="!showProfile">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="rdoGender" data-ng-model="thisAccount.gender"> Male
+                                            <input type="radio" class="form-check-input" name="rdoGender" data-ng-model="thisAccount.gender" value="Male" /> Male
                                         </label>
                                     </div>
                                     <div class="form-check-inline" data-ng-show="!showProfile">
                                         <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="rdoGender" data-ng-model="thisAccount.gender"> Female
+                                            <input type="radio" class="form-check-input" name="rdoGender" data-ng-model="thisAccount.gender" value="Female" /> Female
                                         </label>
                                     </div>
                                     <p data-ng-show="showProfile" data-ng-bind="thisAccount.gender"></p>
@@ -124,7 +124,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div editable>
-                                    <select class="form-control" data-ng-model="thisAcount.position" data-ng-show="!showProfile" data-ng-options="position as position.name for position in positionList"></select>
+                                    <select class="form-control" data-ng-model="thisAccount.position" data-ng-show="!showProfile" data-ng-options="position as position.name for position in positionList"></select>
                                     <p data-ng-show="showProfile" data-ng-bind="thisAccount.position"></p>
                                 </div>
                             </div>
