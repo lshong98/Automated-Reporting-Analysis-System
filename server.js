@@ -36,6 +36,11 @@ app.use(express.static(path.join(__dirname, 'pages')));
 app.use(express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(path.join(__dirname, 'images')));
 
+//app.route('/').get(function (req, res) {
+//    'use strict';
+//    res.sendFile('index.html', {root: __dirname});
+//});
+
 app.get('/', function (req, res) {
     'use strict';
     res.sendFile('index.html', {root: __dirname});
@@ -252,7 +257,7 @@ app.post('/addUser', function (req, res) {
 app.get('/getAllUser', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'F' THEN 'FREEZE' END) AS status, tblposition.positionName AS position FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID AND tblposition.positionName != 'ADMINISTRATOR'";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status, tblposition.positionName AS position FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID AND tblposition.positionName != 'ADMINISTRATOR'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -277,7 +282,7 @@ app.post('/updatePassword', function (req, res) {
 app.post('/loadSpecificAccount', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'F' THEN 'Freeze' END) AS status, tblposition.positionName AS position FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'I' THEN 'Inactive' END) AS status, tblstaff.handphone, tblstaff.phone, tblstaff.email, tblposition.positionName AS position FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -305,15 +310,21 @@ app.post('/updateProfile', function (req, res) {
     req.body.gender = req.body.gender == "Male" ? 'M' : 'F';
     req.body.dob = dt.format('Y-m-d');
     
-    var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position.id + "', staffStatus = '" + req.body.status + "' WHERE staffID = '" + req.body.id + "'";
-    console.log(sql);
+    var sql = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.position + "' LIMIT 0, 1";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
-        res.json({"status": "success", "message": "Profile Updated!"});
+        req.body.position = result[0].id;
+        var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', staffStatus = '" + req.body.status + "' WHERE staffID = '" + req.body.id + "'";
+        db.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            res.json({"status": "success", "message": "Profile Updated!"});
+        });
     });
-});
+}); // Complete
 
 // Role Management
 app.post('/addRole', function (req, res) {
