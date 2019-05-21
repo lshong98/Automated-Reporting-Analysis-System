@@ -1,7 +1,7 @@
 /*jslint white:true */
 /*global angular, Highcharts, $ */
 //Felix handsome boi2 doing visualization
-app.controller('visualizationController', function ($scope, $http, $window) {
+app.controller('visualizationController', function ($scope, $http, $window, $filter) {
     'use strict';
     $scope.chartDurationGarbageSelected = "Line";
     $scope.chartCompleteStatusSelected = "Area";
@@ -36,7 +36,8 @@ app.controller('visualizationController', function ($scope, $http, $window) {
         var dimension = false;
         for (i = 0; i < data.length; i += 1) {
             if (element === "reportCollectionDate") {
-                objReturn.push(data[i].reportCollectionDate);
+                objReturn.push(
+                    $filter('date')(data[i].reportCollectionDate,'EEEE, MMM d'));
             } else if (element === "areaID") {
                 objReturn.push(data[i].areaID);
             } else if (element === "garbageAmount") {
@@ -55,34 +56,34 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 duration = (timeEnd - timeStart) / 60 / 1000;
 
                 for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j].name === data[i].areaID) {
+                    if (objReturn[j].name === data[i].areaName) {
                         objReturn[j].data.push(duration);
                         exist = true;
                     }
                 }
                 if (!exist) {
                     objReturn.push({
-                        "name": data[i].areaID,
+                        "name": data[i].areaName,
                         "data": [duration]
                     });
                 }
             } else if (element === "amountGarbageOnArea") {
                 exist = false;
                 for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j].name === data[i].areaID) {
+                    if (objReturn[j].name === data[i].areaName) {
                         objReturn[j].y += parseInt(data[i].garbageAmount);
                         exist = true;
                     }
                 }
                 if (!exist) {
                     objReturn.push({
-                        "name": data[i].areaID,
+                        "name": data[i].areaName,
                         "y": parseInt(data[i].garbageAmount)
                     });
                 }
             }else if (element === "completionStatusArea"){
                 exist = false;
-                complete = data[i].completionStatus === "1" ? true : false;
+                complete = data[i].reportStatus === "C" ? true : false;
                 
                 if(!dimension){
                     for(var num = 0; num < 3; num+=1){
@@ -92,7 +93,7 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 }
                 
                 for(j = 0; j < objReturn[0].length; j += 1){
-                    if(objReturn[0][j] === data[i].areaID){
+                    if(objReturn[0][j] === data[i].areaName){
                         objReturn[1][j] += complete === true ? -1 : 0;
                         objReturn[2][j] += complete === false ? 1 : 0;
                         
@@ -101,13 +102,13 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 }
                 //add new area
                 if(!exist){
-                    objReturn[0].push(data[i].areaID);
+                    objReturn[0].push(data[i].areaName);
                     objReturn[1].push(complete === true ? -1 : 0);
                     objReturn[2].push(complete === false ? 1 : 0);
                 }    
             }else if (element === "completionStatusDate"){
                 exist = false;
-                complete = data[i].completionStatus === "1" ? true : false;
+                complete = data[i].reportStatus === "C" ? true : false;
                 
                 if(!dimension){
                     for(num = 0; num < 3; num+=1){
@@ -117,7 +118,7 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 }
                 
                 for(j = 0; j < objReturn[0].length; j += 1){
-                    if(objReturn[0][j] === data[i].reportCollectionDate){
+                    if(objReturn[0][j] === $filter('date')(data[i].reportCollectionDate,'EEEE, MMM d')){
                         objReturn[1][j] += complete === true ? -1 : 0;
                         objReturn[2][j] += complete === false ? 1 : 0;
                         
@@ -126,7 +127,7 @@ app.controller('visualizationController', function ($scope, $http, $window) {
                 }
                 //add new area
                 if(!exist){
-                    objReturn[0].push(data[i].reportCollectionDate);
+                    objReturn[0].push($filter('date')(data[i].reportCollectionDate,'EEEE, MMM d'));
                     objReturn[1].push(complete === true ? -1 : 0);
                     objReturn[2].push(complete === false ? 1 : 0);
                 }    
@@ -135,7 +136,10 @@ app.controller('visualizationController', function ($scope, $http, $window) {
 
         return objReturn;
     }
-    $http.get("/data_json/reports.json")
+//    $http.get('/getDataVisualization').then(function(response){
+//        var visual = response.data;
+//    });
+    $http.get("/getDataVisualization")
         .then(function (response) {
                 $scope.reportList = response.data;
 //                var obj = getElementList("completionStatusArea", $scope.reportList);

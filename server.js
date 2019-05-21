@@ -573,6 +573,20 @@ app.get('/getReportList', function(req, res){
     });
 });
 
+//Felix handsome boi
+app.get('/getDataVisualization', function(req, res){
+    'use strict';
+    
+    var sql ="SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.reportStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID ";
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 app.get('/getAllUser', function (req, res) {
     'use strict';
     
