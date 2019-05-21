@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = '';
 var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens';
 
 var SVR_PORT = 3000;
 var obj = {
@@ -850,16 +850,17 @@ emitter.on('defaultUser', function () {
     
     var dt = dateTime.create();
     var formatted= dt.format('Y-m-d H:M:S');
+    var roleFormat = dt.format('Ymd');
     
-    makeID("role", formatted);
-    setTimeout(function () {
-        var sql = "INSERT INTO tblstaffposition (staffPosID, staffPositionName, creationDateTime, staffPosStatus) VALUE ('" + obj.ID + "', 'ADMINISTRATOR', '" + formatted + "', 'A')";
-        
+    //makeID("role", formatted);
+    var roleID = "ATH" + roleFormat + "0001";
+    //setTimeout(function () {
+        var sql = "INSERT INTO tblstaffposition (staffPosID, staffPositionName, creationDateTime, staffPosStatus) VALUE ('" + roleID + "', 'ADMINISTRATOR', '" + formatted + "', 'A')";
         db.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
-            var roleID = obj.ID;
+            
             makeID("account", formatted);
             setTimeout(function () {
                 var thePassword = bcrypt.hashSync('adminacc123', 10);
@@ -903,9 +904,9 @@ emitter.on('defaultUser', function () {
                     }
                     console.log('Administrator generated...');
                 });
-            }, 100);
+            }, 1000);
         });
-    }, 100);
+    //}, 2000);
 });
 /* Emitter Registered */
 
