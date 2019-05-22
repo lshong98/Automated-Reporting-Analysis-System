@@ -2,7 +2,7 @@
     {
         "reportID": "0001",
         "areaID": "0001",
-        "reportCollectionDate": "17/05/2019",
+        "reportCollectionDate": "2019-05-21",
         "reportCreationDateTime": "17/05/2019",
         "operationTimeStart": "6:10:00",
         "operationTimeEnd": "14:05:00",
@@ -17,7 +17,7 @@
     {
         "reportID": "0002",
         "areaID": "0001",
-        "reportCollectionDate": "18/05/2019",
+        "reportCollectionDate": "2019-05-18",
         "reportCreationDateTime": "18/05/2019",
         "operationTimeStart": "7:10:00",
         "operationTimeEnd": "14:50:00",
@@ -32,7 +32,7 @@
     {
         "reportID": "0003",
         "areaID": "0001",
-        "reportCollectionDate": "19/05/2019",
+        "reportCollectionDate": "2019-05-19",
         "reportCreationDateTime": "19/05/2019",
         "operationTimeStart": "6:10:00",
         "operationTimeEnd": "12:30:00",
@@ -47,7 +47,7 @@
     {
         "reportID": "0004",
         "areaID": "0002",
-        "reportCollectionDate": "18/05/2019",
+        "reportCollectionDate": "2019-05-18",
         "reportCreationDateTime": "19/05/2019",
         "operationTimeStart": "6:10:00",
         "operationTimeEnd": "12:30:00",
@@ -62,7 +62,7 @@
     {
         "reportID": "0005",
         "areaID": "0002",
-        "reportCollectionDate": "19/05/2019",
+        "reportCollectionDate": "2019-05-19",
         "reportCreationDateTime": "19/05/2019",
         "operationTimeStart": "6:10:00",
         "operationTimeEnd": "15:30:00",
@@ -77,7 +77,7 @@
     {
         "reportID": "0006",
         "areaID": "0003",
-        "reportCollectionDate": "17/05/2019",
+        "reportCollectionDate": "2019-05-17",
         "reportCreationDateTime": "19/05/2019",
         "operationTimeStart": "6:10:00",
         "operationTimeEnd": "13:30:00",
@@ -92,7 +92,7 @@
     {
         "reportID": "0007",
         "areaID": "0003",
-        "reportCollectionDate": "18/05/2019",
+        "reportCollectionDate": "2019-05-18",
         "reportCreationDateTime": "19/05/2019",
         "operationTimeStart": "7:10:00",
         "operationTimeEnd": "12:30:00",
@@ -107,7 +107,7 @@
     {
         "reportID": "0008",
         "areaID": "0003",
-        "reportCollectionDate": "19/05/2019",
+        "reportCollectionDate": "2019-05-19",
         "reportCreationDateTime": "19/05/2019",
         "operationTimeStart": "6:10:00",
         "operationTimeEnd": "12:30:00",
@@ -122,7 +122,7 @@
     {
         "reportID": "0009",
         "areaID": "0003",
-        "reportCollectionDate": "20/05/2019",
+        "reportCollectionDate": "2019-05-20",
         "reportCreationDateTime": "20/05/2019",
         "operationTimeStart": "8:10:00",
         "operationTimeEnd": "12:30:00",
@@ -137,7 +137,7 @@
     {
         "reportID": "0010",
         "areaID": "0004",
-        "reportCollectionDate": "19/05/2019",
+        "reportCollectionDate": "2019-05-19",
         "reportCreationDateTime": "19/05/2019",
         "operationTimeStart": "7:10:00",
         "operationTimeEnd": "10:30:00",
@@ -152,7 +152,7 @@
     {
         "reportID": "0011",
         "areaID": "0004",
-        "reportCollectionDate": "20/05/2019",
+        "reportCollectionDate": "2019-05-20",
         "reportCreationDateTime": "20/05/2019",
         "operationTimeStart": "10:40:00",
         "operationTimeEnd": "17:00:00",
