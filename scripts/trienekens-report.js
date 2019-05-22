@@ -40,7 +40,29 @@ app.directive('appFilereader', function($q) {
             } //link
     }; //return
 });
-
+app.directive("strToTime", function(){
+   return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModelController) {
+        ngModelController.$parsers.push(function(data) {     
+            if (!data)
+                return "";
+            return ("0" + data.getHours().toString()).slice(-2) + ":" + ("0" + data.getMinutes().toString()).slice(-2);
+        });
+    
+        ngModelController.$formatters.push(function(data) {
+            if (!data) {
+                return null; 
+            }
+            var d = new Date(1970, 1, 1);
+            var splitted = data.split(":");
+            d.setHours(splitted[0]);
+            d.setMinutes(splitted[1]);
+          return d;
+        });
+      }
+    };
+});
 app.controller('dailyController', function ($scope, $window, $routeParams, $http, $filter) {
     'use strict';
     
@@ -68,11 +90,11 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     $scope.report.collectionDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
 
     $scope.startTimeChange = function(time) {
-        $scope.report.startTime = time.toLocaleTimeString();
+        $scope.report.startTime = time == undefined ? "" : time;
     };
     
     $scope.endTimeChange = function(time) {
-        $scope.report.endTime = time.toLocaleTimeString();
+        $scope.report.endTime = time == undefined ? "" : time;
     };
     
     $scope.truckList = [];

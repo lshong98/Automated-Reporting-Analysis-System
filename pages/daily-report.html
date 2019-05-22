@@ -96,7 +96,7 @@
     <label for="inputStartTime form-label" class="col-xs-3 col-form-label form-label-width">Start Time</label>
     <div class="col-md-9">
 <!--        <input type="text" id="inputStartTime" class="form-control mx-sm-3 clockpicker-start" readonly />-->
-        <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="report.startTime" data-ng-change="startTimeChange(report.startTime)" />
+        <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="report.startTime" data-ng-change="startTimeChange(report.startTime)" str-to-time="" />
     </div>
 </div>
 
@@ -104,7 +104,7 @@
     <label for="inputEndTime form-label" class="col-xs-3 col-form-label form-label-width">End Time</label>
     <div class="col-md-9">
 <!--        <input type="text" id="inputEndTime" class="form-control mx-sm-3 clockpicker-end" readonly />-->
-        <input type="time" id="inputEndTime" class="form-control mx-sm-3" data-ng-model="report.endTime" data-ng-change="endTimeChange(report.endTime)" />
+        <input type="time" id="inputEndTime" class="form-control mx-sm-3" data-ng-model="report.endTime" data-ng-change="endTimeChange(report.endTime)" str-to-time />
     </div>
 </div>
 
