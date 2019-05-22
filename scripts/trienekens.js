@@ -217,13 +217,46 @@ app.directive('dateNow', ['$filter', function ($filter) {
     };
 }]);
 
-app.controller('managerController', function ($scope) {
+app.controller('managerController', function ($scope, $http) {
     'use strict';
     var socket = io.connect();
     socket.on('connect', function () {
         var sessionid = socket.io.engine.id;
         console.log(sessionid);
     });
+    
+    $http.get('/getZoneCount').then(function (response) {
+        $scope.zoneCount = response.data[0].count;
+    });
+    
+    $http.get('/getAreaCount').then(function (response) {
+        $scope.areaCount = response.data[0].count;
+    });
+    
+    $http.get('/getAcrCount').then(function (response) {
+        $scope.acrCount = response.data[0].count;
+    });
+    
+    $http.get('/getBinCount').then(function (response) {
+        $scope.binCount = response.data[0].count;
+    });
+    
+    $http.get('/getTruckCount').then(function (response) {
+        $scope.truckCount = response.data[0].count;
+    });
+    
+    $http.get('/getUserCount').then(function (response) {
+        $scope.userCount = response.data[0].count - 1;
+    });
+    
+    $http.get('/getReportCompleteCount').then(function (response) {
+        $scope.reportCompleteCount = response.data[0].completeCount;
+    });
+    
+    $http.get('/getReportIncompleteCount').then(function (response) {
+        $scope.reportIncompleteCount = response.data[0].incompleteCount;
+    });
+
 
     function synchronizePieSeries(event, slice) {
         //console.log($(pieChart.series[1]));

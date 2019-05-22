@@ -801,6 +801,94 @@ app.get('/getDriverList', function(req, res) {
     });
 }); // Complete
 
+
+app.get('/getZoneCount',function(req,res){
+    var sql="SELECT COUNT(*) AS 'count' FROM tblzone";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+
+});
+
+app.get('/getAreaCount',function(req,res){
+    var sql="SELECT COUNT(*) AS 'count' FROM tblarea";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+
+});
+
+app.get('/getAcrCount',function(req,res){
+    var sql="SELECT COUNT(*) AS 'count' FROM tblacr";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+
+});
+
+app.get('/getBinCount',function(req,res){
+    var sql="SELECT COUNT(*) AS 'count' FROM tblbin";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+
+});
+
+app.get('/getTruckCount',function(req,res){
+    var sql="SELECT COUNT(*) AS 'count' FROM tbltruck";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+
+});
+
+app.get('/getUserCount',function(req,res){
+    var sql="SELECT COUNT(*) AS 'count' FROM tblstaff";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+
+});
+
+app.get('/getReportCompleteCount',function(req,res){
+    var sql="SELECT COUNT(*) AS 'completeCount' FROM tblreport WHERE reportStatus = 'C'";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+
+});
+
+app.get('/getReportIncompleteCount',function(req,res){
+    var sql="SELECT COUNT(*) AS 'incompleteCount' FROM tblreport WHERE reportStatus = 'I'";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+
+});
 /* Emitter Registered */
 
 // Create Database Tables

@@ -49,6 +49,11 @@
     color: #FFF;
 }  
 
+.card-counter.warning{
+    background-color: #FFCC46;
+    color: #FFF;
+}
+
 .card-counter i{
     font-size: 5em;
     opacity: 0.2;
@@ -59,6 +64,22 @@
     right: 35px;
     top: 20px;
     font-size: 32px;
+    display: block;
+}
+
+.card-counter .count-report-complete{
+    position: absolute;
+    right: 35px;
+    top: 20px;
+    font-size: 18px;
+    display: block;
+}
+
+.card-counter .count-report-incomplete{
+    position: absolute;
+    right: 35px;
+    top: 40px;
+    font-size: 18px;
     display: block;
 }
 

@@ -27,28 +27,81 @@
         <h5>Dashboard</h5>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-4">
-        <div class="card-counter info">
-            <i class="fa fa-map"></i>
-            <span class="count-numbers">56</span>
+        <div class="card-counter info" onclick="window.location.href = '#/zone-management'">
+                <i class="fa fa-map"></i>
+                <span class="count-numbers" data-ng-bind="zoneCount"></span>
+                <span class="count-name">Zone</span>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-counter success" onclick="window.location.href = '#/acr-management'">
+            <i class="fa fa-address-card"></i>
+            <span class="count-numbers" data-ng-bind="acrCount"></span>
+            <span class="count-name">ACR</span>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-counter danger" onclick="window.location.href = '#/account-management'">
+            <i class="fa fa-users"></i>
+            <span class="count-numbers" data-ng-bind="userCount"></span>
+            <span class="count-name">Users</span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-counter info" onclick="window.location.href = '#/area-management'">
+            <i class="fa fa-map-marker"></i>
+            <span class="count-numbers" data-ng-bind="areaCount"></span>
             <span class="count-name">Area</span>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card-counter success">
-            <i class="fa fa-database"></i>
-            <span class="count-numbers">156</span>
-            <span class="count-name">Zone</span>
+        <div class="card-counter success" onclick="window.location.href = '#/bin-management'">
+            <i class="fa fa-recycle"></i>
+            <span class="count-numbers" data-ng-bind="binCount"></span>
+            <span class="count-name">Bin Centre</span>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-counter danger" onclick="window.location.href = '#/truck-management'">
+            <i class="fa fa-truck"></i>
+            <span class="count-numbers" data-ng-bind="truckCount"></span>
+            <span class="count-name">Trucks</span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-counter info" onclick="window.location.href = '#/reporting'">
+            <i class="fa fa-file"></i>
+            <span class="count-report-complete">Complete: {{reportCompleteCount}}</span>
+            <span class="count-report-incomplete">Incomplete: {{reportIncompleteCount}}</span>
+            <span class="count-name">Reports</span>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-counter success" onclick="window.location.href = '#/datavisualization'">
+            <i class="fa fa-table"></i>
+            <span class="count-name">Data visualization</span>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="card-counter danger">
-            <i class="fa fa-truck"></i>
-            <span class="count-numbers">105</span>
-            <span class="count-name">Trucks</span>
+            <i class="fa fa-bell"></i>
+            <span class="count-numbers"></span>
+            <span class="count-name">Notifications</span>
         </div>
     </div>
 </div>
