@@ -1569,6 +1569,7 @@ app.controller('acrController',function($scope, $http, $filter){
     angular.element('.datepicker').datepicker();
     
     $http.get('/getAreaList').then(function (response) {
+        console.log(response.data);
         $.each(response.data, function(index, value) {
             //console.log(response.data);
             var areaID = value.id.split(",");

@@ -689,7 +689,7 @@ app.post('/addReport',function(req,res){
                 throw err;
             }
             for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                var sql = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
+                var sql = "INSERT INTO tblmapcircle (radius, lng, lat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
                 
                 db.query(sql, function (err, result) {
                     if (err) {
@@ -704,7 +704,7 @@ app.post('/addReport',function(req,res){
 app.post('/getReport', function(req, res){
     'use strict';
     
-    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.gmLat AS lat, tblreport.gmLong AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetImg AS ifleet, tbltruck.truckNum AS truck, tbltruck.transporterID AS transporter, tblstaff.staffName AS driver, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
+    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.lat AS lat, tblreport.lng AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetImg AS ifleet, tbltruck.truckNum AS truck, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
 console.log(sql);
     db.query(sql, function (err, result) {
         if (err) {
@@ -740,7 +740,7 @@ app.post('/getReportACR', function (req, res) {
 app.post('/getReportCircle', function(req,res){
     'use strict';
     
-    var sql = "SELECT radius, cLong, cLat FROM tblmapcircle WHERE reportID = '" + req.body.reportID + "'";
+    var sql = "SELECT radius, lng, lat FROM tblmapcircle WHERE reportID = '" + req.body.reportID + "'";
     
     db.query(sql, function (err, result) {
         if (err) {

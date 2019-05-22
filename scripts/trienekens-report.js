@@ -125,8 +125,9 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         console.log(myPlace);
         var area = myPlace.area.replace(" ", "+");
         var zone = myPlace.zone.replace(" ", "+");
-        var concat = area + ',' + zone;
+        var concat = area + '+' + zone;
         $scope.report.address = concat;
+        
         
         address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
         
@@ -206,6 +207,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
 
             // JSON data returned by API above
             var myPlace = response.data;
+            console.log(response.data);
 
             // After get the place data, re-center the map
             $window.setTimeout(function () {
@@ -238,9 +240,8 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                     type: "success",
                     message: "Report added successfully!"
                 });
-               
+                window.location.href = '#/reporting';
             }
-             window.location.href = '#/reporting';
         });
     };
     
@@ -530,7 +531,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         $.each(data, function (index, value) {
             var circle = new google.maps.Circle({
             map: map,
-            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+            center: new google.maps.LatLng(data[index].lat, data[index].lng),
             radius: parseFloat(data[index].radius),
             fillColor: 'transparent',
             strokeColor: 'red',
