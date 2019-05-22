@@ -576,67 +576,38 @@ app.controller('managerController', function ($scope) {
 
 });
 
-app.controller('officerController', function ($scope) {
+app.controller('officerController', function ($scope, $filter, $http, $window) {
     'use strict';
-    $scope.handledArea = [{
-        "zoneCode": 'Z1',
-        "area": [{
-            "areaCode": 'Z1A1',
-            "areaName": 'Zone 1 Area 1'
-        }, {
-            "areaCode": 'Z1A2',
-            "areaName": 'Zone 1 Area 2'
-        }, {
-            "areaCode": 'Z1A3',
-            "areaName": 'Zone 1 Area 3'
-        }, {
-            "areaCode": 'Z1A4',
-            "areaName": 'Zone 1 Area 4'
-        }, {
-            "areaCode": 'Z1A5',
-            "areaName": 'Zone 1 Area 5'
-        }]
-    }, {
-        "zoneCode": 'Z2',
-        "area": [{
-            "areaCode": 'Z2A1',
-            "areaName": 'Zone 2 Area 1'
-        }, {
-            "areaCode": 'Z2A2',
-            "areaName": 'Zone 2 Area 2'
-        }, {
-            "areaCode": 'Z2A3',
-            "areaName": 'Zone 2 Area 3'
-        }, {
-            "areaCode": 'Z2A4',
-            "areaName": 'Zone 2 Area 4'
-        }, {
-            "areaCode": 'Z2A5',
-            "areaName": 'Zone 2 Area 5'
-        }]
-    }, {
-        "zoneCode": 'Z3',
-        "area": [{
-            "areaCode": 'Z3A1',
-            "areaName": 'Zone 3 Area 1'
-        }, {
-            "areaCode": 'Z3A2',
-            "areaName": 'Zone 3 Area 2'
-        }, {
-            "areaCode": 'Z3A3',
-            "areaName": 'Zone 3 Area 3'
-        }, {
-            "areaCode": 'Z3A4',
-            "areaName": 'Zone 3 Area 4'
-        }, {
-            "areaCode": 'Z3A5',
-            "areaName": 'Zone 3 Area 5'
-        }]
-    }];
-
-    $scope.thisArea = function (a) {
-        window.location.href = '#/daily-report/' + a;
+    
+    var d = new Date()
+    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    $scope.todayDate = $filter('date')(new Date(), 'yyyy-MM-dd');
+    $scope.todayDay = days[d.getDay()];
+    $scope.areaList = [];
+    $scope.reportingOfficerId = {
+        "officerid" : $window.sessionStorage.getItem('owner')
     };
+    
+    $http.post('/getReportingAreaList',$scope.reportingOfficerId).then(function (response) {
+        $.each(response.data, function(index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var area = [];
+            $.each(areaID, function(index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index]
+                });
+            });
+            $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+           
+        });
+         console.log($scope.areaList);
+    });
+
+//    $scope.thisArea = function (a) {
+//        window.location.href = '#/daily-report/' + a;
+//    };
 });
 
 app.controller('areaController', function ($scope, $http, $filter) {

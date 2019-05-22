@@ -371,15 +371,19 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
 });
 
-app.controller('reportingController', function ($scope, $http, $filter) {
+app.controller('reportingController', function ($scope, $http, $filter, $window) {
     'use strict';
     $scope.searchReportFilter = '';
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 10; //Record number each page
     $scope.maxSize = 10; //Show the number in page
     $scope.areaList = [];
-
-    $http.get('/getAreaList').then(function (response) {
+    
+    $scope.reportingOfficerId = {
+        "officerid" : $window.sessionStorage.getItem('owner')
+    };
+    
+    $http.post('/getReportingAreaList',$scope.reportingOfficerId).then(function (response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");

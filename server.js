@@ -712,6 +712,20 @@ console.log(sql);
         res.json(result);
     });
 }); // Wait for area_collection
+
+app.post('/getReportingAreaList', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "'GROUP BY tblzone.zoneID";
+    
+    db.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
+
 app.post('/getReportBin', function(req,res){
     'use strict';
     

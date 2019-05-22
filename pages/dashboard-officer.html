@@ -1,9 +1,47 @@
 <div class="row">
-    <div class="col-md-12">
-        <h5>Dashboard</h5>
+    <div class="col-md-9">
+        <h1>Officer Dashboard</h1>
+        
+    </div>
+    <div class="col-md-3">
+        <h2 data-ng-bind="todayDate"></h2>
+        <h3 data-ng-bind="todayDay"></h3>
     </div>
 </div>
-<div class="row">
+<hr/>
+<div class = "row">
+    <div class="col-md-12">
+        <h4> Select your reporting area in below: </h4>
+    </div>
+</div>
+
+<div class = "row">
+    <div class="col-md-12">
+        <table class="table table-hover">
+            <tbody data-ng-repeat="z in areaList">
+                <tr data-target="#{{z.zone.id}}" data-toggle="collapse" class="clickable" aria-expanded="false">
+                    <th>{{z.zone.name}} <i class="fa fa-chevron-circle-right"></i></th>
+                </tr>
+
+                <tr>
+                    <td colspan="12">
+                        <div class="collapse myOptions" id="{{z.zone.id}}">
+                            <table class="table table-clickable">
+                                <tbody>
+                                    <tr class="clickable-row" data-ng-repeat="a in z.area" data-ng-click="thisArea(a.id, a.name);">
+                                        <td data-dismiss="modal" data-ng-bind="a.name"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--<div class="row">
     <div class="col-md-12">
         <table class="table table-hover">
             <tbody data-ng-repeat="z in handledArea">
@@ -27,7 +65,7 @@
             </tbody>
         </table>
     </div>
-</div>
+</div>-->
 <!--
 <div class="row">
     <div class="col-md-12">
@@ -142,7 +180,7 @@
         </table>
     </div>
 </div>-->
-<script>
+<!--<script>
     $(document).ready(function() {
         $('.clickable').click(function() {
             $(this).children().find('i').toggleClass("fa-chevron-circle-right fa-chevron-circle-down");
@@ -156,4 +194,4 @@
 //    $(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
 //        window.alert($(this).children().data('value'));
 //    });
-</script>
+</script>-->
