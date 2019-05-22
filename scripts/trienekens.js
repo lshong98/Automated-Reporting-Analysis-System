@@ -60,6 +60,7 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         scope.showZone = true;
         scope.showProfile = true;
         scope.showBin = true;
+        scope.showCollection = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -200,6 +201,10 @@ app.directive('editable', function ($compile, $http, storeDataService) {
             });
             
         };
+        
+        scope.editCollection = function () {
+            scope.showCollection = !scope.showCollection;
+        }
     };
 });
 
@@ -877,7 +882,25 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams) {
         "name": '',
         "zone": '',
         "staff": '',
-        "status": ''
+        "status": '',
+        "days": {
+            "mon": '',
+            "tue": '',
+            "wed": '',
+            "thu": '',
+            "fri": '',
+            "sat": '',
+            "sun": ''
+        }
+    };
+    $scope.days = {
+        "mon": '',
+        "tue": '',
+        "wed": '',
+        "thu": '',
+        "fri": '',
+        "sat": '',
+        "sun": ''
     };
     $scope.collection = {
         "area": areaID,
@@ -898,6 +921,13 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams) {
     $http.post('/thisArea', $scope.area).then(function (response) {
         var data = response.data[0];
         $scope.area = data;
+        $scope.daysArray = $scope.area.frequency.split(',');
+        
+        $.each($scope.daysArray, function (index, value) {
+            $scope.days[value] = 'A';
+        });
+        
+        console.log($scope.area);
     });
     
     $http.post('/getCollection', $scope.area).then(function (response) {

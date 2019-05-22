@@ -24,7 +24,6 @@ var obj = {
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json({limit: '50mb'}));
-//app.use(express.limit('5M'));
 // Parse URL-encoded bodies (as sent by HTML forms)
 //app.use(express.urlencoded());
 
@@ -566,7 +565,7 @@ app.post('/editArea',function(req,res){
 app.post('/thisArea', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblarea.areaID AS id, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "'";
+    var sql = "SELECT tblarea.areaID AS id, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;

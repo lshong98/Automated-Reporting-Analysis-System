@@ -20,13 +20,27 @@
     <div class="col-md-12">
         <div class="form-group">
             <label for="sltColFreq" class="form-label">Collection Frequency</label><br />
-            <input type="checkbox" name="cf1" value="monday" data-ng-model="area.collectionFrequency"> Monday<br>
-              <input type="checkbox" name="cf2" value="tuesday" data-ng-model="area.collectionFrequency"> Tuesday<br>
-              <input type="checkbox" name="cf3" value="wednesday" data-ng-model="area.collectionFrequency"> Wednesday<br>
-              <input type="checkbox" name="cf4" value="thursday" data-ng-model="area.collectionFrequency"> Thursday<br>
-              <input type="checkbox" name="cf5" value="friday" data-ng-model="area.collectionFrequency"> Friday<br>
-              <input type="checkbox" name="cf6" value="saturday" data-ng-model="area.collectionFrequency"> Saturday<br>
-              <input type="checkbox" name="cf7" value="sunday" data-ng-model="area.collectionFrequency"> Sunday<br>
+            <label>
+                <input type="checkbox" data-ng-true-value="'A'" data-ng-false-value="'I'" data-ng-model="days.mon"> Monday
+            </label><br />
+            <label>
+                <input type="checkbox" data-ng-true-value="'A'" data-ng-false-value="'I'" data-ng-model="days.tue"> Tuesday
+            </label><br />
+            <label>
+              <input type="checkbox" data-ng-true-value="'A'" data-ng-false-value="'I'" data-ng-model="days.wed"> Wednesday
+            </label><br />
+            <label>
+              <input type="checkbox" data-ng-true-value="'A'" data-ng-false-value="'I'" data-ng-model="days.thu"> Thursday
+            </label><br />
+            <label>
+              <input type="checkbox" data-ng-true-value="'A'" data-ng-false-value="'I'" data-ng-model="days.fri"> Friday
+            </label><br />
+            <label>
+              <input type="checkbox" data-ng-true-value="'A'" data-ng-false-value="'I'" data-ng-model="days.sat"> Saturday
+            </label><br />
+            <label>
+              <input type="checkbox" data-ng-true-value="'A'" data-ng-false-value="'I'" data-ng-model="days.sun"> Sunday
+            </label>
         </div>
     </div>
 </div>
@@ -84,9 +98,14 @@
                     </tr>
                     <tr data-ng-repeat="c in collectionList">
                         <td data-ng-bind="($index + 1)"></td>
-                        <td data-ng-bind="c.address"></td>
                         <td>
-                            <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-alt"></i></button>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="c.address" data-ng-show="!showCollection" />
+                                <p data-ng-show="showCollection" data-ng-bind="c.address"></p>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" data-ng-click="editCollection();"><i class="fa fa-pencil-alt"></i></button>
                             <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                             <button class="btn btn-warning btn-sm"><i class="fa fa-arrow-right"></i></button>
                         </td>
@@ -103,5 +122,3 @@
         <button type="button" class="btn btn-primary" data-ng-click="editArea();">Edit</button>
     </div>
 </div>
-        
-        
