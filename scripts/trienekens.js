@@ -158,7 +158,8 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         scope.saveProfile = function () {
             scope.showProfile = !scope.showProfile;
             $http.post('/updateProfile', scope.thisAccount).then(function (response) {
-                
+                var data = response.data;
+                scope.notify(data.status, data.message);
             });
         };
         scope.cancelProfile = function () {
@@ -872,7 +873,52 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams) {
     var areaID = $routeParams.areaID;
     
     $scope.area = {
-        "id": areaID
+        "id": areaID,
+        "name": '',
+        "zone": '',
+        "staff": '',
+        "status": ''
+    };
+    $scope.collection = {
+        "area": areaID,
+        "address": ''
+    };
+    
+    $http.get('/getZoneList').then(function (response){
+        var data = response.data;
+        
+        $scope.zoneList = data;
+    });
+    
+    $http.get('/getStaffList').then(function (response) {
+        var data = response.data;
+        $scope.staffList = data;
+    });
+    
+    $http.post('/thisArea', $scope.area).then(function (response) {
+        var data = response.data[0];
+        $scope.area = data;
+    });
+    
+    $http.post('/getCollection', $scope.area).then(function (response) {
+        $scope.collectionList = response.data;
+    });
+    
+    $scope.addCollection = function () {
+        if ($scope.collection.add != "") {
+            $http.post('/addCollection', $scope.collection).then(function (response) {
+                var data = response.data;
+                
+                if (data.status == "success") {
+                    $scope.collectionList.push({"address": $scope.collection.address});
+                    $scope.collection.address = "";
+                }
+                angular.element('body').overhang({
+                    "status": data.status,
+                    "message": data.message
+                });
+            });
+        }
     };
     
 });

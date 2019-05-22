@@ -306,7 +306,7 @@ app.post('/updateProfile', function (req, res) {
     
     var dt = dateTime.create(req.body.dob);
 
-    req.body.status = req.body.status == "ACTIVE" ? 'A' : 'I';
+    req.body.status = req.body.status == "Active" ? 'A' : 'I';
     req.body.gender = req.body.gender == "Male" ? 'M' : 'F';
     req.body.dob = dt.format('Y-m-d');
     
@@ -563,6 +563,40 @@ app.post('/editArea',function(req,res){
         res.json({"status": "success", "message": "Area Information Updated."});
     });
 });
+app.post('/thisArea', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblarea.areaID AS id, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "'";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+app.post('/addCollection', function (req, res) {
+    'use strict';
+    
+    var sql = "INSERT INTO area_collection (areaID, areaAddress, acStatus) VALUE ('" + req.body.area + "', '" + req.body.address + "', 'A')";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Address Added!"});
+    });
+});
+app.post('/getCollection', function (req, res){
+    'use strict';
+
+    var sql = "SELECT areaAddress AS address FROM area_collection WHERE acStatus = 'A'";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+        res.end();
+    });
+});
 
 // Bin Management
 app.post('/addBin', function (req, res) {
@@ -768,7 +802,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblaccess (positionID VARCHAR(15), mgmtID VARCHAR(15), status CHAR(1))",
         "CREATE TABLE tblzone (zoneID VARCHAR(15) PRIMARY KEY, zoneName VARCHAR(100), creationDateTime DATETIME, zoneStatus CHAR(1))",
         "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))",
-        "CREATE TABLE area_collection (acID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), areaAddress MEDIUMTEXT, acStatus CHAR(1))",
+        "CREATE TABLE area_collection (acID INT PRIMARY KEY AUTO_INCREMENT, areaID VARCHAR(15), areaAddress MEDIUMTEXT, acStatus CHAR(1))",
         "CREATE TABLE tblbin (binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))",
         "CREATE TABLE tblacr (acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATE, creationDateTime DATETIME, acrStatus CHAR(1))",
         "CREATE TABLE tblacrfreq (acrID VARCHAR(15), areaID VARCHAR(15), day VARCHAR(15))",
