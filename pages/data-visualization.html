@@ -95,25 +95,4 @@
         </div>
     </div>
 </div>
-<script>
-    $(function() {
-        var start = moment().subtract(7, 'days');
-        var end = moment();
-        function putRange(start, end) {
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        }
-
-        $('#reportrange').daterangepicker({
-            startDate: start,
-            endDate: end,
-            opens: 'right'
-        }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-            putRange(start, end);
-        });
-        putRange(start, end);
-    });
-
-</script>
-
 </html>

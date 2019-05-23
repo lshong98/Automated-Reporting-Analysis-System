@@ -19,7 +19,38 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             $scope.chartCompleteStatusSelected = "Date";
         }
     }
+    //date configuration
+    var currentDate = new Date();
+    var startDate = new Date();
+    startDate.setDate(currentDate.getDate() - 7);
+    $scope.visualdate = {
+        "dateStart" : '',
+        "dateEnd" : ''
+    }
+    $scope.visualdate.dateStart = $filter('date')(startDate, 'yyyy-MM-dd');
+    $scope.visualdate.dateEnd = $filter('date')(currentDate, 'yyyy-MM-dd');
+    
+    $(function() {
+        var start = moment().subtract(7, 'days');
+        var end = moment();
+        function putRange(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
 
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            opens: 'right'
+        }, function(start, end, label) {
+            //console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            putRange(start, end);
+            $scope.visualdate.dateStart = start.format('YYYY-MM-DD');
+            $scope.visualdate.dateEnd = end.format('YYYY-MM-DD');
+            getDataVisualization();
+        });
+        putRange(start, end);
+    });
+    
     var stringToTime = function (string) {
         var strArray = string.split(":");
         var d = new Date();
@@ -27,6 +58,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
 
         return d;
     }
+    
     //function to reshape data for fit into charts
     var getElementList = function (element, data) {
         var objReturn = [];
@@ -149,10 +181,9 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
 
         return objReturn;
     }
-    //    $http.get('/getDataVisualization').then(function(response){
-    //        var visual = response.data;
-    //    });
-    $http.get("/getDataVisualization")
+    
+    var getDataVisualization = function(){
+        $http.post("/getDataVisualization", $scope.visualdate)
         .then(function (response) {
                 $scope.reportList = response.data;
 //                var obj = getElementList("timeSeries", $scope.reportList);
@@ -162,7 +193,10 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             },
             function (response) {
                 $window.console.log("errror retrieving json file - " + response);
-            });
+            });    
+    }
+    //get data visualization when load the page
+    getDataVisualization();
     //chart-line-duration-garbage
     var displayChart = function () {
         Highcharts.chart('chart-line-duration-garbage', {

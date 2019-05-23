@@ -777,20 +777,7 @@ app.get('/getReportList', function(req, res){
 }); // Complete
 
 // Visualization Management
-app.get('/getDataVisualization', function(req, res){
-    'use strict';
-    
-    var sql ="SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.reportStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID ORDER BY r.reportCollectionDate";
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-// Visualization Management for 7 Days
-app.post('/getDataVisualizationWeek', function(req, res){
+app.post('/getDataVisualization', function(req, res){
     'use strict';
     
     var sql ="SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.reportStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' ORDER BY r.reportCollectionDate";

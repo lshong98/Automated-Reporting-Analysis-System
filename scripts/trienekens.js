@@ -219,7 +219,7 @@ app.directive('dateNow', ['$filter', function ($filter) {
 
 app.controller('managerController', function ($scope, $http, $filter) {
     'use strict';
-    
+    //date configuration
     var currentDate = new Date();
     var startDate = new Date();
     startDate.setDate(currentDate.getDate() - 7);
@@ -292,7 +292,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
     var socket = io.connect();
     socket.on('connect', function () {
         var sessionid = socket.io.engine.id;
-        console.log(sessionid);
+//        console.log(sessionid);
     });
     
     $http.get('/getZoneCount').then(function (response) {
@@ -327,10 +327,9 @@ app.controller('managerController', function ($scope, $http, $filter) {
         $scope.reportIncompleteCount = response.data[0].incompleteCount;
     });
     
-    $http.post('/getDataVisualizationWeek',$scope.visualdate).then(function (response) {
-        $scope.visualObject = response.data;
+    $http.post('/getDataVisualization', $scope.visualdate).then(function (response) {
+        $scope.visualObject = response.data;        
         displayChart();
-        
     });
     var displayChart = function(){
         //chart-combine-durvol-day
