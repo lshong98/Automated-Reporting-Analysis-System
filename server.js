@@ -13,7 +13,7 @@ var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
 var DB_HOST = '';
-var DB_USER = '';
+var DB_USER = ';
 var DB_PASS = '';
 var DB_NAME = '';
 
@@ -789,6 +789,19 @@ app.post('/getDataVisualization', function(req, res){
         res.json(result);
     });
 });
+app.post('/getDataVisualizationGroupByDate', function(req, res){
+    'use strict';
+    
+    var sql ="SELECT reportCollectionDate, SUM(operationTimeStart) AS 'operationTimeStart', SUM(operationTimeEnd) AS 'operationTimeEnd', SUM(garbageAmount) AS 'garbageAmount' FROM tblreport WHERE reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' GROUP BY reportCollectionDate ORDER BY reportCollectionDate";
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+//"SELECT reportCollectionDate, SUM(operationTimeStart), SUM(operationTimeEnd), SUM(garbageAmount) FROM tblreport WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' GROUP BY reportCollectionDate ORDER BY r.reportCollectionDate";
 
 // Driver
 app.get('/getDriverList', function(req, res) {

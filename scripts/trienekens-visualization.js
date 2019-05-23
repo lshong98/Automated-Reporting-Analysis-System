@@ -69,21 +69,26 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         var dimension = false;
         for (i = 0; i < data.length; i += 1) {
             if (element === "reportCollectionDate") {
-                objReturn.push(
-                    $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d'));
-            } else if (element === "areaID") {
-                objReturn.push(data[i].areaID);
+                exist = false;
+                var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
+                //objReturn.push(formattedDate);
+                for (j = 0; j < objReturn.length; j += 1) {
+                    if (objReturn[j] === formattedDate) {
+                        exist = true;
+                        //console.log(objReturn[j]);
+                    }
+                }
+                if (!exist) {
+                   objReturn.push(formattedDate);
+                }
             } else if (element === "garbageAmount") {
                 objReturn.push(parseInt(data[i].garbageAmount));
             } else if (element === "duration") {
-                timeStart = stringToTime(data[i].operationTimeStart)
-                timeEnd = stringToTime(data[i].operationTimeEnd);
-                duration = (timeEnd - timeStart) / 60 / 1000;
-
+                duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
                 objReturn.push(duration);
             } else if (element === "area & duration") {
                 exist = false;
-
+                //var formattedDate2 = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
                 timeStart = stringToTime(data[i].operationTimeStart)
                 timeEnd = stringToTime(data[i].operationTimeEnd);
                 duration = (timeEnd - timeStart) / 60 / 1000;
@@ -186,14 +191,28 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         $http.post("/getDataVisualization", $scope.visualdate)
         .then(function (response) {
                 $scope.reportList = response.data;
-//                var obj = getElementList("timeSeries", $scope.reportList);
+//                console.log(response.data);
+//                var obj = getElementList("reportCollectionDate", $scope.reportList);
+//                console.log(obj);
+//                displayChart();
+
+            },
+            function (response) {
+                $window.console.log("errror retrieving json file - " + response);
+            });
+        $http.post("/getDataVisualizationGroupByDate", $scope.visualdate)
+        .then(function (response) {
+                $scope.reportListGroupByDate = response.data;
+//                console.log(response.data)
+                //console.log(response.data);
+//                var obj = getElementList("area & duration", $scope.reportList);
 //                console.log(obj);
                 displayChart();
 
             },
             function (response) {
                 $window.console.log("errror retrieving json file - " + response);
-            });    
+            }); 
     }
     //get data visualization when load the page
     getDataVisualization();
@@ -392,7 +411,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 text: 'Trienekens'
             },
             xAxis: [{
-                categories: getElementList("reportCollectionDate", $scope.reportList),
+                categories: getElementList("reportCollectionDate", $scope.reportListGroupByDate),
                 crosshair: true
     }],
             yAxis: [{ // Primary yAxis
@@ -439,7 +458,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 name: 'Garbage Amount',
                 type: 'column',
                 yAxis: 1,
-                data: getElementList("garbageAmount", $scope.reportList),
+                data: getElementList("garbageAmount", $scope.reportListGroupByDate),
                 tooltip: {
                     valueSuffix: ' ton'
                 }
@@ -447,7 +466,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
     }, {
                 name: 'Duration',
                 type: 'spline',
-                data: getElementList("duration", $scope.reportList),
+                data: getElementList("duration", $scope.reportListGroupByDate),
                 tooltip: {
                     valueSuffix: ' minutes'
                 }
