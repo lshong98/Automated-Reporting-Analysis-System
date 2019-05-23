@@ -27,9 +27,6 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
 
         return d;
     }
-    var sortByDate = function (a, b) {
-        return a.localeCompare(b);
-    }
     //function to reshape data for fit into charts
     var getElementList = function (element, data) {
         var objReturn = [];

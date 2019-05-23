@@ -1,6 +1,6 @@
 /*
 jshint: white
-global angular, document, google
+global angular, document, google, Highcharts
 */
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap']);
 
@@ -217,8 +217,78 @@ app.directive('dateNow', ['$filter', function ($filter) {
     };
 }]);
 
-app.controller('managerController', function ($scope, $http) {
+app.controller('managerController', function ($scope, $http, $filter) {
     'use strict';
+    
+    var currentDate = new Date();
+    var startDate = new Date();
+    startDate.setDate(currentDate.getDate() - 7);
+    $scope.visualdate = {
+        "dateStart" : '',
+        "dateEnd" : ''
+    }
+    $scope.visualdate.dateStart = $filter('date')(startDate, 'yyyy-MM-dd');
+    $scope.visualdate.dateEnd = $filter('date')(currentDate, 'yyyy-MM-dd');
+    
+    var stringToTime = function (string) {
+        var strArray = string.split(":");
+        var d = new Date();
+        d.setHours(strArray[0], strArray[1], strArray[2]);
+
+        return d;
+    }
+    //function to reshape data for fit into charts
+    var getElementList = function (element, data) {
+        var objReturn = [];
+        var i, j;
+        var exist = false,
+            complete;
+        var timeStart, timeEnd, duration;
+        var dimension = false;
+        for (i = 0; i < data.length; i += 1) {
+            if (element === "reportCollectionDate") {
+                objReturn.push(
+                    $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d'));
+            } else if (element === "garbageAmount") {
+                objReturn.push(parseInt(data[i].garbageAmount));
+            } else if (element === "duration") {
+                timeStart = stringToTime(data[i].operationTimeStart)
+                timeEnd = stringToTime(data[i].operationTimeEnd);
+                duration = (timeEnd - timeStart) / 60 / 1000;
+
+                objReturn.push(duration);
+            } else if (element === "amountGarbageOnArea") {
+                exist = false;
+                for (j = 0; j < objReturn.length; j += 1) {
+                    if (objReturn[j].name === data[i].areaName) {
+                        objReturn[j].y += parseInt(data[i].garbageAmount);
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    objReturn.push({
+                        "name": data[i].areaName,
+                        "y": parseInt(data[i].garbageAmount)
+                    });
+                }
+            } else if (element === "timeSeries") {
+                var date = new Date(data[i].reportCollectionDate);
+                exist = false;
+                for (j = 0; j < objReturn.length; j += 1) {
+                    if (objReturn[j][0] === date.getTime()) {
+                        objReturn[j][1] += parseInt(data[i].garbageAmount);
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    objReturn.push([date.getTime(), parseInt(data[i].garbageAmount)]);
+                }
+            }
+        }
+
+        return objReturn;
+    }
+    
     var socket = io.connect();
     socket.on('connect', function () {
         var sessionid = socket.io.engine.id;
@@ -256,356 +326,527 @@ app.controller('managerController', function ($scope, $http) {
     $http.get('/getReportIncompleteCount').then(function (response) {
         $scope.reportIncompleteCount = response.data[0].incompleteCount;
     });
+    
+    $http.post('/getDataVisualizationWeek',$scope.visualdate).then(function (response) {
+        $scope.visualObject = response.data;
+        displayChart();
+        
+    });
+    var displayChart = function(){
+        //chart-combine-durvol-day
+        Highcharts.chart('chart-combine-durvol-day', {
+            chart: {
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Comparison between Duration and Volume of Garbage Collection'
+            },
+            subtitle: {
+                text: 'Trienekens'
+            },
+            xAxis: [{
+                categories: getElementList("reportCollectionDate", $scope.visualObject),
+                crosshair: true
+    }],
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value}minutes',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Duration',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+    }, { // Secondary yAxis
+                title: {
+                    text: 'Garbage Amount',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value} ton',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+    }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 120,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255,255,255,0.25)'
+            },
+            series: [{
+                name: 'Garbage Amount',
+                type: 'column',
+                yAxis: 1,
+                data: getElementList("garbageAmount", $scope.visualObject),
+                tooltip: {
+                    valueSuffix: ' ton'
+                }
 
+    }, {
+                name: 'Duration',
+                type: 'spline',
+                data: getElementList("duration", $scope.visualObject),
+                tooltip: {
+                    valueSuffix: ' minutes'
+                }
+    }]
+        });
+        
+        //chart-pie-volume-area
+        Highcharts.chart('chart-pie-volume-area', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Garbage Amount based on Area'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Percentage',
+                colorByPoint: true,
+                data: getElementList("amountGarbageOnArea", $scope.visualObject)
+    }]
+        });
+        
+        //chart-line-volume-day
+        Highcharts.chart('chart-line-volume-day', {
+            chart: {
+                zoomType: 'x'
+            },
+            title: {
+                text: 'Garbage Amount over time'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: 'Garbage Amount'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
 
-    function synchronizePieSeries(event, slice) {
-        //console.log($(pieChart.series[1]));
-        $(pieChart.series[1].data).each(function (i, e) {
-            if (slice.name === e.name) {
-                slice.visible ? e.graphic.hide() : e.graphic.show();
-            }
+            series: [{
+                type: 'area',
+                name: 'Garbage Amount',
+                data: getElementList("timeSeries", $scope.visualObject)
+            }]
         });
     }
 
-    var pieChart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'pie-chart',
-            plotBackgroundColor: null,
-            plotBorderWidth: 1,
-            plotShadow: false,
-            type: 'pie',
-            events: {
-                load: function () {},
-                redraw: function () {}
-            }
-        },
-        title: '',
-        labels: {
-            items: [{
-                html: 'QAA 1234',
-                style: {
-                    left: '40',
-                    top: '130'
-                }
-            }, {
-                html: 'QAA 2345',
-                style: {
-                    left: '190',
-                    top: '130'
-                }
-            }, {
-                html: 'QAA 2345',
-                style: {
-                    left: '340',
-                    top: '130'
-                }
-            }, {
-                html: 'QAA 2345',
-                style: {
-                    left: '490',
-                    top: '130'
-                }
-            }, {
-                html: 'QAA 2345',
-                style: {
-                    left: '640',
-                    top: '130'
-                }
-            }]
-        },
-        legend: {
-            enabled: true
-        },
-        tooltip: {
-            pointFormat: '{data.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: false,
-                innerSize: '70%',
-                cursor: 'pointer',
-                column: {
-                    colorByPoint: true
-                },
-                dataLabels: false
-            }
-        },
-        floating: true,
-        series: [{
-            type: 'pie',
-            name: 'Browser share',
-            center: [50, 50],
-            size: 100,
-            showInLegend: true,
-            title: {
-                align: 'center',
-                text: '<b>91.76%</b>',
-                verticalAlign: 'middle',
-                y: -10
-            },
-            data: [
-                {
-                    name: 'Used space',
-                    y: 91.76,
-                    labels: 'ok',
-                    color: '#C10003'
-                }, {
-                    name: 'Free space',
-                    y: 8.24,
-                    color: 'gray'
-                }
-            ]
-        }, {
-            type: 'pie',
-            name: 'Browser share',
-            center: [200, 50],
-            size: 100,
-            title: {
-                align: 'center',
-                text: '<b>10%</b>',
-                verticalAlign: 'middle',
-                y: -10
-            },
-            dataLabels: {
-                enabled: false
-            },
-            data: [
-                {
-                    name: 'Used space',
-                    y: 10,
-                    color: '#C10003'
-                }, {
-                    name: 'Free space',
-                    y: 90,
-                    color: 'gray'
-                }
-            ]
-        }, {
-            type: 'pie',
-            name: 'Browser share',
-            center: [350, 50],
-            size: 100,
-            title: {
-                align: 'center',
-                text: '<b>30%</b>',
-                verticalAlign: 'middle',
-                y: -10
-            },
-            dataLabels: {
-                enabled: false
-            },
-            data: [
-                {
-                    name: 'Used space',
-                    y: 30,
-                    color: '#C10003'
-                }, {
-                    name: 'Free space',
-                    y: 70,
-                    color: 'gray'
-                }
-            ]
-        }, {
-            type: 'pie',
-            name: 'Browser share',
-            center: [500, 50],
-            size: 100,
-            title: {
-                align: 'center',
-                text: '<b>55%</b>',
-                verticalAlign: 'middle',
-                y: -10
-            },
-            dataLabels: {
-                enabled: false
-            },
-            data: [
-                {
-                    name: 'Used space',
-                    y: 55,
-                    color: '#C10003'
-                }, {
-                    name: 'Free space',
-                    y: 45,
-                    color: 'gray'
-                }
-            ]
-        }, {
-            type: 'pie',
-            name: 'Browser share',
-            center: [650, 50],
-            size: 100,
-            title: {
-                align: 'center',
-                text: '<b>85%</b>',
-                verticalAlign: 'middle',
-                y: -10
-            },
-            dataLabels: {
-                enabled: false
-            },
-            data: [
-                {
-                    name: 'Used space',
-                    y: 85,
-                    color: '#C10003'
-                }, {
-                    name: 'Free space',
-                    y: 15,
-                    color: 'gray'
-                }
-            ]
-        }]
-    }, function (chart) {
-        $(chart.series[0].data).each(function (i, e) {
-            e.legendItem.on('click', function (event) {
-                var legendItem = e.name;
+//    function synchronizePieSeries(event, slice) {
+//        //console.log($(pieChart.series[1]));
+//        $(pieChart.series[1].data).each(function (i, e) {
+//            if (slice.name === e.name) {
+//                slice.visible ? e.graphic.hide() : e.graphic.show();
+//            }
+//        });
+//    }
 
-                event.stopPropagation();
-
-                $(chart.series).each(function (j, f) {
-                    $(this.data).each(function (k, z) {
-                        if (z.name == legendItem) {
-                            if (z.visible) {
-                                z.setVisible(false);
-                            } else {
-                                z.setVisible(true);
-                            }
-                        }
-                    });
-                });
-            });
-        });
-    });
-
-    var lineChart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'line-chart'
-        },
-        title: {
-            text: 'Solar Employment Growth by Sector, 2010-2016'
-        },
-        subtitle: {
-            text: 'Source: thesolarfoundation.com'
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Employees'
-            }
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-        },
-        plotOptions: {
-            series: {
-                label: {
-                    connectorAllowed: false
-                },
-                pointStart: 2010
-            }
-        },
-        series: [{
-            name: 'Installation',
-            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-        }, {
-            name: 'Manufacturing',
-            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-        }, {
-            name: 'Sales & Distribution',
-            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-        }, {
-            name: 'Project Development',
-            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-        }, {
-            name: 'Other',
-            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-        }],
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 1000
-                },
-                chartOptions: {
-                    legend: {
-                        layout: 'horizontal',
-                        align: 'center',
-                        verticalAlign: 'bottom'
-                    }
-                }
-            }]
-        }
-    });
-
-    var barChart = new Highcharts.Chart({
-        chart: {
-            type: 'bar',
-            renderTo: 'bar-chart'
-        },
-        title: {
-            text: 'Population pyramid for Germany, 2018'
-        },
-        subtitle: {
-            text: 'Source: <a href="http://populationpyramid.net/germany/2018/">Population Pyramids of the World from 1950 to 2100</a>'
-        },
-        xAxis: [{
-            categories: categories,
-            reversed: false,
-            labels: {
-                step: 1
-            }
-        }, { // mirror axis on right side
-            opposite: true,
-            reversed: false,
-            categories: categories,
-            linkedTo: 0,
-            labels: {
-                step: 1
-            }
-        }],
-        yAxis: {
-            title: {
-                text: null
-            },
-            labels: {
-                formatter: function () {
-                    return Math.abs(this.value) + '%';
-                }
-            }
-        },
-        plotOptions: {
-            series: {
-                stacking: 'normal'
-            }
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
-                    'Population: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
-            }
-        },
-        series: [{
-            name: 'Male',
-            data: [
-                -2.2, -2.1, -2.2, -2.4,
-                -2.7, -3.0, -3.3, -3.2,
-                -2.9, -3.5, -4.4, -4.1,
-                -3.4, -2.7, -2.3, -2.2,
-                -1.6, -0.6, -0.3, -0.0,
-                -0.0
-            ]
-        }, {
-            name: 'Female',
-            data: [
-                2.1, 2.0, 2.1, 2.3, 2.6,
-                2.9, 3.2, 3.1, 2.9, 3.4,
-                4.3, 4.0, 3.5, 2.9, 2.5,
-                2.7, 2.2, 1.1, 0.6, 0.2,
-                0.0
-            ]
-        }]
-    });
+//    var pieChart = new Highcharts.Chart({
+//        chart: {
+//            renderTo: 'pie-chart',
+//            plotBackgroundColor: null,
+//            plotBorderWidth: 1,
+//            plotShadow: false,
+//            type: 'pie',
+//            events: {
+//                load: function () {},
+//                redraw: function () {}
+//            }
+//        },
+//        title: '',
+//        labels: {
+//            items: [{
+//                html: 'QAA 1234',
+//                style: {
+//                    left: '40',
+//                    top: '130'
+//                }
+//            }, {
+//                html: 'QAA 2345',
+//                style: {
+//                    left: '190',
+//                    top: '130'
+//                }
+//            }, {
+//                html: 'QAA 2345',
+//                style: {
+//                    left: '340',
+//                    top: '130'
+//                }
+//            }, {
+//                html: 'QAA 2345',
+//                style: {
+//                    left: '490',
+//                    top: '130'
+//                }
+//            }, {
+//                html: 'QAA 2345',
+//                style: {
+//                    left: '640',
+//                    top: '130'
+//                }
+//            }]
+//        },
+//        legend: {
+//            enabled: true
+//        },
+//        tooltip: {
+//            pointFormat: '{data.name}: <b>{point.percentage:.1f}%</b>'
+//        },
+//        plotOptions: {
+//            pie: {
+//                allowPointSelect: false,
+//                innerSize: '70%',
+//                cursor: 'pointer',
+//                column: {
+//                    colorByPoint: true
+//                },
+//                dataLabels: false
+//            }
+//        },
+//        floating: true,
+//        series: [{
+//            type: 'pie',
+//            name: 'Browser share',
+//            center: [50, 50],
+//            size: 100,
+//            showInLegend: true,
+//            title: {
+//                align: 'center',
+//                text: '<b>91.76%</b>',
+//                verticalAlign: 'middle',
+//                y: -10
+//            },
+//            data: [
+//                {
+//                    name: 'Used space',
+//                    y: 91.76,
+//                    labels: 'ok',
+//                    color: '#C10003'
+//                }, {
+//                    name: 'Free space',
+//                    y: 8.24,
+//                    color: 'gray'
+//                }
+//            ]
+//        }, {
+//            type: 'pie',
+//            name: 'Browser share',
+//            center: [200, 50],
+//            size: 100,
+//            title: {
+//                align: 'center',
+//                text: '<b>10%</b>',
+//                verticalAlign: 'middle',
+//                y: -10
+//            },
+//            dataLabels: {
+//                enabled: false
+//            },
+//            data: [
+//                {
+//                    name: 'Used space',
+//                    y: 10,
+//                    color: '#C10003'
+//                }, {
+//                    name: 'Free space',
+//                    y: 90,
+//                    color: 'gray'
+//                }
+//            ]
+//        }, {
+//            type: 'pie',
+//            name: 'Browser share',
+//            center: [350, 50],
+//            size: 100,
+//            title: {
+//                align: 'center',
+//                text: '<b>30%</b>',
+//                verticalAlign: 'middle',
+//                y: -10
+//            },
+//            dataLabels: {
+//                enabled: false
+//            },
+//            data: [
+//                {
+//                    name: 'Used space',
+//                    y: 30,
+//                    color: '#C10003'
+//                }, {
+//                    name: 'Free space',
+//                    y: 70,
+//                    color: 'gray'
+//                }
+//            ]
+//        }, {
+//            type: 'pie',
+//            name: 'Browser share',
+//            center: [500, 50],
+//            size: 100,
+//            title: {
+//                align: 'center',
+//                text: '<b>55%</b>',
+//                verticalAlign: 'middle',
+//                y: -10
+//            },
+//            dataLabels: {
+//                enabled: false
+//            },
+//            data: [
+//                {
+//                    name: 'Used space',
+//                    y: 55,
+//                    color: '#C10003'
+//                }, {
+//                    name: 'Free space',
+//                    y: 45,
+//                    color: 'gray'
+//                }
+//            ]
+//        }, {
+//            type: 'pie',
+//            name: 'Browser share',
+//            center: [650, 50],
+//            size: 100,
+//            title: {
+//                align: 'center',
+//                text: '<b>85%</b>',
+//                verticalAlign: 'middle',
+//                y: -10
+//            },
+//            dataLabels: {
+//                enabled: false
+//            },
+//            data: [
+//                {
+//                    name: 'Used space',
+//                    y: 85,
+//                    color: '#C10003'
+//                }, {
+//                    name: 'Free space',
+//                    y: 15,
+//                    color: 'gray'
+//                }
+//            ]
+//        }]
+//    }, function (chart) {
+//        $(chart.series[0].data).each(function (i, e) {
+//            e.legendItem.on('click', function (event) {
+//                var legendItem = e.name;
+//
+//                event.stopPropagation();
+//
+//                $(chart.series).each(function (j, f) {
+//                    $(this.data).each(function (k, z) {
+//                        if (z.name == legendItem) {
+//                            if (z.visible) {
+//                                z.setVisible(false);
+//                            } else {
+//                                z.setVisible(true);
+//                            }
+//                        }
+//                    });
+//                });
+//            });
+//        });
+//    });
+//
+//    var lineChart = new Highcharts.Chart({
+//        chart: {
+//            renderTo: 'line-chart'
+//        },
+//        title: {
+//            text: 'Solar Employment Growth by Sector, 2010-2016'
+//        },
+//        subtitle: {
+//            text: 'Source: thesolarfoundation.com'
+//        },
+//        yAxis: {
+//            title: {
+//                text: 'Number of Employees'
+//            }
+//        },
+//        legend: {
+//            layout: 'vertical',
+//            align: 'right',
+//            verticalAlign: 'middle'
+//        },
+//        plotOptions: {
+//            series: {
+//                label: {
+//                    connectorAllowed: false
+//                },
+//                pointStart: 2010
+//            }
+//        },
+//        series: [{
+//            name: 'Installation',
+//            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+//        }, {
+//            name: 'Manufacturing',
+//            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+//        }, {
+//            name: 'Sales & Distribution',
+//            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+//        }, {
+//            name: 'Project Development',
+//            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
+//        }, {
+//            name: 'Other',
+//            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+//        }],
+//        responsive: {
+//            rules: [{
+//                condition: {
+//                    maxWidth: 1000
+//                },
+//                chartOptions: {
+//                    legend: {
+//                        layout: 'horizontal',
+//                        align: 'center',
+//                        verticalAlign: 'bottom'
+//                    }
+//                }
+//            }]
+//        }
+//    });
+//
+//    var barChart = new Highcharts.Chart({
+//        chart: {
+//            type: 'bar',
+//            renderTo: 'bar-chart'
+//        },
+//        title: {
+//            text: 'Population pyramid for Germany, 2018'
+//        },
+//        subtitle: {
+//            text: 'Source: <a href="http://populationpyramid.net/germany/2018/">Population Pyramids of the World from 1950 to 2100</a>'
+//        },
+//        xAxis: [{
+//            categories: categories,
+//            reversed: false,
+//            labels: {
+//                step: 1
+//            }
+//        }, { // mirror axis on right side
+//            opposite: true,
+//            reversed: false,
+//            categories: categories,
+//            linkedTo: 0,
+//            labels: {
+//                step: 1
+//            }
+//        }],
+//        yAxis: {
+//            title: {
+//                text: null
+//            },
+//            labels: {
+//                formatter: function () {
+//                    return Math.abs(this.value) + '%';
+//                }
+//            }
+//        },
+//        plotOptions: {
+//            series: {
+//                stacking: 'normal'
+//            }
+//        },
+//        tooltip: {
+//            formatter: function () {
+//                return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
+//                    'Population: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+//            }
+//        },
+//        series: [{
+//            name: 'Male',
+//            data: [
+//                -2.2, -2.1, -2.2, -2.4,
+//                -2.7, -3.0, -3.3, -3.2,
+//                -2.9, -3.5, -4.4, -4.1,
+//                -3.4, -2.7, -2.3, -2.2,
+//                -1.6, -0.6, -0.3, -0.0,
+//                -0.0
+//            ]
+//        }, {
+//            name: 'Female',
+//            data: [
+//                2.1, 2.0, 2.1, 2.3, 2.6,
+//                2.9, 3.2, 3.1, 2.9, 3.4,
+//                4.3, 4.0, 3.5, 2.9, 2.5,
+//                2.7, 2.2, 1.1, 0.6, 0.2,
+//                0.0
+//            ]
+//        }]
+//    });
 
 });
 
