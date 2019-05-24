@@ -13,7 +13,7 @@ var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
 var DB_HOST = '';
-var DB_USER = ';
+var DB_USER = '';
 var DB_PASS = '';
 var DB_NAME = '';
 

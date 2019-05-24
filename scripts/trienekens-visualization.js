@@ -24,13 +24,13 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
     var startDate = new Date();
     startDate.setDate(currentDate.getDate() - 7);
     $scope.visualdate = {
-        "dateStart" : '',
-        "dateEnd" : ''
+        "dateStart": '',
+        "dateEnd": ''
     }
     $scope.visualdate.dateStart = $filter('date')(startDate, 'yyyy-MM-dd');
     $scope.visualdate.dateEnd = $filter('date')(currentDate, 'yyyy-MM-dd');
-    
-    $(function() {
+    //data range picker filter
+    $(function () {
         var start = moment().subtract(7, 'days');
         var end = moment();
         function putRange(start, end) {
@@ -41,7 +41,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             startDate: start,
             endDate: end,
             opens: 'right'
-        }, function(start, end, label) {
+        }, function (start, end, label) {
             //console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
             putRange(start, end);
             $scope.visualdate.dateStart = start.format('YYYY-MM-DD');
@@ -50,62 +50,87 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         });
         putRange(start, end);
     });
-    
+
     var stringToTime = function (string) {
         var strArray = string.split(":");
         var d = new Date();
         d.setHours(strArray[0], strArray[1], strArray[2]);
-
         return d;
     }
     
     //function to reshape data for fit into charts
     var getElementList = function (element, data) {
         var objReturn = [];
-        var i, j;
+        var i, j, k;
         var exist = false,
             complete;
-        var timeStart, timeEnd, duration;
+
         var dimension = false;
+        
+        if (element === "area & duration") {
+            var timeStart, timeEnd, duration;
+            var dateArray = getElementList("reportCollectionDate", data);        
+            var areaArray = getElementList("areaName", data);
+            for (i = 0; i < areaArray.length; i += 1) {
+                objReturn.push({
+                    name: areaArray[i],
+                    data: []
+                });
+            }
+            for (i = 0; i < areaArray.length; i += 1) {
+                for(j=0; j<dateArray.length; j+=1){
+                    objReturn[i].data[j] = dateArray[j];
+                }
+            }
+
+
+            for (i = 0; i < areaArray.length; i += 1) {
+                for (j = 0; j < dateArray.length; j += 1) {
+                    var isNull = true;
+                    for (k = 0; k < data.length; k += 1) {
+                        var formattedDate2 = $filter('date')(data[k].reportCollectionDate, 'EEEE, MMM d');
+                        timeStart = stringToTime(data[k].operationTimeStart)
+                        timeEnd = stringToTime(data[k].operationTimeEnd);
+                        duration = (timeEnd - timeStart) / 60 / 1000;
+                        if (objReturn[i].data[j] === formattedDate2 && objReturn[i].name === data[k].areaName) {
+                            objReturn[i].data[j] = duration;
+                            isNull = false;
+                        }
+                    }
+                    if (isNull) {
+                        objReturn[i].data[j] = null;
+                    }
+                }
+            }
+        }else{
         for (i = 0; i < data.length; i += 1) {
             if (element === "reportCollectionDate") {
                 exist = false;
                 var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
-                //objReturn.push(formattedDate);
                 for (j = 0; j < objReturn.length; j += 1) {
                     if (objReturn[j] === formattedDate) {
                         exist = true;
-                        //console.log(objReturn[j]);
                     }
                 }
                 if (!exist) {
-                   objReturn.push(formattedDate);
+                    objReturn.push(formattedDate);
+                }
+            } else if (element === "areaName") {
+                exist = false;
+                for (j = 0; j < objReturn.length; j += 1) {
+                    if (objReturn[j] === data[i].areaName) {
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    objReturn.push(data[i].areaName);
                 }
             } else if (element === "garbageAmount") {
                 objReturn.push(parseInt(data[i].garbageAmount));
             } else if (element === "duration") {
                 duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
                 objReturn.push(duration);
-            } else if (element === "area & duration") {
-                exist = false;
-                //var formattedDate2 = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
-                timeStart = stringToTime(data[i].operationTimeStart)
-                timeEnd = stringToTime(data[i].operationTimeEnd);
-                duration = (timeEnd - timeStart) / 60 / 1000;
-
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j].name === data[i].areaName) {
-                        objReturn[j].data.push(duration);
-                        exist = true;
-                    }
-                }
-                if (!exist) {
-                    objReturn.push({
-                        "name": data[i].areaName,
-                        "data": [duration]
-                    });
-                }
-            } else if (element === "amountGarbageOnArea") {
+            }else if (element === "amountGarbageOnArea") {
                 exist = false;
                 for (j = 0; j < objReturn.length; j += 1) {
                     if (objReturn[j].name === data[i].areaName) {
@@ -183,36 +208,29 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 }
             }
         }
-
+        }
         return objReturn;
     }
-    
-    var getDataVisualization = function(){
+
+    var getDataVisualization = function () {
         $http.post("/getDataVisualization", $scope.visualdate)
-        .then(function (response) {
-                $scope.reportList = response.data;
-//                console.log(response.data);
-//                var obj = getElementList("reportCollectionDate", $scope.reportList);
-//                console.log(obj);
-//                displayChart();
-
-            },
-            function (response) {
-                $window.console.log("errror retrieving json file - " + response);
-            });
+            .then(function (response) {
+                    $scope.reportList = response.data;
+//                    var obj = getElementList("area & duration", $scope.reportList);
+//                    console.log(obj);
+                },
+                function (response) {
+                    $window.console.log("errror retrieving json file - " + response);
+                });
         $http.post("/getDataVisualizationGroupByDate", $scope.visualdate)
-        .then(function (response) {
-                $scope.reportListGroupByDate = response.data;
-//                console.log(response.data)
-                //console.log(response.data);
-//                var obj = getElementList("area & duration", $scope.reportList);
-//                console.log(obj);
-                displayChart();
+            .then(function (response) {
+                    $scope.reportListGroupByDate = response.data;
+                    displayChart();
 
-            },
-            function (response) {
-                $window.console.log("errror retrieving json file - " + response);
-            }); 
+                },
+                function (response) {
+                    $window.console.log("errror retrieving json file - " + response);
+                });
     }
     //get data visualization when load the page
     getDataVisualization();

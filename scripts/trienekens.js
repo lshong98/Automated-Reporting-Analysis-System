@@ -241,21 +241,23 @@ app.controller('managerController', function ($scope, $http, $filter) {
     var getElementList = function (element, data) {
         var objReturn = [];
         var i, j;
-        var exist = false,
-            complete;
-        var timeStart, timeEnd, duration;
-        var dimension = false;
+        var exist;
         for (i = 0; i < data.length; i += 1) {
             if (element === "reportCollectionDate") {
-                objReturn.push(
-                    $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d'));
+                exist = false;
+                var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
+                for (j = 0; j < objReturn.length; j += 1) {
+                    if (objReturn[j] === formattedDate) {
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    objReturn.push(formattedDate);
+                }
             } else if (element === "garbageAmount") {
                 objReturn.push(parseInt(data[i].garbageAmount));
             } else if (element === "duration") {
-                timeStart = stringToTime(data[i].operationTimeStart)
-                timeEnd = stringToTime(data[i].operationTimeEnd);
-                duration = (timeEnd - timeStart) / 60 / 1000;
-
+                var duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
                 objReturn.push(duration);
             } else if (element === "amountGarbageOnArea") {
                 exist = false;
@@ -292,7 +294,6 @@ app.controller('managerController', function ($scope, $http, $filter) {
     var socket = io.connect();
     socket.on('connect', function () {
         var sessionid = socket.io.engine.id;
-//        console.log(sessionid);
     });
     
     $http.get('/getZoneCount').then(function (response) {
@@ -328,7 +329,10 @@ app.controller('managerController', function ($scope, $http, $filter) {
     });
     
     $http.post('/getDataVisualization', $scope.visualdate).then(function (response) {
-        $scope.visualObject = response.data;        
+        $scope.visualObject = response.data;
+    });
+    $http.post('/getDataVisualizationGroupByDate', $scope.visualdate).then(function (response) {
+        $scope.reportListGroupByDate = response.data;
         displayChart();
     });
     var displayChart = function(){
@@ -344,7 +348,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
                 text: 'Trienekens'
             },
             xAxis: [{
-                categories: getElementList("reportCollectionDate", $scope.visualObject),
+                categories: getElementList("reportCollectionDate", $scope.reportListGroupByDate),
                 crosshair: true
     }],
             yAxis: [{ // Primary yAxis
@@ -391,7 +395,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
                 name: 'Garbage Amount',
                 type: 'column',
                 yAxis: 1,
-                data: getElementList("garbageAmount", $scope.visualObject),
+                data: getElementList("garbageAmount", $scope.reportListGroupByDate),
                 tooltip: {
                     valueSuffix: ' ton'
                 }
@@ -399,7 +403,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
     }, {
                 name: 'Duration',
                 type: 'spline',
-                data: getElementList("duration", $scope.visualObject),
+                data: getElementList("duration", $scope.reportListGroupByDate),
                 tooltip: {
                     valueSuffix: ' minutes'
                 }
