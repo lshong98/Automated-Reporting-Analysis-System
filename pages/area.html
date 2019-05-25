@@ -1,3 +1,8 @@
+<style>
+    .bottom-margin {
+        margin-bottom: 50px;
+    }
+</style>
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
@@ -78,7 +83,7 @@
     <div class="col-md-12">
         <div class="form-group">
             <label class="form-label">Area Collection</label>
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th width="10%">NO.</th>
@@ -96,7 +101,7 @@
                             <button class="btn btn-success btn-sm" data-ng-click="addCollection();"><i class="fa fa-plus"></i></button>
                         </td>
                     </tr>
-                    <tr data-ng-repeat="c in collectionList">
+                    <tr data-ng-repeat="c in collectionList" data-ng-show="deleteCollection">
                         <td data-ng-bind="($index + 1)"></td>
                         <td>
                             <div editable>
@@ -105,9 +110,15 @@
                             </div>
                         </td>
                         <td>
-                            <button class="btn btn-primary btn-sm" data-ng-click="editCollection();"><i class="fa fa-pencil-alt"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fa fa-arrow-right"></i></button>
+                            <div data-ng-show="showCollection">
+                                <button class="btn btn-primary btn-sm" data-ng-click="editCollection(c.id, c.address);"><i class="fa fa-pencil-alt"></i></button>
+                                <button class="btn btn-danger btn-sm" data-ng-click="deleteCollection(c.id);"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-warning btn-sm"><i class="fa fa-arrow-right"></i></button>
+                            </div>
+                            <div data-ng-show="!showCollection">
+                                <button class="btn btn-warning btn-sm" data-ng-click="saveCollection();"><i class="fa fa-save"></i></button>
+                                <button class="btn btn-default btn-sm" data-ng-click="cancelCollection();"><i class="fa fa-times"></i></button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -116,9 +127,9 @@
     </div>
 </div>
 
-<div class="row text-right">
+<div class="row text-center bottom-margin">
     <div class="col-md-12">
         <button type="button" class="btn btn-secondary" onclick="window.location.href = '#/area-management';">Close</button>
-        <button type="button" class="btn btn-primary" data-ng-click="editArea();">Edit</button>
+        <button type="button" class="btn btn-primary" data-ng-click="updateArea();">Edit</button>
     </div>
 </div>

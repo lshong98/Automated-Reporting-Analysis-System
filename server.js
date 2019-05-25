@@ -1,4 +1,3 @@
-
 /*jslint node:true*/
 var express = require('express');
 var sanitizer = require('sanitizer');
@@ -117,6 +116,18 @@ app.get('/bin-management', function(req, res) {
     'use strict';
     res.sendFile('pages/bin-management.html', {root: __dirname});
 });
+app.get('/reporting', function (req, res) {
+    'use strict';
+    res.sendFile('pages/reporting.html', {root: __dirname});
+});
+app.get('/view-report/:reportCode', function (req, res) {
+    'use strict';
+    res.sendFile('pages/view-report.html', {root: __dirname});
+});
+app.get('/data-visualization', function (req, res) {
+    'use strict';
+    res.sendFile('pages/data-visualization.html', {root: __dirname});
+});
 var makeID = function(keyword, creationDate) {
     var table, property, header, ID;
     var getDateArr, row, stringRow, prefix, i;
@@ -219,7 +230,7 @@ app.post('/login', function (req, res) {
         }
         if (result.length > 0) {
             if (bcrypt.compareSync(req.body.password, result[0].password)) {
-                res.json({"status": "valid", details: {"staffPosition": result[0].staffPositionName, "staffID": result[0].staffID}});
+                res.json({"status": "valid", details: {"staffPosition": result[0].positionName, "staffID": result[0].staffID}});
             } else {
                 res.json({"status": "invalid"});
             }
@@ -228,6 +239,17 @@ app.post('/login', function (req, res) {
         }
     });
 }); // Complete
+app.post('/navigationControl', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
 
 // Account Management
 app.post('/addUser', function (req, res) {
@@ -399,7 +421,6 @@ app.post('/getAllAuth', function (req, res) {
     'use strict';
     
     var sql = "SELECT tblmanagement.mgmtName AS name, tblaccess.status FROM tblaccess JOIN tblposition ON tblaccess.positionID = tblposition.positionID JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblposition.positionName = '" + req.body.name + "'";
-    
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -550,19 +571,36 @@ app.get('/getAreaList', function (req, res) {
         res.json(result);
     });
 }); // Complete
-app.post('/editArea',function(req,res){
+app.post('/updateArea',function(req,res){
     'use strict';
     
-    var sql = "UPDATE tblarea SET areaName = '" + req.body.editAreaName+ "', zoneID = '" + req.body.editAreaZone.id + "', staffID = '" + req.body.editAreaStaff.id +"' , areaStatus = '" + req.body.editAreaStatus + "' WHERE areaID = '"+ req.body.editAreaId + "'";
-
+    var sql = "SELECT staffID FROM tblstaff WHERE staffName = '" + req.body.staff + "' LIMIT 0, 1";
     db.query(sql, function (err, result) {
         if (err) {
-            res.json({"status": "error", "message": "Update failed."});
             throw err;
         }
-        res.json({"status": "success", "message": "Area Information Updated."});
+        var staffID = result[0].staffID;
+        
+        var sql = "SELECT zoneID FROM tblzone WHERE zoneName = '" + req.body.zone + "' LIMIT 0, 1";
+        db.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            var zoneID = result[0].zoneID;
+            
+            req.body.status = req.body.status == 'Active' ? 'A' : 'I';
+            var sql = "UPDATE tblarea SET areaName = '" + req.body.name+ "', zoneID = '" + zoneID + "', staffID = '" + staffID +"', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '"+ req.body.id + "'";
+            
+            db.query(sql, function (err, result) {
+                if (err) {
+                    res.json({"status": "error", "message": "Update failed."});
+                    throw err;
+                }
+                res.json({"status": "success", "message": "Area Information Updated."});
+            });
+        });
     });
-});
+}); // Complete
 app.post('/thisArea', function (req, res) {
     'use strict';
     
@@ -588,13 +626,35 @@ app.post('/addCollection', function (req, res) {
 app.post('/getCollection', function (req, res){
     'use strict';
 
-    var sql = "SELECT areaAddress AS address FROM area_collection WHERE acStatus = 'A'";
+    var sql = "SELECT acID AS id, areaAddress AS address FROM area_collection WHERE acStatus = 'A'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
         res.json(result);
         res.end();
+    });
+});
+app.post('/deleteCollection', function (req, res) {
+    'user strict';
+    
+    var sql = "UPDATE area_collection SET acStatus = 'I' WHERE acID = '" + req.body.id + "'";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Delete successfully!"});
+    });
+});
+app.post('/updateCollection', function (req, res) {
+    'use strict';
+    
+    var sql = "UPDATE area_collection SET areaAddress = '" + req.body.address + "' WHERE acID = '" + req.body.id + "'";
+    db.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Area collection updated!"});
     });
 });
 
@@ -814,7 +874,6 @@ app.get('/getDriverList', function(req, res) {
         res.json(result);
     });
 }); // Complete
-
 
 app.get('/getZoneCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblzone";

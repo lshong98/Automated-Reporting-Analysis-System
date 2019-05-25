@@ -1,8 +1,3 @@
-<!--TODO:
-- View table - add driver and area, status word
-- Edit function
--->
-
 <!-- Modal -->
 <!--16/5 sing hong modify-->
 <div class="modal fade" id="createTruck" tabindex="-1" role="dialog" aria-labelledby="createTruck" aria-hidden="true">
@@ -102,13 +97,13 @@
     </div>
 </div>
 <br />
-<div class="row">
+<div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-12">
         <button class="btn btn-success" data-toggle="modal" data-target="#createTruck"><i class="fa fa-plus"></i> New</button>
     </div>
 </div>
 <br />
-<div class="row">
+<div class="row" data-ng-show="show.view">
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
@@ -124,7 +119,7 @@
                                 <th width="10%">Available Collection Ton</th>
                                 <th width="10%">Road Tax Expiry</th>
                                 <th width="10%">Status</th>
-                                <th width="5%">Action</th>
+                                <th data-ng-show="show.edit == 'A'" width="5%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -166,7 +161,7 @@
                                         <span data-ng-show="showTruck" data-ng-bind="t.status"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-ng-show="show.edit == 'A'">
                                     <button class="btn btn-sm btn-primary" data-ng-show="showTruck" data-ng-click="editTruck(t.id, t.no, t.transporter, t.ton, t.roadtax, t.status);"><i class="fa fa-pencil-alt"></i></button>
                                     
                                     <button class="btn btn-sm btn-warning" data-ng-show="!showTruck" data-ng-click="saveTruck();"><i class="fa fa-save"></i></button>
