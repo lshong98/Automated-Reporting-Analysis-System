@@ -1091,8 +1091,12 @@ app.controller('areaController', function ($scope, $http, $filter) {
                 $scope.areaList.push({
                     "id": newAreaID,
                     "name": $scope.area.name,
-                    "status": 'ACTIVE'
+                    "status": 'ACTIVE',
+                    "zoneName" : $scope.area.zone.id + '-' + $scope.area.zone.name,
+                    "staffName" : $scope.area.staff.id + '-' +$scope.area.staff.name 
                 });
+                console.log($scope.area.zone);
+                console.log($scope.area.staff);
                 $scope.filterAreaList = angular.copy($scope.areaList);
                 angular.element('#createArea').modal('toggle');
                 $scope.totalItems = $scope.filterAreaList.length;
