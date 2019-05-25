@@ -41,14 +41,14 @@ TODO LIST:
     </div>
 </div>
 <br />
-<div class="row">
+<div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-12">
         <button class="btn btn-success" data-toggle="modal" data-target="#createZone"><i class="fa fa-plus"></i> New</button>
         
     </div>
 </div>
 <br />
-<div class="row">
+<div class="row" data-ng-show="show.view == 'A'">
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
@@ -59,7 +59,7 @@ TODO LIST:
                                 <th width="20%">Zone Code <i class="fas fa-sort-down"></i></th>
                                 <th width="25%">Zone Name <i class="fas fa-sort-down"></i></th>
                                 <th width="15%">Status <i class="fas fa-sort-down"></i></th>
-                                <th width="15%">Action</th>
+                                <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,7 +82,7 @@ TODO LIST:
                                         <span data-ng-show="showZone" data-ng-bind="z.status"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-ng-show="show.edit == 'A'">
                                     <button class="btn btn-sm btn-primary" data-ng-show="showZone" data-ng-click="editZone(z.id, z.name, z.status);"><i class="fa fa-pencil-alt"></i></button>
                                     <button class="btn btn-sm btn-warning" data-ng-show="!showZone" data-ng-click="saveZone();"><i class="fa fa-save"></i></button>
                                     <button class="btn btn-sm btn-default" data-ng-show="!showZone" data-ng-click="cancelZone();"><i class="fa fa-times"></i></button>

@@ -47,7 +47,7 @@
     </div>
 </div>
 <br />
-<div class="row">
+<div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-12">
         <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New</button>
     </div>
@@ -66,7 +66,7 @@
                                 <th width="15%">Location</th>
                                 <th width="10%">Belong Area</th>
                                 <th width="20%">Bin Centre Status</th>
-                                <th width="10%">Action</th>
+                                <th data-ng-show="show.edit == 'A'" width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -98,7 +98,7 @@
                                         <p data-ng-show="showBin" data-ng-bind="b.status"></p>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-ng-show="show.edit == 'A'">
                                     <button class="btn btn-sm btn-primary" data-ng-click="editBin(b.id, b.name, b.location, b.area, b.status);" data-ng-show="showBin"><i class="fa fa-pencil-alt"></i></button>
                                     <button class="btn btn-sm btn-warning" data-ng-click="saveBin();" data-ng-show="!showBin"><i class="fa fa-save"></i></button>
                                     <button class="btn btn-sm btn-default" data-ng-click="cancelBin();" data-ng-show="!showBin"><i class="fa fa-times"></i></button>

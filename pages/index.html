@@ -30,9 +30,9 @@
                                 <span class="icon icon--cross"></span>
                             </button>
                             <div class="menu__wrap">
-                                <ul data-menu="main" class="menu__level" tabindex="-1" role="menu" aria-label="All">
-                                    <li class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>
-                                    <li class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>
+                                <ul data-ng-controller="navigationController" data-menu="main" class="menu__level" tabindex="-1" role="menu" aria-label="All">
+                                    <li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>
+                                    <li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>
 
                                     <li class="menu__item" role="menuitem"><a class="menu__link" href="#/account-management"><i class="fa fa-users"></i> Account Management</a></li>
 
@@ -44,10 +44,10 @@
                                     <li class="menu__item" role="menuitem"><a class="menu__link" href="#/area-management"><i class="fa fa-map"></i> Area Management</a></li>
                                     <li class="menu__item" role="menuitem"><a class="menu__link" href="#/bin-management"><i class="fa fa-dumpster"></i> Bin Center Management</a></li>
                                     <li class="menu__item" role="menuitem"><a class="menu__link" href="#/reporting"><i class="fa fa-file"></i> Reporting</a></li>
-                                    <li class="menu__item" role="menuitem"><a class="menu__link" href="#/datavisualization"><i class="fa fa-chart-area"></i> Data Analysis &amp; Visualize</a></li>
+                                    <li class="menu__item" role="menuitem"><a class="menu__link" href="#/data-visualization"><i class="fa fa-chart-area"></i> Data Analysis &amp; Visualize</a></li>
                                     <li class="menu__item" role="menuitem"><a class="menu__link" href="#/notification"><i class="fa fa-bell"></i> Notification</a></li>
                                     <li class="menu__item" role="menuitem"><a class="menu__link" href="#/acr-management"><i class="fa fa-bookmark"></i> ACR Management</a></li>
-                                    <li class="menu__item" role="menuitem"><a class="menu__link" href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                                    <li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>
                                 </ul>
 
                                 <!-- Submenu 1 -->

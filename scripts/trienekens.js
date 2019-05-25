@@ -47,6 +47,51 @@ app.service('storeDataService', function () {
             "name": '',
             "location": '',
             "area": ''
+        },
+        "collection": {
+            "id": '',
+            "address": ''
+        },
+        "show": {
+            "account": {
+                "create": false,
+                "edit": false,
+                "view": false
+            },
+            "driver": {
+                "create": false,
+                "edit": false,
+                "view": false
+            },
+            "truck": {
+                "create": false,
+                "edit": false,
+                "view": false
+            },
+            "zone": {
+                "create": false,
+                "edit": false,
+                "view": false
+            },
+            "area": {
+                "create": false,
+                "edit": false,
+                "view": false,
+                "collection": {
+                    "add": false,
+                    "edit": false
+                }
+            },
+            "bin": {
+                "create": false,
+                "edit": false,
+                "view": false
+            },
+            "acr": {
+                "create": false,
+                "edit": false,
+                "view": false
+            }
         }
     };
     
@@ -61,6 +106,7 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         scope.showProfile = true;
         scope.showBin = true;
         scope.showCollection = true;
+        scope.deleteCollection = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -80,6 +126,13 @@ app.directive('editable', function ($compile, $http, storeDataService) {
             "location": '',
             "area": '',
             "status": ''
+        };
+        scope.thisCollection = {
+            "id": '',
+            "address": ''
+        };
+        scope.collection = {
+            "id": ''
         };
         
         scope.notify = function (stat, mes) {
@@ -187,6 +240,7 @@ app.directive('editable', function ($compile, $http, storeDataService) {
                         } else {
                             scope.z = angular.copy(storeDataService.bin[index]);
                         }
+                        return false;
                     }
                 });
             });
@@ -197,14 +251,61 @@ app.directive('editable', function ($compile, $http, storeDataService) {
             $.each(storeDataService.bin, function (index, value) {
                 if (storeDataService.bin[index].id == scope.thisBin.id) {
                     scope.b = angular.copy(storeDataService.bin[index]);
+                    return false;
                 }
             });
             
         };
         
-        scope.editCollection = function () {
+        scope.editCollection = function (id, address) {
             scope.showCollection = !scope.showCollection;
-        }
+            scope.thisCollection = { "id": id, "address": address };
+        };
+        scope.saveCollection = function () {
+            scope.showCollection = !scope.showCollection;
+            console.log(scope.thisCollection);
+            console.log(scope.c);
+            $http.post('/updateCollection', scope.c).then(function (response) {
+                var data = response.data;
+                
+                scope.notify(data.status, data.message);
+                if (data.status == "success") {
+                    $.each(storeDataService.collection, function (index, value) {
+                        if (storeDataService.collection[index].id = scope.thisCollection.id) {
+                            storeDataService.collection[index] = angular.copy(scope.c);
+                            return false;
+                        }
+                    });
+                } else {
+                    scope.c = angular.copy(storeDataService.collection[index]);
+                }
+            });
+        };
+        scope.cancelCollection = function () {
+            scope.showCollection = !scope.showCollection;
+            $.each(storeDataService.collection, function (index, value) {
+                if (storeDataService.collection[index].id == scope.thisCollection.id) {
+                    scope.c = angular.copy(storeDataService.collection[index]);
+                    return false;
+                }
+            });
+        };
+        scope.deleteCollection = function (id) {
+            scope.collection.id = id;
+            $http.post('/deleteCollection', scope.collection).then(function (response) {
+                var data = response.data;
+                scope.notify(data.status, data.message);
+                if (data.status == "success") {
+                    $.each(storeDataService.collection, function (index, value) {
+                        if (storeDataService.collection[index].id == scope.collection.id) {
+                            scope.deleteCollection = !scope.deleteCollection;
+                            storeDataService.collection.splice(index, 1);
+                            return false;
+                        }
+                    });
+                }
+            });
+        };
     };
 });
 
@@ -216,6 +317,85 @@ app.directive('dateNow', ['$filter', function ($filter) {
         }
     };
 }]);
+
+app.controller('navigationController', function ($scope, $http, $window, storeDataService) {
+    'use strict';
+    
+    $scope.navigation = {
+        "name": $window.sessionStorage.getItem('position'),
+        "manager": false,
+        "officer": false
+    };
+    
+    $scope.show = {
+        "account": {
+            "create": false,
+            "edit": false,
+            "view": false
+        },
+        "driver": {
+            "create": false,
+            "edit": false,
+            "view": false
+        },
+        "truck": {
+            "create": false,
+            "edit": false,
+            "view": false
+        },
+        "zone": {
+            "create": false,
+            "edit": false,
+            "view": false
+        },
+        "area": {
+            "create": false,
+            "edit": false,
+            "view": false,
+            "collection": {
+                "add": false,
+                "edit": false
+            }
+        },
+        "bin": {
+            "create": false,
+            "edit": false,
+            "view": false
+        },
+        "acr": {
+            "create": false,
+            "edit": false,
+            "view": false
+        }
+    };
+    
+    if ($scope.navigation.name == "Manager") {
+        $scope.navigation["manager"] = true;
+    } else {
+        $scope.navigation["officer"] = true;
+    }
+
+    $http.post('/getAllAuth', $scope.navigation).then(function (response) {
+        $.each(response.data, function (index, value) {
+            $.each($scope.show, function (bigKey, bigValue) {
+                $.each(bigValue, function (smallKey, smallValue) {
+                    if (smallKey == "collection") {
+                        $.each(smallValue, function (xsmallKey, xsmallValue) {
+                            $scope.show[bigKey][smallKey][xsmallKey] = value.status;
+                        });
+                    } else {
+                        if (value.name.indexOf(smallKey) != -1) {
+                            if (value.name.indexOf(bigKey) != -1) {
+                                $scope.show[bigKey][smallKey] = value.status;
+                            }
+                        }
+                    }
+                });
+            });
+        });
+        storeDataService.show = angular.copy($scope.show);
+    });
+});
 
 app.controller('managerController', function ($scope, $http, $filter) {
     'use strict';
@@ -887,7 +1067,7 @@ app.controller('officerController', function ($scope, $filter, $http, $window) {
 //    };
 });
 
-app.controller('areaController', function ($scope, $http, $filter) {
+app.controller('areaController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
 
     $scope.currentPage = 1; //Initial current page to 1
@@ -898,6 +1078,8 @@ app.controller('areaController', function ($scope, $http, $filter) {
         "zone": '',
         "staff": ''
     };
+    
+    $scope.show = angular.copy(storeDataService.show.area);
 
     $http.get('/getAllArea').then(function (response) {
         $scope.searchAreaFilter = '';
@@ -1107,24 +1289,9 @@ app.controller('areaController', function ($scope, $http, $filter) {
     $scope.editAreaPage = function(id){
         window.location.href = '#/area/' + id;
     };
-    
-    $scope.editArea = function(){
-        
-        $http.post('/editArea', $scope.area).then(function(response){
-            var data = response.data;
-            if(data.status === "success"){
-                angular.element('body').overhang({
-                    type: data.status,
-                    message: data.message
-                });
-                window.location.href = '#/area-management';
-            }
-            
-        });
-    }
 });
 
-app.controller('thisAreaController', function ($scope, $http, $routeParams) {
+app.controller('thisAreaController', function ($scope, $http, $routeParams, storeDataService) {
     'use strict';
     
     var areaID = $routeParams.areaID;
@@ -1159,9 +1326,10 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams) {
         "address": ''
     };
     
+    $scope.show = angular.copy(storeDataService.show.area);
+    
     $http.get('/getZoneList').then(function (response){
         var data = response.data;
-        
         $scope.zoneList = data;
     });
     
@@ -1178,12 +1346,11 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams) {
         $.each($scope.daysArray, function (index, value) {
             $scope.days[value] = 'A';
         });
-        
-        console.log($scope.area);
     });
     
     $http.post('/getCollection', $scope.area).then(function (response) {
         $scope.collectionList = response.data;
+        storeDataService.collection = angular.copy($scope.collectionList);
     });
     
     $scope.addCollection = function () {
@@ -1203,9 +1370,23 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams) {
         }
     };
     
+    $scope.updateArea = function(){
+        $http.post('/updateArea', $scope.area).then(function(response){
+            var data = response.data;
+            if(data.status === "success"){
+                angular.element('body').overhang({
+                    type: data.status,
+                    message: data.message
+                });
+                window.location.href = '#/area-management';
+            }
+            
+        });
+    }
+    
 });
 
-app.controller('accountController', function ($scope, $http, $filter, $window) {
+app.controller('accountController', function ($scope, $http, $filter, $window, storeDataService) {
     'use strict';
 
     var asc = true;
@@ -1221,6 +1402,8 @@ app.controller('accountController', function ($scope, $http, $filter, $window) {
             "password": ''
         };
     };
+    
+    $scope.show = angular.copy(storeDataService.show.account);
 
     $http.get('/getPositionList').then(function (response) {
         $scope.positionList = response.data;
@@ -1294,7 +1477,7 @@ app.controller('accountController', function ($scope, $http, $filter, $window) {
     };
 });
 
-app.controller('specificAccController', function ($scope, $http, $routeParams) {
+app.controller('specificAccController', function ($scope, $http, $routeParams, storeDataService) {
     'use strict';
 
     $scope.thisAccount = {
@@ -1316,6 +1499,8 @@ app.controller('specificAccController', function ($scope, $http, $routeParams) {
         "password": '',
         "again": ''
     };
+    
+    $scope.show = angular.copy(storeDataService.show.account);
     
     $http.get('/getPositionList').then(function (response) {
         $scope.positionList = response.data;
@@ -1358,6 +1543,8 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             "area": ''
         };
     };
+    
+    $scope.show = angular.copy(storeDataService.show.truck);
     
     $http.get('/getAllTruck').then(function (response) {
         $scope.searchTruckFilter = '';
@@ -1498,7 +1685,9 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
             "name": '',
             "creationDate": ''
         };
-    }
+    };
+    
+    $scope.show = angular.copy(storeDataService.show.zone);
 
     $http.get('/getAllZone').then(function (response) {
         storeDataService.zone = angular.copy(response.data);
@@ -1695,6 +1884,8 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         "area": ''
     };
     
+    $scope.show = angular.copy(storeDataService.show.bin);
+    
     $http.get('/getAllBin').then(function(response){
         $scope.searchBinFilter = '';
         $scope.binList = response.data;
@@ -1787,7 +1978,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 });
 
 //acr controller
-app.controller('acrController',function($scope, $http, $filter){
+app.controller('acrController',function($scope, $http, $filter, storeDataService){
     'use strict';
     $scope.areaList = [];
     $scope.acrList = [];
@@ -1795,27 +1986,28 @@ app.controller('acrController',function($scope, $http, $filter){
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
     
-    
     function initializeAcr(){
         $scope.acr = {
-        "id": '',    
-        "name": '',
-        "address": '',
-        "area": '',
-        "phone": '',
-        "days": [{
-            "mon": '',
-            "tue": '',
-            "wed": '',
-            "thu": '',
-            "fri": '',
-            "sat": '',
-            "sun": ''
-        }],
-        "enddate": '',
-        "status": ''
-    };
+            "id": '',    
+            "name": '',
+            "address": '',
+            "area": '',
+            "phone": '',
+            "days": [{
+                "mon": '',
+                "tue": '',
+                "wed": '',
+                "thu": '',
+                "fri": '',
+                "sat": '',
+                "sun": ''
+            }],
+            "enddate": '',
+            "status": ''
+        };
     }
+    
+    $scope.show = angular.copy(storeDataService.show.acr);
     
     $http.get('/getAllAcr').then(function (response) {
         $scope.searchAcrFilter = '';
@@ -1846,7 +2038,6 @@ app.controller('acrController',function($scope, $http, $filter){
         }, true);
 
     });
-    
     
     angular.element('.datepicker').datepicker();
     

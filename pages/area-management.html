@@ -1,12 +1,3 @@
-<!--
-TODO list:
-- Add new page
-- Collection frequency in add new and edit form
-- figure out how to allow user add address
-- Inactive can’t be show
-- Select specific area to edit
-- View information
--->
 <!-- Area Modal -->
 <div class="modal fade" id="createArea" tabindex="-1" role="dialog" aria-labelledby="createArea" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -53,12 +44,6 @@ TODO list:
   </div>
 </div>
 
-<!--15/5 sing hong-->
-<!--have to been changed to page-->
-<!-- edit modal-->
-
-
-
 <div class="row">
     <div class="col-md-12">
         <h5>Area Management</h5>
@@ -70,13 +55,13 @@ TODO list:
     </div>
 </div>
 <br />
-<div class="row">
+<div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-12">
         <button class="btn btn-success" data-toggle="modal" data-target="#createArea"><i class="fa fa-plus"></i> New</button>
     </div>
 </div>
 <br />
-<div class="row">
+<div class="row" data-ng-show="show.view == 'A'">
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
@@ -91,7 +76,7 @@ TODO list:
                                 <th width="20%">Staff</th>
                                 <!--<th>Collection Frequency</th>-->
                                 <th width="10%">Status</th>
-                                <th width="10%">Action</th>
+                                <th data-ng-show="show.edit == 'A'" width="10%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,7 +88,7 @@ TODO list:
                                 <td data-ng-bind="(a.staff) + ' - ' + (a.staffName)"></td>
                                 <!--<td data-ng-bind="a.collectionFrequency"></td>-->
                                 <td data-ng-bind="a.status"></td>
-                                <td>
+                                <td data-ng-show="show.edit == 'A'">
                                     <button class="btn btn-sm btn-primary" data-ng-click="editAreaPage(a.id);"><i class="fa fa-pencil-alt"></i></button>
                                 </td>
                             </tr>

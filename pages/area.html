@@ -1,3 +1,8 @@
+<style>
+    .bottom-margin {
+        margin-bottom: 50px;
+    }
+</style>
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
@@ -78,16 +83,16 @@
     <div class="col-md-12">
         <div class="form-group">
             <label class="form-label">Area Collection</label>
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th width="10%">NO.</th>
                         <th width="75%">Address</th>
-                        <th width="15%">Action</th>
+                        <th data-ng-show="show.area.collection.edit == 'A'" width="15%">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr data-ng-show="show.area.collection.add == 'A'">
                         <td></td>
                         <td>
                             <input type="text" class="form-control" data-ng-model="collection.address" />
@@ -96,7 +101,7 @@
                             <button class="btn btn-success btn-sm" data-ng-click="addCollection();"><i class="fa fa-plus"></i></button>
                         </td>
                     </tr>
-                    <tr data-ng-repeat="c in collectionList">
+                    <tr data-ng-repeat="c in collectionList" data-ng-show="deleteCollection">
                         <td data-ng-bind="($index + 1)"></td>
                         <td>
                             <div editable>
@@ -104,10 +109,16 @@
                                 <p data-ng-show="showCollection" data-ng-bind="c.address"></p>
                             </div>
                         </td>
-                        <td>
-                            <button class="btn btn-primary btn-sm" data-ng-click="editCollection();"><i class="fa fa-pencil-alt"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fa fa-arrow-right"></i></button>
+                        <td data-ng-show="show.area.collection.edit == 'A'">
+                            <div data-ng-show="showCollection">
+                                <button class="btn btn-primary btn-sm" data-ng-click="editCollection(c.id, c.address);"><i class="fa fa-pencil-alt"></i></button>
+                                <button class="btn btn-danger btn-sm" data-ng-click="deleteCollection(c.id);"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-warning btn-sm"><i class="fa fa-arrow-right"></i></button>
+                            </div>
+                            <div data-ng-show="!showCollection">
+                                <button class="btn btn-warning btn-sm" data-ng-click="saveCollection();"><i class="fa fa-save"></i></button>
+                                <button class="btn btn-default btn-sm" data-ng-click="cancelCollection();"><i class="fa fa-times"></i></button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -116,9 +127,9 @@
     </div>
 </div>
 
-<div class="row text-right">
+<div class="row text-center bottom-margin">
     <div class="col-md-12">
         <button type="button" class="btn btn-secondary" onclick="window.location.href = '#/area-management';">Close</button>
-        <button type="button" class="btn btn-primary" data-ng-click="editArea();">Edit</button>
+        <button type="button" class="btn btn-primary" data-ng-click="updateArea();">Edit</button>
     </div>
 </div>

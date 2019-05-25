@@ -92,7 +92,7 @@
     </div>
 </div>
 <br />
-<div class="row">
+<div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-12">
         <button class="btn btn-success" data-toggle="modal" data-target="#createACR"><i class="fa fa-plus"></i> New</button>
     </div>
@@ -108,14 +108,6 @@
                 <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#acrInformation" role="tab" aria-controls="acrInformation" aria-selected="false">Information</a>
             </li>
         </ul>
-<!--
-        <nav>
-            <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" id="nav-acrSchedule-tab" data-toggle="tab" data-target="#nav-acrSchedule" role="tab" aria-controls="nav-acrSchedule" aria-selected="true">Schedule</a>
-                <a class="nav-item nav-link active" id="nav-acrInformation-tab" data-toggle="tab" data-target="#nav-acrInformation" role="tab" aria-controls="nav-acrInformation" aria-selected="true">Information</a>
-            </div>
-        </nav>
--->
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="acrSchedule" role="tabpanel" aria-labelledby="acrSchedule-tab">
                 <div class="table-responsive">
@@ -167,7 +159,7 @@
                     </table>
                 </div>
             </div>
-            <div class="tab-pane fade" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab">
+            <div class="tab-pane fade" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab" data-ng-show="show.view == 'A'">
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
                         <thead>
@@ -179,7 +171,7 @@
                                 <th>Phone No</th>
                                 <th>End Date</th>
                                 <th>Status</th>
-                                <th>Activity</th>
+                                <th data-ng-show="show.edit == 'A'">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,8 +183,8 @@
                                 <td data-ng-bind="a.phone"></td>
                                 <td data-ng-bind="a.enddate"></td>
                                 <td data-ng-bind="a.status"></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editAcr">Edit</button>
+                                <td data-ng-show="show.edit == 'A'">
+                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editAcr"><i class="fa fa-pencil-alt"></i></button>
                                 </td>
                             </tr>
                         </tbody>
