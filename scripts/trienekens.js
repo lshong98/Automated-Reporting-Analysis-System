@@ -53,8 +53,6 @@ app.service('storeDataService', function () {
             "address": ''
         },
         "show": {
-            "manager": false,
-            "officer": false,
             "account": {
                 "create": false,
                 "edit": false,
@@ -324,12 +322,12 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     'use strict';
     
     $scope.navigation = {
-        "name": $window.sessionStorage.getItem('position')
+        "name": $window.sessionStorage.getItem('position'),
+        "manager": false,
+        "officer": false
     };
     
     $scope.show = {
-//        "manager": false,
-//        "officer": false,
         "account": {
             "create": false,
             "edit": false,
@@ -370,13 +368,12 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
             "view": false
         }
     };
-
     
-//    if ($scope.navigation.name == "Manager") {
-//        $scope.show["manager"] = true;
-//    } else {
-//        $scope.show["officer"] = true;
-//    }
+    if ($scope.navigation.name == "Manager") {
+        $scope.navigation["manager"] = true;
+    } else {
+        $scope.navigation["officer"] = true;
+    }
 
     $http.post('/getAllAuth', $scope.navigation).then(function (response) {
         $.each(response.data, function (index, value) {
@@ -398,13 +395,6 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         });
         storeDataService.show = angular.copy($scope.show);
     });
-//    $http.post('/navigationControl', $scope.navigation).then(function (response) {
-//        var data = response.data;
-//        $.each(data, function (index, value) {
-//            $scope.show[data[index].mgmtName] = true;
-//        });
-//        storeDataService.show = angular.copy($scope.show);
-//    });
 });
 
 app.controller('managerController', function ($scope, $http, $filter) {
@@ -1332,6 +1322,8 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
         "address": ''
     };
     
+    $scope.show = angular.copy(storeDataService.show.area);
+    
     $http.get('/getZoneList').then(function (response){
         var data = response.data;
         $scope.zoneList = data;
@@ -1888,6 +1880,8 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         "area": ''
     };
     
+    $scope.show = angular.copy(storeDataService.show.bin);
+    
     $http.get('/getAllBin').then(function(response){
         $scope.searchBinFilter = '';
         $scope.binList = response.data;
@@ -1980,7 +1974,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 });
 
 //acr controller
-app.controller('acrController',function($scope, $http, $filter){
+app.controller('acrController',function($scope, $http, $filter, storeDataService){
     'use strict';
     $scope.areaList = [];
     $scope.acrList = [];
@@ -1988,27 +1982,28 @@ app.controller('acrController',function($scope, $http, $filter){
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
     
-    
     function initializeAcr(){
         $scope.acr = {
-        "id": '',    
-        "name": '',
-        "address": '',
-        "area": '',
-        "phone": '',
-        "days": [{
-            "mon": '',
-            "tue": '',
-            "wed": '',
-            "thu": '',
-            "fri": '',
-            "sat": '',
-            "sun": ''
-        }],
-        "enddate": '',
-        "status": ''
-    };
+            "id": '',    
+            "name": '',
+            "address": '',
+            "area": '',
+            "phone": '',
+            "days": [{
+                "mon": '',
+                "tue": '',
+                "wed": '',
+                "thu": '',
+                "fri": '',
+                "sat": '',
+                "sun": ''
+            }],
+            "enddate": '',
+            "status": ''
+        };
     }
+    
+    $scope.show = angular.copy(storeDataService.show.acr);
     
     $http.get('/getAllAcr').then(function (response) {
         $scope.searchAcrFilter = '';
@@ -2039,7 +2034,6 @@ app.controller('acrController',function($scope, $http, $filter){
         }, true);
 
     });
-    
     
     angular.element('.datepicker').datepicker();
     
