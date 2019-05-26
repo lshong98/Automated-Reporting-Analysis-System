@@ -88,11 +88,11 @@
                     <tr>
                         <th width="10%">NO.</th>
                         <th width="75%">Address</th>
-                        <th data-ng-show="show.area.collection.edit == 'A'" width="15%">Action</th>
+                        <th data-ng-show="show.collection.edit == 'A'" width="15%">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-show="show.area.collection.add == 'A'">
+                    <tr data-ng-show="show.collection.add == 'A'">
                         <td></td>
                         <td>
                             <input type="text" class="form-control" data-ng-model="collection.address" />
@@ -109,7 +109,7 @@
                                 <p data-ng-show="showCollection" data-ng-bind="c.address"></p>
                             </div>
                         </td>
-                        <td data-ng-show="show.area.collection.edit == 'A'">
+                        <td data-ng-show="show.collection.edit == 'A'">
                             <div data-ng-show="showCollection">
                                 <button class="btn btn-primary btn-sm" data-ng-click="editCollection(c.id, c.address);"><i class="fa fa-pencil-alt"></i></button>
                                 <button class="btn btn-danger btn-sm" data-ng-click="deleteCollection(c.id);"><i class="fa fa-trash"></i></button>

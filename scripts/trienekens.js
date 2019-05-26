@@ -98,7 +98,7 @@ app.service('storeDataService', function () {
     return globalList;
 });
 
-app.directive('editable', function ($compile, $http, storeDataService) {
+app.directive('editable', function ($compile, $http, $filter, storeDataService) {
     'use strict';
     return function (scope) {
         scope.showTruck = true;
@@ -211,6 +211,8 @@ app.directive('editable', function ($compile, $http, storeDataService) {
         };
         scope.saveProfile = function () {
             scope.showProfile = !scope.showProfile;
+            scope.thisAccount.dob = $filter('date')(scope.thisAccount.dob, 'dd MMM yyyy');
+            scope.thisAccount.bindDob = $filter('date')(scope.thisAccount.dob, 'dd MMM yyyy');
             $http.post('/updateProfile', scope.thisAccount).then(function (response) {
                 var data = response.data;
                 scope.notify(data.status, data.message);
@@ -1096,7 +1098,7 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
         }
 
 //        $.each($scope.areaList, function (index) {
-//            $scope.filterAreaList = angular.copy($scope.areaList);
+            $scope.filterAreaList = angular.copy($scope.areaList);
 //        });
 
         $scope.totalItems = $scope.filterAreaList.length;
@@ -1114,134 +1116,6 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
             return vm;
         }, true);
     });
-
-    $scope.areaCollection = [{
-        "zoneCode": 'Z1',
-        "area": [{
-            "areaCode": 'Z1A1',
-            "collection": [{
-                "collectionName": 'Z1A1C1'
-            }, {
-                "collectionName": 'Z1A1C2'
-            }, {
-                "collectionName": 'Z1A1C3'
-            }, {
-                "collectionName": 'Z1A1C4'
-            }, {
-                "collectionName": 'Z1A1C5'
-            }]
-        }, {
-            "areaCode": 'Z1A2',
-            "collection": [{
-                "collectionName": 'Z1A2C1'
-            }, {
-                "collectionName": 'Z1A2C2'
-            }, {
-                "collectionName": 'Z1A2C3'
-            }, {
-                "collectionName": 'Z1A2C4'
-            }, {
-                "collectionName": 'Z1A2C5'
-            }]
-        }, {
-            "areaCode": 'Z1A3',
-            "collection": [{
-                "collectionName": "Z1A3C1"
-            }, {
-                "collectionName": "Z1A3C2"
-            }, {
-                "collectionName": "Z1A3C3"
-            }, {
-                "collectionName": "Z1A3C4"
-            }, {
-                "collectionName": "Z1A3C5"
-            }]
-        }]
-    }, {
-        "zoneCode": 'Z2',
-        "area": [{
-            "areaCode": 'Z2A1',
-            "collection": [{
-                "collectionName": 'Z2A1C1'
-            }, {
-                "collectionName": 'Z2A1C2'
-            }, {
-                "collectionName": 'Z2A1C3'
-            }, {
-                "collectionName": 'Z2A1C4'
-            }, {
-                "collectionName": 'Z2A1C5'
-            }]
-        }, {
-            "areaCode": 'Z2A2',
-            "collection": [{
-                "collectionName": 'Z2A2C1'
-            }, {
-                "collectionName": 'Z2A2C2'
-            }, {
-                "collectionName": 'Z2A2C3'
-            }, {
-                "collectionName": 'Z2A2C4'
-            }, {
-                "collectionName": 'Z2A2C5'
-            }]
-        }, {
-            "areaCode": 'Z2A3',
-            "collection": [{
-                "collectionName": 'Z2A3C1'
-            }, {
-                "collectionName": 'Z2A3C2'
-            }, {
-                "collectionName": 'Z2A3C3'
-            }, {
-                "collectionName": 'Z2A3C4'
-            }, {
-                "collectionName": 'Z2A3C5'
-            }]
-        }]
-    }, {
-        "zoneCode": 'Z3',
-        "area": [{
-            "areaCode": 'Z3A1',
-            "collection": [{
-                "collectionName": 'Z3A1C1'
-            }, {
-                "collectionName": 'Z3A1C2'
-            }, {
-                "collectionName": 'Z3A1C3'
-            }, {
-                "collectionName": 'Z3A1C4'
-            }, {
-                "collectionName": 'Z3A1C5'
-            }]
-        }, {
-            "areaCode": 'Z3A2',
-            "collection": [{
-                "collectionName": 'Z3A2C1'
-            }, {
-                "collectionName": 'Z3A2C2'
-            }, {
-                "collectionName": 'Z3A2C3'
-            }, {
-                "collectionName": 'Z3A2C4'
-            }, {
-                "collectionName": 'Z3A2C5'
-            }]
-        }, {
-            "areaCode": 'Z3A3',
-            "collection": [{
-                "collectionName": 'Z3A3C1'
-            }, {
-                "collectionName": 'Z3A3C2'
-            }, {
-                "collectionName": 'Z3A3C3'
-            }, {
-                "collectionName": 'Z3A3C4'
-            }, {
-                "collectionName": 'Z3A3C5'
-            }]
-        }]
-    }];
 
     $http.get('/getZoneList').then(function (response) {
         $scope.zoneList = response.data;
@@ -1306,7 +1180,8 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
             "fri": '',
             "sat": '',
             "sun": ''
-        }
+        },
+        "frequency": ''
     };
     $scope.days = {
         "mon": '',
@@ -1337,11 +1212,12 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
     $http.post('/thisArea', $scope.area).then(function (response) {
         var data = response.data[0];
         $scope.area = data;
-        $scope.daysArray = $scope.area.frequency.split(',');
-        
-        $.each($scope.daysArray, function (index, value) {
-            $scope.days[value] = 'A';
-        });
+        if ($scope.area.frequency != null) {
+            $scope.daysArray = $scope.area.frequency.split(',');
+            $.each($scope.daysArray, function (index, value) {
+                $scope.days[value] = 'A';
+            });
+        }
     });
     
     $http.post('/getCollection', $scope.area).then(function (response) {
@@ -1367,6 +1243,14 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
     };
     
     $scope.updateArea = function(){
+        var concatDays = "";
+        $.each($scope.days, function (index, value) {
+            if (value != "") {
+                concatDays += index + ',';
+            }
+        });
+        concatDays = concatDays.slice(0, -1);
+        $scope.area.frequency = concatDays;
         $http.post('/updateArea', $scope.area).then(function(response){
             var data = response.data;
             if(data.status === "success"){
@@ -1378,7 +1262,7 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
             }
             
         });
-    }
+    };
     
 });
 
@@ -1414,9 +1298,9 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
             return (staff.id + staff.name + staff.username + staff.position + staff.status).toUpperCase().indexOf($scope.searchStaffFilter.toUpperCase()) >= 0;
         }
 
-        $.each($scope.staffList, function (index) {
+        //$.each($scope.staffList, function (index) {
             $scope.filterStaffList = angular.copy($scope.staffList);
-        });
+        //});
 
         $scope.totalItems = $scope.filterStaffList.length;
 
@@ -1473,7 +1357,7 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
     };
 });
 
-app.controller('specificAccController', function ($scope, $http, $routeParams, storeDataService) {
+app.controller('specificAccController', function ($scope, $http, $routeParams, $filter, storeDataService) {
     'use strict';
 
     $scope.thisAccount = {
@@ -1482,6 +1366,7 @@ app.controller('specificAccController', function ($scope, $http, $routeParams, s
         "ic": '',
         "gender": '',
         "dob": '',
+        "bindDob": '',
         "position": '',
         "status": '',
         "email": '',
@@ -1504,7 +1389,12 @@ app.controller('specificAccController', function ($scope, $http, $routeParams, s
 
     $http.post('/loadSpecificAccount', $scope.thisAccount).then(function (response) {
         $.each(response.data[0], function (index, value) {
-            $scope.thisAccount[index] = value;
+            if (index == "dob") {
+                $scope.thisAccount[index] = new Date(value);
+                $scope.thisAccount["bindDob"] = $scope.thisAccount["bindDob"] == "null" ? "" : $filter('date')($scope.thisAccount[index], 'dd MMM yyyy');
+            } else {
+                $scope.thisAccount[index] = value == "null" ? "" : value;
+            }
         });
     });
     

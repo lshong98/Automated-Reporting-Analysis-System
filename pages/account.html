@@ -19,7 +19,7 @@
                 <div class="profile-head">
                     <h5 data-ng-bind="thisAccount.name"></h5>
                     <h6 data-ng-bind="thisAccount.position"></h6>
-                    <p class="profile-rating">RANKINGS : <span>8/10</span></p>
+<!--                    <p class="profile-rating">RANKINGS : <span>8/10</span></p>-->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -41,6 +41,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
+<!--
                 <div class="profile-work">
                     <p>WORK LINK</p>
                     <a href="">Website Link</a><br/>
@@ -53,6 +54,7 @@
                     <a href="">WooCommerce</a><br/>
                     <a href="">PHP, .Net</a><br/>
                 </div>
+-->
             </div>
             <div class="col-md-8">
                 <div class="tab-content profile-tab" id="myTabContent">
@@ -113,8 +115,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div editable>
-                                    <input type="text" class="form-control" data-ng-model="thisAccount.dob" data-ng-show="!showProfile" />
-                                    <p data-ng-show="showProfile" data-ng-bind="thisAccount.dob"></p>
+                                    <input type="date" class="form-control" data-ng-model="thisAccount.dob" data-ng-show="!showProfile" />
+                                    <p data-ng-show="showProfile" data-ng-bind="thisAccount.bindDob"></p>
                                 </div>
                             </div>
                         </div>
