@@ -262,13 +262,12 @@ app.post('/addUser', function (req, res) {
             setTimeout(function() {
                 var thePassword = bcrypt.hashSync(req.body.password, 10);
                 var sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, creationDateTime, staffStatus) VALUE ('" + obj.ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
-                console.log(sql);
                 db.query(sql, function (err, result) {
                     if (err) {
                         throw err;
                     }
                     res.json({"status": "success", "message": "Account created successfully!", "details": {"staffID": obj.ID}});
-                    console.log(result);
+                    res.end();
                 });
             }, 100);
         } else {
@@ -738,7 +737,7 @@ app.get('/getAllAcr', function(req,res){
 app.get('/getScheduleList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblacr.acrName AS name, GROUP_CONCAT(tblacrfreq.day) AS days FROM tblacr JOIN tblacrfreq ON tblacr.acrID = tblacrfreq.acrID";
+    var sql = "SELECT tblacr.acrName AS name, GROUP_CONCAT(tblacrfreq.day) AS days FROM tblacr JOIN tblacrfreq ON tblacr.acrID = tblacrfreq.acrID GROUP BY tblacr.acrID";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -778,7 +777,6 @@ app.post('/getReport', function(req, res){
     'use strict';
     
     var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.lat AS lat, tblreport.lng AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetImg AS ifleet, tbltruck.truckNum AS truck, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
-console.log(sql);
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
