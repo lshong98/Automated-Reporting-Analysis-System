@@ -627,7 +627,7 @@ app.post('/addCollection', function (req, res) {
 app.post('/getCollection', function (req, res){
     'use strict';
 
-    var sql = "SELECT acID AS id, areaAddress AS address FROM area_collection WHERE acStatus = 'A'";
+    var sql = "SELECT acID AS id, areaAddress AS address FROM area_collection WHERE acStatus = 'A' AND areaID = '" + req.body.id + "'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
