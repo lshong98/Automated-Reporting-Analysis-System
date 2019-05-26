@@ -65,7 +65,7 @@
                                 <th width="35%">Bin Centre Name</th>
                                 <th width="15%">Location</th>
                                 <th width="10%">Belong Area</th>
-                                <th width="20%">Bin Centre Status</th>
+                                <th width="20%">Status</th>
                                 <th data-ng-show="show.edit == 'A'" width="10%">Action</th>
                             </tr>
                         </thead>
@@ -86,14 +86,21 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <select class="form-control" data-ng-model="b.area" data-ng-show="!showBin">
-                                        </select>
+                                        <div data-ng-show="!showBin">
+                                            <select data-ng-model="b.area" class="selectpicker" data-live-search="true" data-width="100%">
+                                                <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                                                    <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.id}} - {{a.name}}</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
                                         <p data-ng-show="showBin" data-ng-bind="b.area"></p>
                                     </div>
                                 </td>
-                                <td data-ng-bind="b.status">
+                                <td>
                                     <div editable>
                                         <select class="form-control" data-ng-model="b.status" data-ng-show="!showBin">
+                                            <option>ACTIVE</option>
+                                            <option>INACTIVE</option>
                                         </select>
                                         <p data-ng-show="showBin" data-ng-bind="b.status"></p>
                                     </div>

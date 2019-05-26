@@ -225,6 +225,9 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         
         scope.editBin = function (id, name, location, area, status) {
             scope.showBin = !scope.showBin;
+            scope.b.area = area;
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
             scope.thisBin = { "id": id, "name": name, "location": location, "area": area, "status": status };
         };
         scope.saveBin = function () {
@@ -1148,8 +1151,8 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                     "id": newAreaID,
                     "name": $scope.area.name,
                     "status": 'ACTIVE',
-                    "zoneName" : $scope.area.zone.id + '-' + $scope.area.zone.name,
-                    "staffName" : $scope.area.staff.id + '-' +$scope.area.staff.name 
+                    "zoneName" : ($scope.area.zone.id + '-' + $scope.area.zone.name),
+                    "staffName" : ($scope.area.staff.id + '-' +$scope.area.staff.name) 
                 });
                 console.log($scope.area.zone);
                 console.log($scope.area.staff);
@@ -1786,9 +1789,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             return (bin.id + bin.name + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
         };
         
-//        $.each($scope.binList, function(index) {
-//            $scope.filterBinList = angular.copy($scope.binList);
-//        });
+        $scope.filterBinList = angular.copy($scope.binList);
     
         $scope.totalItems = $scope.filterBinList.length;
     
@@ -1899,6 +1900,11 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
     
     $scope.show = angular.copy(storeDataService.show.acr);
     
+    function renderSltPicker() {
+        angular.element('.selectpicker').selectpicker('refresh');
+        angular.element('.selectpicker').selectpicker('render');
+    }
+    
     $http.get('/getAllAcr').then(function (response) {
         $scope.searchAcrFilter = '';
         $scope.acrList = response.data;
@@ -1932,9 +1938,7 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
     angular.element('.datepicker').datepicker();
     
     $http.get('/getAreaList').then(function (response) {
-        console.log(response.data);
         $.each(response.data, function(index, value) {
-            //console.log(response.data);
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
             var area = [];
@@ -1952,11 +1956,13 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
         });
     });
     
-    
-    function renderSltPicker() {
-        angular.element('.selectpicker').selectpicker('refresh');
-        angular.element('.selectpicker').selectpicker('render');
-    }
+    $http.get('/getScheduleList').then(function (response) {
+        $scope.scheduleList = response.data;
+        
+        $.each($scope.scheduleList, function (index, value) {
+            console.log($scope.scheduleList[index]);
+        });
+    });
     
 //    $http.get('/getAllAcr').then(function(response){
 //        

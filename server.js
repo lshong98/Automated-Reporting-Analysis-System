@@ -399,7 +399,8 @@ app.post('/setAuth', function (req, res) {
                     if (err) {
                         throw err;
                     }
-                    res.json({"status": "success", "message": "Permission given."});
+                    var message = req.body.access == 'A' ? "Permission given." : "Permission removed.";
+                    res.json({"status": "success", "message": message});
                 });
             });
         });
@@ -732,6 +733,18 @@ app.get('/getAllAcr', function(req,res){
             throw err;
         }
         res.json(result);
+    });
+});
+app.get('/getScheduleList', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblacr.acrName AS name, GROUP_CONCAT(tblacrfreq.day) AS days FROM tblacr JOIN tblacrfreq ON tblacr.acrID = tblacrfreq.acrID";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+        res.end();
     });
 });
 

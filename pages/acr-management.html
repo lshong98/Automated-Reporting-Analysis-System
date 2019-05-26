@@ -125,6 +125,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr data-ng-repeat="acr in scheduleList">
+                                <td data-ng-bind="acr.name"></td>
+                                <td class="text-center"><i class="fa fa-check" data-ng-show="acr.days.indexOf('mon') >= 0"></i></td>
+                                <td class="text-center"><i class="fa fa-check" data-ng-show="acr.days.indexOf('tue') >= 0"></i></td>
+                                <td class="text-center"><i class="fa fa-check" data-ng-show="acr.days.indexOf('wed') >= 0"></i></td>
+                                <td class="text-center"><i class="fa fa-check" data-ng-show="acr.days.indexOf('thu') >= 0"></i></td>
+                                <td class="text-center"><i class="fa fa-check" data-ng-show="acr.days.indexOf('fri') >= 0"></i></td>
+                                <td class="text-center"><i class="fa fa-check" data-ng-show="acr.days.indexOf('sat') >= 0"></i></td>
+                                <td class="text-center"><i class="fa fa-check" data-ng-show="acr.days.indexOf('sun') >= 0"></i></td>
+                            </tr>
+<!--
                             <tr class="clickable-row">
                                 <td>DUTA JASA SDN BHD</td>
                                 <td class="text-center"><i class="fa fa-check"></i></td>
@@ -155,6 +166,7 @@
                                 <td class="text-center"><i class="fa fa-check"></i></td>
                                 <td class="text-center"><i class="fa fa-check"></i></td>
                             </tr>
+-->
                         </tbody>
                     </table>
                 </div>
