@@ -970,7 +970,7 @@ emitter.on('createTable', function () {
     var sqls, i;
     
     sqls = [
-        "CREATE TABLE tblstaff (staffID VARCHAR(15) PRIMARY KEY, username VARCHAR(20), password MEDIUMTEXT, staffName VARCHAR(50), staffIC VARCHAR(15), staffGender CHAR(1), staffDOB DATE, staffAddress VARCHAR(255), handphone VARCHAR(11), phone VARCHAR(10), email VARCHAR(50), positionID VARCHAR(15), creationDateTime DATETIME, staffStatus CHAR(1))",
+        "CREATE TABLE tblstaff (staffID VARCHAR(15) PRIMARY KEY, username VARCHAR(20), password MEDIUMTEXT, staffName VARCHAR(50), staffIC VARCHAR(15), staffGender CHAR(1), staffDOB DATE, staffAddress VARCHAR(255), handphone VARCHAR(11), phone VARCHAR(10), email VARCHAR(50), positionID VARCHAR(15), staffPic MEDIUMTEXT, creationDateTime DATETIME, staffStatus CHAR(1))",
         "CREATE TABLE tblposition (positionID VARCHAR(15) PRIMARY KEY, positionName VARCHAR(30), creationDateTime DATETIME, positionStatus CHAR(1))",
         "CREATE TABLE tblmanagement (mgmtID INT PRIMARY KEY AUTO_INCREMENT, mgmtName VARCHAR(50))",
         "CREATE TABLE tblaccess (positionID VARCHAR(15), mgmtID VARCHAR(15), status CHAR(1))",
@@ -1087,6 +1087,8 @@ emitter.on('defaultUser', function () {
             });
         }, 1000);
     });
+    
+    
 }); // Complete
 /* Emitter Registered */
 
