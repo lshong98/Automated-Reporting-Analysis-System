@@ -375,9 +375,10 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
     'use strict';
     $scope.searchReportFilter = '';
     $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 10; //Record number each page
+    $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
     $scope.areaList = [];
+    $scope.filterReportList = [];
     
     $scope.reportingOfficerId = {
         "officerid" : $window.sessionStorage.getItem('owner')
@@ -397,7 +398,6 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
             $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
            
         });
-         console.log($scope.areaList);
     });
     
     $http.get('/getReportList').then(function(response){
@@ -405,6 +405,23 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
         $.each($scope.reportList, function (index, value) {
             $scope.reportList[index].reportCollectionDate = $filter('date')($scope.reportList[index].reportCollectionDate, 'yyyy-MM-dd');
         });
+        
+        $scope.filterReportList = angular.copy($scope.reportList);
+        
+        $scope.totalItems = $scope.filterReportList.length;
+
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterReportList, $scope.searchReportFilter);
+        };
+        
+        $scope.$watch('searchReportFilter', function (newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
     });
     
     $scope.viewReport = function(reportCode){
@@ -413,7 +430,6 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
         }, 500);
     }
 
-
     $scope.thisArea = function (id,name) {
         angular.element('#chooseArea').modal('toggle');
         setTimeout(function () {
@@ -421,32 +437,10 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
         }, 500);
     };
 
-    
-    $scope.filterReportList = [];
     $scope.searchReport = function (report) {
         return (report.reportCode + report.reportDate + report.area + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
     }
-    
-//    $.each($scope.reportList, function (index) {
-//        $scope.filterReportList = angular.copy($scope.reportList);
-//    });
 
-    $scope.totalItems = $scope.filterReportList.length;
-    console.log($scope.totalItems)
-
-    $scope.getData = function () {
-        return $filter('filter')($scope.filterReportList, $scope.searchReportFilter);
-    };
-
-    $scope.$watch('searchReportFilter', function (newVal, oldVal) {
-        var vm = this;
-        if (oldVal !== newVal) {
-            $scope.currentPage = 1;
-            $scope.totalItems = $scope.getData().length;
-        }
-        return vm;
-    }, true);
-    
     //filtering by column asc and desc
     var asc = true;
     $scope.orderBy = function (property) {

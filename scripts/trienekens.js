@@ -1067,9 +1067,9 @@ app.controller('officerController', function ($scope, $filter, $http, $window) {
          console.log($scope.areaList);
     });
 
-//    $scope.thisArea = function (a) {
-//        window.location.href = '#/daily-report/' + a;
-//    };
+    $scope.thisArea = function (a) {
+        window.location.href = '#/daily-report/' + a;
+    };
 });
 
 app.controller('areaController', function ($scope, $http, $filter, storeDataService) {
