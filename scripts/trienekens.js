@@ -1238,7 +1238,8 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
                 var data = response.data;
                 
                 if (data.status == "success") {
-                    $scope.collectionList.push({"address": $scope.collection.address});
+                    $scope.collectionList.push({"id": data.details.id, "address": $scope.collection.address});
+                    storeDataService.collection = angular.copy($scope.collectionList);
                     $scope.collection.address = "";
                 }
                 angular.element('body').overhang({
@@ -1674,7 +1675,7 @@ app.controller('roleController', function ($scope, $http, $filter) {
     
 });
 
-app.controller('specificAuthController', function ($scope, $http, $routeParams) {
+app.controller('specificAuthController', function ($scope, $http, $routeParams, storeDataService) {
     $scope.role = {
         "name": $routeParams.auth
     };
@@ -1721,29 +1722,34 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
     };
 
     $http.post('/getAllAuth', $scope.role).then(function (response) {
+        var splitName, flag = false, key;
         $.each(response.data, function (index, value) {
-            $.each($scope.auth, function (bigKey, bigValue) {
-                $.each(bigValue, function (smallKey, smallValue) {
-                    if (smallKey == "collection") {
-                        $.each(smallValue, function (xsmallKey, xsmallValue) {
-                            $scope.auth[bigKey][smallKey][xsmallKey] = value.status;
-                        });
-                    } else {
-                        if (value.name.indexOf(smallKey) != -1) {
-                            if (value.name.indexOf(bigKey) != -1) {
-                                $scope.auth[bigKey][smallKey] = value.status;
-                            }
-                        }
+            $.each(value, function (bigKey, bigValue) {
+                if (bigKey == 'name') {
+                    splitName = bigValue.split(' ');
+                    if (bigValue == "add collection") {
+                        flag = true;
+                        key = "add";
                     }
-                });
+                    if (bigValue == "edit collection") {
+                        flag = true;
+                        key = "edit";
+                    }
+                }
+                if (bigKey == "status") {
+                    if (flag == false) {
+                        $scope.auth[splitName[1]][splitName[0]] = bigValue;
+                    } else {
+                        $scope.auth["area"]["collection"][key] = bigValue;
+                        flag = false;
+                    }
+                }
             });
         });
+        storeDataService.show = angular.copy($scope.auth);
     });
 
     $scope.changeValue = function (value, key) {
-        console.log($scope.role.name);
-        console.log(key);
-        console.log(value);
         
         $scope.thisAuth = {
             "name": $scope.role.name,
@@ -1757,8 +1763,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams) 
                 type: data.status,
                 "message": data.message
             });
+            storeDataService.show = angular.copy($scope.auth);
         });
-        
     }
 
 });
@@ -1958,10 +1964,6 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
     
     $http.get('/getScheduleList').then(function (response) {
         $scope.scheduleList = response.data;
-        
-        $.each($scope.scheduleList, function (index, value) {
-            console.log($scope.scheduleList[index]);
-        });
     });
     
 //    $http.get('/getAllAcr').then(function(response){

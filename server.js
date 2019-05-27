@@ -620,7 +620,7 @@ app.post('/addCollection', function (req, res) {
         if (err) {
             throw err;
         }
-        res.json({"status": "success", "message": "Address Added!"});
+        res.json({"status": "success", "message": "Address Added!", "details": {"id": result.insertId}});
     });
 });
 app.post('/getCollection', function (req, res){
