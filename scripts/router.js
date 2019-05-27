@@ -32,6 +32,8 @@ app.config(function($routeProvider, $locationProvider){
                     return routingService.auth($window, $location, '/dashboard-manager');
                 else if ($window.sessionStorage.getItem('position') == "Reporting Officer")
                     return routingService.auth($window, $location, '/dashboard-officer');
+                else if ($window.sessionStorage.getItem('position') == "Officer")
+                    return routingService.auth($window, $location, '/zone-management');
             }
         }
 	})

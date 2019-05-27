@@ -373,10 +373,10 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
             "view": false
         }
     };
-    
-    if ($scope.navigation.name == "Manager") {
+
+    if ($window.sessionStorage.getItem('position') == "Manager") {
         $scope.navigation["manager"] = true;
-    } else {
+    } else if ($window.sessionStorage.getItem('position') == "Reporting Officer") {
         $scope.navigation["officer"] = true;
     }
 
@@ -1050,7 +1050,7 @@ app.controller('officerController', function ($scope, $filter, $http, $window) {
         "officerid" : $window.sessionStorage.getItem('owner')
     };
     
-    $http.post('/getReportingAreaList',$scope.reportingOfficerId).then(function (response) {
+    $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function (response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
@@ -1067,8 +1067,8 @@ app.controller('officerController', function ($scope, $filter, $http, $window) {
          console.log($scope.areaList);
     });
 
-    $scope.thisArea = function (a) {
-        window.location.href = '#/daily-report/' + a;
+    $scope.thisArea = function (areaID, areaName) {
+        window.location.href = '#/daily-report/' + areaID + '/' + areaName;
     };
 });
 
