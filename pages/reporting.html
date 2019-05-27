@@ -61,12 +61,12 @@
             <table class="table table-hover table-striped table-clickable">
                 <thead>
                     <tr>
-                        <th width="20%" data-ng-click="orderBy('reportCode');">Report Code <i class="fas fa-sort-down"></i></th>
-                        <th width="15%" data-ng-click="orderBy('reportDate');">Date <i class="fas fa-sort-down"></i></th>
-                        <th width="20%" data-ng-click="orderBy('area');">Area Name <i class="fas fa-sort-down"></i></th>
+                        <th width="20%" data-ng-click="orderBy('reportID');">Report Code <i class="fas fa-sort-down"></i></th>
+                        <th width="15%" data-ng-click="orderBy('reportCollectionDate');">Date <i class="fas fa-sort-down"></i></th>
+                        <th width="20%" data-ng-click="orderBy('areaName');">Area Name <i class="fas fa-sort-down"></i></th>
 <!--                        <th width="10%" data-ng-click="orderBy('collection');">Collection <i class="fas fa-sort-down"></i></th>-->
 <!--                        <th width="25%" data-ng-click="orderBy('garbageAmount');">Collected Garbage(ton) <i class="fas fa-sort-down"></i></th>-->
-                        <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('reportStatus');">Status <i class="fas fa-sort-down"></i></th>
                         
                         <th width="35%" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
                     </tr>
@@ -75,7 +75,7 @@
                     <tr data-ng-repeat="d in reportList | filter: searchReport | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewReport(d.reportID);">
                         <td data-ng-bind="d.reportID"></td>
                         <td data-ng-bind="d.reportCollectionDate"></td>
-                        <td data-ng-bind="d.areaID"></td>
+                        <td data-ng-bind="d.areaName"></td>
 <!--                        <td data-ng-bind="d.collection"></td>-->
 <!--                        <td data-ng-bind="d.garbageAmount"></td>-->
                         <td data-ng-bind="d.reportStatus"></td>

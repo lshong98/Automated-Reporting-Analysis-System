@@ -80,7 +80,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h5>IVMW Inspection Report - (<span data-ng-bind="params.areaCode"></span>)</h5>
+        <h5>IVMW Inspection Report - (<span data-ng-bind="(params.areaCode) + ' - ' + (params.areaName)"></span>)</h5>
     </div>
 </div>
 
@@ -194,7 +194,7 @@ textarea {
 </div>
 <div class="row">
     <div class="col-md-12">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#previewReport">Preview</button>
+        <!--<button class="btn btn-primary" data-toggle="modal" data-target="#previewReport">Preview</button>-->
         <button class="btn btn-primary submit" data-ng-click="addReport()">Submit</button>
     </div>
 </div>

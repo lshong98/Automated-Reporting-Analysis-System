@@ -189,10 +189,10 @@ app.config(function($routeProvider, $locationProvider){
         },
         templateUrl: '/notification'
     })
-    .when('/daily-report/:areaCode', {
+    .when('/daily-report/:areaCode/:areaName', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {
-                return routingService.auth($window, $location, '/daily-report/' + $route.current.params.areaCode);
+                return routingService.auth($window, $location, '/daily-report/' + $route.current.params.areaCode + '/' +$route.current.params.areaName);
             }
         },
         templateUrl: '/daily-report',

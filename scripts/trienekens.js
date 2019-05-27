@@ -1253,7 +1253,7 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
     $scope.updateArea = function(){
         var concatDays = "";
         $.each($scope.days, function (index, value) {
-            if (value != "") {
+            if (value == "A") {
                 concatDays += index + ',';
             }
         });

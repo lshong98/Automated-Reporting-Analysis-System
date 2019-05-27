@@ -87,6 +87,8 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         "status" : ''
     };
     
+    
+    
     $scope.report.collectionDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
 
     $scope.startTimeChange = function(time) {
@@ -106,7 +108,8 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
 //    
 //    $scope.$params_areaName = areaName;
     $scope.params = {
-        "areaCode": $routeParams.areaCode
+        "areaCode": $routeParams.areaCode,
+        "areaName" : $routeParams.areaName
     };
 //    $scope.report.area = areaCode;
     
@@ -402,6 +405,7 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
     
     $http.get('/getReportList').then(function(response){
         $scope.reportList = response.data;
+        console.log(response.data);
         $.each($scope.reportList, function (index, value) {
             $scope.reportList[index].reportCollectionDate = $filter('date')($scope.reportList[index].reportCollectionDate, 'yyyy-MM-dd');
         });
@@ -433,12 +437,12 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
     $scope.thisArea = function (id,name) {
         angular.element('#chooseArea').modal('toggle');
         setTimeout(function () {
-            window.location.href = '#/daily-report/' + id; // +"+"+ name
+            window.location.href = '#/daily-report/' + id  +"/"+ name
         }, 500);
     };
 
     $scope.searchReport = function (report) {
-        return (report.reportCode + report.reportDate + report.area + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+        return (report.reportCode + report.reportDate + report.areaName + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
     }
 
     //filtering by column asc and desc

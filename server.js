@@ -837,7 +837,7 @@ app.post('/getReportCircle', function(req,res){
 app.get('/getReportList', function(req, res){
     'use strict';
     
-    var sql ="SELECT reportID, reportCollectionDate, areaID, reportStatus, garbageAmount, remark FROM tblreport";
+    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, reportStatus, garbageAmount, remark FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -986,7 +986,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblmanagement (mgmtID INT PRIMARY KEY AUTO_INCREMENT, mgmtName VARCHAR(50))",
         "CREATE TABLE tblaccess (positionID VARCHAR(15), mgmtID VARCHAR(15), status CHAR(1))",
         "CREATE TABLE tblzone (zoneID VARCHAR(15) PRIMARY KEY, zoneName VARCHAR(100), creationDateTime DATETIME, zoneStatus CHAR(1))",
-        "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(10), creationDateTime DATETIME, areaStatus CHAR(1))",
+        "CREATE TABLE tblarea (areaID VARCHAR(15) PRIMARY KEY, zoneID VARCHAR(15), staffID VARCHAR(15), areaName VARCHAR(100), collection_frequency VARCHAR(30), creationDateTime DATETIME, areaStatus CHAR(1))",
         "CREATE TABLE area_collection (acID INT PRIMARY KEY AUTO_INCREMENT, areaID VARCHAR(15), areaAddress MEDIUMTEXT, acStatus CHAR(1))",
         "CREATE TABLE tblbin (binID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), binName VARCHAR(100), binLocation VARCHAR(100), creationDateTime DATETIME, binStatus CHAR(1))",
         "CREATE TABLE tblacr (acrID VARCHAR(15) PRIMARY KEY, acrName VARCHAR(100), acrPhoneNo VARCHAR(30), acrAddress VARCHAR(100), acrPeriod DATE, creationDateTime DATETIME, acrStatus CHAR(1))",
