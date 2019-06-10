@@ -1075,6 +1075,7 @@ app.controller('officerController', function ($scope, $filter, $http, $window) {
 app.controller('areaController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
 
+    var asc = true;
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
@@ -1090,6 +1091,8 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
         $scope.searchAreaFilter = '';
         $scope.areaList = response.data;
         $scope.filterAreaList = [];
+        
+        console.log($scope.areaList);
 
 //        for(var i = 0; i < ($scope.areaList).length; i++){
 //            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
@@ -1165,6 +1168,11 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
     
     $scope.editAreaPage = function(id){
         window.location.href = '#/area/' + id;
+    };
+    
+    $scope.orderBy = function (property) {
+        $scope.areaList = $filter('orderBy')($scope.areaList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
     };
 });
 
@@ -1429,6 +1437,7 @@ app.controller('errorController', function ($scope, $window) {
 app.controller('truckController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
 
+    var asc = true;
     $scope.areaList = [];
     $scope.initializeTruck = function () {
         $scope.truck = {
@@ -1472,6 +1481,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             return vm;
         }, true);
 
+        console.log($scope.truckList);
     });
     
     function renderSltPicker() {
@@ -1529,6 +1539,11 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             }
         });
     };
+    
+    $scope.orderBy = function (property) {
+        $scope.truckList = $filter('orderBy')($scope.truckList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
 });
 
 app.controller('driverController', function ($scope, $http, $filter) {
@@ -1569,7 +1584,8 @@ app.controller('driverController', function ($scope, $http, $filter) {
 
 app.controller('zoneController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
-
+    
+    var asc = true;
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
@@ -1637,6 +1653,11 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
             }
         });
     }
+    
+    $scope.orderBy = function (property) {
+        $scope.zoneList = $filter('orderBy')($scope.zoneList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
 });
 
 app.controller('roleController', function ($scope, $http, $filter) {
@@ -1771,6 +1792,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
 
 app.controller('binController', function($scope, $http, $filter, storeDataService){
     'use strict';
+    var asc = true;
     $scope.areaList = [];
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
@@ -1811,6 +1833,8 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             }
             return vm;
         }, true);
+        
+        console.log($scope.binList);
     });
     
     $http.get('/getAreaList').then(function (response) {
@@ -1857,6 +1881,11 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             }
         });
     }
+    
+    $scope.orderBy = function (property) {
+        $scope.binList = $filter('orderBy')($scope.binList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
     
 //    $scope.editBin = function(){
 //        

@@ -111,14 +111,14 @@
                     <table class="table table-hover table-striped table-clickable">
                         <thead>
                             <tr>
-                                <th width="20%">Truck Code</th>
-                                <th width="10%">Truck NO</th>
-                                <th width="5%">Transporter ID</th>
+                                <th width="15%" data-ng-click="orderBy('id');">Truck Code <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('no');">Truck NO <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('transporter');">Transporter ID <i class="fas fa-sort-down"></i></th>
                                 <!--<th>Driver</th>-->
                                 <!--<th>Collect Area</th>--> <!-- Truck area -->
-                                <th width="10%">Available Collection Ton</th>
-                                <th width="10%">Road Tax Expiry</th>
-                                <th width="10%">Status</th>
+                                <th width="15%" data-ng-click="orderBy('ton');">Available Collection Ton <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('roadtax');">Road Tax Expiry <i class="fas fa-sort-down"></i></th>
+                                <th width="5%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                 <th data-ng-show="show.edit == 'A'" width="5%">Action</th>
                             </tr>
                         </thead>

@@ -56,9 +56,9 @@ TODO LIST:
                     <table class="table table-hover table-striped table-clickable">
                         <thead>
                             <tr>
-                                <th width="20%">Zone Code <i class="fas fa-sort-down"></i></th>
-                                <th width="25%">Zone Name <i class="fas fa-sort-down"></i></th>
-                                <th width="15%">Status <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('id');">Zone Code <i class="fas fa-sort-down"></i></th>
+                                <th width="25%" data-ng-click="orderBy('name');">Zone Name <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                 <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
                             </tr>
                         </thead>

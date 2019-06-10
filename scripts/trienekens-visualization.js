@@ -490,6 +490,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 }
     }]
         });
+        console.log($scope.reportListGroupByDate);
 
         //chart-negativebar-status-area
         Highcharts.chart('chart-negativebar-status-area', {

@@ -61,11 +61,11 @@
                     <table class="table table-hover table-striped">
                         <thead>
                             <tr>
-                                <th width="10%">Bin Centre Code</th>
-                                <th width="35%">Bin Centre Name</th>
-                                <th width="15%">Location</th>
-                                <th width="10%">Belong Area</th>
-                                <th width="20%">Status</th>
+                                <th width="10%" data-ng-click="orderBy('id');">Bin Centre Code <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('name');">Bin Centre Name <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('location');">Location <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('area');">Belong Area <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                 <th data-ng-show="show.edit == 'A'" width="10%">Action</th>
                             </tr>
                         </thead>
