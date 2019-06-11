@@ -18,6 +18,49 @@ app.filter('offset', function () {
     };
 });
 
+app.directive('appFilereader', function($q) {
+    'use strict';
+    var slice = Array.prototype.slice;
+
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        link: function(scope, element, attrs, ngModel) {
+                if (!ngModel) {return;}
+
+                ngModel.$render = function() {};
+
+                element.bind('change', function(e) {
+                    var element;
+                    element = e.target;
+                    
+                    function readFile(file) {
+                        var deferred = $q.defer(),
+                            reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            deferred.resolve(e.target.result);
+                        };
+                        reader.onerror = function(e) {
+                            deferred.reject(e);
+                        };
+                        reader.readAsDataURL(file);
+
+                        return deferred.promise;
+                    }
+
+                    $q.all(slice.call(element.files, 0).map(readFile))
+                        .then(function(values) {
+                            if (element.multiple) {ngModel.$setViewValue(values);}
+                            else {ngModel.$setViewValue(values.length ? values[0] : null);}
+                        });
+
+                }); //change
+
+            } //link
+    }; //return
+});
+
 app.service('storeDataService', function () {
     'use strict';
     var globalList;
@@ -326,6 +369,17 @@ app.directive('dateNow', ['$filter', function ($filter) {
 app.controller('navigationController', function ($scope, $http, $window, storeDataService) {
     'use strict';
     
+    var socket = io.connect();
+    
+    socket.on('connect', function () {
+        var sessionID = socket.io.engine.id;
+        socket.emit('socketID', {
+            "socketID": sessionID,
+            "user": $window.sessionStorage.getItem('owner'),
+            "position": $window.sessionStorage.getItem('position')
+        });
+    });
+    
     $scope.navigation = {
         "name": $window.sessionStorage.getItem('position'),
         "manager": false,
@@ -475,11 +529,6 @@ app.controller('managerController', function ($scope, $http, $filter) {
 
         return objReturn;
     }
-    
-    var socket = io.connect();
-    socket.on('connect', function () {
-        var sessionid = socket.io.engine.id;
-    });
     
     $http.get('/getZoneCount').then(function (response) {
         $scope.zoneCount = response.data[0].count;
@@ -1378,6 +1427,7 @@ app.controller('specificAccController', function ($scope, $http, $routeParams, $
 
     $scope.thisAccount = {
         "id": $routeParams.userID,
+        "avatar": '',
         "name": '',
         "ic": '',
         "gender": '',
@@ -1412,6 +1462,7 @@ app.controller('specificAccController', function ($scope, $http, $routeParams, $
                 $scope.thisAccount[index] = value == "null" ? "" : value;
             }
         });
+//        $scope.thisAccount.avatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog";
     });
     
     $scope.updatePassword = function () {
@@ -1814,7 +1865,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         $scope.filterBinList = [];
         
         $scope.searchBin = function (bin) {
-            return (bin.id + bin.name + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+            return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
         };
         
         $scope.filterBinList = angular.copy($scope.binList);
@@ -1833,8 +1884,6 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             }
             return vm;
         }, true);
-        
-        console.log($scope.binList);
     });
     
     $http.get('/getAreaList').then(function (response) {

@@ -16,7 +16,11 @@ var DB_USER = '';
 var DB_PASS = '';
 var DB_NAME = '';
 
-var SVR_PORT = ;
+users = [];
+connections = [];
+connectedUserList = [];
+
+var SVR_PORT = '';
 var obj = {
     "ID": '',
     "authStatus": ''
@@ -303,7 +307,7 @@ app.post('/updatePassword', function (req, res) {
 app.post('/loadSpecificAccount', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'I' THEN 'Inactive' END) AS status, tblstaff.handphone, tblstaff.phone, tblstaff.email, tblposition.positionName AS position FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'I' THEN 'Inactive' END) AS status, tblstaff.handphone, tblstaff.phone, tblstaff.email, tblposition.positionName AS position, tblstaff.staffPic AS avatar FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -337,7 +341,7 @@ app.post('/updateProfile', function (req, res) {
             throw err;
         }
         req.body.position = result[0].id;
-        var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', staffStatus = '" + req.body.status + "' WHERE staffID = '" + req.body.id + "'";
+        var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', staffStatus = '" + req.body.status + "', staffPic = '" + req.body.avatar + "' WHERE staffID = '" + req.body.id + "'";
         db.query(sql, function (err, result) {
             if (err) {
                 throw err;
@@ -1149,4 +1153,70 @@ db.connect(function (err) {
 server.listen(process.env.PORT || SVR_PORT, function () {
     'use strict';
     console.log('Server is running on port ' + SVR_PORT + '');
+});
+
+//------------------------------------------------------------------------------------------
+// check if an element exists in array using a comparer function
+// comparer : function(currentElement)
+Array.prototype.inArray = function(comparer) { 
+    for(var i = 0; i < this.length; i++) { 
+        if(comparer(this[i])) return true; 
+    }
+    return false; 
+};
+
+// adds an element to the array if it does not already exist using a comparer 
+// function
+Array.prototype.pushIfNotExist = function(element, comparer) { 
+    if (!this.inArray(comparer)) {
+        this.push(element);
+    } else {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i].user == element.user) {
+                this[i].socketID = element.socketID;
+            }
+        }
+    }
+};
+//------------------------------------------------------------------------------------------
+
+
+io.sockets.on('connection', function(socket) {
+    connections.push(socket);
+    console.log('Connected: %s sockets connected', connections.length);
+    
+    // Disconnect
+    socket.on('disconnect', function(data) {
+        users.splice(users.indexOf(socket.username), 1);
+        updateUsernames();
+        connections.splice(connections.indexOf(socket), 1);
+        console.log('Disconnected: %s sockets connected', connections.length);
+    });
+    
+    socket.on('socketID', function (data) {
+        connectedUserList.pushIfNotExist(data, function(e) { 
+            return e.user === data.user;
+        });
+        console.log(connectedUserList);
+    });
+    
+    //Send Message
+    socket.on('send message', function(data) {
+        io.sockets.emit('new message', {
+            msg: data,
+            user: socket.username
+        });
+    });
+    
+    // New User
+    socket.on('new user', function(data, callback) {
+        callback(true);
+        socket.username = data;
+        users.push(socket.username);
+        updateUsernames();
+    });
+    
+    function updateUsernames() {
+        io.sockets.emit('get users', users);
+    }
 });

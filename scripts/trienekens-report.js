@@ -387,7 +387,7 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
         "officerid" : $window.sessionStorage.getItem('owner')
     };
     
-    $http.post('/getReportingAreaList',$scope.reportingOfficerId).then(function (response) {
+    $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function (response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
@@ -411,6 +411,10 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
         });
         
         $scope.filterReportList = angular.copy($scope.reportList);
+        
+        $scope.searchReport = function (report) {
+            return (report.reportID + report.reportCollectionDate + report.areaName + report.reportStatus + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+        }
         
         $scope.totalItems = $scope.filterReportList.length;
 
@@ -440,10 +444,6 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
             window.location.href = '#/daily-report/' + id  +"/"+ name
         }, 500);
     };
-
-    $scope.searchReport = function (report) {
-        return (report.reportCode + report.reportDate + report.areaName + report.status + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
-    }
 
     //filtering by column asc and desc
     var asc = true;
