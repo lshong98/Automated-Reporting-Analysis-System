@@ -223,6 +223,18 @@ app.config(function($routeProvider, $locationProvider){
         controller:'viewReportController',
         controllerAs:'report'
     })
+    .when('/edit-report/:reportCode',{
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/edit-report/' + $route.current.params.reportCode);
+            }
+        },
+        templateUrl: function (params) {
+            return '/edit-report/' + params.reportCode;
+        },
+        controller:'editReportController',
+        controllerAs:'editReport'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {

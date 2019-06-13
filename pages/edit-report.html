@@ -1,0 +1,132 @@
+<style>
+    .form-label-width {
+        width: 110px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Edit Report - <span data-ng-bind="reportCode"></span><span data-ng-bind="'-' + (editField.area) + ' - ' + (params.areaName)"></span></h5>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputDate form-label" class="col-xs-3 col-form-label form-label-width">Date</label>
+    <div class="col-md-9">
+<!--        <input data-provide="datepicker" type="text" id="inputDate" class="form-control mx-sm-3 datepicker" data-date-format="yyyy-mm-dd" />-->
+        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="editField.collectionDate" data-ng-bind="editField.date" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputStartTime form-label" class="col-xs-3 col-form-label form-label-width">Start Time</label>
+    <div class="col-md-9">
+<!--        <input type="text" id="inputStartTime" class="form-control mx-sm-3 clockpicker-start" readonly />-->
+        <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="editField.startTime" data-ng-change="startTimeChange(report.startTime)" str-to-time="" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputEndTime form-label" class="col-xs-3 col-form-label form-label-width">End Time</label>
+    <div class="col-md-9">
+<!--        <input type="text" id="inputEndTime" class="form-control mx-sm-3 clockpicker-end" readonly />-->
+        <input type="time" id="inputEndTime" class="form-control mx-sm-3" data-ng-model="editField.endTime" data-ng-change="endTimeChange(report.endTime)" str-to-time />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputTruck" class="col-xs-3 col-form-label form-label-width">Truck No</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3 " id="inputTruck" data-ng-model="editField.truck" data-live-search="true" data-width="100%">
+            <option value="{{a.id}}" data-ng-repeat="a in truckList">{{a.id}} - {{a.no}}</option>
+        </select>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label for="inputDriver" class="col-xs-3 col-form-label form-label-width">Driver</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3 " id="inputDriver" data-ng-model="editField.driver" data-live-search="true" data-width="100%">
+            <option value="{{d.id}}" data-ng-repeat="d in driverList">{{d.id}} - {{d.name}}</option>
+        </select>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label for="status" class="col-xs-3 col-form-label form-label-width">Report Status</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3 " id="status" data-ng-model="editField.status" data-live-search="true" data-width="100%">
+            <option value="C">Complete</option>
+            <option value="I">Incomplete</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputGAmount form-label" class="col-xs-3 col-form-label form-label-width">Garbage Amount (TON)</label>
+    <div class="col-md-9">
+        <input type="text" id="inputGAmount" placeholder="(ton)" class="form-control mx-sm-3" data-ng-model="editField.ton"/>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
+    <div class="col-md-9">
+    <!--<input type="text" id="inputRemark" class="form-control mx-sm-3" />-->
+        <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="editField.remark"></textarea>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-12">
+        <button class="btn btn-primary btnShape" data-shape="circle">Circle</button>
+        <button class="btn btn-warning btnShape" data-shape="rectangle">Rectangle</button>
+    </div>
+</div>
+
+<style>
+.target {
+  border: solid 1px #aaa;
+  min-height: 500px;
+/*  width: 50%;*/
+  margin-top: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 300ms all;
+  position: relative;
+}
+#googleMap{
+    margin-top: 1em;
+    height: 500px
+}
+style="padingwidth:600px;height:500px;"
+.contain {
+    background-size: cover;
+  position: relative;
+  z-index: 10;
+  top: 0px;
+  left: 0px;
+}
+textarea {
+  background-color: white;
+}
+.active {
+  box-shadow: 0px 0px 10px 10px rgb(50, 205, 50);
+}
+</style>
+<div class="row">
+   <div class="col-md-6">
+        <!--<div class="target"></div>-->
+        <input type="file" data-ng-model="report.ifleetImg" accept="image/*" app-filereader>
+    </div>
+    <div class="col-md-6">
+        <div id="googleMap"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!--<button class="btn btn-primary" data-toggle="modal" data-target="#previewReport">Preview</button>-->
+        <button class="btn btn-primary submit" data-ng-click="addReport()">Submit</button>
+    </div>
+</div>

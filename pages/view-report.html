@@ -1,5 +1,8 @@
 <div class="row">
-    <div class="col-md-11"></div>
+    <div class="col-md-10"></div>
+    <div class="col=md-1">
+        <button class="btn btn-md btn-success" data-ng-click="editReport()">Edit</button>
+    </div>
     <div class="col-md-1">
         <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
     </div>
@@ -13,7 +16,9 @@
                     <tr>
                         <th colspan="2" data-ng-bind="'IVWM INSPECTION REPORT ID: ' + (reportID)"></th>
                         <!--REPORT ID HERE-->
-                        <th colspan="3" data-ng-bind="'Collection Date: ' + (thisReport.date)"></th>
+                        <th  data-ng-bind="'Completion Status:' + (thisReport.status)"></th>
+                        <th data-ng-bind="'Collection Date: ' + (thisReport.date)"></th>
+                        <th data-ng-bind="'Garbage Amount(ton): ' + (thisReport.ton)"></th>
                         <th data-ng-bind="'Time Start: ' + (thisReport.startTime)"></th>
                         <th data-ng-bind="'Time End: ' + (thisReport.endTime)"></th>
                         <th>Reporting Staff:</th>
