@@ -1208,6 +1208,17 @@ io.sockets.on('connection', function(socket) {
         });
     });
     
+    //Create New User
+    socket.on('create new user', function(data) {
+        socket.broadcast.emit('append user list', {
+            id: obj.ID,
+            name: data.name,
+            username: data.username,
+            position: data.position.name,
+            status: 'ACTIVE'
+        });
+    });
+    
     // New User
     socket.on('new user', function(data, callback) {
         callback(true);

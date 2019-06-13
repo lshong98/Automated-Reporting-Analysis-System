@@ -4,6 +4,17 @@ global angular, document, google, Highcharts
 */
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap']);
 
+var socket = io.connect();
+
+socket.on('connect', function () {
+    var sessionID = socket.io.engine.id;
+    socket.emit('socketID', {
+        "socketID": sessionID,
+        "user": window.sessionStorage.getItem('owner'),
+        "position": window.sessionStorage.getItem('position')
+    });
+});
+
 /*
     -Pagination
 */
@@ -368,17 +379,6 @@ app.directive('dateNow', ['$filter', function ($filter) {
 
 app.controller('navigationController', function ($scope, $http, $window, storeDataService) {
     'use strict';
-    
-    var socket = io.connect();
-    
-    socket.on('connect', function () {
-        var sessionID = socket.io.engine.id;
-        socket.emit('socketID', {
-            "socketID": sessionID,
-            "user": $window.sessionStorage.getItem('owner'),
-            "position": $window.sessionStorage.getItem('position')
-        });
-    });
     
     $scope.navigation = {
         "name": $window.sessionStorage.getItem('position'),
@@ -1338,6 +1338,9 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
+    $scope.filterStaffList = [];
+    $scope.searchStaffFilter = '';
+    $scope.staffList = [];
 
     $scope.initializeStaff = function () {
         $scope.staff = {
@@ -1356,16 +1359,12 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
     });
 
     $http.get('/getAllUser').then(function (response) {
-        $scope.searchStaffFilter = '';
         $scope.staffList = response.data;
-        $scope.filterStaffList = [];
         $scope.searchStaff = function (staff) {
             return (staff.id + staff.name + staff.username + staff.position + staff.status).toUpperCase().indexOf($scope.searchStaffFilter.toUpperCase()) >= 0;
         }
 
-        //$.each($scope.staffList, function (index) {
-            $scope.filterStaffList = angular.copy($scope.staffList);
-        //});
+        $scope.filterStaffList = angular.copy($scope.staffList);
 
         $scope.totalItems = $scope.filterStaffList.length;
 
@@ -1404,6 +1403,7 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
                 });
                 $scope.filterStaffList = angular.copy($scope.staffList);
                 $scope.totalItems = $scope.filterStaffList.length;
+                socket.emit('create new user', $scope.staff);
             }
             angular.element('body').overhang({
                 type: returnedData.status,
@@ -1415,6 +1415,20 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
             console.error('error');
         });
     };
+    
+    socket.on('append user list', function(data) {
+        console.log('here is socket ' + socket.io.engine.id + ' appended');
+        $scope.staffList.push({
+            "id": data.id,
+            "name": data.name,
+            "username": data.username,
+            "position": data.position,
+            "status": data.status
+        });
+        $scope.filterStaffList = angular.copy($scope.staffList);
+        $scope.totalItems = $scope.filterStaffList.length;
+        $scope.$apply();
+    });
 
     $scope.orderBy = function (property) {
         $scope.staffList = $filter('orderBy')($scope.staffList, ['' + property + ''], asc);
