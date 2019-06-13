@@ -997,7 +997,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblacrfreq (acrID VARCHAR(15), areaID VARCHAR(15), day VARCHAR(15))",
         "CREATE TABLE tbltruck (truckID VARCHAR(15) PRIMARY KEY, transporter VARCHAR(15), truckTon INT, truckNum VARCHAR(10), truckExpiryStatus DATE, creationDateTime DATETIME, truckStatus CHAR(1))",
         "CREATE TABLE tblreport (reportID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), reportCollectionDate DATE, operationTimeStart TIME, operationTimeEnd TIME, garbageAmount INT(3), iFleetImg MEDIUMTEXT, address VARCHAR(80), lng DOUBLE(10, 7), lat DOUBLE(10, 7), readStatus CHAR(1), reportStatus CHAR(1), truckID VARCHAR(15), driverID VARCHAR(15), remark TEXT, creationDateTime DATETIME)",
-        "CREATE TABLE tblmapcircle(circleID INT PRIMARY KEY AUTO_INCREMENT, radius VARCHAR(50), lng DOUBLE(10, 7), lat DOUBLE(10, 7), reportID VARCHAR(15))"
+        "CREATE TABLE tblmapcircle(circleID INT PRIMARY KEY AUTO_INCREMENT, shape VARCHAR(15), radius VARCHAR(50), lng DOUBLE(10, 7), lat DOUBLE(10, 7), reportID VARCHAR(15))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {

@@ -67,6 +67,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     'use strict';
     
     $scope.circleID = 0;
+    $scope.shape = 'circle';
     var centerArray = [];
 
     $scope.report = {
@@ -87,6 +88,9 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         "status" : ''
     };
     
+    angular.element('.btnShape').click(function () {
+        $scope.shape = angular.element(this).data('shape');
+    });
     
     
     $scope.report.collectionDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
@@ -125,7 +129,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     $http.post('/getGoogleLocation', $scope.params).then(function (response) {
         var myPlace = response.data[0];
-        console.log(myPlace);
         var area = myPlace.area.replace(" ", "+");
         var zone = myPlace.zone.replace(" ", "+");
         var concat = area + '+' + zone;
@@ -156,40 +159,79 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
 
             // OnClick add Marker and get address
             google.maps.event.addListener(map, "click", function (e) {
-                var latLng, latitude, longtitude, circle;
+                var latLng, latitude, longtitude, circle, rectangle;
                 $scope.circleID++;
 
                 latLng = e.latLng;
                 latitude = latLng.lat();
                 longtitude = latLng.lng();
-
-                circle = new google.maps.Circle({
-                    id: $scope.circleID,
-                    map: map,
-                    center: new google.maps.LatLng(latitude, longtitude),
-                    radius: 200,
-                    fillColor: 'transparent',
-                    strokeColor: 'red',
-                    editable: true,
-                    draggable: true
-                });
-                centerArray.push({"lat": circle.getCenter().lat(), "lng": circle.getCenter().lng(), "radius": circle.getRadius()});
-
-                google.maps.event.addListener(circle, "radius_changed", function () {
-                    $.each(centerArray, function (index, value) {
-                        if (circle.id == (index + 1)) {
-                            centerArray[index].radius = circle.getRadius();
-                        }
+                
+                if ($scope.shape == "circle") {
+                    circle = new google.maps.Circle({
+                        id: $scope.circleID,
+                        map: map,
+                        center: new google.maps.LatLng(latitude, longtitude),
+                        radius: 200,
+                        fillColor: 'transparent',
+                        strokeColor: 'red',
+                        editable: true,
+                        draggable: true
                     });
-                });
-                google.maps.event.addListener(circle, "center_changed", function () {
-                    $.each(centerArray, function (index, value) {
-                        if (circle.id == (index + 1)) {
-                            centerArray[index].lat = circle.getCenter().lat();
-                            centerArray[index].lng = circle.getCenter().lng();
-                        }
+                    centerArray.push({"lat": circle.getCenter().lat(), "lng": circle.getCenter().lng(), "radius": circle.getRadius()});
+
+                    google.maps.event.addListener(circle, "radius_changed", function () {
+                        $.each(centerArray, function (index, value) {
+                            if (circle.id == (index + 1)) {
+                                centerArray[index].radius = circle.getRadius();
+                            }
+                        });
                     });
-                });
+                    google.maps.event.addListener(circle, "center_changed", function () {
+                        $.each(centerArray, function (index, value) {
+                            if (circle.id == (index + 1)) {
+                                centerArray[index].lat = circle.getCenter().lat();
+                                centerArray[index].lng = circle.getCenter().lng();
+                            }
+                        });
+                    });
+                } else if ($scope.shape == "rectangle") {
+                    rectangle = new google.maps.Rectangle({
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: '#FF0000',
+                        fillOpacity: 0.35,
+                        map: map,
+                        editable: true,
+                        draggable: true,
+                        center: new google.maps.LatLng(latitude, longtitude),
+                        bounds: new google.maps.LatLngBounds (
+                            new google.maps.LatLng (latitude, longtitude),
+                            new google.maps.LatLng (latitude+0.001, longtitude+0.001),
+                        )
+                    });
+                }
+
+////                    centerArray.push({"lat": circle.getCenter().lat(), "lng": circle.getCenter().lng(), "radius": circle.getRadius()});
+////
+////                    google.maps.event.addListener(circle, "radius_changed", function () {
+////                        $.each(centerArray, function (index, value) {
+////                            if (circle.id == (index + 1)) {
+////                                centerArray[index].radius = circle.getRadius();
+////                            }
+////                        });
+////                    });
+////                    google.maps.event.addListener(circle, "center_changed", function () {
+////                        $.each(centerArray, function (index, value) {
+////                            if (circle.id == (index + 1)) {
+////                                centerArray[index].lat = circle.getCenter().lat();
+////                                centerArray[index].lng = circle.getCenter().lng();
+////                            }
+////                        });
+////                    });
+//                }
+
+                
 
         //                    var marker = new google.maps.Marker({
         //                        position: new google.maps.LatLng(latitude, longtitude),
@@ -210,7 +252,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
 
             // JSON data returned by API above
             var myPlace = response.data;
-            console.log(response.data);
 
             // After get the place data, re-center the map
             $window.setTimeout(function () {
@@ -227,8 +268,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                 $scope.report.lat = lat;
             }, 1000);
         });
-        
-
     });
     
     $scope.addReport = function () {
