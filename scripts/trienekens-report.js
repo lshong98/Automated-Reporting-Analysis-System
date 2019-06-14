@@ -67,8 +67,9 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     'use strict';
     
     $scope.circleID = 0;
+    $scope.rectangleID = 0;
     $scope.shape = 'circle';
-    var centerArray = [];
+    var centerArray = [], rectArray = [];
 
     $scope.report = {
         "areaCode": $routeParams.areaCode,
@@ -84,6 +85,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         "lat": '',
         "address": '',
         "marker": centerArray,
+        "rectangle": rectArray,
         "creationDate": '',
         "status" : ''
     };
@@ -160,13 +162,13 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
             // OnClick add Marker and get address
             google.maps.event.addListener(map, "click", function (e) {
                 var latLng, latitude, longtitude, circle, rectangle;
-                $scope.circleID++;
 
                 latLng = e.latLng;
                 latitude = latLng.lat();
                 longtitude = latLng.lng();
                 
                 if ($scope.shape == "circle") {
+                    $scope.circleID++;
                     circle = new google.maps.Circle({
                         id: $scope.circleID,
                         map: map,
@@ -195,12 +197,11 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                         });
                     });
                 } else if ($scope.shape == "rectangle") {
+                    $scope.rectangleID++;
                     rectangle = new google.maps.Rectangle({
+                        id: $scope.rectangleID,
                         strokeColor: '#FF0000',
-                        strokeOpacity: 0.8,
                         strokeWeight: 2,
-                        fillColor: '#FF0000',
-                        fillOpacity: 0.35,
                         map: map,
                         editable: true,
                         draggable: true,
@@ -210,27 +211,22 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                             new google.maps.LatLng (latitude+0.001, longtitude+0.001),
                         )
                     });
+                    rectArray.push({"neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng()});
+                    
+                    google.maps.event.addListener(rectangle, "bounds_changed", function () {
+                        var bounds =  rectangle.getBounds();
+                        var ne = bounds.getNorthEast();
+                        var sw = bounds.getSouthWest();
+                        $.each(rectArray, function (index, value) {
+                            if (rectangle.id == (index + 1)) {
+                                rectArray[index].neLat = ne.lat();
+                                rectArray[index].neLng = ne.lng();
+                                rectArray[index].swLat = sw.lat();
+                                rectArray[index].swLng = sw.lng();
+                            }
+                        });
+                    });
                 }
-
-////                    centerArray.push({"lat": circle.getCenter().lat(), "lng": circle.getCenter().lng(), "radius": circle.getRadius()});
-////
-////                    google.maps.event.addListener(circle, "radius_changed", function () {
-////                        $.each(centerArray, function (index, value) {
-////                            if (circle.id == (index + 1)) {
-////                                centerArray[index].radius = circle.getRadius();
-////                            }
-////                        });
-////                    });
-////                    google.maps.event.addListener(circle, "center_changed", function () {
-////                        $.each(centerArray, function (index, value) {
-////                            if (circle.id == (index + 1)) {
-////                                centerArray[index].lat = circle.getCenter().lat();
-////                                centerArray[index].lng = circle.getCenter().lng();
-////                            }
-////                        });
-////                    });
-//                }
-
                 
 
         //                    var marker = new google.maps.Marker({
@@ -272,7 +268,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        console.log($scope.report);
         $http.post('/addReport', $scope.report).then(function (response) {
             var returnedData = response.data;
             var newReportID = returnedData.details.reportID;
@@ -410,7 +405,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
             alert("Unable to copy text");
         }
     }
-    
 });
 
 app.controller('reportingController', function ($scope, $http, $filter, $window) {
