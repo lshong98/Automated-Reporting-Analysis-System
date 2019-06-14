@@ -202,6 +202,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
                         id: $scope.rectangleID,
                         strokeColor: '#FF0000',
                         strokeWeight: 2,
+                        fillColor: 'transparent',
                         map: map,
                         editable: true,
                         draggable: true,
@@ -563,21 +564,38 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     $http.post('/getReportCircle', $scope.report).then(function (response) {
         var data = response.data;
         $window.setTimeout(function () {
-            
-        
         $.each(data, function (index, value) {
             var circle = new google.maps.Circle({
-            map: map,
-            center: new google.maps.LatLng(data[index].lat, data[index].lng),
-            radius: parseFloat(data[index].radius),
-            fillColor: 'transparent',
-            strokeColor: 'red',
-            editable: false,
-            draggable: false
-        });
+                map: map,
+                center: new google.maps.LatLng(data[index].lat, data[index].lng),
+                radius: parseFloat(data[index].radius),
+                fillColor: 'transparent',
+                strokeColor: 'red',
+                editable: false,
+                draggable: false
+            });
         });
         }, 1000);
 
+    });
+    
+    $http.post('/getReportRect', $scope.report).then(function (response) {
+        var data = response.data;
+        $window.setTimeout(function () {
+            $.each(data, function(index, value) {
+                var rect = new google.maps.Rectangle({
+                    map: map,
+                    bounds: new google.maps.LatLngBounds (
+                        new google.maps.LatLng (data[index].swLat, data[index].swLng),
+                        new google.maps.LatLng (data[index].neLat, data[index].neLng),
+                    ),
+                    fillColor: 'transparent',
+                    strokeColor: 'red',
+                    editable: false,
+                    draggable: false
+                });
+            })
+        }, 1000);
     });
     
     $scope.editReport = function () {

@@ -770,9 +770,9 @@ app.post('/addReport',function(req,res){
             }
             if (Object.keys(req.body.marker).length > 0) {
                 for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                    var sql = "INSERT INTO tblmapcircle (radius, lng, lat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
+                    var circleSQL = "INSERT INTO tblmapcircle (radius, lng, lat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
 
-                    db.query(sql, function (err, result) {
+                    db.query(circleSQL, function (err, result) {
                         if (err) {
                             throw err;
                         }
@@ -781,9 +781,9 @@ app.post('/addReport',function(req,res){
             }
             if (Object.keys(req.body.rectangle).length > 0) {
                 for (j = 0; j < Object.keys(req.body.rectangle).length; j++) {
-                    var sql = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].neLng + "', '" + reportID + "')";
+                    var rectSQL = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].swLng + "', '" + reportID + "')";
                     
-                    db.query(sql, function (err, result) {
+                    db.query(rectSQL, function (err, result) {
                         if (err) {
                             throw err;
                         }
@@ -848,6 +848,16 @@ app.post('/getReportCircle', function(req,res){
     
     var sql = "SELECT radius, lng, lat FROM tblmapcircle WHERE reportID = '" + req.body.reportID + "'";
     
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+app.post('/getReportRect', function (req, res) {
+    'use strict';
+    var sql = "SELECT neLat, neLng, swLat, swLng FROM tblmaprect WHERE reportID = '" + req.body.reportID + "'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
