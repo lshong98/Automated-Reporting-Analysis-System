@@ -761,21 +761,34 @@ app.post('/addReport',function(req,res){
     makeID('report',req.body.creationDate);
     setTimeout(function () {
         var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, lng, lat, readStatus, reportStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '" + req.body.address + "', '" + req.body.lng + "', '" + req.body.lat + "', 'I', '" + req.body.status+ "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
-        var i = 0;
+        var i = 0, j = 0;
         var reportID = obj.ID;
         
         db.query(sql, function(err, result) {
             if (err) {
                 throw err;
             }
-            for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                var sql = "INSERT INTO tblmapcircle (radius, lng, lat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
-                
-                db.query(sql, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                });
+            if (Object.keys(req.body.marker).length > 0) {
+                for (i = 0; i < Object.keys(req.body.marker).length; i++) {
+                    var sql = "INSERT INTO tblmapcircle (radius, lng, lat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
+
+                    db.query(sql, function (err, result) {
+                        if (err) {
+                            throw err;
+                        }
+                    });
+                }
+            }
+            if (Object.keys(req.body.rectangle).length > 0) {
+                for (j = 0; j < Object.keys(req.body.rectangle).length; j++) {
+                    var sql = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].neLng + "', '" + reportID + "')";
+                    
+                    db.query(sql, function (err, result) {
+                        if (err) {
+                            throw err;
+                        }
+                    });
+                }
             }
             res.json({"status": "success", "details": {"reportID": obj.ID}});
         });
@@ -1001,7 +1014,8 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblacrfreq (acrID VARCHAR(15), areaID VARCHAR(15), day VARCHAR(15))",
         "CREATE TABLE tbltruck (truckID VARCHAR(15) PRIMARY KEY, transporter VARCHAR(15), truckTon INT, truckNum VARCHAR(10), truckExpiryStatus DATE, creationDateTime DATETIME, truckStatus CHAR(1))",
         "CREATE TABLE tblreport (reportID VARCHAR(15) PRIMARY KEY, areaID VARCHAR(15), reportCollectionDate DATE, operationTimeStart TIME, operationTimeEnd TIME, garbageAmount INT(3), iFleetImg MEDIUMTEXT, address VARCHAR(80), lng DOUBLE(10, 7), lat DOUBLE(10, 7), readStatus CHAR(1), reportStatus CHAR(1), truckID VARCHAR(15), driverID VARCHAR(15), remark TEXT, creationDateTime DATETIME)",
-        "CREATE TABLE tblmapcircle(circleID INT PRIMARY KEY AUTO_INCREMENT, shape VARCHAR(15), radius VARCHAR(50), lng DOUBLE(10, 7), lat DOUBLE(10, 7), reportID VARCHAR(15))"
+        "CREATE TABLE tblmapcircle(circleID INT PRIMARY KEY AUTO_INCREMENT, radius VARCHAR(50), lng DOUBLE(10, 7), lat DOUBLE(10, 7), reportID VARCHAR(15))",
+        "CREATE TABLE tblmaprect(rectID INT PRIMARY KEY AUTO_INCREMENT, neLat DOUBLE(10, 7), neLng DOUBLE(10, 7), swLat DOUBLE(10, 7), swLng DOUBLE(10, 7), reportID VARCHAR(15))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
