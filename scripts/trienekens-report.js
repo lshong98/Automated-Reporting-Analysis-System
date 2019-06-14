@@ -632,6 +632,64 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         $scope.editField.date = new Date(response.data[0].date);
         
         console.log($scope.editField);
+        
+        
+        var $googleMap = document.getElementById('googleMap');
+        var visualizeMap = {
+            center: new google.maps.LatLng(1, 1),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false,
+            panControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+            disableDefaultUI: true,
+            editable: false
+        };
+
+        map = new google.maps.Map($googleMap, visualizeMap);
+
+        $window.setTimeout(function () {
+            map.panTo(new google.maps.LatLng($scope.editField.lat, $scope.editField.lng));
+            map.setZoom(17);
+        }, 1000);
+
+        $http.post('/getReportCircle', $scope.reportObj).then(function (response) {
+            var data = response.data;
+            $window.setTimeout(function () {
+            $.each(data, function (index, value) {
+                var circle = new google.maps.Circle({
+                    map: map,
+                    center: new google.maps.LatLng(data[index].lat, data[index].lng),
+                    radius: parseFloat(data[index].radius),
+                    fillColor: 'transparent',
+                    strokeColor: 'red',
+                    editable: true,
+                    draggable: true
+                });
+            });
+            }, 1000);
+
+        });
+        
+//        $http.post('/getReportRect', $scope.report).then(function (response) {
+//            var data = response.data;
+//            $window.setTimeout(function () {
+//                $.each(data, function(index, value) {
+//                    var rect = new google.maps.Rectangle({
+//                        map: map,
+//                        bounds: new google.maps.LatLngBounds (
+//                            new google.maps.LatLng (data[index].swLat, data[index].swLng),
+//                            new google.maps.LatLng (data[index].neLat, data[index].neLng),
+//                        ),
+//                        fillColor: 'transparent',
+//                        strokeColor: 'red',
+//                        editable: false,
+//                        draggable: false
+//                    });
+//                })
+//            }, 1000);
+//        });        
+        
     });
     
     $http.get('/getTruckList').then(function (response) {
@@ -641,114 +699,6 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
     
     $http.get('/getDriverList').then(function (response) {
         $scope.driverList = response.data;
-    });
-    var $googleMap, visualizeMap, map, lat = 0, lng = 0, myPlace, address;
-    
-//    $http.post('/getGoogleLocation', $scope.params).then(function (response) {
-////        var myPlace = response.data[0];
-////        var area = myPlace.area.replace(" ", "+");
-////        var zone = myPlace.zone.replace(" ", "+");
-////        var concat = area + '+' + zone;
-////        $scope.report.address = concat;
-////        
-////        
-////        address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
-//        
-//        $http.get(address).then(function (response) {
-////            function timeToSeconds(time) {
-////                time = time.split(/:/);
-////                return time[0] * 3600 + time[1] * 60 + time[2];
-////            }
-//
-//            $googleMap = document.getElementById('googleMap');
-//            visualizeMap = {
-//                center: new google.maps.LatLng(1, 1),
-//                mapTypeId: google.maps.MapTypeId.ROADMAP,
-//                mapTypeControl: false,
-//                panControl: false,
-//                zoomControl: false,
-//                streetViewControl: false,
-//                disableDefaultUI: true,
-//                editable: false
-//            };
-//
-//            map = new google.maps.Map($googleMap, visualizeMap);
-//
-//            // OnClick add Marker and get address
-//            google.maps.event.addListener(map, "click", function (e) {
-//                var latLng, latitude, longtitude, circle, rectangle;
-//                $scope.circleID++;
-//
-//                //latLng = e.latLng;
-//                latitude = $scope.editField.lat;
-//                longtitude = $scope.editField.lng;
-//                
-//                if ($scope.shape == "circle") {
-//                    circle = new google.maps.Circle({
-//                        id: $scope.circleID,
-//                        map: map,
-//                        center: new google.maps.LatLng(latitude, longtitude),
-//                        radius: 200,
-//                        fillColor: 'transparent',
-//                        strokeColor: 'red',
-//                        editable: true,
-//                        draggable: true
-//                    });
-//                    centerArray.push({"lat": circle.getCenter().lat(), "lng": circle.getCenter().lng(), "radius": circle.getRadius()});
-//
-//                    google.maps.event.addListener(circle, "radius_changed", function () {
-//                        $.each(centerArray, function (index, value) {
-//                            if (circle.id == (index + 1)) {
-//                                centerArray[index].radius = circle.getRadius();
-//                            }
-//                        });
-//                    });
-//                    google.maps.event.addListener(circle, "center_changed", function () {
-//                        $.each(centerArray, function (index, value) {
-//                            if (circle.id == (index + 1)) {
-//                                centerArray[index].lat = circle.getCenter().lat();
-//                                centerArray[index].lng = circle.getCenter().lng();
-//                            }
-//                        });
-//                    });
-//                } else if ($scope.shape == "rectangle") {
-//                    rectangle = new google.maps.Rectangle({
-//                        strokeColor: '#FF0000',
-//                        strokeOpacity: 0.8,
-//                        strokeWeight: 2,
-//                        fillColor: '#FF0000',
-//                        fillOpacity: 0.35,
-//                        map: map,
-//                        editable: true,
-//                        draggable: true,
-//                        center: new google.maps.LatLng(latitude, longtitude),
-//                        bounds: new google.maps.LatLngBounds (
-//                            new google.maps.LatLng (latitude, longtitude),
-//                            new google.maps.LatLng (latitude+0.001, longtitude+0.001),
-//                        )
-//                    });
-//                }
-//            });
-//
-//            // JSON data returned by API above
-//            var myPlace = response.data;
-//
-//            // After get the place data, re-center the map
-//            $window.setTimeout(function () {
-//                var places, location;
-//
-//                places = myPlace.results[0];
-//                location = places.formatted_address;
-//                lat = places.geometry.location.lat;
-//                lng = places.geometry.location.lng;
-//                map.panTo(new google.maps.LatLng(lat, lng));
-//                map.setZoom(17);
-//                
-//                $scope.report.lng = lng;
-//                $scope.report.lat = lat;
-//            }, 1000);
-//        });
-//    });
-//    
+    });  
     
 });
