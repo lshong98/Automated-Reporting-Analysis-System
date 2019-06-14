@@ -617,12 +617,14 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
     $http.post('/getReport',$scope.reportObj).then(function(response){
         
         $scope.editField = response.data[0];
+        $scope.editField.date = new Date(response.data[0].date);
         
         console.log($scope.editField);
     });
     
     $http.get('/getTruckList').then(function (response) {
         $scope.truckList = response.data;
+        console.log($scope.truckList);
     });
     
     $http.get('/getDriverList').then(function (response) {
@@ -631,20 +633,20 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
     var $googleMap, visualizeMap, map, lat = 0, lng = 0, myPlace, address;
     
 //    $http.post('/getGoogleLocation', $scope.params).then(function (response) {
-//        var myPlace = response.data[0];
-//        var area = myPlace.area.replace(" ", "+");
-//        var zone = myPlace.zone.replace(" ", "+");
-//        var concat = area + '+' + zone;
-//        $scope.report.address = concat;
-//        
-//        
-//        address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+////        var myPlace = response.data[0];
+////        var area = myPlace.area.replace(" ", "+");
+////        var zone = myPlace.zone.replace(" ", "+");
+////        var concat = area + '+' + zone;
+////        $scope.report.address = concat;
+////        
+////        
+////        address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
 //        
 //        $http.get(address).then(function (response) {
-//            function timeToSeconds(time) {
-//                time = time.split(/:/);
-//                return time[0] * 3600 + time[1] * 60 + time[2];
-//            }
+////            function timeToSeconds(time) {
+////                time = time.split(/:/);
+////                return time[0] * 3600 + time[1] * 60 + time[2];
+////            }
 //
 //            $googleMap = document.getElementById('googleMap');
 //            visualizeMap = {
@@ -665,9 +667,9 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
 //                var latLng, latitude, longtitude, circle, rectangle;
 //                $scope.circleID++;
 //
-//                latLng = e.latLng;
-//                latitude = latLng.lat();
-//                longtitude = latLng.lng();
+//                //latLng = e.latLng;
+//                latitude = $scope.editField.lat;
+//                longtitude = $scope.editField.lng;
 //                
 //                if ($scope.shape == "circle") {
 //                    circle = new google.maps.Circle({

@@ -14,7 +14,7 @@
     <label for="inputDate form-label" class="col-xs-3 col-form-label form-label-width">Date</label>
     <div class="col-md-9">
 <!--        <input data-provide="datepicker" type="text" id="inputDate" class="form-control mx-sm-3 datepicker" data-date-format="yyyy-mm-dd" />-->
-        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="editField.collectionDate" data-ng-bind="editField.date" />
+        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="editField.date"/>
     </div>
 </div>
 
@@ -37,7 +37,7 @@
 <div class="form-group row">
     <label for="inputTruck" class="col-xs-3 col-form-label form-label-width">Truck No</label>
     <div class="col-md-9">
-        <select class="form-control mx-sm-3 " id="inputTruck" data-ng-model="editField.truck" data-live-search="true" data-width="100%">
+        <select class="form-control mx-sm-3 " id="inputTruck" data-ng-model="editField.truckID" data-live-search="true" data-width="100%">
             <option value="{{a.id}}" data-ng-repeat="a in truckList">{{a.id}} - {{a.no}}</option>
         </select>
     </div>
@@ -47,7 +47,7 @@
 <div class="form-group row">
     <label for="inputDriver" class="col-xs-3 col-form-label form-label-width">Driver</label>
     <div class="col-md-9">
-        <select class="form-control mx-sm-3 " id="inputDriver" data-ng-model="editField.driver" data-live-search="true" data-width="100%">
+        <select class="form-control mx-sm-3 " id="inputDriver" data-ng-model="editField.driverID" data-live-search="true" data-width="100%">
             <option value="{{d.id}}" data-ng-repeat="d in driverList">{{d.id}} - {{d.name}}</option>
         </select>
     </div>
@@ -116,14 +116,20 @@ textarea {
 }
 </style>
 <div class="row">
+        <div class="col-md-6" style="width: 50%">
+            <img id="myImg" src="{{editField.ifleet}}" style="width:650px; height: 650px;" />
+        </div>
+        <div class="col-md-6" style="width: 50%" data-html2canvas-ignore="true">
+            <div id="googleMap" style="min-height: 650px; min-width: 650px;"></div>
+        </div>
+</div>
+<div class="row">
    <div class="col-md-6">
         <!--<div class="target"></div>-->
-        <input type="file" data-ng-model="report.ifleetImg" accept="image/*" app-filereader>
-    </div>
-    <div class="col-md-6">
-        <div id="googleMap"></div>
+        <input type="file" data-ng-model="editField.ifleet" accept="image/*" app-filereader>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <!--<button class="btn btn-primary" data-toggle="modal" data-target="#previewReport">Preview</button>-->
