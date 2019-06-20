@@ -1,0 +1,201 @@
+<!-- Modal -->
+<div class="modal fade" id="createBin" tabindex="-1" role="dialog" aria-labelledby="createBin" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Create Account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtStaffName form-label">Staff Name</label>
+                    <input type="text" class="form-control" id="txtStaffName" data-ng-model="staff.name" />
+                </div>
+
+                <div class="form-group">
+                    <label for="sltStaffPosition form-label">Staff Position</label>
+                    <select id="sltStaffPosition" class="form-control" data-ng-model="staff.position" data-ng-options="position as position.name for position in positionList">
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtLoginUsername form-label">Login Username</label>
+                    <input type="text" class="form-control" id="txtLoginUsername" data-ng-model="staff.username" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtLoginPassword form-label">Login Password</label>
+                    <input type="password" class="form-control" id="txtLoginPassword" data-ng-model="staff.password" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addBin();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Wheel Bin Database</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchBinFilter" />
+    </div>
+</div>
+<br />
+<div class="row" data-ng-show="show.create == 'A'">
+    <div class="col-md-12">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New</button>
+    </div>
+</div>
+<br />
+<div class="row" data-ng-show="show.view == 'A'">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-clickable">
+                        <thead>
+                            <tr>
+                                <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('name');">Full Name <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('icNo');">IC No. <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('serialNo');">Serial No. <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('rcDwell');">RC Dwell <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('houseNo');">House No. <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('tmnKpg');">Tmn/Kpg <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('areaCode');">Area Code <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('comment');">Comment <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('binSize');">Bin Size <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('acrfSerialNo');">ACRF Serial No. <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('itemType');">Item Type <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('path');">Path <i class="fas fa-sort-down"></i></th>
+                                <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="b in binList | filter: searchBin | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.date"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.name" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.name"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.icNo" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.icNo"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.serialNo" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.serialNo"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.rcDwell" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.rcDwell"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.houseNo" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.houseNo"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.tmnKpg" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.tmnKpg"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.areaCode" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.areaCode"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.status"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.comment" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.comment"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.binSize"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.address" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.address"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.companyName" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.companyName"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.acrfSerialNo" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.acrfSerialNo"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.itemType" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.itemType"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.path" data-ng-show="!showDatabaseBin" />
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.path"></span>
+                                    </div>
+                                </td>
+                                <td data-ng-show="show.edit == 'A'">
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showDatabaseBin" data-ng-click="editDatabaseBin(b.date, b.name, b.icNo, b.serialNo, b.rcDwell, b.houseNo, b.tmnKpg, b.areaCode, b.status, b.comment, b.binSize, b.address, b.companyName, b.acrfSerialNo, b.itemType, b.path);"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-danger" data-ng-show="showDatabaseBin" data-ng-click="deleteDatabaseBin(b.serialNo)"><i class="fas fa-trash-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showDatabaseBin" data-ng-click="saveDatabaseBin();"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showDatabaseBin" data-ng-click="cancelDatabaseBin();"><i class="fa fa-times"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+            <div class="col-md-12">
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+            </div>
+        </div>
+    </div>
+</div>

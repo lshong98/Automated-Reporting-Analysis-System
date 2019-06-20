@@ -106,6 +106,24 @@ app.service('storeDataService', function () {
             "id": '',
             "address": ''
         },
+        "databaseBin": {
+            "date": '',
+            "name": '',
+            "icNo": '',
+            "serialNo": '',
+            "rcDwell": '',
+            "houseNo": '',
+            "tmnKpg": '',
+            "areaCode": '',
+            "status": '',
+            "comment": '',
+            "binSize": '',
+            "address": '',
+            "companyName": '',
+            "acrfSerialNo": '',
+            "itemType": '',
+            "path": ''
+        },
         "show": {
             "account": {
                 "create": false,
@@ -161,6 +179,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.showBin = true;
         scope.showCollection = true;
         scope.deleteCollection = true;
+        scope.showDatabaseBin = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -188,6 +207,24 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.collection = {
             "id": ''
         };
+        scope.thisDatabaseBin = {
+            "date": '',
+            "name": '',
+            "icNo": '',
+            "serialNo": '',
+            "rcDwell": '',
+            "houseNo": '',
+            "tmnKpg": '',
+            "areaCode": '',
+            "status": '',
+            "comment": '',
+            "binSize": '',
+            "address": '',
+            "companyName": '',
+            "acrfSerialNo": '',
+            "itemType": '',
+            "path": ''
+        }
         
         scope.notify = function (stat, mes) {
             angular.element('body').overhang({
@@ -316,6 +353,8 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             
         };
         
+        
+
         scope.editCollection = function (id, address) {
             scope.showCollection = !scope.showCollection;
             scope.thisCollection = { "id": id, "address": address };
@@ -363,6 +402,55 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                         }
                     });
                 }
+            });
+        };
+
+
+        //BIN INVENTORY MODULE EDITABLE TABLES
+        scope.editDatabaseBin = function (date, name, icNo, serialNo, rcDwell, houseNo, tmnKpg, areaCode, status, comment, binSize, address, companyName, acrfSerialNo, itemType, path) {
+            scope.showDatabaseBin = !scope.showDatabaseBin;
+            //scope.b.area = area;
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+            scope.thisDatabaseBin = { "date": date, "name": name, "icNo": icNo, "serialNo": serialNo, "rcDwell": rcDwell, "houseNo": houseNo, "tmnKpg": tmnKpg, "areaCode": areaCode, "status": status, "comment": comment, "binSize": binSize, "address": address, "companyName": companyName, "acrfSerialNo": acrfSerialNo, "itemType": itemType, "path": path };
+        };
+        scope.saveDatabaseBin = function () {
+            scope.showDatabaseBin = !scope.showDatabaseBin;
+            
+            $http.post('/editDatabaseBin', scope.b).then(function (response) {
+                var data = response.data;
+                
+                scope.notify(data.status, data.message);
+                
+                $.each(storeDataService.databaseBin, function (index, value) {
+                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
+                    //     if (data.status == "success") {
+                    //         storeDataService.bin[index] = angular.copy(scope.b);
+                    //     } else {
+                    //         scope.z = angular.copy(storeDataService.bin[index]);
+                    //     }
+                    //     return false;
+                    // }
+                });
+            });
+        };
+        scope.cancelDatabaseBin = function () {
+            scope.showDatabaseBin = !scope.showDatabaseBin;
+            
+            $.each(storeDataService.bin, function (index, value) {
+                if (storeDataService.databaseBin[index].id == scope.thisDatabaseBin.id) {
+                    scope.b = angular.copy(storeDataService.databaseBin[index]);
+                    return false;
+                }
+            });
+            
+        };
+        scope.deleteDatabaseBin = function () {
+            $http.post('/deleteDatabaseBin', scope.b).then(function (response) {
+                var data = response.data;
+                
+                scope.notify(data.status, data.message);
+                
             });
         };
     };
@@ -2113,4 +2201,104 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
             }
         });
     }
+});
+
+app.controller('databaseBinController', function($scope, $http, $filter, storeDataService){
+    'use strict';
+    var asc = true;
+    $scope.areaList = [];
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    
+    $scope.databaseBin = {
+        "date": '',
+            "name": '',
+            "icNo": '',
+            "serialNo": '',
+            "rcDwell": '',
+            "houseNo": '',
+            "tmnKpg": '',
+            "areaCode": '',
+            "status": '',
+            "comment": '',
+            "binSize": '',
+            "address": '',
+            "companyName": '',
+            "acrfSerialNo": '',
+            "itemType": '',
+            "path": ''
+    };
+    
+    $scope.show = angular.copy(storeDataService.show.databaseBin);
+    
+    $http.get('/getAllDatabaseBin').then(function(response){
+        $scope.searchDatabaseBinFilter = '';
+        $scope.databaseBinList = response.data;
+        storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+        $scope.filterDatabaseBinList = [];
+        
+        $scope.searchDatabaseBin = function (bin) {
+            return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+        };
+        
+        $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
+    
+        $scope.totalItems = $scope.filterDatabaseBinList.length;
+    
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterDatabaseBinList, $scope.searchDatabaseBinFilter);
+        };
+    
+        $scope.$watch('searchDatabaseBinFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+    });
+    
+    
+    $scope.addDatabaseBin = function () {
+        $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        console.log($scope.databaseBin);
+        $http.post('/addDatabaseBin', $scope.databaseBin).then(function (response) {
+            var returnedData = response.data;
+            //var newBinID = returnedData.details.binID;
+            
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "New Bin added successfully!"
+                });
+                $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
+                storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+                $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
+                angular.element('#createDatabaseBin').modal('toggle');
+                $scope.totalItems = $scope.filterDatabaseBinList.length;
+            }
+        });
+    }
+    
+    $scope.orderBy = function (property) {
+        $scope.databaseBinList = $filter('orderBy')($scope.databaseBinList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
+    
+//    $scope.editBin = function(){
+//        
+//        $http.post('/editBin', $scope.bin).then(function(response){
+//            var data = response.data;
+//            if(data.status === "success"){
+//                angular.element('body').overhang({
+//                    type: data.status,
+//                    message: data.message
+//                });
+//            }
+//            
+//        });
+//    }
+    
 });
