@@ -11,16 +11,16 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var DB_HOST = '';
-var DB_USER = '';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens2';
 
 users = [];
 connections = [];
 connectedUserList = [];
 
-var SVR_PORT = '';
+var SVR_PORT = '3000';
 var obj = {
     "ID": '',
     "authStatus": ''
@@ -136,6 +136,14 @@ app.get('/edit-report/:reportCode', function (req, res) {
 app.get('/data-visualization', function (req, res) {
     'use strict';
     res.sendFile('pages/data-visualization.html', {root: __dirname});
+});
+app.get('/bin-database', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bin-database.html', {root: __dirname});
+});
+app.get('/bin-inventory', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bin-inventory.html', {root: __dirname});
 });
 var makeID = function(keyword, creationDate) {
     var table, property, header, ID;
