@@ -235,6 +235,26 @@ app.config(function($routeProvider, $locationProvider){
         controller:'editReportController',
         controllerAs:'editReport'
     })
+    .when('/bin-database', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/bin-database');
+            }
+        },
+        templateUrl: '/bin-database',
+        controller: 'databaseBinController',
+        controllerAs:'databaseBin'
+    })
+    .when('/bin-inventory', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/bin-inventory');
+            }
+        },
+        templateUrl: '/bin-inventory',
+        controller: 'inventoryBinController',
+        controllerAs:'inventoryBin'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {
