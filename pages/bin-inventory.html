@@ -37,62 +37,62 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="nb in newMgbList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                            <tr data-ng-repeat="nb in inventoryRecordList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td>
-                                    <span data-ng-show="showNewMgbStock" data-ng-bind="nb.date"></span>
+                                    <span data-ng-show="showNewMgb" data-ng-bind="nb.date"></span>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="nb.120in" data-ng-show="!showNewMgbStock" />
-                                        <span data-ng-show="showNewMgbStock" data-ng-bind="nb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="nb.inNew120" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.inNew120"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="nb.240in" data-ng-show="!showNewMgbStock" />
-                                        <span data-ng-show="showNewMgbStock" data-ng-bind="nb.240in"></span>
+                                        <input type="text" class="form-control" data-ng-model="nb.inNew240" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.inNew240"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="nb.660in" data-ng-show="!showNewMgbStock" />
-                                        <span data-ng-show="showNewMgbStock" data-ng-bind="nb.660in"></span>
+                                        <input type="text" class="form-control" data-ng-model="nb.inNew660" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.inNew660"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="nb.1000in" data-ng-show="!showNewMgbStock" />
-                                        <span data-ng-show="showNewMgbStock" data-ng-bind="nb.1000in"></span>
+                                        <input type="text" class="form-control" data-ng-model="nb.inNew1000" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.inNew1000"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="nb.120out" data-ng-show="!showNewMgbStock" />
-                                        <span data-ng-show="showNewMgbStock" data-ng-bind="nb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="nb.outNew120" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.outNew120"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="nb.240out" data-ng-show="!showNewMgbStock" />
-                                        <span data-ng-show="showNewMgbStock" data-ng-bind="nb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="nb.outNew240" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.outNew240"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="nb.660out" data-ng-show="!showNewMgbStock" />
-                                        <span data-ng-show="showNewMgbStock" data-ng-bind="nb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="nb.outNew660" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.outNew660"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="nb.1000out" data-ng-show="!showNewMgbStock" />
-                                        <span data-ng-show="showNewMgbStock" data-ng-bind="nb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="nb.outNew1000" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.outNew1000"></span>
                                     </div>
                                 </td>
                                 <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showNewMgbStock" data-ng-click="editNewMgbStock(nb.120in, nb.240in, nb.660in, nb.1000in, nb.120out, nb.240out, nb.660out, nb.1000out);"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showNewMgbStock" data-ng-click="saveNewMgbStock();"><i class="fa fa-save"></i></button>
-                                    <button class="btn btn-sm btn-default" data-ng-show="!showNewMgbStock" data-ng-click="cancelNewMgbStock();"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showNewMgb" data-ng-click="editNewMgb(nb.inNew120, nb.inNew240, nb.inNew660, nb.inNew1000, nb.outNew120, nb.outNew240, nb.outNew660, nb.outNew1000);"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showNewMgb" data-ng-click="saveNewMgb();"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showNewMgb" data-ng-click="cancelNewMgb();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -143,62 +143,62 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="rb in reusableMgbList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                            <tr data-ng-repeat="rb in inventoryRecordList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td>
-                                    <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.date"></span>
+                                    <span data-ng-show="showReusableMgb" data-ng-bind="rb.date"></span>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="rb.120in" data-ng-show="!showReusableMgbStock" />
-                                        <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="rb.inReusable120" data-ng-show="!showReusableMgb" />
+                                        <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable120"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="rb.240in" data-ng-show="!showReusableMgbStock" />
-                                        <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.240in"></span>
+                                        <input type="text" class="form-control" data-ng-model="rb.inReusable240" data-ng-show="!showReusableMgb" />
+                                        <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable240"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="rb.660in" data-ng-show="!showReusableMgbStock" />
-                                        <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.660in"></span>
+                                        <input type="text" class="form-control" data-ng-model="rb.inReusable660" data-ng-show="!showReusableMgb" />
+                                        <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable660"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="rb.1000in" data-ng-show="!showReusableMgbStock" />
-                                        <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.1000in"></span>
+                                        <input type="text" class="form-control" data-ng-model="rb.inReusable1000" data-ng-show="!showReusableMgb" />
+                                        <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable1000"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="rb.120out" data-ng-show="!showReusableMgbStock" />
-                                        <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="rb.outReusable120" data-ng-show="!showReusableMgb" />
+                                        <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable120"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="rb.240out" data-ng-show="!showReusableMgbStock" />
-                                        <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="rb.outReusable240" data-ng-show="!showReusableMgb" />
+                                        <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable120"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="rb.660out" data-ng-show="!showReusableMgbStock" />
-                                        <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="rb.outReusable660" data-ng-show="!showReusableMgb" />
+                                        <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable120"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="rb.1000out" data-ng-show="!showReusableMgbStock" />
-                                        <span data-ng-show="showReusableMgbStock" data-ng-bind="rb.120in"></span>
+                                        <input type="text" class="form-control" data-ng-model="rb.outReusable1000" data-ng-show="!showReusableMgb" />
+                                        <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable120"></span>
                                     </div>
                                 </td>
                                 <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showReusableMgbStock" data-ng-click="editReusableMgbStock(rb.120in, rb.240in, rb.660in, rb.1000in, rb.120out, rb.240out, rb.660out, rb.1000out);"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showReusableMgbStock" data-ng-click="saveReusableMgbStock();"><i class="fa fa-save"></i></button>
-                                    <button class="btn btn-sm btn-default" data-ng-show="!showReusableMgbStock" data-ng-click="cancelReusableMgbStock();"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showReusableMgb" data-ng-click="editReusableMgb(rb.inReusable120, rb.inReusable240, rb.inReusable660, rb.inReusable1000, rb.outReusable120, rb.outReusable240, rb.outReusable660, rb.outReusable1000);"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showReusableMgb" data-ng-click="saveReusableMgb();"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showReusableMgb" data-ng-click="cancelReusableMgb();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
                         </tbody>
