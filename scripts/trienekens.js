@@ -2364,22 +2364,21 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
 
 
     
-    $scope.show = angular.copy(storeDataService.show.newMgb);
-    $scope.show = angular.copy(storeDataService.show.reusableMgb);
+    $scope.show = angular.copy(storeDataService.show.inventoryRecord);
     
-    $http.get('/getAllMgb').then(function(response){
+    $http.get('/getAllInventoryRecords').then(function(response){
         $scope.searchInventoryRecordFilter = '';
         $scope.inventoryRecordList = response.data;
-        storeDataService.newMgb = angular.copy($scope.newMgbList);
-        $scope.filterNewMgbList = [];
+        storeDataService.inventoryRecord = angular.copy($scope.inventoryRecord);
+        $scope.filterInventoryRecordList = [];
         
         // $scope.searchDatabaseBin = function (bin) {
         //     return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
         // };
         
-        $scope.filterNewMgbList = angular.copy($scope.newMgbList);
+        $scope.filterInventoryRecordList = angular.copy($scope.inventoryRecordList);
     
-        $scope.totalItems = $scope.filterNewMgbList.length;
+        $scope.totalItems = $scope.filterInventoryRecordList.length;
     
         $scope.getData = function () {
             return $filter('filter')($scope.filterNewMgbList, $scope.searchNewMgbFilter);
@@ -2402,56 +2401,119 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
         //Check if record is first record in Database
         if ($scope.getRecordIndex(date) !== 0) {
 
-            for (i = $scope.getRecordIndex(date); i < $scope.binInventory.length; i++) {
+            for (i = $scope.getRecordIndex(date); i < $scope.inventoryRecordList.length; i++) {
 
                 //Calculate Daily New Bin Balance
-                $scope.binInventory[i].newBalance120 = parseInt($scope.binInventory[i - 1].newBalance120) + parseInt($scope.binInventory[i].inNew120) - parseInt($scope.binInventory[i].outNew120);
-                $scope.binInventory[i].newBalance240 = parseInt($scope.binInventory[i - 1].newBalance240) + parseInt($scope.binInventory[i].inNew240) - parseInt($scope.binInventory[i].outNew240);
-                $scope.binInventory[i].newBalance660 = parseInt($scope.binInventory[i - 1].newBalance660) + parseInt($scope.binInventory[i].inNew660) - parseInt($scope.binInventory[i].outNew660);
-                $scope.binInventory[i].newBalance1000 = parseInt($scope.binInventory[i - 1].newBalance1000) + parseInt($scope.binInventory[i].inNew1000) - parseInt($scope.binInventory[i].outNew1000);
+                $scope.inventoryRecordList[i].newBalance120 = parseInt($scope.inventoryRecordList[i - 1].newBalance120) + parseInt($scope.inventoryRecordList[i].inNew120) - parseInt($scope.inventoryRecordList[i].outNew120);
+                $scope.inventoryRecordList[i].newBalance240 = parseInt($scope.inventoryRecordList[i - 1].newBalance240) + parseInt($scope.inventoryRecordList[i].inNew240) - parseInt($scope.inventoryRecordList[i].outNew240);
+                $scope.inventoryRecordList[i].newBalance660 = parseInt($scope.inventoryRecordList[i - 1].newBalance660) + parseInt($scope.inventoryRecordList[i].inNew660) - parseInt($scope.inventoryRecordList[i].outNew660);
+                $scope.inventoryRecordList[i].newBalance1000 = parseInt($scope.inventoryRecordList[i - 1].newBalance1000) + parseInt($scope.inventoryRecordList[i].inNew1000) - parseInt($scope.inventoryRecordList[i].outNew1000);
 
                 //Calculate Daily Reusable Bin Balance
-                $scope.binInventory[i].reusableBalance120 = parseInt($scope.binInventory[i - 1].reusableBalance120) + parseInt($scope.binInventory[i].inReusable120) - parseInt($scope.binInventory[i].outReusable120);
-                $scope.binInventory[i].reusableBalance240 = parseInt($scope.binInventory[i - 1].reusableBalance240) + parseInt($scope.binInventory[i].inReusable240) - parseInt($scope.binInventory[i].outReusable240);
-                $scope.binInventory[i].reusableBalance660 = parseInt($scope.binInventory[i - 1].reusableBalance660) + parseInt($scope.binInventory[i].inReusable660) - parseInt($scope.binInventory[i].outReusable660);
-                $scope.binInventory[i].reusableBalance1000 = parseInt($scope.binInventory[i - 1].reusableBalance1000) + parseInt($scope.binInventory[i].inReusable1000) - parseInt($scope.binInventory[i].outReusable1000);
+                $scope.inventoryRecordList[i].reusableBalance120 = parseInt($scope.inventoryRecordList[i - 1].reusableBalance120) + parseInt($scope.inventoryRecordList[i].inReusable120) - parseInt($scope.inventoryRecordList[i].outReusable120);
+                $scope.inventoryRecordList[i].reusableBalance240 = parseInt($scope.inventoryRecordList[i - 1].reusableBalance240) + parseInt($scope.inventoryRecordList[i].inReusable240) - parseInt($scope.inventoryRecordList[i].outReusable240);
+                $scope.inventoryRecordList[i].reusableBalance660 = parseInt($scope.inventoryRecordList[i - 1].reusableBalance660) + parseInt($scope.inventoryRecordList[i].inReusable660) - parseInt($scope.inventoryRecordList[i].outReusable660);
+                $scope.inventoryRecordList[i].reusableBalance1000 = parseInt($scope.inventoryRecordList[i - 1].reusableBalance1000) + parseInt($scope.inventoryRecordList[i].inReusable1000) - parseInt($scope.inventoryRecordList[i].outReusable1000);
             }
 
 
         } else {
-            $scope.binInventory[$scope.getRecordIndex(date)].newBalance120 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inNew120) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outNew120);
-            $scope.binInventory[$scope.getRecordIndex(date)].newBalance240 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inNew240) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outNew240);
-            $scope.binInventory[$scope.getRecordIndex(date)].newBalance660 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inNew660) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outNew660);
-            $scope.binInventory[$scope.getRecordIndex(date)].newBalance1000 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inNew1000) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outNew1000);
+            $scope.inventoryRecordList[$scope.getRecordIndex(date)].newBalance120 = parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].inNew120) - parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].outNew120);
+            $scope.inventoryRecordList[$scope.getRecordIndex(date)].newBalance240 = parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].inNew240) - parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].outNew240);
+            $scope.inventoryRecordList[$scope.getRecordIndex(date)].newBalance660 = parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].inNew660) - parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].outNew660);
+            $scope.inventoryRecordList[$scope.getRecordIndex(date)].newBalance1000 = parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].inNew1000) - parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].outNew1000);
 
-            $scope.binInventory[$scope.getRecordIndex(date)].reusableBalance120 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inReusable120) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outReusable120);
-            $scope.binInventory[$scope.getRecordIndex(date)].reusableBalance240 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inReusable240) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outReusable240);
-            $scope.binInventory[$scope.getRecordIndex(date)].reusableBalance660 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inReusable660) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outReusable660);
-            $scope.binInventory[$scope.getRecordIndex(date)].reusableBalance1000 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inReusable1000) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outReusable1000);
+            $scope.inventoryRecordList[$scope.getRecordIndex(date)].reusableBalance120 = parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].inReusable120) - parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].outReusable120);
+            $scope.inventoryRecordList[$scope.getRecordIndex(date)].reusableBalance240 = parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].inReusable240) - parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].outReusable240);
+            $scope.inventoryRecordList[$scope.getRecordIndex(date)].reusableBalance660 = parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].inReusable660) - parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].outReusable660);
+            $scope.inventoryRecordList[$scope.getRecordIndex(date)].reusableBalance1000 = parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].inReusable1000) - parseInt($scope.inventoryRecordList[$scope.getRecordIndex(date)].outReusable1000);
 
-            for (i = $scope.getRecordIndex(date) + 1; i < $scope.binInventory.length; i++) {
+            for (i = $scope.getRecordIndex(date) + 1; i < $scope.inventoryRecordList.length; i++) {
 
                 //Calculate Daily New Bin Balance
-                $scope.binInventory[i].newBalance120 = parseInt($scope.binInventory[i - 1].newBalance120) + parseInt($scope.binInventory[i].inNew120) - parseInt($scope.binInventory[i].outNew120);
-                $scope.binInventory[i].newBalance240 = parseInt($scope.binInventory[i - 1].newBalance240) + parseInt($scope.binInventory[i].inNew240) - parseInt($scope.binInventory[i].outNew240);
-                $scope.binInventory[i].newBalance660 = parseInt($scope.binInventory[i - 1].newBalance660) + parseInt($scope.binInventory[i].inNew660) - parseInt($scope.binInventory[i].outNew660);
-                $scope.binInventory[i].newBalance1000 = parseInt($scope.binInventory[i - 1].newBalance1000) + parseInt($scope.binInventory[i].inNew1000) - parseInt($scope.binInventory[i].outNew1000);
+                $scope.inventoryRecordList[i].newBalance120 = parseInt($scope.inventoryRecordList[i - 1].newBalance120) + parseInt($scope.inventoryRecordList[i].inNew120) - parseInt($scope.inventoryRecordList[i].outNew120);
+                $scope.inventoryRecordList[i].newBalance240 = parseInt($scope.inventoryRecordList[i - 1].newBalance240) + parseInt($scope.inventoryRecordList[i].inNew240) - parseInt($scope.inventoryRecordList[i].outNew240);
+                $scope.inventoryRecordList[i].newBalance660 = parseInt($scope.inventoryRecordList[i - 1].newBalance660) + parseInt($scope.inventoryRecordList[i].inNew660) - parseInt($scope.inventoryRecordList[i].outNew660);
+                $scope.inventoryRecordList[i].newBalance1000 = parseInt($scope.inventoryRecordList[i - 1].newBalance1000) + parseInt($scope.inventoryRecordList[i].inNew1000) - parseInt($scope.inventoryRecordList[i].outNew1000);
 
                 //Calculate Daily Reusable Bin Balance
-                $scope.binInventory[i].reusableBalance120 = parseInt($scope.binInventory[i - 1].reusableBalance120) + parseInt($scope.binInventory[i].inReusable120) - parseInt($scope.binInventory[i].outReusable120);
-                $scope.binInventory[i].reusableBalance240 = parseInt($scope.binInventory[i - 1].reusableBalance240) + parseInt($scope.binInventory[i].inReusable240) - parseInt($scope.binInventory[i].outReusable240);
-                $scope.binInventory[i].reusableBalance660 = parseInt($scope.binInventory[i - 1].reusableBalance660) + parseInt($scope.binInventory[i].inReusable660) - parseInt($scope.binInventory[i].outReusable660);
-                $scope.binInventory[i].reusableBalance1000 = parseInt($scope.binInventory[i - 1].reusableBalance1000) + parseInt($scope.binInventory[i].inReusable1000) - parseInt($scope.binInventory[i].outReusable1000);
+                $scope.inventoryRecordList[i].reusableBalance120 = parseInt($scope.inventoryRecordList[i - 1].reusableBalance120) + parseInt($scope.inventoryRecordList[i].inReusable120) - parseInt($scope.inventoryRecordList[i].outReusable120);
+                $scope.inventoryRecordList[i].reusableBalance240 = parseInt($scope.inventoryRecordList[i - 1].reusableBalance240) + parseInt($scope.inventoryRecordList[i].inReusable240) - parseInt($scope.inventoryRecordList[i].outReusable240);
+                $scope.inventoryRecordList[i].reusableBalance660 = parseInt($scope.inventoryRecordList[i - 1].reusableBalance660) + parseInt($scope.inventoryRecordList[i].inReusable660) - parseInt($scope.inventoryRecordList[i].outReusable660);
+                $scope.inventoryRecordList[i].reusableBalance1000 = parseInt($scope.inventoryRecordList[i - 1].reusableBalance1000) + parseInt($scope.inventoryRecordList[i].inReusable1000) - parseInt($scope.inventoryRecordList[i].outReusable1000);
             }
         }
 
     }
 
-/*Get index of binInventory record based on date*/
+//CALCULATE STOCK
+    $scope.calculateOverallStock = function () {
+        $scope.stock.overall120 = 0;
+        $scope.stock.overall240 = 0;
+        $scope.stock.overall660 = 0;
+        $scope.stock.overall1000 = 0;
+
+        //Calculate Overall Stock
+        $scope.stock.overall120 = $scope.stock.new120 + $scope.stock.reusable120;
+        $scope.stock.overall240 = $scope.stock.new240 + $scope.stock.reusable240;
+        $scope.stock.overall660 = $scope.stock.new660 + $scope.stock.reusable660;
+        $scope.stock.overall1000 = $scope.stock.new1000 + $scope.stock.reusable1000;
+    };
+
+    $scope.calculateReusableStock = function () {
+        $scope.stock.reusable120 = 0;
+        $scope.stock.reusable240 = 0;
+        $scope.stock.reusable660 = 0;
+        $scope.stock.reusable1000 = 0;
+
+        var i = 0;
+        for (i = 0; i < $scope.inventoryRecordList.length; i++) {
+
+            //Calculate Reusable Stock
+            $scope.stock.reusable120 += parseInt($scope.inventoryRecordList[i].inReusable120);
+            $scope.stock.reusable120 -= parseInt($scope.inventoryRecordList[i].outReusable120);
+
+            $scope.stock.reusable240 += parseInt($scope.inventoryRecordList[i].inReusable240);
+            $scope.stock.reusable240 -= parseInt($scope.inventoryRecordList[i].outReusable240);
+
+            $scope.stock.reusable660 += parseInt($scope.inventoryRecordList[i].inReusable660);
+            $scope.stock.reusable660 -= parseInt($scope.inventoryRecordList[i].outReusable660);
+
+            $scope.stock.reusable1000 += parseInt($scope.inventoryRecordList[i].inReusable1000);
+            $scope.stock.reusable1000 -= parseInt($scope.inventoryRecordList[i].outReusable1000);
+        }
+    };
+
+    $scope.calculateNewStock = function () {
+        $scope.stock.new120 = 0;
+        $scope.stock.new240 = 0;
+        $scope.stock.new660 = 0;
+        $scope.stock.new1000 = 0;
+
+        //Calculate new 120L Stock
+        var i = 0;
+        for (i = 0; i < $scope.inventoryRecordList.length; i++) {
+
+            //Calculate New Stock
+            $scope.stock.new120 += parseInt($scope.inventoryRecordList[i].inNew120);
+            $scope.stock.new120 -= parseInt($scope.inventoryRecordList[i].outNew120);
+
+            $scope.stock.new240 += parseInt($scope.inventoryRecordList[i].inNew240);
+            $scope.stock.new240 -= parseInt($scope.inventoryRecordList[i].outNew240);
+
+            $scope.stock.new660 += parseInt($scope.inventoryRecordList[i].inNew660);
+            $scope.stock.new660 -= parseInt($scope.inventoryRecordList[i].outNew660);
+
+            $scope.stock.new1000 += parseInt($scope.inventoryRecordList[i].inNew1000);
+            $scope.stock.new1000 -= parseInt($scope.inventoryRecordList[i].outNew1000);
+        }
+    };
+
+/*Get index of inventoryRecordList record based on date*/
 $scope.getRecordIndex = function (date) {
     var i = 0;
-    for (i = 0; i < $scope.binInventory.length; i++) {
-        if ($scope.binInventory[i].date == date) {
+    for (i = 0; i < $scope.inventoryRecordList.length; i++) {
+        if ($scope.inventoryRecordList[i].date == date) {
             return i;
         }
     }
