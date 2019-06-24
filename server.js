@@ -1,7 +1,7 @@
 /*jslint node:true*/
 var express = require('express');
 var sanitizer = require('sanitizer');
-var bcrypt = require('bcryptjs');
+var bcrypt = require('bcrypt');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
@@ -38,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'scripts')));
 app.use(express.static(path.join(__dirname, 'pages')));
 app.use(express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static(path.join(__dirname, 'sounds')));
 
 //app.route('/').get(function (req, res) {
 //    'use strict';
@@ -794,6 +795,64 @@ app.post('/addReport',function(req,res){
         });
     }, 100);
 }); // Complete
+
+app.post('/editReport',function(req,res){
+    'use strict';
+    
+    var sql = "UPDATE tblreport SET reportCollectionDate = '" + req.body.date + "', operationTimeStart = '" + req.body.startTime + "', operationTimeEnd = '" + req.body.endTime + "', garbageAmount = '" + req.body.ton + "', iFleetImg = '"+ req.body.ifleet + "', lng = '" + req.body.lng + "', lat = '" + req.body.lat + "', reportStatus = '" + req.body.status + "', truckID = '" + req.body.truckID + "', driverID = '" + req.body.driverID + "', remark = '" + req.body.remark + "' WHERE reportID = '" + req.body.id + "'";
+    
+    var i = 0, j = 0;
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            res.json({"status": "error", "message": "Something wrong!"});
+            throw err;
+        }
+
+        if (Object.keys(req.body.marker).length > 0) {
+            var dltCircleSQL = "DELETE FROM tblmapcircle WHERE reportID = '" + req.body.id + "'";
+            
+            db.query(dltCircleSQL, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+            });           
+            
+            
+            for (i = 0; i < Object.keys(req.body.marker).length; i++) {
+                var circleSQL = "INSERT INTO tblmapcircle (radius, lng, lat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + req.body.id + "')";
+
+                db.query(circleSQL, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                });
+            }
+        }
+        if (Object.keys(req.body.rectangle).length > 0) {
+            
+            var dltRectSQL = "DELETE FROM tblmaprect WHERE reportID = '" + req.body.id + "'";
+            
+            db.query(dltRectSQL, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+            }); 
+            
+            for (j = 0; j < Object.keys(req.body.rectangle).length; j++) {
+                var rectSQL = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].swLng + "', '" + req.body.id + "')";
+
+                db.query(rectSQL, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                });
+            }
+        }        
+        res.json({"status": "success", "message": "report edited!"});
+    });
+});
+
 app.post('/getReport', function(req, res){
     'use strict';
     console.log(req.body);
@@ -868,7 +927,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function(req, res){
     'use strict';
     
-    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, reportStatus, garbageAmount, remark FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID";
+    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, reportStatus, garbageAmount, remark FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID ORDER BY reportCollectionDate DESC";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -1004,8 +1063,8 @@ app.get('/getReportIncompleteCount',function(req,res){
     });
 
 });
-/* Emitter Registered */
 
+/* Emitter Registered */
 // Create Database Tables
 emitter.on('createTable', function () {
     'use strict';
@@ -1143,7 +1202,7 @@ var db = mysql.createConnection({
     password: DB_PASS
 });
 
-//// Connect
+// Connect
 db.connect(function (err) {
     'use strict';
     if (err) {
@@ -1208,6 +1267,7 @@ Array.prototype.pushIfNotExist = function(element, comparer) {
 };
 //------------------------------------------------------------------------------------------
 
+var roomManager = "manager";
 
 io.sockets.on('connection', function(socket) {
     connections.push(socket);
@@ -1227,6 +1287,29 @@ io.sockets.on('connection', function(socket) {
         });
         console.log(connectedUserList);
     });
+    
+    socket.on('room', function (room) {
+        socket.join(room);
+    });
+    
+    socket.on('make report', function (data) {
+        var sql = "SELECT staffName AS name, staffPic AS avatar FROM tblstaff WHERE staffID = '" + data.owner + "' LIMIT 0, 1";
+        
+        db.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            if (result[0].avatar == "") {
+                result[0].avatar = "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png";
+            }
+            io.sockets.in(roomManager).emit('receive report notification', {
+                id: data.reportID,
+                name: result[0].name,
+                avatar: result[0].avatar
+            });
+        });
+    });
+    
     
     //Send Message
     socket.on('send message', function(data) {

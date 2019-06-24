@@ -5,27 +5,6 @@
         <title>Trienekens Automated Reporting and Analytics System</title>
         <link rel="stylesheet" type="text/css" href="/bootstrap-4.0.0/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="/trienekens.css" />
-        <script>
-            function login() {
-                $username = $('input[name=txtusername]');
-                $password = $('input[name=txtpassword]');
-                
-                $.ajax({
-                    method: 'POST',
-                    url: '/login',
-                    contentType: 'application/json',
-                    data: JSON.stringify({"username": $username.val(), "password": $password.val()}),
-                    success: function (response) {
-                        console.log(response);
-                        if (response.status == "valid") {
-                            sessionStorage['position'] = response.details.staffPosition;
-                            sessionStorage['owner'] = response.details.staffID;
-                            window.location.href = '/pages/';
-                        }
-                    }
-                });
-            }
-        </script>
     </head>
     <body>
         <div class="container">
@@ -93,5 +72,34 @@
             </div>
         </div>
         <script src="/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+        <script>
+            function login() {
+                $username = $('input[name=txtusername]');
+                $password = $('input[name=txtpassword]');
+                
+                $.ajax({
+                    method: 'POST',
+                    url: '/login',
+                    contentType: 'application/json',
+                    data: JSON.stringify({"username": $username.val(), "password": $password.val()}),
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status == "valid") {
+                            sessionStorage['position'] = response.details.staffPosition;
+                            sessionStorage['owner'] = response.details.staffID;
+                            window.location.href = '/pages/';
+                        }
+                    }
+                });
+            }
+            
+            $(document).ready(function (e) {
+                $('input[name=txtusername], input[name=txtpassword]').on('keyup', function(e) {
+                    if (e.keyCode === 13) {
+                        login();
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

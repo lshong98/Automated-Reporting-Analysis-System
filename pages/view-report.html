@@ -8,7 +8,7 @@
     </div>
 </div>
 <div id="nodeToRenderAsPDF" style="padding: 20px;">
-    <div class="row" id="htmlToPdf">
+    <div class="row">
         <div class="col-md-12">
             <!--            <table class="table table-bordered">-->
             <table border="1">
@@ -55,11 +55,11 @@
     </div>
     <br /><br />
     <div class="row">
-        <div class="col-md-6" style="width: 50%">
-            <img id="myImg" src="{{thisReport.ifleet}}" style="width:650px; height: 650px;" />
+        <div class="col-md-6">
+            <img id="myImg" style="min-width: 100%;" src="{{thisReport.ifleet}}" />
         </div>
-        <div class="col-md-6" style="width: 50%" data-html2canvas-ignore="true">
-            <div id="googleMap" style="min-height: 650px; min-width: 650px;"></div>
+        <div class="col-md-6">
+            <div id="googleMap" style="min-height: 500px"></div>
         </div>
     </div>
 </div>
@@ -77,15 +77,33 @@
     //    }
     // Variant
     // This one lets you improve the PDF sharpness by scaling up the HTML node tree to render as an image before getting pasted on the PDF.
-    function exportPdf(quality = 4) {
-        const filename = 'ThisIsYourPDFFilename.pdf';
-
+    function exportPdf(quality = 10) {
+        var filename = 'ThisIsYourPDFFilename.pdf';
+        var transform = $("#googleMap .gm-style>div:first>div:first>div:last>div").css("transform");
+        var comp = transform.split(",");
+        var mapleft = parseFloat(comp[4]);
+        var maptop = parseFloat(comp[5]);
+        $("#googleMap .gm-style>div:first>div:first>div:last>div").css({
+            "transform": "none",
+            "left": mapleft,
+            "top": maptop
+        });
+        
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
-            scale: quality
-        }).then(canvas => {
-            let pdf = new jsPDF('l', 'mm', 'a4');
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 298, 211);
-            pdf.save(filename);
+            useCORS: true,
+            scale: quality,
+            onrendered: function(canvas) {
+                $("#googleMap .gm-style>div:first>div:first>div:last>div").css({
+                    "transform": transform,
+                    "left": 0,
+                    "top": 0
+                });
+                
+                var img = canvas.toDataURL("image/png", 1.0);
+                var pdf = new jsPDF('l', 'mm', 'a3');
+                pdf.addImage(img, 'PNG', 45, 45, 350, 200);
+                pdf.save(filename);
+            }
         });
     }
 

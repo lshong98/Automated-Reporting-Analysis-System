@@ -3,7 +3,7 @@
 
 <head>
     <title>Automated Analysis and Reporting System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/font-awesome-5.7.2/fontawesome.min.css" />
     <link rel="stylesheet" type="text/css" href="/bootstrap-4.0.0/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/bootstrap-select-1.13.7/bootstrap-select.min.css" />
@@ -14,6 +14,7 @@
     <script src="/multi-level-menu/modernizr-custom.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="/notifications.css" />
 </head>
 
 <body>
@@ -34,14 +35,10 @@
                                     <li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>
                                     <li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>
                                     <li class="menu__item" data-ng-show="show.account.view == 'A'" role="menuitem"><a class="menu__link" href="#/account-management"><i class="fa fa-users"></i> Account Management</a></li>
-
                                     <li class="menu__item" data-ng-show="navigation.name == 'Manager' || navigation.name == 'ADMINISTRATOR'" role="menuitem"><a class="menu__link" href="#/role-management"><i class="fa fa-lock"></i> Role Management</a></li>
-
-                                    <!--                                        <li class="menu__item" role="menuitem"><a class="menu__link" href="#/driver-management"><i class="fa fa-car"></i> Driver Management</a></li>-->
                                     <li class="menu__item" data-ng-show="show.zone.view == 'A'" role="menuitem"><a class="menu__link" href="#/zone-management"><i class="fa fa-vector-square"></i> Zone Management</a></li>
                                     <li class="menu__item" data-ng-show="show.area.view == 'A'" role="menuitem"><a class="menu__link" href="#/area-management"><i class="fa fa-map"></i> Area Management</a></li>
                                     <li class="menu__item" data-ng-show="show.truck.view == 'A'" role="menuitem"><a class="menu__link" href="#/truck-management"><i class="fa fa-truck"></i> Truck Management</a></li>
-                                    
                                     <li class="menu__item" data-ng-show="show.bin.view == 'A'" role="menuitem"><a class="menu__link" href="#/bin-management"><i class="fa fa-dumpster"></i> Bin Center Management</a></li>
                                     <li class="menu__item" role="menuitem"><a class="menu__link" href="#/reporting"><i class="fa fa-file"></i> Reporting</a></li>
                                     <li class="menu__item" role="menuitem"><a class="menu__link" href="#/data-visualization"><i class="fa fa-chart-area"></i> Data Analysis &amp; Visualize</a></li>
@@ -141,6 +138,7 @@
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="/angular-1.6.9/angular.min.js"></script>
+    <script src="/notifications.js"></script>
     <script src="/angular-1.6.9/angular-route.min.js"></script>
     <script src="/bootstrap-4.0.0/ui-bootstrap-tpls-3.0.6.min.js"></script>
     <script src="/multi-level-menu/classie.js"></script>
