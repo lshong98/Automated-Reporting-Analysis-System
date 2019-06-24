@@ -172,8 +172,8 @@ var makeID = function(keyword, creationDate) {
             header = "ARE";
             break;
         case "bin":
-            table = "tblbin";
-            property = "binID";
+            table = "tblbincenter";
+            property = "binCenterID";
             header = "BIN";
             break;
         case "role":
@@ -496,18 +496,6 @@ app.get('/getAllTruck', function(req,res){
     });
 }); // Complete
 
-app.post('/getGoogleLocation', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblarea.areaName AS area, tblzone.zoneName AS zone FROM tblarea INNER JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID = '" + req.body.areaCode + "' LIMIT 0, 1";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-
 // Zone Management
 app.post('/addZone', function (req, res) {
     'use strict';
@@ -632,7 +620,7 @@ app.post('/thisArea', function (req, res) {
 app.post('/addCollection', function (req, res) {
     'use strict';
     
-    var sql = "INSERT INTO area_collection (areaID, areaAddress, acStatus) VALUE ('" + req.body.area + "', '" + req.body.address + "', 'A')";
+    var sql = "INSERT INTO area_collection (areaID, areaAddress, areaCollStatus) VALUE ('" + req.body.area + "', '" + req.body.address + "', 'A')";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -643,7 +631,7 @@ app.post('/addCollection', function (req, res) {
 app.post('/getCollection', function (req, res){
     'use strict';
 
-    var sql = "SELECT acID AS id, areaAddress AS address FROM area_collection WHERE acStatus = 'A' AND areaID = '" + req.body.id + "'";
+    var sql = "SELECT acID AS id, areaAddress AS address FROM area_collection WHERE areaCollStatus = 'A' AND areaID = '" + req.body.id + "'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -655,7 +643,7 @@ app.post('/getCollection', function (req, res){
 app.post('/deleteCollection', function (req, res) {
     'user strict';
     
-    var sql = "UPDATE area_collection SET acStatus = 'I' WHERE acID = '" + req.body.id + "'";
+    var sql = "UPDATE area_collection SET areaCollStatus = 'I' WHERE acID = '" + req.body.id + "'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -675,12 +663,12 @@ app.post('/updateCollection', function (req, res) {
     });
 });
 
-// Bin Management
-app.post('/addBin', function (req, res) {
+// Bin Center Management
+app.post('/addBinCenter', function (req, res) {
     'use strict';
     makeID("bin", req.body.creationDate);
     setTimeout(function () {
-        var sql = "INSERT INTO tblbin (binID, areaID, binName, binLocation, binStatus, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.area + "' , '" + req.body.name + "', '" + req.body.location + "', 'A', '" + req.body.creationDate + "')";
+        var sql = "INSERT INTO tblbincenter (binCenterID, areaID, binCenterName, binCenterLocation, binCenterStatus, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.area + "' , '" + req.body.name + "', '" + req.body.location + "', 'A', '" + req.body.creationDate + "')";
         db.query(sql, function(err, result) {
             if (err) {
                 throw err;
@@ -689,11 +677,11 @@ app.post('/addBin', function (req, res) {
         });
     }, 100);
 }); // Complete
-app.post('/editBin', function (req, res) {
+app.post('/editBinCenter', function (req, res) {
     'use strict';
     
     req.body.status = req.body.status == "ACTIVE" ? 'A' : 'I';
-    var sql = "UPDATE tblbin SET binName = '" + req.body.name + "', binLocation = '" + req.body.location + "', areaID = '" + req.body.area + "', binStatus = '" + req.body.status + "' WHERE binID = '" + req.body.id + "'";
+    var sql = "UPDATE tblbincenter SET binCenterName = '" + req.body.name + "', binCenterLocation = '" + req.body.location + "', areaID = '" + req.body.area + "', binCenterStatus = '" + req.body.status + "' WHERE binCenterID = '" + req.body.id + "'";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -701,10 +689,10 @@ app.post('/editBin', function (req, res) {
         res.json({"status": "success", "message": "Successfully updated!"});
     });
 }); // Complete
-app.get('/getAllBin', function(req,res){
+app.get('/getAllBinCenter', function(req,res){
     'use strict';
     
-    var sql = "SELECT binID AS id, areaID AS area, binName as name, binLocation AS location, (CASE WHEN binStatus = 'A' THEN 'ACTIVE' WHEN binStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblbin";
+    var sql = "SELECT binCenterID AS id, areaID AS area, binCenterName as name, binCenterLocation AS location, (CASE WHEN binCenterStatus = 'A' THEN 'ACTIVE' WHEN binCenterStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblbincenter";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -803,7 +791,6 @@ app.post('/addReport',function(req,res){
         });
     }, 100);
 }); // Complete
-
 app.post('/editReport',function(req,res){
     'use strict';
     
@@ -860,7 +847,6 @@ app.post('/editReport',function(req,res){
         res.json({"status": "success", "message": "report edited!"});
     });
 });
-
 app.post('/getReport', function(req, res){
     'use strict';
     console.log(req.body);
@@ -872,7 +858,6 @@ app.post('/getReport', function(req, res){
         res.json(result);
     });
 }); // Wait for area_collection
-
 app.post('/getReportingAreaList', function (req, res) {
     'use strict';
     
@@ -885,11 +870,10 @@ app.post('/getReportingAreaList', function (req, res) {
         res.json(result);
     });
 }); // Complete
-
 app.post('/getReportBin', function(req,res){
     'use strict';
     
-    var sql = "SELECT binName AS name FROM tblbin WHERE areaID = '" + req.body.areaID + "'";
+    var sql = "SELECT binCenterName AS name FROM tblbincenter WHERE areaID = '" + req.body.areaID + "'";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -944,7 +928,17 @@ app.get('/getReportList', function(req, res){
         res.json(result);
     });
 }); // Complete
-
+app.post('/getGoogleLocation', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblarea.areaName AS area, tblzone.zoneName AS zone FROM tblarea INNER JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID = '" + req.body.areaCode + "' LIMIT 0, 1";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
 // Visualization Management
 app.post('/getDataVisualization', function(req, res){
     'use strict';
@@ -970,7 +964,6 @@ app.post('/getDataVisualizationGroupByDate', function(req, res){
         res.json(result);
     });
 });
-//"SELECT reportCollectionDate, SUM(operationTimeStart), SUM(operationTimeEnd), SUM(garbageAmount) FROM tblreport WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' GROUP BY reportCollectionDate ORDER BY r.reportCollectionDate";
 
 // Driver
 app.get('/getDriverList', function(req, res) {
@@ -984,6 +977,7 @@ app.get('/getDriverList', function(req, res) {
     });
 }); // Complete
 
+//get count
 app.get('/getZoneCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblzone";
      db.query(sql, function (err, result) {
@@ -994,7 +988,6 @@ app.get('/getZoneCount',function(req,res){
     });
 
 });
-
 app.get('/getAreaCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblarea";
      db.query(sql, function (err, result) {
@@ -1005,7 +998,6 @@ app.get('/getAreaCount',function(req,res){
     });
 
 });
-
 app.get('/getAcrCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblacr";
      db.query(sql, function (err, result) {
@@ -1016,9 +1008,8 @@ app.get('/getAcrCount',function(req,res){
     });
 
 });
-
 app.get('/getBinCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'count' FROM tblbin";
+    var sql="SELECT COUNT(*) AS 'count' FROM tblbincenter";
      db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -1027,7 +1018,6 @@ app.get('/getBinCount',function(req,res){
     });
 
 });
-
 app.get('/getTruckCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tbltruck";
      db.query(sql, function (err, result) {
@@ -1038,7 +1028,6 @@ app.get('/getTruckCount',function(req,res){
     });
 
 });
-
 app.get('/getUserCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblstaff";
      db.query(sql, function (err, result) {
@@ -1049,7 +1038,6 @@ app.get('/getUserCount',function(req,res){
     });
 
 });
-
 app.get('/getReportCompleteCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'completeCount' FROM tblreport WHERE reportStatus = 'C'";
      db.query(sql, function (err, result) {
@@ -1060,7 +1048,6 @@ app.get('/getReportCompleteCount',function(req,res){
     });
 
 });
-
 app.get('/getReportIncompleteCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'incompleteCount' FROM tblreport WHERE reportStatus = 'I'";
      db.query(sql, function (err, result) {
