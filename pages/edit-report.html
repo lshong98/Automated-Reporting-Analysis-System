@@ -79,7 +79,11 @@
     </div>
 </div>
 <div class="form-group row">
-    <div class="col-md-12">
+    <div class="col-md-6">
+        <input type="file" data-ng-model="editField.ifleet" accept="image/*" app-filereader>
+    </div>
+    
+    <div class="col-md-6">
         <button class="btn btn-primary btnShape" data-shape="circle">Circle</button>
         <button class="btn btn-warning btnShape" data-shape="rectangle">Rectangle</button>
     </div>
@@ -123,16 +127,18 @@ textarea {
             <div id="googleMap" style="min-height: 650px; min-width: 650px;"></div>
         </div>
 </div>
+<!--
 <div class="row">
    <div class="col-md-6">
-        <!--<div class="target"></div>-->
+        <div class="target"></div>
         <input type="file" data-ng-model="editField.ifleet" accept="image/*" app-filereader>
     </div>
 </div>
+-->
 
 <div class="row">
     <div class="col-md-12">
         <!--<button class="btn btn-primary" data-toggle="modal" data-target="#previewReport">Preview</button>-->
-        <button class="btn btn-primary submit" data-ng-click="addReport()">Submit</button>
+        <button class="btn btn-primary submit" data-ng-click="edit()">Edit</button>
     </div>
 </div>

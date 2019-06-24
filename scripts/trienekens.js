@@ -13,6 +13,20 @@ socket.on('connect', function () {
         "user": window.sessionStorage.getItem('owner'),
         "position": window.sessionStorage.getItem('position')
     });
+    
+    if (window.sessionStorage.getItem('position') == "Manager") {
+        socket.emit('room', "manager");
+    }
+    
+    socket.on('receive report notification', function (data) {
+        Lobibox.notify('info', {
+            pauseDelayOnHover: true,
+            continueDelayOnInactiveTab: false,
+            title: 'Daily Report',
+            msg: data.name + ' have submitted a new report ' + data.id,
+            img: data.avatar
+        });
+    });
 });
 
 /*
@@ -106,6 +120,7 @@ app.service('storeDataService', function () {
             "id": '',
             "address": ''
         },
+        
         "databaseBin": {
             "date": '',
             "name": '',
@@ -124,6 +139,7 @@ app.service('storeDataService', function () {
             "itemType": '',
             "path": ''
         },
+        
         "show": {
             "account": {
                 "create": false,
@@ -207,6 +223,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.collection = {
             "id": ''
         };
+        
         scope.thisDatabaseBin = {
             "date": '',
             "name": '',
@@ -353,8 +370,6 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             
         };
         
-        
-
         scope.editCollection = function (id, address) {
             scope.showCollection = !scope.showCollection;
             scope.thisCollection = { "id": id, "address": address };
@@ -404,8 +419,6 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 }
             });
         };
-
-
         //BIN INVENTORY MODULE EDITABLE TABLES
         scope.editDatabaseBin = function (date, name, icNo, serialNo, rcDwell, houseNo, tmnKpg, areaCode, status, comment, binSize, address, companyName, acrfSerialNo, itemType, path) {
             scope.showDatabaseBin = !scope.showDatabaseBin;
@@ -822,356 +835,23 @@ app.controller('managerController', function ($scope, $http, $filter) {
                 data: getElementList("timeSeries", $scope.visualObject)
             }]
         });
-    }
-
-//    function synchronizePieSeries(event, slice) {
-//        //console.log($(pieChart.series[1]));
-//        $(pieChart.series[1].data).each(function (i, e) {
-//            if (slice.name === e.name) {
-//                slice.visible ? e.graphic.hide() : e.graphic.show();
-//            }
-//        });
-//    }
-
-//    var pieChart = new Highcharts.Chart({
-//        chart: {
-//            renderTo: 'pie-chart',
-//            plotBackgroundColor: null,
-//            plotBorderWidth: 1,
-//            plotShadow: false,
-//            type: 'pie',
-//            events: {
-//                load: function () {},
-//                redraw: function () {}
-//            }
-//        },
-//        title: '',
-//        labels: {
-//            items: [{
-//                html: 'QAA 1234',
-//                style: {
-//                    left: '40',
-//                    top: '130'
-//                }
-//            }, {
-//                html: 'QAA 2345',
-//                style: {
-//                    left: '190',
-//                    top: '130'
-//                }
-//            }, {
-//                html: 'QAA 2345',
-//                style: {
-//                    left: '340',
-//                    top: '130'
-//                }
-//            }, {
-//                html: 'QAA 2345',
-//                style: {
-//                    left: '490',
-//                    top: '130'
-//                }
-//            }, {
-//                html: 'QAA 2345',
-//                style: {
-//                    left: '640',
-//                    top: '130'
-//                }
-//            }]
-//        },
-//        legend: {
-//            enabled: true
-//        },
-//        tooltip: {
-//            pointFormat: '{data.name}: <b>{point.percentage:.1f}%</b>'
-//        },
-//        plotOptions: {
-//            pie: {
-//                allowPointSelect: false,
-//                innerSize: '70%',
-//                cursor: 'pointer',
-//                column: {
-//                    colorByPoint: true
-//                },
-//                dataLabels: false
-//            }
-//        },
-//        floating: true,
-//        series: [{
-//            type: 'pie',
-//            name: 'Browser share',
-//            center: [50, 50],
-//            size: 100,
-//            showInLegend: true,
-//            title: {
-//                align: 'center',
-//                text: '<b>91.76%</b>',
-//                verticalAlign: 'middle',
-//                y: -10
-//            },
-//            data: [
-//                {
-//                    name: 'Used space',
-//                    y: 91.76,
-//                    labels: 'ok',
-//                    color: '#C10003'
-//                }, {
-//                    name: 'Free space',
-//                    y: 8.24,
-//                    color: 'gray'
-//                }
-//            ]
-//        }, {
-//            type: 'pie',
-//            name: 'Browser share',
-//            center: [200, 50],
-//            size: 100,
-//            title: {
-//                align: 'center',
-//                text: '<b>10%</b>',
-//                verticalAlign: 'middle',
-//                y: -10
-//            },
-//            dataLabels: {
-//                enabled: false
-//            },
-//            data: [
-//                {
-//                    name: 'Used space',
-//                    y: 10,
-//                    color: '#C10003'
-//                }, {
-//                    name: 'Free space',
-//                    y: 90,
-//                    color: 'gray'
-//                }
-//            ]
-//        }, {
-//            type: 'pie',
-//            name: 'Browser share',
-//            center: [350, 50],
-//            size: 100,
-//            title: {
-//                align: 'center',
-//                text: '<b>30%</b>',
-//                verticalAlign: 'middle',
-//                y: -10
-//            },
-//            dataLabels: {
-//                enabled: false
-//            },
-//            data: [
-//                {
-//                    name: 'Used space',
-//                    y: 30,
-//                    color: '#C10003'
-//                }, {
-//                    name: 'Free space',
-//                    y: 70,
-//                    color: 'gray'
-//                }
-//            ]
-//        }, {
-//            type: 'pie',
-//            name: 'Browser share',
-//            center: [500, 50],
-//            size: 100,
-//            title: {
-//                align: 'center',
-//                text: '<b>55%</b>',
-//                verticalAlign: 'middle',
-//                y: -10
-//            },
-//            dataLabels: {
-//                enabled: false
-//            },
-//            data: [
-//                {
-//                    name: 'Used space',
-//                    y: 55,
-//                    color: '#C10003'
-//                }, {
-//                    name: 'Free space',
-//                    y: 45,
-//                    color: 'gray'
-//                }
-//            ]
-//        }, {
-//            type: 'pie',
-//            name: 'Browser share',
-//            center: [650, 50],
-//            size: 100,
-//            title: {
-//                align: 'center',
-//                text: '<b>85%</b>',
-//                verticalAlign: 'middle',
-//                y: -10
-//            },
-//            dataLabels: {
-//                enabled: false
-//            },
-//            data: [
-//                {
-//                    name: 'Used space',
-//                    y: 85,
-//                    color: '#C10003'
-//                }, {
-//                    name: 'Free space',
-//                    y: 15,
-//                    color: 'gray'
-//                }
-//            ]
-//        }]
-//    }, function (chart) {
-//        $(chart.series[0].data).each(function (i, e) {
-//            e.legendItem.on('click', function (event) {
-//                var legendItem = e.name;
-//
-//                event.stopPropagation();
-//
-//                $(chart.series).each(function (j, f) {
-//                    $(this.data).each(function (k, z) {
-//                        if (z.name == legendItem) {
-//                            if (z.visible) {
-//                                z.setVisible(false);
-//                            } else {
-//                                z.setVisible(true);
-//                            }
-//                        }
-//                    });
-//                });
-//            });
-//        });
-//    });
-//
-//    var lineChart = new Highcharts.Chart({
-//        chart: {
-//            renderTo: 'line-chart'
-//        },
-//        title: {
-//            text: 'Solar Employment Growth by Sector, 2010-2016'
-//        },
-//        subtitle: {
-//            text: 'Source: thesolarfoundation.com'
-//        },
-//        yAxis: {
-//            title: {
-//                text: 'Number of Employees'
-//            }
-//        },
-//        legend: {
-//            layout: 'vertical',
-//            align: 'right',
-//            verticalAlign: 'middle'
-//        },
-//        plotOptions: {
-//            series: {
-//                label: {
-//                    connectorAllowed: false
-//                },
-//                pointStart: 2010
-//            }
-//        },
-//        series: [{
-//            name: 'Installation',
-//            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-//        }, {
-//            name: 'Manufacturing',
-//            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-//        }, {
-//            name: 'Sales & Distribution',
-//            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-//        }, {
-//            name: 'Project Development',
-//            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-//        }, {
-//            name: 'Other',
-//            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-//        }],
-//        responsive: {
-//            rules: [{
-//                condition: {
-//                    maxWidth: 1000
-//                },
-//                chartOptions: {
-//                    legend: {
-//                        layout: 'horizontal',
-//                        align: 'center',
-//                        verticalAlign: 'bottom'
-//                    }
-//                }
-//            }]
-//        }
-//    });
-//
-//    var barChart = new Highcharts.Chart({
-//        chart: {
-//            type: 'bar',
-//            renderTo: 'bar-chart'
-//        },
-//        title: {
-//            text: 'Population pyramid for Germany, 2018'
-//        },
-//        subtitle: {
-//            text: 'Source: <a href="http://populationpyramid.net/germany/2018/">Population Pyramids of the World from 1950 to 2100</a>'
-//        },
-//        xAxis: [{
-//            categories: categories,
-//            reversed: false,
-//            labels: {
-//                step: 1
-//            }
-//        }, { // mirror axis on right side
-//            opposite: true,
-//            reversed: false,
-//            categories: categories,
-//            linkedTo: 0,
-//            labels: {
-//                step: 1
-//            }
-//        }],
-//        yAxis: {
-//            title: {
-//                text: null
-//            },
-//            labels: {
-//                formatter: function () {
-//                    return Math.abs(this.value) + '%';
-//                }
-//            }
-//        },
-//        plotOptions: {
-//            series: {
-//                stacking: 'normal'
-//            }
-//        },
-//        tooltip: {
-//            formatter: function () {
-//                return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
-//                    'Population: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
-//            }
-//        },
-//        series: [{
-//            name: 'Male',
-//            data: [
-//                -2.2, -2.1, -2.2, -2.4,
-//                -2.7, -3.0, -3.3, -3.2,
-//                -2.9, -3.5, -4.4, -4.1,
-//                -3.4, -2.7, -2.3, -2.2,
-//                -1.6, -0.6, -0.3, -0.0,
-//                -0.0
-//            ]
-//        }, {
-//            name: 'Female',
-//            data: [
-//                2.1, 2.0, 2.1, 2.3, 2.6,
-//                2.9, 3.2, 3.1, 2.9, 3.4,
-//                4.3, 4.0, 3.5, 2.9, 2.5,
-//                2.7, 2.2, 1.1, 0.6, 0.2,
-//                0.0
-//            ]
-//        }]
-//    });
+ }
+    
+    var $googleMap, visualizeMap, map;
+    
+    $googleMap = document.getElementById('googleMap');
+    visualizeMap = {
+        center: new google.maps.LatLng(1.5503052, 110.3394602),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false,
+        panControl: false,
+        zoomControl: false,
+        streetViewControl: false,
+        disableDefaultUI: true,
+        editable: false,
+        zoom: 13
+    };
+    map = new google.maps.Map($googleMap, visualizeMap);
 
 });
 
@@ -2202,6 +1882,7 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
         });
     }
 });
+
 
 app.controller('databaseBinController', function($scope, $http, $filter, storeDataService){
     'use strict';
