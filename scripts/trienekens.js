@@ -1894,21 +1894,21 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     
     $scope.databaseBin = {
         "date": '',
-            "name": '',
-            "icNo": '',
-            "serialNo": '',
-            "rcDwell": '',
-            "houseNo": '',
-            "tmnKpg": '',
-            "areaCode": '',
-            "status": '',
-            "comment": '',
-            "binSize": '',
-            "address": '',
-            "companyName": '',
-            "acrfSerialNo": '',
-            "itemType": '',
-            "path": ''
+        "name": '',
+        "icNo": '',
+        "serialNo": '',
+        "rcDwell": '',
+        "houseNo": '',
+        "tmnKpg": '',
+        "areaCode": '',
+        "status": '',
+        "comment": '',
+        "binSize": '',
+        "address": '',
+        "companyName": '',
+        "acrfSerialNo": '',
+        "itemType": '',
+        "path": ''
     };
     
     $scope.show = angular.copy(storeDataService.show.databaseBin);
@@ -1967,6 +1967,178 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         $scope.databaseBinList = $filter('orderBy')($scope.databaseBinList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
+    
+//    $scope.editBin = function(){
+//        
+//        $http.post('/editBin', $scope.bin).then(function(response){
+//            var data = response.data;
+//            if(data.status === "success"){
+//                angular.element('body').overhang({
+//                    type: data.status,
+//                    message: data.message
+//                });
+//            }
+//            
+//        });
+//    }
+    
+});
+
+app.controller('inventoryBinController', function($scope, $http, $filter, storeDataService){
+    'use strict';
+    var asc = true;
+    $scope.areaList = [];
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+
+    $scope.stock = $scope.stock || {
+        new120: 0,
+        new240: 0,
+        new660: 0,
+        new1000: 0,
+        reusable120: 0,
+        reusable240: 0,
+        reusable660: 0,
+        reusable1000: 0,
+        overall120: 0,
+        overall240: 0,
+        overall660: 0,
+        overall1000: 0
+    };
+    
+    $scope.inventoryRecord = {
+        "date": '',
+        "doNo": '',
+
+        "inNew120": 0,
+        "inNew240": 0,
+        "inNew660": 0,
+        "inNew1000": 0,
+        "outNew120": 0,
+        "outNew240": 0,
+        "outNew660": 0,
+        "outNew1000": 0,
+
+        "inReusable120": 0,
+        "inReusable240": 0,
+        "inReusable660": 0,
+        "inReusable1000": 0,
+        "outReusable120": 0,
+        "outReusable240": 0,
+        "outReusable660": 0,
+        "outReusable1000": 0,
+
+        "newBalance120": 0,
+        "newBalance240": 0,
+        "newBalance660": 0,
+        "newBalance1000": 0,
+        "reusableBalance120": 0,
+        "reusableBalance240": 0,
+        "reusableBalance660": 0,
+        "reusableBalance1000": 0,
+        "overallBalance120": 0,
+        "overallBalance240": 0,
+        "overallBalance660": 0,
+        "overallBalance1000": 0
+    };
+
+
+    
+    $scope.show = angular.copy(storeDataService.show.newMgb);
+    $scope.show = angular.copy(storeDataService.show.reusableMgb);
+    
+    $http.get('/getAllMgb').then(function(response){
+        $scope.searchInventoryRecordFilter = '';
+        $scope.inventoryRecordList = response.data;
+        storeDataService.newMgb = angular.copy($scope.newMgbList);
+        $scope.filterNewMgbList = [];
+        
+        // $scope.searchDatabaseBin = function (bin) {
+        //     return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+        // };
+        
+        $scope.filterNewMgbList = angular.copy($scope.newMgbList);
+    
+        $scope.totalItems = $scope.filterNewMgbList.length;
+    
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterNewMgbList, $scope.searchNewMgbFilter);
+        };
+    
+        $scope.$watch('searchDatabaseBinFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+    });
+
+    $scope.calculateBalance = function (date) {
+
+        var i = 0;
+
+        //Check if record is first record in Database
+        if ($scope.getRecordIndex(date) !== 0) {
+
+            for (i = $scope.getRecordIndex(date); i < $scope.binInventory.length; i++) {
+
+                //Calculate Daily New Bin Balance
+                $scope.binInventory[i].newBalance120 = parseInt($scope.binInventory[i - 1].newBalance120) + parseInt($scope.binInventory[i].inNew120) - parseInt($scope.binInventory[i].outNew120);
+                $scope.binInventory[i].newBalance240 = parseInt($scope.binInventory[i - 1].newBalance240) + parseInt($scope.binInventory[i].inNew240) - parseInt($scope.binInventory[i].outNew240);
+                $scope.binInventory[i].newBalance660 = parseInt($scope.binInventory[i - 1].newBalance660) + parseInt($scope.binInventory[i].inNew660) - parseInt($scope.binInventory[i].outNew660);
+                $scope.binInventory[i].newBalance1000 = parseInt($scope.binInventory[i - 1].newBalance1000) + parseInt($scope.binInventory[i].inNew1000) - parseInt($scope.binInventory[i].outNew1000);
+
+                //Calculate Daily Reusable Bin Balance
+                $scope.binInventory[i].reusableBalance120 = parseInt($scope.binInventory[i - 1].reusableBalance120) + parseInt($scope.binInventory[i].inReusable120) - parseInt($scope.binInventory[i].outReusable120);
+                $scope.binInventory[i].reusableBalance240 = parseInt($scope.binInventory[i - 1].reusableBalance240) + parseInt($scope.binInventory[i].inReusable240) - parseInt($scope.binInventory[i].outReusable240);
+                $scope.binInventory[i].reusableBalance660 = parseInt($scope.binInventory[i - 1].reusableBalance660) + parseInt($scope.binInventory[i].inReusable660) - parseInt($scope.binInventory[i].outReusable660);
+                $scope.binInventory[i].reusableBalance1000 = parseInt($scope.binInventory[i - 1].reusableBalance1000) + parseInt($scope.binInventory[i].inReusable1000) - parseInt($scope.binInventory[i].outReusable1000);
+            }
+
+
+        } else {
+            $scope.binInventory[$scope.getRecordIndex(date)].newBalance120 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inNew120) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outNew120);
+            $scope.binInventory[$scope.getRecordIndex(date)].newBalance240 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inNew240) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outNew240);
+            $scope.binInventory[$scope.getRecordIndex(date)].newBalance660 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inNew660) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outNew660);
+            $scope.binInventory[$scope.getRecordIndex(date)].newBalance1000 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inNew1000) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outNew1000);
+
+            $scope.binInventory[$scope.getRecordIndex(date)].reusableBalance120 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inReusable120) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outReusable120);
+            $scope.binInventory[$scope.getRecordIndex(date)].reusableBalance240 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inReusable240) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outReusable240);
+            $scope.binInventory[$scope.getRecordIndex(date)].reusableBalance660 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inReusable660) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outReusable660);
+            $scope.binInventory[$scope.getRecordIndex(date)].reusableBalance1000 = parseInt($scope.binInventory[$scope.getRecordIndex(date)].inReusable1000) - parseInt($scope.binInventory[$scope.getRecordIndex(date)].outReusable1000);
+
+            for (i = $scope.getRecordIndex(date) + 1; i < $scope.binInventory.length; i++) {
+
+                //Calculate Daily New Bin Balance
+                $scope.binInventory[i].newBalance120 = parseInt($scope.binInventory[i - 1].newBalance120) + parseInt($scope.binInventory[i].inNew120) - parseInt($scope.binInventory[i].outNew120);
+                $scope.binInventory[i].newBalance240 = parseInt($scope.binInventory[i - 1].newBalance240) + parseInt($scope.binInventory[i].inNew240) - parseInt($scope.binInventory[i].outNew240);
+                $scope.binInventory[i].newBalance660 = parseInt($scope.binInventory[i - 1].newBalance660) + parseInt($scope.binInventory[i].inNew660) - parseInt($scope.binInventory[i].outNew660);
+                $scope.binInventory[i].newBalance1000 = parseInt($scope.binInventory[i - 1].newBalance1000) + parseInt($scope.binInventory[i].inNew1000) - parseInt($scope.binInventory[i].outNew1000);
+
+                //Calculate Daily Reusable Bin Balance
+                $scope.binInventory[i].reusableBalance120 = parseInt($scope.binInventory[i - 1].reusableBalance120) + parseInt($scope.binInventory[i].inReusable120) - parseInt($scope.binInventory[i].outReusable120);
+                $scope.binInventory[i].reusableBalance240 = parseInt($scope.binInventory[i - 1].reusableBalance240) + parseInt($scope.binInventory[i].inReusable240) - parseInt($scope.binInventory[i].outReusable240);
+                $scope.binInventory[i].reusableBalance660 = parseInt($scope.binInventory[i - 1].reusableBalance660) + parseInt($scope.binInventory[i].inReusable660) - parseInt($scope.binInventory[i].outReusable660);
+                $scope.binInventory[i].reusableBalance1000 = parseInt($scope.binInventory[i - 1].reusableBalance1000) + parseInt($scope.binInventory[i].inReusable1000) - parseInt($scope.binInventory[i].outReusable1000);
+            }
+        }
+
+    }
+
+/*Get index of binInventory record based on date*/
+$scope.getRecordIndex = function (date) {
+    var i = 0;
+    for (i = 0; i < $scope.binInventory.length; i++) {
+        if ($scope.binInventory[i].date == date) {
+            return i;
+        }
+    }
+};
+
+
     
 //    $scope.editBin = function(){
 //        
