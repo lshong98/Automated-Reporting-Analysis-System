@@ -179,6 +179,15 @@ app.service('storeDataService', function () {
                 "create": false,
                 "edit": false,
                 "view": false
+            },
+            "database": {
+                "create": false,
+                "edit": false,
+                "view": false
+            },
+            "inventory": {
+                "edit": false,
+                "view": false
             }
         }
     };
@@ -1572,6 +1581,15 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "create": 'I',
             "edit": 'I',
             "view": 'I'
+        },
+        "database": {
+            "create": 'I',
+            "edit": 'I',
+            "view": 'I'
+        },
+        "inventory": {
+            "edit": 'I',
+            "view": 'I'
         }
     };
 
@@ -1911,7 +1929,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         "path": ''
     };
     
-    $scope.show = angular.copy(storeDataService.show.databaseBin);
+    $scope.show = angular.copy(storeDataService.show.database);
     
     $http.get('/getAllDatabaseBin').then(function(response){
         $scope.searchDatabaseBinFilter = '';
@@ -2045,7 +2063,7 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
 
 
     
-    $scope.show = angular.copy(storeDataService.show.inventoryRecord);
+    $scope.show = angular.copy(storeDataService.show.inventory);
     
     $http.get('/getAllInventoryRecords').then(function(response){
         $scope.searchInventoryRecordFilter = '';

@@ -1144,7 +1144,13 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view bin')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create acr')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit acr')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view acr')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view acr')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view database')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit database')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('create database')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view inventory')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')"
+
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
