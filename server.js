@@ -1,7 +1,7 @@
 /*jslint node:true*/
 var express = require('express');
 var sanitizer = require('sanitizer');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
