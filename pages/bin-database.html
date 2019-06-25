@@ -91,9 +91,34 @@
         <h5>Wheel Bin Database</h5>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchBinFilter" />
+<div class="row filter-div">
+    <div class="col-md-3">
+        <h6>Serial No :</h6>
+        <input class="form-control" type="text" id="serialNum" ng-model="wbdFilter.serialNum">
+
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12">
+                <h6>Date: </h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input class="form-control" type="date" id="dateStart" ng-model="date.from" ng-change="resetDate(date.from, date.to)" value="">
+            </div>
+            <div class="col-md-6">
+                <input class="form-control" type="date" id="dateEnd" ng-model="date.to" ng-change="resetDate(date.from, date.to)" value="">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <h6>Area Code :</h6>
+        <input class="form-control" type="text" id="areaCode" ng-model="wbdFilter.areaCode">
+    </div>
+    <div class="col-md-3">
+        <h6>ACRF Serial No :</h6>
+        <input class="form-control" type="text" id="acrfNo" ng-model="wbdFilter.acrfSerialNum">
     </div>
 </div>
 <br />
@@ -131,7 +156,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="b in databaseBinList | filter: searchBin | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                            <tr data-ng-repeat="b in databaseBinList | filter: wbdFilter | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                 <td>
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />

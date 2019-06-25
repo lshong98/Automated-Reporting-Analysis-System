@@ -2123,7 +2123,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     
 });
 app.filter("yearMonthFilter", function () {
-    return function (binInventory, yearMonth) {
+    return function (inventoryRecordList, yearMonth) {
         var filtered = [];
 
         var strYearMonth = yearMonth.split("-");
@@ -2137,7 +2137,7 @@ app.filter("yearMonthFilter", function () {
         var from_Date = Date.parse(fromDate);
         var to_Date = Date.parse(toDate);
 
-        angular.forEach(binInventory, function (bin) {
+        angular.forEach(inventoryRecordList, function (bin) {
             if (Date.parse(bin.date) >= from_Date && Date.parse(bin.date) < to_Date) {
                 filtered.push(bin);
             }
