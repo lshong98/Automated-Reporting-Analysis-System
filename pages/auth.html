@@ -316,21 +316,43 @@ input:checked + .slider:before {
                 <li class="list-group-item">
                     Create Bin
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.databaseBin.create" data-ng-change="changeValue(auth.databaseBin.create, 'create databaseBin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.database.create" data-ng-change="changeValue(auth.database.create, 'create database');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     Edit Bin
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.databaseBin.edit" data-ng-change="changeValue(auth.databaseBin.edit, 'edit acr');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.database.edit" data-ng-change="changeValue(auth.database.edit, 'edit database');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
                 <li class="list-group-item">
                     View Bin
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.databaseBin.view" data-ng-change="changeValue(auth.databaseBin.view, 'view databaseBin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <input type="checkbox" class="primary" data-ng-model="auth.database.view" data-ng-change="changeValue(auth.database.view, 'view database');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
+    <div class="col-md-6">
+	    <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Wheel Bin Database</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Edit Bin
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.inventory.edit" data-ng-change="changeValue(auth.inventory.edit, 'edit inventory');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View Bin
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.inventory.view" data-ng-change="changeValue(auth.inventory.view, 'view inventory');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
