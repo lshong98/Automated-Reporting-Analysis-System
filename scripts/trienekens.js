@@ -475,6 +475,14 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 
             });
         };
+        scope.editInventoryBin = function (date, inNew120, inNew240, inNew660, inNew1000, outNew120, outNew240,outNew660, outNew1000, inReusable120, inReusable240, inReusable660, inReusable1000, outReusable120, outReusable240, outReusable660, outReusable1000) {
+            scope.showDatabaseBin = !scope.showDatabaseBin;
+            //scope.b.area = area;
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+            scope.thisDatabaseBin = { "date": date, "inNew120": inNew120, "inNew240": inNew240, "inNew660": inNew660, "inNew1000": inNew1000, "outNew120": outNew120, "outNew240": outNew240, "outNew660": outNew660, "outNew1000": outNew1000, "inReusable120": inReusable120, "inReusable240": inReusable240, "inReusable660": inReusable660, "inReusable1000": inReusable1000, "outReusable120": outReusable120, "outReusable240": outReusable240, "outReusable660": outReusable660, "outReusable1000": outReusable1000 };
+        };
+
     };
 });
 
@@ -1968,15 +1976,15 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         }, true);
     });
     
-    
+    $scope.databaseBinList = [];
     $scope.addDatabaseBin = function () {
         // $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         // console.log($scope.databaseBin);
 
         window.alert("clicked");
         $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
-        $scope.totalItems = $scope.filterDatabaseBinList.length;
-        
+        //$scope.totalItems = $scope.filterDatabaseBinList.length;
+        console.log($scope.databaseBinList);
         // $http.post('/addDatabaseBin', $scope.databaseBin).then(function (response) {
         //     var returnedData = response.data;
         //     //var newBinID = returnedData.details.binID;
