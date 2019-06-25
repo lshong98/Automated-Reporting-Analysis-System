@@ -490,7 +490,7 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
 
 app.controller('viewReportController', function($scope, $http, $routeParams, $window, $filter){
     $scope.bin = "";
-    $scope.acr = "";
+    //$scope.acr = "";
     var map;
     
     function GMapCircle(lat, lng, circleArr, detail = 8) {
@@ -531,7 +531,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     $scope.reportID = $routeParams.reportCode;
     
     $scope.thisReport = {
-        "acr": [],
+        //"acr": [],
         "date" : ""
     };
     
@@ -563,7 +563,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             map.setZoom(17);
         }, 1000);
         
-        $http.post('/getReportBin', $scope.area).then(function(response){
+        $http.post('/getReportBinCenter', $scope.area).then(function(response){
             $scope.thisReport.bin = response.data;
             $scope.row = Object.keys($scope.thisReport.bin).length;
             $.each($scope.thisReport.bin, function (index, value) {
@@ -575,21 +575,21 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         });
     });
     
-    $http.post('/getReportACR', $scope.report).then(function (response) {
-        if(response.data.length != 0){
-            $scope.thisReport.acr = response.data;            
-        }
-        else{
-            $scope.thisReport.acr = [];
-        }
-        $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-        $.each($scope.thisReport.acr, function (index, value) {
-            $scope.acr += value.name;
-            if ((index + 1) != $scope.acrRow) {
-                $scope.acr += ', ';
-            }
-        });
-    });
+//    $http.post('/getReportACR', $scope.report).then(function (response) {
+//        if(response.data.length != 0){
+//            $scope.thisReport.acr = response.data;            
+//        }
+//        else{
+//            $scope.thisReport.acr = [];
+//        }
+//        $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+//        $.each($scope.thisReport.acr, function (index, value) {
+//            $scope.acr += value.name;
+//            if ((index + 1) != $scope.acrRow) {
+//                $scope.acr += ', ';
+//            }
+//        });
+//    });
     
     $http.post('/getReportCircle', $scope.report).then(function (response) {
         var data = response.data;

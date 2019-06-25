@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'trienekens2';
+var DB_NAME = 'trienekens4';
 
 users = [];
 connections = [];
@@ -757,7 +757,7 @@ app.post('/addReport',function(req,res){
     'use strict';
     makeID('report',req.body.creationDate);
     setTimeout(function () {
-        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetImg, address, lng, lat, readStatus, reportStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '" + req.body.address + "', '" + req.body.lng + "', '" + req.body.lat + "', 'I', '" + req.body.status+ "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
+        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, readStatus, completionStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', 'I', '" + req.body.status+ "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
         var i = 0, j = 0;
         var reportID = obj.ID;
         
@@ -767,7 +767,7 @@ app.post('/addReport',function(req,res){
             }
             if (Object.keys(req.body.marker).length > 0) {
                 for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                    var circleSQL = "INSERT INTO tblmapcircle (radius, lng, lat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
+                    var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
 
                     db.query(circleSQL, function (err, result) {
                         if (err) {
@@ -794,7 +794,7 @@ app.post('/addReport',function(req,res){
 app.post('/editReport',function(req,res){
     'use strict';
     
-    var sql = "UPDATE tblreport SET reportCollectionDate = '" + req.body.date + "', operationTimeStart = '" + req.body.startTime + "', operationTimeEnd = '" + req.body.endTime + "', garbageAmount = '" + req.body.ton + "', iFleetImg = '"+ req.body.ifleet + "', lng = '" + req.body.lng + "', lat = '" + req.body.lat + "', reportStatus = '" + req.body.status + "', truckID = '" + req.body.truckID + "', driverID = '" + req.body.driverID + "', remark = '" + req.body.remark + "' WHERE reportID = '" + req.body.id + "'";
+    var sql = "UPDATE tblreport SET reportCollectionDate = '" + req.body.date + "', operationTimeStart = '" + req.body.startTime + "', operationTimeEnd = '" + req.body.endTime + "', garbageAmount = '" + req.body.ton + "', iFleetMap = '"+ req.body.ifleet + "', completionStatus = '" + req.body.status + "', truckID = '" + req.body.truckID + "', driverID = '" + req.body.driverID + "', remark = '" + req.body.remark + "' WHERE reportID = '" + req.body.id + "'";
     
     var i = 0, j = 0;
     
@@ -815,7 +815,7 @@ app.post('/editReport',function(req,res){
             
             
             for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                var circleSQL = "INSERT INTO tblmapcircle (radius, lng, lat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + req.body.id + "')";
+                var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + req.body.id + "')";
 
                 db.query(circleSQL, function (err, result) {
                     if (err) {
@@ -850,7 +850,7 @@ app.post('/editReport',function(req,res){
 app.post('/getReport', function(req, res){
     'use strict';
     console.log(req.body);
-    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.lat AS lat, tblreport.lng AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetImg AS ifleet, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency, tblreport.reportStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
+    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetMap AS ifleet, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -870,7 +870,7 @@ app.post('/getReportingAreaList', function (req, res) {
         res.json(result);
     });
 }); // Complete
-app.post('/getReportBin', function(req,res){
+app.post('/getReportBinCenter', function(req,res){
     'use strict';
     
     var sql = "SELECT binCenterName AS name FROM tblbincenter WHERE areaID = '" + req.body.areaID + "'";
@@ -882,22 +882,22 @@ app.post('/getReportBin', function(req,res){
         res.json(result);
     });
 });
-app.post('/getReportACR', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
+//app.post('/getReportACR', function (req, res) {
+//    'use strict';
+//    
+//    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
+//    
+//    db.query(sql, function (err, result) {
+//        if (err) {
+//            throw err;
+//        }
+//        res.json(result);
+//    });
+//});
 app.post('/getReportCircle', function(req,res){
     'use strict';
     
-    var sql = "SELECT radius, lng, lat FROM tblmapcircle WHERE reportID = '" + req.body.reportID + "'";
+    var sql = "SELECT radius, cLong, cLat FROM tblmapcircle WHERE reportID = '" + req.body.reportID + "'";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -919,7 +919,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function(req, res){
     'use strict';
     
-    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, reportStatus, garbageAmount, remark FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID ORDER BY reportCollectionDate DESC";
+    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, completionStatus, garbageAmount, remark FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID ORDER BY reportCollectionDate DESC";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -939,11 +939,12 @@ app.post('/getGoogleLocation', function (req, res) {
         res.json(result);
     });
 });
+
 // Visualization Management
 app.post('/getDataVisualization', function(req, res){
     'use strict';
     
-    var sql ="SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.reportStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' ORDER BY r.reportCollectionDate";
+    var sql ="SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.completionStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' ORDER BY r.reportCollectionDate";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -1008,7 +1009,7 @@ app.get('/getAcrCount',function(req,res){
     });
 
 });
-app.get('/getBinCount',function(req,res){
+app.get('/getBinCenterCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblbincenter";
      db.query(sql, function (err, result) {
         if (err) {
@@ -1039,7 +1040,7 @@ app.get('/getUserCount',function(req,res){
 
 });
 app.get('/getReportCompleteCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'completeCount' FROM tblreport WHERE reportStatus = 'C'";
+    var sql="SELECT COUNT(*) AS 'completeCount' FROM tblreport WHERE completionStatus = 'C'";
      db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -1049,7 +1050,7 @@ app.get('/getReportCompleteCount',function(req,res){
 
 });
 app.get('/getReportIncompleteCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'incompleteCount' FROM tblreport WHERE reportStatus = 'I'";
+    var sql="SELECT COUNT(*) AS 'incompleteCount' FROM tblreport WHERE completionStatus = 'I'";
      db.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -1069,12 +1070,11 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblCustomer (customerID int auto_increment, username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50),  houseNo varchar(5),  streetNo varchar(20),  neighborhood varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime,  PRIMARY KEY (customerID))",
         "CREATE TABLE tblPosition (  positionID varchar(15),  positionName varchar(30),  positionStatus char(1),  creationDateTime datetime,  primary key (positionID))",
         "CREATE TABLE tblBins (  serialNo int,  customerID int,  size int,  status char(1),  PRIMARY KEY (serialNo),  foreign key (customerID) references tblCustomer(customerID))",
-        "CREATE TABLE tblTransporter (  transporterID varchar(15),  transporterName varchar(30),  transporterDescription varchar(30),  transporterStatus char(1),  PRIMARY KEY (transporterID))",
         "CREATE TABLE tblManagement (  mgmtID int auto_increment,  mgmtName varchar(50),  PRIMARY KEY (mgmtID))",
         "CREATE TABLE tblZone (  zoneID varchar(15),  zoneName varchar(100), zoneStatus char(1),  creationDateTime datetime,  PRIMARY KEY (zoneID))",
         "CREATE TABLE tblBinInventory (  date date,  doNo varchar(10),  inNew120 int,  inNew240 int,  inNew660 int,  inNew1000 int,  outNew120 int,  outNew240 int,  outNew660 int,  outNew1000 int,  inReusable120 int,  inReusable240 int,  inReusable660 int,  inReusable1000 int,  outReusable120 int,  outReusable240 int,  outReusable660 int,  outReusable1000 int,  newBalance120 int,  newBalance240 int,  newBalance660 int,  newBalance1000 int,  reusableBalance120 int,  reusableBalance240 int,  reusableBalance660 int,  reusableBalance1000 int,  overallBalance120 int,  overallBalance240 int,  overallBalance660 int,  overallBalance1000 int,  PRIMARY KEY (date))",
         "CREATE TABLE tblStaff (  staffID varchar(15),  username varchar(20),  password mediumtext,  staffName varchar(50),  staffIC varchar(15),  staffGender char(1),  staffDOB date,  staffAddress varchar(255),  handphone varchar(11),  phone varchar(10),  email varchar(50),  positionID varchar(15),  staffStatus char(1),  creationDateTime datetime,  staffPic mediumtext,  PRIMARY KEY (staffID),  foreign key (positionID) references tblPosition(positionID))",
-        "CREATE TABLE tblTruck (  truckID varchar(15),  transporterID varchar(15),  truckTon int(11),  truckNum varchar(10),  truckExpiryStatus date,  truckStatus char(1),  creationDateTime datetime,  PRIMARY KEY (truckID),  foreign key (transporterID) references tblTransporter(transporterID))",
+        "CREATE TABLE tblTruck (  truckID varchar(15),  transporter varchar(15),  truckTon int(11),  truckNum varchar(10),  truckExpiryStatus date,  truckStatus char(1),  creationDateTime datetime,  PRIMARY KEY (truckID))",
         "CREATE TABLE tblDBD (  dbdID int auto_increment,  creationDateTime datetime,  status char(1),  PRIMARY KEY (dbdID))",
         "CREATE TABLE tblDBDEntry (  idNo int auto_increment,  dbdID int,  serialNo int,  reportedBy varchar(15),  damageType varchar(15),  reason mediumtext,  repair char(1),  replacement char(1),  costCharged varchar(5),  status char(1),  rectifiedDate datetime,  PRIMARY KEY (idNo),  foreign KEY  (dbdID) references tblDBD(dbdID),  foreign KEY  (serialNo) references tblBins(serialNo),  foreign KEY  (reportedBy) references tblStaff(staffID))",
         "CREATE TABLE tblAcr (  acrID varchar(15),  serialNo int,  acrSticker varchar(10),  customerID int,  acrPeriod date,  acrStatus char(1),  creationDateTime datetime,  PRIMARY KEY (acrID),  foreign key (serialNo) references tblBins(serialNo),  foreign key (customerID) references tblCustomer(customerID))",
@@ -1087,7 +1087,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblWheelBinDatabase (  idNo int auto_increment,  date datetime,  customerID int,  areaID varchar(15),  serialNo int,  acrID varchar(15),  activeStatus char(1),  PRIMARY KEY (idNo),  foreign key (customerID) references tblCustomer(customerID),  foreign key (areaID) references tblArea(areaID),  foreign key (serialNo) references tblBins(serialNo),  foreign key (acrID) references tblAcr(acrID))",
         "CREATE TABLE tblUserActions (  date datetime,  staffID varchar(15),  action varchar(20),  onObject varchar(20),  PRIMARY KEY (date, staffID),  foreign key (staffID) references tblStaff(staffID))",
         "CREATE TABLE tblAccess (  positionID varchar(15),  mgmtID int,  status char(1),  primary key (positionID, mgmtID),  foreign key (positionID) references tblPosition(positionID),  foreign key (mgmtID) references tblManagement(mgmtID))",
-        "CREATE TABLE tblReport (  reportID VARCHAR(15),  areaID VARCHAR(15),  reportCollectionDate date,  reportCreationDateTime datetime,  operationTimeStart time,  operationTimeEnd time,  garbageAmount int,  iFleetMap mediumtext,  readStatus char(1),  completionStatus char(1),  truckID varchar(15),  driverID varchar(15),  zoom double(2,2),  remark text,  PRIMARY KEY (reportID),  foreign key (areaID) references tblArea(areaID),  foreign key (truckID) references tblTruck(truckID),  foreign key (driverID) references tblStaff(staffID))",
+        "CREATE TABLE tblReport (  reportID VARCHAR(15),  areaID VARCHAR(15),  reportCollectionDate date,  creationDateTime datetime,  operationTimeStart time,  operationTimeEnd time,  garbageAmount int,  iFleetMap mediumtext,  readStatus char(1),  completionStatus char(1),  truckID varchar(15),  driverID varchar(15),  zoom double(2,2),  remark text,  PRIMARY KEY (reportID),  foreign key (areaID) references tblArea(areaID),  foreign key (truckID) references tblTruck(truckID),  foreign key (driverID) references tblStaff(staffID))",
         "CREATE TABLE tblMapCircle (  circleID int auto_increment,  radius varchar(50),  cLong double(10,7),  cLat double(10,7),  reportID varchar(15),  primary key (circleID),  foreign key (reportID) references tblReport(reportID))",
         "CREATE TABLE tblMapRect (  rectID int auto_increment,  neLat double(10,7),  neLng double(10,7),  swLat double(10,7),  swLng double(10,7),  reportID varchar(15),  primary key (rectID),  foreign key (reportID) references tblReport(reportID))",
         "CREATE TABLE tblAcrFreq (  acrID varchar(15),  areaID varchar(15),  day varchar(30),  primary key (acrID, areaID, day),  foreign key(acrID) references tblAcr(acrID),  foreign key(areaID) references tblArea(areaID))",

@@ -350,7 +350,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.saveBin = function () {
             scope.showBin = !scope.showBin;
             
-            $http.post('/editBin', scope.b).then(function (response) {
+            $http.post('/editBinCenter', scope.b).then(function (response) {
                 var data = response.data;
                 
                 scope.notify(data.status, data.message);
@@ -475,6 +475,14 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 
             });
         };
+        scope.editInventoryBin = function (date, inNew120, inNew240, inNew660, inNew1000, outNew120, outNew240,outNew660, outNew1000, inReusable120, inReusable240, inReusable660, inReusable1000, outReusable120, outReusable240, outReusable660, outReusable1000) {
+            scope.showDatabaseBin = !scope.showDatabaseBin;
+            //scope.b.area = area;
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+            scope.thisDatabaseBin = { "date": date, "inNew120": inNew120, "inNew240": inNew240, "inNew660": inNew660, "inNew1000": inNew1000, "outNew120": outNew120, "outNew240": outNew240, "outNew660": outNew660, "outNew1000": outNew1000, "inReusable120": inReusable120, "inReusable240": inReusable240, "inReusable660": inReusable660, "inReusable1000": inReusable1000, "outReusable120": outReusable120, "outReusable240": outReusable240, "outReusable660": outReusable660, "outReusable1000": outReusable1000 };
+        };
+
     };
 });
 
@@ -533,6 +541,15 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         },
         "acr": {
             "create": false,
+            "edit": false,
+            "view": false
+        },
+        "database": {
+            "create": false,
+            "edit": false,
+            "view": false
+        },
+        "inventory": {
             "edit": false,
             "view": false
         }
@@ -652,7 +669,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
         $scope.acrCount = response.data[0].count;
     });
     
-    $http.get('/getBinCount').then(function (response) {
+    $http.get('/getBinCenterCount').then(function (response) {
         $scope.binCount = response.data[0].count;
     });
     
@@ -1658,7 +1675,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     
     $scope.show = angular.copy(storeDataService.show.bin);
     
-    $http.get('/getAllBin').then(function(response){
+    $http.get('/getAllBinCenter').then(function(response){
         $scope.searchBinFilter = '';
         $scope.binList = response.data;
         storeDataService.bin = angular.copy($scope.binList);
@@ -1713,7 +1730,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     $scope.addBin = function () {
         $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         console.log($scope.bin);
-        $http.post('/addBin', $scope.bin).then(function (response) {
+        $http.post('/addBinCenter', $scope.bin).then(function (response) {
             var returnedData = response.data;
             var newBinID = returnedData.details.binID;
             
@@ -1959,26 +1976,31 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         }, true);
     });
     
-    
+    $scope.databaseBinList = [];
     $scope.addDatabaseBin = function () {
-        $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        console.log($scope.databaseBin);
-        $http.post('/addDatabaseBin', $scope.databaseBin).then(function (response) {
-            var returnedData = response.data;
-            //var newBinID = returnedData.details.binID;
+        // $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        // console.log($scope.databaseBin);
+
+        window.alert("clicked");
+        $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
+        //$scope.totalItems = $scope.filterDatabaseBinList.length;
+        console.log($scope.databaseBinList);
+        // $http.post('/addDatabaseBin', $scope.databaseBin).then(function (response) {
+        //     var returnedData = response.data;
+        //     //var newBinID = returnedData.details.binID;
             
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "New Bin added successfully!"
-                });
-                $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
-                storeDataService.databaseBin = angular.copy($scope.databaseBinList);
-                $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
-                angular.element('#createDatabaseBin').modal('toggle');
-                $scope.totalItems = $scope.filterDatabaseBinList.length;
-            }
-        });
+        //     if (returnedData.status === "success") {
+        //         angular.element('body').overhang({
+        //             type: "success",
+        //             "message": "New Bin added successfully!"
+        //         });
+        //         $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
+        //         storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+        //         $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
+        //         angular.element('#createDatabaseBin').modal('toggle');
+        //         $scope.totalItems = $scope.filterDatabaseBinList.length;
+        //     }
+        // });
     }
     
     $scope.orderBy = function (property) {
