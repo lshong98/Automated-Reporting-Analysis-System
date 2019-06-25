@@ -3,30 +3,156 @@
         <h5>Bin Inventory Management</h5>
     </div>
 </div>
-<!-- NEW MGB BIN INVENTORY -->
+
 <div class="row">
-    <div class="col-md-12">
-        <h4>New MGB Inventory</h4>
+    <div class="col-md-4">
+        <div class="card" >
+            <div class="card-header">
+            <h5>Overall MGB Stock Balance</h5>
+            </div>
+            
+            <div class="card-group">
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.overall120}}</h4>
+                    <p class="card-text"><small>120L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.overall240}}</h4>
+                    <p class="card-text"><small>240L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">    
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.overall660}}</h4>
+                    <p class="card-text"><small>660L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.overall1000}}</h4>
+                    <p class="card-text"><small>1000L</small></p>
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+         <div class="card" >
+            <div class="card-header">
+            <h5>New MGB Stock Balance</h5>
+            </div>
+            
+            <div class="card-group">
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.new120}}</h4>
+                    <h4 class="card-title"></h4>
+                    <p class="card-text"><small>120L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.new240}}</h4>
+                    <p class="card-text"><small>240L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">    
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.new660}}</h4>
+                    <p class="card-text"><small>660L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.new1000}}</h4>
+                    <p class="card-text"><small>1000L</small></p>
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+         <div class="card" >
+            <div class="card-header">
+            <h5>Reusable MGB Stock Balance</h5>
+            </div>
+            
+            <div class="card-group">
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.reusable120}}</h4>
+                    <p class="card-text"><small>120L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.reusable240}}</h4>
+                    <p class="card-text"><small>240L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">    
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.reusable660}}</h4>
+                    <p class="card-text"><small>660L</small></p>
+                    </div>
+                </div>
+
+                <div class="card dashboard-card">
+                    <div class="card-body">
+                    <h4 class="card-title">{{stock.reusable1000}}</h4>
+                    <p class="card-text"><small>1000L</small></p>
+                    </div>
+                </div>
+            </div>    
+        </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
+        <div class="form-inline" style="float: right">
+            <h6 style="margin-right: 20px;">Month: </h6>
+            <select ng-change="" class="form-control month-select" ng-model="yearMonth" ng-options="(ym | date: 'yyyy - MMM') for ym in yearMonths">
+                <option value="">Select Month</option>
+            </select>
+        </div>
     </div>
 </div>
-<br />
-<br />
-<div class="row" data-ng-show="show.view == 'A'">
+
+
+<div class="row">
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
+        <ul class="nav nav-tabs" id="acrTab" role=tablist>
+            <li class="nav-item">
+                <a class="nav-link active" id="schedule-tab" data-toggle="tab" data-target="#acrSchedule" role="tab" aria-controls="acrSchedule" aria-selected="true">New MGB</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#acrInformation" role="tab" aria-controls="acrInformation" aria-selected="false">Reusable MGB</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="acrSchedule" role="tabpanel" aria-labelledby="acrSchedule-tab">
                 <div class="table-responsive">
                     <table class="table table-hover table-striped table-clickable">
                         <thead>
                             <tr>
                                 <th width="20%">Date</th>
-                                <th width="25%">120L IN</th>
-                                <th width="15%">240L IN</th>
+                                <th width="20%">DO No.</th>
+                                <th width="10%">120L IN</th>
+                                <th width="10%">240L IN</th>
                                 <th width="10%">660L IN</th>
                                 <th width="10%">1000L IN</th>
                                 <th width="10%">120L OUT</th>
@@ -40,6 +166,12 @@
                             <tr data-ng-repeat="nb in inventoryRecordList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td>
                                     <span data-ng-show="showNewMgb" data-ng-bind="nb.date"></span>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="nb.doNo" data-ng-show="!showNewMgb" />
+                                        <span data-ng-show="showNewMgb" data-ng-bind="nb.doNo"></span>
+                                    </div>
                                 </td>
                                 <td>
                                     <div editable>
@@ -99,40 +231,14 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-            <div class="col-md-12">
-                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- REUSABLE MGB BIN INVENTORY -->
-<div class="row">
-    <div class="col-md-12">
-        <h4>Reusable MGB Inventory</h4>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
-    </div>
-</div>
-<br />
-<br />
-<div class="row" data-ng-show="show.view == 'A'">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
+            <div class="tab-pane fade" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab" data-ng-show="show.view == 'A'">
                 <div class="table-responsive">
                     <table class="table table-hover table-striped table-clickable">
                         <thead>
                             <tr>
                                 <th width="20%">Date</th>
-                                <th width="25%">120L IN</th>
-                                <th width="15%">240L IN</th>
+                                <th width="10%">120L IN</th>
+                                <th width="10%">240L IN</th>
                                 <th width="10%">660L IN</th>
                                 <th width="10%">1000L IN</th>
                                 <th width="10%">120L OUT</th>
@@ -206,10 +312,6 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-            <div class="col-md-12">
-                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-            </div>
-        </div>
+
     </div>
 </div>
