@@ -58,6 +58,8 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         return d;
     }
     
+    //areaList
+    $scope.areaList = [];   
     //function to reshape data for fit into charts
     var getElementList = function (element, data) {
         var objReturn = [];
@@ -211,7 +213,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         }
         return objReturn;
     }
-
+    
     var getDataVisualization = function () {
         $http.post("/getDataVisualization", $scope.visualdate)
             .then(function (response) {
@@ -231,6 +233,28 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 function (response) {
                     $window.console.log("errror retrieving json file - " + response);
                 });
+        $http.get('/getAreaList').then(function (response) {
+            renderSltPicker();
+            $.each(response.data, function(index, value) {
+                var areaID = value.id.split(",");
+                var areaName = value.name.split(",");
+                var area = [];
+                $.each(areaID, function(index, value) {
+                    area.push({
+                        "id": areaID[index],
+                        "name": areaName[index]
+                    });
+                });
+                $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+            });
+            function renderSltPicker() {
+                angular.element('.selectpicker').selectpicker('refresh');
+                angular.element('.selectpicker').selectpicker('render');
+            }
+            $('.selectpicker').on('change', function() {
+                renderSltPicker();
+            });
+        });
     }
     //get data visualization when load the page
     getDataVisualization();
