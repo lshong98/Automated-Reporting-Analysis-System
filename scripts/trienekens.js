@@ -205,6 +205,8 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.showCollection = true;
         scope.deleteCollection = true;
         scope.showDatabaseBin = true;
+        scope.showNewMgb = true;
+        scope.showReusableMgb = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -250,6 +252,31 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             "acrfSerialNo": '',
             "itemType": '',
             "path": ''
+        }
+        scope.thisNewMgb = {
+            "date": '',
+            "doNo": '',
+
+            "inNew120": 0,
+            "inNew240": 0,
+            "inNew660": 0,
+            "inNew1000": 0,
+            "outNew120": 0,
+            "outNew240": 0,
+            "outNew660": 0,
+            "outNew1000": 0
+        }
+        scope.thisReusableMgb = {
+            "date": '',
+
+            "inReusable120": 0,
+            "inReusable240": 0,
+            "inReusable660": 0,
+            "inReusable1000": 0,
+            "outReusable120": 0,
+            "outReusable240": 0,
+            "outReusable660": 0,
+            "outReusable1000": 0
         }
         
         scope.notify = function (stat, mes) {
@@ -475,13 +502,85 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 
             });
         };
-        scope.editInventoryBin = function (date, inNew120, inNew240, inNew660, inNew1000, outNew120, outNew240,outNew660, outNew1000, inReusable120, inReusable240, inReusable660, inReusable1000, outReusable120, outReusable240, outReusable660, outReusable1000) {
-            scope.showDatabaseBin = !scope.showDatabaseBin;
-            //scope.b.area = area;
+        scope.editNewMgb = function (date, doNo, inNew120, inNew240, inNew660, inNew1000, outNew120, outNew240,outNew660, outNew1000) {
+            scope.showNewMgb = !scope.showNewMgb;
+            
             angular.element('.selectpicker').selectpicker('refresh');
             angular.element('.selectpicker').selectpicker('render');
-            scope.thisDatabaseBin = { "date": date, "inNew120": inNew120, "inNew240": inNew240, "inNew660": inNew660, "inNew1000": inNew1000, "outNew120": outNew120, "outNew240": outNew240, "outNew660": outNew660, "outNew1000": outNew1000, "inReusable120": inReusable120, "inReusable240": inReusable240, "inReusable660": inReusable660, "inReusable1000": inReusable1000, "outReusable120": outReusable120, "outReusable240": outReusable240, "outReusable660": outReusable660, "outReusable1000": outReusable1000 };
+            scope.thisNewMgb = { "date": date, "doNo": doNo, "inNew120": inNew120, "inNew240": inNew240, "inNew660": inNew660, "inNew1000": inNew1000, "outNew120": outNew120, "outNew240": outNew240, "outNew660": outNew660, "outNew1000": outNew1000};
         };
+        scope.saveNewMgb = function () {
+            scope.showNewMgb = !scope.showNewMgb;
+            scope.calculateBalance(scope.nb.date);
+            
+            $http.post('/editNewMgbStock', scope.nb).then(function (response) {
+                var data = response.data;
+                
+                scope.notify(data.status, data.message);
+                
+                $.each(storeDataService.databaseBin, function (index, value) {
+                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
+                    //     if (data.status == "success") {
+                    //         storeDataService.bin[index] = angular.copy(scope.b);
+                    //     } else {
+                    //         scope.z = angular.copy(storeDataService.bin[index]);
+                    //     }
+                    //     return false;
+                    // }
+                });
+            });
+        };
+        scope.cancelNewMgb = function () {
+            scope.showNewMgb = !scope.showNewMgb;
+            
+            $.each(storeDataService.bin, function (index, value) {
+                if (storeDataService.databaseBin[index].id == scope.thisDatabaseBin.id) {
+                    scope.b = angular.copy(storeDataService.databaseBin[index]);
+                    return false;
+                }
+            });
+            
+        };
+        scope.editReusableMgb = function (date, inReusable120, inReusable240, inReusable660, inReusable1000, outReusable120, outReusable240, outReusable660, outReusable1000) {
+            scope.showReusableMgb = !scope.showReusableMgb;
+            
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+            scope.thisReusableMgb = { "date": date, "inReusable120": inReusable120, "inReusable240": inReusable240, "inReusable660": inReusable660, "inReusable1000": inReusable1000, "outReusable120": outReusable120, "outReusable240": outReusable240, "outReusable660": outReusable660, "outReusable1000": outReusable1000 };
+        };
+        scope.saveReusableMgb = function () {
+            scope.showReusableMgb = !scope.showReusableMgb;
+            scope.calculateBalance(scope.rb.date);
+            
+            $http.post('/editReusableMgbStock', scope.rb).then(function (response) {
+                var data = response.data;
+                
+                scope.notify(data.status, data.message);
+                
+                $.each(storeDataService.databaseBin, function (index, value) {
+                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
+                    //     if (data.status == "success") {
+                    //         storeDataService.bin[index] = angular.copy(scope.b);
+                    //     } else {
+                    //         scope.z = angular.copy(storeDataService.bin[index]);
+                    //     }
+                    //     return false;
+                    // }
+                });
+            });
+        };
+        scope.cancelReusableMgb = function () {
+            scope.showReusableMgb = !scope.showReusableMgb;
+            
+            $.each(storeDataService.bin, function (index, value) {
+                if (storeDataService.databaseBin[index].id == scope.thisDatabaseBin.id) {
+                    scope.b = angular.copy(storeDataService.databaseBin[index]);
+                    return false;
+                }
+            });
+            
+        };
+        
 
     };
 });
@@ -2023,7 +2122,30 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
 //    }
     
 });
+app.filter("yearMonthFilter", function () {
+    return function (binInventory, yearMonth) {
+        var filtered = [];
 
+        var strYearMonth = yearMonth.split("-");
+
+        var year = strYearMonth[0];
+        var month = strYearMonth[1];
+
+        var fromDate = new Date(year, month - 1, 1);
+        var toDate = new Date(year, month, 1);
+
+        var from_Date = Date.parse(fromDate);
+        var to_Date = Date.parse(toDate);
+
+        angular.forEach(binInventory, function (bin) {
+            if (Date.parse(bin.date) >= from_Date && Date.parse(bin.date) < to_Date) {
+                filtered.push(bin);
+            }
+        });
+
+        return filtered;
+    };
+});
 app.controller('inventoryBinController', function($scope, $http, $filter, storeDataService){
     'use strict';
     var asc = true;
@@ -2032,6 +2154,7 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
 
+    $scope.yearMonths = ['2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01', '2019-05-01'];
     $scope.stock = $scope.stock || {
         new120: 0,
         new240: 0,
