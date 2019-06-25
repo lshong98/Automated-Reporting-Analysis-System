@@ -922,6 +922,7 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
+    $scope.newArea = { "areaCode":'' };
 
     $scope.area = {
         "zone": '',
@@ -935,7 +936,6 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
         $scope.areaList = response.data;
         $scope.filterAreaList = [];
         
-        console.log($scope.areaList);
 
 //        for(var i = 0; i < ($scope.areaList).length; i++){
 //            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
@@ -984,9 +984,11 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
 
     $scope.addArea = function () {
         $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        
         $http.post('/addArea', $scope.area).then(function (response) {
             var returnedData = response.data;
             var newAreaID = returnedData.details.areaID;
+            $scope.newArea.areaCode = newAreaID;
 
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
@@ -1006,7 +1008,55 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                 angular.element('#createArea').modal('toggle');
                 $scope.totalItems = $scope.filterAreaList.length;
             }
+            var $googleMap, visualizeMap, map, lat = 0, lng = 0, myPlace, address;
+
+            $http.post('/getGoogleLocation', $scope.newArea).then(function (response) {
+                var myPlace = response.data[0];
+                var area = myPlace.area.replace(" ", "+");
+                var zone = myPlace.zone.replace(" ", "+");
+                var concat = area + '+' + zone;
+
+
+
+                address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+
+                $http.get(address).then(function (response) {
+                    function timeToSeconds(time) {
+                        time = time.split(/:/);
+                        return time[0] * 3600 + time[1] * 60 + time[2];
+                    }
+
+
+
+
+                    // JSON data returned by API above
+                    var myPlace = response.data;
+
+                    // After get the place data, re-center the map
+//                    $window.setTimeout(function () {
+//                        var places, location;
+//
+//                        places = myPlace.results[0];
+//                        location = places.formatted_address;
+//                        lat = places.geometry.location.lat;
+//                        lng = places.geometry.location.lng;
+//                        map.panTo(new google.maps.LatLng(lat, lng));
+//                        map.setZoom(17);
+//
+
+//                    }, 1000);
+                    $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
+                    $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
+                    $http.post('/updateAreaLngLat', $scope.newArea).then(function (response) {
+                        
+                    });
+
+                });
+            });              
+       
         });
+      
+                
     }
     
     $scope.editAreaPage = function(id){

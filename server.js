@@ -815,7 +815,9 @@ app.post('/editReport',function(req,res){
             
             
             for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + req.body.id + "')";
+                var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].cLong + "', '" + req.body.marker[i].cLat + "', '" + req.body.id + "')";
+                
+                console.log(circleSQL);
 
                 db.query(circleSQL, function (err, result) {
                     if (err) {
@@ -849,7 +851,6 @@ app.post('/editReport',function(req,res){
 });
 app.post('/getReport', function(req, res){
     'use strict';
-    console.log(req.body);
     var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetMap AS ifleet, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
     db.query(sql, function (err, result) {
         if (err) {
@@ -940,6 +941,30 @@ app.post('/getGoogleLocation', function (req, res) {
     });
 });
 
+//});
+app.post('/getAreaLngLat', function(req, res) {
+    'use strict';
+    var sql = "SELECT longitude, latitude FROM tblarea WHERE areaID = '" + req.body.areaCode+ "'";
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
+
+app.post('/updateAreaLngLat', function(req, res) {
+    'use strict';
+    var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat+ "' WHERE areaID = '" + req.body.areaCode + "'";
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
+
 // Visualization Management
 app.post('/getDataVisualization', function(req, res){
     'use strict';
@@ -977,6 +1002,8 @@ app.get('/getDriverList', function(req, res) {
         res.json(result);
     });
 }); // Complete
+
+
 
 //get count
 app.get('/getZoneCount',function(req,res){
