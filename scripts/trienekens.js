@@ -535,6 +535,15 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
             "create": false,
             "edit": false,
             "view": false
+        },
+        "database": {
+            "create": false,
+            "edit": false,
+            "view": false
+        },
+        "inventory": {
+            "edit": false,
+            "view": false
         }
     };
 
@@ -1961,24 +1970,29 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     
     
     $scope.addDatabaseBin = function () {
-        $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        console.log($scope.databaseBin);
-        $http.post('/addDatabaseBin', $scope.databaseBin).then(function (response) {
-            var returnedData = response.data;
-            //var newBinID = returnedData.details.binID;
+        // $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        // console.log($scope.databaseBin);
+
+        window.alert("clicked");
+        $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
+        $scope.totalItems = $scope.filterDatabaseBinList.length;
+        
+        // $http.post('/addDatabaseBin', $scope.databaseBin).then(function (response) {
+        //     var returnedData = response.data;
+        //     //var newBinID = returnedData.details.binID;
             
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "New Bin added successfully!"
-                });
-                $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
-                storeDataService.databaseBin = angular.copy($scope.databaseBinList);
-                $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
-                angular.element('#createDatabaseBin').modal('toggle');
-                $scope.totalItems = $scope.filterDatabaseBinList.length;
-            }
-        });
+        //     if (returnedData.status === "success") {
+        //         angular.element('body').overhang({
+        //             type: "success",
+        //             "message": "New Bin added successfully!"
+        //         });
+        //         $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
+        //         storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+        //         $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
+        //         angular.element('#createDatabaseBin').modal('toggle');
+        //         $scope.totalItems = $scope.filterDatabaseBinList.length;
+        //     }
+        // });
     }
     
     $scope.orderBy = function (property) {
