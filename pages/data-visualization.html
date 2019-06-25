@@ -6,19 +6,29 @@
 </head>
 <div class="row">
     <div class="col-md-3">
-        <h3>Date Range Filter: </h3>
-        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+        <h3>Date Filter: </h3>
+        <div id="reportrange" style="background: #F8F8F8; cursor: pointer; margin-top: 15px; padding: 7px 10px; border-radius: 3px; width: 100%" >
             <i class="fa fa-calendar"></i>&nbsp;
-            <span></span> <i class="fa fa-caret-down"></i>
+            <span></span> <i class="fa fa-caret-down" style="float: right; padding: 5px; 0px;"></i>
         </div>
     </div>
+    <div class="col-md-3">
+       <div class="form-group">
+          <h3><label for="txtArea form-label">Area Filter:</label></h3>
+          <select id="txtArea" data-ng-model="areaSelected" class="selectpicker" data-live-search="true" data-width="100%">
+              <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                  <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.id}} - {{a.name}}</option>
+              </optgroup>
+          </select>
+        </div>        
+    </div>
 </div>
-<!--First Visualization-->
 <div class="row">
-    <div class="col-md-12">
+   <!--First Visualization-->
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4>Duration of Garbage Collection</h4>
+<!--                <h4>Duration of Garbage Collection</h4>-->
                 <label for="sel1">Choose Visualization type:</label>
                 <select data-ng-model="chartDurationGarbageSelected" data-ng-change="changeChartDurationGarbage(chartDurationGarbageSelected)" class="form-control" id="sel1">
                     <option value="Line">Line Chart</option>
@@ -33,13 +43,11 @@
             </div>
         </div>
     </div>
-</div>
-<!--Second Visualization-->
-<div class="row">
-    <div class="col-md-12">
+    <!--Second Visualization-->
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4>Amount of Garbage Percentage on Area</h4>
+<!--                <h4>Amount of Garbage Percentage on Area</h4>-->
             </div>
             <div class="panel-body">
                 <div id="chart-pie-volume-area"></div>
