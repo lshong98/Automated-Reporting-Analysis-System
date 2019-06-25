@@ -350,7 +350,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.saveBin = function () {
             scope.showBin = !scope.showBin;
             
-            $http.post('/editBin', scope.b).then(function (response) {
+            $http.post('/editBinCenter', scope.b).then(function (response) {
                 var data = response.data;
                 
                 scope.notify(data.status, data.message);
@@ -652,7 +652,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
         $scope.acrCount = response.data[0].count;
     });
     
-    $http.get('/getBinCount').then(function (response) {
+    $http.get('/getBinCenterCount').then(function (response) {
         $scope.binCount = response.data[0].count;
     });
     
@@ -1658,7 +1658,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     
     $scope.show = angular.copy(storeDataService.show.bin);
     
-    $http.get('/getAllBin').then(function(response){
+    $http.get('/getAllBinCenter').then(function(response){
         $scope.searchBinFilter = '';
         $scope.binList = response.data;
         storeDataService.bin = angular.copy($scope.binList);
@@ -1713,7 +1713,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     $scope.addBin = function () {
         $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         console.log($scope.bin);
-        $http.post('/addBin', $scope.bin).then(function (response) {
+        $http.post('/addBinCenter', $scope.bin).then(function (response) {
             var returnedData = response.data;
             var newBinID = returnedData.details.binID;
             
