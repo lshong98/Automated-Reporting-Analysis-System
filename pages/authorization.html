@@ -1,0 +1,69 @@
+   
+      <div class="row">
+          <div class="col-md-12">
+              <h5>Task Authorization</h5>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
+          </div>
+      </div>
+      <br />
+      <div class="row" data-ng-show="show.create == 'A'">
+          <div class="col-md-12">
+              <button class="btn btn-success" data-toggle="modal" data-target="#createZone"><i class="fa fa-plus"></i> New</button>
+              
+          </div>
+      </div>
+      <br />
+      <div class="row" data-ng-show="show.view == 'A'">
+          <div class="col-md-12">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="table-responsive">
+                          <table class="table table-hover table-striped table-clickable">
+                              <thead>
+                                  <tr>
+                                      <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                      <th width="25%" data-ng-click="orderBy('staff');">Staff <i class="fas fa-sort-down"></i></th>
+                                      <th width="15%" data-ng-click="orderBy('action');">Action <i class="fas fa-sort-down"></i></th>
+                                      <th width="15%" data-ng-click="orderBy('page');">Page <i class="fas fa-sort-down"></i></th>
+                                      <th width="15%" data-ng-click="orderBy('rowId');">Row ID <i class="fas fa-sort-down"></i></th>
+                                      <th width="15%">Authorize</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr data-ng-repeat="t in taskList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                      <td>
+                                          <span data-ng-bind="t.taskId"></span>
+                                      </td>
+                                      <td>
+                                            <span data-ng-bind="t.staff"></span>
+                                      </td>
+                                      <td>
+                                            <span data-ng-bind="t.action"></span>
+                                      </td>
+                                      <td>
+                                            <span data-ng-bind="t.page"></span>
+                                      </td>
+                                      <td>
+                                            <span data-ng-bind="t.rowId"></span>
+                                      </td>
+                                      <td>
+                                            <button class="btn btn-sm btn-success">Approve</button>
+                                            <button class="btn btn-sm btn-danger">Reject</button>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+              <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                  <div class="col-md-12">
+                      <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                  </div>
+              </div>
+          </div>
+      </div>

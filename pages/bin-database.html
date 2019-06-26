@@ -94,33 +94,28 @@
 <div class="row filter-div">
     <div class="col-md-3">
         <h6>Serial No :</h6>
-        <input class="form-control" type="text" id="serialNum" ng-model="wbdFilter.serialNum">
+        <input class="form-control" type="text" id="serialNum" ng-model="wbdFilter.serialNo">
 
     </div>
-    <div class="col-md-3">
-        <div class="row">
-            <div class="col-md-12">
-                <h6>Date: </h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <input class="form-control" type="date" id="dateStart" ng-model="date.from" ng-change="resetDate(date.from, date.to)" value="">
-            </div>
-            <div class="col-md-6">
-                <input class="form-control" type="date" id="dateEnd" ng-model="date.to" ng-change="resetDate(date.from, date.to)" value="">
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <h6>Area Code :</h6>
-        <input class="form-control" type="text" id="areaCode" ng-model="wbdFilter.areaCode">
-    </div>
+    
+    
     <div class="col-md-3">
         <h6>ACRF Serial No :</h6>
-        <input class="form-control" type="text" id="acrfNo" ng-model="wbdFilter.acrfSerialNum">
+        <input class="form-control" type="text" id="acrfNo" ng-model="wbdFilter.acrfSerialNo">
     </div>
+    <div class="col-md-2">
+            <h6>Area Code :</h6>
+            <input class="form-control" type="text" id="areaCode" ng-model="wbdFilter.areaCode">
+        </div>
+        <div class="col-md-4">
+                <h6>Date Filter: </h6>
+                <div id="databaserange" style="background: #F8F8F8; cursor: pointer; margin-top: 7px; padding: 8px 10px; border-radius: 3px; width: 100%" >
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span></span> <i class="fa fa-caret-down" style="float: right; padding: 5px;"></i>
+                </div>
+            </div>
 </div>
+
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-12">
@@ -156,11 +151,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="b in databaseBinList | filter: wbdFilter | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                            <tr data-ng-repeat="b in databaseBinList | dateFilter:date.from:date.to | filter: wbdFilter | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                 <td>
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.date"></span>
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.date | date:'dd-MM-yyyy'"></span>
                                     </div>
                                 </td>
                                 <td>
