@@ -291,16 +291,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             "outReusable660": 0,
             "outReusable1000": 0
         }
-        scope.task = {
-            "taskId": '',
-            "date": '',
-            "staff": '',
-            "action": '',
-            "page": '',
-            "rowId": '',
-            "query": '',
-            "authorize": ''
-        }
+        
         
         scope.notify = function (stat, mes) {
             angular.element('body').overhang({
@@ -604,46 +595,6 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             
         };
 
-        //Edit Task Authorization
-        scope.editTask = function (taskId, date, staff, action, page, rowId, query, authorize) {
-            scope.showTask = !scope.showTask;
-            
-            angular.element('.selectpicker').selectpicker('refresh');
-            angular.element('.selectpicker').selectpicker('render');
-            scope.thisTask = {"taskId": taskId, "date": date, "staff": staff, "action": action, "page": page, "rowId": rowId, "query": query, "authorize": authorize};
-        };
-        scope.saveTask = function () {
-            scope.showTask = !scope.showTask;
-            
-            $http.post('/editTask', scope.t).then(function (response) {
-                var data = response.data;
-                
-                scope.notify(data.status, data.message);
-                
-                $.each(storeDataService.task, function (index, value) {
-                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
-                    //     if (data.status == "success") {
-                    //         storeDataService.bin[index] = angular.copy(scope.b);
-                    //     } else {
-                    //         scope.z = angular.copy(storeDataService.bin[index]);
-                    //     }
-                    //     return false;
-                    // }
-                });
-            });
-        };
-        scope.cancelTask = function () {
-            scope.showTask = !scope.showTask;
-            
-            $.each(storeDataService.task, function (index, value) {
-                if (storeDataService.databaseBin[index].id == scope.thisDatabaseBin.id) {
-                    scope.b = angular.copy(storeDataService.databaseBin[index]);
-                    return false;
-                }
-            });
-            
-        };
-
     };
 });
 
@@ -712,6 +663,9 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         },
         "inventory": {
             "edit": false,
+            "view": false
+        },
+        "authorization": {
             "view": false
         }
     };
@@ -2531,7 +2485,7 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
     $scope.maxSize = 10; //Show the number in page
 
     
-    $scope.show = angular.copy(storeDataService.show.zone);
+    $scope.show = angular.copy(storeDataService.show.authorization);
 
     $http.get('/getAllTasks').then(function (response) {
         storeDataService.task = angular.copy(response.data);
