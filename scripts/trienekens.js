@@ -1982,7 +1982,20 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 //    }
     
 });
-
+//complaint detail controller
+app.controller('complaintDetailController',function($scope, $routeParams){
+    'use strict';
+    console.log($routeParams.complaintCode)
+    $scope.details = [{
+        'ctype': 'Personal',
+        'title': 'Collection',
+        'date': '26-06-2019',
+        'customer': 'Leonard',
+        'area': 'Tabuan Jaya',
+        'content': 'rubish not collected',
+        'address': 'Tabuan'
+    }];
+});
 //acr controller
 app.controller('acrController',function($scope, $http, $filter, storeDataService){
     'use strict';
@@ -2549,4 +2562,23 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
         $scope.zoneList = $filter('orderBy')($scope.zoneList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
+});
+app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
+    'use strict';
+    $scope.complaintList = [];
+    
+    $http.get('/getComplaintList').then(function (response) {
+        $scope.complaintList = response.data;
+        for(var i =0; i<$scope.complaintList.length; i++){
+            $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
+        }
+        console.log($scope.complaintList);
+    });
+    
+    $scope.complaintDetail = function(complaintCode){
+        console.log(complaintCode)
+        window.location.href = '#/complaint-detail/' + complaintCode;
+    };
+    
+    
 });

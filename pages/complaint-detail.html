@@ -1,0 +1,37 @@
+<style>
+    .detailBox{
+        padding: 30px 30px;
+        background-color: aliceblue;
+        border-radius: 7px;
+        margin-top: 10px;
+        font-size: 13pt;
+    }
+    .contentBox{
+        background-color: azure;
+        border-radius: 7px;
+        padding: 20px 20px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Complaint Detail</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 detailBox">
+        <div data-ng-repeat="c in details">
+            <p><strong>Complaint Type: </strong>{{c.ctype}}</p>
+            <p><strong>Complaint Title: </strong> {{c.title}}</p>
+            <p><strong>Date Time: </strong>{{c.date}}</p>
+            <p><strong>Customer: </strong>{{c.customer}}</p>
+            <p><strong>Area: </strong>{{c.area}}</p>
+            <p><strong>Address:</strong></p>
+            <p>{{c.address}}</p>
+            <p><strong>Content: </strong></p>
+            <p class="contentBox">{{c.content}}</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2>Report reference</h2>
+    </div>
+</div>
