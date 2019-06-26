@@ -52,7 +52,7 @@ function makeID(keyword, creationDate) {
     }
     
     var sql = "SELECT " + property + " FROM " + table + " WHERE creationDateTime LIKE '%" + getDate[0] + "%'";
-    return new Promise(resolve => {
+    return new Promise(function (resolve, reject) {
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
@@ -71,6 +71,7 @@ function makeID(keyword, creationDate) {
             resolve(ID);
         });
     });
+    console.log(database);
 };
 
 function checkAuthority(keyword, whoIs) {

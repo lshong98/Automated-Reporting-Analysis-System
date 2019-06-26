@@ -11,6 +11,8 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
+var SVR_PORT = '';
+
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
 var accountManagement = require('./custom_modules/account-management');
@@ -254,6 +256,11 @@ app.post('/updateAreaLngLat', function(req, res) {
         res.json(result);
     });
 }); // Complete
+
+server.listen(process.env.PORT || SVR_PORT, function () {
+    'use strict';
+    console.log('Server is running on port ' + SVR_PORT + '');
+});
 
 //------------------------------------------------------------------------------------------
 // check if an element exists in array using a comparer function

@@ -1,11 +1,8 @@
-var express = require('express');
-var app = express();
-var server = require('http').createServer(app);
 var mysql = require('mysql');
-var EventEmitter = require('events');
+var bcrypt = require('bcryptjs');
 var dateTime = require('node-datetime');
+var EventEmitter = require('events');
 var emitter = new EventEmitter();
-var f = require('./function-management');
 
 var DB_HOST = '';
 var DB_USER = '';
@@ -53,11 +50,6 @@ db.connect(function (err) {
             }
         }
     });
-});
-
-server.listen(process.env.PORT || SVR_PORT, function () {
-    'use strict';
-    console.log('Server is running on port ' + SVR_PORT + '');
 });
 
 /* Emitter Registered */
@@ -149,63 +141,61 @@ emitter.on('defaultUser', function () {
     }
     
     var dt = dateTime.create();
-    var formatted= dt.format('Y-m-d H:M:S');
+//    var formatted = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    var formatted = dt.format('Y-m-d H:M:S');
     var roleFormat = dt.format('Ymd');
     
     var roleID = "ATH" + roleFormat + "0001";
+    var staffID = "ACC" + roleFormat + "0001";
+    
     var sql = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUE ('" + roleID + "', 'ADMINISTRATOR', '" + formatted + "', 'A')";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
+        var thePassword = bcrypt.hashSync('adminacc123', 10);
+        var sql = "INSERT INTO tblstaff (staffID, username, password, positionID, creationDateTime, staffStatus) VALUE ('" + staffID + "', 'trienekens@admin.com', '" + thePassword + "', '" + roleID + "', '" + formatted + "', 'A')";
+        db.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }                    
+            var sqls = [
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '1', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '2', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '3', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '4', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '5', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '6', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '7', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '8', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '9', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '10', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '11', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '12', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '13', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '14', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '15', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '16', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '17', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '18', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '19', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '20', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '21', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '22', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '23', 'A')"
+            ], j;
 
-        f.makeID("account", formatted).then(function (ID) {
-            var thePassword = bcrypt.hashSync('adminacc123', 10);
-            var sql = "INSERT INTO tblstaff (staffID, username, password, positionID, creationDateTime, staffStatus) VALUE ('" + ID + "', 'trienekens@admin.com', '" + thePassword + "', '" + roleID + "', '" + formatted + "', 'A')";
-            db.query(sql, function (err, result) {
-                if (err) {
-                    throw err;
-                }                    
-                var sqls = [
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '1', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '2', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '3', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '4', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '5', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '6', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '7', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '8', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '9', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '10', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '11', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '12', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '13', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '14', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '15', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '16', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '17', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '18', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '19', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '20', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '21', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '22', 'A')",
-                    "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '23', 'A')"
-                ], j;
-                    
-                for (j = 0; j < sqls.length; j += 1) {
-                    db.query(sqls[j], function (err, result) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
-                }
-                console.log('Administrator generated...');
-            });
+            for (j = 0; j < sqls.length; j += 1) {
+                db.query(sqls[j], function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                });
+            }
+            console.log('Administrator generated...');
         });
     });
-    
-    
 }); // Complete
-/* Emitter Registered */
+/* Emitter Registered */ 
 
 module.exports = db;
