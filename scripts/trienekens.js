@@ -1917,7 +1917,19 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 //    }
     
 });
-
+//complaint detail controller
+app.controller('complaintDetailController',function($scope){
+    'use strict';
+    $scope.details = [{
+        'ctype': 'Personal',
+        'title': 'Collection',
+        'date': '26-06-2019',
+        'customer': 'Leonard',
+        'area': 'Tabuan Jaya',
+        'content': 'rubish not collected',
+        'address': 'Tabuan'
+    }];
+});
 //acr controller
 app.controller('acrController',function($scope, $http, $filter, storeDataService){
     'use strict';
