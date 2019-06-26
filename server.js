@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'triemerge';
+var DB_NAME = 'trienekens6';
 
 users = [];
 connections = [];
@@ -144,6 +144,10 @@ app.get('/bin-database', function (req, res) {
 app.get('/bin-inventory', function (req, res) {
     'use strict';
     res.sendFile('pages/bin-inventory.html', {root: __dirname});
+});
+app.get('/authorization', function (req, res) {
+    'use strict';
+    res.sendFile('pages/authorization.html', {root: __dirname});
 });
 app.get('/complaint-module', function (req, res) {
     'use strict';
@@ -1217,8 +1221,8 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit database')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create database')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view inventory')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')"
-
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')"
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {

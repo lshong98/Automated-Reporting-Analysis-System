@@ -255,6 +255,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'inventoryBinController',
         controllerAs:'inventoryBin'
     })
+    .when('/authorization', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/authorization');
+            }
+        },
+        templateUrl: '/authorization',
+        controller: 'taskAuthorizationController',
+        controllerAs:'taskAuthorization'
+    })
     .when('/complaint-module', {
         resolve: {
             "check": function (routingService, $window, $location) {
