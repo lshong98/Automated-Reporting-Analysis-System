@@ -1362,6 +1362,7 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
                 });
                 $scope.filterStaffList = angular.copy($scope.staffList);
                 $scope.totalItems = $scope.filterStaffList.length;
+                $scope.staff.id = newStaffID;
                 socket.emit('create new user', $scope.staff);
             }
             angular.element('body').overhang({

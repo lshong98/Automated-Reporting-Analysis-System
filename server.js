@@ -1,7 +1,6 @@
 /*jslint node:true*/
 var express = require('express');
 var sanitizer = require('sanitizer');
-var bcrypt = require('bcryptjs');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
@@ -11,16 +10,23 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var DB_HOST = '';
-var DB_USER = '';
-var DB_PASS = '';
-var DB_NAME = 'trienekens7';
+var requestHandler = require('./requestHandlers');
+var database = require('./custom_modules/database-management');
+var accountManagement = require('./custom_modules/account-management');
+var acrManagement = require('./custom_modules/acr-management');
+var areaManagement = require('./custom_modules/area-management');
+var zoneManagement = require('./custom_modules/zone-management');
+var bincenterManagement = require('./custom_modules/bincenter-management');
+var f = require('./custom_modules/function-management');
+var reportManagement = require('./custom_modules/report-management');
+var roleManagement = require('./custom_modules/role-management');
+var truckManagement = require('./custom_modules/truck-management');
+var zoneManagement = require('./custom_modules/zone-management');
 
 users = [];
 connections = [];
 connectedUserList = [];
 
-var SVR_PORT = '';
 var obj = {
     "ID": '',
     "authStatus": ''
@@ -31,921 +37,12 @@ app.use(express.json({limit: '50mb'}));
 // Parse URL-encoded bodies (as sent by HTML forms)
 //app.use(express.urlencoded());
 
-// Set static path
-app.use(express.static(path.join(__dirname)));
-app.use(express.static(path.join(__dirname, 'styles')));
-app.use(express.static(path.join(__dirname, 'scripts')));
-app.use(express.static(path.join(__dirname, 'pages')));
-app.use(express.static(path.join(__dirname, 'fonts')));
-app.use(express.static(path.join(__dirname, 'images')));
-app.use(express.static(path.join(__dirname, 'sounds')));
 
-//app.route('/').get(function (req, res) {
-//    'use strict';
-//    res.sendFile('index.html', {root: __dirname});
-//});
-
-app.get('/', function (req, res) {
-    'use strict';
-    res.sendFile('index.html', {root: __dirname});
-});
-app.get('/pages', function (req, res) {
-    'use strict';
-    res.sendFile('pages/index.html', {root: __dirname});
-});
-app.get('/dashboard-manager', function (req, res) {
-    'use strict';
-    res.sendFile('pages/dashboard-manager.html', {root: __dirname});
-});
-app.get('/dashboard-officer', function (req, res) {
-    'use strict';
-    res.sendFile('pages/dashboard-officer.html', {root: __dirname});
-});
-app.get('/account-management', function (req, res) {
-    'use strict';
-    res.sendFile('pages/account-management.html', {root: __dirname});
-});
-app.get('/account/:account', function (req, res) {
-    'use strict';
-    res.sendFile('pages/account.html', {root: __dirname});
-});
-app.get('/truck-management', function (req, res) {
-    'use strict';
-    res.sendFile('pages/truck-management.html', {root: __dirname});
-});
-app.get('/area-management', function (req, res) {
-    'use strict';
-    res.sendFile('pages/area-management.html', {root: __dirname});
-});
-app.get('/dashboard-officer', function (req, res) {
-    'use strict';
-    res.sendFile('pages/dashboard-officer.html', {root: __dirname});
-});
-app.get('/acr-management', function (req, res) {
-    'use strict';
-    res.sendFile('pages/acr-management.html', {root: __dirname});
-});
-app.get('/notification', function (req, res) {
-    'use strict';
-    res.sendFile('pages/notification.html', {root: __dirname});
-});
-app.get('/error', function (req, res) {
-    'use strict';
-    res.sendFile('pages/error-404.html', {root: __dirname});
-});
-app.get('/daily-report', function(req, res) {
-    'use strict';
-    res.sendFile('pages/daily-report.html', {root: __dirname});
-});
-app.get('/driver-management', function(req, res) {
-    'use strict';
-    res.sendFile('pages/driver-management.html', {root: __dirname});
-});
-app.get('/zone-management', function(req, res) {
-    'use strict';
-    res.sendFile('pages/zone-management.html', {root: __dirname});
-});
-app.get('/role-management', function(req, res) {
-    'use strict';
-    res.sendFile('pages/role-management.html', {root: __dirname});
-});
-app.get('/auth/:auth', function(req, res) {
-    'use strict';
-    res.sendFile('pages/auth.html', {root: __dirname});
-});
-app.get('/area/:areaID', function(req, res) {
-    'use strict';
-    res.sendFile('pages/area.html', {root: __dirname});
-});
-app.get('/bin-management', function(req, res) {
-    'use strict';
-    res.sendFile('pages/bin-management.html', {root: __dirname});
-});
-app.get('/reporting', function (req, res) {
-    'use strict';
-    res.sendFile('pages/reporting.html', {root: __dirname});
-});
-app.get('/view-report/:reportCode', function (req, res) {
-    'use strict';
-    res.sendFile('pages/view-report.html', {root: __dirname});
-});
-app.get('/edit-report/:reportCode', function (req, res) {
-    'use strict';
-    res.sendFile('pages/edit-report.html', {root: __dirname});
-});
-app.get('/data-visualization', function (req, res) {
-    'use strict';
-    res.sendFile('pages/data-visualization.html', {root: __dirname});
-});
-app.get('/bin-database', function (req, res) {
-    'use strict';
-    res.sendFile('pages/bin-database.html', {root: __dirname});
-});
-app.get('/bin-inventory', function (req, res) {
-    'use strict';
-    res.sendFile('pages/bin-inventory.html', {root: __dirname});
-});
-app.get('/authorization', function (req, res) {
-    'use strict';
-    res.sendFile('pages/authorization.html', {root: __dirname});
-});
-app.get('/complaint-module', function (req, res) {
-    'use strict';
-    res.sendFile('pages/complaint-module.html', {root: __dirname});
-});
-app.get('/complaint-detail/:complaintCode', function (req, res) {
-    'use strict';
-    res.sendFile('pages/complaint-detail.html', {root: __dirname});
-});
-var makeID = function(keyword, creationDate) {
-    var table, property, header, ID;
-    var getDateArr, row, stringRow, prefix, i;
-    var getDate = creationDate.split(' ');
-    
-    switch (keyword) {
-        case "account":
-            table = "tblstaff";
-            property = "staffID";
-            header = "ACC";
-            break;
-        case "truck":
-            table = "tbltruck";
-            property = "truckID";
-            header = "TRK";
-            break;
-        case "zone":
-            table = "tblzone";
-            property = "zoneID";
-            header = "ZON";
-            break;
-        case "area":
-            table = "tblarea";
-            property = "areaID";
-            header = "ARE";
-            break;
-        case "bin":
-            table = "tblbincenter";
-            property = "binCenterID";
-            header = "BIN";
-            break;
-        case "role":
-            table = "tblposition";
-            property = "positionID";
-            header = "ATH";
-            break;
-        case "acr":
-            table = "tblacr";
-            property = "acrID";
-            header = "ACR";
-            break;
-        case "report":
-            table = "tblreport";
-            property = "reportID";
-            header = "RPT";
-            break;
-        default: break;
-    }
-    
-    var sql = "SELECT " + property + " FROM " + table + " WHERE creationDateTime LIKE '%" + getDate[0] + "%'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        
-        getDateArr = getDate[0].split('-');
-        
-        row = result.length;
-        row += 1;
-        stringRow = row.toString();
-        prefix = '';
-        for (i = stringRow.length; i < 4; i += 1) {
-            prefix += '0';
-        }
-        ID = header + getDateArr[0] + getDateArr[1] + getDateArr[2] + prefix + row;
-    });
-    
-    setTimeout(function() {
-        obj.ID = ID;
-    }, 100);
-};
-
-var checkAuthority = function (keyword, whoIs) {
-    'use strict';
-    
-    var sql;
-    
-    switch (keyword) {
-        case "create account":
-            sql = "SELECT tblaccess.status FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID JOIN tblaccess ON tblposition.positionID = tblaccess.positionID JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblmanagement.mgmtName = 'create account' AND tblstaff.staffID = '" + whoIs + "'";
-            break;
-    }
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        obj.authStatus = result[0].status;
-    });
-    
-};
-
-app.post('/login', function (req, res) {
-    'use strict';
-
-    var sql = "SELECT tblstaff.staffID, tblstaff.password, tblposition.positionName FROM tblstaff JOIN tblposition ON tblposition.positionID = tblstaff.positionID WHERE tblstaff.username = '" + req.body.username + "' AND tblstaff.staffStatus = 'A'";
-
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        if (result.length > 0) {
-            if (bcrypt.compareSync(req.body.password, result[0].password)) {
-                res.json({"status": "valid", details: {"staffPosition": result[0].positionName, "staffID": result[0].staffID}});
-            } else {
-                res.json({"status": "invalid"});
-            }
-        } else {
-            res.json({"status": "invalid"});
-        }
-    });
-}); // Complete
 app.post('/navigationControl', function (req, res) {
     'use strict';
     
     var sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-
-// Account Management
-app.post('/addUser', function (req, res) {
-    'use strict';
-
-    checkAuthority("create account", req.body.owner);
-    setTimeout(function () {
-        if (obj.authStatus == 'A') {
-            makeID("account", req.body.creationDate);
-            setTimeout(function() {
-                var thePassword = bcrypt.hashSync(req.body.password, 10);
-                var sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, creationDateTime, staffStatus) VALUE ('" + obj.ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
-                db.query(sql, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    res.json({"status": "success", "message": "Account created successfully!", "details": {"staffID": obj.ID}});
-                    res.end();
-                });
-            }, 100);
-        } else {
-            res.json({"status": "error", "message": "You have no permission to create account!"});
-        }
-    }, 100);
-}); // Complete
-app.get('/getAllUser', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status, tblposition.positionName AS position FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID AND tblposition.positionName != 'ADMINISTRATOR'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-app.post('/updatePassword', function (req, res) {
-    'use strict';
-
-    var thePassword = bcrypt.hashSync(req.body.password, 10);
-
-    var sql = "UPDATE tblstaff SET password = '" + thePassword + "' WHERE staffID = '" + req.body.id + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            res.json({"status": "error", "message": "Update failed."});
-            throw err;
-        }
-        res.json({"status": "success", "message": "Password updated."});
-    });
-}); // Complete
-app.post('/loadSpecificAccount', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'I' THEN 'Inactive' END) AS status, tblstaff.handphone, tblstaff.phone, tblstaff.email, tblposition.positionName AS position, tblstaff.staffPic AS avatar FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-app.get('/getStaffList', function (req, res) {
-    'use strict';
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffStatus = 'A' AND tblposition.positionName = 'Reporting Officer'";
-    db.query(sql, function(err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-app.post('/updateProfile', function (req, res) {
-    'use strict';
-    
-    var dt = dateTime.create(req.body.dob);
-
-    req.body.status = req.body.status == "Active" ? 'A' : 'I';
-    req.body.gender = req.body.gender == "Male" ? 'M' : 'F';
-    req.body.dob = dt.format('Y-m-d');
-    
-    var sql = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.position + "' LIMIT 0, 1";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        req.body.position = result[0].id;
-        var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', staffStatus = '" + req.body.status + "', staffPic = '" + req.body.avatar + "' WHERE staffID = '" + req.body.id + "'";
-        db.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            res.json({"status": "success", "message": "Profile Updated!"});
-        });
-    });
-}); // Complete
-
-// Role Management
-app.post('/addRole', function (req, res) {
-    'use strict';
-    
-    makeID("role", req.body.creationDate);
-    setTimeout(function () {
-        var sql = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUE ('" + obj.ID + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
-        db.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            res.json({"status": "success", "message": "Role created successfully!", "details": {"roleID": obj.ID}});
-        });
-    }, 100);
-}); // Complete
-app.get('/getAllRole', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT positionID AS id, positionName AS name, (CASE WHEN positionStatus = 'A' THEN 'ACTIVE' WHEN positionStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblposition WHERE positionName != 'ADMINISTRATOR'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-app.post('/setAuth', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.name + "' LIMIT 0, 1";
-    db.query(sql, function (err, result){
-        if (err) {
-            throw err;
-        }
-        var staffID = result[0].id;
-        var sql = "SELECT mgmtID AS id FROM tblmanagement WHERE mgmtName = '" + req.body.management + "' LIMIT 0, 1";
-        db.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            var managementID = result[0].id;
-            var sql = "DELETE FROM tblaccess WHERE positionID = '" + staffID + "' AND mgmtID = '" + managementID + "'";
-            db.query(sql, function (err, result) {
-                if (err) {
-                    throw err;
-                }
-                var sql = "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + staffID + "', '" + managementID + "', '" + req.body.access + "')";
-                db.query(sql, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    var message = req.body.access == 'A' ? "Permission given." : "Permission removed.";
-                    res.json({"status": "success", "message": message});
-                });
-            });
-        });
-    });
-}); // Complete
-app.get('/getPositionList', function(req, res) {
-    'use strict';
-    
-    var sql = "SELECT positionID AS id, positionName AS name FROM tblposition WHERE positionStatus = 'A' AND positionName != 'ADMINISTRATOR'";
-    db.query(sql, function(err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-    
-}); // Complete
-app.post('/getAllAuth', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblmanagement.mgmtName AS name, tblaccess.status FROM tblaccess JOIN tblposition ON tblaccess.positionID = tblposition.positionID JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblposition.positionName = '" + req.body.name + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-
-// Truck Management
-app.post('/addTruck', function (req, res) {
-    'use strict';
-    makeID("truck", req.body.creationDate);
-    setTimeout(function () {
-        var sql = "INSERT INTO tbltruck (truckID, transporter, truckTon, truckNum, truckExpiryStatus, creationDateTime, truckStatus) VALUE ('" + obj.ID + "', '" + req.body.transporter + "', '" + req.body.ton + "', '" + req.body.no + "', '" + req.body.roadtax + "', '" + req.body.creationDate + "', 'A')";
-        db.query(sql, function(err, result) {
-            if (err) {
-                throw err;
-            }
-            res.json({"status": "success", "details": {"truckID": obj.ID}});
-        });
-    }, 100);
-}); // Complete
-app.post('/editTruck', function (req, res) {
-    'use strict';
-    
-    req.body.status = req.body.status == "ACTIVE" ? 'A' : 'I';
-    
-    var sql = "UPDATE tbltruck SET transporter = '" + req.body.transporter + "', truckTon = '" + req.body.ton + "', truckNum = '" + req.body.no + "', truckExpiryStatus = '" + req.body.roadtax + "', truckStatus = '" + req.body.status + "' WHERE truckID = '" + req.body.id + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            res.json({"status": "error", "message": "Something wrong!"});
-            throw err;
-        }
-        res.json({"status": "success", "message": "Truck edited!"});
-    });
-}); // Complete
-app.get('/getTruckList', function (req, res) {
-    'use strict';
-    var sql = "SELECT truckID AS id, truckNum AS no FROM tbltruck WHERE truckStatus = 'A'";
-    db.query(sql, function(err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.get('/getAllTruck', function(req,res){
-    'use strict';
-    
-    var sql = "SELECT truckID AS id, transporter, truckTon AS ton, truckNum AS no, truckExpiryStatus AS roadtax, (CASE WHEN truckStatus = 'A' THEN 'ACTIVE' WHEN truckStatus = 'I' THEN 'INACTIVE' END) AS status FROM tbltruck";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-
-// Zone Management
-app.post('/addZone', function (req, res) {
-    'use strict';
-    makeID("zone", req.body.creationDate);
-    setTimeout(function() {
-        var sql = "INSERT INTO tblzone (zoneID, zoneName, creationDateTime, zoneStatus) VALUE ('" + obj.ID + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
-        db.query(sql, function(err, result) {
-            if (err) {
-                throw err;
-            }
-            res.json({"status": "success", "details": {"zoneID": obj.ID}});
-        });
-    }, 100);
-}); // Complete
-app.get('/getZoneList', function (req, res) {
-    'use strict';
-    var sql = "SELECT zoneID AS id, zoneName AS name FROM tblzone WHERE zoneStatus = 'A'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.get('/getAllZone', function (req, res) {
-    'use strict';
-    var sql = "SELECT zoneID AS id, zoneName AS name, (CASE WHEN zoneStatus = 'A' THEN 'ACTIVE' WHEN zoneStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblzone";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.post('/editZone',function(req, res){
-    'use strict';
-    var sql = "UPDATE tblzone SET zoneName = '" + req.body.name+ "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '"+ req.body.id + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            res.json({"status": "error", "message": "Update failed."});
-            throw err;
-        }
-        res.json({"status": "success", "message": "Zone Information Updated."});
-    });
-}); // Complete
-
-// Area Management
-app.post('/addArea', function (req, res) {
-    'use strict';
-    makeID("area", req.body.creationDate);
-    setTimeout(function () {
-        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, areaName, creationDateTime, areaStatus) VALUE ('" + obj.ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
-        db.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            res.json({"status": "success", "details": {"areaID": obj.ID}});
-        });
-    }, 100);
-}); // Complete
-app.get('/getAllArea', function (req, res) {
-    'use strict';
-    var sql = "SELECT a.areaID AS id, a.areaName AS name, z.zoneID as zone, z.zoneName as zoneName, s.staffID as staff, s.staffName as staffName, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea a INNER JOIN tblzone z ON a.zoneID = z.zoneID INNER JOIN tblstaff s ON a.staffID = s.staffID";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-app.get('/getAreaList', function (req, res) {
-    'use strict';
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
-    db.query(sql, function(err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-app.post('/updateArea',function(req,res){
-    'use strict';
-    
-    var sql = "SELECT staffID FROM tblstaff WHERE staffName = '" + req.body.staff + "' LIMIT 0, 1";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        var staffID = result[0].staffID;
-        
-        var sql = "SELECT zoneID FROM tblzone WHERE zoneName = '" + req.body.zone + "' LIMIT 0, 1";
-        db.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            var zoneID = result[0].zoneID;
-            
-            req.body.status = req.body.status == 'Active' ? 'A' : 'I';
-            var sql = "UPDATE tblarea SET areaName = '" + req.body.name+ "', zoneID = '" + zoneID + "', staffID = '" + staffID +"', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '"+ req.body.id + "'";
-            
-            db.query(sql, function (err, result) {
-                if (err) {
-                    res.json({"status": "error", "message": "Update failed."});
-                    throw err;
-                }
-                res.json({"status": "success", "message": "Area Information Updated."});
-            });
-        });
-    });
-}); // Complete
-app.post('/thisArea', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblarea.areaID AS id, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.post('/addCollection', function (req, res) {
-    'use strict';
-    
-    var sql = "INSERT INTO area_collection (areaID, areaAddress, areaCollStatus) VALUE ('" + req.body.area + "', '" + req.body.address + "', 'A')";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json({"status": "success", "message": "Address Added!", "details": {"id": result.insertId}});
-    });
-});
-app.post('/getCollection', function (req, res){
-    'use strict';
-
-    var sql = "SELECT acID AS id, areaAddress AS address FROM area_collection WHERE areaCollStatus = 'A' AND areaID = '" + req.body.id + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-        res.end();
-    });
-});
-app.post('/deleteCollection', function (req, res) {
-    'user strict';
-    
-    var sql = "UPDATE area_collection SET areaCollStatus = 'I' WHERE acID = '" + req.body.id + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json({"status": "success", "message": "Delete successfully!"});
-    });
-});
-app.post('/updateCollection', function (req, res) {
-    'use strict';
-    
-    var sql = "UPDATE area_collection SET areaAddress = '" + req.body.address + "' WHERE acID = '" + req.body.id + "'";
-    db.query(sql, function(err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json({"status": "success", "message": "Area collection updated!"});
-    });
-});
-
-// Bin Center Management
-app.post('/addBinCenter', function (req, res) {
-    'use strict';
-    makeID("bin", req.body.creationDate);
-    setTimeout(function () {
-        var sql = "INSERT INTO tblbincenter (binCenterID, areaID, binCenterName, binCenterLocation, binCenterStatus, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.area + "' , '" + req.body.name + "', '" + req.body.location + "', 'A', '" + req.body.creationDate + "')";
-        db.query(sql, function(err, result) {
-            if (err) {
-                throw err;
-            }
-            res.json({"status": "success", "details": {"binID": obj.ID}});
-        });
-    }, 100);
-}); // Complete
-app.post('/editBinCenter', function (req, res) {
-    'use strict';
-    
-    req.body.status = req.body.status == "ACTIVE" ? 'A' : 'I';
-    var sql = "UPDATE tblbincenter SET binCenterName = '" + req.body.name + "', binCenterLocation = '" + req.body.location + "', areaID = '" + req.body.area + "', binCenterStatus = '" + req.body.status + "' WHERE binCenterID = '" + req.body.id + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json({"status": "success", "message": "Successfully updated!"});
-    });
-}); // Complete
-app.get('/getAllBinCenter', function(req,res){
-    'use strict';
-    
-    var sql = "SELECT binCenterID AS id, areaID AS area, binCenterName as name, binCenterLocation AS location, (CASE WHEN binCenterStatus = 'A' THEN 'ACTIVE' WHEN binCenterStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblbincenter";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-
-// ACR Management
-app.post('/addAcr',function(req,res){
-    'use strict';
-    var i, days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
-    
-    makeID("acr", req.body.creationDate);
-    setTimeout(function () {
-        var sql = "INSERT INTO tblacr (acrID, acrName, acrPhoneNo, acrAddress, acrPeriod, acrStatus, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.name + "' , '" + req.body.phone + "', '" + req.body.address + "', '" + req.body.enddate + "', 'A', '" + req.body.creationDate + "')";
-        
-        db.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            for (i = 0; i < days.length; i += 1) {
-                if (req.body.days[days[i]] != undefined) {
-                    var sql = "INSERT INTO tblacrfreq (acrID, areaID, day) VALUE ('" + obj.ID + "', '" + req.body.area + "', '" + days[i] + "')";
-                    db.query(sql, function (err, result) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
-                }
-            }
-            res.json({"status": "success", "message": "ACR created!", "details": {"acrID": obj.ID}});
-        });
-    }, 100);
-}); // Complete
-app.get('/getAllAcr', function(req,res){
-    'use strict';
-    
-    var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.get('/getScheduleList', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblacr.acrName AS name, GROUP_CONCAT(tblacrfreq.day) AS days FROM tblacr JOIN tblacrfreq ON tblacr.acrID = tblacrfreq.acrID GROUP BY tblacr.acrID";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-        res.end();
-    });
-});
-
-// Report Management
-app.post('/addReport',function(req,res){
-    'use strict';
-    makeID('report',req.body.creationDate);
-    setTimeout(function () {
-        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, readStatus, completionStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + obj.ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', 'I', '" + req.body.status+ "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
-        var i = 0, j = 0;
-        var reportID = obj.ID;
-        
-        db.query(sql, function(err, result) {
-            if (err) {
-                throw err;
-            }
-            if (Object.keys(req.body.marker).length > 0) {
-                for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                    var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
-
-                    db.query(circleSQL, function (err, result) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
-                }
-            }
-            if (Object.keys(req.body.rectangle).length > 0) {
-                for (j = 0; j < Object.keys(req.body.rectangle).length; j++) {
-                    var rectSQL = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].swLng + "', '" + reportID + "')";
-                    
-                    db.query(rectSQL, function (err, result) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
-                }
-            }
-            res.json({"status": "success", "details": {"reportID": obj.ID}});
-        });
-    }, 100);
-}); // Complete
-app.post('/editReport',function(req,res){
-    'use strict';
-    
-    var sql = "UPDATE tblreport SET reportCollectionDate = '" + req.body.date + "', operationTimeStart = '" + req.body.startTime + "', operationTimeEnd = '" + req.body.endTime + "', garbageAmount = '" + req.body.ton + "', iFleetMap = '"+ req.body.ifleet + "', completionStatus = '" + req.body.status + "', truckID = '" + req.body.truckID + "', driverID = '" + req.body.driverID + "', remark = '" + req.body.remark + "' WHERE reportID = '" + req.body.id + "'";
-    
-    var i = 0, j = 0;
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            res.json({"status": "error", "message": "Something wrong!"});
-            throw err;
-        }
-
-        if (Object.keys(req.body.marker).length > 0) {
-            var dltCircleSQL = "DELETE FROM tblmapcircle WHERE reportID = '" + req.body.id + "'";
-            
-            db.query(dltCircleSQL, function (err, result) {
-                if (err) {
-                    throw err;
-                }
-            });           
-            
-            
-            for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].cLong + "', '" + req.body.marker[i].cLat + "', '" + req.body.id + "')";
-                
-                console.log(circleSQL);
-
-                db.query(circleSQL, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                });
-            }
-        }
-        if (Object.keys(req.body.rectangle).length > 0) {
-            
-            var dltRectSQL = "DELETE FROM tblmaprect WHERE reportID = '" + req.body.id + "'";
-            
-            db.query(dltRectSQL, function (err, result) {
-                if (err) {
-                    throw err;
-                }
-            }); 
-            
-            for (j = 0; j < Object.keys(req.body.rectangle).length; j++) {
-                var rectSQL = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].swLng + "', '" + req.body.id + "')";
-
-                db.query(rectSQL, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                });
-            }
-        }        
-        res.json({"status": "success", "message": "report edited!"});
-    });
-});
-app.post('/getReport', function(req, res){
-    'use strict';
-    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetMap AS ifleet, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Wait for area_collection
-app.post('/getReportingAreaList', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "'GROUP BY tblzone.zoneID";
-    
-    db.query(sql, function(err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-app.post('/getReportBinCenter', function(req,res){
-    'use strict';
-    
-    var sql = "SELECT binCenterName AS name FROM tblbincenter WHERE areaID = '" + req.body.areaID + "'";
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-//app.post('/getReportACR', function (req, res) {
-//    'use strict';
-//    
-//    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
-//    
-//    db.query(sql, function (err, result) {
-//        if (err) {
-//            throw err;
-//        }
-//        res.json(result);
-//    });
-//});
-app.post('/getReportCircle', function(req,res){
-    'use strict';
-    
-    var sql = "SELECT radius, cLong, cLat FROM tblmapcircle WHERE reportID = '" + req.body.reportID + "'";
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.post('/getReportRect', function (req, res) {
-    'use strict';
-    var sql = "SELECT neLat, neLng, swLat, swLng FROM tblmaprect WHERE reportID = '" + req.body.reportID + "'";
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.get('/getReportList', function(req, res){
-    'use strict';
-    
-    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, completionStatus, garbageAmount, remark FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID ORDER BY reportCollectionDate DESC";
-    
-    db.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-app.post('/getGoogleLocation', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblarea.areaName AS area, tblzone.zoneName AS zone FROM tblarea INNER JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID = '" + req.body.areaCode + "' LIMIT 0, 1";
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -957,7 +54,7 @@ app.post('/getGoogleLocation', function (req, res) {
 app.post('/getAreaLngLat', function(req, res) {
     'use strict';
     var sql = "SELECT longitude, latitude FROM tblarea WHERE areaID = '" + req.body.areaCode+ "'";
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -969,7 +66,7 @@ app.post('/updateAreaLngLat', function(req, res) {
     'use strict';
     var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat+ "' WHERE areaID = '" + req.body.areaCode + "'";
     
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -983,7 +80,7 @@ app.post('/getDataVisualization', function(req, res){
     
     var sql ="SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.completionStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' ORDER BY r.reportCollectionDate";
     
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -995,7 +92,7 @@ app.post('/getDataVisualizationGroupByDate', function(req, res){
     
     var sql ="SELECT reportCollectionDate, SUM(operationTimeStart) AS 'operationTimeStart', SUM(operationTimeEnd) AS 'operationTimeEnd', SUM(garbageAmount) AS 'garbageAmount' FROM tblreport WHERE reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' GROUP BY reportCollectionDate ORDER BY reportCollectionDate";
     
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1007,7 +104,7 @@ app.post('/getDataVisualizationGroupByDate', function(req, res){
 app.get('/getDriverList', function(req, res) {
     'use strict';
     var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblposition JOIN tblstaff ON tblstaff.positionID = tblposition.positionID WHERE tblposition.positionName = 'Driver' AND tblstaff.staffStatus = 'A'";
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1015,12 +112,10 @@ app.get('/getDriverList', function(req, res) {
     });
 }); // Complete
 
-
-
 //get count
 app.get('/getZoneCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblzone";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1030,7 +125,7 @@ app.get('/getZoneCount',function(req,res){
 });
 app.get('/getAreaCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblarea";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1040,7 +135,7 @@ app.get('/getAreaCount',function(req,res){
 });
 app.get('/getAcrCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblacr";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1050,7 +145,7 @@ app.get('/getAcrCount',function(req,res){
 });
 app.get('/getBinCenterCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblbincenter";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1060,7 +155,7 @@ app.get('/getBinCenterCount',function(req,res){
 });
 app.get('/getTruckCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tbltruck";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1070,7 +165,7 @@ app.get('/getTruckCount',function(req,res){
 });
 app.get('/getUserCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'count' FROM tblstaff";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1080,7 +175,7 @@ app.get('/getUserCount',function(req,res){
 });
 app.get('/getReportCompleteCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'completeCount' FROM tblreport WHERE completionStatus = 'C'";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1090,7 +185,7 @@ app.get('/getReportCompleteCount',function(req,res){
 });
 app.get('/getReportIncompleteCount',function(req,res){
     var sql="SELECT COUNT(*) AS 'incompleteCount' FROM tblreport WHERE completionStatus = 'I'";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1102,7 +197,7 @@ app.get('/getReportIncompleteCount',function(req,res){
 //complaint module
 app.get('/getComplaintList',function(req,res){
     var sql="SELECT tblComplaint.date AS 'date', tblComplaint.complaintTitle AS 'title', tblCustomer.name AS  'customer', tblComplaintType.complaintType AS 'type', tblArea.areaName AS 'area', tblComplaint.complaintID AS ' complaintID' FROM tblComplaint JOIN tblComplaintType ON tblComplaint.complaintType = tblComplaintType.complaintType JOIN tblCustomer ON tblCustomer.customerID = tblComplaint.customerID JOIN tblArea ON tblArea.areaID = tblCustomer.areaID";
-     db.query(sql, function (err, result) {
+     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1114,7 +209,7 @@ app.get('/getComplaintLoc',function(req,res){
     
     var sql = "SELECT tblcomplaint.complaintID, tblarea.longitude AS 'longitude', tblarea.latitude AS 'latitude', tblarea.areaName AS 'area' FROM tblarea JOIN tblcustomer ON tblarea.areaID = tblcustomer.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID";
     
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1126,7 +221,7 @@ app.post('/getComplaintDetail',function(req,res){
     'use strict';
     var sql = "SELECT t.complaint, co.complaintTitle, co.complaintContent, co.date, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', cu.neighborhood, ', ', cu.neighborhood, ', ', cu.postCode, ', ', cu.city) AS address, a.areaID, a.areaName from tblComplaint co JOIN tblComplaintType t ON co.complaintType = t.complaintType JOIN tblCustomer cu ON co.customerID = cu.customerID JOIN tblArea a ON a.areaID = cu.areaID WHERE co.complaintID = '" + req.body.id + "'";
 
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1139,7 +234,7 @@ app.post('/getDateListForComplaint',function(req,res){
     'use strict';
     var sql = "SELECT reportCollectionDate as date FROM tblreport WHERE areaID = '" + req.body.id + "'";
 
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1151,7 +246,7 @@ app.post('/updateAreaLngLat', function(req, res) {
     'use strict';
     var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat+ "' WHERE areaID = '" + req.body.areaCode + "'";
     
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1196,7 +291,7 @@ emitter.on('createTable', function () {
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
-        db.query(sqls[i], function (err, result) {
+        database.query(sqls[i], function (err, result) {
             if (err) {
                 throw err;
             }
@@ -1240,7 +335,7 @@ emitter.on('defaultUser', function () {
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
-        db.query(sqls[i], function (err, result) {
+        database.query(sqls[i], function (err, result) {
             if (err) {
                 throw err;
             }
@@ -1253,7 +348,7 @@ emitter.on('defaultUser', function () {
     
     var roleID = "ATH" + roleFormat + "0001";
     var sql = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUE ('" + roleID + "', 'ADMINISTRATOR', '" + formatted + "', 'A')";
-    db.query(sql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -1262,7 +357,7 @@ emitter.on('defaultUser', function () {
         setTimeout(function () {
             var thePassword = bcrypt.hashSync('adminacc123', 10);
             var sql = "INSERT INTO tblstaff (staffID, username, password, positionID, creationDateTime, staffStatus) VALUE ('" + obj.ID + "', 'trienekens@admin.com', '" + thePassword + "', '" + roleID + "', '" + formatted + "', 'A')";
-            db.query(sql, function (err, result) {
+            database.query(sql, function (err, result) {
                 if (err) {
                     throw err;
                 }                    
@@ -1293,7 +388,7 @@ emitter.on('defaultUser', function () {
                 ], j;
                     
                 for (j = 0; j < sqls.length; j += 1) {
-                    db.query(sqls[j], function (err, result) {
+                    database.query(sqls[j], function (err, result) {
                         if (err) {
                             throw err;
                         }
@@ -1307,54 +402,6 @@ emitter.on('defaultUser', function () {
     
 }); // Complete
 /* Emitter Registered */
-
-
-// Create connection
-var db = mysql.createConnection({
-    host: DB_HOST,
-    user: DB_USER,
-    password: DB_PASS
-});
-
-// Connect
-db.connect(function (err) {
-    'use strict';
-    if (err) {
-        throw err;
-    }
-    db.query('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' + DB_NAME + '"', function (err, result) {
-        if (result[0] === undefined) {
-            db.query('CREATE DATABASE ' + DB_NAME + '', function (err, result) {
-                if (err) {
-                    throw err;
-                }
-                console.log('Database created...');
-                db.query('USE ' + DB_NAME + '', function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    console.log('MySQL Connected...');
-                    emitter.emit('createTable');
-                    emitter.emit('defaultUser');
-                });
-            });
-        } else {
-            if (result[0].schema_name === DB_NAME) {
-                db.query('USE ' + DB_NAME + '', function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    console.log('MySQL Connected...');
-                });
-            }
-        }
-    });
-});
-
-server.listen(process.env.PORT || SVR_PORT, function () {
-    'use strict';
-    console.log('Server is running on port ' + SVR_PORT + '');
-});
 
 //------------------------------------------------------------------------------------------
 // check if an element exists in array using a comparer function
@@ -1409,7 +456,7 @@ io.sockets.on('connection', function(socket) {
     socket.on('make report', function (data) {
         var sql = "SELECT staffName AS name, staffPic AS avatar FROM tblstaff WHERE staffID = '" + data.owner + "' LIMIT 0, 1";
         
-        db.query(sql, function (err, result) {
+        database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
@@ -1436,7 +483,7 @@ io.sockets.on('connection', function(socket) {
     //Create New User
     socket.on('create new user', function(data) {
         socket.broadcast.emit('append user list', {
-            id: obj.ID,
+            id: data.id,
             name: data.name,
             username: data.username,
             position: data.position.name,
@@ -1456,3 +503,13 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('get users', users);
     }
 });
+
+app.use('/', requestHandler);
+app.use('/', accountManagement);
+app.use('/', acrManagement);
+app.use('/', areaManagement);
+app.use('/', bincenterManagement);
+app.use('/', reportManagement);
+app.use('/', roleManagement);
+app.use('/', truckManagement);
+app.use('/', zoneManagement);
