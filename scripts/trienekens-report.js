@@ -412,6 +412,7 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
     
     $http.get('/getReportList').then(function(response){
         $scope.reportList = response.data;
+        
         $.each($scope.reportList, function (index, value) {
             $scope.reportList[index].reportCollectionDate = $filter('date')($scope.reportList[index].reportCollectionDate, 'yyyy-MM-dd');
         });
