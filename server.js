@@ -149,7 +149,7 @@ app.get('/complaint-module', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-module.html', {root: __dirname});
 });
-app.get('/complaint-detail:complaintCode', function (req, res) {
+app.get('/complaint-detail/:complaintCode', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-detail.html', {root: __dirname});
 });
