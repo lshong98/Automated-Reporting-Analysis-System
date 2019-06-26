@@ -2530,12 +2530,6 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
 
-    $scope.initializeZone = function () {
-        $scope.zone = {
-            "name": '',
-            "creationDate": ''
-        };
-    };
     
     $scope.show = angular.copy(storeDataService.show.zone);
 
@@ -2545,10 +2539,11 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
     });
     
     $scope.orderBy = function (property) {
-        $scope.zoneList = $filter('orderBy')($scope.zoneList, ['' + property + ''], asc);
+        $scope.taskList = $filter('orderBy')($scope.taskList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
 });
+
 app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
     $scope.complaintList = [];
@@ -2606,16 +2601,32 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     
 });
 //complaint detail controller
-app.controller('complaintDetailController',function($scope, $routeParams){
+app.controller('complaintDetailController',function($scope, $http, $filter, $routeParams){
     'use strict';
-    console.log($routeParams.complaintCode)
-    $scope.details = [{
-        'ctype': 'Personal',
-        'title': 'Collection',
-        'date': '26-06-2019',
-        'customer': 'Leonard',
-        'area': 'Tabuan Jaya',
-        'content': 'rubish not collected',
-        'address': 'Tabuan'
-    }];
+    
+    $scope.req = {
+        'id': $routeParams.complaintCode
+    };
+    
+    $http.post('/getComplaintDetail', $scope.req).then(function (response){
+//        var complaint = {};
+        var complaint = response.data;
+        console.log(complaint)
+        $scope.comDetail = {
+            'ctype': complaint[0].complaint,
+            'title': complaint[0].complaintTitle,
+            'content': complaint[0].complaintContent,
+            'date': $filter('date')(complaint[0].date, 'medium'),
+            'customer': complaint[0].name,
+            'address': complaint[0].address,
+            'area': complaint[0].areaName
+        };
+//        $scope.comDetail.ctype = 
+//        $scope.comDetail.title = complaint.complaintTitle;
+//        $scope.comDetail.content = complaint.complaintContent;
+//        $scope.comDetail.date = $filter('date')(complaint.date, 'medium');
+//        $scope.comDetail.customer = complaint.name;
+//        $scope.comDetail.address = complaint.address;
+//        $scope.comDetail.area = complaint.areaName;
+    });
 });

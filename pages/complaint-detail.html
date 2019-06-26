@@ -19,16 +19,16 @@
 </div>
 <div class="row">
     <div class="col-md-6 detailBox">
-        <div data-ng-repeat="c in details">
-            <p><strong>Complaint Type: </strong>{{c.ctype}}</p>
-            <p><strong>Complaint Title: </strong> {{c.title}}</p>
-            <p><strong>Date Time: </strong>{{c.date}}</p>
-            <p><strong>Customer: </strong>{{c.customer}}</p>
-            <p><strong>Area: </strong>{{c.area}}</p>
+        <div>
+            <p><strong>Complaint Type: </strong>{{comDetail.ctype}}</p>
+            <p><strong>Complaint Title: </strong> {{comDetail.title}}</p>
+            <p><strong>Date Time: </strong>{{comDetail.date}}</p>
+            <p><strong>Customer: </strong>{{comDetail.customer}}</p>
+            <p><strong>Area: </strong>{{comDetail.area}}</p>
             <p><strong>Address:</strong></p>
-            <p>{{c.address}}</p>
+            <p>{{comDetail.address}}</p>
             <p><strong>Content: </strong></p>
-            <p class="contentBox">{{c.content}}</p>
+            <p class="contentBox">{{comDetail.content}}</p>
         </div>
     </div>
     <div class="col-md-6">
