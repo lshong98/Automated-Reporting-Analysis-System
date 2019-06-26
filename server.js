@@ -11,8 +11,8 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
 var DB_NAME = 'trienekens7';
 
@@ -20,7 +20,7 @@ users = [];
 connections = [];
 connectedUserList = [];
 
-var SVR_PORT = '3000';
+var SVR_PORT = '';
 var obj = {
     "ID": '',
     "authStatus": ''
@@ -1110,9 +1110,9 @@ app.get('/getComplaintList',function(req,res){
     });    
 });
 
-app.get('getComplaintLoc',function(req,res){
+app.get('/getComplaintLoc',function(req,res){
     
-    var sql = ""
+    var sql = "SELECT tblcomplaint.complaintID, tblarea.longitude AS 'longitude', tblarea.latitude AS 'latitude', tblarea.areaName AS 'area' FROM tblarea JOIN tblcustomer ON tblarea.areaID = tblcustomer.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID";
     
     db.query(sql, function (err, result) {
         if (err) {
@@ -1121,6 +1121,43 @@ app.get('getComplaintLoc',function(req,res){
         res.json(result);
     });        
 });
+//get complaint detail by id
+app.post('/getComplaintDetail',function(req,res){
+    'use strict';
+    var sql = "SELECT t.complaint, co.complaintTitle, co.complaintContent, co.date, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', cu.neighborhood, ', ', cu.neighborhood, ', ', cu.postCode, ', ', cu.city) AS address, a.areaID, a.areaName from tblComplaint co JOIN tblComplaintType t ON co.complaintType = t.complaintType JOIN tblCustomer cu ON co.customerID = cu.customerID JOIN tblArea a ON a.areaID = cu.areaID WHERE co.complaintID = '" + req.body.id + "'";
+
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });        
+});
+
+//get report date list for complaint by id
+app.post('/getDateListForComplaint',function(req,res){
+    'use strict';
+    var sql = "SELECT reportCollectionDate as date FROM tblreport WHERE areaID = '" + req.body.id + "'";
+
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });        
+});
+
+app.post('/updateAreaLngLat', function(req, res) {
+    'use strict';
+    var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat+ "' WHERE areaID = '" + req.body.areaCode + "'";
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
 
 /* Emitter Registered */
 // Create Database Tables

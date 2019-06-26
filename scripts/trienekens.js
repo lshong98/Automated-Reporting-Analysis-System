@@ -2501,13 +2501,13 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
 app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
     $scope.complaintList = [];
+    $scope.complaintLocList = [];
     
     $http.get('/getComplaintList').then(function (response) {
         $scope.complaintList = response.data;
         for(var i =0; i<$scope.complaintList.length; i++){
             $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
         }
-        console.log($scope.complaintList);
     });
     
     $scope.complaintDetail = function(complaintCode){
@@ -2515,6 +2515,8 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         window.location.href = '#/complaint-detail/' + complaintCode;
         
     };
+    
+
     
     var $googleMap = document.getElementById('googleMap');
     
@@ -2531,20 +2533,63 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     };
     
     var map = new google.maps.Map($googleMap, visualizeMap);
- 
+
+    $http.get('/getComplaintLoc').then(function (response) {
+        $scope.complaintLocList = response.data    
+        
+        for(var i =0; i <$scope.complaintLocList.length; i++){
+        
+            var myLatLng = {lat: $scope.complaintLocList[i].latitude, lng: $scope.complaintLocList[i].longitude};
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                title: $scope.complaintLocList.area
+            });
+
+            marker.setMap(map);
+
+        }
+    });
+    
+    
     
 });
 //complaint detail controller
-app.controller('complaintDetailController',function($scope, $routeParams){
+app.controller('complaintDetailController',function($scope, $http, $filter, $routeParams){
     'use strict';
-    console.log($routeParams.complaintCode)
-    $scope.details = [{
-        'ctype': 'Personal',
-        'title': 'Collection',
-        'date': '26-06-2019',
-        'customer': 'Leonard',
-        'area': 'Tabuan Jaya',
-        'content': 'rubish not collected',
-        'address': 'Tabuan'
-    }];
+    $scope.req = {
+        'id': $routeParams.complaintCode
+    };
+    
+    //get complaint detail refers on complaint id
+    $http.post('/getComplaintDetail', $scope.req).then(function (response){
+        var complaint = response.data;
+//        console.log(complaint)
+        $scope.comDetail = {
+            'ctype': complaint[0].complaint,
+            'title': complaint[0].complaintTitle,
+            'content': complaint[0].complaintContent,
+            'date': $filter('date')(complaint[0].date, 'medium'),
+            'customer': complaint[0].name,
+            'address': complaint[0].address,
+            'areaID': complaint[0].areaID,
+            'area': complaint[0].areaName
+        };
+        
+        //get report dates for certain area id
+        $scope.dateList = [];
+        $scope.req2 = {
+            'id': $scope.comDetail.areaID
+        };
+        $http.post('/getDateListForComplaint', $scope.req2).then(function (response){
+            var dates = response.data;
+            
+            for(var i = 0; i < dates.length; i++){
+                $scope.dateList.push($filter('date')(dates[i].date, 'mediumDate'));
+            }
+            
+            console.log($scope.dateList)
+        });    
+    });
+    
 });
