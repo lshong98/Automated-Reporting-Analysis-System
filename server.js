@@ -1106,7 +1106,7 @@ app.get('/getComplaintList',function(req,res){
     });    
 });
 
-app.get('getComplaintLoc',function(req,res){
+app.get('/getComplaintLoc',function(req,res){
     
     var sql = ""
     
@@ -1117,6 +1117,29 @@ app.get('getComplaintLoc',function(req,res){
         res.json(result);
     });        
 });
+//get complaint detail by id
+app.post('/getComplaintDetail',function(req,res){
+    'use strict';
+    var sql = "SELECT t.complaint, co.complaintTitle, co.complaintContent, co.date, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', cu.neighborhood, ', ', cu.neighborhood, ', ', cu.postCode, ', ', cu.city) AS address, a.areaName from tblComplaint co JOIN tblComplaintType t ON co.complaintType = t.complaintType JOIN tblCustomer cu ON co.customerID = cu.customerID JOIN tblArea a ON a.areaID = cu.areaID WHERE co.complaintID = '" + req.body.id + "'";
+
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });        
+});
+app.post('/updateAreaLngLat', function(req, res) {
+    'use strict';
+    var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat+ "' WHERE areaID = '" + req.body.areaCode + "'";
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
 
 /* Emitter Registered */
 // Create Database Tables
