@@ -255,6 +255,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'inventoryBinController',
         controllerAs:'inventoryBin'
     })
+    .when('/complaint-module', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/complaint-module');
+            }
+        },
+        templateUrl: '/complaint-module',
+        controller: 'complaintController',
+        controllerAs:'complaint'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {

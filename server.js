@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'trienekens4';
+var DB_NAME = 'triemerge';
 
 users = [];
 connections = [];
@@ -144,6 +144,10 @@ app.get('/bin-database', function (req, res) {
 app.get('/bin-inventory', function (req, res) {
     'use strict';
     res.sendFile('pages/bin-inventory.html', {root: __dirname});
+});
+app.get('/complaint-module', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-module.html', {root: __dirname});
 });
 var makeID = function(keyword, creationDate) {
     var table, property, header, ID;
@@ -1087,6 +1091,16 @@ app.get('/getReportIncompleteCount',function(req,res){
 
 });
 
+//complaint module
+app.get('/getComplaintList',function(req,res){
+    var sql="SELECT tblComplaint.date AS 'date', tblComplaint.complaintTitle AS 'title', tblCustomer.name AS  'customer', tblComplaintType.complaintType AS 'type', tblArea.areaName AS 'area', tblComplaint.complaintID AS ' complaintID' FROM tblComplaint JOIN tblComplaintType ON tblComplaint.complaintType = tblComplaintType.complaintType JOIN tblCustomer ON tblCustomer.customerID = tblComplaint.customerID JOIN tblArea ON tblArea.areaID = tblCustomer.areaID";
+     db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+})
 /* Emitter Registered */
 // Create Database Tables
 emitter.on('createTable', function () {
@@ -1094,7 +1108,7 @@ emitter.on('createTable', function () {
     var sqls, i;
     
     sqls = [
-        "CREATE TABLE tblCustomer (customerID int auto_increment, username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50),  houseNo varchar(5),  streetNo varchar(20),  neighborhood varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime,  PRIMARY KEY (customerID))",
+        "CREATE TABLE tblCustomer (customerID int auto_increment, username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50),  houseNo varchar(5),  streetNo varchar(20),  neighborhood varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime, areaID varchar(15),  PRIMARY KEY (customerID))",
         "CREATE TABLE tblPosition (  positionID varchar(15),  positionName varchar(30),  positionStatus char(1),  creationDateTime datetime,  primary key (positionID))",
         "CREATE TABLE tblBins (  serialNo int,  customerID int,  size int,  status char(1),  PRIMARY KEY (serialNo),  foreign key (customerID) references tblCustomer(customerID))",
         "CREATE TABLE tblManagement (  mgmtID int auto_increment,  mgmtName varchar(50),  PRIMARY KEY (mgmtID))",
@@ -1120,7 +1134,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblAcrFreq (  acrID varchar(15),  areaID varchar(15),  day varchar(30),  primary key (acrID, areaID, day),  foreign key(acrID) references tblAcr(acrID),  foreign key(areaID) references tblArea(areaID))",
         "CREATE TABLE tblBinCenter (  binCenterID varchar(15),  areaID varchar(15),  binCenterName varchar(100),  binCenterLocation varchar(100),  binCenterStatus char(1),  creationDateTime datetime,  PRIMARY KEY (binCenterID),  foreign key (areaID) references tblArea(areaID))",
         "CREATE TABLE tblLostBinRecord (  idNo int auto_increment,  customerID int,  serialNo int,  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblCustomer(customerID),  foreign key (areaID) references tblArea(areaID),  foreign key (serialNo) references tblBins(serialNo))",
-        "CREATE TABLE tblTag (  date datetime,  serialNo int,  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tblTruck(truckID))"
+        "CREATE TABLE tblTag (  date datetime,  serialNo int,  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tblTruck(truckID))", "create table tblComplaintType ( complaintType int auto_increment,    complaint varchar(15), primary key (complaintType))", " create table tblComplaint ( complaintID int auto_increment, customerID int, date datetime, complaintType int, complaintTitle mediumtext, complaintContent longtext, primary key (complaintID), foreign key (customerID) references tblCustomer(customerID), foreign key (complaintType) references tblComplaintType(complaintType))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {

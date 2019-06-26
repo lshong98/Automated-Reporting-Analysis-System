@@ -2430,3 +2430,22 @@ $scope.getRecordIndex = function (date) {
 //    }
     
 });
+
+app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
+    'use strict';
+    $scope.complaintList = [];
+    
+    $http.get('/getComplaintList').then(function (response) {
+        $scope.complaintList = response.data;
+        for(var i =0; i<$scope.complaintList.length; i++){
+            $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
+        }
+        console.log($scope.complaintList);
+    });
+    
+    $scope.complaintDetail = function(complaintID){
+        window.location.href = '#/complaint-detail/' + complaintID;
+    };
+    
+    
+});
