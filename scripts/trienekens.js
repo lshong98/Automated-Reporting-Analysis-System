@@ -2544,12 +2544,6 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
 
-    $scope.initializeZone = function () {
-        $scope.zone = {
-            "name": '',
-            "creationDate": ''
-        };
-    };
     
     $scope.show = angular.copy(storeDataService.show.zone);
 
@@ -2559,10 +2553,11 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
     });
     
     $scope.orderBy = function (property) {
-        $scope.zoneList = $filter('orderBy')($scope.zoneList, ['' + property + ''], asc);
+        $scope.taskList = $filter('orderBy')($scope.taskList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
 });
+
 app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
     $scope.complaintList = [];
