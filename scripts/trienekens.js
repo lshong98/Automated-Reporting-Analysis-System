@@ -2547,13 +2547,13 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
 app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
     $scope.complaintList = [];
+    $scope.complaintLocList = [];
     
     $http.get('/getComplaintList').then(function (response) {
         $scope.complaintList = response.data;
         for(var i =0; i<$scope.complaintList.length; i++){
             $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
         }
-        console.log($scope.complaintList);
     });
     
     $scope.complaintDetail = function(complaintCode){
@@ -2561,6 +2561,8 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         window.location.href = '#/complaint-detail/' + complaintCode;
         
     };
+    
+
     
     var $googleMap = document.getElementById('googleMap');
     
@@ -2577,7 +2579,25 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     };
     
     var map = new google.maps.Map($googleMap, visualizeMap);
- 
+
+    $http.get('/getComplaintLoc').then(function (response) {
+        $scope.complaintLocList = response.data    
+        
+        for(var i =0; i <$scope.complaintLocList.length; i++){
+        
+            var myLatLng = {lat: $scope.complaintLocList[i].latitude, lng: $scope.complaintLocList[i].longitude};
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                title: $scope.complaintLocList.area
+            });
+
+            marker.setMap(map);
+
+        }
+    });
+    
+    
     
 });
 //complaint detail controller
