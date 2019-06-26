@@ -148,6 +148,9 @@ app.get('/bin-inventory', function (req, res) {
 app.get('/complaint-module', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-module.html', {root: __dirname});
+app.get('/complaint-detail', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-detail.html', {root: __dirname});
 });
 var makeID = function(keyword, creationDate) {
     var table, property, header, ID;
