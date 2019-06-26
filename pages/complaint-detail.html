@@ -19,19 +19,20 @@
 </div>
 <div class="row">
     <div class="col-md-6 detailBox">
-        <div>
-            <p><strong>Complaint Type: </strong>{{comDetail.ctype}}</p>
-            <p><strong>Complaint Title: </strong> {{comDetail.title}}</p>
-            <p><strong>Date Time: </strong>{{comDetail.date}}</p>
-            <p><strong>Customer: </strong>{{comDetail.customer}}</p>
-            <p><strong>Area: </strong>{{comDetail.area}}</p>
-            <p><strong>Address:</strong></p>
-            <p>{{comDetail.address}}</p>
-            <p><strong>Content: </strong></p>
-            <p class="contentBox">{{comDetail.content}}</p>
-        </div>
+        <p><strong>Complaint Type: </strong>{{comDetail.ctype}}</p>
+        <p><strong>Complaint Title: </strong> {{comDetail.title}}</p>
+        <p><strong>Date Time: </strong>{{comDetail.date}}</p>
+        <p><strong>Customer: </strong>{{comDetail.customer}}</p>
+        <p><strong>Area: </strong>{{comDetail.area}}</p>
+        <p><strong>Address:</strong></p>
+        <p>{{comDetail.address}}</p>
+        <p><strong>Content: </strong></p>
+        <p class="contentBox">{{comDetail.content}}</p>
     </div>
     <div class="col-md-6">
         <h2>Report reference</h2>
+        <div data-ng-repeat="d in dateList">
+            <p>{{d}}</p>
+        </div>
     </div>
 </div>

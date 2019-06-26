@@ -2583,15 +2583,14 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
 //complaint detail controller
 app.controller('complaintDetailController',function($scope, $http, $filter, $routeParams){
     'use strict';
-    
     $scope.req = {
         'id': $routeParams.complaintCode
     };
     
+    //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response){
-//        var complaint = {};
         var complaint = response.data;
-        console.log(complaint)
+//        console.log(complaint)
         $scope.comDetail = {
             'ctype': complaint[0].complaint,
             'title': complaint[0].complaintTitle,
@@ -2599,14 +2598,24 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
             'date': $filter('date')(complaint[0].date, 'medium'),
             'customer': complaint[0].name,
             'address': complaint[0].address,
+            'areaID': complaint[0].areaID,
             'area': complaint[0].areaName
         };
-//        $scope.comDetail.ctype = 
-//        $scope.comDetail.title = complaint.complaintTitle;
-//        $scope.comDetail.content = complaint.complaintContent;
-//        $scope.comDetail.date = $filter('date')(complaint.date, 'medium');
-//        $scope.comDetail.customer = complaint.name;
-//        $scope.comDetail.address = complaint.address;
-//        $scope.comDetail.area = complaint.areaName;
+        
+        //get report dates for certain area id
+        $scope.dateList = [];
+        $scope.req2 = {
+            'id': $scope.comDetail.areaID
+        };
+        $http.post('/getDateListForComplaint', $scope.req2).then(function (response){
+            var dates = response.data;
+            
+            for(var i = 0; i < dates.length; i++){
+                $scope.dateList.push($filter('date')(dates[i].date, 'mediumDate'));
+            }
+            
+            console.log($scope.dateList)
+        });    
     });
+    
 });
