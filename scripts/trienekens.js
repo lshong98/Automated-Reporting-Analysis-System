@@ -139,6 +139,16 @@ app.service('storeDataService', function () {
             "itemType": '',
             "path": ''
         },
+        "task": {
+            "taskId": '',
+            "date": '',
+            "staff": '',
+            "action": '',
+            "page": '',
+            "rowId": '',
+            "query": '',
+            "authorize": ''
+        },
         
         "show": {
             "account": {
@@ -187,6 +197,9 @@ app.service('storeDataService', function () {
             },
             "inventory": {
                 "edit": false,
+                "view": false
+            },
+            "authorization": {
                 "view": false
             }
         }
@@ -277,6 +290,16 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             "outReusable240": 0,
             "outReusable660": 0,
             "outReusable1000": 0
+        }
+        scope.task = {
+            "taskId": '',
+            "date": '',
+            "staff": '',
+            "action": '',
+            "page": '',
+            "rowId": '',
+            "query": '',
+            "authorize": ''
         }
         
         scope.notify = function (stat, mes) {
@@ -580,7 +603,46 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
             
         };
-        
+
+        //Edit Task Authorization
+        scope.editTask = function (taskId, date, staff, action, page, rowId, query, authorize) {
+            scope.showTask = !scope.showTask;
+            
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+            scope.thisTask = {"taskId": taskId, "date": date, "staff": staff, "action": action, "page": page, "rowId": rowId, "query": query, "authorize": authorize};
+        };
+        scope.saveTask = function () {
+            scope.showTask = !scope.showTask;
+            
+            $http.post('/editTask', scope.t).then(function (response) {
+                var data = response.data;
+                
+                scope.notify(data.status, data.message);
+                
+                $.each(storeDataService.task, function (index, value) {
+                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
+                    //     if (data.status == "success") {
+                    //         storeDataService.bin[index] = angular.copy(scope.b);
+                    //     } else {
+                    //         scope.z = angular.copy(storeDataService.bin[index]);
+                    //     }
+                    //     return false;
+                    // }
+                });
+            });
+        };
+        scope.cancelTask = function () {
+            scope.showTask = !scope.showTask;
+            
+            $.each(storeDataService.task, function (index, value) {
+                if (storeDataService.databaseBin[index].id == scope.thisDatabaseBin.id) {
+                    scope.b = angular.copy(storeDataService.databaseBin[index]);
+                    return false;
+                }
+            });
+            
+        };
 
     };
 });
@@ -1756,6 +1818,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "inventory": {
             "edit": 'I',
             "view": 'I'
+        },
+        "authorization": {
+            "view": 'I'
         }
     };
 
@@ -2124,15 +2189,28 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
             return vm;
         }, true);
     });
+
+    var getFilteredDatabaseBin = function(){
+        $http.post("/getFilteredDatabaseBin", $scope.date)
+            .then(function (response) {
+                    $scope.databaseBinList = response.data;
+//                    var obj = getElementList("area & duration", $scope.reportList);
+//                    console.log(obj);
+                },
+                function (response) {
+                    $window.console.log("errror retrieving json file - " + response);
+                });
+    };
     
     $scope.databaseBinList = [];
     $scope.addDatabaseBin = function () {
         // $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         // console.log($scope.databaseBin);
 
-        window.alert("clicked");
+        
         $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
         //$scope.totalItems = $scope.filterDatabaseBinList.length;
+        console.log("Database Bin Created");
         console.log($scope.databaseBinList);
         // $http.post('/addDatabaseBin', $scope.databaseBin).then(function (response) {
         //     var returnedData = response.data;
@@ -2156,20 +2234,34 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         $scope.databaseBinList = $filter('orderBy')($scope.databaseBinList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
+
+    $scope.date = $scope.date || {
+        from: '1900-01-01',
+        to: '3000-01-01'
+    };
+    $(function () {
+        var start = moment().subtract(7, 'days');
+        var end = moment();
+        function putRange(start, end) {
+            $('#databaserange span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+        }
+
+        $('#databaserange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            opens: 'right'
+        }, function (start, end, label) {
+            //console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            putRange(start, end);
+            $scope.date.from = start.format('YYYY-MM-DD');
+            $scope.date.to = end.format('YYYY-MM-DD');
+            console.log($scope.date.from + ' ' + $scope.date.to);
+            getFilteredDatabaseBin();
+        });
+        putRange(start, end);
+    });
+
     
-//    $scope.editBin = function(){
-//        
-//        $http.post('/editBin', $scope.bin).then(function(response){
-//            var data = response.data;
-//            if(data.status === "success"){
-//                angular.element('body').overhang({
-//                    type: data.status,
-//                    message: data.message
-//                });
-//            }
-//            
-//        });
-//    }
     
 });
 app.filter("yearMonthFilter", function () {
@@ -2429,4 +2521,32 @@ $scope.getRecordIndex = function (date) {
 //        });
 //    }
     
+});
+
+app.controller('taskAuthorizationController', function ($scope, $http, $filter, storeDataService) {
+    'use strict';
+    
+    var asc = true;
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 8; //Record number each page
+    $scope.maxSize = 10; //Show the number in page
+
+    $scope.initializeZone = function () {
+        $scope.zone = {
+            "name": '',
+            "creationDate": ''
+        };
+    };
+    
+    $scope.show = angular.copy(storeDataService.show.zone);
+
+    $http.get('/getAllTasks').then(function (response) {
+        storeDataService.task = angular.copy(response.data);
+        $scope.taskList = response.data;
+    });
+    
+    $scope.orderBy = function (property) {
+        $scope.zoneList = $filter('orderBy')($scope.zoneList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
 });
