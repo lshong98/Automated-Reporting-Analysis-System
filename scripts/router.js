@@ -275,7 +275,7 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintController',
         controllerAs:'complaint'
     })
-    .when('/complaint-detail/:complaintID', {
+    .when('/complaint-detail/:complaintCode', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {
                 return routingService.auth($window, $location, '/complaint-detail/' + $route.current.params.complaintCode);

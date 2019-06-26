@@ -153,7 +153,7 @@ app.get('/complaint-module', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-module.html', {root: __dirname});
 });
-app.get('/complaint-detail:complaintCode', function (req, res) {
+app.get('/complaint-detail/:complaintCode', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-detail.html', {root: __dirname});
 });
@@ -1108,7 +1108,20 @@ app.get('/getComplaintList',function(req,res){
         }
         res.json(result);
     });    
-})
+});
+
+app.get('getComplaintLoc',function(req,res){
+    
+    var sql = ""
+    
+    db.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });        
+});
+
 /* Emitter Registered */
 // Create Database Tables
 emitter.on('createTable', function () {

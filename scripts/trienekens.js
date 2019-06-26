@@ -1982,20 +1982,6 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 //    }
     
 });
-//complaint detail controller
-app.controller('complaintDetailController',function($scope, $routeParams){
-    'use strict';
-    console.log($routeParams.complaintCode)
-    $scope.details = [{
-        'ctype': 'Personal',
-        'title': 'Collection',
-        'date': '26-06-2019',
-        'customer': 'Leonard',
-        'area': 'Tabuan Jaya',
-        'content': 'rubish not collected',
-        'address': 'Tabuan'
-    }];
-});
 //acr controller
 app.controller('acrController',function($scope, $http, $filter, storeDataService){
     'use strict';
@@ -2573,7 +2559,38 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     $scope.complaintDetail = function(complaintCode){
         console.log(complaintCode)
         window.location.href = '#/complaint-detail/' + complaintCode;
+        
     };
     
+    var $googleMap = document.getElementById('googleMap');
     
+    var visualizeMap = {
+        center: new google.maps.LatLng(1.5503052, 110.3394602),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false,
+        panControl: false,
+        zoomControl: false,
+        streetViewControl: false,
+        disableDefaultUI: true,
+        editable: false,
+        zoom:13
+    };
+    
+    var map = new google.maps.Map($googleMap, visualizeMap);
+ 
+    
+});
+//complaint detail controller
+app.controller('complaintDetailController',function($scope, $routeParams){
+    'use strict';
+    console.log($routeParams.complaintCode)
+    $scope.details = [{
+        'ctype': 'Personal',
+        'title': 'Collection',
+        'date': '26-06-2019',
+        'customer': 'Leonard',
+        'area': 'Tabuan Jaya',
+        'content': 'rubish not collected',
+        'address': 'Tabuan'
+    }];
 });
