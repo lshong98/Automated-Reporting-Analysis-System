@@ -1918,8 +1918,9 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     
 });
 //complaint detail controller
-app.controller('complaintDetailController',function($scope){
+app.controller('complaintDetailController',function($scope, $routeParams){
     'use strict';
+    console.log($routeParams.complaintCode)
     $scope.details = [{
         'ctype': 'Personal',
         'title': 'Collection',
@@ -2455,8 +2456,9 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         console.log($scope.complaintList);
     });
     
-    $scope.complaintDetail = function(complaintID){
-        window.location.href = '#/complaint-detail/' + complaintID;
+    $scope.complaintDetail = function(complaintCode){
+        console.log(complaintCode)
+        window.location.href = '#/complaint-detail/' + complaintCode;
     };
     
     

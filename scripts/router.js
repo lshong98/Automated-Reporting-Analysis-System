@@ -265,13 +265,15 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintController',
         controllerAs:'complaint'
     })
-    .when('/complaint-detail', {
+    .when('/complaint-detail/:complaintID', {
         resolve: {
-            "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/complaint-detail');
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/complaint-detail/' + $route.current.params.complaintCode);
             }
         },
-        templateUrl: '/complaint-detail',
+        templateUrl: function (params) {
+            return '/complaint-detail/' + params.complaintCode;
+        },
         controller: 'complaintDetailController',
         controllerAs: 'complaintDetail'
     })
