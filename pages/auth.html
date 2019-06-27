@@ -389,6 +389,21 @@ input:checked + .slider:before {
             </ul>
         </div> 
     </div>
+    <div class="col-md-6">
+            <div class="card">
+                <!-- Default panel contents -->
+                <div class="card-header">Transaction Log</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        View Transaction Log
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.transactionLog.view" data-ng-change="changeValue(auth.transactionLog.view, 'view transactionLog');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                </ul>
+            </div> 
+        </div>
 
     
 </div>

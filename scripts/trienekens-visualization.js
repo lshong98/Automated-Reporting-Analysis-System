@@ -42,7 +42,6 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             endDate: end,
             opens: 'right'
         }, function (start, end, label) {
-            //console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
             putRange(start, end);
             $scope.visualdate.dateStart = start.format('YYYY-MM-DD');
             $scope.visualdate.dateEnd = end.format('YYYY-MM-DD');
@@ -148,8 +147,8 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 }
             } else if (element === "completionStatusArea") {
                 exist = false;
-                complete = data[i].reportStatus === "C" ? true : false;
-
+                complete = data[i].completionStatus === "C" ? true : false;
+                
                 if (!dimension) {
                     for (var num = 0; num < 3; num += 1) {
                         objReturn[num] = [];
@@ -218,7 +217,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         $http.post("/getDataVisualization", $scope.visualdate)
             .then(function (response) {
                     $scope.reportList = response.data;
-//                    var obj = getElementList("area & duration", $scope.reportList);
+//                    var obj = getElementList("completionStatusArea", $scope.reportList);
 //                    console.log(obj);
                 },
                 function (response) {
@@ -260,58 +259,6 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
     getDataVisualization();
     //chart-line-duration-garbage
     var displayChart = function () {
-        Highcharts.chart('chart-line-duration-garbage', {
-
-            title: {
-                text: 'Areas Collection Duration'
-            },
-
-            subtitle: {
-                text: 'Trienekens'
-            },
-            xAxis: {
-                categories: getElementList("reportCollectionDate", $scope.reportList)
-            },
-            yAxis: {
-                title: {
-                    text: 'Duration in Minutes'
-                }
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle'
-            },
-            tooltip: {
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y} minutes</b></td></tr>'
-            },
-            plotOptions: {
-                series: {
-                    label: {
-                        connectorAllowed: false
-                    }
-                }
-            },
-
-            series: getElementList("area & duration", $scope.reportList),
-
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        legend: {
-                            layout: 'horizontal',
-                            align: 'center',
-                            verticalAlign: 'bottom'
-                        }
-                    }
-        }]
-            }
-
-        });
 
         //chart-bar-duration-garbage
         Highcharts.chart('chart-bar-duration-garbage', {
@@ -514,7 +461,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 }
     }]
         });
-        console.log($scope.reportListGroupByDate);
+//        console.log($scope.reportListGroupByDate);
 
         //chart-negativebar-status-area
         Highcharts.chart('chart-negativebar-status-area', {
