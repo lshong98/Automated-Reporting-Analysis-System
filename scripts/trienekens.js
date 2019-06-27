@@ -204,6 +204,9 @@ app.service('storeDataService', function () {
             },
             "complaintlist":{
                 "view": false
+            },
+            "transactionLog":{
+                "view": false
             }
         }
     };
@@ -672,6 +675,9 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
             "view": false
         },
         "complaintlist": {
+            "view": false
+        },
+        "transactionLog": {
             "view": false
         }
     };
@@ -1641,6 +1647,7 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
         storeDataService.zone = angular.copy(response.data);
         $scope.searchZoneFilter = '';
         $scope.zoneList = response.data;
+
         $scope.filterZoneList = [];
         $scope.searchZone = function (zone) {
             return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
@@ -1791,6 +1798,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "view": 'I'
         },
         "complaintlist": {
+            "view": 'I'
+        },
+        "authorizationLog": {
             "view": 'I'
         }
     };
@@ -2752,10 +2762,12 @@ app.controller('transactionLogController', function ($scope, $http, $filter, sto
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
 
-    $scope.initializeZone = function () {
-        $scope.zone = {
-            "name": '',
-            "creationDate": ''
+    $scope.initializeTransaction = function () {
+        $scope.transaction = {
+            "date": "",
+            "description": "",
+            "staff": "",
+            "authorizedBy": ""
         };
     };
     
@@ -2765,11 +2777,13 @@ app.controller('transactionLogController', function ($scope, $http, $filter, sto
     $http.get('/getAllTransaction').then(function (response) {
         storeDataService.zone = angular.copy(response.data);
         $scope.transactionList = response.data;
+
+        console.log("success");
     });
 
     
     $scope.orderBy = function (property) {
-        $scope.zoneList = $filter('orderBy')($scope.zoneList, ['' + property + ''], asc);
+        $scope.transactionList = $filter('orderBy')($scope.transactionList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
 });

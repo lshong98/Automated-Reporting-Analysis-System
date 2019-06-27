@@ -189,7 +189,9 @@ app.config(function($routeProvider, $locationProvider){
                 return routingService.auth($window, $location, '/notification');
             }
         },
-        templateUrl: '/notification'
+        templateUrl: '/notification',
+        controller: 'transactionLogController',
+        controllerAs: 'transactionLog'
     })
     .when('/daily-report/:areaCode/:areaName', {
         resolve: {

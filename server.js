@@ -26,6 +26,7 @@ var roleManagement = require('./custom_modules/role-management');
 var truckManagement = require('./custom_modules/truck-management');
 var zoneManagement = require('./custom_modules/zone-management');
 var logManagement = require('./custom_modules/log');
+var transactionLog = require('./custom_modules/transaction-log');
 
 users = [];
 connections = [];
@@ -374,3 +375,4 @@ app.use('/', roleManagement);
 app.use('/', truckManagement);
 app.use('/', zoneManagement);
 app.use('/', logManagement);
+app.use('/', transactionLog);

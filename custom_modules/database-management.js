@@ -131,7 +131,8 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view inventory')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view complaintlist')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view complaintlist')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view transactionLog')"
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
