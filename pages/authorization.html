@@ -26,33 +26,25 @@
                               <thead>
                                   <tr>
                                       <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                                      <th width="25%" data-ng-click="orderBy('staff');">Staff <i class="fas fa-sort-down"></i></th>
-                                      <th width="15%" data-ng-click="orderBy('action');">Action <i class="fas fa-sort-down"></i></th>
-                                      <th width="15%" data-ng-click="orderBy('page');">Page <i class="fas fa-sort-down"></i></th>
-                                      <th width="15%" data-ng-click="orderBy('rowId');">Row ID <i class="fas fa-sort-down"></i></th>
+                                      <th width="15%" data-ng-click="orderBy('staffID');">Staff ID <i class="fas fa-sort-down"></i></th>
+                                      <th width="25%" data-ng-click="orderBy('description');">Description <i class="fas fa-sort-down"></i></th>
                                       <th width="15%">Authorize</th>
                                   </tr>
                               </thead>
                               <tbody>
-                                  <tr data-ng-repeat="t in taskList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                  <tr data-ng-repeat="t in taskList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-show="t.authorize == 'M'">
                                       <td>
-                                          <span data-ng-bind="t.taskId"></span>
+                                          <span data-ng-bind="t.date"></span>
                                       </td>
                                       <td>
-                                            <span data-ng-bind="t.staff"></span>
+                                            <span data-ng-bind="t.staffID"></span>
                                       </td>
                                       <td>
-                                            <span data-ng-bind="t.action"></span>
+                                            <span data-ng-bind="t.description"></span>
                                       </td>
                                       <td>
-                                            <span data-ng-bind="t.page"></span>
-                                      </td>
-                                      <td>
-                                            <span data-ng-bind="t.rowId"></span>
-                                      </td>
-                                      <td>
-                                            <button class="btn btn-sm btn-success">Approve</button>
-                                            <button class="btn btn-sm btn-danger">Reject</button>
+                                            <button class="btn btn-sm btn-success" data-ng-click="approveTask(t.taskId)">Approve</button>
+                                            <button class="btn btn-sm btn-danger" data-ng-click="rejectTask(t.taskId)">Reject</button>
                                       </td>
                                   </tr>
                               </tbody>

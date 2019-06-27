@@ -2572,7 +2572,40 @@ $scope.getRecordIndex = function (date) {
 
 app.controller('taskAuthorizationController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
-    
+    $http.get('/getAllTasks').then(function (response) {
+        storeDataService.task = angular.copy(response.data);
+        $scope.taskList = response.data;
+    });
+
+    $scope.approveTask = function(taskId) {
+        $scope.taskId = {
+            "id": taskId
+        }
+        $http.post('/approveTask', $scope.taskId).then(function (response){
+            
+            console.log(response.data); 
+        });
+        $http.get('/getAllTasks').then(function (response) {
+            storeDataService.task = angular.copy(response.data);
+            $scope.taskList = response.data;
+        });
+
+    }
+
+    $scope.rejectTask = function(taskId) {
+        $scope.taskId = {
+            "id": taskId
+        }
+        $http.post('/rejectTask', $scope.taskId).then(function (response){
+            
+            console.log(response.data); 
+        });
+
+        $http.get('/getAllTasks').then(function (response) {
+            storeDataService.task = angular.copy(response.data);
+            $scope.taskList = response.data;
+        });
+    }
     var asc = true;
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
@@ -2581,10 +2614,7 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
     
     $scope.show = angular.copy(storeDataService.show.authorization);
 
-    $http.get('/getAllTasks').then(function (response) {
-        storeDataService.task = angular.copy(response.data);
-        $scope.taskList = response.data;
-    });
+    
     
     $scope.orderBy = function (property) {
         $scope.taskList = $filter('orderBy')($scope.taskList, ['' + property + ''], asc);
@@ -2778,7 +2808,7 @@ app.controller('transactionLogController', function ($scope, $http, $filter, sto
         storeDataService.zone = angular.copy(response.data);
         $scope.transactionList = response.data;
 
-        console.log("success");
+        console.log(response.data);
     });
 
     

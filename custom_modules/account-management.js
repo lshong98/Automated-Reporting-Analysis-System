@@ -34,14 +34,16 @@ app.post('/addUser', function (req, res) {
         if (status == 'A') {
             f.makeID("account", req.body.creationDate).then(function (ID) {
                 var thePassword = bcrypt.hashSync(req.body.password, 10);
-                var sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, creationDateTime, staffStatus) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
-                database.query(sql, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    res.json({"status": "success", "message": "Account created successfully!", "details": {"staffID": ID}});
-                    res.end();
-                });
+                //var sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, creationDateTime, staffStatus) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
+                f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", req.body.owner, 1, "tblstaff", "'INSERT INTO tblStaff (staffId) value null'");
+
+                // database.query(sql, function (err, result) {
+                //     if (err) {
+                //         throw err;
+                //     }
+                //     res.json({"status": "success", "message": "Account created successfully!", "details": {"staffID": ID}});
+                //     res.end();
+                // });
             });
 
             f.logTransaction(req.body.creationDate, req.body.owner, "add", "Created New Account", req.body.owner, 1, "tblstaff");

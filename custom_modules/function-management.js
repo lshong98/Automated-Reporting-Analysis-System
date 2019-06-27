@@ -105,6 +105,21 @@ function logTransaction(date, staffId, action, description, authorizedBy, rowID,
         
     });
 }
+
+function sendForAuthorization(date, staffId, action, description, authorizedBy, rowID, tblName, query) {
+    
+    var sql = "insert into tblAuthorization (taskID, date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) values ( null, \"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", \"" + authorizedBy +  "\", \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
+
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log("sent for authorization");
+    });
+}
+
 exports.makeID = makeID;
 exports.checkAuthority = checkAuthority;
 exports.logTransaction = logTransaction;
+exports.sendForAuthorization = sendForAuthorization;
