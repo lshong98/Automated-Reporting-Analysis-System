@@ -2743,3 +2743,33 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
 
 //     console.log("test");
 // };
+
+app.controller('transactionLogController', function ($scope, $http, $filter, storeDataService) {
+    'use strict';
+    
+    var asc = true;
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 8; //Record number each page
+    $scope.maxSize = 10; //Show the number in page
+
+    $scope.initializeZone = function () {
+        $scope.zone = {
+            "name": '',
+            "creationDate": ''
+        };
+    };
+    
+    $scope.show = angular.copy(storeDataService.show.zone);
+    $scope.transactionList = [];
+
+    $http.get('/getAllTransaction').then(function (response) {
+        storeDataService.zone = angular.copy(response.data);
+        $scope.transactionList = response.data;
+    });
+
+    
+    $scope.orderBy = function (property) {
+        $scope.zoneList = $filter('orderBy')($scope.zoneList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
+});
