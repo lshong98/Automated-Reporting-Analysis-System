@@ -2608,19 +2608,23 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
         };
         
         //get report dates for certain area id
-        $scope.dateList = [];
+        $scope.reportList = [];
         $scope.req2 = {
             'id': $scope.comDetail.areaID
         };
         $http.post('/getDateListForComplaint', $scope.req2).then(function (response){
-            var dates = response.data;
+//            var dates = response.data;
+//            console.log(dates)
+//            for(var i = 0; i < dates.length; i++){
+//                $scope.dateList.push($filter('date')(dates[i].date, 'mediumDate'));
+//            }
+            $scope.reportList = response.data
             
-            for(var i = 0; i < dates.length; i++){
-                $scope.dateList.push($filter('date')(dates[i].date, 'mediumDate'));
-            }
-            
-            console.log($scope.dateList)
+            console.log($scope.reportList)
         });    
     });
     
+    $scope.viewReport = function(reportCode){
+        window.location.href = '#/view-report/' + reportCode;
+    }
 });

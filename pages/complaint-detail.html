@@ -11,6 +11,13 @@
         border-radius: 7px;
         padding: 20px 20px;
     }
+    .reportRefBox{
+        padding: 10px 50px;
+    }
+    .listItem{
+        cursor: pointer;
+        padding: 5px 10px 0px 10px;
+    }
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -29,10 +36,15 @@
         <p><strong>Content: </strong></p>
         <p class="contentBox">{{comDetail.content}}</p>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 reportRefBox">
         <h2>Report reference</h2>
-        <div data-ng-repeat="d in dateList">
-            <p>{{d}}</p>
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Choose the report date
+          <span class="caret"></span></button>
+          
+          <div class="dropdown-menu">
+            <p data-ng-repeat="r in reportList" data-ng-click="viewReport(r.reportID)" class="listItem" clickable>{{r.date | date: "mediumDate"}}</p>
+          </div>
         </div>
     </div>
 </div>
