@@ -27,20 +27,8 @@
    <!--First Visualization-->
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">
 <!--                <h4>Duration of Garbage Collection</h4>-->
-                <label for="sel1">Choose Visualization type:</label>
-                <select data-ng-model="chartDurationGarbageSelected" data-ng-change="changeChartDurationGarbage(chartDurationGarbageSelected)" class="form-control" id="sel1">
-                    <option value="Line">Line Chart</option>
-                    <option value="Bar">Bar Chart</option>
-                </select>
-            </div>
-            <div data-ng-show="chartDurationGarbageSelected == 'Line'" class="panel-body">
-                <div id="chart-line-duration-garbage"></div>
-            </div>
-            <div data-ng-show="chartDurationGarbageSelected == 'Bar'" class="panel-body">
-                <div id="chart-bar-duration-garbage"></div>
-            </div>
+            <div id="chart-bar-duration-garbage"></div>
         </div>
     </div>
     <!--Second Visualization-->
