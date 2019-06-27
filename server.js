@@ -257,6 +257,34 @@ app.post('/updateAreaLngLat', function(req, res) {
     });
 }); // Complete
 
+
+//get all customer lng and lat
+app.get('/getLngLat', function(req, res){
+   'use strict';
+    
+    var sql = "SELECT longitude, latitude FROM tblbins";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+});
+
+//get lng and lat of collected customer's bin 
+app.get('/getCollectedLngLat',function(req,res){
+    
+    var sql= "SELECT tblbins.longitude AS longitude, tblbins.latitude AS latitude FROM tblbins JOIN tbltag on tblbins.serialNo = tbltag.serialNo WHERE tbltag.date = CURDATE()";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    }); 
+});
+
 server.listen(process.env.PORT || SVR_PORT, function () {
     'use strict';
     console.log('Server is running on port ' + SVR_PORT + '');

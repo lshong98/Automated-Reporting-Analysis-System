@@ -999,6 +999,51 @@ app.controller('managerController', function ($scope, $http, $filter) {
         zoom: 13
     };
     map = new google.maps.Map($googleMap, visualizeMap);
+    
+    $http.get('/getLngLat').then(function (response) {
+        $scope.lnglatlist = response.data; 
+        
+        var rd = {
+            url: '../styles/mapmarkers/rd.png'
+            
+        };
+
+        for(var i =0; i < $scope.lnglatlist.length; i++){
+
+            var myLatLng = {lat: $scope.lnglatlist[i].latitude, lng: $scope.lnglatlist[i].longitude};
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                icon : rd
+            });
+
+            marker.setMap(map);
+
+        }
+    });
+    
+    var currentDate = new Date();
+    console.log(currentDate);
+    $http.get('/getCollectedLngLat').then(function(response){
+        $scope.collectedlnglatlist = response.data;
+        var gd = {
+            url: '../styles/mapmarkers/gd.png'
+            
+        };
+
+        for(var i =0; i < $scope.collectedlnglatlist.length; i++){
+
+            var myLatLng = {lat: $scope.collectedlnglatlist[i].latitude, lng: $scope.collectedlnglatlist[i].longitude};
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                icon : gd
+            });
+
+            marker.setMap(map);
+
+        }        
+    });
 
 });
 

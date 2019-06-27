@@ -59,9 +59,9 @@ emitter.on('createTable', function () {
     var sqls, i;
     
     sqls = [
-        "CREATE TABLE tblcustomer (customerID int auto_increment, username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50),  houseNo varchar(5),  streetNo varchar(20),  neighborhood varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime, areaID varchar(15),  PRIMARY KEY (customerID))",
+        "CREATE TABLE tblcustomer (customerID int auto_increment, username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50),  houseNo varchar(5),  streetNo varchar(20),  neighborhood varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime, areaID varchar(15), PRIMARY KEY (customerID))",
         "CREATE TABLE tblposition (  positionID varchar(15),  positionName varchar(30),  positionStatus char(1),  creationDateTime datetime,  primary key (positionID))",
-        "CREATE TABLE tblbins (  serialNo int,  customerID int,  size int,  status char(1),  PRIMARY KEY (serialNo),  foreign key (customerID) references tblcustomer(customerID))",
+        "CREATE TABLE tblbins (  serialNo int,  customerID int,  size int,  status char(1),  longitude double(10,7),  latitude double(10,7), PRIMARY KEY (serialNo),  foreign key (customerID) references tblcustomer(customerID))",
         "CREATE TABLE tblmanagement (  mgmtID int auto_increment,  mgmtName varchar(50),  PRIMARY KEY (mgmtID))",
         "CREATE TABLE tblzone (  zoneID varchar(15),  zoneName varchar(100), zoneStatus char(1),  creationDateTime datetime,  PRIMARY KEY (zoneID))",
         "CREATE TABLE tblbininventory (  date date,  doNo varchar(10),  inNew120 int,  inNew240 int,  inNew660 int,  inNew1000 int,  outNew120 int,  outNew240 int,  outNew660 int,  outNew1000 int,  inReusable120 int,  inReusable240 int,  inReusable660 int,  inReusable1000 int,  outReusable120 int,  outReusable240 int,  outReusable660 int,  outReusable1000 int,  newBalance120 int,  newBalance240 int,  newBalance660 int,  newBalance1000 int,  reusableBalance120 int,  reusableBalance240 int,  reusableBalance660 int,  reusableBalance1000 int,  overallBalance120 int,  overallBalance240 int,  overallBalance660 int,  overallBalance1000 int,  PRIMARY KEY (date))",
