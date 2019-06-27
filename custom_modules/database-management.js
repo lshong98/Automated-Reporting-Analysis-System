@@ -129,7 +129,8 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create database')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view inventory')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view complaintlist')"
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {

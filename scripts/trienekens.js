@@ -201,6 +201,9 @@ app.service('storeDataService', function () {
             },
             "authorization": {
                 "view": false
+            },
+            "complaintlist":{
+                "view": false
             }
         }
     };
@@ -666,6 +669,9 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
             "view": false
         },
         "authorization": {
+            "view": false
+        },
+        "complaintlist": {
             "view": false
         }
     };
@@ -1775,6 +1781,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "view": 'I'
         },
         "authorization": {
+            "view": 'I'
+        },
+        "complaintlist": {
             "view": 'I'
         }
     };

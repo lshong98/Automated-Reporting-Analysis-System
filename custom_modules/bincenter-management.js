@@ -6,7 +6,7 @@ var f = require('./function-management');
 // Bin Center Management
 app.post('/addBinCenter', function (req, res) {
     'use strict';
-    f.makeID("bin", req.body.creationDate).then(function (ID) {
+    f.makeID("bincenter", req.body.creationDate).then(function (ID) {
         var sql = "INSERT INTO tblbincenter (binCenterID, areaID, binCenterName, binCenterLocation, binCenterStatus, creationDateTime) VALUE ('" + ID + "', '" + req.body.area + "' , '" + req.body.name + "', '" + req.body.location + "', 'A', '" + req.body.creationDate + "')";
         database.query(sql, function(err, result) {
             if (err) {
