@@ -2706,3 +2706,40 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
         window.location.href = '#/view-report/' + reportCode;
     }
 });
+
+// //LOG TASk
+// var logTask = function(action, description, rowId) {
+
+//     var today = new Date();
+//     var staffId = window.sessionStorage.getItem('owner');
+//     var authorizedBy = window.sessionStorage.getItem('owner');
+
+//     var logVar = {
+//         "taskID": null,
+//         "date": today,
+//         "staffId": 'ACC201906260002',
+//         "action": action,
+//         "description": description,
+//         "authroizedBy": null,
+//         tblName: '',
+//         "rowID": rowId
+//     }
+       
+//     $.ajax({
+//         method: 'POST',
+//         url: '/addLog',
+//         data: $.param(logVar)
+//     }).then(function (response) {
+//             console.log(response.data);
+//     });
+        
+//         // $http.post('/addLog', logVar).then(function (response) {
+//         //     var returnedData = response.data;
+
+//         //     console.log(returnedData);
+//         // }).catch(function (response) {
+//         //     console.error('error');
+//         // });
+
+//     console.log("test");
+// };
