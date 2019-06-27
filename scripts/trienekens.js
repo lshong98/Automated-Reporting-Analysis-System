@@ -2501,13 +2501,40 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
 
 app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
+    
+    var asc = true;
     $scope.complaintList = [];
     $scope.complaintLocList = [];
     
     $http.get('/getComplaintList').then(function (response) {
+        $scope.searchComplaintFilter = '';
+        $scope.filterComplaintList = [];
         $scope.complaintList = response.data;
+        
         for(var i =0; i<$scope.complaintList.length; i++){
             $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
+        }
+        
+        $scope.filterComplaintList = angular.copy($scope.complaintList);
+        
+        $scope.searchComplaint = function (complaint) {
+            return (complaint.date + complaint.title + complaint.customer + complaint.type + complaint.area ).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
+        }
+        
+        $scope.totalItems = $scope.filterComplaintList.length;
+        
+        $scope.getData = function(){
+            return $filter('filter')($scope.filterComplaintList, $scope.searchComplaintFilter);
+            
+        $scope.$watch('searchComplaintFilter', function (newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);            
+            
         }
     });
     
@@ -2552,7 +2579,10 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         }
     });
     
-    
+    $scope.orderBy = function (property) {
+        $scope.complaintList = $filter('orderBy')($scope.complaintList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };    
     
 });
 //complaint detail controller

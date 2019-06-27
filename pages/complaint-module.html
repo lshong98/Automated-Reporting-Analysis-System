@@ -4,7 +4,12 @@
     </div>
 </div>
 <br />
-
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchComplaintFilter"/>
+    </div>
+</div>
+<br/>
 <div class="row">
     <div class="col-md-12">
         <div class="row">
@@ -13,15 +18,15 @@
                     <table class="table table-hover table-striped table-clickable">
                         <thead>
                             <tr>
-                                <th width="20%%">Date</th>
-                                <th width="30%">Title</th>
-                                <th width="20%">Customer</th>
-                                <th width="15%">Type</th>
-                                <th width="15%">Area</th>
+                                <th width="20%%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                <th width="30%" data-ng-click="orderBy('title');">Title <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('customer');">Customer <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('type');">Type <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('area');">Area <i class="fas fa-sort-down"></i></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="c in complaintList" data-ng-click="complaintDetail(c.complaintID)">
+                            <tr data-ng-repeat="c in complaintList | filter: searchComplaint" data-ng-click="complaintDetail(c.complaintID)">
                                 <td data-ng-bind="c.date"></td>
                                 <td data-ng-bind="c.title"></td>
                                 <td data-ng-bind="c.customer"></td>
