@@ -2510,10 +2510,13 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
 
 app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
-    
     var asc = true;
     $scope.complaintList = [];
     $scope.complaintLocList = [];
+    //pagination
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 3; //Record number each page
+    $scope.maxSize = 8; //Show the number in page
     
     $http.get('/getComplaintList').then(function (response) {
         $scope.searchComplaintFilter = '';
@@ -2553,8 +2556,6 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         
     };
     
-
-    
     var $googleMap = document.getElementById('googleMap');
     
     var visualizeMap = {
@@ -2591,7 +2592,9 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     $scope.orderBy = function (property) {
         $scope.complaintList = $filter('orderBy')($scope.complaintList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
-    };    
+    };
+    
+    
     
 });
 //complaint detail controller
@@ -2604,7 +2607,6 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response){
         var complaint = response.data;
-//        console.log(complaint)
         $scope.comDetail = {
             'ctype': complaint[0].complaint,
             'title': complaint[0].complaintTitle,
@@ -2622,14 +2624,7 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
             'id': $scope.comDetail.areaID
         };
         $http.post('/getDateListForComplaint', $scope.req2).then(function (response){
-//            var dates = response.data;
-//            console.log(dates)
-//            for(var i = 0; i < dates.length; i++){
-//                $scope.dateList.push($filter('date')(dates[i].date, 'mediumDate'));
-//            }
             $scope.reportList = response.data
-            
-            console.log($scope.reportList)
         });    
     });
     
