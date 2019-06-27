@@ -94,5 +94,17 @@ function checkAuthority(keyword, whoIs) {
     });
 };
 
+function logTransaction(date, staffId, action, description, authorizedBy, rowID, tblName) {
+
+    var sql = "insert into tblLog (transactionID, date, staffId, action, description, authorizedBy, rowID, tblName) values ( null, \"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", \"" + authorizedBy +  "\", \"" + rowID +"\", \""+ tblName + "\")";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        
+    });
+}
 exports.makeID = makeID;
 exports.checkAuthority = checkAuthority;
+exports.logTransaction = logTransaction;

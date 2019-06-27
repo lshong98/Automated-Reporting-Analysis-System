@@ -11,7 +11,7 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var SVR_PORT = '';
+var SVR_PORT = '3000';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -25,6 +25,7 @@ var reportManagement = require('./custom_modules/report-management');
 var roleManagement = require('./custom_modules/role-management');
 var truckManagement = require('./custom_modules/truck-management');
 var zoneManagement = require('./custom_modules/zone-management');
+var logManagement = require('./custom_modules/log');
 
 users = [];
 connections = [];
@@ -372,3 +373,4 @@ app.use('/', reportManagement);
 app.use('/', roleManagement);
 app.use('/', truckManagement);
 app.use('/', zoneManagement);
+app.use('/', logManagement);

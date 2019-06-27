@@ -43,6 +43,8 @@ app.post('/addUser', function (req, res) {
                     res.end();
                 });
             });
+
+            f.logTransaction(req.body.creationDate, req.body.owner, "add", "Created New Account", req.body.owner, 1, "tblstaff");
         } else {
             res.json({"status": "error", "message": "You have no permission to create account!"});
         }

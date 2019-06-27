@@ -1348,6 +1348,8 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
     $scope.addUser = function () {
         $scope.staff.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.staff.owner = $window.sessionStorage.getItem('owner');
+
+        //create variables in json object
         $http.post('/addUser', $scope.staff).then(function (response) {
             var returnedData = response.data;
 
@@ -1360,11 +1362,16 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
                     "position": $scope.staff.position.name,
                     "status": 'ACTIVE'
                 });
+
                 $scope.filterStaffList = angular.copy($scope.staffList);
                 $scope.totalItems = $scope.filterStaffList.length;
                 $scope.staff.id = newStaffID;
                 socket.emit('create new user', $scope.staff);
+                var rowId = 1;
             }
+
+            
+
             angular.element('body').overhang({
                 type: returnedData.status,
                 message: returnedData.message
@@ -2157,15 +2164,82 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     };
     
     $scope.databaseBinList = [];
+
+     //get list of IC
+     var getIc = "select ic from tblCustomer";
+     var ic = $scope.databaseBin.icNo;
+
+     //auto-fill based on IC
+     var customerName = "Select customerName from tblCustomer where ic = " + ic;
+     var customerId = "select customerId from tblCustomer where ic = " + ic;
+     var contactNumber = "select contactNumber from tblCustomer where ic = " + ic;
+     var houseNo = "select houseNo from tblCustomer where ic = " + ic;
+     var tmnKpg = "select tmnKpg from tblCustomer where ic = " + ic;
+     var streetNo = "select streetNo from tblCustomer where ic = " + ic;
+     var postCode = "select postCode from tblCustomer where ic = " + ic;
+     var city = "select city from tblCustomer where ic = " + ic;
+     var address = houseNo + ', ' + streetNo + ', ' + tmnKpg + ', ' + postCode + ', ' + city;
+     
+
+     $scope.databaseBin.name = customerName;
+     $scope.databaseBin.houseNo = houseNo;
+     $scope.databaseBin.tmnKpg = tmnKpg;
+     $scope.databaseBin.address = address;
+
+     
+     //get bin size
+     $scope.binSize = ['120L', '240L', '660L', '1000L'];
+
     $scope.addDatabaseBin = function () {
         // $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         // console.log($scope.databaseBin);
 
         
-        $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
+        //$scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
         //$scope.totalItems = $scope.filterDatabaseBinList.length;
         console.log("Database Bin Created");
         console.log($scope.databaseBinList);
+
+       
+
+        
+        
+
+
+        var query = "INSERT INTO table tblWheelBinDatabase (idNo, date, customerId, areaId, serialNo, acrId, activeStatus) value (" + null + ", \"" + $scope.databaseBin.date + "\", \"" + customerId + "\", \"" + $scope.databaseBin.areaCode + "\", \"" + $scope.databaseBin.acrfSerialNo + "\", " + "\"A\")";
+
+        
+
+
+        console.log(query);
+        $http.post('/addTaskAuthorization', today, ).then(function (response) {
+            var returnedData = response.data;
+            //var newBinID = returnedData.details.binID;
+            
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "New Bin added successfully!"
+                });
+
+                //log task
+                var today = new Date();
+                var staffId = window.sessionStorage.getItem('owner');
+                var action = "add";
+                var description = "Added New Bin to bin Database";
+                var approvedBy = "null";
+                var rowId = $scope.databaseBin.binId;
+
+                query = "insert into tblLog (dateTime, staffId, action, description, approvedBy, rowId) values (\"" + today + "\", \"" + staffId + "\", \"" + action + "\", \"" + description + + "\", \"" + approvedBy + + "\", \"" + rowId + "\")";
+                logTask(query);
+                $scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
+                storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+                $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
+                angular.element('#createDatabaseBin').modal('toggle');
+                $scope.totalItems = $scope.filterDatabaseBinList.length;
+            }
+        });
+
         // $http.post('/addDatabaseBin', $scope.databaseBin).then(function (response) {
         //     var returnedData = response.data;
         //     //var newBinID = returnedData.details.binID;
@@ -2594,3 +2668,42 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
     });
     
 });
+
+
+
+//LOG TASk
+var logTask = function(action, description, rowId) {
+
+    var today = new Date();
+    var staffId = window.sessionStorage.getItem('owner');
+    var authorizedBy = window.sessionStorage.getItem('owner');
+
+    var logVar = {
+        "taskID": null,
+        "date": today,
+        "staffId": 'ACC201906260002',
+        "action": action,
+        "description": description,
+        "authroizedBy": null,
+        tblName: '',
+        "rowID": rowId
+    }
+       
+    $.ajax({
+        method: 'POST',
+        url: '/addLog',
+        data: $.param(logVar)
+    }).then(function (response) {
+            console.log(response.data);
+    });
+        
+        // $http.post('/addLog', logVar).then(function (response) {
+        //     var returnedData = response.data;
+
+        //     console.log(returnedData);
+        // }).catch(function (response) {
+        //     console.error('error');
+        // });
+
+    console.log("test");
+};
