@@ -236,7 +236,7 @@ app.post('/getComplaintDetail',function(req,res){
 //get report date list for complaint by id
 app.post('/getDateListForComplaint',function(req,res){
     'use strict';
-    var sql = "SELECT reportCollectionDate as date FROM tblreport WHERE areaID = '" + req.body.id + "'";
+    var sql = "SELECT reportID, reportCollectionDate as date FROM tblreport WHERE areaID = '" + req.body.id + "' ORDER BY reportCollectionDate DESC";
 
     database.query(sql, function (err, result) {
         if (err) {

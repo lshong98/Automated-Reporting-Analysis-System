@@ -28,9 +28,9 @@ function makeID(keyword, creationDate) {
             property = "areaID";
             header = "ARE";
             break;
-        case "bin":
-            table = "tblbin";
-            property = "binID";
+        case "bincenter":
+            table = "tblbincenter";
+            property = "binCenterID";
             header = "BIN";
             break;
         case "role":

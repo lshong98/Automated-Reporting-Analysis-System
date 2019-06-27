@@ -17,7 +17,7 @@ app.post('/addReport',function(req,res){
             }
             if (Object.keys(req.body.marker).length > 0) {
                 for (i = 0; i < Object.keys(req.body.marker).length; i++) {
-                    var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].lng + "', '" + req.body.marker[i].lat + "', '" + reportID + "')";
+                    var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].cLong + "', '" + req.body.marker[i].cLat + "', '" + reportID + "')";
 
                     database.query(circleSQL, function (err, result) {
                         if (err) {

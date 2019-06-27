@@ -201,6 +201,9 @@ app.service('storeDataService', function () {
             },
             "authorization": {
                 "view": false
+            },
+            "complaintlist":{
+                "view": false
             }
         }
     };
@@ -666,6 +669,9 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
             "view": false
         },
         "authorization": {
+            "view": false
+        },
+        "complaintlist": {
             "view": false
         }
     };
@@ -1783,6 +1789,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         },
         "authorization": {
             "view": 'I'
+        },
+        "complaintlist": {
+            "view": 'I'
         }
     };
 
@@ -2575,13 +2584,43 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
 
 app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
+    var asc = true;
     $scope.complaintList = [];
     $scope.complaintLocList = [];
+    //pagination
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 3; //Record number each page
+    $scope.maxSize = 8; //Show the number in page
     
     $http.get('/getComplaintList').then(function (response) {
+        $scope.searchComplaintFilter = '';
+        $scope.filterComplaintList = [];
         $scope.complaintList = response.data;
+        
         for(var i =0; i<$scope.complaintList.length; i++){
             $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
+        }
+        
+        $scope.filterComplaintList = angular.copy($scope.complaintList);
+        
+        $scope.searchComplaint = function (complaint) {
+            return (complaint.date + complaint.title + complaint.customer + complaint.type + complaint.area ).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
+        }
+        
+        $scope.totalItems = $scope.filterComplaintList.length;
+        
+        $scope.getData = function(){
+            return $filter('filter')($scope.filterComplaintList, $scope.searchComplaintFilter);
+            
+        $scope.$watch('searchComplaintFilter', function (newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);            
+            
         }
     });
     
@@ -2590,8 +2629,6 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         window.location.href = '#/complaint-detail/' + complaintCode;
         
     };
-    
-
     
     var $googleMap = document.getElementById('googleMap');
     
@@ -2626,6 +2663,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         }
     });
     
+    $scope.orderBy = function (property) {
+        $scope.complaintList = $filter('orderBy')($scope.complaintList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
+    
     
     
 });
@@ -2639,7 +2681,6 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response){
         var complaint = response.data;
-//        console.log(complaint)
         $scope.comDetail = {
             'ctype': complaint[0].complaint,
             'title': complaint[0].complaintTitle,
@@ -2652,58 +2693,16 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
         };
         
         //get report dates for certain area id
-        $scope.dateList = [];
+        $scope.reportList = [];
         $scope.req2 = {
             'id': $scope.comDetail.areaID
         };
         $http.post('/getDateListForComplaint', $scope.req2).then(function (response){
-            var dates = response.data;
-            
-            for(var i = 0; i < dates.length; i++){
-                $scope.dateList.push($filter('date')(dates[i].date, 'mediumDate'));
-            }
-            
-            console.log($scope.dateList)
+            $scope.reportList = response.data
         });    
     });
     
-});
-
-
-
-//LOG TASk
-var logTask = function(action, description, rowId) {
-
-    var today = new Date();
-    var staffId = window.sessionStorage.getItem('owner');
-    var authorizedBy = window.sessionStorage.getItem('owner');
-
-    var logVar = {
-        "taskID": null,
-        "date": today,
-        "staffId": 'ACC201906260002',
-        "action": action,
-        "description": description,
-        "authroizedBy": null,
-        tblName: '',
-        "rowID": rowId
+    $scope.viewReport = function(reportCode){
+        window.location.href = '#/view-report/' + reportCode;
     }
-       
-    $.ajax({
-        method: 'POST',
-        url: '/addLog',
-        data: $.param(logVar)
-    }).then(function (response) {
-            console.log(response.data);
-    });
-        
-        // $http.post('/addLog', logVar).then(function (response) {
-        //     var returnedData = response.data;
-
-        //     console.log(returnedData);
-        // }).catch(function (response) {
-        //     console.error('error');
-        // });
-
-    console.log("test");
-};
+});
