@@ -25,7 +25,8 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
     startDate.setDate(currentDate.getDate() - 7);
     $scope.visualdate = {
         "dateStart": '',
-        "dateEnd": ''
+        "dateEnd": '',
+        "zoneID": ''
     }
     $scope.visualdate.dateStart = $filter('date')(startDate, 'yyyy-MM-dd');
     $scope.visualdate.dateEnd = $filter('date')(currentDate, 'yyyy-MM-dd');
@@ -57,8 +58,12 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         return d;
     }
     
-    //areaList
-    $scope.areaList = [];   
+    //areaList for filtering
+    $scope.zoneList = [];  
+    $scope.onAreaFilterSelectionChange = function(){ //from selection
+        $scope.visualdate.zoneID = $scope.areaSelected
+        getDataVisualization(); //call get new data visualization when area selected
+    }
     //function to reshape data for fit into charts
     var getElementList = function (element, data) {
         var objReturn = [];
@@ -232,19 +237,12 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 function (response) {
                     $window.console.log("errror retrieving json file - " + response);
                 });
-        $http.get('/getAreaList').then(function (response) {
+    }
+    
+    $http.get('/getAreaList').then(function (response) {
             renderSltPicker();
             $.each(response.data, function(index, value) {
-                var areaID = value.id.split(",");
-                var areaName = value.name.split(",");
-                var area = [];
-                $.each(areaID, function(index, value) {
-                    area.push({
-                        "id": areaID[index],
-                        "name": areaName[index]
-                    });
-                });
-                $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+                $scope.zoneList.push({"id": value.zoneID, "name": value.zoneName});
             });
             function renderSltPicker() {
                 angular.element('.selectpicker').selectpicker('refresh');
@@ -254,7 +252,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 renderSltPicker();
             });
         });
-    }
+    
     //get data visualization when load the page
     getDataVisualization();
     //chart-line-duration-garbage

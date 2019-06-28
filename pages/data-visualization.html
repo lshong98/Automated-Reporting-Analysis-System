@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>data visualization</title>
 </head>
@@ -15,10 +14,9 @@
     <div class="col-md-3">
        <div class="form-group">
           <h3><label for="txtArea form-label">Area Filter:</label></h3>
-          <select id="txtArea" data-ng-model="areaSelected" class="selectpicker" data-live-search="true" data-width="100%">
-              <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
-                  <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.id}} - {{a.name}}</option>
-              </optgroup>
+          <select id="txtArea" data-ng-model="areaSelected" class="selectpicker" data-live-search="true" data-width="100%" data-ng-change="onAreaFilterSelectionChange()">
+                <option value="">All Areas</option>
+                <option value="{{a.id}}" data-ng-repeat="a in zoneList">{{a.id}} - {{a.name}}</option>
           </select>
         </div>        
     </div>
