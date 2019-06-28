@@ -1028,15 +1028,12 @@ app.controller('managerController', function ($scope, $http, $filter) {
         }
     });
     
-    var currentDate = new Date();
-    console.log(currentDate);
     $http.get('/getCollectedLngLat').then(function(response){
         $scope.collectedlnglatlist = response.data;
         var gd = {
             url: '../styles/mapmarkers/gd.png'
             
         };
-
         for(var i =0; i < $scope.collectedlnglatlist.length; i++){
 
             var myLatLng = {lat: $scope.collectedlnglatlist[i].latitude, lng: $scope.collectedlnglatlist[i].longitude};

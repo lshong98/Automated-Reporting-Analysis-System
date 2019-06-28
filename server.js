@@ -11,7 +11,7 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var SVR_PORT = '3000';
+var SVR_PORT = '';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -85,6 +85,10 @@ app.post('/getDataVisualization', function(req, res){
     
     var sql ="SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.completionStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' ORDER BY r.reportCollectionDate";
     
+    if(req.body.zoneID != ''){
+        sql ="SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.completionStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' AND a.zoneID = '" + req.body.zoneID + "' ORDER BY r.reportCollectionDate";
+    }
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -95,7 +99,11 @@ app.post('/getDataVisualization', function(req, res){
 app.post('/getDataVisualizationGroupByDate', function(req, res){
     'use strict';
     
-    var sql ="SELECT reportCollectionDate, SUM(operationTimeStart) AS 'operationTimeStart', SUM(operationTimeEnd) AS 'operationTimeEnd', SUM(garbageAmount) AS 'garbageAmount' FROM tblreport WHERE reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' GROUP BY reportCollectionDate ORDER BY reportCollectionDate";
+    var sql ="SELECT r.reportCollectionDate, SUM(r.operationTimeStart) AS 'operationTimeStart', SUM(r.operationTimeEnd) AS 'operationTimeEnd', SUM(r.garbageAmount) AS 'garbageAmount' FROM tblreport r INNER JOIN tblarea a ON  r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' GROUP BY r.reportCollectionDate ORDER BY r.reportCollectionDate";
+    
+    if(req.body.zoneID != ''){
+        sql ="SELECT r.reportCollectionDate, SUM(r.operationTimeStart) AS 'operationTimeStart', SUM(r.operationTimeEnd) AS 'operationTimeEnd', SUM(r.garbageAmount) AS 'garbageAmount' FROM tblreport r INNER JOIN tblarea a ON  r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '"+req.body.dateStart+"' AND '"+req.body.dateEnd+"' AND a.zoneID = '" + req.body.zoneID + "' GROUP BY r.reportCollectionDate ORDER BY r.reportCollectionDate";
+    }
     
     database.query(sql, function (err, result) {
         if (err) {
