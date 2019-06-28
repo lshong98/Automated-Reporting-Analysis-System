@@ -12,6 +12,7 @@ app.get('/getAllTasks', function (req, res) {
             throw err;
         }
         res.json(result);
+        console.log("ALL TASKS COLLECTED");
     });
 }); // Complete
 
@@ -19,8 +20,8 @@ app.post('/approveTask', function (req, res) {
     'use strict';
     
     var sql = "UPDATE tblAuthorization SET authorize = 'Y' WHERE taskID = '"+ req.body.id + "'";
-    console.log(req.body);
-    console.log(sql);
+    console.log(req.body.id);
+    console.log(req.body.query);
     console.log("Query called");
     database.query(sql, function (err, result) {
         if (err) {

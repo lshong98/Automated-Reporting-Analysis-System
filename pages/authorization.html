@@ -43,8 +43,8 @@
                                             <span data-ng-bind="t.description"></span>
                                       </td>
                                       <td>
-                                            <button class="btn btn-sm btn-success" data-ng-click="approveTask(t.taskId)">Approve</button>
-                                            <button class="btn btn-sm btn-danger" data-ng-click="rejectTask(t.taskId)">Reject</button>
+                                            <button class="btn btn-sm btn-success" data-ng-click="approveTask(t.taskId, t.query)">Approve</button>
+                                            <button class="btn btn-sm btn-danger" data-ng-click="rejectTask(t.taskId, t.query)">Reject</button>
                                       </td>
                                   </tr>
                               </tbody>

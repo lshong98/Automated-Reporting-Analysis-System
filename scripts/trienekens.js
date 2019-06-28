@@ -2622,11 +2622,13 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
         $scope.taskList = response.data;
     });
 
-    $scope.approveTask = function(taskId) {
-        $scope.taskId = {
-            "id": taskId
+    $scope.approveTask = function(taskId, query) {
+        $scope.task = {
+            "id": taskId,
+            "query": query
         }
-        $http.post('/approveTask', $scope.taskId).then(function (response){
+        
+        $http.post('/approveTask', $scope.task).then(function (response){
             
             console.log(response.data); 
         });

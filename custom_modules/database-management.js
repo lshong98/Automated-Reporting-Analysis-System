@@ -7,7 +7,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'trienekens14';
+var DB_NAME = 'trienekens16';
 var SVR_PORT = '3000';
 
 // Create connection
