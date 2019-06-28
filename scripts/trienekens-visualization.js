@@ -222,7 +222,6 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         $http.post("/getDataVisualization", $scope.visualdate)
             .then(function (response) {
                     $scope.reportList = response.data;
-            console.log(response.data)
 //                    var obj = getElementList("completionStatusArea", $scope.reportList);
 //                    console.log(obj);
                 },
@@ -238,7 +237,9 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 function (response) {
                     $window.console.log("errror retrieving json file - " + response);
                 });
-        $http.get('/getAreaList').then(function (response) {
+    }
+    
+    $http.get('/getAreaList').then(function (response) {
             renderSltPicker();
             $.each(response.data, function(index, value) {
                 $scope.zoneList.push({"id": value.zoneID, "name": value.zoneName});
@@ -251,7 +252,6 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 renderSltPicker();
             });
         });
-    }
     
     //get data visualization when load the page
     getDataVisualization();
