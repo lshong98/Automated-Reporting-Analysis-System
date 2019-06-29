@@ -49,6 +49,7 @@ app.post('/setAuth', function (req, res) {
                     throw err;
                 }
                 var sql = "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + staffID + "', '" + managementID + "', '" + req.body.access + "')";
+                console.log(sql);
                 database.query(sql, function (err, result) {
                     if (err) {
                         throw err;
