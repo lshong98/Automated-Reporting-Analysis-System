@@ -368,6 +368,22 @@ io.sockets.on('connection', function(socket) {
         });
     });
     
+    socket.on('authorize request', function (data) {
+        var sql = "";
+        if (data.action == "create user") {
+            sql = "SELECT COUNT(*) AS row FROM tblauthorization WHERE authorize = 'M'";
+        }
+        
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            } else {
+                io.sockets.in(roomManager).emit('receive authorize action', {
+                    num: result[0].row
+                });
+            }
+        });
+    });
     
     //Send Message
     socket.on('send message', function(data) {

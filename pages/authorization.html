@@ -1,61 +1,60 @@
-   
+<div class="row">
+  <div class="col-md-12">
+      <h5>Task Authorization</h5>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+      <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
+  </div>
+</div>
+<br />
+<div class="row" data-ng-show="show.create == 'A'">
+  <div class="col-md-12">
+      <button class="btn btn-success" data-toggle="modal" data-target="#createZone"><i class="fa fa-plus"></i> New</button>
+
+  </div>
+</div>
+<br />
+<div class="row" data-ng-show="show.view == 'A'">
+  <div class="col-md-12">
       <div class="row">
           <div class="col-md-12">
-              <h5>Task Authorization</h5>
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-md-12">
-              <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
-          </div>
-      </div>
-      <br />
-      <div class="row" data-ng-show="show.create == 'A'">
-          <div class="col-md-12">
-              <button class="btn btn-success" data-toggle="modal" data-target="#createZone"><i class="fa fa-plus"></i> New</button>
-              
-          </div>
-      </div>
-      <br />
-      <div class="row" data-ng-show="show.view == 'A'">
-          <div class="col-md-12">
-              <div class="row">
-                  <div class="col-md-12">
-                      <div class="table-responsive">
-                          <table class="table table-hover table-striped table-clickable">
-                              <thead>
-                                  <tr>
-                                      <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                                      <th width="15%" data-ng-click="orderBy('staffID');">Staff ID <i class="fas fa-sort-down"></i></th>
-                                      <th width="25%" data-ng-click="orderBy('description');">Description <i class="fas fa-sort-down"></i></th>
-                                      <th width="15%">Authorize</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr data-ng-repeat="t in taskList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-show="t.authorize == 'M'">
-                                      <td>
-                                          <span data-ng-bind="t.date"></span>
-                                      </td>
-                                      <td>
-                                            <span data-ng-bind="t.staffID"></span>
-                                      </td>
-                                      <td>
-                                            <span data-ng-bind="t.description"></span>
-                                      </td>
-                                      <td>
-                                            <button class="btn btn-sm btn-success" data-ng-click="approveTask(t.taskId, t.query)">Approve</button>
-                                            <button class="btn btn-sm btn-danger" data-ng-click="rejectTask(t.taskId, t.query)">Reject</button>
-                                      </td>
-                                  </tr>
-                              </tbody>
-                          </table>
-                      </div>
-                  </div>
-              </div>
-              <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-                  <div class="col-md-12">
-                      <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-                  </div>
+              <div class="table-responsive">
+                  <table class="table table-hover table-striped table-clickable">
+                      <thead>
+                          <tr>
+                              <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                              <th width="15%" data-ng-click="orderBy('staffID');">Staff ID <i class="fas fa-sort-down"></i></th>
+                              <th width="25%" data-ng-click="orderBy('description');">Description <i class="fas fa-sort-down"></i></th>
+                              <th width="15%">Authorize</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr data-ng-repeat="t in taskList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-show="t.authorize == 'M'">
+                              <td>
+                                  <span data-ng-bind="t.date"></span>
+                              </td>
+                              <td>
+                                    <span data-ng-bind="t.staffID"></span>
+                              </td>
+                              <td>
+                                    <span data-ng-bind="t.description"></span>
+                              </td>
+                              <td>
+                                    <button class="btn btn-sm btn-success" data-ng-click="approveTask(t.taskId, t.query)">Approve</button>
+                                    <button class="btn btn-sm btn-danger" data-ng-click="rejectTask(t.taskId, t.query)">Reject</button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
               </div>
           </div>
       </div>
+      <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+          <div class="col-md-12">
+              <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+          </div>
+      </div>
+  </div>
+</div>

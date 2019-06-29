@@ -96,7 +96,7 @@ function checkAuthority(keyword, whoIs) {
 
 function logTransaction(date, staffId, action, description, authorizedBy, rowID, tblName) {
 
-    var sql = "insert into tblLog (transactionID, date, staffId, action, description, authorizedBy, rowID, tblName) values ( null, \"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", \"" + authorizedBy +  "\", \"" + rowID +"\", \""+ tblName + "\")";
+    var sql = "insert into tbllog (transactionID, date, staffId, action, description, authorizedBy, rowID, tblName) values ( null, \"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", \"" + authorizedBy +  "\", \"" + rowID +"\", \""+ tblName + "\")";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
@@ -108,9 +108,10 @@ function logTransaction(date, staffId, action, description, authorizedBy, rowID,
 
 function sendForAuthorization(date, staffId, action, description, authorizedBy, rowID, tblName, query) {
     
-    var sql = "insert into tblAuthorization (taskID, date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) values ( null, \"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", \"" + authorizedBy +  "\", \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
+    var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (\"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", \"" + authorizedBy +  "\", \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
+    
+    //var sql = "INSERT INTO tblauthorization (date, staffID, action, description, rowID, tblName, authorize, query) VALUES ('"+ date +"', '"+ staffId +"', '"+ action +"', '"+ description +"', '"+ rowID +"', '"+ tblName +"', 'M', '"+ query +"')";
 
-    console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
