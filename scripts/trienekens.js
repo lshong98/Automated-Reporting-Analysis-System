@@ -18,6 +18,10 @@ socket.on('connect', function () {
         socket.emit('room', "manager");
     }
     
+    socket.on('receive authorize action', function (data) {
+        $('.authorization').addClass("badge badge-danger").html(data.num);
+    });
+    
     socket.on('receive report notification', function (data) {
         Lobibox.notify('info', {
             pauseDelayOnHover: true,
@@ -708,6 +712,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         });
         storeDataService.show = angular.copy($scope.show);
     });
+    socket.emit('authorize request', {"action": "create user"});
 });
 
 app.controller('managerController', function ($scope, $http, $filter) {
@@ -1421,6 +1426,7 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
                 $scope.totalItems = $scope.filterStaffList.length;
                 $scope.staff.id = newStaffID;
                 socket.emit('create new user', $scope.staff);
+                socket.emit('authorize request', {"action": "create user"});
                 var rowId = 1;
             }
 
@@ -1842,7 +1848,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "complaintlist": {
             "view": 'I'
         },
-        "authorizationLog": {
+        "transactionLog": {
             "view": 'I'
         }
     };
