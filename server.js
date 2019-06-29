@@ -68,10 +68,9 @@ app.post('/loadMenu', function (req, res) {
     var sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
     
     database.query(sql, function (err, result) {
-        
         result.forEach(function (key, value) {
             if ((key.mgmtName).indexOf("view") != -1)
-            content += menuItem(key.mgmtName, key.status);
+            content += f.menuItem(key.mgmtName, key.status);
         });
         
         content += '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>';
@@ -80,55 +79,6 @@ app.post('/loadMenu', function (req, res) {
     });
     
 });
-
-function menuItem(keyword, status) {
-    switch (keyword) {
-        case "view account":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.account.view == \'A\'" role="menuitem"><a class="menu__link" href="#/account-management"><i class="fa fa-users"></i> Account Management</a></li>';
-            }
-        case "view truck":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.truck.view == \'A\'" role="menuitem"><a class="menu__link" href="#/truck-management"><i class="fa fa-truck"></i> Truck Management</a></li>';
-            }
-        case "view zone":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.zone.view == \'A\'" role="menuitem"><a class="menu__link" href="#/zone-management"><i class="fa fa-vector-square"></i> Zone Management</a></li>';
-            }
-        case "view area":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.area.view == \'A\'" role="menuitem"><a class="menu__link" href="#/area-management"><i class="fa fa-map"></i> Area Management</a></li>';
-            }
-        case "view bin":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.bin.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-management"><i class="fa fa-dumpster"></i> Bin Center Management</a></li>';
-            }
-        case "view acr":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.acr.view == \'A\'" role="menuitem"><a class="menu__link" href="#/acr-management"><i class="fa fa-bookmark"></i> ACR Management</a></li>';
-            }
-        case "view database":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.database.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-database"><i class="fas fa-warehouse"></i> Wheel Bin Database</a></li>';
-            }
-        case "view inventory":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.inventory.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-inventory"><i class="fas fa-dumpster"></i> Wheel Bin Inventory</a></li>';
-            }
-        case "view authorization":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.authorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/authorization"><i class="fas fa-clipboard-check"></i> Task Authorization <span class="authorization"></span></a></li>';
-            }
-        case "view complaintlist":
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module</a></li>';
-            }
-        case "view transactionLog":
-            if (status == 'A') {
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/notification"><i class="fa fa-bell"></i> Transaction Log</a></li>';
-            }
-    }
-}
 
 //});
 app.post('/getAreaLngLat', function(req, res) {
@@ -284,7 +234,7 @@ app.get('/getReportIncompleteCount',function(req,res){
 
 //complaint module
 app.get('/getComplaintList',function(req,res){
-    var sql="SELECT tblComplaint.date AS 'date', tblComplaint.complaintTitle AS 'title', tblCustomer.name AS  'customer', tblComplaintType.complaintType AS 'type', tblArea.areaName AS 'area', tblComplaint.complaintID AS ' complaintID' FROM tblComplaint JOIN tblComplaintType ON tblComplaint.complaintType = tblComplaintType.complaintType JOIN tblCustomer ON tblCustomer.customerID = tblComplaint.customerID JOIN tblArea ON tblArea.areaID = tblCustomer.areaID";
+    var sql="SELECT tblcomplaint.date AS 'date', tblcomplaint.complaintTitle AS 'title', tblcustomer.name AS  'customer', tblcomplainttype.complaintType AS 'type', tblarea.areaName AS 'area', tblcomplaint.complaintID AS ' complaintID' FROM tblcomplaint JOIN tblcomplainttype ON tblcomplaint.complaintType = tblcomplainttype.complaintType JOIN tblcustomer ON tblcustomer.customerID = tblcomplaint.customerID JOIN tblarea ON tblarea.areaID = tblcustomer.areaID";
      database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -295,7 +245,7 @@ app.get('/getComplaintList',function(req,res){
 
 app.get('/getComplaintLoc',function(req,res){
     
-    var sql = "SELECT tblcomplaint.complaintID, tblComplaint.date AS 'date', tblarea.longitude AS 'longitude', tblarea.latitude AS 'latitude', tblarea.areaName AS 'area', tblcustomer.name AS 'customer' FROM tblarea JOIN tblcustomer ON tblarea.areaID = tblcustomer.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID";
+    var sql = "SELECT tblcomplaint.complaintID, tblcomplaint.date AS 'date', tblarea.longitude AS 'longitude', tblarea.latitude AS 'latitude', tblarea.areaName AS 'area', tblcustomer.name AS 'customer' FROM tblarea JOIN tblcustomer ON tblarea.areaID = tblcustomer.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -307,7 +257,7 @@ app.get('/getComplaintLoc',function(req,res){
 //get complaint detail by id
 app.post('/getComplaintDetail',function(req,res){
     'use strict';
-    var sql = "SELECT t.complaint, co.complaintTitle, co.complaintContent, co.date, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', cu.neighborhood, ', ', cu.neighborhood, ', ', cu.postCode, ', ', cu.city) AS address, a.areaID, a.areaName from tblComplaint co JOIN tblComplaintType t ON co.complaintType = t.complaintType JOIN tblCustomer cu ON co.customerID = cu.customerID JOIN tblArea a ON a.areaID = cu.areaID WHERE co.complaintID = '" + req.body.id + "'";
+    var sql = "SELECT t.complaint, co.complaintTitle, co.complaintContent, co.date, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', cu.neighborhood, ', ', cu.neighborhood, ', ', cu.postCode, ', ', cu.city) AS address, a.areaID, a.areaName from tblcomplaint co JOIN tblcomplainttype t ON co.complaintType = t.complaintType JOIN tblcustomer cu ON co.customerID = cu.customerID JOIN tblarea a ON a.areaID = cu.areaID WHERE co.complaintID = '" + req.body.id + "'";
 
     database.query(sql, function (err, result) {
         if (err) {

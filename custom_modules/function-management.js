@@ -120,7 +120,61 @@ function sendForAuthorization(date, staffId, action, description, authorizedBy, 
     });
 }
 
+function menuItem(keyword, status) {
+    switch (keyword) {
+        case "view account":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.account.view == \'A\'" role="menuitem"><a class="menu__link" href="#/account-management"><i class="fa fa-users"></i> Account Management</a></li>';
+            }
+        case "view truck":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.truck.view == \'A\'" role="menuitem"><a class="menu__link" href="#/truck-management"><i class="fa fa-truck"></i> Truck Management</a></li>';
+            }
+        case "view zone":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.zone.view == \'A\'" role="menuitem"><a class="menu__link" href="#/zone-management"><i class="fa fa-vector-square"></i> Zone Management</a></li>';
+            }
+        case "view area":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.area.view == \'A\'" role="menuitem"><a class="menu__link" href="#/area-management"><i class="fa fa-map"></i> Area Management</a></li>';
+            }
+        case "view bin":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.bin.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-management"><i class="fa fa-dumpster"></i> Bin Center Management</a></li>';
+            }
+        case "view acr":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.acr.view == \'A\'" role="menuitem"><a class="menu__link" href="#/acr-management"><i class="fa fa-bookmark"></i> ACR Management</a></li>';
+            }
+        case "view database":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.database.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-database"><i class="fas fa-warehouse"></i> Wheel Bin Database</a></li>';
+            }
+        case "view inventory":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.inventory.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-inventory"><i class="fas fa-dumpster"></i> Wheel Bin Inventory</a></li>';
+            }
+        case "view authorization":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.authorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/authorization"><i class="fas fa-clipboard-check"></i> Task Authorization <span class="authorization"></span></a></li>';
+            }
+        case "view complaintlist":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module</a></li>';
+            }
+        case "view transactionLog":
+            if (status == 'A') {
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/notification"><i class="fa fa-bell"></i> Transaction Log</a></li>';
+            }
+        case "view role":
+            if (status == 'A') {
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/role-management"><i class="fa fa-lock"></i> Role Management</a></li>';
+            }
+    }
+}
+
 exports.makeID = makeID;
 exports.checkAuthority = checkAuthority;
 exports.logTransaction = logTransaction;
 exports.sendForAuthorization = sendForAuthorization;
+exports.menuItem = menuItem;
