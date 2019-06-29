@@ -713,6 +713,10 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         storeDataService.show = angular.copy($scope.show);
     });
     socket.emit('authorize request', {"action": "create user"});
+    
+    $http.post('/loadMenu', {"position": $window.sessionStorage.getItem('position')}).then(function (response) {
+        $('ul.menu__level').html(response.data.content);
+    });
 });
 
 app.controller('managerController', function ($scope, $http, $filter) {
