@@ -2731,20 +2731,44 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     var map = new google.maps.Map($googleMap, visualizeMap);
 
     $http.get('/getComplaintLoc').then(function (response) {
-        $scope.complaintLocList = response.data    
-        
-        for(var i =0; i <$scope.complaintLocList.length; i++){
-        
-            var myLatLng = {lat: $scope.complaintLocList[i].latitude, lng: $scope.complaintLocList[i].longitude};
+        $scope.complaintLocList = response.data   
+        var myLatLng = [];
+        var marker = [];
+        var complaintInfo = [];
+//        
+//        for(var i =0; i <$scope.complaintLocList.length; i++){
+//        
+//            myLatLng[i] = {lat: $scope.complaintLocList[i].latitude, lng: $scope.complaintLocList[i].longitude};
+//
+//            marker[i] = new google.maps.Marker({
+//                position: myLatLng[i],
+//                title: $scope.complaintLocList.area
+//            });
+//
+//            marker[i].setMap(map);
+//
+//        }
+        console.log($scope.complaintLocList);
+        $.each($scope.complaintLocList, function(index, value){
+            myLatLng[index] = {lat: value.latitude, lng: value.longitude};
+            value.date = $filter('date')(value.date, 'yyyy-MM-dd');
+            complaintInfo[index] = value.customer + ',' + value.date + ',' + value.area + ',' + 'View Detail.'.link('#/complaint-detail/' + value.complaintID);
 
-            var marker = new google.maps.Marker({
-                position: myLatLng,
-                title: $scope.complaintLocList.area
+            marker[index] = new google.maps.Marker({
+                position: myLatLng[index],
+                title: value.area
             });
 
-            marker.setMap(map);
+            marker[index].setMap(map); 
+            
+            marker[index].addListener('click', function() {
+                var infowindow = new google.maps.InfoWindow({
+                  content: complaintInfo[index]
+                });
+                infowindow.open(marker[index].get('map'), marker[index]);
 
-        }
+            });
+        });
     });
     
     $scope.orderBy = function (property) {
