@@ -450,6 +450,28 @@ io.sockets.on('connection', function(socket) {
         });
     });
     
+    //Create New Area
+    socket.on('create new area', function (data) {
+        socket.broadcast.emit('append area list', {
+            "id": data.id,
+            "name": data.name,
+            "zoneName": data.zoneName,
+            "staffName": data.staffName,
+            "status": 'ACTIVE'
+        });
+    });
+    
+    //Create New Bin
+    socket.on('create new bin', function (data) {
+        socket.broadcast.emit('append bin list', {
+            "id": data.id,
+            "name": data.name,
+            "location": data.location,
+            "area": data.area,
+            "status": 'ACTIVE'
+        });
+    });
+    
     // New User
     socket.on('new user', function(data, callback) {
         callback(true);

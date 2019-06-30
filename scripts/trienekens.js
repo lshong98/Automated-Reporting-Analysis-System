@@ -1177,11 +1177,13 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                     "id": newAreaID,
                     "name": $scope.area.name,
                     "status": 'ACTIVE',
-                    "zoneName" : ($scope.area.zone.id + '-' + $scope.area.zone.name),
-                    "staffName" : ($scope.area.staff.id + '-' +$scope.area.staff.name) 
+                    "zoneName": $scope.area.zone.id + '-' + $scope.area.zone.name,
+                    "staffName": $scope.area.staff.id + '-' + $scope.area.staff.name
                 });
-                console.log($scope.area.zone);
-                console.log($scope.area.staff);
+                $scope.area.id = newAreaID;
+                $scope.area.zoneName = $scope.area.zone.id + '-' + $scope.area.zone.name;
+                $scope.area.staffName = $scope.area.staff.id + '-' +$scope.area.staff.name;
+                socket.emit('create new area', $scope.area);
                 $scope.filterAreaList = angular.copy($scope.areaList);
                 angular.element('#createArea').modal('toggle');
                 $scope.totalItems = $scope.filterAreaList.length;
@@ -1193,8 +1195,6 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                 var area = myPlace.area.replace(" ", "+");
                 var zone = myPlace.zone.replace(" ", "+");
                 var concat = area + '+' + zone;
-
-
 
                 address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
 
@@ -1231,15 +1231,25 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
 
                 });
             });              
-       
         });
-      
-                
     }
     
     $scope.editAreaPage = function(id){
         window.location.href = '#/area/' + id;
     };
+    
+    socket.on('append area list', function(data) {
+        $scope.areaList.push({
+            "id": data.id,
+            "name": data.name,
+            "zoneName": data.zoneName,
+            "staffName": data.staffName,
+            "status": data.status
+        });
+        $scope.filterAreaList = angular.copy($scope.areaList);
+        $scope.totalItems = $scope.filterAreaList.length;
+        $scope.$apply();
+    });
     
     $scope.orderBy = function (property) {
         $scope.areaList = $filter('orderBy')($scope.areaList, ['' + property + ''], asc);
@@ -1763,7 +1773,6 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
                     "status": 'ACTIVE'
                 });
                 $scope.zone.id = newZoneID;
-                console.log($scope.zone);
                 socket.emit('create new zone', $scope.zone);
                 $scope.filterZoneList = angular.copy($scope.zoneList);
                 storeDataService.zone = angular.copy($scope.zoneList);
@@ -2020,7 +2029,15 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
                     type: "success",
                     "message": "Area added successfully!"
                 });
-                $scope.binList.push({"id": newBinID, "name": $scope.bin.name, "location": $scope.bin.location, "area":$scope.bin.area, "status": 'ACTIVE'});
+                $scope.binList.push({
+                    "id": newBinID,
+                    "name": $scope.bin.name,
+                    "location": $scope.bin.location,
+                    "area":$scope.bin.area,
+                    "status": 'ACTIVE'
+                });
+                $scope.bin.id = newBinID;
+                socket.emit('create new bin', $scope.bin);
                 storeDataService.bin = angular.copy($scope.binList);
                 $scope.filterBinList = angular.copy($scope.binList);
                 angular.element('#createBin').modal('toggle');
@@ -2028,6 +2045,19 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             }
         });
     }
+    
+    socket.on('append bin list', function(data) {
+        $scope.binList.push({
+            "id": data.id,
+            "name": data.name,
+            "location": data.location,
+            "area": data.area,
+            "status": data.status
+        });
+        $scope.filterBinList = angular.copy($scope.binList);
+        $scope.totalItems = $scope.filterBinList.length;
+        $scope.$apply();
+    });
     
     $scope.orderBy = function (property) {
         $scope.binList = $filter('orderBy')($scope.binList, ['' + property + ''], asc);
