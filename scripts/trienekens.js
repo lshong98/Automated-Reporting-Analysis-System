@@ -1434,8 +1434,6 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
                 var rowId = 1;
             }
 
-            
-
             angular.element('body').overhang({
                 type: returnedData.status,
                 message: returnedData.message
@@ -1448,7 +1446,6 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
     };
     
     socket.on('append user list', function(data) {
-        console.log('here is socket ' + socket.io.engine.id + ' appended');
         $scope.staffList.push({
             "id": data.id,
             "name": data.name,
@@ -1626,7 +1623,16 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
                     type: "success",
                     message: "Truck added successfully!"
                 });
-                $scope.truckList.push({"id":newTruckID, "no":$scope.truck.no, "transporter":$scope.truck.transporter, "ton":$scope.truck.ton, "roadtax": $scope.truck.roadtax, "status":'Active'});
+                $scope.truckList.push({
+                    "id":newTruckID,
+                    "no":$scope.truck.no,
+                    "transporter":$scope.truck.transporter,
+                    "ton":$scope.truck.ton,
+                    "roadtax": $scope.truck.roadtax,
+                    "status":'Active'
+                });
+                $scope.truck.id = newTruckID;
+                socket.emit('create new truck', $scope.truck);
                 storeDataService.truck = angular.copy($scope.truckList);
                 $scope.filterTruckList = angular.copy($scope.truckList);
                 $scope.totalItems = $scope.filterTruckList.length;
@@ -1635,6 +1641,20 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             }
         });
     };
+    
+    socket.on('append truck list', function(data) {
+        $scope.truckList.push({
+            "id": data.id,
+            "no": data.no,
+            transporter: data.transporter,
+            ton: data.ton,
+            roadtax: data.roadtax,
+            status: data.status
+        });
+        $scope.filterTruckList = angular.copy($scope.truckList);
+        $scope.totalItems = $scope.filterTruckList.length;
+        $scope.$apply();
+    });
     
     $scope.orderBy = function (property) {
         $scope.truckList = $filter('orderBy')($scope.truckList, ['' + property + ''], asc);
@@ -1742,6 +1762,9 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
                     "name": $scope.zone.name,
                     "status": 'ACTIVE'
                 });
+                $scope.zone.id = newZoneID;
+                console.log($scope.zone);
+                socket.emit('create new zone', $scope.zone);
                 $scope.filterZoneList = angular.copy($scope.zoneList);
                 storeDataService.zone = angular.copy($scope.zoneList);
                 $scope.totalItems = $scope.filterZoneList.length;
@@ -1750,6 +1773,17 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
             }
         });
     }
+    
+    socket.on('append zone list', function(data) {
+        $scope.zoneList.push({
+            "id": data.id,
+            "name": data.name,
+            "status": data.status
+        });
+        $scope.filterZoneList = angular.copy($scope.zoneList);
+        $scope.totalItems = $scope.filterZoneList.length;
+        $scope.$apply();
+    });
     
     $scope.orderBy = function (property) {
         $scope.zoneList = $filter('orderBy')($scope.zoneList, ['' + property + ''], asc);
@@ -2163,7 +2197,6 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
         });
     }
 });
-
 
 app.controller('databaseBinController', function($scope, $http, $filter, storeDataService){
     'use strict';

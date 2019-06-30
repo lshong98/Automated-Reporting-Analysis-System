@@ -429,6 +429,27 @@ io.sockets.on('connection', function(socket) {
         });
     });
     
+    //Create New Truck
+    socket.on('create new truck', function (data) {
+        socket.broadcast.emit('append truck list', {
+            id: data.id,
+            no: data.no,
+            transporter: data.transporter,
+            ton: data.ton,
+            roadtax: data.roadtax,
+            status: 'ACTIVE'
+        });
+    });
+    
+    //Create New Zone
+    socket.on('create new zone', function (data) {
+        socket.broadcast.emit('append zone list', {
+            "id": data.id,
+            "name": data.name,
+            "status": 'ACTIVE'
+        });
+    });
+    
     // New User
     socket.on('new user', function(data, callback) {
         callback(true);
