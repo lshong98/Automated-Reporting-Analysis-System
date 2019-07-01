@@ -35,18 +35,12 @@ app.post('/addUser', function (req, res) {
             f.makeID("account", req.body.creationDate).then(function (ID) {
                 var thePassword = bcrypt.hashSync(req.body.password, 10);
                 var sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, creationDateTime, staffStatus) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
-
-                database.query(sql, function (err, result) {
-                    if (err) {
-                        throw err;
-                    } else {
-                        f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", req.body.owner, 1, "tblstaff", "\""+ sql + "\"");
-                        f.logTransaction(req.body.creationDate, req.body.owner, "add", "Created New Account", req.body.owner, 1, "tblstaff");
-                        
-                        res.json({"status": "success", "message": "Account created successfully!", "details": {"staffID": ID}});
-                        res.end();
-                    }
-                });
+                
+                // Authorize
+                f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", req.body.owner, 1, "tblstaff", "\""+ sql + "\"");
+                f.logTransaction(req.body.creationDate, req.body.owner, "add", "Request to Create New Account", req.body.owner, 1, "tblstaff");
+                res.json({"status": "success", "message": "Request pending.."});
+                res.end();
             });
         } else {
             res.json({"status": "error", "message": "You have no permission to create account!"});
