@@ -1017,6 +1017,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
     
     $http.get('/getLngLat').then(function (response) {
         $scope.lnglatlist = response.data; 
+        console.log($scope.lnglatlist);
         
         var rd = {
             url: '../styles/mapmarkers/rd.png'
@@ -2773,6 +2774,8 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         }, true);            
             
         }
+        
+        $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-success': c.status == 'Complete'}";
     });
     
     $scope.complaintDetail = function(complaintCode){
@@ -2865,7 +2868,8 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
             'customer': complaint[0].name,
             'address': complaint[0].address,
             'areaID': complaint[0].areaID,
-            'area': complaint[0].areaName
+            'area': complaint[0].areaName,
+            'status' : complaint[0].status
         };
         
         //get report dates for certain area id
