@@ -1196,7 +1196,7 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                 var zone = myPlace.zone.replace(" ", "+");
                 var concat = area + '+' + zone;
 
-                address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
+                address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
 
                 $http.get(address).then(function (response) {
                     function timeToSeconds(time) {

@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '8080';
+var SVR_PORT = '';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
