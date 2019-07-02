@@ -1427,19 +1427,6 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
             var returnedData = response.data;
 
             if (returnedData.status === "success") {
-                var newStaffID = returnedData.details.staffID;
-                $scope.staffList.push({
-                    "id": newStaffID,
-                    "name": $scope.staff.name,
-                    "username": $scope.staff.username,
-                    "position": $scope.staff.position.name,
-                    "status": 'ACTIVE'
-                });
-
-                $scope.filterStaffList = angular.copy($scope.staffList);
-                $scope.totalItems = $scope.filterStaffList.length;
-                $scope.staff.id = newStaffID;
-                socket.emit('create new user', $scope.staff);
                 socket.emit('authorize request', {"action": "create user"});
                 var rowId = 1;
             }
@@ -2685,7 +2672,7 @@ $scope.getRecordIndex = function (date) {
     
 });
 
-app.controller('taskAuthorizationController', function ($scope, $http, $filter, storeDataService) {
+app.controller('taskAuthorizationController', function ($scope, $window, $http, $filter, storeDataService) {
     'use strict';
     $http.get('/getAllTasks').then(function (response) {
         storeDataService.task = angular.copy(response.data);
@@ -2695,12 +2682,18 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
     $scope.approveTask = function(taskId, query) {
         $scope.task = {
             "id": taskId,
-            "query": query
+            "query": query,
+            "approvedBy": $window.sessionStorage.getItem('owner')
         }
         
         $http.post('/approveTask', $scope.task).then(function (response){
+            var data = response.data;
+            angular.element('body').overhang({
+                type: data.status,
+                "message": data.message
+            });
             
-            console.log(response.data); 
+            socket.emit('create new user');
         });
         $http.get('/getAllTasks').then(function (response) {
             storeDataService.task = angular.copy(response.data);
@@ -2711,7 +2704,8 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
 
     $scope.rejectTask = function(taskId) {
         $scope.taskId = {
-            "id": taskId
+            "id": taskId,
+            "rejectedBy": $window.sessionStorage.getItem('owner')
         }
         $http.post('/rejectTask', $scope.taskId).then(function (response){
             

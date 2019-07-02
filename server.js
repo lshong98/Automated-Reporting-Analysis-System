@@ -459,13 +459,17 @@ io.sockets.on('connection', function(socket) {
     });
     
     //Create New User
-    socket.on('create new user', function(data) {
-        socket.broadcast.emit('append user list', {
-            id: data.id,
-            name: data.name,
-            username: data.username,
-            position: data.position.name,
-            status: 'ACTIVE'
+    socket.on('create new user', function() {
+        var latestData = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, tblposition.positionName AS position, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblstaff INNER JOIN tblposition ON tblposition.positionID = tblstaff.positionID ORDER BY tblstaff.creationDateTime DESC LIMIT 0, 1";
+        
+        database.query(latestData, function (err, result) {
+            socket.broadcast.emit('append user list', {
+                id: result[0].id,
+                name: result[0].name,
+                username: result[0].username,
+                position: result[0].position,
+                status: result[0].status
+            });
         });
     });
     
