@@ -1196,7 +1196,7 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                 var zone = myPlace.zone.replace(" ", "+");
                 var concat = area + '+' + zone;
 
-                address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+                address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
 
                 $http.get(address).then(function (response) {
                     function timeToSeconds(time) {
@@ -2855,6 +2855,7 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
 //complaint detail controller
 app.controller('complaintDetailController',function($scope, $http, $filter, $routeParams){
     'use strict';
+
     $scope.req = {
         'id': $routeParams.complaintCode
     };
@@ -2886,6 +2887,43 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
     $scope.viewReport = function(reportCode){
         window.location.href = '#/view-report/' + reportCode;
     }
+    
+    $scope.sendEmail = function(actioncode){
+//        $http.get('/emailService').then(function(response){
+//            console.log(response.data);
+//        });
+        
+        $scope.emailobj = {
+            "subject" : "",
+            "text" : "",
+            "email" : "lshong9899@gmail.com"
+        }
+        
+        if(actioncode == "ack"){
+            $scope.emailobj.subject = "Complaint received."
+            $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). "
+            
+            $http.post('/emailService',$scope.emailobj).then(function(response){
+                console.log(response.data);
+            });
+        }
+        if(actioncode == "rpy"){
+            $scope.emailobj.subject = $scope.subject;
+            $scope.emailobj.text = $scope.text;
+            $http.post('/emailService',$scope.emailobj).then(function(response){
+                console.log(response.data);
+            });
+        }
+        if(actioncode == "slv"){
+            $scope.emailobj.subject = "Problem Solved."
+            $scope.emailobj.text = "Your problem has been completely solved. Thank you for providing feedback to us. \n(Please do not reply to this email)."
+            
+            $http.post('/emailService',$scope.emailobj).then(function(response){
+                console.log(response.data);
+            });
+        }
+    }
+    
 });
 
 // //LOG TASk

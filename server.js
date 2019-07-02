@@ -10,8 +10,10 @@ var bcrypt = require('bcryptjs');
 var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
+var nodemailer = require('nodemailer');
+require('dotenv').config();
 
-var SVR_PORT = '';
+var SVR_PORT = '8080';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -319,6 +321,44 @@ app.get('/getCollectedLngLat',function(req,res){
         res.json(result);
     }); 
 });
+
+//emailing service for complaint
+app.post('/emailService',function(req,res){
+    'use strict';
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+      }
+    });
+//    
+//    var subject = "testinggg using nodemailer";
+//    var text = "testinggg";
+//    var email = "lshong9899@gmail.com";
+        
+    var subject = req.body.subject;
+    var text = req.body.text;
+    var email = req.body.email;
+    
+    var mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: subject,
+      text: text
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.json("success");
+      }
+    });
+    
+});
+
 
 server.listen(process.env.PORT || SVR_PORT, function () {
     'use strict';
