@@ -11,7 +11,7 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 
-var SVR_PORT = '';
+var SVR_PORT = '3000';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
