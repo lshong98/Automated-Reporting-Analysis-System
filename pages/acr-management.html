@@ -10,17 +10,13 @@
       </div>
       <div class="modal-body">
           <div class="form-group">
-              <label for="txtDcsAreas form-label">Additional Collection Areas</label>
-              <input type="text" class="form-control" id="txtDcsAreas" data-ng-model="dcs.areas" />
-          </div>
-          <div class="form-group">
               <label for="txtDcsPeriodFrom form-label">Period From</label>
-              <input type="text" class="form-control" id="txtDcsPeriodFrom" data-ng-model="dcs.periodFrom" />
+              <input type="date" class="form-control" id="txtDcsPeriodFrom" data-ng-model="dcs.periodFrom" />
           </div>
           
           <div class="form-group">
               <label for="txtDcsPeriodTo form-label">Period To</label>
-              <input type="text" class="form-control" id="txtDcsPeriodTo" data-ng-model="dcs.periodTo" />
+              <input type="date" class="form-control" id="txtDcsPeriodTo" data-ng-model="dcs.periodTo" />
           </div>
           <div class="form-group">
             <label for="txtDcsDriver form-label">Driver</label>
@@ -28,12 +24,12 @@
           </div>
           <div class="form-group">
             <label for="txtDcsReplacementPeriodFrom form-label">Replacement Period From</label>
-            <input type="text" class="form-control" id="txtDcsReplacementPeriodFrom" data-ng-model="dcs.replacementPeriodFrom" />
+            <input type="date" class="form-control" id="txtDcsReplacementPeriodFrom" data-ng-model="dcs.replacementPeriodFrom" />
           </div>
       
           <div class="form-group">
               <label for="txtDcsReplacementPeriodTo form-label">Replacement Period To</label>
-              <input type="text" class="form-control" id="txtDcsReplacementPeriodTo" data-ng-model="dcs.replacementPeriodTo" />
+              <input type="date" class="form-control" id="txtDcsReplacementPeriodTo" data-ng-model="dcs.replacementPeriodTo" />
           </div>
           <div class="form-group">
             <label for="txtDcsReplacementDriver form-label">Replacement Driver</label>
@@ -78,8 +74,8 @@
                   </tr>
               </thead>
               <tbody>               
-                  <tr data-ng-repeat="d in dcsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewdcs(d.dcsID);">
-                      <td data-ng-bind="d.dcsID"></td>
+                  <tr data-ng-repeat="d in dcsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewdcs(d.id);">
+                      <td data-ng-bind="d.id"></td>
                       <td data-ng-bind="d.periodFrom"></td>
                       <td data-ng-bind="d.periodTo"></td>
                       <td data-ng-bind="d.status"></td>
@@ -91,11 +87,11 @@
   </div>
 </div>
 
-<script>
+<!-- <script>
 $(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
     window.location.href = $(this).data('href');
 });
     $(document).ready(function () {
         $('.selectpicker').selectpicker();
     });
-</script>
+</script> -->

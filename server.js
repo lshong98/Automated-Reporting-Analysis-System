@@ -29,6 +29,8 @@ var truckManagement = require('./custom_modules/truck-management');
 var zoneManagement = require('./custom_modules/zone-management');
 var transactionLog = require('./custom_modules/transaction-log');
 var authorization = require('./custom_modules/authorization');
+var databaseBinManagement = require('./custom_modules/bin-database');
+var binInventoryManagement = require('./custom_modules/bin-inventory');
 
 users = [];
 connections = [];
@@ -43,7 +45,6 @@ var obj = {
 app.use(express.json({limit: '50mb'}));
 // Parse URL-encoded bodies (as sent by HTML forms)
 //app.use(express.urlencoded());
-
 
 app.post('/navigationControl', function (req, res) {
     'use strict';
@@ -540,3 +541,5 @@ app.use('/', truckManagement);
 app.use('/', zoneManagement);
 app.use('/', transactionLog);
 app.use('/', authorization);
+app.use('/', databaseBinManagement);
+app.use('/', binInventoryManagement);

@@ -104,6 +104,18 @@ app.get('/edit-report/:reportCode', function (req, res) {
     'use strict';
     res.sendFile('pages/edit-report.html', {root: __dirname});
 });
+app.get('/dcs-details/:dcsID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/dcs-details.html', {root: __dirname});
+});
+app.get('/bdaf-details/:bdafID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bdaf-details.html', {root: __dirname});
+});
+app.get('/dbd-details/:dbdID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/dbd-details.html', {root: __dirname});
+});
 app.get('/data-visualization', function (req, res) {
     'use strict';
     res.sendFile('pages/data-visualization.html', {root: __dirname});

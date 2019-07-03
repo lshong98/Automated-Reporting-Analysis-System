@@ -237,6 +237,40 @@ app.config(function($routeProvider, $locationProvider){
         controller:'editReportController',
         controllerAs:'editReport'
     })
+    .when('/dcs-details/:dcsID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/dcs-details/' + $route.current.params.dcsID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/dcs-details/' + params.dcsID;
+        }
+    })
+    .when('/bdaf-details/:bdafID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/bdaf-details/' + $route.current.params.bdafID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/view-report/' + params.reportCode;
+        },
+        controller:'viewReportController',
+        controllerAs:'report'
+    })
+    .when('/dbd-details/:dbdID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/dbd-details/' + $route.current.params.dbdID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/view-report/' + params.reportCode;
+        },
+        controller:'viewReportController',
+        controllerAs:'report'
+    })
     .when('/bin-database', {
         resolve: {
             "check": function (routingService, $window, $location) {

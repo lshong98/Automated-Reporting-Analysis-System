@@ -6,7 +6,7 @@ var f = require('./function-management');
 
 app.get('/getAllDatabaseBin', function (req, res) {
     'use strict';
-    var sql = "SELECT date, description, staffID, authorizedBy from tbllog";
+    var sql = "SELECT date, activeStatus from tblwheelbindatabase";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

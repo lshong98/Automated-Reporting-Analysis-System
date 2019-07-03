@@ -2071,29 +2071,28 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 app.controller('acrController',function($scope, $http, $filter, storeDataService){
     'use strict';
     $scope.areaList = [];
-    $scope.acrList = [];
+    $scope.dcsList = [];
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
     
-    function initializeAcr(){
-        $scope.acr = {
+
+    $scope.viewdcs = function(dcsID){
+       // setTimeout(function () {
+            window.location.href = '#/dcs-details/' + dcsID; // +"+"+ name
+       // }, 500);
+    }
+
+    function initializeDcs(){
+        $scope.dcs = {
             "id": '',    
-            "name": '',
-            "address": '',
-            "area": '',
-            "phone": '',
-            "days": [{
-                "mon": '',
-                "tue": '',
-                "wed": '',
-                "thu": '',
-                "fri": '',
-                "sat": '',
-                "sun": ''
-            }],
-            "enddate": '',
-            "status": ''
+            "creationDateTime": '',
+            "driver": '',
+            "periodFrom": '',
+            "periodTo": '',
+            "replacementDriver": '',
+            "replacementPeriodFrom": '',
+            "replacementPeriodTo": ''
         };
     }
     
@@ -2104,60 +2103,61 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
         angular.element('.selectpicker').selectpicker('render');
     }
     
-    $http.get('/getAllAcr').then(function (response) {
+    $http.get('/getAllDcs').then(function (response) {
         $scope.searchAcrFilter = '';
-        $scope.acrList = response.data;
+        $scope.dcsList = response.data;
+
         
-        $scope.filterAcrList = [];
-        $scope.searchAcr = function (acr) {
-            return (acr.id + acr.name + acr.address + acr.area + acr.phone + acr.days + acr.enddate + acr.status).toUpperCase().indexOf($scope.searchAcrFilter.toUpperCase()) >= 0;
-        }
+        // $scope.filterAcrList = [];
+        // $scope.searchAcr = function (acr) {
+        //     return (acr.id + acr.name + acr.address + acr.area + acr.phone + acr.days + acr.enddate + acr.status).toUpperCase().indexOf($scope.searchAcrFilter.toUpperCase()) >= 0;
+        // }
         
-        $.each($scope.acrList, function(index) {
-            $scope.filterAcrList = angular.copy($scope.acrList);
-        });
+        // $.each($scope.acrList, function(index) {
+        //     $scope.filterAcrList = angular.copy($scope.acrList);
+        // });
     
-        $scope.totalItems = $scope.filterAcrList.length;
+        // $scope.totalItems = $scope.filterAcrList.length;
     
-        $scope.getData = function () {
-            return $filter('filter')($scope.filterAcrList, $scope.searchAcrFilter);
-        };
+        // $scope.getData = function () {
+        //     return $filter('filter')($scope.filterAcrList, $scope.searchAcrFilter);
+        // };
     
-        $scope.$watch('searchAcrFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
-            }
-            return vm;
-        }, true);
+        // $scope.$watch('searchAcrFilter', function(newVal, oldVal) {
+        //     var vm = this;
+        //     if (oldVal !== newVal) {
+        //         $scope.currentPage = 1;
+        //         $scope.totalItems = $scope.getData().length;
+        //     }
+        //     return vm;
+        // }, true);
 
     });
     
     angular.element('.datepicker').datepicker();
     
-    $http.get('/getAreaList').then(function (response) {
-        $.each(response.data, function(index, value) {
-            var areaID = value.id.split(",");
-            var areaName = value.name.split(",");
-            var area = [];
-            $.each(areaID, function(index, value) {
-                area.push({
-                    "id": areaID[index],
-                    "name": areaName[index]
-                });
-            });
-            $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
-        });
-        renderSltPicker();
-        $('.selectpicker').on('change', function() {
-            renderSltPicker();
-        });
-    });
+    // $http.get('/getAreaList').then(function (response) {
+    //     $.each(response.data, function(index, value) {
+    //         var areaID = value.id.split(",");
+    //         var areaName = value.name.split(",");
+    //         var area = [];
+    //         $.each(areaID, function(index, value) {
+    //             area.push({
+    //                 "id": areaID[index],
+    //                 "name": areaName[index]
+    //             });
+    //         });
+    //         $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
+    //     });
+    //     renderSltPicker();
+    //     $('.selectpicker').on('change', function() {
+    //         renderSltPicker();
+    //     });
+    // });
     
-    $http.get('/getScheduleList').then(function (response) {
-        $scope.scheduleList = response.data;
-    });
+    // $http.get('/getScheduleList').then(function (response) {
+    //     $scope.scheduleList = response.data;
+    // });
     
 //    $http.get('/getAllAcr').then(function(response){
 //        
@@ -2192,25 +2192,26 @@ app.controller('acrController',function($scope, $http, $filter, storeDataService
 //    });
     
     
-    $scope.addAcr = function () {
-        $scope.acr.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addAcr', $scope.acr).then(function (response) {
+    $scope.addDcs = function () {
+        $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addDcs', $scope.dcs).then(function (response) {
             var returnedData = response.data;
-            var newAcrID = returnedData.details.acrID;
+            var newDcsID = returnedData.details.dcsID;
+            var today = new Date();
             
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
-                    "message": "ACR added successfully!"
+                    "message": "DCS added successfully!"
                 });
                 
-                var area = $('.selectpicker option:selected').text();
-               var areastr = area.split(" ")[2];
+            //     var area = $('.selectpicker option:selected').text();
+            //    var areastr = area.split(" ")[2];
 //                console.log(areastr);
-                $scope.acrList.push({"id": newAcrID, "name": $scope.acr.name, "address": $scope.acr.address, "area": areastr, "phone":$scope.acr.phone, "enddate":$scope.acr.enddate, "status": 'ACTIVE'});
-                $scope.filterAcrList = angular.copy($scope.acrList);
-                angular.element('#createACR').modal('toggle');
-                $scope.totalItems = $scope.filterAcrList.length;
+                $scope.dcsList.push({"id": newDcsID, "creationDateTime": today, "driver": $scope.dcs.driver, "periodFrom": $scope.dcs.periodFrom, "periodTo":$scope.dcs.periodTo, "replacementDriver":$scope.dcs.replacementDriver, "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom, "replacementPeriodTo": $scope.dcs.replacementPeriodTo, "status": 'ACTIVE'});
+                // $scope.filterAcrList = angular.copy($scope.acrList);
+                angular.element('#createDCS').modal('toggle');
+                // $scope.totalItems = $scope.filterAcrList.length;
             }
         });
     }
@@ -2246,44 +2247,45 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.show = angular.copy(storeDataService.show.database);
     
     $http.get('/getAllDatabaseBin').then(function(response){
-        $scope.searchDatabaseBinFilter = '';
+        
         $scope.databaseBinList = response.data;
+        console.log($scope.databaseBinList);
         storeDataService.databaseBin = angular.copy($scope.databaseBinList);
-        $scope.filterDatabaseBinList = [];
+        //$scope.filterDatabaseBinList = [];
         
-        $scope.searchDatabaseBin = function (bin) {
-            return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
-        };
+        // $scope.searchDatabaseBin = function (bin) {
+        //     return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+        // };
         
-        $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
+        // $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
     
-        $scope.totalItems = $scope.filterDatabaseBinList.length;
+        // $scope.totalItems = $scope.filterDatabaseBinList.length;
     
-        $scope.getData = function () {
-            return $filter('filter')($scope.filterDatabaseBinList, $scope.searchDatabaseBinFilter);
-        };
+        // $scope.getData = function () {
+        //     return $filter('filter')($scope.filterDatabaseBinList, $scope.searchDatabaseBinFilter);
+        // };
     
-        $scope.$watch('searchDatabaseBinFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
-            }
-            return vm;
-        }, true);
+        // $scope.$watch('searchDatabaseBinFilter', function(newVal, oldVal) {
+        //     var vm = this;
+        //     if (oldVal !== newVal) {
+        //         $scope.currentPage = 1;
+        //         $scope.totalItems = $scope.getData().length;
+        //     }
+        //     return vm;
+        // }, true);
     });
 
-    var getFilteredDatabaseBin = function(){
-        $http.post("/getFilteredDatabaseBin", $scope.date)
-            .then(function (response) {
-                    $scope.databaseBinList = response.data;
-//                    var obj = getElementList("area & duration", $scope.reportList);
-//                    console.log(obj);
-                },
-                function (response) {
-                    $window.console.log("errror retrieving json file - " + response);
-                });
-    };
+//     var getFilteredDatabaseBin = function(){
+//         $http.post("/getFilteredDatabaseBin", $scope.date)
+//             .then(function (response) {
+//                     $scope.databaseBinList = response.data;
+// //                    var obj = getElementList("area & duration", $scope.reportList);
+// //                    console.log(obj);
+//                 },
+//                 function (response) {
+//                     $window.console.log("error retrieving json file - " + response);
+//                 });
+//     };
     
     $scope.databaseBinList = [];
 
@@ -2389,6 +2391,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         from: '1900-01-01',
         to: '3000-01-01'
     };
+    
     $(function () {
         var start = moment().subtract(7, 'days');
         var end = moment();
@@ -2401,18 +2404,33 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
             endDate: end,
             opens: 'right'
         }, function (start, end, label) {
-            //console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
             putRange(start, end);
             $scope.date.from = start.format('YYYY-MM-DD');
             $scope.date.to = end.format('YYYY-MM-DD');
             console.log($scope.date.from + ' ' + $scope.date.to);
-            getFilteredDatabaseBin();
+            
         });
         putRange(start, end);
     });
 
     
     
+});
+app.filter("dateFilter", function () {
+    return function (binDatabase, dateFrom, dateTo) {
+        var filtered = [];
+
+        var from_date = Date.parse(dateFrom);
+        var to_date = Date.parse(dateTo) + 86400000;
+
+
+        angular.forEach(binDatabase, function (bin) {
+            if (Date.parse(bin.date) > from_date && Date.parse(bin.date) < to_date) {
+                filtered.push(bin);
+            }
+        });
+        return filtered;
+    };
 });
 app.filter("yearMonthFilter", function () {
     return function (inventoryRecordList, yearMonth) {

@@ -48,6 +48,11 @@ function makeID(keyword, creationDate) {
             property = "reportID";
             header = "RPT";
             break;
+        case "dcs":
+            table = "tbldcs";
+            property = "dcsID";
+            header = "DCS";
+            break;
         default: break;
     }
     
