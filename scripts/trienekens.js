@@ -1017,6 +1017,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
     
     $http.get('/getLngLat').then(function (response) {
         $scope.lnglatlist = response.data; 
+        console.log($scope.lnglatlist);
         
         var rd = {
             url: '../styles/mapmarkers/rd.png'
@@ -1427,19 +1428,6 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
             var returnedData = response.data;
 
             if (returnedData.status === "success") {
-                var newStaffID = returnedData.details.staffID;
-                $scope.staffList.push({
-                    "id": newStaffID,
-                    "name": $scope.staff.name,
-                    "username": $scope.staff.username,
-                    "position": $scope.staff.position.name,
-                    "status": 'ACTIVE'
-                });
-
-                $scope.filterStaffList = angular.copy($scope.staffList);
-                $scope.totalItems = $scope.filterStaffList.length;
-                $scope.staff.id = newStaffID;
-                socket.emit('create new user', $scope.staff);
                 socket.emit('authorize request', {"action": "create user"});
                 var rowId = 1;
             }
@@ -2685,7 +2673,7 @@ $scope.getRecordIndex = function (date) {
     
 });
 
-app.controller('taskAuthorizationController', function ($scope, $http, $filter, storeDataService) {
+app.controller('taskAuthorizationController', function ($scope, $window, $http, $filter, storeDataService) {
     'use strict';
     $http.get('/getAllTasks').then(function (response) {
         storeDataService.task = angular.copy(response.data);
@@ -2695,12 +2683,18 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
     $scope.approveTask = function(taskId, query) {
         $scope.task = {
             "id": taskId,
-            "query": query
+            "query": query,
+            "approvedBy": $window.sessionStorage.getItem('owner')
         }
         
         $http.post('/approveTask', $scope.task).then(function (response){
+            var data = response.data;
+            angular.element('body').overhang({
+                type: data.status,
+                "message": data.message
+            });
             
-            console.log(response.data); 
+            socket.emit('create new user');
         });
         $http.get('/getAllTasks').then(function (response) {
             storeDataService.task = angular.copy(response.data);
@@ -2711,7 +2705,8 @@ app.controller('taskAuthorizationController', function ($scope, $http, $filter, 
 
     $scope.rejectTask = function(taskId) {
         $scope.taskId = {
-            "id": taskId
+            "id": taskId,
+            "rejectedBy": $window.sessionStorage.getItem('owner')
         }
         $http.post('/rejectTask', $scope.taskId).then(function (response){
             
@@ -2779,6 +2774,8 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         }, true);            
             
         }
+        
+        $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-success': c.status == 'Complete'}";
     });
     
     $scope.complaintDetail = function(complaintCode){
@@ -2855,6 +2852,7 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
 //complaint detail controller
 app.controller('complaintDetailController',function($scope, $http, $filter, $routeParams){
     'use strict';
+
     $scope.req = {
         'id': $routeParams.complaintCode
     };
@@ -2870,7 +2868,8 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
             'customer': complaint[0].name,
             'address': complaint[0].address,
             'areaID': complaint[0].areaID,
-            'area': complaint[0].areaName
+            'area': complaint[0].areaName,
+            'status' : complaint[0].status
         };
         
         //get report dates for certain area id
@@ -2886,6 +2885,43 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
     $scope.viewReport = function(reportCode){
         window.location.href = '#/view-report/' + reportCode;
     }
+    
+    $scope.sendEmail = function(actioncode){
+//        $http.get('/emailService').then(function(response){
+//            console.log(response.data);
+//        });
+        
+        $scope.emailobj = {
+            "subject" : "",
+            "text" : "",
+            "email" : "lshong9899@gmail.com"
+        }
+        
+        if(actioncode == "ack"){
+            $scope.emailobj.subject = "Complaint received."
+            $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). "
+            
+            $http.post('/emailService',$scope.emailobj).then(function(response){
+                console.log(response.data);
+            });
+        }
+        if(actioncode == "rpy"){
+            $scope.emailobj.subject = $scope.subject;
+            $scope.emailobj.text = $scope.text;
+            $http.post('/emailService',$scope.emailobj).then(function(response){
+                console.log(response.data);
+            });
+        }
+        if(actioncode == "slv"){
+            $scope.emailobj.subject = "Problem Solved."
+            $scope.emailobj.text = "Your problem has been completely solved. Thank you for providing feedback to us. \n(Please do not reply to this email)."
+            
+            $http.post('/emailService',$scope.emailobj).then(function(response){
+                console.log(response.data);
+            });
+        }
+    }
+    
 });
 
 // //LOG TASk

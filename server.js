@@ -10,6 +10,8 @@ var bcrypt = require('bcryptjs');
 var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
+var nodemailer = require('nodemailer');
+require('dotenv').config();
 
 var SVR_PORT = '3000';
 
@@ -234,7 +236,7 @@ app.get('/getReportIncompleteCount',function(req,res){
 
 //complaint module
 app.get('/getComplaintList',function(req,res){
-    var sql="SELECT tblcomplaint.date AS 'date', tblcomplaint.complaintTitle AS 'title', tblcustomer.name AS  'customer', tblcomplainttype.complaintType AS 'type', tblarea.areaName AS 'area', tblcomplaint.complaintID AS ' complaintID' FROM tblcomplaint JOIN tblcomplainttype ON tblcomplaint.complaintType = tblcomplainttype.complaintType JOIN tblcustomer ON tblcustomer.customerID = tblcomplaint.customerID JOIN tblarea ON tblarea.areaID = tblcustomer.areaID";
+    var sql="SELECT tblcomplaint.date AS 'date', tblcomplaint.complaintTitle AS 'title', tblcustomer.name AS  'customer', tblcomplainttype.complaintType AS 'type', tblarea.areaName AS 'area', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Complete' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'In progress' END) AS status FROM tblcomplaint JOIN tblcomplainttype ON tblcomplaint.complaintType = tblcomplainttype.complaintType JOIN tblcustomer ON tblcustomer.customerID = tblcomplaint.customerID JOIN tblarea ON tblarea.areaID = tblcustomer.areaID";
      database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -245,7 +247,7 @@ app.get('/getComplaintList',function(req,res){
 
 app.get('/getComplaintLoc',function(req,res){
     
-    var sql = "SELECT tblcomplaint.complaintID, tblcomplaint.date AS 'date', tblarea.longitude AS 'longitude', tblarea.latitude AS 'latitude', tblarea.areaName AS 'area', tblcustomer.name AS 'customer' FROM tblarea JOIN tblcustomer ON tblarea.areaID = tblcustomer.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID";
+    var sql = "SELECT tblcomplaint.complaintID, tblcomplaint.date AS 'date', tblarea.longitude AS 'longitude', tblarea.latitude AS 'latitude', tblarea.areaName AS 'area', tblcustomer.name AS 'customer', tblcomplaint.status AS 'status' FROM tblarea JOIN tblcustomer ON tblarea.areaID = tblcustomer.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -257,7 +259,7 @@ app.get('/getComplaintLoc',function(req,res){
 //get complaint detail by id
 app.post('/getComplaintDetail',function(req,res){
     'use strict';
-    var sql = "SELECT t.complaint, co.complaintTitle, co.complaintContent, co.date, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', cu.neighborhood, ', ', cu.neighborhood, ', ', cu.postCode, ', ', cu.city) AS address, a.areaID, a.areaName from tblcomplaint co JOIN tblcomplainttype t ON co.complaintType = t.complaintType JOIN tblcustomer cu ON co.customerID = cu.customerID JOIN tblarea a ON a.areaID = cu.areaID WHERE co.complaintID = '" + req.body.id + "'";
+    var sql = "SELECT t.complaint, co.complaintTitle, co.complaintContent, co.date, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', cu.neighborhood, ', ', cu.neighborhood, ', ', cu.postCode, ', ', cu.city) AS address, a.areaID, a.areaName, (CASE WHEN co.status = 'c' THEN 'Complete' WHEN co.status = 'p' THEN 'Pending' WHEN co.status = 'i' THEN 'In progress' END) AS status from tblcomplaint co JOIN tblcomplainttype t ON co.complaintType = t.complaintType JOIN tblcustomer cu ON co.customerID = cu.customerID JOIN tblarea a ON a.areaID = cu.areaID WHERE co.complaintID = '" + req.body.id + "'";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -319,6 +321,44 @@ app.get('/getCollectedLngLat',function(req,res){
         res.json(result);
     }); 
 });
+
+//emailing service for complaint
+app.post('/emailService',function(req,res){
+    'use strict';
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+      }
+    });
+//    
+//    var subject = "testinggg using nodemailer";
+//    var text = "testinggg";
+//    var email = "lshong9899@gmail.com";
+        
+    var subject = req.body.subject;
+    var text = req.body.text;
+    var email = req.body.email;
+    
+    var mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: subject,
+      text: text
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.json("success");
+      }
+    });
+    
+});
+
 
 server.listen(process.env.PORT || SVR_PORT, function () {
     'use strict';
@@ -419,13 +459,17 @@ io.sockets.on('connection', function(socket) {
     });
     
     //Create New User
-    socket.on('create new user', function(data) {
-        socket.broadcast.emit('append user list', {
-            id: data.id,
-            name: data.name,
-            username: data.username,
-            position: data.position.name,
-            status: 'ACTIVE'
+    socket.on('create new user', function() {
+        var latestData = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, tblposition.positionName AS position, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblstaff INNER JOIN tblposition ON tblposition.positionID = tblstaff.positionID ORDER BY tblstaff.creationDateTime DESC LIMIT 0, 1";
+        
+        database.query(latestData, function (err, result) {
+            socket.broadcast.emit('append user list', {
+                id: result[0].id,
+                name: result[0].name,
+                username: result[0].username,
+                position: result[0].position,
+                status: result[0].status
+            });
         });
     });
     

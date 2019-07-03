@@ -108,7 +108,7 @@ function logTransaction(date, staffId, action, description, authorizedBy, rowID,
 
 function sendForAuthorization(date, staffId, action, description, authorizedBy, rowID, tblName, query) {
     
-    var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (\"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", \"" + authorizedBy +  "\", \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
+    var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (\"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", NULL, \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
     
     //var sql = "INSERT INTO tblauthorization (date, staffID, action, description, rowID, tblName, authorize, query) VALUES ('"+ date +"', '"+ staffId +"', '"+ action +"', '"+ description +"', '"+ rowID +"', '"+ tblName +"', 'M', '"+ query +"')";
 
@@ -173,8 +173,19 @@ function menuItem(keyword, status) {
     }
 }
 
+function insertNewData(query, req, res) {
+    database.query(query, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Task Approved."})
+        res.end();
+    });
+}
+
 exports.makeID = makeID;
 exports.checkAuthority = checkAuthority;
 exports.logTransaction = logTransaction;
 exports.sendForAuthorization = sendForAuthorization;
 exports.menuItem = menuItem;
+exports.insertNewData = insertNewData;
