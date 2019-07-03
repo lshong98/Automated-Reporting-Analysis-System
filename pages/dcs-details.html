@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-6">
-        <h2>Driver's Collection Schedule (for ACR Customers)</h2>
+        <h5>Driver's Collection Schedule (for ACR Customers)</h5>
     </div>
     <div class="col-md-6">
         <p>TRIENEKENS LOGO</p>
@@ -9,19 +9,19 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h4>Additional Collection Areas:</h4>
+        <h6>Additional Collection Areas:</h6>
     </div>
     <div class="col-md-3">
         <!-- Blank space for ACA -->
     </div>
     <div class="col-md-1">
-        <h4>Period:</h4>
+        <h6>Period:</h6>
     </div>
     <div class="col-md-2">
         <!-- Blank space for Period From -->
     </div>
     <div class="col-md-1">
-            <h4>To:</h4>
+            <h6>To:</h6>
     </div>
     <div class="col-md-2">
         <!-- Blank space for Period To -->
@@ -30,39 +30,202 @@
 
 <div class="row">
     <div class="col-md-2">
-        <h4>Driver Name:</h4>
+        <h6>Driver Name:</h6>
     </div>
     <div class="col-md-1">
 
     </div>
     <div class="col-md-2">
-        <h4>Replacement Driver Name:</h4>
+        <h6>Replacement Driver Name:</h6>
     </div>
     <div class="col-md-1">
 
     </div>
     <div class="col-md-2">
-        <h4>Replacement Period:</h4>
+        <h6>Replacement Period:</h6>
     </div>
     <div class="col-md-1">
 
     </div>
     <div class="col-md-2">
-        <h4>To:</h4>
+        <h6>To:</h6>
     </div>
     <div class="col-md-1">
         
     </div>
 </div>
 
+</br>
 <div class="row">
     <div class="col-md-12">
-
-    </div>
-</div>
-
-<div class="row">
-        <div class="col-md-12">
-            
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th width="15%" data-ng-click="orderBy('acrfNo');">ACRF Number <i class="fas fa-sort-down"></i></th>
+                        <th width="15%" data-ng-click="orderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
+                        <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
+                        <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
+                        <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
+                        <th width="5%" data-ng-click="orderBy('areaCode');">Area Code <i class="fas fa-sort-down"></i></th>
+                        <th width="5%" data-ng-click="orderBy('Mon');">Mon</i></th>
+                        <th width="5%" data-ng-click="orderBy('Tue');">Tue</i></th>
+                        <th width="5%" data-ng-click="orderBy('Wed');">Wed</i></th>
+                        <th width="5%" data-ng-click="orderBy('Thu');">Thu</i></th>
+                        <th width="5%" data-ng-click="orderBy('Fri');">Fri</i></th>
+                        <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
+                        <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
+                    </tr>
+                </thead>
+                <tbody>               
+                    <tr data-ng-repeat="d in dcsDetails | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.acrfNo" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.acrfNo"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.company" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.company"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.address" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.address"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.beBins" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.beBins"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.acrBins" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.acrBins"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.areaCode" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.areaCode"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.mon" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.mon"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.tue" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.tue"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.wed" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.wed"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.thu" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.thu"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.fri" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.fri"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.sat" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.sat"></span>
+                            </div>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="d.remarks" data-ng-show="!showDcsDetails" />
+                                <span data-ng-show="showDcsDetails" data-ng-bind="d.remarks"></span>
+                            </div>
+                        
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12">
+                Prepared by:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Name:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Date:
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12">
+                Checked by:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                    Name:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                    Date:
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12">
+                Verified by:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                    Name:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                    Date:
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12">
+                Job completed:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                    Name:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                Date:
+            </div>
+        </div>
+    </div>
+
+</div>

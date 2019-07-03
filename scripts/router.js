@@ -245,7 +245,9 @@ app.config(function($routeProvider, $locationProvider){
         },
         templateUrl: function (params) {
             return '/dcs-details/' + params.dcsID;
-        }
+        },
+        controller:'acrController',
+        controllerAs:'acr'
     })
     .when('/bdaf-details/:bdafID', {
         resolve: {
@@ -254,7 +256,7 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: function (params) {
-            return '/view-report/' + params.reportCode;
+            return '/bdaf-details/' + params.bdafID;
         },
         controller:'viewReportController',
         controllerAs:'report'
@@ -266,7 +268,7 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: function (params) {
-            return '/view-report/' + params.reportCode;
+            return '/bdaf-details/' + params.dbdID;
         },
         controller:'viewReportController',
         controllerAs:'report'

@@ -211,6 +211,11 @@ app.service('storeDataService', function () {
             },
             "transactionLog":{
                 "view": false
+            },
+            "dcsDetails": {
+                "view": false,
+                "edit": false,
+                "create": false
             }
         }
     };
@@ -230,6 +235,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.showDatabaseBin = true;
         scope.showNewMgb = true;
         scope.showReusableMgb = true;
+        scope.showDcsDetails = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -604,6 +610,43 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
             
         };
+        //DCS DETAILS
+        scope.editDcsDetails = function (id, name, location, area, status) {
+            scope.showDcsDetails = !scope.showDcsDetails;
+            
+            scope.thisBin = { "id": id, "name": name, "location": location, "area": area, "status": status };
+        };
+        scope.saveDcsDetails = function () {
+            scope.showDcsDetails = !scope.showDcsDetails;
+            
+            $http.post('/editDcsDetails', scope.b).then(function (response) {
+                var data = response.data;
+                
+                scope.notify(data.status, data.message);
+                
+                $.each(storeDataService.bin, function (index, value) {
+                    if (storeDataService.bin[index].id == scope.thisBin.id) {
+                        if (data.status == "success") {
+                            storeDataService.bin[index] = angular.copy(scope.b);
+                        } else {
+                            scope.z = angular.copy(storeDataService.bin[index]);
+                        }
+                        return false;
+                    }
+                });
+            });
+        };
+        scope.cancelDcsDetails = function () {
+            scope.showDcsDetails = !scope.showDcsDetails;
+            
+            $.each(storeDataService.bin, function (index, value) {
+                if (storeDataService.bin[index].id == scope.thisBin.id) {
+                    scope.b = angular.copy(storeDataService.bin[index]);
+                    return false;
+                }
+            });
+            
+        };
 
     };
 });
@@ -683,6 +726,11 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         },
         "transactionLog": {
             "view": false
+        },
+        "dcsDetails": {
+            "view": false,
+            "edit": false,
+            "create": false
         }
     };
 
