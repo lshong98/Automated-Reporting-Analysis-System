@@ -7,7 +7,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'trienekens02';
+var DB_NAME = '';
 
 // Create connection
 var db = mysql.createConnection({
