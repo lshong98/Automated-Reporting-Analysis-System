@@ -2841,11 +2841,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
             
         }
         
-        $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-success': c.status == 'Complete'}";
+        $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-primary': c.status == 'Confirmation', 'badge badge-success': c.status == 'Done'}";
     });
     
     $scope.complaintDetail = function(complaintCode){
-        console.log(complaintCode)
+        console.log(complaintCode);
         window.location.href = '#/complaint-detail/' + complaintCode;
         
     };
@@ -2922,6 +2922,14 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
     $scope.req = {
         'id': $routeParams.complaintCode
     };
+
+    $scope.emailobj = {
+        "id" : "",
+        "status" : "",
+        "subject" : "",
+        "text" : "",
+        "email" : "lshong9899@gmail.com"
+    };
     
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response){
@@ -2945,7 +2953,9 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
         };
         $http.post('/getDateListForComplaint', $scope.req2).then(function (response){
             $scope.reportList = response.data
-        });    
+        });
+        console.log($scope.comDetail);
+        
     });
     
     $scope.viewReport = function(reportCode){
@@ -2953,40 +2963,121 @@ app.controller('complaintDetailController',function($scope, $http, $filter, $rou
     }
     
     $scope.sendEmail = function(actioncode){
-//        $http.get('/emailService').then(function(response){
-//            console.log(response.data);
-//        });
-        
-        $scope.emailobj = {
-            "subject" : "",
-            "text" : "",
-            "email" : "lshong9899@gmail.com"
-        }
         
         if(actioncode == "ack"){
-            $scope.emailobj.subject = "Complaint received."
-            $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). "
-            
-            $http.post('/emailService',$scope.emailobj).then(function(response){
-                console.log(response.data);
+        
+            swal({
+              title: "Acknowledgement",
+              text: "This will send an acknowledgement email to customer, and move to next status, are you want to do it? (cannot be move back in next status)",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonClass: "btn-warning",
+              confirmButtonText: "Send email",
+              cancelButtonText: "Cancel",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm) {
+              if (isConfirm) {
+                  swal("Acknowledge", "Acknowledgement email has been sent.", "success");
+                  $scope.emailobj.subject = "Complaint received.";
+                  $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). ";
+                  $scope.emailobj.id = $routeParams.complaintCode;
+                  $scope.emailobj.status = "i";
+                  $http.post('/emailandupdate',$scope.emailobj).then(function(response){
+                      if(response.data.status == "success"){
+                          console.log(response.data);
+                          swal("Email Sent Successfully!","","success");
+                          $scope.comDetail.status = "In progress";
+                      }else{
+                          swal("Email has not been sent successfully!","","error");
+                      }
+                      
+                  });
+                  
+              } else {
+                  swal("Cancelled", "Acknowledgement email has not been sent.", "error");
+              }
             });
+
         }
         if(actioncode == "rpy"){
-            $scope.emailobj.subject = $scope.subject;
-            $scope.emailobj.text = $scope.text;
-            $http.post('/emailService',$scope.emailobj).then(function(response){
-                console.log(response.data);
+            
+            swal({
+              title: "Reply email",
+              text: "This will send an information email to customer, and move to next status, are you want to do it? (cannot be move back in next status)",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonClass: "btn-warning",
+              confirmButtonText: "Send email",
+              cancelButtonText: "Cancel",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm) {
+                
+                if (isConfirm) {
+                swal("Information", "Email has been sent.", "success");
+                $scope.emailobj.id = $routeParams.complaintCode;
+                $scope.emailobj.status = "c";
+
+                  $http.post('/emailandupdate',$scope.emailobj).then(function(response){
+                      if(response.data.status == "success"){
+                          console.log(response.data);
+                          swal("Email Sent Successfully!","","success");
+                          $scope.comDetail.status = "Confirmation";
+                      }else{
+                          swal("Email has not been sent successfully!","","error");
+                      }
+
+                  });
+                
+                } else {
+                swal("Cancelled", "Email has not been sent.", "error");
+                }
             });
+            
+
         }
         if(actioncode == "slv"){
-            $scope.emailobj.subject = "Problem Solved."
-            $scope.emailobj.text = "Your problem has been completely solved. Thank you for providing feedback to us. \n(Please do not reply to this email)."
             
-            $http.post('/emailService',$scope.emailobj).then(function(response){
-                console.log(response.data);
+            swal({
+              title: "Solved",
+              text: "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonClass: "btn-warning",
+              confirmButtonText: "Send email",
+              cancelButtonText: "Cancel",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                swal("Complete", "Confirmation email has been sent.", "success");
+                $scope.emailobj.subject = "Problem Solved."
+                $scope.emailobj.text = "Your problem has been completely solved. Thank you for providing feedback to us. \n(Please do not reply to this email)."
+                $scope.emailobj.id = $routeParams.complaintCode;
+                $scope.emailobj.status = "d";
+
+                  $http.post('/emailandupdate',$scope.emailobj).then(function(response){
+                      if(response.data.status == "success"){
+                          console.log(response.data);
+                          swal("Confirmation email Sent Successfully!","","success");
+                          $scope.comDetail.status = "Done";
+                      }else{
+                          swal("Confirmation email has not been sent successfully!","","error");
+                      }
+
+                  });
+                } else {
+                swal("Cancelled", "Confirmation email has not been sent.", "error");
+                }
             });
+
         }
     }
+    
     
 });
 
