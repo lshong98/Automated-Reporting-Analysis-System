@@ -1,3 +1,61 @@
+<div class="modal fade" id="createDcsEntry" tabindex="-1" role="dialog" aria-labelledby="createDcsEntry" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Add a DCS</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtDcsPeriodFrom form-label">Period From</label>
+                    <input type="date" class="form-control" id="txtDcsPeriodFrom" data-ng-model="dcs.periodFrom" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="txtDcsPeriodTo form-label">Period To</label>
+                    <input type="date" class="form-control" id="txtDcsPeriodTo" data-ng-model="dcs.periodTo" />
+                </div>
+                <div class="form-group">
+                  <label for="txtDcsDriver form-label">Driver</label>
+                  <input type="text" class="form-control" id="txtDcsDriver" data-ng-model="dcs.driver" />
+                </div>
+                <div class="form-group">
+                  <label for="txtDcsReplacementPeriodFrom form-label">Replacement Period From</label>
+                  <input type="date" class="form-control" id="txtDcsReplacementPeriodFrom" data-ng-model="dcs.replacementPeriodFrom" />
+                </div>
+            
+                <div class="form-group">
+                    <label for="txtDcsReplacementPeriodTo form-label">Replacement Period To</label>
+                    <input type="date" class="form-control" id="txtDcsReplacementPeriodTo" data-ng-model="dcs.replacementPeriodTo" />
+                </div>
+                <div class="form-group">
+                  <label for="txtDcsReplacementDriver form-label">Replacement Driver</label>
+                  <input type="text" class="form-control" id="txtDcsReplacementDriver" data-ng-model="dcs.replacementDriver" />
+                </div>
+         
+                
+                
+                
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-ng-click="addDcsEntry();">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" data-ng-show="show.create == 'A'">
+            <div class="col-md-12">
+                <button class="btn btn-success" data-toggle="modal" data-target="#createDcsEntry"><i class="fa fa-plus"></i> New</button>
+            </div>
+        </div>
+
+
+
+
 <div class="row">
     <div class="col-md-6">
         <h5>Driver's Collection Schedule (for ACR Customers)</h5>
@@ -9,49 +67,49 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h6>Additional Collection Areas:</h6>
+        <h6>Additional Collection Areas: </h6>
     </div>
     <div class="col-md-3">
-        <!-- Blank space for ACA -->
+            {{d.areas}}
     </div>
     <div class="col-md-1">
-        <h6>Period:</h6>
+        <h6>Period: </h6>
     </div>
     <div class="col-md-2">
-        <!-- Blank space for Period From -->
+            {{d.periodFrom}}
     </div>
     <div class="col-md-1">
-            <h6>To:</h6>
+            <h6>To: </h6>
     </div>
     <div class="col-md-2">
-        <!-- Blank space for Period To -->
+            {{d.periodTo}}
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-2">
-        <h6>Driver Name:</h6>
+        <h6>Driver Name: </h6>
     </div>
     <div class="col-md-1">
-
+            {{d.driver}}
     </div>
     <div class="col-md-2">
-        <h6>Replacement Driver Name:</h6>
+        <h6>Replacement Driver Name: </h6>
     </div>
     <div class="col-md-1">
-
+            {{d.replacementDriver}}
     </div>
     <div class="col-md-2">
-        <h6>Replacement Period:</h6>
+        <h6>Replacement Period: </h6>
     </div>
     <div class="col-md-1">
-
+            {{d.replacementPeriodFrom}}
     </div>
     <div class="col-md-2">
         <h6>To:</h6>
     </div>
     <div class="col-md-1">
-        
+        {{d.replacementPeriodTo}}
     </div>
 </div>
 
@@ -59,7 +117,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
-            <table class="table table-hover table-striped">
+            <table class="table table-hover table-striped table-clickable">
                 <thead>
                     <tr>
                         <th width="15%" data-ng-click="orderBy('acrfNo');">ACRF Number <i class="fas fa-sort-down"></i></th>

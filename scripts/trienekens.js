@@ -620,7 +620,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             scope.showDcsDetails = !scope.showDcsDetails;
             
             $http.post('/editDcsDetails', scope.b).then(function (response) {
-                var data = response.data;
+                var data = response.data; 
                 
                 scope.notify(data.status, data.message);
                 
