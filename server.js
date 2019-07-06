@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '3000';
+var SVR_PORT = '';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -282,7 +282,40 @@ app.post('/getDateListForComplaint',function(req,res){
         res.json(result);
     });        
 });
-
+app.post('/getReportForComplaint', function(req, res){
+    'use strict';
+    var content = '';
+    
+    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetMap AS ifleet, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(area_collection.areaAddress) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN area_collection ON tblreport.areaID = area_collection.areaID JOIN tblarea ON tblarea.areaID = tblreport.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        
+        content += '<div class="row"><div class="col-md-12"><table border="1"><thead><tr><th colspan="2">IVWM INSPECTION REPORT ID: '+result[0].id+'</th><th>Completion Status:'+result[0].status+'</th><th>Collection Date: '+result[0].date+'</th><th>Garbage Amount(ton): '+result[0].ton+'</th><th>Time Start: '+result[0].startTime+'</th><th>Time End: '+result[0].startEnd+'</th><th>Reporting Staff:</th></tr><tr><th>Area</th><th>Collection Area</th><th>COLLECTION FREQUENCY</th><th>BIN CENTERS</th><th>ACR CUSTOMER</th><th>TRANSPORTER</th><th>TRUCK NO.</th><th>DRIVER</th></tr></thead><tbody><tr><td>'+result[0].area+'</td><td>'+result[0].collection+'</td><td>'+result[0].frequency+'</td><td >bin</td><td>acr</td><td>'+result[0].transporter+'</td><td>'+result[0].truck+'</td><td>'+result[0].driver+'</td></tr><tr><td>Remarks:</td><td colspan="7">'+result[0].remark+'</td></tr></tbody></table></div></div>'
+        
+        res.json({"content": content});
+    });
+    
+//    if (req.body.position == "Manager") {
+//        content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
+//    } else if (req.body.position == "Reporting Officer") {
+//        content += '<li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>';
+//    }
+//    
+//    var sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
+//    
+//    database.query(sql, function (err, result) {
+//        result.forEach(function (key, value) {
+//            if ((key.mgmtName).indexOf("view") != -1)
+//            content += f.menuItem(key.mgmtName, key.status);
+//        });
+//        
+//        content += '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>';
+//        
+//        res.json({"content": content});
+//    });
+});
 app.post('/updateAreaLngLat', function(req, res) {
     'use strict';
     var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat+ "' WHERE areaID = '" + req.body.areaCode + "'";
