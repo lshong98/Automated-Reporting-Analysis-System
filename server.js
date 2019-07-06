@@ -294,27 +294,9 @@ app.post('/getReportForComplaint', function(req, res){
         
         content += '<div class="row"><div class="col-md-12"><table border="1"><thead><tr><th colspan="2">IVWM INSPECTION REPORT ID: '+result[0].id+'</th><th>Completion Status:'+result[0].status+'</th><th>Collection Date: '+result[0].date+'</th><th>Garbage Amount(ton): '+result[0].ton+'</th><th>Time Start: '+result[0].startTime+'</th><th>Time End: '+result[0].startEnd+'</th><th>Reporting Staff:</th></tr><tr><th>Area</th><th>Collection Area</th><th>COLLECTION FREQUENCY</th><th>BIN CENTERS</th><th>ACR CUSTOMER</th><th>TRANSPORTER</th><th>TRUCK NO.</th><th>DRIVER</th></tr></thead><tbody><tr><td>'+result[0].area+'</td><td>'+result[0].collection+'</td><td>'+result[0].frequency+'</td><td >bin</td><td>acr</td><td>'+result[0].transporter+'</td><td>'+result[0].truck+'</td><td>'+result[0].driver+'</td></tr><tr><td>Remarks:</td><td colspan="7">'+result[0].remark+'</td></tr></tbody></table></div></div>'
         
-        res.json({"content": content});
+        res.json({"content": content, "result": result});
     });
     
-//    if (req.body.position == "Manager") {
-//        content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
-//    } else if (req.body.position == "Reporting Officer") {
-//        content += '<li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>';
-//    }
-//    
-//    var sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
-//    
-//    database.query(sql, function (err, result) {
-//        result.forEach(function (key, value) {
-//            if ((key.mgmtName).indexOf("view") != -1)
-//            content += f.menuItem(key.mgmtName, key.status);
-//        });
-//        
-//        content += '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>';
-//        
-//        res.json({"content": content});
-//    });
 });
 app.post('/updateAreaLngLat', function(req, res) {
     'use strict';

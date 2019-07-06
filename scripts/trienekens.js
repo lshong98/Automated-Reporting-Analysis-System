@@ -2919,7 +2919,7 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
 
 });
 //complaint detail controller
-app.controller('complaintDetailController', function($scope, $http, $filter, $routeParams) {
+app.controller('complaintDetailController', function($scope, $http, $filter, $window, $routeParams) {
     'use strict';
     $scope.req = {
         'id': $routeParams.complaintCode
@@ -2956,6 +2956,7 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $ro
         $http.post('/getDateListForComplaint', $scope.req2).then(function(response) {
             $scope.reportList = response.data;
         });
+    
     });
 
     $scope.viewReport = function(reportCode) {
@@ -2963,12 +2964,33 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $ro
         $scope.report = {
             "reportID": reportCode
         };
+        
+        var $googleMap, map;
 
         $http.post('/getReportForComplaint', $scope.report).then(function(response) {
             console.log(response.data)
             $('div.report_reference').html(response.data.content);
-
+            $scope.thisReport = response.data.result[0];
         });
+        
+        $googleMap = document.getElementById('googleMap');
+        var visualizeMap = {
+            center: new google.maps.LatLng(1, 1),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false,
+            panControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+            disableDefaultUI: true,
+            editable: false
+        };
+
+        map = new google.maps.Map($googleMap, visualizeMap);
+
+        $window.setTimeout(function () {
+            map.panTo(new google.maps.LatLng($scope.thisReport.lat, $scope.thisReport.lng));
+            map.setZoom(17);
+        }, 1000);
     }
 
     $scope.sendEmail = function(actioncode) {
