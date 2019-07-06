@@ -80,18 +80,18 @@ app.post('/thisArea', function (req, res) {
 app.post('/addCollection', function (req, res) {
     'use strict';
     
-    var sql = "INSERT INTO area_collection (areaID, areaAddress, areaCollStatus) VALUE ('" + req.body.area + "', '" + req.body.address + "', 'A')";
+    var sql = "INSERT INTO tbltaman(areaID, tamanName) VALUE ('" + req.body.area + "', '" + req.body.address + "')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
-        res.json({"status": "success", "message": "Address Added!", "details": {"id": result.insertId}});
+        res.json({"status": "success", "message": "Taman Added!", "details": {"id": result.insertId}});
     });
 });
 app.post('/getCollection', function (req, res){
     'use strict';
 
-    var sql = "SELECT acID AS id, areaAddress AS address FROM area_collection WHERE areaCollStatus = 'A' AND areaID = '" + req.body.id + "'";
+    var sql = "SELECT tamanID AS id, tamanName AS address FROM tbltaman WHERE areaID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -103,7 +103,7 @@ app.post('/getCollection', function (req, res){
 app.post('/deleteCollection', function (req, res) {
     'user strict';
     
-    var sql = "UPDATE area_collection SET areaCollStatus = 'I' WHERE acID = '" + req.body.id + "'";
+    var sql = "DELETE FROM tbltaman WHERE tamanID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -114,12 +114,12 @@ app.post('/deleteCollection', function (req, res) {
 app.post('/updateCollection', function (req, res) {
     'use strict';
     
-    var sql = "UPDATE area_collection SET areaAddress = '" + req.body.address + "' WHERE acID = '" + req.body.id + "'";
+    var sql = "UPDATE tbltaman SET tamanName = '" + req.body.address + "' WHERE tamanID = '" + req.body.id + "'";
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
         }
-        res.json({"status": "success", "message": "Area collection updated!"});
+        res.json({"status": "success", "message": "taman updated!"});
     });
 });
 
