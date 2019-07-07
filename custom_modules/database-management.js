@@ -205,6 +205,6 @@ emitter.on('defaultUser', function () {
         });
     });
 }); // Complete
-/* Emitter Registered */ 
+/* Emitter Registered */
 
 module.exports = db;

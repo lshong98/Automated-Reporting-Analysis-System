@@ -46,18 +46,6 @@ app.use(express.json({limit: '50mb'}));
 // Parse URL-encoded bodies (as sent by HTML forms)
 //app.use(express.urlencoded());
 
-app.post('/navigationControl', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-
 app.post('/loadMenu', function (req, res) {
     'use strict';
     var content = '';
@@ -79,11 +67,11 @@ app.post('/loadMenu', function (req, res) {
         content += '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>';
         
         res.json({"content": content});
+        res.end();
     });
     
 });
 
-//});
 app.post('/getAreaLngLat', function(req, res) {
     'use strict';
     var sql = "SELECT longitude, latitude FROM tblarea WHERE areaID = '" + req.body.areaCode+ "'";
