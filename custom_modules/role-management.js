@@ -1,9 +1,10 @@
+/*jslint node:true*/
 var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 
-// Role Management
+// Create Role
 app.post('/addRole', function (req, res) {
     'use strict';
     
@@ -17,6 +18,8 @@ app.post('/addRole', function (req, res) {
         });
     });
 }); // Complete
+
+// Load all role in management
 app.get('/getAllRole', function (req, res) {
     'use strict';
     
@@ -28,51 +31,49 @@ app.get('/getAllRole', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+// Give/Remove authority from an user
 app.post('/setAuth', function (req, res) {
     'use strict';
     
-    var sql = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.name + "' LIMIT 0, 1";
-    database.query(sql, function (err, result){
-        if (err) {
-            throw err;
-        }
-        var staffID = result[0].id;
-        var sql = "SELECT mgmtID AS id FROM tblmanagement WHERE mgmtName = '" + req.body.management + "' LIMIT 0, 1";
-        database.query(sql, function (err, result) {
+    var information = {};
+    
+    f.waterfallQuery("SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.name + "' LIMIT 0, 1").then(function (positionID) {
+        information.positionID = positionID.id;
+        return f.waterfallQuery("SELECT mgmtID AS id FROM tblmanagement WHERE mgmtName = '" + req.body.management + "' LIMIT 0, 1");
+    }).then(function (managementID) {
+        information.managementID = managementID.id;
+        return f.waterfallQuery("DELETE FROM tblaccess WHERE positionID = '" + information.positionID + "' AND mgmtID = '" + information.managementID + "'");
+    }).then(function () {
+        database.query("INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + information.positionID + "', '" + information.managementID + "', '" + req.body.access + "')", function (err, result) {
             if (err) {
                 throw err;
+            } else {
+                var message = req.body.access === 'A' ? "Permission given." : "Permission removed.";
+                res.json({"status": "success", "message": message});
+                res.end();
             }
-            var managementID = result[0].id;
-            var sql = "DELETE FROM tblaccess WHERE positionID = '" + staffID + "' AND mgmtID = '" + managementID + "'";
-            database.query(sql, function (err, result) {
-                if (err) {
-                    throw err;
-                }
-                var sql = "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + staffID + "', '" + managementID + "', '" + req.body.access + "')";
-                console.log(sql);
-                database.query(sql, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    var message = req.body.access == 'A' ? "Permission given." : "Permission removed.";
-                    res.json({"status": "success", "message": message});
-                });
-            });
         });
     });
 }); // Complete
-app.get('/getPositionList', function(req, res) {
+
+// Used in comboBox - Role
+app.get('/getPositionList', function (req, res) {
     'use strict';
     
     var sql = "SELECT positionID AS id, positionName AS name FROM tblposition WHERE positionStatus = 'A' AND positionName != 'ADMINISTRATOR'";
-    database.query(sql, function(err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
+        } else {
+            res.json(result);
+            res.end();
         }
-        res.json(result);
     });
     
 }); // Complete
+
+// Load specific role details - Accessibility
 app.post('/getAllAuth', function (req, res) {
     'use strict';
     

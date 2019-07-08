@@ -1,3 +1,4 @@
+/*jslint node:true*/
 var express = require('express');
 var app = express();
 var bcrypt = require('bcryptjs');
@@ -26,18 +27,18 @@ app.post('/login', function (req, res) {
     });
 }); // Complete
 
-// Account Management
+// Create User
 app.post('/addUser', function (req, res) {
     'use strict';
 
     f.checkAuthority("create account", req.body.owner).then(function (status) {
-        if (status == 'A') {
+        if (status === 'A') {
             f.makeID("account", req.body.creationDate).then(function (ID) {
-                var thePassword = bcrypt.hashSync(req.body.password, 10);
-                var sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, creationDateTime, staffStatus) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
+                var thePassword = bcrypt.hashSync(req.body.password, 10),
+                    sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, creationDateTime, staffStatus) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
                 
                 // Authorize
-                f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", req.body.owner, 1, "tblstaff", "\""+ sql + "\"");
+                f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", req.body.owner, 1, "tblstaff", "\"" + sql + "\"");
                 f.logTransaction(req.body.creationDate, req.body.owner, "add", "Request to Create New Account", req.body.owner, 1, "tblstaff");
                 res.json({"status": "success", "message": "Request pending.."});
                 res.end();
@@ -47,6 +48,8 @@ app.post('/addUser', function (req, res) {
         }
     });
 }); // Complete
+
+// Load all user in management
 app.get('/getAllUser', function (req, res) {
     'use strict';
     
@@ -58,12 +61,13 @@ app.get('/getAllUser', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+// Update user password
 app.post('/updatePassword', function (req, res) {
     'use strict';
 
-    var thePassword = bcrypt.hashSync(req.body.password, 10);
-
-    var sql = "UPDATE tblstaff SET password = '" + thePassword + "' WHERE staffID = '" + req.body.id + "'";
+    var thePassword = bcrypt.hashSync(req.body.password, 10),
+        sql = "UPDATE tblstaff SET password = '" + thePassword + "' WHERE staffID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
             res.json({"status": "error", "message": "Update failed."});
@@ -72,6 +76,8 @@ app.post('/updatePassword', function (req, res) {
         res.json({"status": "success", "message": "Password updated."});
     });
 }); // Complete
+
+// Load specific account
 app.post('/loadSpecificAccount', function (req, res) {
     'use strict';
     
@@ -84,26 +90,42 @@ app.post('/loadSpecificAccount', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+// Used in comboBox - Reporting Officer
 app.get('/getStaffList', function (req, res) {
     'use strict';
     var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffStatus = 'A' AND tblposition.positionName = 'Reporting Officer'";
-    database.query(sql, function(err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
         res.json(result);
     });
 }); // Complete
+
+// Used in comboBox - Driver
+app.get('/getDriverList', function (req, res) {
+    'use strict';
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblposition JOIN tblstaff ON tblstaff.positionID = tblposition.positionID WHERE tblposition.positionName = 'Driver' AND tblstaff.staffStatus = 'A'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
+
+// Update Account Information
 app.post('/updateProfile', function (req, res) {
     'use strict';
     
-    var dt = dateTime.create(req.body.dob);
-
-    req.body.status = req.body.status == "Active" ? 'A' : 'I';
-    req.body.gender = req.body.gender == "Male" ? 'M' : 'F';
+    var dt = dateTime.create(req.body.dob),
+        sql = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.position + "' LIMIT 0, 1";
+    req.body.status = req.body.status === "Active" ? 'A' : 'I';
+    req.body.gender = req.body.gender === "Male" ? 'M' : 'F';
     req.body.dob = dt.format('Y-m-d');
     
-    var sql = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.position + "' LIMIT 0, 1";
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
