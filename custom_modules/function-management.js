@@ -175,6 +175,14 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/role-management"><i class="fa fa-lock"></i> Role Management</a></li>';
             }
+        case "view visualization":
+            if (status == 'A') {
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/data-visualization"><i class="fa fa-chart-area"></i> Data Analysis &amp; Visualize</a></li>';
+            }
+        case "view reporting":
+            if (status == 'A') {
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/reporting"><i class="fa fa-file"></i> Reporting</a></li>';
+            }
     }
 }
 
@@ -188,9 +196,23 @@ function insertNewData(query, req, res) {
     });
 }
 
+function waterfallQuery(query) {
+    'use strict';
+    return new Promise(function (resolve, reject) {
+        database.query(query, function (err, result) {
+            if (err) {
+                throw err;
+            } else {
+                resolve(result[0]);
+            }
+        })
+    });
+}
+
 exports.makeID = makeID;
 exports.checkAuthority = checkAuthority;
 exports.logTransaction = logTransaction;
 exports.sendForAuthorization = sendForAuthorization;
 exports.menuItem = menuItem;
 exports.insertNewData = insertNewData;
+exports.waterfallQuery = waterfallQuery;
