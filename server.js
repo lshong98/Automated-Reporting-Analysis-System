@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '';
+var SVR_PORT = '3000';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -35,7 +35,7 @@ var binInventoryManagement = require('./custom_modules/bin-inventory');
 users = [];
 connections = [];
 connectedUserList = [];
-
+ 
 var obj = {
     "ID": '',
     "authStatus": ''
@@ -79,7 +79,7 @@ app.post('/getAreaLngLat', function(req, res) {
         if (err) {
             throw err;
         }
-        res.json(result);
+        res.json(result); 
     });
 }); // Complete
 
