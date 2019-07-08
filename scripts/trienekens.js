@@ -2122,6 +2122,9 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     'use strict';
     $scope.areaList = [];
     $scope.dcsList = [];
+    $scope.dcsDetails = [];
+    $scope.dcsID = [];
+
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
@@ -2130,6 +2133,11 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     $scope.viewdcs = function(dcsID) {
         // setTimeout(function () {
         window.location.href = '#/dcs-details/' + dcsID; // +"+"+ name
+        $scope.dcsID = {
+            "id": dcsID
+        }
+
+        $scope.getDcsDetails();
         // }, 500);
     }
 
@@ -2157,90 +2165,9 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         $scope.searchAcrFilter = '';
         $scope.dcsList = response.data;
 
-
-        // $scope.filterAcrList = [];
-        // $scope.searchAcr = function (acr) {
-        //     return (acr.id + acr.name + acr.address + acr.area + acr.phone + acr.days + acr.enddate + acr.status).toUpperCase().indexOf($scope.searchAcrFilter.toUpperCase()) >= 0;
-        // }
-
-        // $.each($scope.acrList, function(index) {
-        //     $scope.filterAcrList = angular.copy($scope.acrList);
-        // });
-
-        // $scope.totalItems = $scope.filterAcrList.length;
-
-        // $scope.getData = function () {
-        //     return $filter('filter')($scope.filterAcrList, $scope.searchAcrFilter);
-        // };
-
-        // $scope.$watch('searchAcrFilter', function(newVal, oldVal) {
-        //     var vm = this;
-        //     if (oldVal !== newVal) {
-        //         $scope.currentPage = 1;
-        //         $scope.totalItems = $scope.getData().length;
-        //     }
-        //     return vm;
-        // }, true);
-
     });
 
     angular.element('.datepicker').datepicker();
-
-    // $http.get('/getAreaList').then(function (response) {
-    //     $.each(response.data, function(index, value) {
-    //         var areaID = value.id.split(",");
-    //         var areaName = value.name.split(",");
-    //         var area = [];
-    //         $.each(areaID, function(index, value) {
-    //             area.push({
-    //                 "id": areaID[index],
-    //                 "name": areaName[index]
-    //             });
-    //         });
-    //         $scope.areaList.push({"zone": { "id": value.zoneID, "name": value.zoneName } ,"area": area});
-    //     });
-    //     renderSltPicker();
-    //     $('.selectpicker').on('change', function() {
-    //         renderSltPicker();
-    //     });
-    // });
-
-    // $http.get('/getScheduleList').then(function (response) {
-    //     $scope.scheduleList = response.data;
-    // });
-
-    //    $http.get('/getAllAcr').then(function(response){
-    //        
-    //        $scope.searchAcrFilter = '';
-    //        $scope.acrList = response.data;
-    //        $scope.filterAcrList = [];
-    //
-    //        $scope.searchAcr = function (bin) {
-    //            return (acr.id + acr.name + acr.address + acr.area + acr.phone + acr.enddate + acr.status).toUpperCase().indexOf($scope.searchAcrFilter.toUpperCase()) >= 0;
-    //        }
-    //
-    //        $.each($scope.acrList, function(index) {
-    //            $scope.filterAcrList = angular.copy($scope.acrList);
-    //        });
-    //
-    //        $scope.totalItems = $scope.filterAcrList.length;
-    //
-    //        $scope.getData = function () {
-    //            return $filter('filter')($scope.filterAcrList, $scope.searchAcrFilter);
-    //        };
-    //
-    //        $scope.$watch('searchAcrFilter', function(newVal, oldVal) {
-    //            var vm = this;
-    //            if (oldVal !== newVal) {
-    //                $scope.currentPage = 1;
-    //                $scope.totalItems = $scope.getData().length;
-    //            }
-    //            return vm;
-    //        }, true);
-    //
-    //
-    //    });
-
 
     $scope.addDcs = function() {
         $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
@@ -2265,6 +2192,34 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             }
         });
     }
+
+    $scope.getDcsDetails = function(){
+        $http.get('/getDcsDetails', $scope.dcsID).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.dcsDetails = response.data;
+    
+        });
+    }
+
+    $scope.addDcsDetails = function() {
+        $http.post('/addDcsDetails', $scope.dcsDetails).then(function(response) {
+            var returnedData = response.data;
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "DCS Entry added successfully!"
+                });
+
+
+                $scope.dcsDetails.push({ "acrfNo": $scope.dcsDetails.acrfNo, "company": $scope.dcsDetails.company, "address": $scope.dcsDetails.address, "beBins": $scope.dcsDetails.beBins, "acrBins": $scope.dcsDetails.acrBins, "areaCode": $scope.dcsDetails.areaCode, "mon": false, "tue": false, "wed": false, "thu": false, "fri": false, "sat": false, "remarks": $scope.dcsDetails.remarks });
+              
+                angular.element('#createDcsEntry').modal('toggle');
+            }
+        });
+    }
+    
+    
 });
 
 app.controller('databaseBinController', function($scope, $http, $filter, storeDataService) {
@@ -2301,41 +2256,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         $scope.databaseBinList = response.data;
         console.log($scope.databaseBinList);
         storeDataService.databaseBin = angular.copy($scope.databaseBinList);
-        //$scope.filterDatabaseBinList = [];
-
-        // $scope.searchDatabaseBin = function (bin) {
-        //     return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
-        // };
-
-        // $scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
-
-        // $scope.totalItems = $scope.filterDatabaseBinList.length;
-
-        // $scope.getData = function () {
-        //     return $filter('filter')($scope.filterDatabaseBinList, $scope.searchDatabaseBinFilter);
-        // };
-
-        // $scope.$watch('searchDatabaseBinFilter', function(newVal, oldVal) {
-        //     var vm = this;
-        //     if (oldVal !== newVal) {
-        //         $scope.currentPage = 1;
-        //         $scope.totalItems = $scope.getData().length;
-        //     }
-        //     return vm;
-        // }, true);
     });
-
-    //     var getFilteredDatabaseBin = function(){
-    //         $http.post("/getFilteredDatabaseBin", $scope.date)
-    //             .then(function (response) {
-    //                     $scope.databaseBinList = response.data;
-    // //                    var obj = getElementList("area & duration", $scope.reportList);
-    // //                    console.log(obj);
-    //                 },
-    //                 function (response) {
-    //                     $window.console.log("error retrieving json file - " + response);
-    //                 });
-    //     };
 
     $scope.databaseBinList = [];
 
@@ -2375,15 +2296,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         console.log($scope.databaseBinList);
 
 
-
-
-
-
-
         var query = "INSERT INTO table tblWheelBinDatabase (idNo, date, customerId, areaId, serialNo, acrId, activeStatus) value (" + null + ", \"" + $scope.databaseBin.date + "\", \"" + customerId + "\", \"" + $scope.databaseBin.areaCode + "\", \"" + $scope.databaseBin.acrfSerialNo + "\", " + "\"A\")";
-
-
-
 
         console.log(query);
         $http.post('/addTaskAuthorization', today, ).then(function(response) {
