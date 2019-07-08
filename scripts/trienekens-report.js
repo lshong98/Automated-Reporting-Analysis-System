@@ -603,7 +603,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     });
     
     $scope.editReport = function () {
-            window.location.href = '#/edit-report/' + $scope.thisReport.id;
+        window.location.href = '#/edit-report/' + $scope.thisReport.id;
     };
     
 });

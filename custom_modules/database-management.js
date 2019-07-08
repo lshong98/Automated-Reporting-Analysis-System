@@ -4,10 +4,10 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = '';
-var DB_USER = '';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens02';
 
 // Create connection
 var db = mysql.createConnection({
@@ -133,7 +133,9 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view complaintlist')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view transactionLog')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view transactionLog')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view visualization')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view reporting')"
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -205,6 +207,6 @@ emitter.on('defaultUser', function () {
         });
     });
 }); // Complete
-/* Emitter Registered */ 
+/* Emitter Registered */
 
 module.exports = db;

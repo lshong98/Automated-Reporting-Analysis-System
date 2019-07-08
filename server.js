@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '';
+var SVR_PORT = '3000';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -35,7 +35,7 @@ var binInventoryManagement = require('./custom_modules/bin-inventory');
 users = [];
 connections = [];
 connectedUserList = [];
-
+ 
 var obj = {
     "ID": '',
     "authStatus": ''
@@ -45,18 +45,6 @@ var obj = {
 app.use(express.json({limit: '50mb'}));
 // Parse URL-encoded bodies (as sent by HTML forms)
 //app.use(express.urlencoded());
-
-app.post('/navigationControl', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
 
 app.post('/loadMenu', function (req, res) {
     'use strict';
@@ -79,11 +67,11 @@ app.post('/loadMenu', function (req, res) {
         content += '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>';
         
         res.json({"content": content});
+        res.end();
     });
     
 });
 
-//});
 app.post('/getAreaLngLat', function(req, res) {
     'use strict';
     var sql = "SELECT longitude, latitude FROM tblarea WHERE areaID = '" + req.body.areaCode+ "'";
@@ -91,7 +79,7 @@ app.post('/getAreaLngLat', function(req, res) {
         if (err) {
             throw err;
         }
-        res.json(result);
+        res.json(result); 
     });
 }); // Complete
 
@@ -141,98 +129,36 @@ app.post('/getDataVisualizationGroupByDate', function(req, res){
     });
 });
 
-// Driver
-app.get('/getDriverList', function(req, res) {
-    'use strict';
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblposition JOIN tblstaff ON tblstaff.positionID = tblposition.positionID WHERE tblposition.positionName = 'Driver' AND tblstaff.staffStatus = 'A'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-}); // Complete
-
 //get count
-app.get('/getZoneCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'count' FROM tblzone";
-     database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
+app.get('/getCount', function (req, res) {
+    var results = {};
+    
+    f.waterfallQuery("SELECT COUNT(*) AS zone FROM tblzone").then(function (zone) {
+        results["zone"] = zone.zone;
+        return f.waterfallQuery("SELECT COUNT(*) AS area FROM tblarea");
+    }).then(function (area) {
+        results["area"] = area.area;
+        return f.waterfallQuery("SELECT COUNT(*) AS acr FROM tblacr");
+    }).then(function (acr) {
+        results["acr"] = acr.acr;
+        return f.waterfallQuery("SELECT COUNT(*) AS bin FROM tblbincenter");
+    }).then(function (bin) {
+        results["bin"] = bin.bin;
+        return f.waterfallQuery("SELECT COUNT(*) AS truck FROM tbltruck");
+    }).then(function (truck) {
+        results["truck"] = truck.truck;
+        return f.waterfallQuery("SELECT COUNT(*) AS staff FROM tblstaff");
+    }).then(function (staff) {
+        results["staff"] = staff.staff;
+        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C'");
+    }).then(function (completeReport) {
+        results["completeReport"] = completeReport.completeReport;
+        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'I'");
+    }).then(function (incompleteReport) {
+        results["incompleteReport"] = incompleteReport.incompleteReport;
+        res.json(results);
+        res.end();
     });
-
-});
-app.get('/getAreaCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'count' FROM tblarea";
-     database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-
-});
-app.get('/getAcrCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'count' FROM tblacr";
-     database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-
-});
-app.get('/getBinCenterCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'count' FROM tblbincenter";
-     database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-
-});
-app.get('/getTruckCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'count' FROM tbltruck";
-     database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-
-});
-app.get('/getUserCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'count' FROM tblstaff";
-     database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-
-});
-app.get('/getReportCompleteCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'completeCount' FROM tblreport WHERE completionStatus = 'C'";
-     database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-
-});
-app.get('/getReportIncompleteCount',function(req,res){
-    var sql="SELECT COUNT(*) AS 'incompleteCount' FROM tblreport WHERE completionStatus = 'I'";
-     database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-
 });
 
 //complaint module
@@ -295,6 +221,7 @@ app.post('/getReportForComplaint', function(req, res){
         console.log(result);
         
         content += '<div class="row"><div class="col-md-12"><table border="1"><thead><tr><th colspan="2">IVWM INSPECTION REPORT ID: '+result[0].id+'</th><th>Completion Status:'+result[0].status+'</th><th>Collection Date: '+result[0].date+'</th><th>Garbage Amount(ton): '+result[0].ton+'</th><th>Time Start: '+result[0].startTime+'</th><th>Time End: '+result[0].startEnd+'</th><th>Reporting Staff:</th></tr><tr><th>Area</th><th>Collection Area</th><th>COLLECTION FREQUENCY</th><th>BIN CENTERS</th><th>ACR CUSTOMER</th><th>TRANSPORTER</th><th>TRUCK NO.</th><th>DRIVER</th></tr></thead><tbody><tr><td>'+result[0].area+'</td><td>'+result[0].collection+'</td><td>'+result[0].frequency+'</td><td >bin</td><td>acr</td><td>'+result[0].transporter+'</td><td>'+result[0].truck+'</td><td>'+result[0].driver+'</td></tr><tr><td>Remarks:</td><td colspan="7">'+result[0].remark+'</td></tr></tbody></table></div></div>';
+        
         res.json({"content": content, "result": result});
         
     });
@@ -434,7 +361,6 @@ app.post('/updateComplaintStatus',function(req,res){
     }); 
     
 });
-
 
 server.listen(process.env.PORT || SVR_PORT, function () {
     'use strict';
