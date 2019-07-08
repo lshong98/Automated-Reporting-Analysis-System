@@ -2791,6 +2791,26 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         $http.post('/getDateListForComplaint', $scope.req2).then(function(response) {
             $scope.reportList = response.data;
         });
+        
+        //initialize email subject and text
+        $scope.emailobj.id = $routeParams.complaintCode;
+        if($scope.comDetail.status == "Pending"){
+            $scope.emailobj.subject = "Complaint received.";
+            $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). ";
+        }
+        else if ($scope.comDetail.status == "In progress"){
+            $scope.emailobj.subject = "";
+            $scope.emailobj.text = "";
+        }
+        else if ($scope.comDetail.status == "Confirmation"){
+            $scope.emailobj.subject =  "Problem Solved.";
+            $scope.emailobj.text = "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)";
+        }
+        else if ($scope.comDetail.status == "Done"){
+            $scope.emailobj.subject = "";
+            $scope.emailobj.text = "";
+        }
+        
     
     });
 
@@ -2846,15 +2866,14 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 function(isConfirm) {
                     if (isConfirm) {
                         swal("Acknowledge", "Acknowledgement email has been sent.", "success");
-                        $scope.emailobj.subject = "Complaint received.";
-                        $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). ";
-                        $scope.emailobj.id = $routeParams.complaintCode;
                         $scope.emailobj.status = "i";
                         $http.post('/emailandupdate', $scope.emailobj).then(function(response) {
                             if (response.data.status == "success") {
                                 console.log(response.data);
                                 swal("Email Sent Successfully!", "", "success");
                                 $scope.comDetail.status = "In progress";
+                                $scope.emailobj.subject = "";
+                                $scope.emailobj.text = "";
                             } else {
                                 swal("Email has not been sent successfully!", "", "error");
                             }
@@ -2884,14 +2903,14 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
 
                     if (isConfirm) {
                         swal("Information", "Email has been sent.", "success");
-                        $scope.emailobj.id = $routeParams.complaintCode;
                         $scope.emailobj.status = "c";
 
                         $http.post('/emailandupdate', $scope.emailobj).then(function(response) {
                             if (response.data.status == "success") {
-                                console.log(response.data);
                                 swal("Email Sent Successfully!", "", "success");
                                 $scope.comDetail.status = "Confirmation";
+                                $scope.emailobj.subject =  "Problem Solved.";
+                                $scope.emailobj.text = "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)";
                             } else {
                                 swal("Email has not been sent successfully!", "", "error");
                             }
@@ -2921,16 +2940,14 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 function(isConfirm) {
                     if (isConfirm) {
                         swal("Complete", "Confirmation email has been sent.", "success");
-                        $scope.emailobj.subject = "Problem Solved."
-                        $scope.emailobj.text = "Your problem has been completely solved. Thank you for providing feedback to us. \n(Please do not reply to this email)."
-                        $scope.emailobj.id = $routeParams.complaintCode;
                         $scope.emailobj.status = "d";
 
                         $http.post('/emailandupdate', $scope.emailobj).then(function(response) {
                             if (response.data.status == "success") {
-                                console.log(response.data);
                                 swal("Confirmation email Sent Successfully!", "", "success");
                                 $scope.comDetail.status = "Done";
+                                $scope.emailobj.subject = "";
+                                $scope.emailobj.text = "";
                             } else {
                                 swal("Confirmation email has not been sent successfully!", "", "error");
                             }

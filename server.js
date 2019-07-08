@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '3000';
+var SVR_PORT = '';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -311,43 +311,43 @@ app.post('/emailandupdate',function(req,res){
     }); 
 });
 
-//emailing service for complaint
-app.post('/emailService',function(req,res){
-    'use strict';
-    console.log("testing");
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD
-      }
-    });
+////emailing service for complaint
+//app.post('/emailService',function(req,res){
+//    'use strict';
+//    console.log("testing");
+//    var transporter = nodemailer.createTransport({
+//      service: 'gmail',
+//      auth: {
+//        user: process.env.EMAIL,
+//        pass: process.env.PASSWORD
+//      }
+//    });
+////    
+////    var subject = "testinggg using nodemailer";
+////    var text = "testinggg";
+////    var email = "lshong9899@gmail.com";
+//        
+//    var subject = req.body.subject;
+//    var text = req.body.text;
+//    var email = req.body.email;
 //    
-//    var subject = "testinggg using nodemailer";
-//    var text = "testinggg";
-//    var email = "lshong9899@gmail.com";
-        
-    var subject = req.body.subject;
-    var text = req.body.text;
-    var email = req.body.email;
-    
-    var mailOptions = {
-      from: process.env.EMAIL,
-      to: email,
-      subject: subject,
-      text: text
-    };
-
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-          res.json({"status": "success"});
-      }
-    });
-    
-});
+//    var mailOptions = {
+//      from: process.env.EMAIL,
+//      to: email,
+//      subject: subject,
+//      text: text
+//    };
+//
+//    transporter.sendMail(mailOptions, function(error, info){
+//      if (error) {
+//        console.log(error);
+//      } else {
+//        console.log('Email sent: ' + info.response);
+//          res.json({"status": "success"});
+//      }
+//    });
+//    
+//});
 
 app.post('/updateComplaintStatus',function(req,res){
    'use strict';
