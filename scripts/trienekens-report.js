@@ -412,7 +412,6 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
     
     $http.get('/getReportList').then(function(response){
         $scope.reportList = response.data;
-        
         $.each($scope.reportList, function (index, value) {
             $scope.reportList[index].reportCollectionDate = $filter('date')($scope.reportList[index].reportCollectionDate, 'yyyy-MM-dd');
         });
@@ -420,7 +419,7 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
         $scope.filterReportList = angular.copy($scope.reportList);
         
         $scope.searchReport = function (report) {
-            return (report.reportID + report.reportCollectionDate + report.areaName + report.reportStatus + report.garbageAmount + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+            return (report.reportID + report.reportCollectionDate + report.areaName + report.reportStatus + report.frequency + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
         }
         
         $scope.totalItems = $scope.filterReportList.length;
