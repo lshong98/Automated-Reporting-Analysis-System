@@ -1586,34 +1586,51 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
 
     $scope.show = angular.copy(storeDataService.show.truck);
 
-    $http.get('/getAllTruck').then(function(response) {
-        $scope.searchTruckFilter = '';
-        $scope.truckList = response.data;
-        $.each($scope.truckList, function(index, value) {
-            $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
-        });
-        storeDataService.truck = angular.copy(response.data);
+    $scope.currentStatus = {
+        "status": true
+    }
+    
+    function getAllTruck() {
+        $http.post('/getAllTruck', $scope.currentStatus).then(function(response) {
+            $scope.searchTruckFilter = '';
+            $scope.truckList = response.data;
+            $.each($scope.truckList, function(index, value) {
+                $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
+            });
+            storeDataService.truck = angular.copy(response.data);
 
-        $scope.searchTruck = function(truck) {
-            return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
-        }
-
-        $scope.totalItems = $scope.filterTruckList.length;
-
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterTruckList, $scope.searchTruckFilter);
-        };
-
-        $scope.$watch('searchTruckFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
+            $scope.searchTruck = function(truck) {
+                return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
             }
-            return vm;
-        }, true);
-    });
 
+            $scope.totalItems = $scope.filterTruckList.length;
+
+            $scope.getData = function() {
+                return $filter('filter')($scope.filterTruckList, $scope.searchTruckFilter);
+            };
+
+            $scope.$watch('searchTruckFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.currentPage = 1;
+                    $scope.totalItems = $scope.getData().length;
+                }
+                return vm;
+            }, true);
+        });
+    }
+    getAllTruck(); //call
+
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllTruck(); //call
+    }
+    
     function renderSltPicker() {
         angular.element('.selectpicker').selectpicker('refresh');
         angular.element('.selectpicker').selectpicker('render');
