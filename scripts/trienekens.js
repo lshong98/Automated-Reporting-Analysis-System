@@ -1586,34 +1586,51 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
 
     $scope.show = angular.copy(storeDataService.show.truck);
 
-    $http.get('/getAllTruck').then(function(response) {
-        $scope.searchTruckFilter = '';
-        $scope.truckList = response.data;
-        $.each($scope.truckList, function(index, value) {
-            $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
-        });
-        storeDataService.truck = angular.copy(response.data);
+    $scope.currentStatus = {
+        "status": true
+    }
+    
+    function getAllTruck() {
+        $http.post('/getAllTruck', $scope.currentStatus).then(function(response) {
+            $scope.searchTruckFilter = '';
+            $scope.truckList = response.data;
+            $.each($scope.truckList, function(index, value) {
+                $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
+            });
+            storeDataService.truck = angular.copy(response.data);
 
-        $scope.searchTruck = function(truck) {
-            return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
-        }
-
-        $scope.totalItems = $scope.filterTruckList.length;
-
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterTruckList, $scope.searchTruckFilter);
-        };
-
-        $scope.$watch('searchTruckFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
+            $scope.searchTruck = function(truck) {
+                return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
             }
-            return vm;
-        }, true);
-    });
 
+            $scope.totalItems = $scope.filterTruckList.length;
+
+            $scope.getData = function() {
+                return $filter('filter')($scope.filterTruckList, $scope.searchTruckFilter);
+            };
+
+            $scope.$watch('searchTruckFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.currentPage = 1;
+                    $scope.totalItems = $scope.getData().length;
+                }
+                return vm;
+            }, true);
+        });
+    }
+    getAllTruck(); //call
+
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllTruck(); //call
+    }
+    
     function renderSltPicker() {
         angular.element('.selectpicker').selectpicker('refresh');
         angular.element('.selectpicker').selectpicker('render');
@@ -2791,6 +2808,26 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         $http.post('/getDateListForComplaint', $scope.req2).then(function(response) {
             $scope.reportList = response.data;
         });
+        
+        //initialize email subject and text
+        $scope.emailobj.id = $routeParams.complaintCode;
+        if($scope.comDetail.status == "Pending"){
+            $scope.emailobj.subject = "Complaint received.";
+            $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). ";
+        }
+        else if ($scope.comDetail.status == "In progress"){
+            $scope.emailobj.subject = "";
+            $scope.emailobj.text = "";
+        }
+        else if ($scope.comDetail.status == "Confirmation"){
+            $scope.emailobj.subject =  "Problem Solved.";
+            $scope.emailobj.text = "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)";
+        }
+        else if ($scope.comDetail.status == "Done"){
+            $scope.emailobj.subject = "";
+            $scope.emailobj.text = "";
+        }
+        
     
     });
 
@@ -2846,15 +2883,14 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 function(isConfirm) {
                     if (isConfirm) {
                         swal("Acknowledge", "Acknowledgement email has been sent.", "success");
-                        $scope.emailobj.subject = "Complaint received.";
-                        $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). ";
-                        $scope.emailobj.id = $routeParams.complaintCode;
                         $scope.emailobj.status = "i";
                         $http.post('/emailandupdate', $scope.emailobj).then(function(response) {
                             if (response.data.status == "success") {
                                 console.log(response.data);
                                 swal("Email Sent Successfully!", "", "success");
                                 $scope.comDetail.status = "In progress";
+                                $scope.emailobj.subject = "";
+                                $scope.emailobj.text = "";
                             } else {
                                 swal("Email has not been sent successfully!", "", "error");
                             }
@@ -2884,14 +2920,14 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
 
                     if (isConfirm) {
                         swal("Information", "Email has been sent.", "success");
-                        $scope.emailobj.id = $routeParams.complaintCode;
                         $scope.emailobj.status = "c";
 
                         $http.post('/emailandupdate', $scope.emailobj).then(function(response) {
                             if (response.data.status == "success") {
-                                console.log(response.data);
                                 swal("Email Sent Successfully!", "", "success");
                                 $scope.comDetail.status = "Confirmation";
+                                $scope.emailobj.subject =  "Problem Solved.";
+                                $scope.emailobj.text = "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)";
                             } else {
                                 swal("Email has not been sent successfully!", "", "error");
                             }
@@ -2921,16 +2957,14 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 function(isConfirm) {
                     if (isConfirm) {
                         swal("Complete", "Confirmation email has been sent.", "success");
-                        $scope.emailobj.subject = "Problem Solved."
-                        $scope.emailobj.text = "Your problem has been completely solved. Thank you for providing feedback to us. \n(Please do not reply to this email)."
-                        $scope.emailobj.id = $routeParams.complaintCode;
                         $scope.emailobj.status = "d";
 
                         $http.post('/emailandupdate', $scope.emailobj).then(function(response) {
                             if (response.data.status == "success") {
-                                console.log(response.data);
                                 swal("Confirmation email Sent Successfully!", "", "success");
                                 $scope.comDetail.status = "Done";
+                                $scope.emailobj.subject = "";
+                                $scope.emailobj.text = "";
                             } else {
                                 swal("Confirmation email has not been sent successfully!", "", "error");
                             }
