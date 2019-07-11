@@ -221,6 +221,12 @@ app.service('storeDataService', function() {
                 "view": false,
                 "edit": false,
                 "create": false
+            },
+            "reporting":{
+                "view": false,
+                "edit": false,
+                "create": false,
+                "export": false
             }
         }
     };
@@ -753,6 +759,12 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
             "view": false,
             "edit": false,
             "create": false
+        },
+        "reporting":{
+            "view": false,
+            "edit": false,
+            "create": false,
+            "export": false
         }
     };
 
@@ -1892,6 +1904,12 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         },
         "transactionLog": {
             "view": 'I'
+        },
+        "reporting":{
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I',
+            "export": 'I'
         }
     };
 
