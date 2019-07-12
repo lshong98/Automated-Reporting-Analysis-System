@@ -7,7 +7,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'trienekens02';
+var DB_NAME = '';
 
 // Create connection
 var db = mysql.createConnection({
@@ -133,7 +133,11 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view complaintlist')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view transactionLog')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view transactionLog')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view reporting')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit reporting')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('create reporting')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('export reporting')"
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -191,7 +195,11 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '26', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '27', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '28', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '29', 'A')"
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '29', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '30', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '31', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '32', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '33', 'A')",
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {

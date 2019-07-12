@@ -381,7 +381,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     }
 });
 
-app.controller('reportingController', function ($scope, $http, $filter, $window) {
+app.controller('reportingController', function ($scope, $http, $filter, $window, storeDataService) {
     'use strict';
     $scope.searchReportFilter = '';
     $scope.currentPage = 1; //Initial current page to 1
@@ -389,6 +389,7 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
     $scope.maxSize = 10; //Show the number in page
     $scope.areaList = [];
     $scope.filterReportList = [];
+    $scope.show = angular.copy(storeDataService.show.reporting);
     
     $scope.reportingOfficerId = {
         "officerid" : $window.sessionStorage.getItem('owner')
@@ -459,7 +460,9 @@ app.controller('reportingController', function ($scope, $http, $filter, $window)
     };
 });
 
-app.controller('viewReportController', function($scope, $http, $routeParams, $window, $filter){
+app.controller('viewReportController', function($scope, $http, $routeParams, $window, $filter, storeDataService){
+    $scope.show = angular.copy(storeDataService.show.reporting);
+    
     $scope.bin = "";
     //$scope.acr = "";
     var map;
