@@ -1,9 +1,97 @@
-<!-- Modal -->
+<!-- Modal For new entry -->
 <div class="modal fade" id="createDatabaseBin" tabindex="-1" role="dialog" aria-labelledby="createDatabaseBin" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add New Bin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtDatabaseBinDate form-label">Date</label>
+                    <input type="date" class="form-control" id="txtDatabaseBinDate" data-ng-model="databaseBin.date" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtDatabaseBinName form-label">Full Name</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinName" data-ng-model="databaseBin.name" />
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtDatabaseBinIcNo form-label">IC Number</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinIcNo" data-ng-model="databaseBin.icNo" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtDatabaseBinSerialNo form-label">Serial Number</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinSerialNo" data-ng-model="databaseBin.serialNo" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinRcDwell form-label">RC Dwell</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinRcDwell" data-ng-model="databaseBin.rcDwell" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinHouseNo form-label">House No.</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinHouseNo" data-ng-model="databaseBin.houseNo" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinTmnKpg form-label">Tmn/Kpg</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinTmnKpg" data-ng-model="databaseBin.tmnKpg" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinAreaCode form-label">Area Code</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinAreaCode" data-ng-model="databaseBin.areaCode" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinStatus form-label">Status</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinStatus" data-ng-model="databaseBin.status" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinComment form-label">Comment</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinComment" data-ng-model="databaseBin.comment" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinBinSize form-label">Bin Size</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinBinSize" data-ng-model="databaseBin.binSize" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinAddress form-label">Address</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinAddress" data-ng-model="databaseBin.address" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinCompanyName form-label">Company Name</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinCompanyName" data-ng-model="databaseBin.companyName" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinAcrfSerialNo form-label">ACRF Serial No</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinAcrfSerialNo" data-ng-model="databaseBin.acrfSerialNo" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinItemType form-label">Item Type</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinItemType" data-ng-model="databaseBin.itemType" />
+                </div>
+                <div class="form-group">
+                    <label for="txtDatabaseBinPath form-label">Path</label>
+                    <input type="text" class="form-control" id="txtDatabaseBinPath" data-ng-model="databaseBin.path" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addDatabaseBin();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal For new customer -->
+<div class="modal fade" id="createCustomer" tabindex="-1" role="dialog" aria-labelledby="createCustomer" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add New Customer</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -118,8 +206,14 @@
 
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
-    <div class="col-md-12">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New</button>
+    <div class="col-md-4">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Entry</button>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Customer</button>
+    </div>
+    <div class="col-md-4">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Bin</button>
     </div>
 </div>
 <br />

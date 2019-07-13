@@ -7,7 +7,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekenstesttemp';
 
 // Create connection
 var db = mysql.createConnection({
@@ -64,7 +64,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblstaff (  staffID varchar(15),  username varchar(20),  password mediumtext,  staffName varchar(50),  staffIC varchar(15),  staffGender char(1),  staffDOB date,  staffAddress varchar(255),  handphone varchar(11),  phone varchar(10),  email varchar(50),  positionID varchar(15),  staffStatus char(1),  creationDateTime datetime,  staffPic mediumtext,  PRIMARY KEY (staffID),  foreign key (positionID) references tblposition(positionID))",
         "CREATE TABLE tblarea (  areaID varchar(15),  zoneID varchar(15),  staffID varchar(15),  areaName varchar(30),  collection_frequency varchar(30),  longitude double(10,7),  latitude double(10,7),  areaStatus char(1),  creationDateTime datetime,  PRIMARY KEY (areaID),  foreign key (zoneID) references tblzone(zoneID),  foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tbltaman (  tamanID int auto_increment,  areaID varchar(15),  tamanName mediumtext,  longitude double(10,7),  latitude double(10,7),  areaCollStatus char(1),  PRIMARY KEY (tamanID),  foreign key (areaID) references tblarea(areaID))",
-        "CREATE TABLE tblcustomer (customerID int auto_increment, tamanID int , username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime, PRIMARY KEY (customerID),foreign key (tamanID) references tbltaman(tamanID))",
+        "CREATE TABLE tblcustomer (customerID int auto_increment, tamanID int , username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50), companyName varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime, PRIMARY KEY (customerID),foreign key (tamanID) references tbltaman(tamanID))",
         "CREATE TABLE tblbins (serialNo int,  customerID int,  size int,  status char(1),  longitude double(10,7),  latitude double(10,7), PRIMARY KEY (serialNo),  foreign key (customerID) references tblcustomer(customerID))",
         "CREATE TABLE tblmanagement (mgmtID int auto_increment,  mgmtName varchar(50),  PRIMARY KEY (mgmtID))",
         "CREATE TABLE tblbininventory (date date,  doNo varchar(10), inNew120 int, inNew240 int, inNew660 int, inNew1000 int, outNew120 int, outNew240 int, outNew660 int, outNew1000 int, inReusable120 int, inReusable240 int, inReusable660 int,  inReusable1000 int, outReusable120 int, outReusable240 int, outReusable660 int, outReusable1000 int, newBalance120 int, newBalance240 int, newBalance660 int, newBalance1000 int, reusableBalance120 int, reusableBalance240 int, reusableBalance660 int, reusableBalance1000 int, overallBalance120 int, overallBalance240 int, overallBalance660 int, overallBalance1000 int, PRIMARY KEY (date))",
@@ -230,8 +230,8 @@ emitter.on('dummyData', function () {
         "insert into tblarea values('a001','a001','a001','area 1','seven times','44.21530','-99.70123','a',current_timestamp())",
         "insert into tbltaman values(null,'a001','taman supreme','44.21530','-99.70123','a')",
         "insert into tbltaman values(null,'a001','taman wan alwi','44.21530','-99.70123','a')",
-        "insert into tblcustomer values(NULL,'1','mobi','mobi123','1234567','18092830','abc123','Mubashir','316','lorong wan alwi 1','93350','kuching','a',current_timestamp())",
-        "insert into tblcustomer values(NULL,'2','jake','jake123','1234567','1236989','abc123','Jake','846','lorong sekama 1','93350','kuching','a',current_timestamp())",
+        "insert into tblcustomer values(NULL,'1','mobi','mobi123','1234567','18092830','abc123','Mubashir', 'Mobi Company','316','lorong wan alwi 1','93350','kuching','a',current_timestamp())",
+        "insert into tblcustomer values(NULL,'2','jake','jake123','1234567','1236989','abc123','Jake', 'Jake Company','846','lorong sekama 1','93350','kuching','a',current_timestamp())",
         "insert into tblcomplainttype values(NULL,'Household')",
         "insert into tblcomplainttype values(NULL,'Commercial')",
         "insert into tblcomplaint values(NULL, '1',current_timestamp(),'1','No garbage collectiomn','Garbage truck didnt come to collect','a')",
