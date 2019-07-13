@@ -390,20 +390,56 @@ input:checked + .slider:before {
         </div> 
     </div>
     <div class="col-md-6">
-            <div class="card">
-                <!-- Default panel contents -->
-                <div class="card-header">Transaction Log</div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        View Transaction Log
-                        <label class="switch">
-                            <input type="checkbox" class="primary" data-ng-model="auth.transactionLog.view" data-ng-change="changeValue(auth.transactionLog.view, 'view transactionLog');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
-                            <span class="slider"></span>
-                        </label>
-                    </li>
-                </ul>
-            </div> 
-        </div>
+        <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Transaction Log</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    View Transaction Log
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.transactionLog.view" data-ng-change="changeValue(auth.transactionLog.view, 'view transactionLog');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>    
+    <div class="col-md-6">
+        <div class="card">
+            <!-- Default panel contents -->
+            <div class="card-header">Reporting</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    View report
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.reporting.view" data-ng-change="changeValue(auth.reporting.view, 'view reporting');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>                
+                <li class="list-group-item">
+                    Edit report
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.reporting.edit" data-ng-change="changeValue(auth.reporting.edit, 'edit reporting');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Create report
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.reporting.create" data-ng-change="changeValue(auth.reporting.create, 'create reporting');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Export report
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.reporting.export" data-ng-change="changeValue(auth.reporting.export, 'export reporting');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div> 
+    </div>
 
     
 </div>

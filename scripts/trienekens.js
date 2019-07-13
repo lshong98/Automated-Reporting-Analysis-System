@@ -221,6 +221,12 @@ app.service('storeDataService', function() {
                 "view": false,
                 "edit": false,
                 "create": false
+            },
+            "reporting":{
+                "view": false,
+                "edit": false,
+                "create": false,
+                "export": false
             }
         }
     };
@@ -753,6 +759,12 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
             "view": false,
             "edit": false,
             "create": false
+        },
+        "reporting":{
+            "view": false,
+            "edit": false,
+            "create": false,
+            "export": false
         }
     };
 
@@ -1892,6 +1904,12 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         },
         "transactionLog": {
             "view": 'I'
+        },
+        "reporting":{
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I',
+            "export": 'I'
         }
     };
 
@@ -2062,7 +2080,9 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     $scope.areaList = [];
     $scope.dcsList = [];
     $scope.dcsDetails = [];
-    $scope.dcsID = [];
+    $scope.dcsID = {
+        "id": ''
+    };
 
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
@@ -2070,16 +2090,17 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 
 
     $scope.viewdcs = function(dcsID) {
-        window.location.href = '#/dcs-details/' + dcsID; // +"+"+ name
-        $scope.dcsID = {
-            "id": dcsID
-        }
+        window.location.href = '#/dcs-details/' + dcsID;
 
-        $scope.getDcsDetails();
-        // }, 500);
+        $scope.dcsID.id = dcsID;
+        $http.post('/getDcsDetails', {"id": dcsID}).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.dcsDetails = response.data;
+    
+        });
     }
 
-    function initializeDcs() {
+    function initializeDcs() { 
         $scope.dcs = {
             "id": '',
             "creationDateTime": '',
@@ -2103,6 +2124,8 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         $scope.searchAcrFilter = '';
         $scope.dcsList = response.data;
 
+        console.log("DCS data received by controller");
+        console.log(response.data);
     });
 
     angular.element('.datepicker').datepicker();
@@ -2110,7 +2133,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     $scope.addDcs = function() {
         $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addDcs', $scope.dcs).then(function(response) {
-            var returnedData = response.data;
+            var returnedData = response.data; 
             var newDcsID = returnedData.details.dcsID;
             var today = new Date();
 
@@ -2131,13 +2154,6 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         });
     }
 
-    $scope.getDcsDetails = function(){
-        $http.get('/getDcsDetails', $scope.dcsID).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.dcsDetails = response.data;
-    
-        });
-    }
 
     $scope.addDcsDetails = function() {
         $http.post('/addDcsDetails', $scope.dcsDetails).then(function(response) {
