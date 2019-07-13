@@ -2124,6 +2124,8 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         $scope.searchAcrFilter = '';
         $scope.dcsList = response.data;
 
+        console.log("DCS data received by controller");
+        console.log(response.data);
     });
 
     angular.element('.datepicker').datepicker();
