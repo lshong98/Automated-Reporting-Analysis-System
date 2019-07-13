@@ -1761,7 +1761,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         $scope.zone.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addZone', $scope.zone).then(function(response) {
             var data = response.data;
-            var newZoneID = returnedData.details.zoneID;
+            var newZoneID = data.details.zoneID;
 
             $scope.notify(data.status, data.message);
             if (data.status === "success") {
