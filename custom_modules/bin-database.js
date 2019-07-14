@@ -63,5 +63,49 @@ app.get('/getAllTaman', function (req, res) {
     });
 });
 
+app.get('/getAllArea', function (req, res) {
+    'use strict';
+    var sql = `select * from tblarea`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        //console.log("Taman query success");
+       // console.log(result);
+        res.json(result);
+        
+    });
+});
+
+app.post('/addBin', function (req, res) {
+    'use strict';
+
+    var sql = `insert into tblbins values('${req.body.serialNo}','${req.body.size}','${req.body.status}','${req.body.longitude}','${req.body.latitude}')`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log("Add Bin success");
+        console.log(result);
+        res.json({"status": "success", "message": `Bin number ${req.body.serialNo} created successfully!`});
+        
+    });
+});
+
+app.post('/addTaman', function (req, res) {
+    'use strict';
+
+    var sql = `insert into tbltaman values(null,'${req.body.areaID}','${req.body.tamanName}','${req.body.longitude}','${req.body.latitude}','${req.body.areaCollStatus}')`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log("Add Taman success");
+        console.log(result);
+        res.json({"status": "success", "message": `Taman created successfully!`});
+        
+    });
+});
+
 
 module.exports = app;

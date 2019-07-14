@@ -4,8 +4,8 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = '';
-var DB_USER = '';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
 var DB_PASS = '';
 var DB_NAME = '';
 
@@ -36,7 +36,7 @@ db.connect(function (err) {
                     console.log('MySQL Connected...');
                     emitter.emit('createTable');
                     emitter.emit('defaultUser');
-                    //emitter.emit('dummyData');
+                    emitter.emit('dummyData');
                 });
             });
         } else {
@@ -65,7 +65,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblarea (  areaID varchar(15),  zoneID varchar(15),  staffID varchar(15),  areaName varchar(30),  collection_frequency varchar(30),  longitude double(10,7),  latitude double(10,7),  areaStatus char(1),  creationDateTime datetime,  PRIMARY KEY (areaID),  foreign key (zoneID) references tblzone(zoneID),  foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tbltaman (  tamanID int auto_increment,  areaID varchar(15),  tamanName mediumtext,  longitude double(10,7),  latitude double(10,7),  areaCollStatus char(1),  PRIMARY KEY (tamanID),  foreign key (areaID) references tblarea(areaID))",
         "CREATE TABLE tblcustomer (customerID int auto_increment, tamanID int , username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50), companyName varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime, PRIMARY KEY (customerID),foreign key (tamanID) references tbltaman(tamanID))",
-        "CREATE TABLE tblbins (serialNo varchar(15),  customerID int,  size int,  status char(1),  longitude double(10,7),  latitude double(10,7), PRIMARY KEY (serialNo),  foreign key (customerID) references tblcustomer(customerID))",
+        "CREATE TABLE tblbins (serialNo varchar(15),size int,  status char(1),  longitude double(10,7),  latitude double(10,7), PRIMARY KEY (serialNo))",
         "CREATE TABLE tblmanagement (mgmtID int auto_increment,  mgmtName varchar(50),  PRIMARY KEY (mgmtID))",
         "CREATE TABLE tblbininventory (date date,  doNo varchar(10), inNew120 int, inNew240 int, inNew660 int, inNew1000 int, outNew120 int, outNew240 int, outNew660 int, outNew1000 int, inReusable120 int, inReusable240 int, inReusable660 int,  inReusable1000 int, outReusable120 int, outReusable240 int, outReusable660 int, outReusable1000 int, newBalance120 int, newBalance240 int, newBalance660 int, newBalance1000 int, reusableBalance120 int, reusableBalance240 int, reusableBalance660 int, reusableBalance1000 int, overallBalance120 int, overallBalance240 int, overallBalance660 int, overallBalance1000 int, PRIMARY KEY (date))",
         "CREATE TABLE tbltruck (  truckID varchar(15),  transporter varchar(15),  truckTon int(11),  truckNum varchar(10),  truckExpiryStatus date,  truckStatus char(1),  creationDateTime datetime,  PRIMARY KEY (truckID))",
@@ -235,7 +235,7 @@ emitter.on('dummyData', function () {
         "insert into tblcomplainttype values(NULL,'Household')",
         "insert into tblcomplainttype values(NULL,'Commercial')",
         "insert into tblcomplaint values(NULL, '1',current_timestamp(),'1','No garbage collectiomn','Garbage truck didnt come to collect','a')",
-        "insert into tblbins values('1','1','120','a','44.21530','-99.70123')",
+        "insert into tblbins values('1','120','a','44.21530','-99.70123')",
         "insert into tblmanagement values(NULL,'management1')",
         "insert into tblbininventory values(current_date(),'a001','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1')",
         "insert into tbltruck values('a001','transporter','1','1234','2019/12/12','a',current_timestamp())",
