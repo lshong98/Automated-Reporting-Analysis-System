@@ -129,7 +129,6 @@ app.service('storeDataService', function() {
             "id": '',
             "address": ''
         },
-
         "databaseBin": {
             "date": '',
             "name": '',
@@ -158,76 +157,80 @@ app.service('storeDataService', function() {
             "query": '',
             "authorize": ''
         },
-
         "show": {
             "account": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "driver": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "truck": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "zone": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "area": {
-                "create": false,
-                "edit": false,
-                "view": false,
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I',
                 "collection": {
-                    "add": false,
-                    "edit": false
+                    "add": 'I',
+                    "edit": 'I'
                 }
             },
             "bin": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "acr": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "database": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "inventory": {
-                "edit": false,
-                "view": false
+                "edit": 'I',
+                "view": 'I'
             },
             "authorization": {
-                "view": false
+                "view": 'I'
             },
             "complaintlist": {
-                "view": false
+                "view": 'I'
             },
             "transactionLog": {
-                "view": false
+                "view": 'I'
             },
             "dcsDetails": {
-                "view": false,
-                "edit": false,
-                "create": false
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I'
             },
             "reporting":{
-                "view": false,
-                "edit": false,
-                "create": false,
-                "export": false
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I',
+                "export": 'I'
             }
+        },
+        "pagination": {
+            "currentPage": 1, //Initial current page to 1
+            "itemsPerPage": 8, //Record number each page
+            "maxSize": 10 //Show the number in page
         }
     };
 
@@ -684,6 +687,25 @@ app.run(function($rootScope) {
             message: mes
         });
     };
+    $rootScope.loadDetails = function (key, value) {
+        var to = "";
+        switch (key) {
+            case "account":
+                to = '#/account/';
+                break;
+            case "area":
+                to = '#/area/';
+                break;
+        }
+        window.location.href = to + value;
+    };
+    $rootScope.geocodeLink = function (place) {
+        var area = place.area.replace(" ", "+");
+        var zone = place.zone.replace(" ", "+");
+        var concat = area + '+' + zone;
+
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
+    };
 });
 
 app.controller('navigationController', function($scope, $http, $window, storeDataService) {
@@ -696,77 +718,8 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
         "manager": false,
         "officer": false
     };
-
-    $scope.show = {
-        "account": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "driver": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "truck": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "zone": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "area": {
-            "create": false,
-            "edit": false,
-            "view": false,
-            "collection": {
-                "add": false,
-                "edit": false
-            }
-        },
-        "bin": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "acr": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "database": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "inventory": {
-            "edit": false,
-            "view": false
-        },
-        "authorization": {
-            "view": false
-        },
-        "complaintlist": {
-            "view": false
-        },
-        "transactionLog": {
-            "view": false
-        },
-        "dcsDetails": {
-            "view": false,
-            "edit": false,
-            "create": false
-        },
-        "reporting":{
-            "view": false,
-            "edit": false,
-            "create": false,
-            "export": false
-        }
-    };
+    
+    $scope.show = angular.copy(storeDataService.show);
 
     if (position == "Manager" || position == "Administrator") {
         $scope.navigation["manager"] = true;
@@ -1162,58 +1115,67 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
     'use strict';
 
     var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
-    $scope.newArea = { "areaCode": '' };
+    $scope.newArea = {
+        "areaCode": ''
+    };
 
     $scope.area = {
         "zone": '',
         "staff": ''
     };
+    
+    $scope.currentStatus = {
+        "status": true
+    }
 
+    $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.area);
 
-    $http.get('/getAllArea').then(function(response) {
-        $scope.searchAreaFilter = '';
-        $scope.areaList = response.data;
-        $scope.filterAreaList = [];
+    function getAllArea() {
+        $http.post('/getAllArea', $scope.currentStatus).then(function(response) {
+            $scope.searchAreaFilter = '';
+            $scope.areaList = response.data;
+            $scope.filterAreaList = [];
 
-
-        //        for(var i = 0; i < ($scope.areaList).length; i++){
-        //            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
-        //            $scope.areaList[i].staffidname = $scope.areaList[i].staffName + '-' + $scope.areaList[i].staff;
-        //        }
-
-        $scope.searchArea = function(area) {
-            return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
-        }
-
-        //        $.each($scope.areaList, function (index) {
-        $scope.filterAreaList = angular.copy($scope.areaList);
-        //        });
-
-        $scope.totalItems = $scope.filterAreaList.length;
-
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterAreaList, $scope.searchAreaFilter);
-        };
-
-        $scope.$watch('searchAreaFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
+            $scope.searchArea = function(area) {
+                return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
             }
-            return vm;
-        }, true);
-    });
+
+            $scope.filterAreaList = angular.copy($scope.areaList);
+
+            $scope.totalItems = $scope.filterAreaList.length;
+
+            $scope.getData = function() {
+                return $filter('filter')($scope.filterAreaList, $scope.searchAreaFilter);
+            };
+
+            $scope.$watch('searchAreaFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.pagination.currentPage = 1;
+                    $scope.totalItems = $scope.getData().length;
+                }
+                return vm;
+            }, true);
+        });
+    }
+    getAllArea();
+    
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllArea(); //call
+    }
 
     $http.get('/getZoneList').then(function(response) {
         $scope.zoneList = response.data;
         $scope.area.zone = $scope.zoneList[0];
         for (var i = 0; i < (response.data).length; i++) {
-            $scope.zoneList[i].zoneidname = response.data[i].name + '-' + response.data[i].id;
+            $scope.zoneList[i].zoneidname = response.data[i].name + ' - ' + response.data[i].id;
         }
     });
 
@@ -1221,7 +1183,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.staffList = response.data;
         $scope.area.staff = $scope.staffList[0];
         for (var i = 0; i < (response.data).length; i++) {
-            $scope.staffList[i].staffidname = response.data[i].name + '-' + response.data[i].id;
+            $scope.staffList[i].staffidname = response.data[i].name + ' - ' + response.data[i].id;
         }
     });
 
@@ -1229,81 +1191,51 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
         $http.post('/addArea', $scope.area).then(function(response) {
-            var returnedData = response.data;
-            var newAreaID = returnedData.details.areaID;
-            $scope.newArea.areaCode = newAreaID;
+            var data = response.data;
+            var newAreaID;
 
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "Area added successfully!"
-                });
+            $scope.notify(data.status, data.message);
+            
+            if (data.status === "success") {
+                newAreaID = data.details.areaID;
+                $scope.newArea.areaCode = newAreaID;
                 $scope.areaList.push({
                     "id": newAreaID,
                     "name": $scope.area.name,
                     "status": 'ACTIVE',
-                    "zoneName": $scope.area.zone.id + '-' + $scope.area.zone.name,
-                    "staffName": $scope.area.staff.id + '-' + $scope.area.staff.name
+                    "zoneName": $scope.area.zone.id + ' - ' + $scope.area.zone.name,
+                    "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
                 });
                 $scope.area.id = newAreaID;
-                $scope.area.zoneName = $scope.area.zone.id + '-' + $scope.area.zone.name;
-                $scope.area.staffName = $scope.area.staff.id + '-' + $scope.area.staff.name;
+                $scope.area.zoneName = $scope.area.zone.id + ' - ' + $scope.area.zone.name;
+                $scope.area.staffName = $scope.area.staff.id + ' - ' + $scope.area.staff.name;
                 socket.emit('create new area', $scope.area);
                 $scope.filterAreaList = angular.copy($scope.areaList);
                 angular.element('#createArea').modal('toggle');
                 $scope.totalItems = $scope.filterAreaList.length;
-            }
-            var $googleMap, visualizeMap, map, lat = 0,
-                lng = 0,
-                myPlace, address;
+            
+                var $googleMap, visualizeMap, map, lat = 0,
+                    lng = 0,
+                    myPlace, address;
 
-            $http.post('/getGoogleLocation', $scope.newArea).then(function(response) {
-                var myPlace = response.data[0];
-                var area = myPlace.area.replace(" ", "+");
-                var zone = myPlace.zone.replace(" ", "+");
-                var concat = area + '+' + zone;
+                console.log($scope.newArea);
+                $http.post('/getGoogleLocation', $scope.newArea).then(function(response) {
+                    address = $scope.geocodeLink(response.data[0]);
 
-                address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+                    $http.get(address).then(function(response) {
+                        // JSON data returned by API above
+                        var myPlace = response.data;
 
-                $http.get(address).then(function(response) {
-                    function timeToSeconds(time) {
-                        time = time.split(/:/);
-                        return time[0] * 3600 + time[1] * 60 + time[2];
-                    }
+                        $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
+                        $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
+                        $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
 
-
-
-
-                    // JSON data returned by API above
-                    var myPlace = response.data;
-
-                    // After get the place data, re-center the map
-                    //                    $window.setTimeout(function () {
-                    //                        var places, location;
-                    //
-                    //                        places = myPlace.results[0];
-                    //                        location = places.formatted_address;
-                    //                        lat = places.geometry.location.lat;
-                    //                        lng = places.geometry.location.lng;
-                    //                        map.panTo(new google.maps.LatLng(lat, lng));
-                    //                        map.setZoom(17);
-                    //
-
-                    //                    }, 1000);
-                    $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
-                    $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
-                    $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
-
+                        });
                     });
-
                 });
-            });
+            }
         });
     }
-
-    $scope.editAreaPage = function(id) {
-        window.location.href = '#/area/' + id;
-    };
 
     socket.on('append area list', function(data) {
         $scope.areaList.push({
@@ -1434,13 +1366,13 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
     'use strict';
 
     var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
     $scope.filterStaffList = [];
     $scope.searchStaffFilter = '';
     $scope.staffList = [];
-
+    
+    $scope.pagination = angular.copy(storeDataService.pagination);
+    $scope.show = angular.copy(storeDataService.show.account);
+    
     $scope.initializeStaff = function() {
         $scope.staff = {
             "name": '',
@@ -1449,8 +1381,6 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
             "password": ''
         };
     };
-
-    $scope.show = angular.copy(storeDataService.show.account);
 
     $http.get('/getPositionList').then(function(response) {
         $scope.positionList = response.data;
@@ -1474,16 +1404,12 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
         $scope.$watch('searchStaffFilter', function(newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
-                $scope.currentPage = 1;
+                $scope.pagination.currentPage = 1;
                 $scope.totalItems = $scope.getData().length;
             }
             return vm;
         }, true);
     });
-
-    $scope.loadSpecificAccount = function(staffID) {
-        window.location.href = '#/account/' + staffID;
-    };
 
     $scope.addUser = function() {
         $scope.staff.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
@@ -1596,6 +1522,7 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
         };
     };
 
+    $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.truck);
 
     $scope.currentStatus = {
@@ -1609,13 +1536,15 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
             $.each($scope.truckList, function(index, value) {
                 $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
             });
-            storeDataService.truck = angular.copy(response.data);
+            $scope.filterTruckList = angular.copy($scope.truckList);
 
             $scope.searchTruck = function(truck) {
                 return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
             }
 
             $scope.totalItems = $scope.filterTruckList.length;
+            console.log($scope.totalItems);
+            console.log($scope.filterTruckList);
 
             $scope.getData = function() {
                 return $filter('filter')($scope.filterTruckList, $scope.searchTruckFilter);
@@ -1624,7 +1553,7 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
             $scope.$watch('searchTruckFilter', function(newVal, oldVal) {
                 var vm = this;
                 if (oldVal !== newVal) {
-                    $scope.currentPage = 1;
+                    $scope.pagination.currentPage = 1;
                     $scope.totalItems = $scope.getData().length;
                 }
                 return vm;
@@ -1729,9 +1658,6 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
     'use strict';
 
     var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
     $scope.filterZoneList = [];
 
     $scope.initializeZone = function() {
@@ -1741,39 +1667,60 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         };
     };
 
+    $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.zone);
 
-    $http.get('/getAllZone').then(function(response) {
-        storeDataService.zone = angular.copy(response.data);
-        $scope.searchZoneFilter = '';
-        $scope.zoneList = response.data;
+    $scope.currentStatus = {
+        "status": true
+    }
+    function getAllZone(){
+        $http.post('/getAllZone',$scope.currentStatus).then(function(response) {
+            storeDataService.zone = angular.copy(response.data);
+            $scope.searchZoneFilter = '';
+            $scope.zoneList = response.data;
 
-        $scope.searchZone = function(zone) {
-            return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
-        }
-
-        $scope.totalItems = $scope.filterZoneList.length;
-
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterZoneList, $scope.searchZoneFilter);
-        };
-
-        $scope.$watch('searchZoneFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
+            $scope.searchZone = function(zone) {
+                return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
             }
-            return vm;
-        }, true);
 
-    });
+            $scope.filterZoneList = angular.copy($scope.zoneList);
+
+            $scope.totalItems = $scope.filterZoneList.length;
+
+            $scope.getData = function() {
+                return $filter('filter')($scope.filterZoneList, $scope.searchZoneFilter);
+            };
+
+            $scope.$watch('searchZoneFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.pagination.currentPage = 1;
+                    $scope.totalItems = $scope.getData().length;
+                }
+                return vm;
+            }, true);
+
+        });
+    }
+    
+    getAllZone();
+    
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllZone(); //call
+    }
+
 
     $scope.addZone = function() {
         $scope.zone.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addZone', $scope.zone).then(function(response) {
             var data = response.data;
-            var newZoneID = returnedData.details.zoneID;
+            var newZoneID = data.details.zoneID;
 
             $scope.notify(data.status, data.message);
             if (data.status === "success") {
@@ -1914,8 +1861,8 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
     };
 
     $http.post('/getAllAuth', $scope.role).then(function(response) {
-        var splitName, flag = false,
-            key;
+        var splitName, flag = false, key;
+        
         $.each(response.data, function(index, value) {
             $.each(value, function(bigKey, bigValue) {
                 if (bigKey == 'name') {
@@ -1939,7 +1886,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 }
             });
         });
-        storeDataService.show = angular.copy($scope.auth);
+        //storeDataService.show = angular.copy($scope.auth);
     });
 
     $scope.changeValue = function(value, key) {
@@ -1963,9 +1910,6 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     'use strict';
     var asc = true;
     $scope.areaList = [];
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemPerPage = 8; //Record number each page
-    $scope.maxSize = 10;
 
     $scope.bin = {
         "id": '',
@@ -1974,35 +1918,53 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         "area": ''
     };
 
+    $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.bin);
 
-    $http.get('/getAllBinCenter').then(function(response) {
-        $scope.searchBinFilter = '';
-        $scope.binList = response.data;
-        storeDataService.bin = angular.copy($scope.binList);
-        $scope.filterBinList = [];
+    $scope.currentStatus = {
+        "status": true
+    }
+    
+    function getAllBinCenter() {
+        $http.post('/getAllBinCenter', $scope.currentStatus).then(function(response) {
+            $scope.searchBinFilter = '';
+            $scope.binList = response.data;
+            storeDataService.bin = angular.copy($scope.binList);
+            $scope.filterBinList = [];
 
-        $scope.searchBin = function(bin) {
-            return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
-        };
+            $scope.searchBin = function(bin) {
+                return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+            };
 
-        $scope.filterBinList = angular.copy($scope.binList);
+            $scope.filterBinList = angular.copy($scope.binList);
 
-        $scope.totalItems = $scope.filterBinList.length;
+            $scope.totalItems = $scope.filterBinList.length;
 
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
-        };
+            $scope.getData = function() {
+                return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
+            };
 
-        $scope.$watch('searchBinFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
-            }
-            return vm;
-        }, true);
-    });
+            $scope.$watch('searchBinFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.pagination.currentPage = 1;
+                    $scope.totalItems = $scope.getData().length;
+                }
+                return vm;
+            }, true);
+        });
+    }
+    getAllBinCenter(); //call
+
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllBinCenter(); //call
+    }
 
     $http.get('/getAreaList').then(function(response) {
         renderSltPicker();
@@ -2080,7 +2042,9 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     $scope.areaList = [];
     $scope.dcsList = [];
     $scope.dcsDetails = [];
-    $scope.dcsID = [];
+    $scope.dcsID = {
+        "id": ''
+    };
 
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
@@ -2088,16 +2052,17 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 
 
     $scope.viewdcs = function(dcsID) {
-        window.location.href = '#/dcs-details/' + dcsID; // +"+"+ name
-        $scope.dcsID = {
-            "id": dcsID
-        }
+        window.location.href = '#/dcs-details/' + dcsID;
 
-        $scope.getDcsDetails();
-        // }, 500);
+        $scope.dcsID.id = dcsID;
+        $http.post('/getDcsDetails', {"id": dcsID}).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.dcsDetails = response.data;
+    
+        });
     }
 
-    function initializeDcs() {
+    function initializeDcs() { 
         $scope.dcs = {
             "id": '',
             "creationDateTime": '',
@@ -2117,20 +2082,37 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         angular.element('.selectpicker').selectpicker('render');
     }
 
-    $http.get('/getAllDcs').then(function(response) {
-        $scope.searchAcrFilter = '';
-        $scope.dcsList = response.data;
+    $scope.currentStatus = {
+        "status": true
+    }
+    
+    function getAllDcs() {
+        $http.post('/getAllDcs', $scope.currentStatus).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.dcsList = response.data;
 
-        console.log("DCS data received by controller");
-        console.log(response.data);
-    });
+            console.log("DCS data received by controller");
+            console.log(response.data);
+        });
+    }
+    getAllDcs(); //call
+
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllDcs(); //call
+    }
 
     angular.element('.datepicker').datepicker();
 
     $scope.addDcs = function() {
         $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addDcs', $scope.dcs).then(function(response) {
-            var returnedData = response.data;
+            var returnedData = response.data; 
             var newDcsID = returnedData.details.dcsID;
             var today = new Date();
 
@@ -2151,13 +2133,6 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         });
     }
 
-    $scope.getDcsDetails = function(){
-        $http.get('/getDcsDetails', $scope.dcsID).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.dcsDetails = response.data;
-    
-        });
-    }
 
     $scope.addDcsDetails = function() {
         $http.post('/addDcsDetails', $scope.dcsDetails).then(function(response) {

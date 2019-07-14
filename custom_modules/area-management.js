@@ -11,17 +11,29 @@ app.post('/addArea', function (req, res) {
         var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, areaName, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
+                res.json({"status": "error", "message": "Something error!"});
+                res.end();
                 throw err;
+            } else {
+                res.json({"status": "success", "message": "Area added successfully!", "details": {"areaID": ID}});
+                res.end();
             }
-            res.json({"status": "success", "details": {"areaID": ID}});
         });
     });
 }); // Complete
 
 // Load all area in management
-app.get('/getAllArea', function (req, res) {
+app.post('/getAllArea', function (req, res) {
     'use strict';
     var sql = "SELECT a.areaID AS id, a.areaName AS name, z.zoneID as zone, z.zoneName as zoneName, s.staffID as staff, s.staffName as staffName, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea a INNER JOIN tblzone z ON a.zoneID = z.zoneID INNER JOIN tblstaff s ON a.staffID = s.staffID";
+    
+    
+    if(req.body.status){
+        sql += " WHERE areaStatus = 'A'";
+    }else{
+        sql += " WHERE areaStatus = 'I'";
+    }
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -135,4 +147,16 @@ app.post('/updateCollection', function (req, res) {
     });
 });
 
+app.post('/getGoogleLocation', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblarea.areaName AS area, tblzone.zoneName AS zone FROM tblarea INNER JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID = '" + req.body.areaCode + "' LIMIT 0, 1";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
 module.exports = app;

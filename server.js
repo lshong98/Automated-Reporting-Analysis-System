@@ -134,28 +134,28 @@ app.get('/getCount', function (req, res) {
     var results = {};
     
     f.waterfallQuery("SELECT COUNT(*) AS zone FROM tblzone").then(function (zone) {
-        results["zone"] = zone.zone;
+        results.zone = zone.zone;
         return f.waterfallQuery("SELECT COUNT(*) AS area FROM tblarea");
     }).then(function (area) {
-        results["area"] = area.area;
+        results.area = area.area;
         return f.waterfallQuery("SELECT COUNT(*) AS acr FROM tblacr");
     }).then(function (acr) {
-        results["acr"] = acr.acr;
+        results.acr = acr.acr;
         return f.waterfallQuery("SELECT COUNT(*) AS bin FROM tblbincenter");
     }).then(function (bin) {
-        results["bin"] = bin.bin;
+        results.bin = bin.bin;
         return f.waterfallQuery("SELECT COUNT(*) AS truck FROM tbltruck");
     }).then(function (truck) {
-        results["truck"] = truck.truck;
+        results.truck = truck.truck;
         return f.waterfallQuery("SELECT COUNT(*) AS staff FROM tblstaff");
     }).then(function (staff) {
-        results["staff"] = staff.staff;
+        results.staff = staff.staff;
         return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C'");
     }).then(function (completeReport) {
-        results["completeReport"] = completeReport.completeReport;
+        results.completeReport = completeReport.completeReport;
         return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'I'");
     }).then(function (incompleteReport) {
-        results["incompleteReport"] = incompleteReport.incompleteReport;
+        results.incompleteReport = incompleteReport.incompleteReport;
         res.json(results);
         res.end();
     });

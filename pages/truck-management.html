@@ -126,7 +126,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="t in truckList | filter: searchTruck | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                            <tr data-ng-repeat="t in truckList | filter: searchTruck | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
                                 <td>
                                     <span data-ng-bind="t.id"></span>
                                 </td>
@@ -179,7 +179,7 @@
         </div>
         <div class="row" style="">
             <div class="col-md-12">
-                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
             </div>
         </div>
     </div>

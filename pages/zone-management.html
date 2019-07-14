@@ -42,9 +42,12 @@ TODO LIST:
 </div>
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
-    <div class="col-md-12">
+    <div class="col-md-11">
         <button class="btn btn-success" data-toggle="modal" data-target="#createZone"><i class="fa fa-plus"></i> New</button>
         
+    </div>
+    <div class="col-md-1" style="padding-top: 10px" >
+        <label style="cursor: pointer;"><input type="checkbox" data-ng-model="statusList" data-ng-click="updateStatusList()"> Active</label>
     </div>
 </div>
 <br />
@@ -63,7 +66,7 @@ TODO LIST:
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="z in zoneList | filter: searchZone | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                            <tr data-ng-repeat="z in zoneList | filter: searchZone | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
                                 <td>
                                     <span data-ng-bind="z.id"></span>
                                 </td>
@@ -95,7 +98,7 @@ TODO LIST:
         </div>
         <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
             <div class="col-md-12">
-                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
             </div>
         </div>
     </div>
