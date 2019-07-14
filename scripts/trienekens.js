@@ -1981,33 +1981,50 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.bin);
 
-    $http.get('/getAllBinCenter').then(function(response) {
-        $scope.searchBinFilter = '';
-        $scope.binList = response.data;
-        storeDataService.bin = angular.copy($scope.binList);
-        $scope.filterBinList = [];
+    $scope.currentStatus = {
+        "status": true
+    }
+    
+    function getAllBinCenter() {
+        $http.post('/getAllBinCenter', $scope.currentStatus).then(function(response) {
+            $scope.searchBinFilter = '';
+            $scope.binList = response.data;
+            storeDataService.bin = angular.copy($scope.binList);
+            $scope.filterBinList = [];
 
-        $scope.searchBin = function(bin) {
-            return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
-        };
+            $scope.searchBin = function(bin) {
+                return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+            };
 
-        $scope.filterBinList = angular.copy($scope.binList);
+            $scope.filterBinList = angular.copy($scope.binList);
 
-        $scope.totalItems = $scope.filterBinList.length;
+            $scope.totalItems = $scope.filterBinList.length;
 
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
-        };
+            $scope.getData = function() {
+                return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
+            };
 
-        $scope.$watch('searchBinFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.pagination.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
-            }
-            return vm;
-        }, true);
-    });
+            $scope.$watch('searchBinFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.pagination.currentPage = 1;
+                    $scope.totalItems = $scope.getData().length;
+                }
+                return vm;
+            }, true);
+        });
+    }
+    getAllBinCenter(); //call
+
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllBinCenter(); //call
+    }
 
     $http.get('/getAreaList').then(function(response) {
         renderSltPicker();
@@ -2125,13 +2142,30 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         angular.element('.selectpicker').selectpicker('render');
     }
 
-    $http.get('/getAllDcs').then(function(response) {
-        $scope.searchAcrFilter = '';
-        $scope.dcsList = response.data;
+    $scope.currentStatus = {
+        "status": true
+    }
+    
+    function getAllDcs() {
+        $http.post('/getAllDcs', $scope.currentStatus).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.dcsList = response.data;
 
-        console.log("DCS data received by controller");
-        console.log(response.data);
-    });
+            console.log("DCS data received by controller");
+            console.log(response.data);
+        });
+    }
+    getAllDcs(); //call
+
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllDcs(); //call
+    }
 
     angular.element('.datepicker').datepicker();
 
