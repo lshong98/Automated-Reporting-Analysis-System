@@ -11,8 +11,8 @@ app.get('/getAllDatabaseBin', function (req, res) {
         if (err) {
             throw err;
         }
-        console.log("script success");
-        console.log(result);
+        //console.log("script success");
+        //console.log(result);
         res.json(result);
         
     });
@@ -25,11 +25,43 @@ app.post('/deleteDatabaseBin', function (req, res) {
         if (err) {
             throw err;
         }
-        console.log("delete script success");
+        //console.log("delete script success");
         console.log(result);
         res.json(result);
         
     });
 });
+
+app.post('/addCustomer', function (req, res) {
+    'use strict';
+    console.log(`${req.body.tamanID}`);
+    console.log(`${req.body.username}`);
+    console.log(`${req.body.status}`);
+    var sql = `insert into tblcustomer values(NULL,'${req.body.tamanID}','${req.body.username}','${req.body.password}','${req.body.contactNumber}','${req.body.ic}','${req.body.tradingLicense}','${req.body.name}', '${req.body.companyName}','${req.body.houseNo}','${req.body.streetNo}','${req.body.postCode}','${req.body.city}','${req.body.status}',current_timestamp())`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log("Add Customer success");
+        console.log(result);
+        res.json({"status": "success", "message": "Customer created successfully!"});
+        
+    });
+});
+
+app.get('/getAllTaman', function (req, res) {
+    'use strict';
+    var sql = `select * from tbltaman`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        //console.log("Taman query success");
+       // console.log(result);
+        res.json(result);
+        
+    });
+});
+
 
 module.exports = app;

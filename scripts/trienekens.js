@@ -2207,7 +2207,45 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         "path": ''
     };
 
+    //Customer details
+    $scope.initializeCustomer = function(){
+        $scope.customer = {
+            //customerID
+            "username": '',
+            "password": '',
+            "contactNumber": '',
+            "ic": '',
+            "tradingLicense": '',
+            "name": '',
+            "companyName": '',
+            "houseNo": '',
+            "streetNo": '',
+            "tamanID": '',
+            "postCode": '',
+            "city": '',
+            "status": ''
+            //creationDateTime
+        };
+    }
+
+    //Taman details
+    $scope.taman ={
+        "tamanID": "",
+        "areaID": "",
+        "tamanName":"",
+        "longitude":"",
+        "latitude":"",
+        "areaCollStatus":""
+    }
+
     $scope.show = angular.copy(storeDataService.show.database);
+
+    //Retrieve all taman entries and store them in tamanList
+    $http.get('/getAllTaman').then(function(response){
+        $scope.tamanList = response.data;
+        console.log($scope.tamanList);
+        console.log("Hello from taman controller");
+    })
 
     $http.get('/getAllDatabaseBin').then(function(response) {
 
@@ -2217,6 +2255,8 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     });
 
     $scope.databaseBinList = [];
+    $scope.customerList = [];
+    $scope.tamanList = [];
 
     //get list of IC
     var getIc = "select ic from tblCustomer";
@@ -2301,6 +2341,34 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         //         $scope.totalItems = $scope.filterDatabaseBinList.length;
         //     }
         // });
+    }
+
+    $scope.addCustomer = function() {
+        console.log($scope.customer.tamanID);
+        console.log("Customer Created");
+        console.log($scope.customer);
+
+        $http.post('/addCustomer', $scope.customer).then(function (response) {
+                 //var returnedData = response.data;
+                 //var newBinID = returnedData.details.binID;
+    
+                 $scope.notify(response.data.status, response.data.message);
+                 console.log("Hello 1");
+                 if (response.data.status === 'success') {
+                     angular.element('body').overhang({
+                         type: "success",
+                         "message": "New Customer added successfully!"
+                     });
+                     console.log("Hello from addCustomer serverside!");
+                     $scope.customerList.push({"name": $scope.customer.name, "icNo": $scope.customer.ic});
+                     //storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+                     //$scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
+                     angular.element('#createCustomer').modal('toggle');
+                     //$scope.totalItems = $scope.filterDatabaseBinList.length;
+                     $scope.initializeCustomer();
+                 }
+             });
+        
     }
 
     $scope.orderBy = function(property) {
