@@ -129,7 +129,6 @@ app.service('storeDataService', function() {
             "id": '',
             "address": ''
         },
-
         "databaseBin": {
             "date": '',
             "name": '',
@@ -158,7 +157,6 @@ app.service('storeDataService', function() {
             "query": '',
             "authorize": ''
         },
-
         "show": {
             "account": {
                 "create": false,
@@ -228,6 +226,11 @@ app.service('storeDataService', function() {
                 "create": false,
                 "export": false
             }
+        },
+        "pagination": {
+            "currentPage": 1, //Initial current page to 1
+            "itemsPerPage": 8, //Record number each page
+            "maxSize": 10 //Show the number in page
         }
     };
 
@@ -683,6 +686,18 @@ app.run(function($rootScope) {
             type: stat,
             message: mes
         });
+    };
+    $rootScope.loadDetails = function (key, value) {
+        var to = "";
+        switch (key) {
+            case "account":
+                to = '#/account/';
+                break;
+            case "area":
+                to = '#/area/';
+                break;
+        }
+        window.location.href = to + value;
     };
 });
 
@@ -1162,9 +1177,6 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
     'use strict';
 
     var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
     $scope.newArea = { "areaCode": '' };
 
     $scope.area = {
@@ -1172,6 +1184,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         "staff": ''
     };
 
+    $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.area);
 
     $http.get('/getAllArea').then(function(response) {
@@ -1202,7 +1215,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.$watch('searchAreaFilter', function(newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
-                $scope.currentPage = 1;
+                $scope.pagination.currentPage = 1;
                 $scope.totalItems = $scope.getData().length;
             }
             return vm;
@@ -1300,10 +1313,6 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
             });
         });
     }
-
-    $scope.editAreaPage = function(id) {
-        window.location.href = '#/area/' + id;
-    };
 
     socket.on('append area list', function(data) {
         $scope.areaList.push({
@@ -1434,13 +1443,13 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
     'use strict';
 
     var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
     $scope.filterStaffList = [];
     $scope.searchStaffFilter = '';
     $scope.staffList = [];
-
+    
+    $scope.pagination = angular.copy(storeDataService.pagination);
+    $scope.show = angular.copy(storeDataService.show.account);
+    
     $scope.initializeStaff = function() {
         $scope.staff = {
             "name": '',
@@ -1449,8 +1458,6 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
             "password": ''
         };
     };
-
-    $scope.show = angular.copy(storeDataService.show.account);
 
     $http.get('/getPositionList').then(function(response) {
         $scope.positionList = response.data;
@@ -1474,16 +1481,12 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
         $scope.$watch('searchStaffFilter', function(newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
-                $scope.currentPage = 1;
+                $scope.pagination.currentPage = 1;
                 $scope.totalItems = $scope.getData().length;
             }
             return vm;
         }, true);
     });
-
-    $scope.loadSpecificAccount = function(staffID) {
-        window.location.href = '#/account/' + staffID;
-    };
 
     $scope.addUser = function() {
         $scope.staff.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
@@ -1596,6 +1599,7 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
         };
     };
 
+    $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.truck);
 
     $scope.currentStatus = {
@@ -1609,13 +1613,16 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
             $.each($scope.truckList, function(index, value) {
                 $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
             });
-            storeDataService.truck = angular.copy(response.data);
+            //storeDataService.truck = angular.copy(response.data);
+            $scope.filterTruckList = angular.copy($scope.truckList);
 
             $scope.searchTruck = function(truck) {
                 return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
             }
 
             $scope.totalItems = $scope.filterTruckList.length;
+            console.log($scope.totalItems);
+            console.log($scope.filterTruckList);
 
             $scope.getData = function() {
                 return $filter('filter')($scope.filterTruckList, $scope.searchTruckFilter);
@@ -1624,7 +1631,7 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
             $scope.$watch('searchTruckFilter', function(newVal, oldVal) {
                 var vm = this;
                 if (oldVal !== newVal) {
-                    $scope.currentPage = 1;
+                    $scope.pagination.currentPage = 1;
                     $scope.totalItems = $scope.getData().length;
                 }
                 return vm;
@@ -1729,9 +1736,6 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
     'use strict';
 
     var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
     $scope.filterZoneList = [];
 
     $scope.initializeZone = function() {
@@ -1741,6 +1745,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         };
     };
 
+    $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.zone);
 
     $http.get('/getAllZone').then(function(response) {
@@ -1751,6 +1756,8 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         $scope.searchZone = function(zone) {
             return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
         }
+        
+        $scope.filterZoneList = angular.copy($scope.zoneList);
 
         $scope.totalItems = $scope.filterZoneList.length;
 
@@ -1761,7 +1768,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         $scope.$watch('searchZoneFilter', function(newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
-                $scope.currentPage = 1;
+                $scope.pagination.currentPage = 1;
                 $scope.totalItems = $scope.getData().length;
             }
             return vm;
@@ -1773,7 +1780,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         $scope.zone.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addZone', $scope.zone).then(function(response) {
             var data = response.data;
-            var newZoneID = returnedData.details.zoneID;
+            var newZoneID = data.details.zoneID;
 
             $scope.notify(data.status, data.message);
             if (data.status === "success") {
@@ -1914,8 +1921,8 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
     };
 
     $http.post('/getAllAuth', $scope.role).then(function(response) {
-        var splitName, flag = false,
-            key;
+        var splitName, flag = false, key;
+        
         $.each(response.data, function(index, value) {
             $.each(value, function(bigKey, bigValue) {
                 if (bigKey == 'name') {
@@ -1963,9 +1970,6 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     'use strict';
     var asc = true;
     $scope.areaList = [];
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemPerPage = 8; //Record number each page
-    $scope.maxSize = 10;
 
     $scope.bin = {
         "id": '',
@@ -1974,6 +1978,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         "area": ''
     };
 
+    $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.bin);
 
     $http.get('/getAllBinCenter').then(function(response) {
@@ -1997,7 +2002,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         $scope.$watch('searchBinFilter', function(newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
-                $scope.currentPage = 1;
+                $scope.pagination.currentPage = 1;
                 $scope.totalItems = $scope.getData().length;
             }
             return vm;

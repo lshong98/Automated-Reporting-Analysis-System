@@ -4,10 +4,10 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = 'trienekens02';
+var DB_NAME = '';
 
 // Create connection
 var db = mysql.createConnection({
