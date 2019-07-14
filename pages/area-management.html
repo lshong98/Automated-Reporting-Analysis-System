@@ -56,8 +56,11 @@
 </div>
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
-    <div class="col-md-12">
+    <div class="col-md-11">
         <button class="btn btn-success" data-toggle="modal" data-target="#createArea"><i class="fa fa-plus"></i> New</button>
+    </div>
+    <div class="col-md-1" style="padding-top: 10px" >
+        <label style="cursor: pointer;"><input type="checkbox" data-ng-model="statusList" data-ng-click="updateStatusList()"> Active</label>
     </div>
 </div>
 <br />
