@@ -1187,40 +1187,60 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.area);
 
-    $http.get('/getAllArea').then(function(response) {
-        $scope.searchAreaFilter = '';
-        $scope.areaList = response.data;
-        $scope.filterAreaList = [];
+    $scope.currentStatus = {
+        "status": true
+    }
+    
+    
+    function getAllArea() {
+        
+        $http.post('/getAllArea', $scope.currentStatus).then(function(response) {
+            $scope.searchAreaFilter = '';
+            $scope.areaList = response.data;
+            $scope.filterAreaList = [];
 
 
-        //        for(var i = 0; i < ($scope.areaList).length; i++){
-        //            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
-        //            $scope.areaList[i].staffidname = $scope.areaList[i].staffName + '-' + $scope.areaList[i].staff;
-        //        }
+            //        for(var i = 0; i < ($scope.areaList).length; i++){
+            //            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
+            //            $scope.areaList[i].staffidname = $scope.areaList[i].staffName + '-' + $scope.areaList[i].staff;
+            //        }
 
-        $scope.searchArea = function(area) {
-            return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
-        }
-
-        //        $.each($scope.areaList, function (index) {
-        $scope.filterAreaList = angular.copy($scope.areaList);
-        //        });
-
-        $scope.totalItems = $scope.filterAreaList.length;
-
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterAreaList, $scope.searchAreaFilter);
-        };
-
-        $scope.$watch('searchAreaFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.pagination.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
+            $scope.searchArea = function(area) {
+                return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
             }
-            return vm;
-        }, true);
-    });
+
+            //        $.each($scope.areaList, function (index) {
+            $scope.filterAreaList = angular.copy($scope.areaList);
+            //        });
+
+            $scope.totalItems = $scope.filterAreaList.length;
+
+            $scope.getData = function() {
+                return $filter('filter')($scope.filterAreaList, $scope.searchAreaFilter);
+            };
+
+            $scope.$watch('searchAreaFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.pagination.currentPage = 1;
+                    $scope.totalItems = $scope.getData().length;
+                }
+                return vm;
+            }, true);
+        });
+    }
+    
+    getAllArea();
+    
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllArea(); //call
+    }
 
     $http.get('/getZoneList').then(function(response) {
         $scope.zoneList = response.data;
@@ -1748,33 +1768,51 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.zone);
 
-    $http.get('/getAllZone').then(function(response) {
-        storeDataService.zone = angular.copy(response.data);
-        $scope.searchZoneFilter = '';
-        $scope.zoneList = response.data;
+    $scope.currentStatus = {
+        "status": true
+    }
+    function getAllZone(){
+        $http.post('/getAllZone',$scope.currentStatus).then(function(response) {
+            storeDataService.zone = angular.copy(response.data);
+            $scope.searchZoneFilter = '';
+            $scope.zoneList = response.data;
 
-        $scope.searchZone = function(zone) {
-            return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
-        }
-        
-        $scope.filterZoneList = angular.copy($scope.zoneList);
-
-        $scope.totalItems = $scope.filterZoneList.length;
-
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterZoneList, $scope.searchZoneFilter);
-        };
-
-        $scope.$watch('searchZoneFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.pagination.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
+            $scope.searchZone = function(zone) {
+                return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
             }
-            return vm;
-        }, true);
 
-    });
+            $scope.filterZoneList = angular.copy($scope.zoneList);
+
+            $scope.totalItems = $scope.filterZoneList.length;
+
+            $scope.getData = function() {
+                return $filter('filter')($scope.filterZoneList, $scope.searchZoneFilter);
+            };
+
+            $scope.$watch('searchZoneFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.pagination.currentPage = 1;
+                    $scope.totalItems = $scope.getData().length;
+                }
+                return vm;
+            }, true);
+
+        });
+    }
+    
+    getAllZone();
+    
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllZone(); //call
+    }
+
 
     $scope.addZone = function() {
         $scope.zone.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
