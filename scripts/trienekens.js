@@ -159,72 +159,72 @@ app.service('storeDataService', function() {
         },
         "show": {
             "account": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "driver": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "truck": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "zone": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "area": {
-                "create": false,
-                "edit": false,
-                "view": false,
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I',
                 "collection": {
-                    "add": false,
-                    "edit": false
+                    "add": 'I',
+                    "edit": 'I'
                 }
             },
             "bin": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "acr": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "database": {
-                "create": false,
-                "edit": false,
-                "view": false
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             },
             "inventory": {
-                "edit": false,
-                "view": false
+                "edit": 'I',
+                "view": 'I'
             },
             "authorization": {
-                "view": false
+                "view": 'I'
             },
             "complaintlist": {
-                "view": false
+                "view": 'I'
             },
             "transactionLog": {
-                "view": false
+                "view": 'I'
             },
             "dcsDetails": {
-                "view": false,
-                "edit": false,
-                "create": false
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I'
             },
             "reporting":{
-                "view": false,
-                "edit": false,
-                "create": false,
-                "export": false
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I',
+                "export": 'I'
             }
         },
         "pagination": {
@@ -699,6 +699,13 @@ app.run(function($rootScope) {
         }
         window.location.href = to + value;
     };
+    $rootScope.geocodeLink = function (place) {
+        var area = place.area.replace(" ", "+");
+        var zone = place.zone.replace(" ", "+");
+        var concat = area + '+' + zone;
+
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
+    };
 });
 
 app.controller('navigationController', function($scope, $http, $window, storeDataService) {
@@ -711,77 +718,8 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
         "manager": false,
         "officer": false
     };
-
-    $scope.show = {
-        "account": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "driver": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "truck": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "zone": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "area": {
-            "create": false,
-            "edit": false,
-            "view": false,
-            "collection": {
-                "add": false,
-                "edit": false
-            }
-        },
-        "bin": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "acr": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "database": {
-            "create": false,
-            "edit": false,
-            "view": false
-        },
-        "inventory": {
-            "edit": false,
-            "view": false
-        },
-        "authorization": {
-            "view": false
-        },
-        "complaintlist": {
-            "view": false
-        },
-        "transactionLog": {
-            "view": false
-        },
-        "dcsDetails": {
-            "view": false,
-            "edit": false,
-            "create": false
-        },
-        "reporting":{
-            "view": false,
-            "edit": false,
-            "create": false,
-            "export": false
-        }
-    };
+    
+    $scope.show = angular.copy(storeDataService.show);
 
     if (position == "Manager" || position == "Administrator") {
         $scope.navigation["manager"] = true;
@@ -1177,41 +1115,33 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
     'use strict';
 
     var asc = true;
-    $scope.newArea = { "areaCode": '' };
+    $scope.newArea = {
+        "areaCode": ''
+    };
 
     $scope.area = {
         "zone": '',
         "staff": ''
     };
+    
+    $scope.currentStatus = {
+        "status": true
+    }
 
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.area);
 
-    $scope.currentStatus = {
-        "status": true
-    }
-    
-    
     function getAllArea() {
-        
         $http.post('/getAllArea', $scope.currentStatus).then(function(response) {
             $scope.searchAreaFilter = '';
             $scope.areaList = response.data;
             $scope.filterAreaList = [];
 
-
-            //        for(var i = 0; i < ($scope.areaList).length; i++){
-            //            $scope.areaList[i].zoneidname =  $scope.areaList[i].zoneName + '-' + $scope.areaList[i].zone;
-            //            $scope.areaList[i].staffidname = $scope.areaList[i].staffName + '-' + $scope.areaList[i].staff;
-            //        }
-
             $scope.searchArea = function(area) {
                 return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
             }
 
-            //        $.each($scope.areaList, function (index) {
             $scope.filterAreaList = angular.copy($scope.areaList);
-            //        });
 
             $scope.totalItems = $scope.filterAreaList.length;
 
@@ -1229,7 +1159,6 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
             }, true);
         });
     }
-    
     getAllArea();
     
     $scope.statusList = true;
@@ -1246,7 +1175,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.zoneList = response.data;
         $scope.area.zone = $scope.zoneList[0];
         for (var i = 0; i < (response.data).length; i++) {
-            $scope.zoneList[i].zoneidname = response.data[i].name + '-' + response.data[i].id;
+            $scope.zoneList[i].zoneidname = response.data[i].name + ' - ' + response.data[i].id;
         }
     });
 
@@ -1254,7 +1183,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.staffList = response.data;
         $scope.area.staff = $scope.staffList[0];
         for (var i = 0; i < (response.data).length; i++) {
-            $scope.staffList[i].staffidname = response.data[i].name + '-' + response.data[i].id;
+            $scope.staffList[i].staffidname = response.data[i].name + ' - ' + response.data[i].id;
         }
     });
 
@@ -1262,75 +1191,49 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
         $http.post('/addArea', $scope.area).then(function(response) {
-            var returnedData = response.data;
-            var newAreaID = returnedData.details.areaID;
-            $scope.newArea.areaCode = newAreaID;
+            var data = response.data;
+            var newAreaID;
 
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "Area added successfully!"
-                });
+            $scope.notify(data.status, data.message);
+            
+            if (data.status === "success") {
+                newAreaID = data.details.areaID;
+                $scope.newArea.areaCode = newAreaID;
                 $scope.areaList.push({
                     "id": newAreaID,
                     "name": $scope.area.name,
                     "status": 'ACTIVE',
-                    "zoneName": $scope.area.zone.id + '-' + $scope.area.zone.name,
-                    "staffName": $scope.area.staff.id + '-' + $scope.area.staff.name
+                    "zoneName": $scope.area.zone.id + ' - ' + $scope.area.zone.name,
+                    "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
                 });
                 $scope.area.id = newAreaID;
-                $scope.area.zoneName = $scope.area.zone.id + '-' + $scope.area.zone.name;
-                $scope.area.staffName = $scope.area.staff.id + '-' + $scope.area.staff.name;
+                $scope.area.zoneName = $scope.area.zone.id + ' - ' + $scope.area.zone.name;
+                $scope.area.staffName = $scope.area.staff.id + ' - ' + $scope.area.staff.name;
                 socket.emit('create new area', $scope.area);
                 $scope.filterAreaList = angular.copy($scope.areaList);
                 angular.element('#createArea').modal('toggle');
                 $scope.totalItems = $scope.filterAreaList.length;
-            }
-            var $googleMap, visualizeMap, map, lat = 0,
-                lng = 0,
-                myPlace, address;
+            
+                var $googleMap, visualizeMap, map, lat = 0,
+                    lng = 0,
+                    myPlace, address;
 
-            $http.post('/getGoogleLocation', $scope.newArea).then(function(response) {
-                var myPlace = response.data[0];
-                var area = myPlace.area.replace(" ", "+");
-                var zone = myPlace.zone.replace(" ", "+");
-                var concat = area + '+' + zone;
+                console.log($scope.newArea);
+                $http.post('/getGoogleLocation', $scope.newArea).then(function(response) {
+                    address = $scope.geocodeLink(response.data[0]);
 
-                address = "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+                    $http.get(address).then(function(response) {
+                        // JSON data returned by API above
+                        var myPlace = response.data;
 
-                $http.get(address).then(function(response) {
-                    function timeToSeconds(time) {
-                        time = time.split(/:/);
-                        return time[0] * 3600 + time[1] * 60 + time[2];
-                    }
+                        $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
+                        $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
+                        $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
 
-
-
-
-                    // JSON data returned by API above
-                    var myPlace = response.data;
-
-                    // After get the place data, re-center the map
-                    //                    $window.setTimeout(function () {
-                    //                        var places, location;
-                    //
-                    //                        places = myPlace.results[0];
-                    //                        location = places.formatted_address;
-                    //                        lat = places.geometry.location.lat;
-                    //                        lng = places.geometry.location.lng;
-                    //                        map.panTo(new google.maps.LatLng(lat, lng));
-                    //                        map.setZoom(17);
-                    //
-
-                    //                    }, 1000);
-                    $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
-                    $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
-                    $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
-
+                        });
                     });
-
                 });
-            });
+            }
         });
     }
 
@@ -1633,7 +1536,6 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
             $.each($scope.truckList, function(index, value) {
                 $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
             });
-            //storeDataService.truck = angular.copy(response.data);
             $scope.filterTruckList = angular.copy($scope.truckList);
 
             $scope.searchTruck = function(truck) {
@@ -1984,7 +1886,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 }
             });
         });
-        storeDataService.show = angular.copy($scope.auth);
+        //storeDataService.show = angular.copy($scope.auth);
     });
 
     $scope.changeValue = function(value, key) {

@@ -11,9 +11,13 @@ app.post('/addArea', function (req, res) {
         var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, areaName, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
+                res.json({"status": "error", "message": "Something error!"});
+                res.end();
                 throw err;
+            } else {
+                res.json({"status": "success", "message": "Area added successfully!", "details": {"areaID": ID}});
+                res.end();
             }
-            res.json({"status": "success", "details": {"areaID": ID}});
         });
     });
 }); // Complete
@@ -143,4 +147,16 @@ app.post('/updateCollection', function (req, res) {
     });
 });
 
+app.post('/getGoogleLocation', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblarea.areaName AS area, tblzone.zoneName AS zone FROM tblarea INNER JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID = '" + req.body.areaCode + "' LIMIT 0, 1";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
 module.exports = app;
