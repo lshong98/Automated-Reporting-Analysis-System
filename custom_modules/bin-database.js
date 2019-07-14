@@ -6,7 +6,7 @@ var f = require('./function-management');
 
 app.get('/getAllDatabaseBin', function (req, res) {
     'use strict';
-    var sql = "select wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, 'rc dwell' as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, 'comment' as comment, bins.size as binSize, 'address' as address, customer.name as companyName, acr.acrID as acrfSerialNo, 'item type' as itemType, 'path' as path from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID where wbd.activeStatus = 'a'";
+    var sql = "select wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, wbd.rcDwell as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, wbd.comment as comment, bins.size as binSize, concat(customer.houseNo,' ',customer.streetNo,' ',taman.tamanName) as address, customer.name as companyName, acr.acrID as acrfSerialNo, wbd.itemType as itemType, wbd.path as path from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID where wbd.activeStatus = 'a'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -28,6 +28,21 @@ app.post('/deleteDatabaseBin', function (req, res) {
         //console.log("delete script success");
         console.log(result);
         res.json(result);
+        
+    });
+});
+
+app.post('/addDatabaseBin', function (req, res) {
+    'use strict';
+
+    var sql = `insert into tblwheelbindatabase values(NULL,'${req.body.date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}','${req.body.acrID}','${req.body.activeStatus}','${req.body.rcDwell}', '${req.body.comment}','${req.body.itemType}','${req.body.path}')`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log("Add WBD entry success");
+        console.log(result);
+        res.json({"status": "success", "message": "WBD Entry created successfully!"});
         
     });
 });
@@ -66,6 +81,48 @@ app.get('/getAllTaman', function (req, res) {
 app.get('/getAllArea', function (req, res) {
     'use strict';
     var sql = `select * from tblarea`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        //console.log("Taman query success");
+       // console.log(result);
+        res.json(result);
+        
+    });
+});
+
+app.get('/getAllCustomer', function (req, res) {
+    'use strict';
+    var sql = `select * from tblcustomer`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        //console.log("Taman query success");
+       // console.log(result);
+        res.json(result);
+        
+    });
+});
+
+app.get('/getAllBins', function (req, res) {
+    'use strict';
+    var sql = `select * from tblbins`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        //console.log("Taman query success");
+       // console.log(result);
+        res.json(result);
+        
+    });
+});
+
+app.get('/getAllAcr', function (req, res) {
+    'use strict';
+    var sql = `select * from tblacr`;
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

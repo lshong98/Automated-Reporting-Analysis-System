@@ -15,59 +15,45 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinName form-label">Full Name</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinName" data-ng-model="databaseBin.name" />
+                    <label for="txtCustomer form-label">Customer</label>
+                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.customerID">
+                        <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.ic}} - {{c.name}} - {{c.companyName}}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinIcNo form-label">IC Number</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinIcNo" data-ng-model="databaseBin.icNo" />
+                    <label for="txtArea form-label">Area ID</label>
+                    <select type="text" class="form-control" id="txtArea" data-ng-model="databaseBin.areaID">
+                        <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaID}} - {{a.areaName}}</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinSerialNo form-label">Serial Number</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinSerialNo" data-ng-model="databaseBin.serialNo" />
+                    <label for="txtBin form-label">Bin</label>
+                    <select type="text" class="form-control" id="txtBin" data-ng-model="databaseBin.serialNo">
+                        <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinRcDwell form-label">RC Dwell</label>
                     <input type="text" class="form-control" id="txtDatabaseBinRcDwell" data-ng-model="databaseBin.rcDwell" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinHouseNo form-label">House No.</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinHouseNo" data-ng-model="databaseBin.houseNo" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinTmnKpg form-label">Tmn/Kpg</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinTmnKpg" data-ng-model="databaseBin.tmnKpg" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinAreaCode form-label">Area Code</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAreaCode" data-ng-model="databaseBin.areaCode" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinStatus form-label">Status</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinStatus" data-ng-model="databaseBin.status" />
+                    <label for="txtDatabaseBinStatus form-label">Active Status</label>
+                    <select type="text" class="form-control" id="txtDatabaseBinStatus" data-ng-model="databaseBin.activeStatus">
+                        <option value="a">Active</option>
+                        <option value="i">Inactive</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinComment form-label">Comment</label>
                     <input type="text" class="form-control" id="txtDatabaseBinComment" data-ng-model="databaseBin.comment" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinBinSize form-label">Bin Size</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinBinSize" data-ng-model="databaseBin.binSize" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinAddress form-label">Address</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAddress" data-ng-model="databaseBin.address" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinCompanyName form-label">Company Name</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinCompanyName" data-ng-model="databaseBin.companyName" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinAcrfSerialNo form-label">ACRF Serial No</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAcrfSerialNo" data-ng-model="databaseBin.acrfSerialNo" />
+                    <label for="txtAcr form-label">ACRF Serial No</label>
+                    <select type="text" class="form-control" id="txtAcr" data-ng-model="databaseBin.acrID">
+                        <option data-ng-repeat="a in acrList" value={{a.acrID}}>{{a.acrID}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinItemType form-label">Item Type</label>
@@ -80,7 +66,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-ng-click="addDatabaseBin();">Create</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addDatabaseBin()">Create</button>
             </div>
         </div>
     </div>
@@ -342,8 +328,8 @@
                                 <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr data-ng-repeat="b in databaseBinList | dateFilter:date.from:date.to | filter: wbdFilter | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                        <tbody> <!--dateFilter:date.from:date.to |filter: wbdFilter |-->
+                            <tr data-ng-repeat="b in databaseBinList |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                 <td>
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />
