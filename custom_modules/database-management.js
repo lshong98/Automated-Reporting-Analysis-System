@@ -36,7 +36,7 @@ db.connect(function (err) {
                     console.log('MySQL Connected...');
                     emitter.emit('createTable');
                     emitter.emit('defaultUser');
-                    emitter.emit('dummyData');
+                    //emitter.emit('dummyData');
                 });
             });
         } else {
