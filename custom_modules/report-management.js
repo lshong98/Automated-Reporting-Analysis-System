@@ -177,16 +177,5 @@ app.get('/getReportList', function(req, res){
         res.json(result);
     });
 }); // Complete
-app.post('/getGoogleLocation', function (req, res) {
-    'use strict';
-    
-    var sql = "SELECT tblarea.areaName AS area, tblzone.zoneName AS zone FROM tblarea INNER JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID = '" + req.body.areaCode + "' LIMIT 0, 1";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
 
 module.exports = app;

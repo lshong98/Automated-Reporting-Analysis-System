@@ -15,59 +15,45 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinName form-label">Full Name</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinName" data-ng-model="databaseBin.name" />
+                    <label for="txtCustomer form-label">Customer</label>
+                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.customerID">
+                        <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.ic}} - {{c.name}} - {{c.companyName}}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinIcNo form-label">IC Number</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinIcNo" data-ng-model="databaseBin.icNo" />
+                    <label for="txtArea form-label">Area ID</label>
+                    <select type="text" class="form-control" id="txtArea" data-ng-model="databaseBin.areaID">
+                        <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaID}} - {{a.areaName}}</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinSerialNo form-label">Serial Number</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinSerialNo" data-ng-model="databaseBin.serialNo" />
+                    <label for="txtBin form-label">Bin</label>
+                    <select type="text" class="form-control" id="txtBin" data-ng-model="databaseBin.serialNo">
+                        <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinRcDwell form-label">RC Dwell</label>
                     <input type="text" class="form-control" id="txtDatabaseBinRcDwell" data-ng-model="databaseBin.rcDwell" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinHouseNo form-label">House No.</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinHouseNo" data-ng-model="databaseBin.houseNo" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinTmnKpg form-label">Tmn/Kpg</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinTmnKpg" data-ng-model="databaseBin.tmnKpg" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinAreaCode form-label">Area Code</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAreaCode" data-ng-model="databaseBin.areaCode" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinStatus form-label">Status</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinStatus" data-ng-model="databaseBin.status" />
+                    <label for="txtDatabaseBinStatus form-label">Active Status</label>
+                    <select type="text" class="form-control" id="txtDatabaseBinStatus" data-ng-model="databaseBin.activeStatus">
+                        <option value="a">Active</option>
+                        <option value="i">Inactive</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinComment form-label">Comment</label>
                     <input type="text" class="form-control" id="txtDatabaseBinComment" data-ng-model="databaseBin.comment" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinBinSize form-label">Bin Size</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinBinSize" data-ng-model="databaseBin.binSize" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinAddress form-label">Address</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAddress" data-ng-model="databaseBin.address" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinCompanyName form-label">Company Name</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinCompanyName" data-ng-model="databaseBin.companyName" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinAcrfSerialNo form-label">ACRF Serial No</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAcrfSerialNo" data-ng-model="databaseBin.acrfSerialNo" />
+                    <label for="txtAcr form-label">ACRF Serial No</label>
+                    <select type="text" class="form-control" id="txtAcr" data-ng-model="databaseBin.acrID">
+                        <option data-ng-repeat="a in acrList" value={{a.acrID}}>{{a.acrID}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinItemType form-label">Item Type</label>
@@ -80,7 +66,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-ng-click="addDatabaseBin();">Create</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addDatabaseBin()">Create</button>
             </div>
         </div>
     </div>
@@ -98,81 +84,176 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="txtDatabaseBinDate form-label">Date</label>
-                    <input type="date" class="form-control" id="txtDatabaseBinDate" data-ng-model="databaseBin.date" />
+                    <label for="txtCustomerUsername form-label">Username</label>
+                    <input type="text" class="form-control" id="txtCustomerUsername" data-ng-model="customer.username" />
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinName form-label">Full Name</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinName" data-ng-model="databaseBin.name" />
+                    <label for="txtCustomerPassword form-label">Password</label>
+                    <input type="text" class="form-control" id="txtCustomerPassword" data-ng-model="customer.password" />
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinIcNo form-label">IC Number</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinIcNo" data-ng-model="databaseBin.icNo" />
+                    <label for="txtCustomerContact form-label">Contact Number</label>
+                    <input type="text" class="form-control" id="txtCustomerContact" data-ng-model="customer.contactNumber" />
                 </div>
 
                 <div class="form-group">
-                    <label for="txtDatabaseBinSerialNo form-label">Serial Number</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinSerialNo" data-ng-model="databaseBin.serialNo" />
+                    <label for="txtCustomerIcNo form-label">IC Number</label>
+                    <input type="text" class="form-control" id="txtCustomerIcNo" data-ng-model="customer.ic" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtCustomerTradingLicense form-label">Trading License</label>
+                    <input type="text" class="form-control" id="txtCustomerTradingLicense" data-ng-model="customer.tradingLicense" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinRcDwell form-label">RC Dwell</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinRcDwell" data-ng-model="databaseBin.rcDwell" />
+                    <label for="txtCustomerName form-label">Full Name</label>
+                    <input type="text" class="form-control" id="txtCustomerName" data-ng-model="customer.name" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinHouseNo form-label">House No.</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinHouseNo" data-ng-model="databaseBin.houseNo" />
+                    <label for="txtCompanyName form-label">Company Name</label>
+                    <input type="text" class="form-control" id="txtCompanyName" data-ng-model="customer.companyName" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinTmnKpg form-label">Tmn/Kpg</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinTmnKpg" data-ng-model="databaseBin.tmnKpg" />
+                    <label for="txtCustomerHouse form-label">House No.</label>
+                    <input type="text" class="form-control" id="txtCustomerHouse" data-ng-model="customer.houseNo" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinAreaCode form-label">Area Code</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAreaCode" data-ng-model="databaseBin.areaCode" />
+                    <label for="txtCustomerStreet form-label">Street No.</label>
+                    <input type="text" class="form-control" id="txtCustomerStreet" data-ng-model="customer.streetNo" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinStatus form-label">Status</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinStatus" data-ng-model="databaseBin.status" />
+                    <label for="txtCustomerPostCode form-label">Post Code</label>
+                    <input type="text" class="form-control" id="txtCustomerPostCode" data-ng-model="customer.postCode" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinComment form-label">Comment</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinComment" data-ng-model="databaseBin.comment" />
+                    <label for="txtTaman form-label">Taman / Kpg</label>
+                    <select class="form-control" id="txtTaman" data-ng-model="customer.tamanID">
+                        <option data-ng-repeat="t in tamanList" value={{t.tamanID}}>{{t.tamanName}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinBinSize form-label">Bin Size</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinBinSize" data-ng-model="databaseBin.binSize" />
+                    <label for="txtCustomerCity form-label">City</label>
+                    <input type="text" class="form-control" id="txtCustomerCity" data-ng-model="customer.city" />
                 </div>
                 <div class="form-group">
-                    <label for="txtDatabaseBinAddress form-label">Address</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAddress" data-ng-model="databaseBin.address" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinCompanyName form-label">Company Name</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinCompanyName" data-ng-model="databaseBin.companyName" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinAcrfSerialNo form-label">ACRF Serial No</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinAcrfSerialNo" data-ng-model="databaseBin.acrfSerialNo" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinItemType form-label">Item Type</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinItemType" data-ng-model="databaseBin.itemType" />
-                </div>
-                <div class="form-group">
-                    <label for="txtDatabaseBinPath form-label">Path</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinPath" data-ng-model="databaseBin.path" />
+                    <label for="txtCustomerStatus form-label">Status</label>
+                    <select class="form-control" id="txtCustomerStatus" data-ng-model="customer.status">
+                        <option value="a">Active</option>
+                        <option value="i">Inactive</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-ng-click="addDatabaseBin();">Create</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addCustomer();">Create</button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal For new Bin -->
+<div class="modal fade" id="createBin" tabindex="-1" role="dialog" aria-labelledby="createBin" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add New Bin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtBinSerialNo form-label">Serial No.</label>
+                    <input type="text" class="form-control" id="txtBinSerialNo" data-ng-model="bin.serialNo" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtBinSize form-label">Size</label>
+                    <select type="text" class="form-control" id="txtBinSize" data-ng-model="bin.size">
+                        <option value="120">120L</option>
+                        <option value="240">240L</option>
+                        <option value="660">660L</option>
+                        <option value="1000">1000L</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtBinStatus form-label">Status</label>
+                    <select type="text" class="form-control" id="txtBinStatus" data-ng-model="bin.status">
+                        <option value="a">Active</option>
+                        <option value="i">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtBinLongitude form-label">Longitude</label>
+                    <input type="text" class="form-control" id="txtBinLongitude" data-ng-model="bin.longitude" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtBinLatitude form-label">Latitude</label>
+                    <input type="text" class="form-control" id="txtBinLatitude" data-ng-model="bin.latitude" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addBin();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal For new Taman -->
+<div class="modal fade" id="createTaman" tabindex="-1" role="dialog" aria-labelledby="createTaman" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add New Taman</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="txtTamanArea form-label">Area ID</label>
+                        <select type="text" class="form-control" id="txtTamanArea" data-ng-model="taman.areaID">
+                            <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaName}}</option>
+                        </select>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="txtTamanName form-label">Taman Name</label>
+                        <input type="text" class="form-control" id="txtTamanName" data-ng-model="taman.tamanName"/>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="txtTamanLongitude form-label">Longitude</label>
+                        <input type="text" class="form-control" id="txtTamanLongitude" data-ng-model="taman.longitude"/>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="txtTamanLatitude form-label">Latitude</label>
+                        <input type="text" class="form-control" id="txtTamanLatitude" data-ng-model="taman.latitude" />
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="txtTamanStatus form-label">Area Collection Status</label>
+                        <select type="text" class="form-control" id="txtTamanStatus" data-ng-model="taman.areaCollStatus">
+                                <option value="a">Active</option>
+                                <option value="i">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-ng-click="addTaman();">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div class="row">
     <div class="col-md-12">
@@ -206,14 +287,17 @@
 
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Entry</button>
     </div>
-    <div class="col-md-4">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Customer</button>
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createCustomer"><i class="fa fa-plus"></i> New Customer</button>
     </div>
-    <div class="col-md-4">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Bin</button>
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New Bin</button>
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createTaman"><i class="fa fa-plus"></i> New Taman</button>
     </div>
 </div>
 <br />
@@ -244,8 +328,8 @@
                                 <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr data-ng-repeat="b in databaseBinList | dateFilter:date.from:date.to | filter: wbdFilter | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                        <tbody> <!--dateFilter:date.from:date.to |filter: wbdFilter |-->
+                            <tr data-ng-repeat="b in databaseBinList |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                 <td>
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />
