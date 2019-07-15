@@ -51,7 +51,7 @@ app.post('/getDcsDetails', function(req,res){
     'use strict';
     console.log("HELLO FROM THE SERVER");
     console.log(req.body);
-    var sql = "SELECT d.acrID, c.companyName, concat(c.houseNo, c.streetNo, c.postCode, c.city) as address, d.areaID, d.beBins, d.acrBins, d.mon, d.tue, d.wed, d.thu, d.fri, d.sat, d.remarks from tbldcsentry as d inner join tblcustomer as c on d.customerID = c.customerID where d.dcsID = '" + req.body.id + "'";
+    var sql = "SELECT d.acrID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, d.areaID, d.beBins, d.acrBins, d.mon, d.tue, d.wed, d.thu, d.fri, d.sat, d.remarks from tbldcsentry as d inner join tblcustomer as c on d.customerID = c.customerID where d.dcsID = '" + req.body.id + "'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     console.log(sql);
     database.query(sql, function (err, result) {
@@ -97,7 +97,7 @@ app.post('/getDcsInfo',function(req,res){
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "SELECT * from tbldcs where dcsID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
-        if (err) {
+        if (err) { 
             throw err;
         }
 

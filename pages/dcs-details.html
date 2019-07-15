@@ -11,7 +11,7 @@
                 
                 <div class="form-group">
                     <label for="txtCompany form-label">Company Name</label>
-                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.company">
+                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.companyName">
                             <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.companyName}}</option>
                     </select>
                 </div>
@@ -74,8 +74,11 @@
 
       
 
-      <div class="col-md-1">
-            <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
+      <div class="row">
+          <div class="col-md-1">
+                <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
+
+          </div>
         </div>
 
 <div id="nodeToRenderAsPDF">
@@ -83,8 +86,8 @@
                 <div class="col-md-6">
                     <h5>Driver's Collection Schedule (for ACR Customers)</h5>
                 </div>
-                <div class="col-md-6">
-                    <p>TRIENEKENS LOGO</p>
+                <div class="col-md-6" style="background-color: darkgreen; text-align: center">
+                        <img src="/images/trienekenslogo_form.png" alt="Trienekens Logo" height= "50px">
                 </div>
             </div>
             
@@ -110,8 +113,8 @@
                         <div class="col-md-3"></div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">{{dcs[0].periodFrom}}</div>
-                        <div class="col-md-6">{{dcs[0].periodTo}}</div>
+                        <div class="col-md-6">{{dcs[0].periodFrom | date:"dd-MM-yyyy"}}</div>
+                        <div class="col-md-6">{{dcs[0].periodTo | date:"dd-MM-yyyy"}}</div>
                     </div>
                         
                 </div>
@@ -136,8 +139,8 @@
                         <div class="col-md-3"></div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">{{dcs[0].replacementPeriodFrom}}</div>
-                        <div class="col-md-6">{{dcs[0].replacementPeriodTo}}</div>
+                        <div class="col-md-6">{{dcs[0].replacementPeriodFrom | date:"dd-MM-yyyy"}}</div>
+                        <div class="col-md-6">{{dcs[0].replacementPeriodTo | date:"dd-MM-yyyy"}}</div>
                     </div>
                         
                 </div>

@@ -8,7 +8,7 @@ var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
 var DB_NAME = 'trienekens02';
-
+ 
 // Create connection
 var db = mysql.createConnection({ 
     host: DB_HOST,
@@ -222,7 +222,7 @@ emitter.on('defaultUser', function () {
 /* Emitter Registered */
 
 /* Emitter Registered */
-// Insert Dummy Data
+// Insert Dummy Data 
 emitter.on('dummyData', function () {
     'use strict';
     var sqls, i;
