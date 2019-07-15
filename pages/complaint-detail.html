@@ -134,7 +134,7 @@
 <div class="row">
     <div class="col-md-12 reportRefBox">
         <h2>Report reference</h2>
-        <div class="dropdown">
+        <div class="dropdown" data-ng-show="showReference">
           <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Choose the report date
           <span class="caret"></span></button>
           
@@ -142,14 +142,15 @@
             <p data-ng-repeat="r in reportList" data-ng-click="viewReport(r.reportID)" class="listItem" clickable>{{r.date | date: "mediumDate"}}</p>
           </div>
         </div>
+        <p data-ng-hide="showReference">No report reference</p>
     </div>
 </div>
-<div class="row">
+<div class="row" data-ng-show="showReference">
     <div class="col-md-12">
         <div class="report_reference"></div>
     </div>
 </div>
-<div class="row">
+<div class="row" data-ng-show="showReference">
     <div class="col-md-6">
         <img id="myImg" src="{{thisReport.ifleet}}" />
     </div>
