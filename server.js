@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '';
+var SVR_PORT = '3000';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -91,6 +91,8 @@ app.post('/updateAreaLngLat', function(req, res) {
         if (err) {
             throw err;
         }
+        result.type = "success";
+        result.msg = "Area's Longitude and Latitude has been added"
         res.json(result);
     });
 }); // Complete
@@ -269,7 +271,6 @@ app.get('/getCollectedLngLat',function(req,res){
 
 app.post('/emailandupdate',function(req,res){
     'use strict';
-    console.log("testing");
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -294,7 +295,6 @@ app.post('/emailandupdate',function(req,res){
     };
 
     transporter.sendMail(mailOptions, function(error, info){
-        console.log("abc");
       if (error) {
         console.log(error);
       } else {

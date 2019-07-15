@@ -57,27 +57,38 @@ app.post('/getDcsDetails', function(req,res){
     database.query(sql, function (err, result) {
         if (err) {
             throw err; 
-        }
+        } 
+         
         res.json(result);
-        console.log(result);
+        console.log(result); 
     });
-});
+}); 
 
-app.post('/addDcsDetails',function(req,res){
+app.post('/addDcsEntry',function(req,res){ 
     'use strict';
-    var today = new Date();
+    //console.log("DCS ID: " + req.body.dcsID);
+    var sql = "INSERT INTO tbldcsentry (idNo, dcsID, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + null + "', '" + req.body.dcsID + "' , '"  + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
 
-    f.makeID("dcs", req.body.creationDate).then(function (ID) {
-        
-        var sql = "INSERT INTO tbldcsentry (dcsID, acrfNo, customerID, periodFrom, periodTo, replacementDriver, replacementPeriodFrom, replacementPeriodTo, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driver + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriver + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', 'A')";
-        database.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-
-            res.json({"status": "success", "message": "ACR created!", "details": {"dcsID": ID}});
-        });
+        res.json({"status": "success", "message": "ACR created!", "details": {"dcsID": req.body.dcsID}});
     });
 }); // Complete
 
-module.exports = app;
+app.post('/getCustomerID', function(req,res){
+    'use strict';
+    console.log(req.body);
+    var sql = "SELECT customerID from tblcustomer where companyName = '" + req.body.companyName + "' and houseNo = '" + req.body.houseNo + "' and streetNo = '" + req.body.streetNo + "' and postCode = '" + req.body.postCode + "' and city = '" + req.body.city + "'";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+        res.json(result);
+        console.log("Customer ID:" + result);  
+    }); 
+});
+
+module.exports = app; 

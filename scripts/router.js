@@ -246,8 +246,8 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: function (params) {
             return '/dcs-details/' + params.dcsID;
         },
-        controller:'acrController',
-        controllerAs:'acr'
+        controller:'dcsDetailsController',
+        controllerAs:'dcs'
     })
     .when('/bdaf-details/:bdafID', {
         resolve: {
