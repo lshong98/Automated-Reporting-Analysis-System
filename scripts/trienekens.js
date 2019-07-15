@@ -2963,7 +2963,6 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     });
 
     $scope.complaintDetail = function(complaintCode) {
-        console.log(complaintCode);
         window.location.href = '#/complaint-detail/' + complaintCode;
 
     };
@@ -3070,7 +3069,9 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         };
         $http.post('/getDateListForComplaint', $scope.req2).then(function(response) {
             $scope.reportList = response.data;
+            $scope.showReference = ($scope.reportList.length == 0 ? false : true);
         });
+        
         
         //initialize email subject and text
         $scope.emailobj.id = $routeParams.complaintCode;
@@ -3103,7 +3104,6 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         var $googleMap, map;
 
         $http.post('/getReportForComplaint', $scope.report).then(function(response) {
-            console.log(response.data)
             $('div.report_reference').html(response.data.content);
             $scope.thisReport = response.data.result[0];
         });
