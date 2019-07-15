@@ -504,12 +504,12 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             });
         };
         //BIN INVENTORY MODULE EDITABLE TABLES
-        scope.editDatabaseBin = function(date, name, icNo, serialNo, rcDwell, houseNo, tmnKpg, areaCode, status, comment, binSize, address, companyName, acrfSerialNo, itemType, path) {
+        scope.editDatabaseBin = function(idNo, date, customerID, areaID, serialNo, acrID, activeStatus, rcDwell, comment, itemType, path) {
             scope.showDatabaseBin = !scope.showDatabaseBin;
             //scope.b.area = area;
             angular.element('.selectpicker').selectpicker('refresh');
             angular.element('.selectpicker').selectpicker('render');
-            scope.thisDatabaseBin = { "date": date, "name": name, "icNo": icNo, "serialNo": serialNo, "rcDwell": rcDwell, "houseNo": houseNo, "tmnKpg": tmnKpg, "areaCode": areaCode, "status": status, "comment": comment, "binSize": binSize, "address": address, "companyName": companyName, "acrfSerialNo": acrfSerialNo, "itemType": itemType, "path": path };
+            scope.thisDatabaseBin = { "idNo": idNo, "date": date, "customerID": customerID, "areaID": areaID, "serialNo": serialNo, "acrID": acrID, "activeStatus": activeStatus, "rcDwell": rcDwell, "comment": comment, "itemType": itemType, "path": path};
         };
         scope.saveDatabaseBin = function() {
             scope.showDatabaseBin = !scope.showDatabaseBin;
@@ -2362,27 +2362,6 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.binList = [];
     $scope.acrList = [];
 
-    //get list of IC
-    var getIc = "select ic from tblCustomer";
-    var ic = $scope.databaseBin.icNo;
-
-    //auto-fill based on IC
-    var customerName = "Select customerName from tblCustomer where ic = " + ic;
-    var customerId = "select customerId from tblCustomer where ic = " + ic;
-    var contactNumber = "select contactNumber from tblCustomer where ic = " + ic;
-    var houseNo = "select houseNo from tblCustomer where ic = " + ic;
-    var tmnKpg = "select tmnKpg from tblCustomer where ic = " + ic;
-    var streetNo = "select streetNo from tblCustomer where ic = " + ic;
-    var postCode = "select postCode from tblCustomer where ic = " + ic;
-    var city = "select city from tblCustomer where ic = " + ic;
-    var address = houseNo + ', ' + streetNo + ', ' + tmnKpg + ', ' + postCode + ', ' + city;
-
-
-    $scope.databaseBin.name = customerName;
-    $scope.databaseBin.houseNo = houseNo;
-    $scope.databaseBin.tmnKpg = tmnKpg;
-    $scope.databaseBin.address = address;
-
 
     //get bin size
     $scope.binSize = ['120L', '240L', '660L', '1000L'];
@@ -2412,7 +2391,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                     "message": "New Entry added successfully!"
                 });
                 console.log("Hello from addDatabaseBin serverside!");
-                $scope.databaseBinList.push({ "date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.ic, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnkpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": concat($scope.databaseBin.houseNo,$scope.databaseBin.streetNo,$scope.databaseBin.tmgkpg), "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrID, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
+                $scope.databaseBinList. push({ "date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.ic, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnkpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": concat($scope.databaseBin.houseNo,$scope.databaseBin.streetNo,$scope.databaseBin.tmgkpg), "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrID, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
                 //storeDataService.databaseBin = angular.copy($scope.databaseBinList);
                 //$scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
                 angular.element('#createDatabaseBin').modal('toggle');
@@ -2495,6 +2474,37 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                  }
              });
         
+    }
+
+    $scope.customerID = "";
+
+    $scope.editCustomer = function(idNo){
+        for( x=0; x<$scope.databaseBinList.length ; x++ ){
+            if($scope.databaseBinList[x].idNo === idNo){
+                $scope.databaseBinList[x].customerID = $scope.customerID;
+
+                $http.post('/updateWBDCustomer', $scope.databaseBinList[x]).then(function (response) {
+       
+                    $scope.notify(response.data.status, response.data.message);
+                    
+                    if (response.data.status === 'success') {
+                        angular.element('body').overhang({
+                            type: "success",
+                            "message": "Customer updated successfully!"
+                        });
+                        console.log("Hello from updateWBDCustomer serverside!");
+                        $scope.customerList.push({"name": $scope.customer.name, "ic": $scope.customer.ic, "companyName": $scope.customer.companyName});
+                        
+                        $http.get('/getAllDatabaseBin').then(function(response) {
+
+                            $scope.databaseBinList = response.data;
+                            console.log($scope.databaseBinList);
+                            storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+                        });
+                    }
+                });
+            }
+        }
     }
 
     //Adds new bin to the database
@@ -2970,7 +2980,6 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     });
 
     $scope.complaintDetail = function(complaintCode) {
-        console.log(complaintCode);
         window.location.href = '#/complaint-detail/' + complaintCode;
 
     };
@@ -3077,7 +3086,9 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         };
         $http.post('/getDateListForComplaint', $scope.req2).then(function(response) {
             $scope.reportList = response.data;
+            $scope.showReference = ($scope.reportList.length == 0 ? false : true);
         });
+        
         
         //initialize email subject and text
         $scope.emailobj.id = $routeParams.complaintCode;
@@ -3110,7 +3121,6 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         var $googleMap, map;
 
         $http.post('/getReportForComplaint', $scope.report).then(function(response) {
-            console.log(response.data)
             $('div.report_reference').html(response.data.content);
             $scope.thisReport = response.data.result[0];
         });
