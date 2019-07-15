@@ -36,7 +36,7 @@ db.connect(function (err) {
                     console.log('MySQL Connected...');
                     emitter.emit('createTable');
                     emitter.emit('defaultUser');
-                    //emitter.emit('dummyData');
+                    emitter.emit('dummyData');
                 });
             });
         } else {
@@ -76,7 +76,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbdafentry (  idNo int auto_increment,  bdafID int,  customerID int,  acrID varchar(15),  serialNo varchar(15),  binDelivered varchar(15),  binPulled varchar(15),  jobDesc longtext,  remarks longtext,  completed boolean,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (acrID) references tblacr(acrID),  foreign key (bdafID) references tblbdaf(bdafID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (binDelivered) references tblbins(serialNo),  foreign key (binPulled) references tblbins(serialNo))",
         "CREATE TABLE tbldcs (  dcsID VARCHAR(15),  creationDateTime datetime,  status varchar(25), driver varchar(50), periodFrom date, periodTo date, replacementDriver varchar(50), replacementPeriodFrom date, replacementPeriodTo date, PRIMARY KEY (dcsID))",
         "CREATE TABLE tbldcsentry (  idNo int auto_increment,  dcsID VARCHAR(15),  acrID varchar(15),  customerID int,  areaID varchar(15),  beBins int,  acrBins int,  mon boolean,  tue boolean,  wed boolean,  thu boolean,  fri boolean,  sat boolean,  remarks longtext,  PRIMARY KEY (idNo),  foreign key (acrID) references tblacr(acrID),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (dcsID) references tbldcs(dcsID))",
-        "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID int,  areaID varchar(15),  serialNo varchar(15),  acrID varchar(15),  activeStatus char(1),  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
+        "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID int,  areaID varchar(15),  serialNo varchar(15),  acrID varchar(15),  activeStatus char(1),,'rc Dwell', 'comment', 'item type 1', 'path 1'  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
         "CREATE TABLE tbluseractions (  date datetime,  staffID varchar(15),  action varchar(20),  onObject varchar(20),  PRIMARY KEY (date, staffID),  foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblaccess (  positionID varchar(15),  mgmtID int,  status char(1),  primary key (positionID, mgmtID),  foreign key (positionID) references tblposition(positionID),  foreign key (mgmtID) references tblmanagement(mgmtID))",
         "CREATE TABLE tblreport (  reportID VARCHAR(15),  areaID VARCHAR(15),  reportCollectionDate date,  creationDateTime datetime,  operationTimeStart time,  operationTimeEnd time,  garbageAmount int,  iFleetMap mediumtext,  readStatus char(1),  completionStatus char(1),  truckID varchar(15),  driverID varchar(15),  zoom double(2,2),  remark text,  PRIMARY KEY (reportID),  foreign key (areaID) references tblarea(areaID),  foreign key (truckID) references tbltruck(truckID),  foreign key (driverID) references tblstaff(staffID))",
@@ -252,7 +252,7 @@ emitter.on('dummyData', function () {
         "insert into tblbdafentry values(NULL, '1','1','a001','1','1','1','bin was delivered','no remarks',true)",
         "insert into tbldcs  values('a001',current_timestamp(),'a',current_date(),current_date()+interval 1 day,'a001','a001',current_date(), current_date()+interval 1 day)",
         "insert into tbldcsentry values(NULL, 'a001','a001','1','a001','1','1',true,false,true,true,false,false,'no remarks')",
-        "insert into tblwheelbindatabase values(NULL, current_timestamp(),'1','a001','1','a001','a')",
+        "insert into tblwheelbindatabase values(NULL, current_timestamp(),'1','a001','1','a001','a','rc Dwell', 'comment', 'item type 1', 'path 1')",
         "insert into tbluseractions values(current_timestamp(),'a001','delete','tblbins')",
         "insert into tblaccess values('200','1','a')",
         "insert into tblreport values('a001','a001',current_date(),current_timestamp(),current_time(),current_time(),'10','this is a map','a','a','a001','a001','0.11','no remark')",

@@ -47,6 +47,21 @@ app.post('/addDatabaseBin', function (req, res) {
     });
 });
 
+app.post('/updateWBDCustomer', function (req, res) {
+    'use strict';
+
+    var sql = `update tblwheelbindatabase set customerID = ${req.body.customerID} where idNo = ${req.body.idNo}`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log("Update WBD entry success");
+        console.log(result);
+        res.json({"status": "success", "message": "WBD Entry updated successfully!"});
+        
+    });
+});
+
 app.post('/addCustomer', function (req, res) {
     'use strict';
     console.log(`${req.body.tamanID}`);
