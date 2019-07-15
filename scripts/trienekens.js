@@ -704,7 +704,7 @@ app.run(function($rootScope) {
         var zone = place.zone.replace(" ", "+");
         var concat = area + '+' + zone;
 
-        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
     };
 });
 
@@ -1218,19 +1218,30 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
                     lng = 0,
                     myPlace, address;
 
-                console.log($scope.newArea);
                 $http.post('/getGoogleLocation', $scope.newArea).then(function(response) {
                     address = $scope.geocodeLink(response.data[0]);
 
                     $http.get(address).then(function(response) {
+                        if(response.data.status == "ZERO_RESULTS"){
+                            angular.element('body').overhang({
+                                type: "error",
+                                message: "Cant obtain area's Longitude and Latitude."
+                            });
+                            
+                        }else{
                         // JSON data returned by API above
-                        var myPlace = response.data;
+                            var myPlace = response.data;
 
-                        $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
-                        $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
-                        $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
+                            $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
+                            $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
+                            $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
+                                angular.element('body').overhang({
+                                    type: response.data.type,
+                                    message: response.data.msg
+                                });                                
+                            });
+                        }
 
-                        });
                     });
                 });
             }
