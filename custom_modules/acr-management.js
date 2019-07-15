@@ -50,35 +50,38 @@ app.post('/getDcsDetails', function(req,res){
     database.query(sql, function (err, result) {
         if (err) {
             throw err; 
-        }
+        } 
+         
         res.json(result);
-        console.log(result);
+        console.log(result); 
     });
-});
+}); 
 
-app.post('/addDcsEntry',function(req,res){
+app.post('/addDcsEntry',function(req,res){ 
     'use strict';
-        
-    var sql = "INSERT INTO tbldcsentry (idNo, dcsID, acrID, customerID, areaID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + null + "', '" + req.body.dcsID + "' , '" + req.body.acrID + "', '" + req.body.customerID + "', '" + req.body.areaID + "', '" + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + "', '" + req.body.wed + "', '" + "', '" + req.body.thu + "', '" + "', '" + req.body.fri + "', '" + "', '" + req.body.sat + "', '" + "', '" + req.body.remarks + "')";
+    //console.log("DCS ID: " + req.body.dcsID);
+    var sql = "INSERT INTO tbldcsentry (idNo, dcsID, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + null + "', '" + req.body.dcsID + "' , '"  + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
 
-        res.json({"status": "success", "message": "ACR created!", "details": {"dcsID": ID}});
+        res.json({"status": "success", "message": "ACR created!", "details": {"dcsID": req.body.dcsID}});
     });
 }); // Complete
 
-app.get('/getCustomerID', function(req,res){
+app.post('/getCustomerID', function(req,res){
     'use strict';
-    var sql = "SELECT customerID from tblcustomer where companyName = '" + req.body.companyName + "' and address = '" + req.body.address + "'";
+    console.log(req.body);
+    var sql = "SELECT customerID from tblcustomer where companyName = '" + req.body.companyName + "' and houseNo = '" + req.body.houseNo + "' and streetNo = '" + req.body.streetNo + "' and postCode = '" + req.body.postCode + "' and city = '" + req.body.city + "'";
     
     database.query(sql, function (err, result) {
         if (err) {
             throw err; 
         }
         res.json(result);
+        console.log("Customer ID:" + result);  
     }); 
 });
 
-module.exports = app;
+module.exports = app; 

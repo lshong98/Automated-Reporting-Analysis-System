@@ -324,6 +324,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             "outReusable660": 0,
             "outReusable1000": 0
         }
+        
 
 
         scope.notify = function(stat, mes) {
@@ -2084,10 +2085,8 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     'use strict';
     $scope.areaList = [];
     $scope.dcsList = [];
-    $scope.dcsDetails = [];
-    $scope.dcsID = {
-        "id": ''
-    };
+    
+
 
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
@@ -2096,13 +2095,6 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 
     $scope.viewdcs = function(dcsID) {
         window.location.href = '#/dcs-details/' + dcsID;
-
-        $scope.dcsID.id = dcsID;
-        $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.dcsDetails = response.data;
-    
-        });
     }
 
     function initializeDcs() { 
@@ -2158,38 +2150,71 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             }
         });
     }
-
-
-    $scope.addDcsEntry = function() {
-        $scope.dcsEntry.dcsID = $scope.dcsID.id;
-        
-        $http.post('/getCustomerID').then(function(response) {
-            $scope.dcsEntry.customerID = response.data;
-            if (returnedData.status === "success"){
-                // IMPLEMENT IF FUNTION
-            }
-        });
-
-
-        $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
-            
-            var returnedData = response.data;
-
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "DCS Entry added successfully!"
-                });
-
-
-                $scope.dcsEntryList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.address, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
-              
-                angular.element('#createDcsEntry').modal('toggle');
-            }
-        });
-    }
     
     
+});
+
+app.controller('dcsDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
+
+    $scope.show = angular.copy(storeDataService.show.dcsDetails);
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    
+    
+    $scope.dcsDetails = [];
+    $scope.dcsID = {};
+    $scope.dcsID.id = $routeParams.dcsID;
+
+    
+
+        $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
+            console.log($scope.dcsID);
+            $scope.searchAcrFilter = '';
+            $scope.dcsDetails = response.data;
+            console.log($scope.dcsDetails); 
+        });
+
+        $scope.addDcsEntry = function() {
+            $scope.dcsEntry.dcsID = $routeParams.dcsID;
+    
+            var address = $scope.dcsEntry.address.split(", ");
+            $scope.customerInfo = {};
+    
+            console.log(address);
+            $scope.customerInfo.houseNo = address[0];
+            $scope.customerInfo.streetNo = address[1];
+            $scope.customerInfo.postCode = address[2];
+            $scope.customerInfo.city = address[3];
+            $scope.customerInfo.companyName = $scope.dcsEntry.companyName;
+             
+    
+            $http.post('/getCustomerID', $scope.customerInfo).then(function(response) {
+                
+                $scope.dcsEntry.customerID = response.data[0].customerID;
+                console.log("Customer ID from client side: " + response.data[0].customerID);
+            });
+    
+    
+            console.log("DCS ID: " + $scope.dcsEntry.dcsID + "\nAddress: " + address + "\nCustomer ID: " + $scope.dcsEntry.customerID);
+    
+            $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
+                
+                var returnedData = response.data;
+    
+                if (returnedData.status === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        "message": "DCS Entry added successfully!"
+                    });
+    
+    
+                    $scope.dcsEntryList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.address, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
+                  
+                    angular.element('#createDcsEntry').modal('toggle');
+                }
+            });
+        }
 });
 
 app.controller('databaseBinController', function($scope, $http, $filter, storeDataService) {

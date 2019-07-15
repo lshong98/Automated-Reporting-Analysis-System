@@ -4,13 +4,13 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = '';
-var DB_USER = '';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens02';
 
 // Create connection
-var db = mysql.createConnection({
+var db = mysql.createConnection({ 
     host: DB_HOST,
     user: DB_USER,
     password: DB_PASS
@@ -75,7 +75,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbdaf (  bdafID int auto_increment,  creationDateTime datetime,  status char(1),  PRIMARY KEY (bdafID))",
         "CREATE TABLE tblbdafentry (  idNo int auto_increment,  bdafID int,  customerID int,  acrID varchar(15),  serialNo int,  binDelivered int,  binPulled int,  jobDesc longtext,  remarks longtext,  completed boolean,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (acrID) references tblacr(acrID),  foreign key (bdafID) references tblbdaf(bdafID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (binDelivered) references tblbins(serialNo),  foreign key (binPulled) references tblbins(serialNo))",
         "CREATE TABLE tbldcs (  dcsID VARCHAR(15),  creationDateTime datetime,  status varchar(25), driver varchar(50), periodFrom date, periodTo date, replacementDriver varchar(50), replacementPeriodFrom date, replacementPeriodTo date, PRIMARY KEY (dcsID))",
-        "CREATE TABLE tbldcsentry (  idNo int auto_increment,  dcsID VARCHAR(15),  acrID varchar(15),  customerID int,  areaID varchar(15),  beBins int,  acrBins int,  mon boolean,  tue boolean,  wed boolean,  thurs boolean,  fri boolean,  sat boolean,  remarks longtext,  PRIMARY KEY (idNo),  foreign key (acrID) references tblacr(acrID),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (dcsID) references tbldcs(dcsID))",
+        "CREATE TABLE tbldcsentry (  idNo int auto_increment,  dcsID VARCHAR(15),  acrID varchar(15),  customerID int,  areaID varchar(15),  beBins int,  acrBins int,  mon boolean,  tue boolean,  wed boolean,  thu boolean,  fri boolean,  sat boolean,  remarks longtext,  PRIMARY KEY (idNo),  foreign key (acrID) references tblacr(acrID),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (dcsID) references tbldcs(dcsID))",
         "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID int,  areaID varchar(15),  serialNo int,  acrID varchar(15),  activeStatus char(1),  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
         "CREATE TABLE tbluseractions (  date datetime,  staffID varchar(15),  action varchar(20),  onObject varchar(20),  PRIMARY KEY (date, staffID),  foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblaccess (  positionID varchar(15),  mgmtID int,  status char(1),  primary key (positionID, mgmtID),  foreign key (positionID) references tblposition(positionID),  foreign key (mgmtID) references tblmanagement(mgmtID))",
@@ -137,7 +137,10 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view reporting')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit reporting')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create reporting')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('export reporting')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('export reporting')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('create dcsDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit dcsDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view dcsDetails')",
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -165,7 +168,7 @@ emitter.on('defaultUser', function () {
         db.query(sql, function (err, result) {
             if (err) {
                 throw err;
-            }                    
+            }                     
             var sqls = [
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '1', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '2', 'A')",
@@ -200,6 +203,9 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '31', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '32', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '33', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '34', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '35', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '36', 'A')",
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {
