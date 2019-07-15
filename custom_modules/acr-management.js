@@ -77,18 +77,31 @@ app.post('/addDcsEntry',function(req,res){
     });
 }); // Complete
 
-app.post('/getCustomerID', function(req,res){
+
+app.get('/getCustomerList', function(req,res){
     'use strict';
     console.log(req.body);
-    var sql = "SELECT customerID from tblcustomer where companyName = '" + req.body.companyName + "' and houseNo = '" + req.body.houseNo + "' and streetNo = '" + req.body.streetNo + "' and postCode = '" + req.body.postCode + "' and city = '" + req.body.city + "'";
+    var sql = "SELECT * from tblcustomer";
     
     database.query(sql, function (err, result) {
         if (err) {
             throw err; 
         }
         res.json(result);
-        console.log("Customer ID:" + result);  
+        console.log(result);
     }); 
 });
 
+app.post('/getDcsInfo',function(req,res){ 
+    'use strict';
+    //console.log("DCS ID: " + req.body.dcsID);
+    var sql = "SELECT * from tbldcs where dcsID = '" + req.body.id + "'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
 module.exports = app; 
