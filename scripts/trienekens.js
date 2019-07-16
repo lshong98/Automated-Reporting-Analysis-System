@@ -504,17 +504,24 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             });
         };
         //BIN INVENTORY MODULE EDITABLE TABLES
-        scope.editDatabaseBin = function(idNo, date, customerID, areaID, serialNo, acrID, activeStatus, rcDwell, comment, itemType, path) {
+        scope.editDatabaseBin = function() {
             scope.showDatabaseBin = !scope.showDatabaseBin;
             //scope.b.area = area;
+
+            
+            console.log("hello from editDatabaseBin");
             angular.element('.selectpicker').selectpicker('refresh');
             angular.element('.selectpicker').selectpicker('render');
-            scope.thisDatabaseBin = { "idNo": idNo, "date": date, "customerID": customerID, "areaID": areaID, "serialNo": serialNo, "acrID": acrID, "activeStatus": activeStatus, "rcDwell": rcDwell, "comment": comment, "itemType": itemType, "path": path};
+            
         };
-        scope.saveDatabaseBin = function() {
+        scope.saveDatabaseBin = function(id, date, customerID, serialNo, acrfSerialNo, status, rcDwell, comment, itemType, path) {
             scope.showDatabaseBin = !scope.showDatabaseBin;
 
-            $http.post('/editDatabaseBin', scope.b).then(function(response) {
+            scope.thisDatabaseBin = { "idNo": id, "date": date, "customerID": customerID, "serialNo": serialNo, "acrID": acrfSerialNo, "activeStatus": status, "rcDwell": rcDwell, "comment": comment, "itemType": itemType, "path": path};
+            console.log("The databasebin thing: ");
+            console.log(scope.thisDatabaseBin);
+
+            $http.post('/editDatabaseBin', scope.thisDatabaseBin).then(function(response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
