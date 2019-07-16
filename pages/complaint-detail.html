@@ -126,9 +126,7 @@
                     </div>
                 </div>
             </div>
-        </div>  
-
-
+        </div>
     </div>
 </div>
 <div class="row">
@@ -142,7 +140,7 @@
             <p data-ng-repeat="r in reportList" data-ng-click="viewReport(r.reportID)" class="listItem" clickable>{{r.date | date: "mediumDate"}}</p>
           </div>
         </div>
-        <p data-ng-hide="showReference">No report reference</p>
+        <p data-ng-hide="showReference">No report reference available! Has no historical report data in database for the specific area.</p>
     </div>
 </div>
 <div class="row" data-ng-show="showReference">
