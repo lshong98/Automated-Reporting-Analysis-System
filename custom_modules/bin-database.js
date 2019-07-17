@@ -47,10 +47,10 @@ app.post('/addDatabaseBin', function (req, res) {
     });
 });
 
-app.post('/updateWBDCustomer', function (req, res) {
+app.post('/editDatabaseBin', function (req, res) {
     'use strict';
 
-    var sql = `update tblwheelbindatabase set customerID = ${req.body.customerID} where idNo = ${req.body.idNo}`;
+    var sql = `update tblwheelbindatabase set date ='${req.body.date}', customerID = '${req.body.customerID}', areaID = 'a001', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}', itemType = '${req.body.itemType}', path = '${req.body.path}' where idNo = ${req.body.idNo}`;
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

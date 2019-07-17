@@ -338,8 +338,8 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <select type="text" class="form-control" data-ng-model="customerID" data-ng-show="!showDatabaseBin" data-ng-click="editCustomer(b.idNo)">
-                                                <option data-ng-repeat="c in customerList" value={{c.customerID}} data-ng-click="editCustomer(b.idNo)">{{c.ic}} - {{c.name}}</option>
+                                        <select type="text" class="form-control" data-ng-model="b.customerID" data-ng-show="!showDatabaseBin">
+                                                <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.ic}} - {{c.name}}</option>
                                         </select>
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.name"></span>
                                     </div>
@@ -384,7 +384,7 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.activeStatus" data-ng-show="!showDatabaseBin" />
+                                        <input type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showDatabaseBin" />
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.activeStatus"></span>
                                     </div>
                                 </td>
@@ -431,9 +431,9 @@
                                     </div>
                                 </td>
                                 <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showDatabaseBin" data-ng-click="editDatabaseBin(b.idNo, b.date, b.customerID, b.areaID, b.serialNo, b.acrID, b.activeStatus, b.rcDwell, b.comment, b.itemType, b.path);"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showDatabaseBin" data-ng-click="editDatabaseBin();"><i class="fa fa-pencil-alt"></i></button>
                                     <button class="btn btn-sm btn-danger" data-ng-show="showDatabaseBin" data-ng-click="deleteDatabaseBin(b.serialNo)"><i class="fas fa-trash-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showDatabaseBin" data-ng-click="saveDatabaseBin();"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showDatabaseBin" data-ng-click="saveDatabaseBin(b.id, b.date, b.customerID, b.serialNo, b.acrfSerialNo, b.status, b.rcDwell, b.comment, b.itemType, b.path);"><i class="fa fa-save"></i></button>
                                     <button class="btn btn-sm btn-default" data-ng-show="!showDatabaseBin" data-ng-click="cancelDatabaseBin();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
