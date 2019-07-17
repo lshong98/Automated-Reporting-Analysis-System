@@ -2483,37 +2483,6 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         
     }
 
-    $scope.customerID = "";
-
-    $scope.editCustomer = function(idNo){
-        for( x=0; x<$scope.databaseBinList.length ; x++ ){
-            if($scope.databaseBinList[x].idNo === idNo){
-                $scope.databaseBinList[x].customerID = $scope.customerID;
-
-                $http.post('/updateWBDCustomer', $scope.databaseBinList[x]).then(function (response) {
-       
-                    $scope.notify(response.data.status, response.data.message);
-                    
-                    if (response.data.status === 'success') {
-                        angular.element('body').overhang({
-                            type: "success",
-                            "message": "Customer updated successfully!"
-                        });
-                        console.log("Hello from updateWBDCustomer serverside!");
-                        $scope.customerList.push({"name": $scope.customer.name, "ic": $scope.customer.ic, "companyName": $scope.customer.companyName});
-                        
-                        $http.get('/getAllDatabaseBin').then(function(response) {
-
-                            $scope.databaseBinList = response.data;
-                            console.log($scope.databaseBinList);
-                            storeDataService.databaseBin = angular.copy($scope.databaseBinList);
-                        });
-                    }
-                });
-            }
-        }
-    }
-
     //Adds new bin to the database
     $scope.addBin = function() {
         //console.log($scope.customer.tamanID);
