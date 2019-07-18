@@ -14,7 +14,7 @@ var DB_NAME = 'trienekenstest';*/
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens02';
  
 // Create connection
 var db = mysql.createConnection({ 
