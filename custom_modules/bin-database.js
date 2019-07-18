@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
+var moment = require('moment');
 
 
 app.get('/getAllDatabaseBin', function (req, res) {
@@ -35,7 +36,11 @@ app.post('/deleteDatabaseBin', function (req, res) {
 app.post('/addDatabaseBin', function (req, res) {
     'use strict';
 
-    var sql = `insert into tblwheelbindatabase values(NULL,'${req.body.date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}','${req.body.acrID}','${req.body.activeStatus}','${req.body.rcDwell}', '${req.body.comment}','${req.body.itemType}','${req.body.path}')`;
+    let current_datetime = req.body.date;
+    let formatted_date = moment(current_datetime).format("YYYY-MM-DD hh:mm:ss");
+    console.log(formatted_date);
+
+    var sql = `insert into tblwheelbindatabase values(NULL,'${formatted_date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}','${req.body.acrID}','${req.body.activeStatus}','${req.body.rcDwell}', '${req.body.comment}','${req.body.itemType}','${req.body.path}')`;
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
