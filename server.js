@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '';
+var SVR_PORT = '3000';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -92,7 +92,7 @@ app.post('/updateAreaLngLat', function(req, res) {
             throw err;
         }
         result.type = "success";
-        result.msg = "Area's Longitude and Latitude has been added"
+        result.msg = "Area's Longitude and Latitude has been added";
         res.json(result);
     });
 }); // Complete
