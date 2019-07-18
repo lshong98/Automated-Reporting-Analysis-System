@@ -18,6 +18,137 @@
         cursor: pointer;
         padding: 5px 10px 0px 10px;
     }
+    .chat-box {
+        margin-top: 10px;
+        background-color: aliceblue;
+        border-radius: 7px;
+        min-height: 85%;
+        max-height: 85%;
+        margin-bottom: 10px;
+        padding-top: 5px;
+        overflow-y: auto;
+    }
+    .chat-input {
+        margin-bottom: -15px;
+        position: absolute;
+        bottom: 0;
+        width: 95.55%;
+    }
+    .sender, .recipient {
+        background-color: antiquewhite;
+        padding: 15px 15px;
+        border-radius: 10px;
+    }
+    .message-wrapper {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    
+    
+    
+    
+    
+    
+    
+/*    */
+    .message {
+  margin: 10px 0;
+  overflow: hidden;
+}
+.message-text {
+  padding: 10px 20px;
+  float: right;
+  clear: both;
+  border-radius: 25px;
+  position: relative;
+  margin-bottom: 1px;
+}
+.message.left .message-text {
+  margin-right: 70px;
+  margin-left: 20px;
+  background-color: white;
+  border: 1px solid #e5e5ea;
+  float: left;
+}
+.message.right .message-text {
+  margin-left: 70px;
+  margin-right: 20px;
+  background-color: white;
+  border: 1px solid #e5e5ea;
+  color: black;
+  float: right;
+}
+
+.message-text:last-child:before,
+.message-text:last-child:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 35px;
+  height: 25px;
+  z-index: -1;
+}
+
+.message.right .message-text:before,
+.message.right .message-text:after {
+  border-radius: 0 0 0 50%;
+}
+.message.right .message-text:before {
+  height: 20px;
+  right: -23px;
+  background-color: #e5e5ea;
+}
+.message.right .message-text:after {
+  right: -35px;
+  bottom: -3px;
+  background-color: aliceblue;
+    z-index: 1;
+}
+
+
+.message.left .message-text:before,
+.message.left .message-text:after {
+  border-radius: 0 0 50% 0;
+}
+.message.left .message-text:before {
+  height: 20px;
+  left: -23px;
+  background-color: #e5e5ea;
+}
+.message.left .message-text:after {
+  left: -35px;
+  bottom: -3px;
+  background-color: aliceblue;
+}
+
+.send-container {
+  background-color: #f6f6f6;
+  border: 1px solid #dcdcdc;
+  margin-top: -1px;
+  padding: 10px;
+}
+.send-input {
+  border-radius: 5px;
+  border: 1px solid #dbdbdb;
+  background-color: #fff;
+  padding: 5px 5px;
+  font-size: 1em;
+  width: 78%;
+}
+.send-btn {
+  text-decoration: none;
+  color: #939297;
+  font-weight: bold;
+  background-color: transparent;
+  border: none;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.message-time {
+    font-size: 10px;
+}
+/*    */
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -36,6 +167,7 @@
         <p><strong>Content: </strong></p>
         <p class="contentBox">{{comDetail.content}}</p>
     </div>
+<!--
     <div class="col-md-6">
         <div class="row"><div class="col-md-12"><strong>Status:{{comDetail.status}}</strong></div></div>
         <br/>
@@ -127,6 +259,86 @@
                 </div>
             </div>
         </div>
+    </div>
+-->
+    <div class="col-md-6">
+<!--        <div class="row">-->
+<!--            <div class="col-md-12">-->
+        <div class="chat-box">
+            <div class="message left">
+                <div class="message-text">
+                    <div><b>May be Name</b></div>
+                    Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello!
+                    Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello!
+                    <div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> 11:00</small></div>
+                </div>
+            </div>
+            
+            <div class="message right">
+                <div class="message-text">
+                    Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello!
+                    Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello!
+                    <div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> 11:00</small></div>
+                </div>
+            </div>
+            
+            <div class="message right">
+                <div class="message-text">
+                    Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello!
+                    Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello!
+                    <div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> 11:00</small></div>
+                </div>
+            </div>
+            
+            <div class="message left">
+                <div class="message-text">
+                    <div><b>May be Name</b></div>
+                    Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello!
+                    Hello! Hello! Hello! Hello! Hello! Hello! Hello! Hello!
+                    <div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> 11:00</small></div>
+                </div>
+            </div>
+            
+            
+<!--
+            <div class="message-wrapper text-left">
+                <img src="https://headlines.liu.edu/wp-content/uploads/2017/04/GenericProfilePhoto-Blue-Round.png" alt="" width="8%" />
+                <span class="sender">
+                    Msg 1
+                    <small class="text-muted"><i class="fa fa-clock"></i> 11:00</small>
+                </span>
+            </div>
+            <div class="message-wrapper text-right">
+                <span class="recipient">
+                    Msg 2
+                    <span><i class="fa fa-clock"></i> 12:00</span>
+                </span>
+                <img src="https://headlines.liu.edu/wp-content/uploads/2017/04/GenericProfilePhoto-Blue-Round.png" alt="" width="8%" />
+            </div>
+            <div class="message-wrapper text-right">
+                <span class="recipient">
+                    Msg 3
+                    <span><i class="fa fa-clock"></i> 13:00</span>
+                </span>
+                <img src="https://headlines.liu.edu/wp-content/uploads/2017/04/GenericProfilePhoto-Blue-Round.png" alt="" width="8%" />
+            </div>
+-->
+        </div>
+<!--
+            </div>
+        </div>
+-->
+            
+<!--        <div class="row ">-->
+            <div class="chat-input">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Enter your message" aria-label="Enter your message">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="button"><i class="fa fa-paper-plane"></i> Send</button>
+                    </div>
+                </div>
+            </div>
+<!--        </div>-->
     </div>
 </div>
 <div class="row">
