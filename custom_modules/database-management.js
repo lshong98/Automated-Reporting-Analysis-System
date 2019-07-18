@@ -5,10 +5,10 @@ var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
 // Cloud database access
-/*var DB_HOST = '35.247.180.192';
-var DB_USER = 'root';
-var DB_PASS = 'root';
-var DB_NAME = 'trienekenstest2';*/
+// var DB_HOST = '35.247.180.192';
+// var DB_USER = 'root';
+// var DB_PASS = 'root';
+// var DB_NAME = 'trienekenstest2';
 
 // Local database access
 var DB_HOST = 'localhost';

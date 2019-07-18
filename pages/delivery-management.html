@@ -1,104 +1,89 @@
-<!-- Modal -->
-<div class="modal fade" id="chooseArea" tabindex="-1" role="dialog" aria-labelledby="chooseArea" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
+<!-- ACR Modal -->
+<div class="modal fade" id="createBDAF" tabindex="-1" role="dialog" aria-labelledby="createBDAF" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Choose Zone and Area</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+              <h5 class="modal-title" id="exampleModalLongTitle">Add BDAF</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
             <div class="modal-body">
-                <table class="table table-hover">
-                    <tbody data-ng-repeat="z in areaList">
-                        <tr data-target="#{{z.zone.id}}" data-toggle="collapse" class="clickable" aria-expanded="false">
-                            <th>{{z.zone.name}} <i class="fa fa-chevron-circle-right"></i></th>
-                        </tr>
-
+                <div class="form-group">
+                    <label for="txtDcsPeriodFrom form-label">Drivers</label>
+                    <input type="date" class="form-control" id="txtDcsPeriodFrom" data-ng-model="dcs.periodFrom" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="txtDcsPeriodTo form-label">General Worker</label>
+                    <input type="date" class="form-control" id="txtDcsPeriodTo" data-ng-model="dcs.periodTo" />
+                </div>
+                <div class="form-group">
+                  <label for="txtDcsDriver form-label">Date</label>
+                  <input type="text" class="form-control" id="txtDcsDriver" data-ng-model="dcs.driver" />
+                </div>
+         
+                
+                
+                
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-ng-click="addDcs();">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+          <div class="col-md-12">
+              <h5>Delivery Management</h5>
+          </div>
+      </div>
+      
+      <br />
+      <div class="row" data-ng-show="show.create == 'A'">
+          <div class="col-md-11">
+              <button class="btn btn-success" data-toggle="modal" data-target="#createBDAF"><i class="fa fa-plus"></i> New</button>
+          </div>
+          <div class="col-md-1" style="padding-top: 10px">
+              <label style="cursor: pointer;"><input type="checkbox" data-ng-model="statusList" data-ng-click="updateStatusList()"> Active</label>
+          </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-clickable">
+                    <thead>
                         <tr>
-                            <td colspan="12">
-                                <div class="collapse myOptions" id="{{z.zone.id}}">
-                                    <table class="table table-clickable">
-                                        <tbody>
-                                            <tr class="clickable-row" data-ng-repeat="a in z.area" data-ng-click="thisArea(a.id, a.name);">
-                                                <td data-dismiss="modal" data-ng-bind="a.name"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
+                            <th width="20%" data-ng-click="orderBy('dcsID');">BDAF ID <i class="fas fa-sort-down"></i></th>
+                            <th width="15%" data-ng-click="orderBy('periodFrom');">Drivers <i class="fas fa-sort-down"></i></th>
+                            <th width="20%" data-ng-click="orderBy('periodTo');">General Worker <i class="fas fa-sort-down"></i></th>
+                            <th width="20%" data-ng-click="orderBy('periodTo');">Date <i class="fas fa-sort-down"></i></th>
+                            <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>               
+                        <tr data-ng-repeat="b in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewdcs(d.id);">
+                            <td data-ng-bind="b.id"></td>
+                            <td data-ng-bind="b.date"></td>
+                            <td data-ng-bind="b.drivers"></td>
+                            <td data-ng-bind="b.generalWorker"></td>
+                            <td data-ng-bind="b.status"></td>
+                            
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
         </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <h5>Delivery Management</h5>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchReportFilter"/>
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn btn-success" data-toggle="modal" data-target="#chooseArea"><i class="fa fa-plus"></i> New</button>
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-clickable">
-                <thead>
-                    <tr>
-                        <th width="20%" data-ng-click="orderBy('reportID');">Report Code <i class="fas fa-sort-down"></i></th>
-                        <th width="15%" data-ng-click="orderBy('reportCollectionDate');">Date <i class="fas fa-sort-down"></i></th>
-                        <th width="20%" data-ng-click="orderBy('areaName');">Area Name <i class="fas fa-sort-down"></i></th>
-<!--                        <th width="10%" data-ng-click="orderBy('collection');">Collection <i class="fas fa-sort-down"></i></th>-->
-<!--                        <th width="25%" data-ng-click="orderBy('garbageAmount');">Collected Garbage(ton) <i class="fas fa-sort-down"></i></th>-->
-                        <th width="10%" data-ng-click="orderBy('reportStatus');">Status <i class="fas fa-sort-down"></i></th>
-                        
-                        <th width="35%" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
-                    </tr>
-                </thead>
-                <tbody>               
-                    <tr data-ng-repeat="bdaf in bdafList | filter: searchReport | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewBdaf(bdaf.bdafId);">
-                        <td data-ng-bind="bdaf.bdafId"></td>
-                        <td data-ng-bind="bdaf.creationDateTime"></td>
-                        <td data-ng-bind="d.status"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-    <div class="col-md-12">
-        <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function() {
-        $('.clickable').click(function() {
-            $(this).children().find('i').toggleClass("fa-chevron-circle-right fa-chevron-circle-down");
-            $('html, body').animate({
-                scrollTop: $(this).offset().top - 20
-            }, 'slow');
-        });
-    });
-    //$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
-    //    window.location.href = $(this).data('href');
-    //});
-
-</script>
+      </div>
+      
+      <!-- <script>
+      $(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+          window.location.href = $(this).data('href');
+      });
+          $(document).ready(function () {
+              $('.selectpicker').selectpicker();
+          });
+      </script> -->
