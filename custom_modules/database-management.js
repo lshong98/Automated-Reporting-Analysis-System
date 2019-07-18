@@ -8,13 +8,13 @@ var emitter = new EventEmitter();
 /*var DB_HOST = '35.247.180.192';
 var DB_USER = 'root';
 var DB_PASS = 'root';
-var DB_NAME = 'trienekenstest';*/
+var DB_NAME = 'trienekenstest2';*/
 
 // Local database access
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens02';
  
 // Create connection
 var db = mysql.createConnection({ 
