@@ -92,7 +92,7 @@ app.post('/updateAreaLngLat', function(req, res) {
             throw err;
         }
         result.type = "success";
-        result.msg = "Area's Longitude and Latitude has been added"
+        result.msg = "Area's Longitude and Latitude has been added";
         res.json(result);
     });
 }); // Complete
