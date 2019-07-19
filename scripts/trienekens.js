@@ -1883,6 +1883,11 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "edit": 'I',
             "create": 'I',
             "export": 'I'
+        },
+        "delivery":{
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
         }
     };
 
@@ -3311,4 +3316,88 @@ app.controller('transactionLogController', function($scope, $http, $filter, stor
         $scope.transactionList = $filter('orderBy')($scope.transactionList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
+});
+
+app.controller('deliveryController', function($scope, $http, $filter, storeDataService) {
+    'use strict';
+
+    $scope.bdafList = [];
+    console.log("DELIVERY MANAGEMENT ACTIVATED!!");
+
+
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+
+
+    $scope.viewbdaf = function(dcsID) {
+        window.location.href = '#/bdaf-details/' + bdafID;
+    }
+
+    function initializeBdaf() { 
+        $scope.bdaf = {
+            "id": '',
+            "creationDateTime": '',
+            "driver": '',
+            "periodFrom": '',
+            "periodTo": '',
+            "replacementDriver": '',
+            "replacementPeriodFrom": '',
+            "replacementPeriodTo": ''
+        };
+    }
+
+    $scope.show = angular.copy(storeDataService.show.delivery);
+
+
+    $scope.currentStatus = {
+        "status": true
+    }
+    
+    function getAllDcs() {
+        $http.post('/getAllDcs', $scope.currentStatus).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.dcsList = response.data;
+
+            console.log("DCS data received by controller");
+            console.log(response.data);
+        });
+    }
+    getAllDcs(); //call
+
+    $scope.statusList = true;
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.currentStatus.status = true;
+        }else{            
+            $scope.currentStatus.status = false;
+        }
+        getAllDcs(); //call
+    }
+
+    angular.element('.datepicker').datepicker();
+
+    $scope.addDcs = function() {
+        $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addDcs', $scope.dcs).then(function(response) {
+            var returnedData = response.data; 
+            var newDcsID = returnedData.details.dcsID;
+            var today = new Date();
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "DCS added successfully!"
+                });
+
+                //     var area = $('.selectpicker option:selected').text();
+                //    var areastr = area.split(" ")[2];
+                //                console.log(areastr);
+                $scope.dcsList.push({ "id": newDcsID, "creationDateTime": today, "driver": $scope.dcs.driver, "periodFrom": $scope.dcs.periodFrom, "periodTo": $scope.dcs.periodTo, "replacementDriver": $scope.dcs.replacementDriver, "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom, "replacementPeriodTo": $scope.dcs.replacementPeriodTo, "status": 'ACTIVE' });
+                // $scope.filterAcrList = angular.copy($scope.acrList);
+                angular.element('#createDCS').modal('toggle');
+                // $scope.totalItems = $scope.filterAcrList.length;
+            }
+        });
+    }
 });

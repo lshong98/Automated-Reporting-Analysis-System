@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '';
+var SVR_PORT = '3000';
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -31,6 +31,7 @@ var transactionLog = require('./custom_modules/transaction-log');
 var authorization = require('./custom_modules/authorization');
 var databaseBinManagement = require('./custom_modules/bin-database');
 var binInventoryManagement = require('./custom_modules/bin-inventory');
+var deliveryManagement = require('./custom_modules/delivery-management');
 
 users = [];
 connections = [];
@@ -544,3 +545,4 @@ app.use('/', transactionLog);
 app.use('/', authorization);
 app.use('/', databaseBinManagement);
 app.use('/', binInventoryManagement);
+app.use('/', deliveryManagement);

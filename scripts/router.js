@@ -325,6 +325,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintDetailController',
         controllerAs: 'complaintDetail'
     })
+    .when('/delivery-management', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/delivery-management');
+            }
+        },
+        templateUrl: '/delivery-management',
+        controller: 'deliveryController',
+        controllerAs:'delivery'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {
