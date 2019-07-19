@@ -31,6 +31,7 @@ var transactionLog = require('./custom_modules/transaction-log');
 var authorization = require('./custom_modules/authorization');
 var databaseBinManagement = require('./custom_modules/bin-database');
 var binInventoryManagement = require('./custom_modules/bin-inventory');
+var chatManagement = require('./custom_modules/chat-management');
 
 users = [];
 connections = [];
@@ -544,3 +545,4 @@ app.use('/', transactionLog);
 app.use('/', authorization);
 app.use('/', databaseBinManagement);
 app.use('/', binInventoryManagement);
+app.use('/', chatManagement)

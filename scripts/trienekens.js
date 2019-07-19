@@ -1514,8 +1514,10 @@ app.controller('specificAccController', function($scope, $http, $routeParams, $f
         $http.post('/updatePassword', $scope.password).then(function(response) {
             var data = response.data;
             $scope.notify(data.status, data.message);
-            $scope.password.password = '';
-            $scope.password.again = '';
+            if (data.status === "success") {
+                $scope.password.password = '';
+                $scope.password.again = '';
+            }
         });
     };
 });
@@ -3031,6 +3033,12 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
     $scope.req = {
         'id': $routeParams.complaintCode
     };
+    $scope.message = {
+        "id": $routeParams.complaintCode,
+        "content": '',
+        "sender": window.sessionStorage.getItem('owner')
+    };
+    var chatContent = '';
 
     $scope.emailobj = {
         "id": "",
@@ -3064,6 +3072,29 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             $scope.reportList = response.data;
             $scope.showReference = ($scope.reportList.length == 0 ? false : true);
         });
+        
+        $scope.sendMessage = function () {
+            $scope.message.content = $scope.mymsg;
+            $http.post('/messageSend', $scope.message).then(function (response) {
+                console.log($scope.message);
+                chatContent += '<div class="message right"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
+                angular.element('.chat-box').html(chatContent);
+            });
+        };
+        
+        $http.post('/chatList', $scope.req).then(function (response) {
+            var data = response.data;
+            var position = '';
+            
+            $.each(data, function (key, value) {
+                position = window.sessionStorage.getItem('owner') === value.sender ? "right" : "left";
+                
+                chatContent += '<div class="message ' + position + '"><div class="message-text">' + value.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + value.date + '</small></div></div></div>';
+            });
+            angular.element('.chat-box').html(chatContent);
+        });
+        
+        
         
         
         //initialize email subject and text

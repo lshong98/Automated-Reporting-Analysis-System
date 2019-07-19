@@ -6,10 +6,11 @@ var database = require('./database-management');
 var dateTime = require('node-datetime');
 var f = require('./function-management');
 
+// Login
 app.post('/login', function (req, res) {
     'use strict';
 
-    var sql = "SELECT tblstaff.staffID, tblstaff.password, tblposition.positionName FROM tblstaff JOIN tblposition ON tblposition.positionID = tblstaff.positionID WHERE tblstaff.username = '" + req.body.username + "' AND tblstaff.staffStatus = 'A'";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.password AS password, tblposition.positionName AS position FROM tblstaff JOIN tblposition ON tblposition.positionID = tblstaff.positionID WHERE tblstaff.username = '" + req.body.username + "' AND tblstaff.staffStatus = 'A'";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -17,12 +18,12 @@ app.post('/login', function (req, res) {
         }
         if (result.length > 0) {
             if (bcrypt.compareSync(req.body.password, result[0].password)) {
-                res.json({"status": "valid", details: {"staffPosition": result[0].positionName, "staffID": result[0].staffID}});
+                res.json({"status": "success", "message": "Login successfully!", details: {"position": result[0].position, "id": result[0].id}});
             } else {
-                res.json({"status": "invalid"});
+                res.json({"status": "error", "message": "Invalid account!"});
             }
         } else {
-            res.json({"status": "invalid"});
+            res.json({"status": "error", "message": "Invalid account!"});
         }
     });
 }); // Complete
@@ -65,16 +66,24 @@ app.get('/getAllUser', function (req, res) {
 // Update user password
 app.post('/updatePassword', function (req, res) {
     'use strict';
-
-    var thePassword = bcrypt.hashSync(req.body.password, 10),
-        sql = "UPDATE tblstaff SET password = '" + thePassword + "' WHERE staffID = '" + req.body.id + "'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            res.json({"status": "error", "message": "Update failed."});
-            throw err;
-        }
-        res.json({"status": "success", "message": "Password updated."});
-    });
+    
+    if (req.body.password === req.body.again) {
+        var thePassword = bcrypt.hashSync(req.body.password, 10),
+            sql = "UPDATE tblstaff SET password = '" + thePassword + "' WHERE staffID = '" + req.body.id + "'";
+        
+        database.query(sql, function (err, result) {
+            if (err) {
+                res.json({"status": "error", "message": "Update failed."});
+                res.end();
+                throw err;
+            }
+            res.json({"status": "success", "message": "Password updated."});
+            res.end();
+        });
+    } else {
+        res.json({"status": "error", "message": "Password not matched!"});
+        res.end();
+    }
 }); // Complete
 
 // Load specific account

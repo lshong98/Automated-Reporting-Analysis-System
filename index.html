@@ -4,6 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Trienekens Automated Reporting and Analytics System</title>
         <link rel="stylesheet" type="text/css" href="/bootstrap-4.0.0/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/overhang/overhang.css" />
         <link rel="stylesheet" type="text/css" href="/trienekens.css" />
     </head>
     <body>
@@ -62,7 +63,6 @@
                             <br />
                             <div class="row text-center">
                                 <div class="col-md-12">
-<!--                                    <a href="trienekens-reporting-system/pages/" class="card-link">Login</a>-->
                                     <button class="btn btn-success" onclick="login();">Login</button>
                                 </div>
                             </div>
@@ -72,34 +72,8 @@
             </div>
         </div>
         <script src="/jquery-3.3.1/jquery-3.3.1.min.js"></script>
-        <script>
-            function login() {
-                $username = $('input[name=txtusername]');
-                $password = $('input[name=txtpassword]');
-                
-                $.ajax({
-                    method: 'POST',
-                    url: '/login',
-                    contentType: 'application/json',
-                    data: JSON.stringify({"username": $username.val(), "password": $password.val()}),
-                    success: function (response) {
-                        console.log(response);
-                        if (response.status == "valid") {
-                            sessionStorage['position'] = response.details.staffPosition;
-                            sessionStorage['owner'] = response.details.staffID;
-                            window.location.href = '/pages/';
-                        }
-                    }
-                });
-            }
-            
-            $(document).ready(function (e) {
-                $('input[name=txtusername], input[name=txtpassword]').on('keyup', function(e) {
-                    if (e.keyCode === 13) {
-                        login();
-                    }
-                });
-            });
-        </script>
+        <script src="/jquery-3.3.1/jquery-ui.min.js"></script>
+        <script src="/overhang/overhang.min.js"></script>
+        <script src="/index.js"></script>
     </body>
 </html>
