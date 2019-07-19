@@ -225,6 +225,11 @@ app.service('storeDataService', function() {
                 "edit": 'I',
                 "create": 'I',
                 "export": 'I'
+            },
+            "delivery": {
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             }
         },
         "pagination": {
@@ -253,6 +258,8 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         scope.showNewMgb = true;
         scope.showReusableMgb = true;
         scope.showDcsDetails = true;
+        scope.showDelivery = true;
+        scope.showBdafDetails = true;
         scope.thisTruck = {
             "id": '',
             "no": '',

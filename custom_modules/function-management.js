@@ -183,6 +183,10 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/reporting"><i class="fa fa-file"></i> Reporting</a></li>';
             }
+        case "view delivery":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.delivery.view == \'A\'" role="menuitem"><a class="menu__link" href="#/delivery-management"><i class="fas fa-truck-loading"></i> Complaint Module</a></li>';
+            }
     }
 }
 
