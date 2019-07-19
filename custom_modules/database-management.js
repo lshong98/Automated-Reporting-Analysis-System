@@ -19,7 +19,7 @@ var DB_NAME = '';
 // Create connection
 var db = mysql.createConnection({ 
     host: DB_HOST,
-    user: DB_USER,
+    user: DB_USER, 
     password: DB_PASS
 });
 
@@ -149,6 +149,12 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create dcsDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit dcsDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view dcsDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('create delivery')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit delivery')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view delivery')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('create bdafDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit bdafDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view bdafDetails')",
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -214,6 +220,12 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '34', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '35', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '36', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '37', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '38', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '39', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '40', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '41', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '42', 'A')",
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {

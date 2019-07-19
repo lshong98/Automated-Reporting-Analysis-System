@@ -11,7 +11,7 @@ app.get('/getAllDatabaseBin', function (req, res) {
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
-        }
+        } 
         //console.log("script success");
         //console.log(result);
         res.json(result);
