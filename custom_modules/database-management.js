@@ -155,6 +155,16 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create bdafDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit bdafDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view bdafDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('create damagedlost')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit damagedlost')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view damagedlost')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('create dbdDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit dbdDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view dbdDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('create blostDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit blostDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view blostDetails')"
+        
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {

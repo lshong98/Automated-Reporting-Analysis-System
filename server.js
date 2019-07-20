@@ -33,6 +33,7 @@ var databaseBinManagement = require('./custom_modules/bin-database');
 var binInventoryManagement = require('./custom_modules/bin-inventory');
 var chatManagement = require('./custom_modules/chat-management');
 var deliveryManagement = require('./custom_modules/delivery-management');
+var damagedLostBin = require('./custom_modules/damaged-lost-bin');
 
 users = [];
 connections = [];
@@ -548,3 +549,4 @@ app.use('/', databaseBinManagement);
 app.use('/', binInventoryManagement);
 app.use('/', chatManagement)
 app.use('/', deliveryManagement);
+app.use('/', damagedLostBin);

@@ -144,5 +144,9 @@ app.get('/delivery-management', function (req, res) {
     'use strict';
     res.sendFile('pages/delivery-management.html', {root: __dirname});
 });
+app.get('/damaged-lost-bin', function (req, res) {
+    'use strict';
+    res.sendFile('pages/damaged-lost-bin.html', {root: __dirname});
+});
 
 module.exports = app;

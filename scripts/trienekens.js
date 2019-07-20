@@ -230,6 +230,11 @@ app.service('storeDataService', function() {
                 "create": 'I',
                 "edit": 'I',
                 "view": 'I'
+            },
+            "damagedlost": {
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
             }
         },
         "pagination": {
@@ -1887,6 +1892,11 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "export": 'I'
         },
         "delivery":{
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
+        "damagedlost":{
             "view": 'I',
             "edit": 'I',
             "create": 'I'
