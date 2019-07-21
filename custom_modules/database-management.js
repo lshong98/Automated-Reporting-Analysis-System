@@ -16,7 +16,7 @@ var DB_USER = 'root';
 var DB_PASS = '';
 var DB_NAME = 'trienekens05';
  
-// Create connection
+// Create connection 
 var db = mysql.createConnection({ 
     host: DB_HOST,
     user: DB_USER, 
@@ -64,9 +64,9 @@ db.connect(function (err) {
 // Create Database Tables
 emitter.on('createTable', function () {
     'use strict';
-    var sqls, i;
-    
-    sqls = [
+    var sqls, i;  
+     
+    sqls = [ 
         "CREATE TABLE tblposition (positionID varchar(15),  positionName varchar(30),  positionStatus char(1),  creationDateTime datetime,  primary key (positionID))",
         "CREATE TABLE tblzone (zoneID varchar(15),  zoneName varchar(100), zoneStatus char(1),  creationDateTime datetime,  PRIMARY KEY (zoneID))",
         "CREATE TABLE tblstaff (  staffID varchar(15),  username varchar(20),  password mediumtext,  staffName varchar(50),  staffIC varchar(15),  staffGender char(1),  staffDOB date,  staffAddress varchar(255),  handphone varchar(11),  phone varchar(10),  email varchar(50),  positionID varchar(15),  staffStatus char(1),  creationDateTime datetime,  staffPic mediumtext,  PRIMARY KEY (staffID),  foreign key (positionID) references tblposition(positionID))",
@@ -81,8 +81,8 @@ emitter.on('createTable', function () {
         "CREATE TABLE tbldbdentry (  idNo int auto_increment,  dbdID int,  serialNo varchar(15),  reportedBy varchar(15),  damageType varchar(15),  reason mediumtext,  repair char(1),  replacement char(1),  costCharged varchar(5),  status char(1),  rectifiedDate datetime,  PRIMARY KEY (idNo),  foreign KEY  (dbdID) references tbldbd(dbdID),  foreign KEY  (serialNo) references tblbins(serialNo),  foreign KEY  (reportedBy) references tblstaff(staffID))",
         "CREATE TABLE tbldcs (dcsID varchar(15),creationDateTime datetime,status char(1),periodFrom date,periodTo date,driverID varchar(15),replacementDriverID varchar(15),replacementPeriodFrom date,replacementPediodTo date,authorizedBy varchar(15),authorizedDate datetime,createdBy varchar(15),PRIMARY KEY (dcsID),foreign key (driverID) references tblstaff(staffID),foreign key (replacementDriverID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID),foreign key (createdBy) references tblstaff(staffID))",
         "CREATE TABLE tblacr (acrID varchar(15),dcsID varchar(15),areaID varchar(15),customerID VARCHAR(15),beBins int,acrBins int,mon boolean,tue boolean,wed boolean,thu boolean,fri boolean,sat boolean,remarks longtext,PRIMARY KEY (acrID),foreign key (dcsID) references tbldcs(dcsID),foreign key (customerID) references tblcustomer(customerID))",
-        "CREATE TABLE tblbdaf (  bdafID int auto_increment,  creationDateTime datetime,  status char(1),  PRIMARY KEY (bdafID))",
-        "CREATE TABLE tblbdafentry (  idNo int auto_increment,  bdafID int,  customerID VARCHAR(15),  acrID varchar(15),  serialNo varchar(15),  binDelivered varchar(15),  binPulled varchar(15),  jobDesc longtext,  remarks longtext,  completed boolean,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (acrID) references tblacr(acrID),  foreign key (bdafID) references tblbdaf(bdafID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (binDelivered) references tblbins(serialNo),  foreign key (binPulled) references tblbins(serialNo))",
+        "CREATE TABLE tblbdaf (  bdafID varchar(15),  creationDateTime datetime,  driverID varchar(15), staffID varchar(15), authorizedBy varchar(15), authorizedDate dateTime, status char(1),  PRIMARY KEY (bdafID), foreign key (driverID) references tblstaff(staffID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
+        "CREATE TABLE tblbdafentry (  idNo int auto_increment,  bdafID varchar(15),  customerID VARCHAR(15),  acrID varchar(15),  serialNo varchar(15),  binDelivered varchar(15),  binPulled varchar(15),  jobDesc longtext,  remarks longtext,  completed boolean,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (acrID) references tblacr(acrID),  foreign key (bdafID) references tblbdaf(bdafID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (binDelivered) references tblbins(serialNo),  foreign key (binPulled) references tblbins(serialNo))",
         "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID VARCHAR(15),  areaID varchar(15),  serialNo varchar(15),  acrID varchar(15),  activeStatus char(1), rcDwell varchar(20), comment mediumtext, itemType varchar(20), path varchar(20),PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
         "CREATE TABLE tbluseractions (  date datetime,  staffID varchar(15),  action varchar(20),  onObject varchar(20),  PRIMARY KEY (date, staffID),  foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblaccess (  positionID varchar(15),  mgmtID int,  status char(1),  primary key (positionID, mgmtID),  foreign key (positionID) references tblposition(positionID),  foreign key (mgmtID) references tblmanagement(mgmtID))",
@@ -93,7 +93,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbincenter (  binCenterID varchar(15),  areaID varchar(15),  binCenterName varchar(100),  binCenterLocation varchar(100),  binCenterStatus char(1),  creationDateTime datetime,  PRIMARY KEY (binCenterID),  foreign key (areaID) references tblarea(areaID))",
         "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID VARCHAR(15),  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
         "CREATE TABLE tbltag (  date date,  serialNo int,  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tbltruck(truckID))",
-        "CREATE TABLE tblcomplainttype ( complaintType int auto_increment, complaint varchar(15), primary key (complaintType))",
+        "CREATE TABLE tblcomplainttype ( complaintType int auto_increment, complaint varchar(15), primary key (complaintType))",  
         "CREATE TABLE tblcomplaint ( complaintID int auto_increment, customerID VARCHAR(15), date datetime, complaintType int, complaintTitle mediumtext, complaintContent longtext, status char(1), primary key (complaintID), foreign key (customerID) references tblcustomer(customerID), foreign key (complaintType) references tblcomplainttype(complaintType))",
         "CREATE TABLE tbllog (transactionID int auto_increment, date datetime, staffID varchar(15), authorizedBy varchar(15), action varchar(15), description mediumtext, rowID varchar(15), tblName varchar(50), primary key (transactionID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
@@ -176,7 +176,7 @@ emitter.on('defaultUser', function () {
     }
     
     var dt = dateTime.create();
-    var formatted = dt.format('Y-m-d H:M:S');
+    var formatted = dt.format('Y-m-d H:M:S'); 
     var roleFormat = dt.format('Ymd');
     
     var roleID = "ATH" + roleFormat + "0001";
@@ -265,12 +265,18 @@ emitter.on('defaultUser', function () {
 emitter.on('dummyData', function () {
     'use strict';
     var sqls, i;
-    
-    sqls = [
+     
+    sqls = [ 
         "insert into tblzone values('a001','Zone number 1','a',current_timestamp())",
         "insert into tblposition values('200','tempBoss','a',current_timestamp())",
+        "insert into tblposition values('DRV','Driver','a',current_timestamp())",
+        "insert into tblposition values('GWK','General Worker','a',current_timestamp())",
         "INSERT INTO tblposition VALUE ('a001', 'ADMINISTRATOR', 'A',current_timestamp())",
         "insert into tblstaff values('a001','user1','user123','Jackson','ic123456','m','1999/12/12','123 Abc drive, Taman BDC','012345678','12345676','email@email.com','200','a',current_timestamp(),'this is an image')",
+        "insert into tblstaff values('a002','user1','user123','Roy','ic293024','m','1999/12/12','123 Abc drive, Taman BDC','012345678','12345676','email@email.com','DRV','a',current_timestamp(),'this is an image')",
+        "insert into tblstaff values('a003','user1','user123','Kevin','ic582045','m','1999/12/12','123 Abc drive, Taman BDC','012345678','12345676','email@email.com','DRV','a',current_timestamp(),'this is an image')",
+        "insert into tblstaff values('a004','user1','user123','Alvin','ic087006','m','1999/12/12','123 Abc drive, Taman BDC','012345678','12345676','email@email.com','GWK','a',current_timestamp(),'this is an image')",
+        "insert into tblstaff values('a005','user1','user123','Barry','ic152472','m','1999/12/12','123 Abc drive, Taman BDC','012345678','12345676','email@email.com','GWK','a',current_timestamp(),'this is an image')",
         "insert into tblauthorization values(null,current_timestamp(),'a001','action','page info','row info','query here',true,'a001','table name')",
         "insert into tblarea values('a001','a001','a001','area 1','seven times','44.21530','-99.70123','a',current_timestamp())",
         "insert into tbltaman values(null,'a001','taman supreme','44.21530','-99.70123','a')",
@@ -288,7 +294,7 @@ emitter.on('dummyData', function () {
         "insert into tbldbdentry values(NULL,'1','1','a001','destroyed','car crash','n','y','50','i','2019/12/12')",
         "insert into tbldcs values('a001',current_timestamp(),'a',current_date(),current_date()+interval 1 day,'a001','a001',current_date(), current_date()+interval 1 day, 'a001', current_timestamp(), 'a001')",
         //"insert into tblacr values('a001','a001','a001','1','10','10',true,true,true,true,true,true,'remarks');",
-        "insert into tblbdaf  values(NULL,current_timestamp(),'a')",
+        //"insert into tblbdaf  values(NULL,current_timestamp(),'a')",
         //"insert into tblbdafentry values(NULL, '1','1','a001','1','1','1','bin was delivered','no remarks',true)",
         //"insert into tblwheelbindatabase values(NULL, current_timestamp(),'1','a001','1','a001','a','rc Dwell', 'comment', 'item type 1', 'path 1')",
         "insert into tbluseractions values(current_timestamp(),'a001','delete','tblbins')",
@@ -300,7 +306,7 @@ emitter.on('dummyData', function () {
         "insert into tblbincenter values('a001','a001','bin center 1','tabuan bin center','a',current_timestamp())",
         //"insert into tbllostbinrecord values(NULL,'1','1','1',false,'a001',current_date(),'no reason')",
         "insert into tbltag values(current_timestamp(),'1','a001','44.21530','-99.70123')",
-    ];
+    ]; 
     
     for (i = 0; i < sqls.length; i += 1) {
         db.query(sqls[i], function (err, result) {

@@ -3363,6 +3363,11 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
     'use strict';
 
     $scope.bdafList = [];
+    $scope.driverList = [];
+    $scope.generalWorkerList = [];
+    var driverPosition = "DRV";
+    var generalWorkerPosition = "GWK";
+    
     console.log("DELIVERY MANAGEMENT ACTIVATED!!");
 
 
@@ -3371,20 +3376,17 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
     $scope.maxSize = 10;
 
  
-    $scope.viewbdaf = function(dcsID) {
+    $scope.viewbdaf = function(bdafID) {
         window.location.href = '#/bdaf-details/' + bdafID;
     }
 
     function initializeBdaf() { 
         $scope.bdaf = {
             "id": '',
-            "creationDateTime": '',
+            "date": '',
             "driver": '',
-            "periodFrom": '',
-            "periodTo": '',
-            "replacementDriver": '',
-            "replacementPeriodFrom": '',
-            "replacementPeriodTo": ''
+            "generalWorker": '',
+            "status": ''
         };
     }
 
@@ -3395,16 +3397,30 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
         "status": true
     }
     
-    function getAllDcs() {
+    function getAllBdaf() {
         $http.post('/getAllBdaf', $scope.currentStatus).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.dcsList = response.data;
+
+            $scope.bdafList = response.data;
 
             console.log("BDAF data received by controller");
             console.log(response.data);
         });
+
+        $http.post('/getStaffList', {"positionID" : driverPosition}).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.driverList = response.data;
+
+        }); 
+
+        $http.post('/getStaffList', {"positionID" : generalWorkerPosition}).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.generalWorkerList = response.data;
+
+        });
+
+
     }
-    //getAllDcs(); //call
+    getAllBdaf(); //call
 
     $scope.statusList = true;
     $scope.updateStatusList = function(){
@@ -3416,26 +3432,23 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
         getAllDcs(); //call
     }
 
-    $scope.addDcs = function() {
-        $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addBdaf', $scope.dcs).then(function(response) {
+    $scope.addBdaf = function() {
+        $scope.bdaf.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        
+        $http.post('/addBdaf', $scope.bdaf).then(function(response) {
             var returnedData = response.data; 
-            var newDcsID = returnedData.details.dcsID;
-            var today = new Date();
+            var newBdafID = returnedData.details.bdafID;
 
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
-                    "message": "DCS added successfully!"
+                    "message": "BDAF added successfully!"
                 });
 
-                //     var area = $('.selectpicker option:selected').text();
-                //    var areastr = area.split(" ")[2];
-                //                console.log(areastr);
-                $scope.dcsList.push({ "id": newDcsID, "creationDateTime": today, "driver": $scope.dcs.driver, "periodFrom": $scope.dcs.periodFrom, "periodTo": $scope.dcs.periodTo, "replacementDriver": $scope.dcs.replacementDriver, "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom, "replacementPeriodTo": $scope.dcs.replacementPeriodTo, "status": 'ACTIVE' });
-                // $scope.filterAcrList = angular.copy($scope.acrList);
-                angular.element('#createDCS').modal('toggle');
-                // $scope.totalItems = $scope.filterAcrList.length;
+            $scope.bdafList.push({ "id": newBdafID, "date": $scope.bdaf.date, "driver": $scope.bdaf.driverID, "generalWorker": $scope.bdaf.generalWorkerID, "authorizedBy": "", "authorizedDate": "", "status": 'ACTIVE' });
+    
+            angular.element('#createBDAF').modal('toggle');
+    
             }
         });
     }

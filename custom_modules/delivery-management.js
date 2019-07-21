@@ -6,31 +6,22 @@ var f = require('./function-management');
 // ACR Management
 app.post('/addBdaf',function(req,res){
     'use strict';
-    console.log(req.body);
-    f.makeID("dcs", req.body.creationDate).then(function (ID) {
+
+    f.makeID("bdaf", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driver, periodFrom, periodTo, replacementDriver, replacementPeriodFrom, replacementPeriodTo, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driver + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriver + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', 'A')";
+        var sql = "INSERT INTO tblbdaf (bdafID, creationDateTime, driverID, staffID, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.driverID + "', '" + req.body.staffID + "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
-            // for (i = 0; i < days.length; i += 1) {
-            //     if (req.body.days[days[i]] != undefined) {
-            //         var sql = "INSERT INTO tblacrfreq (acrID, areaID, day) VALUE ('" + acrID + "', '" + req.body.area + "', '" + days[i] + "')";
-            //         database.query(sql, function (err, result) {
-            //             if (err) {
-            //                 throw err;
-            //             }
-            //         }); 
-            //     }
-            // }
-            res.json({"status": "success", "message": "ACR created!", "details": {"dcsID": ID}});
+
+            res.json({"status": "success", "message": "BDAF created!", "details": {"bdafID": ID}});
         });
     });
 }); // Complete
 app.post('/getAllBdaf', function(req,res){
     'use strict';
-    var sql = "SELECT bdafID AS id, creationDateTime, driverID, staffID, authorizedBy, authorizedDate, status from tblbdaf";
+    var sql = "SELECT b.bdafID AS id, b.creationDateTime as date, b.driverID as driver, b.staffID as generalWorker, b.authorizedBy, b.authorizedDate, b.status from tblbdaf as b";
         
     if(req.body.status){
         sql += " WHERE status = 'A'";
@@ -43,14 +34,17 @@ app.post('/getAllBdaf', function(req,res){
             throw err; 
         }
         res.json(result);
+        console.log("GET ALL BDAF: " + result);
     }); 
+
+    
 });
 
 app.post('/getBdafDetails', function(req,res){
     'use strict';
-    console.log("HELLO FROM THE SERVER");
+    console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
     console.log(req.body);
-    var sql = "SELECT b.bdafID, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as location, c.contactPerson, c.contactNo, a.acrID, b.acrSticker, b.jobDesc, db.binSize, b.serialNo, b.remarks, b.binDelivered, b.binPulled, b.completed from tbldcsentry as d inner join tblcustomer as c on d.customerID = c.customerID where d.dcsID = '" + req.body.id + "'";
+    var sql = "SELECT b.bdafID, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as location, c.contactPerson, c.contactNo, a.acrID, b.acrSticker, b.jobDesc, db.binSize, b.serialNo, b.remarks, b.binDelivered, b.binPulled, b.completed from tblcustomer as c inner join tblbdafentry as b on b.customerID = c.customerID inner join tblbins as db on b.serialNo = db.serialNo where d.bdafID = '" + req.body.id + "'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     console.log(sql);
     database.query(sql, function (err, result) {
@@ -66,13 +60,13 @@ app.post('/getBdafDetails', function(req,res){
 app.post('/addBdafEntry',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
-    var sql = "INSERT INTO tbldcsentry (idNo, dcsID, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + null + "', '" + req.body.dcsID + "' , '"  + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
+    var sql = "INSERT INTO tblbdafentry (idNo, bdafID, customerID, acrID, acrSticker, serialNo, binDelivered, binPulled, jobDesc, remarks, completed) VALUE ('" + null + "', '" + req.body.bdafID + "' , '"  + req.body.customerID + "', '"  + req.body.acrID + "', '" + req.body.acrSticker + "', '" + req.body.serialNo + "', '" + req.body.binDelivered + "', '" + req.body.binPulled + "', '" + req.body.jobDesc + "', '" + req.body.remarks + "', '"+ req.body.completed + "')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
 
-        res.json({"status": "success", "message": "ACR created!", "details": {"dcsID": req.body.dcsID}});
+        res.json({"status": "success", "message": "BDAF entry added!", "details": {"bdafID": req.body.bdafJD}});
     });
 }); // Complete
 
@@ -103,4 +97,19 @@ app.post('/getBdafInfo',function(req,res){
         res.json(result);
     });
 }); // Complete
+
+app.post('/getStaffList', function(req,res){
+    'use strict';
+    console.log("GET STAFF LIST: " + req.body);
+    var sql = "SELECT * from tblstaff where positionID = '" + req.body.positionID + "'";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+        res.json(result);
+        console.log(result);
+    }); 
+});
+
 module.exports = app; 
