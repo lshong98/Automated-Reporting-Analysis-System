@@ -4,7 +4,7 @@ var database = require('./database-management');
 var f = require('./function-management');
 
 // ACR Management
-app.post('/addDcs',function(req,res){
+app.post('/addBdaf',function(req,res){
     'use strict';
     console.log(req.body);
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
@@ -28,11 +28,10 @@ app.post('/addDcs',function(req,res){
         });
     });
 }); // Complete
-app.post('/getAllDcs', function(req,res){
+app.post('/getAllBdaf', function(req,res){
     'use strict';
-    var sql = "SELECT dcsID AS id, creationDateTime, driver, periodFrom, periodTo, replacementDriver, replacementPeriodFrom, replacementPeriodTo, status from tbldcs";
-    //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
-    
+    var sql = "SELECT bdafID AS id, creationDateTime, driverID, staffID, authorizedBy, authorizedDate, status from tblbdaf";
+        
     if(req.body.status){
         sql += " WHERE status = 'A'";
     }else{
@@ -47,11 +46,11 @@ app.post('/getAllDcs', function(req,res){
     }); 
 });
 
-app.post('/getDcsDetails', function(req,res){
+app.post('/getBdafDetails', function(req,res){
     'use strict';
     console.log("HELLO FROM THE SERVER");
     console.log(req.body);
-    var sql = "SELECT d.acrID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, d.areaID, d.beBins, d.acrBins, d.mon, d.tue, d.wed, d.thu, d.fri, d.sat, d.remarks from tbldcsentry as d inner join tblcustomer as c on d.customerID = c.customerID where d.dcsID = '" + req.body.id + "'";
+    var sql = "SELECT b.bdafID, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as location, c.contactPerson, c.contactNo, a.acrID, b.acrSticker, b.jobDesc, db.binSize, b.serialNo, b.remarks, b.binDelivered, b.binPulled, b.completed from tbldcsentry as d inner join tblcustomer as c on d.customerID = c.customerID where d.dcsID = '" + req.body.id + "'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     console.log(sql);
     database.query(sql, function (err, result) {
@@ -64,7 +63,7 @@ app.post('/getDcsDetails', function(req,res){
     });
 }); 
 
-app.post('/addDcsEntry',function(req,res){ 
+app.post('/addBdafEntry',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "INSERT INTO tbldcsentry (idNo, dcsID, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + null + "', '" + req.body.dcsID + "' , '"  + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
@@ -92,7 +91,7 @@ app.get('/getCustomerList', function(req,res){
     }); 
 });
 
-app.post('/getDcsInfo',function(req,res){ 
+app.post('/getBdafInfo',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "SELECT * from tbldcs where dcsID = '" + req.body.id + "'";

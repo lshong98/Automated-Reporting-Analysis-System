@@ -179,9 +179,9 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.delivery.view == \'A\'" role="menuitem"><a class="menu__link" href="#/delivery-management"><i class="fas fa-truck-loading"></i> Delivery Management</a></li>';
         }
-        case "view damagedlostbin":
+        case "view damagedlost":
             if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.damagedlost.view == \'A\'" role="menuitem"><a class="menu__link" href="#/damaged-lost-bin"><i class="fas fa-dumpster-fire"></i> Delivery Management</a></li>';
+                return '<li class="menu__item" data-ng-show="show.damagedlost.view == \'A\'" role="menuitem"><a class="menu__link" href="#/damaged-lost-bin"><i class="fas fa-dumpster-fire"></i> Damaged & Lost Bin Management</a></li>';
         }
         case "view role":
             if (status == 'A') {

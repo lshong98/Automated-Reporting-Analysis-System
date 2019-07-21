@@ -335,6 +335,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'deliveryController',
         controllerAs:'delivery'
     })
+    .when('/damaged-lost-bin', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/damaged-lost-bin');
+            }
+        },
+        templateUrl: '/damaged-lost-bin',
+        controller: 'damagedLostController',
+        controllerAs:'damagedLost'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {

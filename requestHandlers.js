@@ -126,7 +126,7 @@ app.get('/bin-database', function (req, res) {
 });
 app.get('/bin-inventory', function (req, res) {
     'use strict';
-    res.sendFile('pages/bin-inventory.html', {root: __dirname});
+    res.sendFile('pages/bin-inventory.html', {root: __dirname}); 
 });
 app.get('/authorization', function (req, res) {
     'use strict';

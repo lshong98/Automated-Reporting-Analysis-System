@@ -11,10 +11,10 @@ var emitter = new EventEmitter();
  //var DB_NAME = 'trienekenstest';
 
 // Local database access
-var DB_HOST = '';
-var DB_USER = '';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens05';
  
 // Create connection
 var db = mysql.createConnection({ 
@@ -236,6 +236,15 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '40', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '41', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '42', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '43', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '44', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '45', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '46', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '47', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '48', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '49', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '50', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '51', 'A')",
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {
