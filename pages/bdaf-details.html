@@ -1,4 +1,4 @@
-<div class="modal fade" id="createDcsEntry" tabindex="-1" role="dialog" aria-labelledby="createDcsEntry" aria-hidden="true">
+<div class="modal fade" id="createBdafEntry" tabindex="-1" role="dialog" aria-labelledby="createBdafEntry" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -156,7 +156,7 @@
         
         <div class="row" id="createButton" data-ng-show="show.create == 'A'">
                 <div class="col-md-12">
-                    <button class="btn btn-success" data-toggle="modal" data-target="#createDcsEntry"><i class="fa fa-plus"></i> New</button>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#createBdafEntry"><i class="fa fa-plus"></i> New</button>
                 </div>
             </div>
         
@@ -168,7 +168,7 @@
                         <thead>
                             <tr>
                                 <th width="15%" data-ng-click="orderBy('location');">Location <i class="fas fa-sort-down"></i></th>
-                                <th width="15%" data-ng-click="orderBy('contactName');">Contact Person <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('contactPerson');">Contact Person <i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('contactNo');">Contact No <i class="fas fa-sort-down"></i></th>
                                 <th width="5%" data-ng-click="orderBy('acrSticker');">ACR Sticker <i class="fas fa-sort-down"></i></th>
                                 <th width="5%" data-ng-click="orderBy('acrfNo');">ACRF No. <i class="fas fa-sort-down"></i></th>
@@ -185,80 +185,62 @@
                                 <tr data-ng-repeat="b in bdafDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.acrID" data-ng-show="!showDcsDetails" /> 
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.acrID"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.location" data-ng-show="!showBdafDetails" /> 
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.location"></span>
                                             </div>
                                     </td>
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.customerID" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.companyName"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.contactPerson" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.contactPerson"></span>
                                                 </div>
                                     </td>
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.customerID" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.address"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.contactNo" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.contactNo"></span>
                                                 </div>
                                     </td>
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.beBins" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.beBins"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.acrSticker" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.acrSticker"></span>
                                                 </div>
                                     </td>
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.acrBins" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.acrBins"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.acrfNo" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.acrfNo"></span>
                                                 </div>
                                     </td>
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.areaCode" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.areaCode"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.jobDesc" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.jobDesc"></span>
                                                 </div>
                                     </td>   
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.mon" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.mon"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.binSize"></span>
                                                 </div>
                                     </td>       
                                     <td>    
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.tue" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.tue"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.unit" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.unit"></span>
                                                 </div>
                                     </td>
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.wed" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.wed"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.remarks" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.remarks"></span>
                                                 </div>
                                     </td>
                                     <td>
                                             <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.thu" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.thu"></span>
-                                                </div>
-                                    </td>
-                                    <td>
-                                            <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.fri" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.fri"></span>
-                                                </div>
-                                    </td>
-                                    <td>
-                                            <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.sat" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.sat"></span>
-                                                </div>
-                                    </td>
-                                    <td>
-                                            <div editable>
-                                                    <input type="text" class="form-control" data-ng-model="d.remarks" data-ng-show="!showDcsDetails" />
-                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.remarks"></span>
+                                                    <input type="text" class="form-control" data-ng-model="b.completed" data-ng-show="!showBdafDetails" />
+                                                    <span data-ng-show="showBdafDetails" data-ng-bind="b.completed"></span>
                                                 </div>
                                     </td>
                                     

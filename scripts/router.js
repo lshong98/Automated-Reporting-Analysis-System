@@ -258,8 +258,8 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: function (params) {
             return '/bdaf-details/' + params.bdafID;
         },
-        controller:'viewReportController',
-        controllerAs:'report'
+        controller:'bdafDetailsController',
+        controllerAs:'bdaf'
     })
     .when('/dbd-details/:dbdID', {
         resolve: {
@@ -270,8 +270,20 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: function (params) {
             return '/bdaf-details/' + params.dbdID;
         },
-        controller:'viewReportController',
-        controllerAs:'report'
+        controller:'dbdDetailsController',
+        controllerAs:'dbd'
+    })
+    .when('/blost-details/:blostID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/blost-details/' + $route.current.params.blostID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/bdaf-details/' + params.blostID;
+        },
+        controller:'blostDetailsController',
+        controllerAs:'blost'
     })
     .when('/bin-database', {
         resolve: {

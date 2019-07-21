@@ -3454,6 +3454,86 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
     }
 });
 
+app.controller('bdafDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
+
+    $scope.show = angular.copy(storeDataService.show.dcsDetails);
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    
+    $scope.showDcsDetails = true;
+   
+    $scope.dcsDetailsList = [];
+    $scope.dcs = [];
+    $scope.customerList = [];
+    $scope.dcsID = {};
+    $scope.dcsID.id = $routeParams.dcsID;
+
+    $scope.test = 
+        {
+            "id": "sdfs",
+            "info": "info"
+        }
+    
+    //$scope.initializeDcsDetails = function(){
+        $scope.dcsDetails = {
+            "dcsID":'',
+            "acrID":'',
+            "areaID":'',
+            "customerID":'',
+            "beBins":'',
+            "acrBins":'',
+            "mon":'',
+            "tue":'',
+            "wed":'',
+            "thu":'',
+            "fri":'',
+            "sat":'',
+            "remarks":''
+        }
+    //}
+
+    $http.post('/getDcsInfo', $scope.dcsID).then(function(response) {
+        
+        $scope.dcs = response.data;
+        console.log($scope.dcs);
+    });
+    
+    $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
+        
+        $scope.dcsDetailsList = response.data;
+        console.log($scope.dcsDetailsList); 
+        console.log("Hello dcsdetails");
+    });
+
+    $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
+        $scope.customerList = response.data;
+    });
+
+    $scope.addDcsEntry = function() {
+        $scope.dcsEntry.dcsID = $routeParams.dcsID;
+
+        $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
+            
+            var returnedData = response.data;
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "DCS Entry added successfully!"
+                });
+
+
+                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
+                
+                angular.element('#createDcsEntry').modal('toggle');
+            }
+        });
+    }
+
+    
+});
+
 app.controller('damagedLostController', function($scope, $http, $filter, storeDataService) {
     'use strict';
 
@@ -3550,4 +3630,164 @@ app.controller('damagedLostController', function($scope, $http, $filter, storeDa
             }
         });
     }
+});
+
+app.controller('dbdDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
+
+    $scope.show = angular.copy(storeDataService.show.dcsDetails);
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    
+    $scope.showDcsDetails = true;
+   
+    $scope.dcsDetailsList = [];
+    $scope.dcs = [];
+    $scope.customerList = [];
+    $scope.dcsID = {};
+    $scope.dcsID.id = $routeParams.dcsID;
+
+    $scope.test = 
+        {
+            "id": "sdfs",
+            "info": "info"
+        }
+    
+    //$scope.initializeDcsDetails = function(){
+        $scope.dcsDetails = {
+            "dcsID":'',
+            "acrID":'',
+            "areaID":'',
+            "customerID":'',
+            "beBins":'',
+            "acrBins":'',
+            "mon":'',
+            "tue":'',
+            "wed":'',
+            "thu":'',
+            "fri":'',
+            "sat":'',
+            "remarks":''
+        }
+    //}
+
+    $http.post('/getDcsInfo', $scope.dcsID).then(function(response) {
+        
+        $scope.dcs = response.data;
+        console.log($scope.dcs);
+    });
+    
+    $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
+        
+        $scope.dcsDetailsList = response.data;
+        console.log($scope.dcsDetailsList); 
+        console.log("Hello dcsdetails");
+    });
+
+    $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
+        $scope.customerList = response.data;
+    });
+
+    $scope.addDcsEntry = function() {
+        $scope.dcsEntry.dcsID = $routeParams.dcsID;
+
+        $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
+            
+            var returnedData = response.data;
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "DCS Entry added successfully!"
+                });
+
+
+                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
+                
+                angular.element('#createDcsEntry').modal('toggle');
+            }
+        });
+    }
+
+    
+});
+
+app.controller('blostDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
+
+    $scope.show = angular.copy(storeDataService.show.dcsDetails);
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    
+    $scope.showDcsDetails = true;
+   
+    $scope.dcsDetailsList = [];
+    $scope.dcs = [];
+    $scope.customerList = [];
+    $scope.dcsID = {};
+    $scope.dcsID.id = $routeParams.dcsID;
+
+    $scope.test = 
+        {
+            "id": "sdfs",
+            "info": "info"
+        }
+    
+    //$scope.initializeDcsDetails = function(){
+        $scope.dcsDetails = {
+            "dcsID":'',
+            "acrID":'',
+            "areaID":'',
+            "customerID":'',
+            "beBins":'',
+            "acrBins":'',
+            "mon":'',
+            "tue":'',
+            "wed":'',
+            "thu":'',
+            "fri":'',
+            "sat":'',
+            "remarks":''
+        }
+    //}
+
+    $http.post('/getDcsInfo', $scope.dcsID).then(function(response) {
+        
+        $scope.dcs = response.data;
+        console.log($scope.dcs);
+    });
+    
+    $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
+        
+        $scope.dcsDetailsList = response.data;
+        console.log($scope.dcsDetailsList); 
+        console.log("Hello dcsdetails");
+    });
+
+    $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
+        $scope.customerList = response.data;
+    });
+
+    $scope.addDcsEntry = function() {
+        $scope.dcsEntry.dcsID = $routeParams.dcsID;
+
+        $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
+            
+            var returnedData = response.data;
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "DCS Entry added successfully!"
+                });
+
+
+                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
+                
+                angular.element('#createDcsEntry').modal('toggle');
+            }
+        });
+    }
+
+    
 });
