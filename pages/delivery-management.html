@@ -10,17 +10,21 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="txtDcsPeriodFrom form-label">Drivers</label>
-                    <input type="date" class="form-control" id="txtDcsPeriodFrom" data-ng-model="dcs.periodFrom" />
+                    <label for="txtBdafDriver form-label">Driver</label>
+                    <select type="text" class="form-control" id="txtDriver" data-ng-model="bdaf.driverID">
+                        <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}} - {{d.staffIC}}</option>
+                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label for="txtDcsPeriodTo form-label">General Worker</label>
-                    <input type="date" class="form-control" id="txtDcsPeriodTo" data-ng-model="dcs.periodTo" />
+                    <label for="txtBdafGeneralWorker form-label">General Worker</label>
+                    <select type="text" class="form-control" id="txtGeneralWorker" data-ng-model="bdaf.staffID">
+                        <option data-ng-repeat="d in generalWorkerList" value={{d.staffID}}>{{d.staffName}} - {{d.staffIC}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                  <label for="txtDcsDriver form-label">Date</label>
-                  <input type="text" class="form-control" id="txtDcsDriver" data-ng-model="dcs.driver" />
+                  <label for="txtBdafDate form-label">Date</label>
+                  <input type="date" class="form-control" id="txtBdafDate" data-ng-model="bdaf.date" />
                 </div>
          
                 
@@ -29,7 +33,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="addDcs();">Create</button>
+              <button type="button" class="btn btn-primary" data-ng-click="addBdaf();">Create</button>
             </div>
           </div>
         </div>
@@ -57,19 +61,23 @@
                 <table class="table table-hover table-striped table-clickable">
                     <thead>
                         <tr>
-                            <th width="20%" data-ng-click="orderBy('dcsID');">BDAF ID <i class="fas fa-sort-down"></i></th>
-                            <th width="15%" data-ng-click="orderBy('periodFrom');">Drivers <i class="fas fa-sort-down"></i></th>
-                            <th width="20%" data-ng-click="orderBy('periodTo');">General Worker <i class="fas fa-sort-down"></i></th>
-                            <th width="20%" data-ng-click="orderBy('periodTo');">Date <i class="fas fa-sort-down"></i></th>
+                            <th width="20%" data-ng-click="orderBy('bdafID');">BDAF ID <i class="fas fa-sort-down"></i></th>
+                            <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                            <th width="15%" data-ng-click="orderBy('driver');">Driver <i class="fas fa-sort-down"></i></th>
+                            <th width="20%" data-ng-click="orderBy('generalWorker');">General Worker <i class="fas fa-sort-down"></i></th>
+                            <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
+                            <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i class="fas fa-sort-down"></i></th>
                             <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                         </tr>
                     </thead>
                     <tbody>               
-                        <tr data-ng-repeat="b in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewdcs(d.id);">
+                        <tr data-ng-repeat="b in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewbdaf(b.id);">
                             <td data-ng-bind="b.id"></td>
-                            <td data-ng-bind="b.date"></td>
-                            <td data-ng-bind="b.drivers"></td>
+                            <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
+                            <td data-ng-bind="b.driver"></td>
                             <td data-ng-bind="b.generalWorker"></td>
+                            <td data-ng-bind="b.authorizedBy"></td>
+                            <td data-ng-bind="b.authorizedDate"></td>
                             <td data-ng-bind="b.status"></td>
                             
                         </tr>

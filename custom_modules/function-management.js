@@ -53,6 +53,21 @@ function makeID(keyword, creationDate) {
             property = "dcsID";
             header = "DCS";
             break;
+        case "bdaf":
+            table = "tblbdaf";
+            property = "bdafID";
+            header = "BDAF";
+            break;
+        case "dbd":
+            table = "tbldbd";
+            property = "dbdID";
+            header = "DBD";
+            break;
+        case "blost":
+            table = "tblblost";
+            property = "blostID";
+            header = "BLOST";
+            break;
         case "chat":
             table = "tblchat";
             property = "chatID";
@@ -179,6 +194,10 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.delivery.view == \'A\'" role="menuitem"><a class="menu__link" href="#/delivery-management"><i class="fas fa-truck-loading"></i> Delivery Management</a></li>';
         }
+        case "view damagedlost":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.damagedlost.view == \'A\'" role="menuitem"><a class="menu__link" href="#/damaged-lost-bin"><i class="fas fa-dumpster-fire"></i> Damaged & Lost Bin Management</a></li>';
+        }
         case "view role":
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/role-management"><i class="fa fa-lock"></i> Role Management</a></li>';
@@ -191,6 +210,7 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/reporting"><i class="fa fa-file"></i> Reporting</a></li>';
             }
+            
         
     }
 }

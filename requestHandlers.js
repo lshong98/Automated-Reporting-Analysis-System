@@ -126,7 +126,7 @@ app.get('/bin-database', function (req, res) {
 });
 app.get('/bin-inventory', function (req, res) {
     'use strict';
-    res.sendFile('pages/bin-inventory.html', {root: __dirname});
+    res.sendFile('pages/bin-inventory.html', {root: __dirname}); 
 });
 app.get('/authorization', function (req, res) {
     'use strict';
@@ -143,6 +143,10 @@ app.get('/complaint-detail/:complaintCode', function (req, res) {
 app.get('/delivery-management', function (req, res) {
     'use strict';
     res.sendFile('pages/delivery-management.html', {root: __dirname});
+});
+app.get('/damaged-lost-bin', function (req, res) {
+    'use strict';
+    res.sendFile('pages/damaged-lost-bin.html', {root: __dirname});
 });
 
 module.exports = app;
