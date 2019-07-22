@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add a DCS</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">Add a BDAF</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -10,55 +10,63 @@
         <div class="modal-body">
             
             <div class="form-group">
-                <label for="txtCompany form-label">Company Name</label>
-                <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.companyName">
-                        <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.companyName}}</option>
+                <label for="txtCompany form-label">Location</label>
+                <select type="text" class="form-control" id="txtCustomer" data-ng-model="bdafEntry.customerID">
+                        <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
                 </select>
             </div>
             <div class="form-group"> 
-              <label for="txtAddress form-label">Address</label>
-              <select type="text" class="form-control" id="txtAddress" data-ng-model="dcsEntry.customerID">
-                    <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+              <label for="txtAddress form-label">Contact Person</label>
+              <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.customerName">
+                    <option data-ng-repeat="c in customerList" value={{c.name}}>{{c.name}} - {{c.ic}}</option>
                 </select>
             </div>
             <div class="form-group">
-              <label for="txtBeBins form-label">BE Bins/Units</label> 
-              <input type="text" class="form-control" id="txtBeBins" data-ng-model="dcsEntry.beBins" />
+              <label for="txtBeBins form-label">Contact No</label> 
+              <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.contactNumber">
+                    <option data-ng-repeat="c in customerList" value={{c.contactNumber}}>{{c.contactNumber}}</option>
+                </select>
             </div>
         
             <div class="form-group">
-                <label for="txtAcrBins form-label">ACR Bins/Units</label>
-                <input type="text" class="form-control" id="txtAcrBins" data-ng-model="dcsEntry.acrBins" />
+                <label for="txtAcrBins form-label">ACR Sticker</label>
+                <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.acrSticker" />
             </div>
             <div class="form-group">
-              <label for="txtAreaCode form-label">Area Code</label>
-              <input type="text" class="form-control" id="txtAreaCode" data-ng-model="dcsEntry.areaCode" />
+              <label for="txtAreaCode form-label">ACRF No.</label>
+              <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.acrfNo">
+                    <option data-ng-repeat="a in acrList" value={{a.acrID}}>{{a.acrID}}</option>
+                </select>
             </div>
             <div class="form-group">
-                <label>Collection Days</label>
-                    <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.mon" value="true"> Mon</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.tue" value="true"> Tue</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.wed" value="true"> Wed</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.thu" value="true"> Thu</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.fri" value="true"> Fri</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.sat" value="true"> Sat</label>
-                    </div>
+                <label for="txtRemarks form-label">Job Description</label>
+                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.jobDesc" />
             </div>
             <div class="form-group">
-                    <label for="txtRemarks form-label">Remarks</label>
-                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="dcsEntry.remarks" />
-                  </div>
+                <label for="txtRemarks form-label">Bin Size</label>
+                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.binSize" />
+            </div>
+            <div class="form-group">
+                <label for="txtRemarks form-label">Unit</label>
+                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.unit" />
+            </div>
+            <div class="form-group">
+                <label for="txtRemarks form-label">Remarks</label>
+                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.remarks" />
+            </div>
+            <div class="form-group">
+                <label for="txtRemarks form-label">binDelivered</label>
+                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.binDelivered" />
+            </div>
+            <div class="form-group">
+                <label for="txtRemarks form-label">binPulled</label>
+                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.binPulled" />
+            </div>
+            <div class="form-group">
+                <label for="txtRemarks form-label">Completed</label>
+                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.Completed" />
+            </div>
+
      
             
             
@@ -66,7 +74,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-ng-click="addDcsEntry();">Create</button>
+          <button type="button" class="btn btn-primary" data-ng-click="addBdafEntry();">Create</button>
         </div>
       </div>
     </div>

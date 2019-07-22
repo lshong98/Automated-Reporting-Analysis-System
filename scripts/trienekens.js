@@ -157,6 +157,10 @@ app.service('storeDataService', function() {
             "query": '',
             "authorize": ''
         },
+        "positionID": {
+            "driverPosition": 'DRV',
+            "generalWorkerPosition": 'GWK'
+        },
         "show": {
             "account": {
                 "create": 'I',
@@ -220,6 +224,21 @@ app.service('storeDataService', function() {
                 "edit": 'I',
                 "create": 'I'
             },
+            "bdafDetails": {
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I'
+            },
+            "dbdDetails": {
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I'
+            },
+            "blostDetails": {
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I'
+            },
             "reporting":{
                 "view": 'I',
                 "edit": 'I',
@@ -265,6 +284,8 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         scope.showDcsDetails = true;
         scope.showDelivery = true;
         scope.showBdafDetails = true;
+        scope.showDbdDetails = true;
+        scope.showBlostDetails = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -2110,6 +2131,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     }
 
     $scope.show = angular.copy(storeDataService.show.acr);
+    var driverPosition = angular.copy(storeDataService.positionID.driverPosition);
 
     function renderSltPicker() {
         angular.element('.selectpicker').selectpicker('refresh');
@@ -2128,6 +2150,12 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             console.log("DCS data received by controller");
             console.log(response.data);
         });
+
+        $http.post('/getStaffList', {"positionID" : driverPosition}).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.driverList = response.data;
+
+        }); 
     }
     getAllDcs(); //call
 
@@ -2177,7 +2205,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
     
-    $scope.showDcsDetails = true;
+    //$scope.showDcsDetails = true;
    
     $scope.dcsDetailsList = [];
     $scope.dcs = [];
@@ -2240,7 +2268,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
                 });
 
 
-                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
+                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
                 
                 angular.element('#createDcsEntry').modal('toggle');
             }
@@ -2258,24 +2286,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
 
-    /*$scope.databaseBin = {
-        "date": '',
-        "name": '',
-        "icNo": '',
-        "serialNo": '',
-        "rcDwell": '',
-        "houseNo": '',
-        "tmnKpg": '',
-        "areaCode": '',
-        "status": '',
-        "comment": '',
-        "binSize": '',
-        "address": '',
-        "companyName": '',
-        "acrfSerialNo": '',
-        "itemType": '',
-        "path": '' 
-    };*/
+    
     $scope.databaseBin = {
         "date": '',
         "name":'',
@@ -3252,7 +3263,7 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         }
         if (actioncode == "slv") {
 
-            swal({
+            swal({ 
                     title: "Solved",
                     text: "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)",
                     type: "warning",
@@ -3365,8 +3376,8 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
     $scope.bdafList = [];
     $scope.driverList = [];
     $scope.generalWorkerList = [];
-    var driverPosition = "DRV";
-    var generalWorkerPosition = "GWK";
+    var driverPosition = angular.copy(storeDataService.positionID.driverPosition);
+    var generalWorkerPosition = angular.copy(storeDataService.positionID.generalWorkerPosition);
     
     console.log("DELIVERY MANAGEMENT ACTIVATED!!");
 
@@ -3456,27 +3467,23 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
 
 app.controller('bdafDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
 
-    $scope.show = angular.copy(storeDataService.show.dcsDetails);
+    $scope.show = angular.copy(storeDataService.show.bdafDetails);
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
     
-    $scope.showDcsDetails = true;
+    //$scope.showDcsDetails = true;
    
-    $scope.dcsDetailsList = [];
-    $scope.dcs = [];
+    $scope.bdafDetailsList = [];
+    $scope.bdaf = [];
     $scope.customerList = [];
-    $scope.dcsID = {};
-    $scope.dcsID.id = $routeParams.dcsID;
+    $scope.acrList = [];
+    $scope.bdafID = {};
+    $scope.bdafID.id = $routeParams.bdafID;
 
-    $scope.test = 
-        {
-            "id": "sdfs",
-            "info": "info"
-        }
     
     //$scope.initializeDcsDetails = function(){
-        $scope.dcsDetails = {
+        $scope.bdafDetails = {
             "dcsID":'',
             "acrID":'',
             "areaID":'',
@@ -3488,45 +3495,48 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
             "wed":'',
             "thu":'',
             "fri":'',
-            "sat":'',
+            "sat":'', 
             "remarks":''
         }
     //}
 
-    $http.post('/getDcsInfo', $scope.dcsID).then(function(response) {
+    $http.post('/getBdafInfo', $scope.bdafID).then(function(response) {
         
-        $scope.dcs = response.data;
+        $scope.bdaf = response.data;
         console.log($scope.dcs);
     });
     
-    $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
+    $http.post('/getBdafDetails', $scope.bdafID).then(function(response) {
         
-        $scope.dcsDetailsList = response.data;
-        console.log($scope.dcsDetailsList); 
-        console.log("Hello dcsdetails");
+        $scope.bdafDetailsList = response.data;
+        console.log($scope.bdafDetailsList); 
     });
 
-    $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
+    $http.get('/getCustomerList', $scope.bdafID).then(function(response) {
         $scope.customerList = response.data;
     });
 
-    $scope.addDcsEntry = function() {
-        $scope.dcsEntry.dcsID = $routeParams.dcsID;
+    $http.get('/getAcrList', $scope.bdafID).then(function(response) {
+        $scope.acrList = response.data;
+    });
 
-        $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
+    $scope.addBdafEntry = function() {
+        $scope.bdafEntry.bdafID = $routeParams.bdafID;
+
+        $http.post('/addBdafEntry', $scope.bdafEntry).then(function(response) {
             
             var returnedData = response.data;
 
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
-                    "message": "DCS Entry added successfully!"
+                    "message": "BDAF Entry added successfully!"
                 });
 
 
-                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
+                $scope.bdafDetailsList.push({ "location": $scope.bdafEntry.location, "contactPerson": $scope.bdafEntry.contactPerson, "contactNo": $scope.bdafEntry.contactNo, "acrSticker": $scope.bdafEntry.acrSticker, "acrfNo": $scope.bdafEntry.acrfNo, "jobDesc": $scope.bdafEntry.jobDesc, "binSize": $scope.bdafEntry.binSize, "unit": $scope.bdafEntry.unit, "remarks": $scope.bdafEntry.remarks, "binDelivered": $scope.bdafEntry.binDelivered, "binPulled": $scope.bdafEntry.binPulled, "completed": $scope.bdafEntry.completed });
                 
-                angular.element('#createDcsEntry').modal('toggle');
+                angular.element('#createBdafEntry').modal('toggle');
             }
         });
     }

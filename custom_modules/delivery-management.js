@@ -44,7 +44,7 @@ app.post('/getBdafDetails', function(req,res){
     'use strict';
     console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
     console.log(req.body);
-    var sql = "SELECT b.bdafID, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as location, c.contactPerson, c.contactNo, a.acrID, b.acrSticker, b.jobDesc, db.binSize, b.serialNo, b.remarks, b.binDelivered, b.binPulled, b.completed from tblcustomer as c inner join tblbdafentry as b on b.customerID = c.customerID inner join tblbins as db on b.serialNo = db.serialNo where d.bdafID = '" + req.body.id + "'";
+    var sql = "SELECT b.bdafID, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as location, c.name as contactPerson, c.contactNumber as contactNo, b.acrID, b.acrSticker, b.jobDesc, db.size as binSize, b.serialNo, b.remarks, b.binDelivered, b.binPulled, b.completed from tblcustomer as c inner join tblbdafentry as b on b.customerID = c.customerID inner join tblbins as db on b.serialNo = db.serialNo where b.bdafID = '" + req.body.id + "'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     console.log(sql);
     database.query(sql, function (err, result) {
@@ -52,7 +52,7 @@ app.post('/getBdafDetails', function(req,res){
             throw err; 
         } 
          
-        res.json(result);
+        res.json(result); 
         console.log(result); 
     });
 }); 
@@ -83,12 +83,26 @@ app.get('/getCustomerList', function(req,res){
         res.json(result);
         console.log(result);
     }); 
+}); 
+
+app.get('/getAcrList', function(req,res){
+    'use strict';
+    console.log(req.body);
+    var sql = "SELECT * from tblacr";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+        res.json(result);
+        console.log(result);
+    }); 
 });
 
 app.post('/getBdafInfo',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
-    var sql = "SELECT * from tbldcs where dcsID = '" + req.body.id + "'";
+    var sql = "SELECT * from tblbdaf where bdafID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) { 
             throw err;
