@@ -14,7 +14,7 @@ socket.on('connect', function() {
         "position": window.sessionStorage.getItem('position')
     });
 
-    if (window.sessionStorage.getItem('position') == "Manager") {
+    if (window.sessionStorage.getItem('position') == "Manager" || window.sessionStorage.getItem('position') == "Administrator") {
         socket.emit('room', "manager");
     }
 
@@ -771,6 +771,9 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
 
 app.controller('managerController', function($scope, $http, $filter) {
     'use strict';
+    
+    $scope.markerList = [];
+    
     //date configuration
     var currentDate = new Date();
     var startDate = new Date();
@@ -1047,49 +1050,82 @@ app.controller('managerController', function($scope, $http, $filter) {
     };
     map = new google.maps.Map($googleMap, visualizeMap);
 
-    $http.get('/getLngLat').then(function(response) {
-        $scope.lnglatlist = response.data;
-        console.log($scope.lnglatlist);
-
-        var rd = {
-            url: '../styles/mapmarkers/rd.png'
-
-        };
-
-        for (var i = 0; i < $scope.lnglatlist.length; i++) {
-
-            var myLatLng = { lat: $scope.lnglatlist[i].latitude, lng: $scope.lnglatlist[i].longitude };
-
-            var marker = new google.maps.Marker({
-                position: myLatLng,
-                icon: rd
+//    $http.get('/getLngLat').then(function(response) {
+//        $scope.lnglatlist = response.data;
+//
+//        var rd = {
+//            url: '../styles/mapmarkers/rd.png'
+//        };
+//
+//        for (var i = 0; i < $scope.lnglatlist.length; i++) {
+//            var myLatLng = { lat: $scope.lnglatlist[i].latitude, lng: $scope.lnglatlist[i].longitude };
+//
+//            var marker = new google.maps.Marker({
+//                position: myLatLng,
+//                icon: rd
+//            });
+//            marker.setMap(map);
+//        }
+//    });
+//
+//    $http.get('/getCollectedLngLat').then(function(response) {
+//        $scope.collectedlnglatlist = response.data;
+//        console.log($scope.lnglatlist);
+//        var gd = {
+//            url: '../styles/mapmarkers/gd.png'
+//
+//        };
+//        for (var i = 0; i < $scope.collectedlnglatlist.length; i++) {
+//
+//            var myLatLng = { lat: $scope.collectedlnglatlist[i].latitude, lng: $scope.collectedlnglatlist[i].longitude };
+//
+//            var marker = new google.maps.Marker({
+//                position: myLatLng,
+//                icon: gd
+//            });
+//            marker.setMap(map);
+//        }
+//    });
+    
+    $http.get('/livemap').then(function (response) {
+        var data = response.data,
+            coordinate = {"lat": '', "lng": ''},
+            dot = {"url": ''}, marker;
+        
+        $.each(data, function (key, value) {
+            coordinate.lat = value.latitude;
+            coordinate.lng = value.longitude;
+            dot.url = value.status === "NOT COLLECTED" ? '../styles/mapmarkers/rd.png' : '../styles/mapmarkers/gd.png';
+            
+            marker = new google.maps.Marker({
+                id: value.serialNo,
+                position: coordinate,
+                icon: dot
             });
-
             marker.setMap(map);
-
-        }
+            $scope.markerList.push(marker);
+        });
+    });
+    
+    socket.on('synchronize map', function(data) {
+        $.each($scope.markerList, function (key, value) {
+            if (value.id == data.serialNumber) {
+                value.icon.url = "../styles/mapmarkers/gd.png";
+                
+                var marker = new google.maps.Marker({
+                    position: value.position,
+                    icon: value.icon
+                });
+                marker.setMap(map);
+            }
+        });
     });
 
-    $http.get('/getCollectedLngLat').then(function(response) {
-        $scope.collectedlnglatlist = response.data;
-        var gd = {
-            url: '../styles/mapmarkers/gd.png'
-
-        };
-        for (var i = 0; i < $scope.collectedlnglatlist.length; i++) {
-
-            var myLatLng = { lat: $scope.collectedlnglatlist[i].latitude, lng: $scope.collectedlnglatlist[i].longitude };
-
-            var marker = new google.maps.Marker({
-                position: myLatLng,
-                icon: gd
-            });
-
-            marker.setMap(map);
-
-        }
-    });
-
+    // Demo Insert Tag
+//    setTimeout(function () {
+//        $http.post('/insertTag', {"data": "example data"}).then(function (response) {
+//        });
+//    }, 5000);
 });
 
 app.controller('officerController', function($scope, $filter, $http, $window) {
