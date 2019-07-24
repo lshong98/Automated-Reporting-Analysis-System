@@ -20,7 +20,9 @@
           </div>
           <div class="form-group">
             <label for="txtDcsDriver form-label">Driver</label>
-            <input type="text" class="form-control" id="txtDcsDriver" data-ng-model="dcs.driver" />
+            <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.driverID">
+                <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffID}}: {{d.staffName}}</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="txtDcsReplacementPeriodFrom form-label">Replacement Period From</label>
@@ -33,7 +35,9 @@
           </div>
           <div class="form-group">
             <label for="txtDcsReplacementDriver form-label">Replacement Driver</label>
-            <input type="text" class="form-control" id="txtDcsReplacementDriver" data-ng-model="dcs.replacementDriver" />
+            <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.replacementDriverID">
+                <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffID}}: {{d.staffName}}</option>
+            </select>
           </div>
    
           

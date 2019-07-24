@@ -9,7 +9,7 @@ app.post('/addDcs',function(req,res){
     console.log(req.body);
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driver + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriver + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', 'A')";
+        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
@@ -67,14 +67,16 @@ app.post('/getDcsDetails', function(req,res){
 app.post('/addDcsEntry',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
-    var sql = "INSERT INTO tblacr (acrID, dcsID, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + null + "', '" + req.body.dcsID + "' , '"  + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
+    f.makeID("acr", req.body.creationDate).then(function (ID) {
+        var sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
 
-        res.json({"status": "success", "message": "ACR created!", "details": {"dcsID": req.body.dcsID}});
-    });
+            res.json({"status": "success", "message": "ACR created!", "details": {"acrID": req.body.acrID}});
+        });
+});
 }); // Complete
 
 

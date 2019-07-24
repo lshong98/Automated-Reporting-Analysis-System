@@ -2105,6 +2105,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     'use strict';
     $scope.areaList = [];
     $scope.dcsList = [];
+    $scope.driverList = [];
     
 
 
@@ -2122,12 +2123,12 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             "id": '',
             "creationDateTime": '',
             "driver": '',
-            "periodFrom": '',
+            "periodFrom": '', 
             "periodTo": '',
             "replacementDriver": '',
             "replacementPeriodFrom": '',
             "replacementPeriodTo": ''
-        };
+        }; 
     }
 
     $scope.show = angular.copy(storeDataService.show.acr);
@@ -2257,6 +2258,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.addDcsEntry = function() {
         $scope.dcsEntry.dcsID = $routeParams.dcsID;
 
+        $scope.dcsEntry.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
             
             var returnedData = response.data;
@@ -3478,6 +3480,7 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
     $scope.bdaf = [];
     $scope.customerList = [];
     $scope.acrList = [];
+    $scope.binList = [];
     $scope.bdafID = {};
     $scope.bdafID.id = $routeParams.bdafID;
 
@@ -3520,8 +3523,34 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
         $scope.acrList = response.data;
     });
 
+    $http.get('/getBinList', $scope.bdafID).then(function(response) {
+        $scope.binList = response.data;
+    });
+
     $scope.addBdafEntry = function() {
         $scope.bdafEntry.bdafID = $routeParams.bdafID;
+
+        console.log($scope.bdafEntry.binDelivered);
+        console.log($scope.bdafEntry.binPulled);
+        console.log($scope.bdafEntry.serialNo);
+
+        if($scope.bdafEntry.binPulled != ''){
+            $scope.bdafEntry.serialNo = $scope.bdafEntry.binPulled;
+
+            if($scope.bdafEntry.binDelivered != ''){
+                $scope.bdafEntry.serialNo = $scope.bdafEntry.binDelivered;
+            } else{
+                $scope.bdafEntry.binDelivered = 'null'; 
+            };
+
+        } else {
+            $scope.bdafEntry.serialNo = $scope.bdafEntry.binDelivered;
+            $scope.bdafEntry.binPulled = 'null';
+        }; 
+
+        console.log($scope.bdafEntry.binDelivered);
+        console.log($scope.bdafEntry.binPulled);
+        console.log($scope.bdafEntry.serialNo);
 
         $http.post('/addBdafEntry', $scope.bdafEntry).then(function(response) {
             
@@ -3547,7 +3576,7 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
 app.controller('damagedLostController', function($scope, $http, $filter, storeDataService) {
     'use strict';
 
-    $scope.bdafList = [];
+    $scope.blostList = [];
     console.log("DAMAGED & LOST BIN MANAGEMENT ACTIVATED!!");
 
 
@@ -3597,13 +3626,14 @@ app.controller('damagedLostController', function($scope, $http, $filter, storeDa
     function getAllBlost() {
         $http.post('/getAllBlost', $scope.currentStatus).then(function(response) {
             $scope.searchAcrFilter = '';
-            $scope.dcsList = response.data;
+            $scope.blostList = response.data;
 
-            console.log("DCS data received by controller");
+            console.log("BLOST data received by controller");
             console.log(response.data);
         });
     }
-    //getAllDcs(); //call
+    //getAllDbd(); //call
+    getAllBlost();
 
     $scope.statusList = true;
     $scope.updateStatusList = function(){
@@ -3617,25 +3647,26 @@ app.controller('damagedLostController', function($scope, $http, $filter, storeDa
 
     angular.element('.datepicker').datepicker();
 
-    $scope.addDcs = function() {
-        $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addDcs', $scope.dcs).then(function(response) {
+    $scope.addBlost = function() {
+        $scope.blost.preparedBy = $window.sessionStorage.getItem('owner');
+        $scope.blost.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addBlost', $scope.blost).then(function(response) {
             var returnedData = response.data; 
-            var newDcsID = returnedData.details.dcsID;
+            var newBlostID = returnedData.details.blostID;
             var today = new Date();
 
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
-                    "message": "DCS added successfully!"
+                    "message": "BLOST added successfully!"
                 });
 
                 //     var area = $('.selectpicker option:selected').text();
                 //    var areastr = area.split(" ")[2];
                 //                console.log(areastr);
-                $scope.dcsList.push({ "id": newDcsID, "creationDateTime": today, "driver": $scope.dcs.driver, "periodFrom": $scope.dcs.periodFrom, "periodTo": $scope.dcs.periodTo, "replacementDriver": $scope.dcs.replacementDriver, "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom, "replacementPeriodTo": $scope.dcs.replacementPeriodTo, "status": 'ACTIVE' });
+                $scope.dcsList.push({ "id": newBlostID, "creationDateTime": today,  "preparedBy": $scope.blost.authorizedBy, "authorizedBy": $scope.blost.authorizedBy, "authorizedDate": $scope.blost.authorizedDate, "status": 'ACTIVE' });
                 // $scope.filterAcrList = angular.copy($scope.acrList);
-                angular.element('#createDCS').modal('toggle');
+                angular.element('#createBLOST').modal('toggle');
                 // $scope.totalItems = $scope.filterAcrList.length;
             }
         });

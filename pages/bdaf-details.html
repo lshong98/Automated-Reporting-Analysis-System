@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
               <label for="txtAreaCode form-label">ACRF No.</label>
-              <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.acrfNo">
+              <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.acrID">
                     <option data-ng-repeat="a in acrList" value={{a.acrID}}>{{a.acrID}}</option>
                 </select>
             </div>
@@ -43,12 +43,12 @@
                 <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.jobDesc" />
             </div>
             <div class="form-group">
-                <label for="txtRemarks form-label">Bin Size</label>
-                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.binSize" />
+                <label for="txtRemarks form-label">Unit</label>
+                <input type="text" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.unit" />
             </div>
             <div class="form-group">
-                <label for="txtRemarks form-label">Unit</label>
-                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.unit" />
+                <label for="txtRemarks form-label">Bin Size</label>
+                <input type="text" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.binSize" />
             </div>
             <div class="form-group">
                 <label for="txtRemarks form-label">Remarks</label>
@@ -56,15 +56,19 @@
             </div>
             <div class="form-group">
                 <label for="txtRemarks form-label">binDelivered</label>
-                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.binDelivered" />
+                <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.binDelivered">
+                    <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="txtRemarks form-label">binPulled</label>
-                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.binPulled" />
+                <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.binPulled">
+                    <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="txtRemarks form-label">Completed</label>
-                <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.Completed" />
+                <input type="text" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.Completed" />
             </div>
 
      

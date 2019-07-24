@@ -4,24 +4,24 @@ var database = require('./database-management');
 var f = require('./function-management');
 
 // ACR Management
-app.post('/addBdaf',function(req,res){
+app.post('/addBlost',function(req,res){
     'use strict';
 
-    f.makeID("bdaf", req.body.creationDate).then(function (ID) {
+    f.makeID("blost", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tblbdaf (bdafID, creationDateTime, driverID, staffID, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.driverID + "', '" + req.body.staffID + "', 'A')";
+        var sql = "INSERT INTO tblblost (blostID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.preparedBy +  "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
 
-            res.json({"status": "success", "message": "BDAF created!", "details": {"bdafID": ID}});
+            res.json({"status": "success", "message": "BLOST created!", "details": {"blostID": ID}});
         });
     });
 }); // Complete
-app.post('/getAllBdaf', function(req,res){
+app.post('/getAllBlost', function(req,res){
     'use strict';
-    var sql = "SELECT b.bdafID AS id, b.creationDateTime as date, b.driverID as driver, b.staffID as generalWorker, b.authorizedBy, b.authorizedDate, b.status from tblbdaf as b";
+    var sql = "SELECT blostID, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, status from tblblost";
         
     if(req.body.status){
         sql += " WHERE status = 'A'";
@@ -34,10 +34,8 @@ app.post('/getAllBdaf', function(req,res){
             throw err; 
         }
         res.json(result);
-        console.log("GET ALL BDAF: " + result);
-    }); 
-
-    
+        console.log("GET ALL BLOST: " + result);
+    });  
 });
 
 app.post('/getBdafDetails', function(req,res){
