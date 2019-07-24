@@ -5,7 +5,7 @@ var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
 // Cloud database access
-// var DB_HOST = '35.247.180.192';
+ //var DB_HOST = '35.247.180.192';
  //var DB_USER = 'root';
  //var DB_PASS = 'root';
  //var DB_NAME = 'trienekenstest';
@@ -92,7 +92,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblacrfreq (  acrID varchar(15),  areaID varchar(15),  day varchar(30),  primary key (acrID, areaID, day),  foreign key(acrID) references tblacr(acrID),  foreign key(areaID) references tblarea(areaID))",
         "CREATE TABLE tblbincenter (  binCenterID varchar(15),  areaID varchar(15),  binCenterName varchar(100),  binCenterLocation varchar(100),  binCenterStatus char(1),  creationDateTime datetime,  PRIMARY KEY (binCenterID),  foreign key (areaID) references tblarea(areaID))",
         "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID int,  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
-        "CREATE TABLE tbltag (  date date,  serialNo int,  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tbltruck(truckID))",
+        "CREATE TABLE tbltag ( tagID int auto_increment, date date,  serialNo int,  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (tagID),  foreign key (truckID) references tbltruck(truckID))",
         "CREATE TABLE tblcomplainttype ( complaintType int auto_increment, complaint varchar(15), primary key (complaintType))",
         "CREATE TABLE tblcomplaint ( complaintID int auto_increment, customerID int, date datetime, complaintType int, complaintTitle mediumtext, complaintContent longtext, status char(1), primary key (complaintID), foreign key (customerID) references tblcustomer(customerID), foreign key (complaintType) references tblcomplainttype(complaintType))",
         "CREATE TABLE tbllog (transactionID int auto_increment, date datetime, staffID varchar(15), authorizedBy varchar(15), action varchar(15), description mediumtext, rowID varchar(15), tblName varchar(50), primary key (transactionID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
@@ -267,7 +267,7 @@ emitter.on('dummyData', function () {
         "insert into tblacrfreq values('a001','a001',dayofweek(current_date()))",
         "insert into tblbincenter values('a001','a001','bin center 1','tabuan bin center','a',current_timestamp())",
         "insert into tbllostbinrecord values(NULL,'1','1','1',false,'a001',current_date(),'no reason')",
-        "insert into tbltag values(current_timestamp(),'1','a001','44.21530','-99.70123')",
+        "insert into tbltag values(null, current_timestamp(),'1','a001','44.21530','-99.70123')",
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -287,7 +287,8 @@ emitter.on('eventScheduler', function () {
     var sqls, i;
     
     sqls = [
-        "create event updateInventory on schedule every 1 day starts concat(current_date(),' 23:59:59') do insert into tblbininventory values(current_date(),'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');"
+        "create event updateInventory on schedule every 1 day starts concat(current_date(),' 23:59:59') do insert into tblbininventory values(current_date(),'0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')",
+        "set global event_scheduler='ON'"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {

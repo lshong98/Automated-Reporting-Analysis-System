@@ -162,10 +162,10 @@
                                 <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr data-ng-repeat="nb in inventoryRecordList | yearMonthFilter:yearMonth | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                        <tbody> <!--| yearMonthFilter:yearMonth-->
+                            <tr data-ng-repeat="nb in inventoryRecordList  | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td>
-                                    <span data-ng-show="showNewMgb" data-ng-bind="nb.date"></span>
+                                    <span data-ng-show="showNewMgb" data-ng-bind="nb.date | date:'dd/MM/yyyy'"></span>
                                 </td>
                                 <td>
                                     <div editable>
@@ -222,8 +222,8 @@
                                     </div>
                                 </td>
                                 <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showNewMgb" data-ng-click="editNewMgb(nb.inNew120, nb.inNew240, nb.inNew660, nb.inNew1000, nb.outNew120, nb.outNew240, nb.outNew660, nb.outNew1000);"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showNewMgb" data-ng-click="saveNewMgb();"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showNewMgb" data-ng-click="editNewMgb();"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showNewMgb" data-ng-click="saveNewMgb(nb.date | date:'yyyy/MM/dd', nb.doNo,nb.inNew120, nb.inNew240, nb.inNew660, nb.inNew1000, nb.outNew120, nb.outNew240, nb.outNew660, nb.outNew1000);"><i class="fa fa-save"></i></button>
                                     <button class="btn btn-sm btn-default" data-ng-show="!showNewMgb" data-ng-click="cancelNewMgb();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
@@ -248,10 +248,10 @@
                                 <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr data-ng-repeat="rb in inventoryRecordList | yearMonthFilter:yearMonth | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                        <tbody> <!-- | yearMonthFilter:yearMonth -->
+                            <tr data-ng-repeat="rb in inventoryRecordList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td>
-                                    <span data-ng-show="showReusableMgb" data-ng-bind="rb.date"></span>
+                                    <span data-ng-show="showReusableMgb" data-ng-bind="rb.date | date:'dd/MM/yyyy'"></span>
                                 </td>
                                 <td>
                                     <div editable>
@@ -302,8 +302,8 @@
                                     </div>
                                 </td>
                                 <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showReusableMgb" data-ng-click="editReusableMgb(rb.inReusable120, rb.inReusable240, rb.inReusable660, rb.inReusable1000, rb.outReusable120, rb.outReusable240, rb.outReusable660, rb.outReusable1000);"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showReusableMgb" data-ng-click="saveReusableMgb();"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showReusableMgb" data-ng-click="editReusableMgb();"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showReusableMgb" data-ng-click="saveReusableMgb(rb.date | date:'yyyy/MM/dd',rb.inReusable120, rb.inReusable240, rb.inReusable660, rb.inReusable1000, rb.outReusable120, rb.outReusable240, rb.outReusable660, rb.outReusable1000 );"><i class="fa fa-save"></i></button>
                                     <button class="btn btn-sm btn-default" data-ng-show="!showReusableMgb" data-ng-click="cancelReusableMgb();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
