@@ -440,6 +440,65 @@ input:checked + .slider:before {
             </ul>
         </div> 
     </div>
+    <div class="col-md-6">
+            <div class="card">
+                <!-- Default panel contents -->
+                <div class="card-header">Delivery Management</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Create BDAF
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.delivery.create" data-ng-change="changeValue(auth.delivery.create, 'create delivery');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Edit BDAF
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.delivery.edit" data-ng-change="changeValue(auth.delivery.edit, 'edit delivery');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        View BDAF
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.delivery.view" data-ng-change="changeValue(auth.delivery.view, 'view delivery');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                </ul>
+            </div> 
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <!-- Default panel contents -->
+                <div class="card-header">Damaged & Lost Bin Management</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Create Forms
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.damagedlost.create" data-ng-change="changeValue(auth.damagedlost.create, 'create damagedlost');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Edit Forms
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.damagedlost.edit" data-ng-change="changeValue(auth.damagedlost.edit, 'edit damagedlost');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        View Forms
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.damagedlost.view" data-ng-change="changeValue(auth.damagedlost.view, 'view damagedlost');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                </ul>
+            </div> 
+        </div>
+        
 
     
 </div>

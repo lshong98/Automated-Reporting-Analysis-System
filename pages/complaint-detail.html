@@ -23,7 +23,7 @@
         background-color: aliceblue;
         border-radius: 7px;
         min-height: 85%;
-        max-height: 85%;
+        max-height: 407.11px;
         margin-bottom: 10px;
         padding-top: 5px;
         overflow-y: auto;
@@ -34,6 +34,7 @@
         bottom: 0;
         width: 95.55%;
     }
+/*
     .sender, .recipient {
         background-color: antiquewhite;
         padding: 15px 15px;
@@ -43,6 +44,7 @@
         margin-top: 30px;
         margin-bottom: 30px;
     }
+*/
     
     
     
@@ -265,6 +267,7 @@
 <!--        <div class="row">-->
 <!--            <div class="col-md-12">-->
         <div class="chat-box">
+<!--
             <div class="message left">
                 <div class="message-text">
                     <div><b>May be Name</b></div>
@@ -298,6 +301,7 @@
                     <div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> 11:00</small></div>
                 </div>
             </div>
+-->
             
             
 <!--
@@ -332,9 +336,9 @@
 <!--        <div class="row ">-->
             <div class="chat-input">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Enter your message" aria-label="Enter your message">
+                    <input type="text" class="form-control" data-ng-model="mymsg" placeholder="Enter your message" aria-label="Enter your message">
                     <div class="input-group-append">
-                        <button class="btn btn-outline-primary" type="button"><i class="fa fa-paper-plane"></i> Send</button>
+                        <button class="btn btn-outline-primary" type="button" data-ng-click="sendMessage();"><i class="fa fa-paper-plane"></i> Send</button>
                     </div>
                 </div>
             </div>

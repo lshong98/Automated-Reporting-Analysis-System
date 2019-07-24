@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = '';
+var SVR_PORT = 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -31,6 +31,9 @@ var transactionLog = require('./custom_modules/transaction-log');
 var authorization = require('./custom_modules/authorization');
 var databaseBinManagement = require('./custom_modules/bin-database');
 var binInventoryManagement = require('./custom_modules/bin-inventory');
+var chatManagement = require('./custom_modules/chat-management');
+var deliveryManagement = require('./custom_modules/delivery-management');
+var damagedLostBin = require('./custom_modules/damaged-lost-bin');
 
 users = [];
 connections = [];
@@ -253,7 +256,8 @@ app.get('/getLngLat', function(req, res){
             throw err;
         }
         res.json(result);
-    });    
+//        SELECT serialNo, longitude, latitude, mystatus FROM (SELECT serialNo, latitude, longitude, 'NOT COLLECTED' AS mystatus FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE) UNION ALL SELECT serialNo, latitude, longitude, 'COLLECTED' AS mystatus FROM tbltag WHERE serialNo NOT IN (SELECT serialNo FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE))) AS t ORDER BY serialNo
+    });
 });
 
 //get lng and lat of collected customer's bin 
@@ -266,7 +270,38 @@ app.get('/getCollectedLngLat',function(req,res){
             throw err;
         }
         res.json(result);
+        res.end();
     }); 
+});
+
+app.get('/livemap', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT serialNo, longitude, latitude, status FROM (SELECT serialNo, latitude, longitude, 'NOT COLLECTED' AS status FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE) UNION ALL SELECT b.serialNo, b.latitude, b.longitude, 'COLLECTED' AS status FROM tbltag t, tblbins b WHERE b.serialNo NOT IN (SELECT serialNo FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE))) AS t ORDER BY serialNo";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            res.end();
+            throw err;
+        } else {
+            res.json(result);
+            res.end();
+        }
+    });
+});
+
+app.post('/insertTag', function (req, res) {
+    'use strict';
+    
+    var sql = "INSERT into tbltag (date, serialNo, truckID, longitude, latitude) VALUE (CURRENT_DATE, 1, 'a001', '44.2153000', '-99.7012300')";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        } else {
+            emitter.emit('live map');
+//            res.json({"status": "success"});
+        }
+    });
 });
 
 app.post('/emailandupdate',function(req,res){
@@ -452,6 +487,23 @@ io.sockets.on('connection', function(socket) {
         });
     });
     
+    emitter.on('live map', function () {
+        'use strict';
+        
+        var sql = "SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE ORDER BY date ASC, serialNo DESC";
+        
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            } else {
+                io.sockets.in(roomManager).emit('synchronize map', {
+                    "serialNumber": result[0].serialNo,
+                    "status": "COLLECTED"
+                });
+            }
+        });
+    });
+    
     //Send Message
     socket.on('send message', function(data) {
         io.sockets.emit('new message', {
@@ -544,3 +596,6 @@ app.use('/', transactionLog);
 app.use('/', authorization);
 app.use('/', databaseBinManagement);
 app.use('/', binInventoryManagement);
+app.use('/', chatManagement);
+app.use('/', deliveryManagement);
+app.use('/', damagedLostBin);
