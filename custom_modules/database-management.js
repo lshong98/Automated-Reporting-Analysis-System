@@ -11,10 +11,10 @@ var emitter = new EventEmitter();
  //var DB_NAME = 'trienekenstest';
 
 // Local database access
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = 'trienekens05';
+var DB_NAME = '';
  
 // Create connection 
 var db = mysql.createConnection({ 
@@ -43,8 +43,8 @@ db.connect(function (err) {
                     console.log('MySQL Connected...');
                     emitter.emit('createTable');
                     emitter.emit('defaultUser');
-                    emitter.emit('dummyData');
-                    emitter.emit('eventScheduler');
+                    //emitter.emit('dummyData');
+                    //emitter.emit('eventScheduler');
                 });
             });
         } else {
@@ -93,10 +93,10 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblmaprect (  rectID int auto_increment,  neLat double(10,7),  neLng double(10,7),  swLat double(10,7),  swLng double(10,7),  reportID varchar(15),  primary key (rectID),  foreign key (reportID) references tblreport(reportID))",
         "CREATE TABLE tblacrfreq (  acrID varchar(15),  areaID varchar(15),  day varchar(30),  primary key (acrID, areaID, day),  foreign key(acrID) references tblacr(acrID),  foreign key(areaID) references tblarea(areaID))",
         "CREATE TABLE tblbincenter (  binCenterID varchar(15),  areaID varchar(15),  binCenterName varchar(100),  binCenterLocation varchar(100),  binCenterStatus char(1),  creationDateTime datetime,  PRIMARY KEY (binCenterID),  foreign key (areaID) references tblarea(areaID))",
-        "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID int,  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
+        "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID VARCHAR(15),  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
         "CREATE TABLE tbltag ( tagID int auto_increment, date date,  serialNo int,  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (tagID),  foreign key (truckID) references tbltruck(truckID))",
         "CREATE TABLE tblcomplainttype ( complaintType int auto_increment, complaint varchar(15), primary key (complaintType))",
-        "CREATE TABLE tblcomplaint ( complaintID int auto_increment, customerID int, date datetime, complaintType int, complaintTitle mediumtext, complaintContent longtext, status char(1), primary key (complaintID), foreign key (customerID) references tblcustomer(customerID), foreign key (complaintType) references tblcomplainttype(complaintType))",
+        "CREATE TABLE tblcomplaint ( complaintID int auto_increment, customerID VARCHAR(15), date datetime, complaintType int, complaintTitle mediumtext, complaintContent longtext, status char(1), primary key (complaintID), foreign key (customerID) references tblcustomer(customerID), foreign key (complaintType) references tblcomplainttype(complaintType))",
         "CREATE TABLE tbllog (transactionID int auto_increment, date datetime, staffID varchar(15), authorizedBy varchar(15), action varchar(15), description mediumtext, rowID varchar(15), tblName varchar(50), primary key (transactionID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID INT, creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))"
@@ -115,57 +115,57 @@ emitter.on('defaultUser', function () {
     'use strict';
     
     var sqls = [
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create account')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit account')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view account')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view role')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create truck')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit truck')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view truck')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create zone')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit zone')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view zone')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create area')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit area')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view area')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('add collection')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit collection')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create bin')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit bin')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view bin')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create acr')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit acr')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view acr')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view database')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit database')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create database')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view inventory')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view complaintlist')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view transactionLog')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view reporting')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit reporting')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create reporting')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('export reporting')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create dcsDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit dcsDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view dcsDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create delivery')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit delivery')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view delivery')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create bdafDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit bdafDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view bdafDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create damagedlost')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit damagedlost')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view damagedlost')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create dbdDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit dbdDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view dbdDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('create blostDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('edit blostDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view blostDetails')"
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create account')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit account')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view account')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view role')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create truck')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit truck')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view truck')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create zone')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit zone')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view zone')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create area')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit area')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view area')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('add collection')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit collection')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create bin')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit bin')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view bin')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create acr')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit acr')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view acr')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view database')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit database')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create database')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view inventory')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit inventory')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view authorization')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view complaintlist')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view transactionLog')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view reporting')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit reporting')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create reporting')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('export reporting')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create dcsDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit dcsDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view dcsDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create delivery')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit delivery')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view delivery')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create bdafDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit bdafDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view bdafDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create damagedlost')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit damagedlost')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view damagedlost')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create dbdDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit dbdDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view dbdDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('create blostDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('edit blostDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUES ('view blostDetails')"
         
     ], i;
     
@@ -184,69 +184,69 @@ emitter.on('defaultUser', function () {
     var roleID = "ATH" + roleFormat + "0001";
     var staffID = "ACC" + roleFormat + "0001";
     
-    var sql = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUE ('" + roleID + "', 'ADMINISTRATOR', '" + formatted + "', 'A')";
+    var sql = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleID + "', 'ADMINISTRATOR', '" + formatted + "', 'A')";
     db.query(sql, function (err, result) {
         if (err) {
             throw err;
-        }
+        } else {
         var thePassword = bcrypt.hashSync('adminacc123', 10);
-        var sql = "INSERT INTO tblstaff (staffID, username, password, positionID, creationDateTime, staffStatus) VALUE ('" + staffID + "', 'trienekens@admin.com', '" + thePassword + "', '" + roleID + "', '" + formatted + "', 'A')";
+        var sql = "INSERT INTO tblstaff (staffID, username, password, positionID, creationDateTime, staffStatus) VALUES ('" + staffID + "', 'trienekens@admin.com', '" + thePassword + "', '" + roleID + "', '" + formatted + "', 'A')";
         db.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }                     
             var sqls = [
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '1', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '2', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '3', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '4', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '5', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '6', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '7', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '8', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '9', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '10', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '11', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '12', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '13', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '14', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '15', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '16', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '17', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '18', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '19', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '20', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '21', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '22', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '23', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '24', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '25', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '26', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '27', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '28', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '29', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '30', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '31', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '32', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '33', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '34', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '35', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '36', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '37', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '38', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '39', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '40', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '41', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '42', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '43', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '44', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '45', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '46', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '47', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '48', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '49', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '50', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '51', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '1', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '2', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '3', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '4', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '5', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '6', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '7', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '8', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '9', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '10', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '11', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '12', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '13', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '14', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '15', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '16', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '17', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '18', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '19', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '20', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '21', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '22', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '23', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '24', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '25', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '26', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '27', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '28', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '29', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '30', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '31', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '32', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '33', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '34', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '35', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '36', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '37', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '38', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '39', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '40', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '41', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '42', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '43', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '44', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '45', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '46', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '47', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '48', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '49', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '50', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUES ('" + roleID + "', '51', 'A')",
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {
@@ -258,6 +258,7 @@ emitter.on('defaultUser', function () {
             }
             console.log('Administrator generated...');
         });
+        }
     });
 }); // Complete
 /* Emitter Registered */
