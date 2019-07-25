@@ -299,7 +299,6 @@ app.post('/insertTag', function (req, res) {
             throw err;
         } else {
             emitter.emit('live map');
-//            res.json({"status": "success"});
         }
     });
 });
