@@ -99,6 +99,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblcomplaint ( complaintID int auto_increment, customerID VARCHAR(15), date datetime, complaintType int, complaintTitle mediumtext, complaintContent longtext, status char(1), primary key (complaintID), foreign key (customerID) references tblcustomer(customerID), foreign key (complaintType) references tblcomplainttype(complaintType))",
         "CREATE TABLE tbllog (transactionID int auto_increment, date datetime, staffID varchar(15), authorizedBy varchar(15), action varchar(15), description mediumtext, rowID varchar(15), tblName varchar(50), primary key (transactionID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
+        "CREATE TABLE tblformauthorization (formentryID int auto_increment, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID INT, creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))"
     ];
     
@@ -141,7 +142,8 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create database')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view inventory')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit inventory')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view authorization')", 
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view formAuthorization')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view complaintlist')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view transactionLog')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view reporting')",
@@ -247,6 +249,7 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '49', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '50', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '51', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '52', 'A')",
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {

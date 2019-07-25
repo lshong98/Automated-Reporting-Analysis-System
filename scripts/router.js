@@ -280,7 +280,7 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: function (params) {
-            return '/bdaf-details/' + params.blostID;
+            return '/blost-details/' + params.blostID;
         },
         controller:'blostDetailsController',
         controllerAs:'blost'
@@ -314,6 +314,16 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: '/authorization',
         controller: 'taskAuthorizationController',
         controllerAs:'taskAuthorization'
+    })
+    .when('/form-authorization', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/form-authorization');
+            }
+        },
+        templateUrl: '/form-authorization',
+        controller: 'formAuthorizationController',
+        controllerAs:'formAuthorization'
     })
     .when('/complaint-module', {
         resolve: {

@@ -6,7 +6,7 @@ var f = require('./function-management');
 // ACR Management
 app.post('/addBlost',function(req,res){
     'use strict';
-
+    console.log("HELLO FROM THE SERVER");
     f.makeID("blost", req.body.creationDate).then(function (ID) {
         
         var sql = "INSERT INTO tblblost (blostID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.preparedBy +  "', 'A')";

@@ -182,6 +182,10 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.authorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/authorization"><i class="fas fa-clipboard-check"></i> Task Authorization <span class="authorization"></span></a></li>';
             }
+        case "view formAuthorization":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.formAuthorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/form-authorization"><i class="fas fa-clipboard-check"></i> Form Authorization <span class="authorization"></span></a></li>';
+            }
         case "view complaintlist":
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module</a></li>';

@@ -116,6 +116,10 @@ app.get('/dbd-details/:dbdID', function (req, res) {
     'use strict';
     res.sendFile('pages/dbd-details.html', {root: __dirname});
 });
+app.get('/blost-details/:blostID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/blost-details.html', {root: __dirname});
+});
 app.get('/data-visualization', function (req, res) {
     'use strict';
     res.sendFile('pages/data-visualization.html', {root: __dirname});
@@ -131,6 +135,10 @@ app.get('/bin-inventory', function (req, res) {
 app.get('/authorization', function (req, res) {
     'use strict';
     res.sendFile('pages/authorization.html', {root: __dirname});
+});
+app.get('/form-authorization', function (req, res) {
+    'use strict';
+    res.sendFile('pages/form-authorization.html', {root: __dirname});
 });
 app.get('/complaint-module', function (req, res) {
     'use strict';

@@ -213,6 +213,9 @@ app.service('storeDataService', function() {
             "authorization": {
                 "view": 'I'
             },
+            "formAuthorization": {
+                "view": 'I'
+            },
             "complaintlist": {
                 "view": 'I'
             },
@@ -1936,6 +1939,9 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         "authorization": {
             "view": 'I'
         },
+        "formAuthorization": {
+            "view": 'I'
+        },
         "complaintlist": {
             "view": 'I'
         },
@@ -2984,6 +2990,68 @@ app.controller('taskAuthorizationController', function($scope, $window, $http, $
     };
 });
 
+app.controller('formAuthorizationController', function($scope, $window, $http, $filter, storeDataService) {
+    'use strict';
+    $http.get('/getAllTasks').then(function(response) {
+        storeDataService.task = angular.copy(response.data);
+        $scope.formList = response.data;
+    });
+
+    $scope.approveForm = function(taskId, query) {
+        $scope.task = {
+            "id": taskId,
+            "query": query,
+            "approvedBy": $window.sessionStorage.getItem('owner')
+        }
+
+        $http.post('/approveForm', $scope.task).then(function(response) {
+            var data = response.data;
+            angular.element('body').overhang({
+                type: data.status,
+                "message": data.message
+            });
+            $scope.notify(data.status, data.message);
+
+            socket.emit('create new user');
+        });
+        $http.get('/getAllTasks').then(function(response) {
+            storeDataService.task = angular.copy(response.data);
+            $scope.taskList = response.data;
+        });
+
+    }
+
+    $scope.rejectForm = function(taskId) {
+        $scope.taskId = {
+            "id": taskId,
+            "rejectedBy": $window.sessionStorage.getItem('owner')
+        }
+        $http.post('/rejectForm', $scope.taskId).then(function(response) {
+
+            console.log(response.data);
+        });
+
+        $http.get('/getAllTasks').then(function(response) {
+            storeDataService.task = angular.copy(response.data);
+            $scope.taskList = response.data;
+        });
+    }
+    var asc = true;
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 8; //Record number each page
+    $scope.maxSize = 10; //Show the number in page
+
+
+    $scope.show = angular.copy(storeDataService.show.formAuthorization);
+
+
+
+    $scope.orderBy = function(property) {
+        $scope.taskList = $filter('orderBy')($scope.taskList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
+});
+
 app.controller('complaintController', function($scope, $http, $filter, $window, storeDataService) {
     'use strict';
     var asc = true;
@@ -3681,10 +3749,10 @@ app.controller('damagedLostController', function($scope, $http, $filter, storeDa
         getAllDcs(); //call
     }
 
-    angular.element('.datepicker').datepicker();
-
     $scope.addBlost = function() {
-        $scope.blost.preparedBy = $window.sessionStorage.getItem('owner');
+        var position = window.sessionStorage.getItem('owner');
+        console.log(position);
+        $scope.blost.preparedBy = position;
         $scope.blost.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addBlost', $scope.blost).then(function(response) {
             var returnedData = response.data; 
@@ -3700,7 +3768,7 @@ app.controller('damagedLostController', function($scope, $http, $filter, storeDa
                 //     var area = $('.selectpicker option:selected').text();
                 //    var areastr = area.split(" ")[2];
                 //                console.log(areastr);
-                $scope.dcsList.push({ "id": newBlostID, "creationDateTime": today,  "preparedBy": $scope.blost.authorizedBy, "authorizedBy": $scope.blost.authorizedBy, "authorizedDate": $scope.blost.authorizedDate, "status": 'ACTIVE' });
+                $scope.blostList.push({ "id": newBlostID, "creationDateTime": today,  "preparedBy": $scope.blost.preparedBy, "authorizedBy": $scope.blost.authorizedBy, "authorizedDate": $scope.blost.authorizedDate, "status": 'ACTIVE' });
                 // $scope.filterAcrList = angular.copy($scope.acrList);
                 angular.element('#createBLOST').modal('toggle');
                 // $scope.totalItems = $scope.filterAcrList.length;
@@ -3868,3 +3936,27 @@ app.controller('blostDetailsController', function($scope, $http, $filter, storeD
 
     
 });
+
+function sendFormForAuthorization(formID, formType, tblname, preparedBy) {
+
+    var formDetails = {
+        "formID": formID,
+        "formType": formType,
+        "tblname": tblname,
+        "preparedBy": preparedBy
+    }
+
+    $http.post('/sendFormForAuthorization', formDetails).then(function(response) {
+            
+        var returnedData = response.data;
+
+        if (returnedData.status === "success") {
+            angular.element('body').overhang({
+                type: "success",
+                "message": "Form sent for authorization!"
+            });
+        }
+    });
+
+
+}

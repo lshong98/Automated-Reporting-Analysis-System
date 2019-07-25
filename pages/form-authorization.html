@@ -1,0 +1,59 @@
+<div class="row">
+        <div class="col-md-12">
+            <h5>Form Authorization</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+            <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
+        </div>
+      </div>
+      <br />
+      </div>
+      <br />
+      <div class="row" data-ng-show="show.view == 'A'">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-clickable">
+                            <thead>
+                                <tr>
+                                    <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                    <th width="25%" data-ng-click="orderBy('formType');">Form Type <i class="fas fa-sort-down"></i></th>
+                                    <th width="25%" data-ng-click="orderBy('formID');">Form ID <i class="fas fa-sort-down"></i></th>
+                                    <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
+                                    <th width="15%">Authorize</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="f in formList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-show="f.status == 'M'">
+                                    <td>
+                                        <span data-ng-bind="f.date"></span>
+                                    </td>
+                                    <td>
+                                        <span data-ng-bind="f.formType"></span>
+                                    </td>
+                                    <td>
+                                          <span data-ng-bind="f.formID"></span>
+                                    </td>
+                                    <td>
+                                          <span data-ng-bind="f.preparedBy"></span>
+                                    </td>
+                                    <td>
+                                          <button class="btn btn-sm btn-success" data-ng-click="approveTask(f.formID, f.query)">Approve</button>
+                                          <button class="btn btn-sm btn-danger" data-ng-click="rejectTask(f.formID, f.query)">Reject</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                <div class="col-md-12">
+                    <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                </div>
+            </div>
+        </div>
+      </div>
