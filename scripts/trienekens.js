@@ -593,18 +593,19 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
 
             });
         };
-        scope.editNewMgb = function(date, doNo, inNew120, inNew240, inNew660, inNew1000, outNew120, outNew240, outNew660, outNew1000) {
+        scope.editNewMgb = function() {
             scope.showNewMgb = !scope.showNewMgb;
 
             angular.element('.selectpicker').selectpicker('refresh');
             angular.element('.selectpicker').selectpicker('render');
-            scope.thisNewMgb = { "date": date, "doNo": doNo, "inNew120": inNew120, "inNew240": inNew240, "inNew660": inNew660, "inNew1000": inNew1000, "outNew120": outNew120, "outNew240": outNew240, "outNew660": outNew660, "outNew1000": outNew1000 };
         };
-        scope.saveNewMgb = function() {
+        scope.saveNewMgb = function(date, doNo, inNew120, inNew240, inNew660, inNew1000, outNew120, outNew240, outNew660, outNew1000) {
             scope.showNewMgb = !scope.showNewMgb;
             scope.calculateBalance(scope.nb.date);
 
-            $http.post('/editNewMgbStock', scope.nb).then(function(response) {
+            scope.thisNewMgb = { "date": date, "doNo": doNo, "inNew120": inNew120, "inNew240": inNew240, "inNew660": inNew660, "inNew1000": inNew1000, "outNew120": outNew120, "outNew240": outNew240, "outNew660": outNew660, "outNew1000": outNew1000 };
+
+            $http.post('/editNewMgbStock', scope.thisNewMgb).then(function(response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
@@ -632,18 +633,20 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             });
 
         };
-        scope.editReusableMgb = function(date, inReusable120, inReusable240, inReusable660, inReusable1000, outReusable120, outReusable240, outReusable660, outReusable1000) {
+        scope.editReusableMgb = function() {
             scope.showReusableMgb = !scope.showReusableMgb;
 
             angular.element('.selectpicker').selectpicker('refresh');
             angular.element('.selectpicker').selectpicker('render');
-            scope.thisReusableMgb = { "date": date, "inReusable120": inReusable120, "inReusable240": inReusable240, "inReusable660": inReusable660, "inReusable1000": inReusable1000, "outReusable120": outReusable120, "outReusable240": outReusable240, "outReusable660": outReusable660, "outReusable1000": outReusable1000 };
         };
-        scope.saveReusableMgb = function() {
+        scope.saveReusableMgb = function(date, inReusable120, inReusable240, inReusable660, inReusable1000, outReusable120, outReusable240, outReusable660, outReusable1000) {
             scope.showReusableMgb = !scope.showReusableMgb;
+
+            scope.thisReusableMgb = { "date": date, "inReusable120": inReusable120, "inReusable240": inReusable240, "inReusable660": inReusable660, "inReusable1000": inReusable1000, "outReusable120": outReusable120, "outReusable240": outReusable240, "outReusable660": outReusable660, "outReusable1000": outReusable1000 };
+
             scope.calculateBalance(scope.rb.date);
 
-            $http.post('/editReusableMgbStock', scope.rb).then(function(response) {
+            $http.post('/editReusableMgbStock', scope.thisReusableMgb).then(function(response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
@@ -2785,6 +2788,19 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
         }, true);
     });
 
+    /*$scope.editBin = function(){
+        $http.post('/editBin', $scope.bin).then(function(response){
+            var data = response.data;
+            if(data.status === "success"){
+                angular.element('body').overhang({
+                    type: data.status,
+                    message: data.message
+                });
+            }
+            
+        });
+    }*/
+
     $scope.calculateBalance = function(date) {
 
         var i = 0;
@@ -2909,22 +2925,6 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
             }
         }
     };
-
-
-
-    //    $scope.editBin = function(){
-    //        
-    //        $http.post('/editBin', $scope.bin).then(function(response){
-    //            var data = response.data;
-    //            if(data.status === "success"){
-    //                angular.element('body').overhang({
-    //                    type: data.status,
-    //                    message: data.message
-    //                });
-    //            }
-    //            
-    //        });
-    //    }
 
 });
 

@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = ;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -300,7 +300,6 @@ app.post('/insertTag', function (req, res) {
             throw err;
         } else {
             emitter.emit('live map');
-//            res.json({"status": "success"});
         }
     });
 });
