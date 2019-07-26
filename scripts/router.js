@@ -301,7 +301,7 @@ app.config(function($routeProvider, $locationProvider){
                 return routingService.auth($window, $location, '/bin-inventory');
             }
         },
-        templateUrl: '/bin-inventory',
+        templateUrl: '/bin-inventory', 
         controller: 'inventoryBinController',
         controllerAs:'inventoryBin'
     })

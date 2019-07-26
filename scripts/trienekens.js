@@ -2245,8 +2245,22 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 });
 
 app.controller('dcsDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
+        
+    $scope.requestAuthorization = function() {
+        sendFormForAuthorization($routeParams.dcsID, "dcs");
+    };
+  
+    $scope.approveForm = function() {
+        approveForm($routeParams.dcsID, "dcs");
+    }
 
+    $scope.rejectForm = function() {
+        rejectForm($routeParams.dcsID, "dcs");
+    }
+
+    $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
+    
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
@@ -2992,50 +3006,22 @@ app.controller('taskAuthorizationController', function($scope, $window, $http, $
 
 app.controller('formAuthorizationController', function($scope, $window, $http, $filter, storeDataService) {
     'use strict';
-    $http.get('/getAllTasks').then(function(response) {
+
+    $scope.getForm = function(formID, formType) {
+
+        if(formType == 'dcs'){
+            window.location.href = '#/dcs-details/' + formID;
+        } else {
+            window.location.href = '#/' + formType +'-details/' + formID;
+        }
+    }
+
+    $http.get('/getAllForms').then(function(response) {
         storeDataService.task = angular.copy(response.data);
         $scope.formList = response.data;
     });
 
-    $scope.approveForm = function(taskId, query) {
-        $scope.task = {
-            "id": taskId,
-            "query": query,
-            "approvedBy": $window.sessionStorage.getItem('owner')
-        }
-
-        $http.post('/approveForm', $scope.task).then(function(response) {
-            var data = response.data;
-            angular.element('body').overhang({
-                type: data.status,
-                "message": data.message
-            });
-            $scope.notify(data.status, data.message);
-
-            socket.emit('create new user');
-        });
-        $http.get('/getAllTasks').then(function(response) {
-            storeDataService.task = angular.copy(response.data);
-            $scope.taskList = response.data;
-        });
-
-    }
-
-    $scope.rejectForm = function(taskId) {
-        $scope.taskId = {
-            "id": taskId,
-            "rejectedBy": $window.sessionStorage.getItem('owner')
-        }
-        $http.post('/rejectForm', $scope.taskId).then(function(response) {
-
-            console.log(response.data);
-        });
-
-        $http.get('/getAllTasks').then(function(response) {
-            storeDataService.task = angular.copy(response.data);
-            $scope.taskList = response.data;
-        });
-    }
+    
     var asc = true;
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
@@ -3933,30 +3919,69 @@ app.controller('blostDetailsController', function($scope, $http, $filter, storeD
             }
         });
     }
-
-    
 });
 
-function sendFormForAuthorization(formID, formType, tblname, preparedBy) {
+function approveForm(formID, formType) {
 
+}
+
+function rejectForm(formID, formType) {
+
+}
+function sendFormForAuthorization(formID, formType) {
+
+    $http = angular.injector(["ng"]).get("$http");
     var formDetails = {
         "formID": formID,
         "formType": formType,
-        "tblname": tblname,
-        "preparedBy": preparedBy
+        "preparedBy": "",
+        "date": ""
     }
 
-    $http.post('/sendFormForAuthorization', formDetails).then(function(response) {
-            
-        var returnedData = response.data;
+    var status = '';
 
-        if (returnedData.status === "success") {
-            angular.element('body').overhang({
-                type: "success",
-                "message": "Form sent for authorization!"
+    $http.post('/getFormStatus', formDetails).then(function(response) {
+        
+        status = response.data[0].status;
+        console.log("STATUS: " + status);
+
+        if(status == 'P') {
+            
+            window.alert("Form is already pending authorization");
+        } else {
+            $http.post('/getFormDetails', formDetails).then(function(response) {
+            
+                var preparedBy = response.data;
+                formDetails.preparedBy = preparedBy[0].preparedBy;
+                formDetails.date = preparedBy[0].creationDateTime;
+                console.log(formDetails);
+        
+                $http.post('/sendFormForAuthorization', formDetails).then(function(response) {
+                    
+                    var returnedData = response.data;
+             
+                    if (returnedData.status === "success") {
+                        angular.element('body').overhang({
+                            type: "success",
+                            "message": "Form sent for authorization!"
+                        });
+                    }
+                });
             });
         }
+
+        
+
     });
+    
+    
+
+    
+
+    
+    
+
+    
 
 
 }
