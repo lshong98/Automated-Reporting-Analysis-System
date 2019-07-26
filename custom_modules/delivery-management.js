@@ -75,7 +75,7 @@ app.post('/addBdafEntry',function(req,res){
             throw err;
         }
 
-        res.json({"status": "success", "message": "BDAF entry added!", "details": {"bdafID": req.body.bdafJD}});
+        res.json({"status": "success", "message": "BDAF entry added!", "details": {"bdafID": req.body.bdafID}});
     });
 }); // Complete
 

@@ -75,9 +75,13 @@
       
 
       <div class="row">
-          <div class="col-md-1">
-                <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
-
+          <div class="col-md-12" style="text-align: right; margin-bottom: 10px">
+                <a href="javascript:exportPdf()" class="btn btn-sm btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
+                
+                <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();">Authorize</button>
+                <span> | </span>
+                <button ng-show="authorize.view == 'A'" class="btn btn-sm btn-success" data-ng-click="approveForm();">Accept</button>
+                <button ng-show="authorize.view == 'A'" class="btn btn-sm btn-danger" data-ng-click="rejectForm();">Reject</button>
           </div>
         </div>
 

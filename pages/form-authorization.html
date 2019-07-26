@@ -27,7 +27,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-ng-repeat="f in formList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-show="f.status == 'M'">
+                                <tr data-ng-repeat="f in formList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-show="f.status == 'P'" data-ng-click="getForm(f.formID, f.formType);">
                                     <td>
                                         <span data-ng-bind="f.date"></span>
                                     </td>
