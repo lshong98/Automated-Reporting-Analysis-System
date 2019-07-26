@@ -13,7 +13,7 @@ var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var SVR_PORT = ;
+var SVR_PORT = 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -29,7 +29,7 @@ var truckManagement = require('./custom_modules/truck-management');
 var zoneManagement = require('./custom_modules/zone-management');
 var transactionLog = require('./custom_modules/transaction-log');
 var authorization = require('./custom_modules/authorization');
-var formAuthorization = require('./custom_modules/form-authorization')
+var formAuthorization = require('./custom_modules/form-authorization');
 var databaseBinManagement = require('./custom_modules/bin-database');
 var binInventoryManagement = require('./custom_modules/bin-inventory');
 var chatManagement = require('./custom_modules/chat-management');
@@ -294,7 +294,7 @@ app.get('/livemap', function (req, res) {
 app.post('/insertTag', function (req, res) {
     'use strict';
     
-    var sql = "INSERT into tbltag (date, serialNo, truckID, longitude, latitude) VALUE (CURRENT_DATE, 1, 'a001', '44.2153000', '-99.7012300')";
+    var sql = "INSERT into tbltag (date, serialNo, truckID, longitude, latitude) VALUE (CURRENT_DATE, '" + req.body.id + "', 'TRK201907150001', '44.2153000', '-99.7012300')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -490,7 +490,7 @@ io.sockets.on('connection', function(socket) {
     emitter.on('live map', function () {
         'use strict';
         
-        var sql = "SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE ORDER BY date ASC, serialNo DESC";
+        var sql = "SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE ORDER BY date ASC, serialNo DESC LIMIT 0, 1";
         
         database.query(sql, function (err, result) {
             if (err) {
