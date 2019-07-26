@@ -294,7 +294,7 @@ app.get('/livemap', function (req, res) {
 app.post('/insertTag', function (req, res) {
     'use strict';
     
-    var sql = "INSERT into tbltag (date, serialNo, truckID, longitude, latitude) VALUE (CURRENT_DATE, 1, 'a001', '44.2153000', '-99.7012300')";
+    var sql = "INSERT into tbltag (date, serialNo, truckID, longitude, latitude) VALUE (CURRENT_DATE, '" + req.body.id + "', 'TRK201907150001', '44.2153000', '-99.7012300')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -489,7 +489,7 @@ io.sockets.on('connection', function(socket) {
     
     emitter.on('live map', function () {
         'use strict';
-        
+
         var sql = "SELECT serialNo FROM tbltag WHERE date >= CURRENT_DATE ORDER BY date DESC LIMIT 0, 1";
         
         database.query(sql, function (err, result) {
