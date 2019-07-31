@@ -3922,10 +3922,45 @@ app.controller('blostDetailsController', function($scope, $http, $filter, storeD
 });
 
 function approveForm(formID, formType) {
+    $http = angular.injector(["ng"]).get("$http");
 
+    var formDetails = {
+        "formID": formID,
+        "formType": formType,
+        "authorizedBy": window.sessionStorage.getItem('owner')
+    }
+
+    $http.post('/approveForm', formDetails).then(function(response) {
+
+        returnedData = response.data;
+
+        if (returnedData.status === "success") {
+            window.alert("SUCCESS");
+            angular.element('body').overhang({
+                type: "success",
+                "message": "Form approved!"
+            });
+        }
+    });
 }
 
 function rejectForm(formID, formType) {
+    $http = angular.injector(["ng"]).get("$http");
+
+    var formDetails = {
+        "formID": formID,
+        "formType": formType
+    }
+    
+    $http.post('/rejectForm', formDetails).then(function(response) {
+
+        if (returnedData.status === "success") {
+            angular.element('body').overhang({
+                type: "success",
+                "message": "Form rejected!"
+            });
+        }
+    });
 
 }
 function sendFormForAuthorization(formID, formType) {

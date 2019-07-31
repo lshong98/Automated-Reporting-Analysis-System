@@ -23,7 +23,7 @@
                                     <th width="25%" data-ng-click="orderBy('formType');">Form Type <i class="fas fa-sort-down"></i></th>
                                     <th width="25%" data-ng-click="orderBy('formID');">Form ID <i class="fas fa-sort-down"></i></th>
                                     <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
-                                    <th width="15%">Authorize</th>
+                                    <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i class="fas fa-sort-down"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,8 +41,7 @@
                                           <span data-ng-bind="f.preparedBy"></span>
                                     </td>
                                     <td>
-                                          <button class="btn btn-sm btn-success" data-ng-click="approveTask(f.formID, f.query)">Approve</button>
-                                          <button class="btn btn-sm btn-danger" data-ng-click="rejectTask(f.formID, f.query)">Reject</button>
+                                            <span data-ng-bind="f.status"></span>
                                     </td>
                                 </tr>
                             </tbody>
