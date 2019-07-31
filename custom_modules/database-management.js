@@ -11,8 +11,8 @@ var emitter = new EventEmitter();
  //var DB_NAME = 'trienekenstest';
 
 // Local database access
-var DB_HOST = '';
-var DB_USER = '';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
 var DB_PASS = '';
 var DB_NAME = '';
  
@@ -44,7 +44,7 @@ db.connect(function (err) {
                     emitter.emit('createTable');
                     emitter.emit('defaultUser');
                     //emitter.emit('dummyData');
-                    //emitter.emit('eventScheduler');
+                    emitter.emit('eventScheduler');
                 });
             });
         } else {
@@ -298,7 +298,7 @@ emitter.on('dummyData', function () {
         "insert into tbltruck values('a001','transporter','1','1234','2019/12/12','a',current_timestamp())",
         "insert into tbldbd  values(NULL,current_timestamp(),'a')",
         "insert into tbldbdentry values(NULL,'1','1','a001','destroyed','car crash','n','y','50','i','2019/12/12')",
-        "insert into tbldcs values('a001',current_timestamp(),'a',current_date(),current_date()+interval 1 day,'a001','a001',current_date(), current_date()+interval 1 day, 'a001', current_timestamp(), 'a001')",
+        "insert into tbldcs values('a001',current_timestamp(),'a','a',current_date(),current_date()+interval 1 day,'a001','a001',current_date(), current_date()+interval 1 day, 'a001', current_timestamp(), 'a001')",
         //"insert into tblacr values('a001','a001','a001','1','10','10',true,true,true,true,true,true,'remarks');",
         //"insert into tblbdaf  values(NULL,current_timestamp(),'a')",
         //"insert into tblbdafentry values(NULL, '1','1','a001','1','1','1','bin was delivered','no remarks',true)",
@@ -310,7 +310,7 @@ emitter.on('dummyData', function () {
         "insert into tblmaprect values('1','44.21530','-99.70123','44.21530','-99.70123','a001')",
         //"insert into tblacrfreq values('a001','a001',dayofweek(current_date()))",
         "insert into tblbincenter values('a001','a001','bin center 1','tabuan bin center','a',current_timestamp())",
-        "insert into tbllostbinrecord values(NULL,'1','1','1',false,'a001',current_date(),'no reason')",
+        //"insert into tbllostbinrecord values(NULL,'1','1','1',false,'a001',current_date(),'no reason')",
         "insert into tbltag values(null, current_timestamp(),'1','a001','44.21530','-99.70123')",
     ];
     
