@@ -1142,13 +1142,25 @@ app.controller('managerController', function($scope, $http, $filter) {
     socket.on('synchronize map', function(data) {
         $.each($scope.markerList, function (key, value) {
             if (value.id == data.serialNumber) {
-                value.icon.url = "../styles/mapmarkers/gd.png";
+                
+                value.icon.url = "../styles/mapmarkers/shining.gif";
                 
                 var marker = new google.maps.Marker({
                     position: value.position,
                     icon: value.icon
                 });
                 marker.setMap(map);
+                
+                setTimeout(function () {
+                    marker.setMap(null);
+                    
+                    value.icon.url = "../styles/mapmarkers/gd.png";
+                    marker = new google.maps.Marker({
+                        position: value.position,
+                        icon: value.icon
+                    });
+                    marker.setMap(map);
+                }, 10000);
             }
         });
     });
@@ -1157,7 +1169,7 @@ app.controller('managerController', function($scope, $http, $filter) {
 //    setTimeout(function () {
 //        $http.post('/insertTag', {"data": "example data"}).then(function (response) {
 //        });
-//    }, 5000);
+//    }, 10000);
 });
 
 app.controller('officerController', function($scope, $filter, $http, $window) {
@@ -2196,7 +2208,6 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             console.log("DCS data received by controller");
             console.log(response.data);
         });
-
         $http.post('/getStaffList', {"positionID" : driverPosition}).then(function(response) {
             $scope.searchAcrFilter = '';
             $scope.driverList = response.data;

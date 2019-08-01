@@ -11,8 +11,8 @@ var emitter = new EventEmitter();
  //var DB_NAME = 'trienekenstest';
 
 // Local database access
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
 var DB_NAME = '';
  

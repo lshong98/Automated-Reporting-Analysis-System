@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 const Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = ;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -295,14 +295,15 @@ app.get('/livemap', function (req, res) {
 app.post('/insertTag', function (req, res) {
     'use strict';
     
-    var sql = "INSERT into tbltag (date, serialNo, truckID, longitude, latitude) VALUE (CURRENT_DATE, '" + req.body.id + "', 'TRK201907150001', '44.2153000', '-99.7012300')";
+    var sql = "INSERT into tbltag values('2019-08-01 06:34:20','K123875','TRK201908010001','110.348068','1.5089');";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         } else {
             emitter.emit('live map');
         }
-    });
+    });    
+
 });
 
 // Tag Rest API
