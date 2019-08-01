@@ -11,10 +11,10 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
-const Joi = require('joi');
+var Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = ;
+var SVR_PORT = 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -308,19 +308,19 @@ app.post('/insertTag', function (req, res) {
 
 // Tag Rest API
 
-app.get('/api/tags', (req,res) =>{
+app.get('/api/tags', function (req,res) {
     var sql = "select * from tbltag";
 
-    database.query(sql, (err,result) => {
+    database.query(sql, function (err,result) {
         if (err) throw err;
         res.json(result);
     });
 });
 
-app.post('/api/tags', (req,res) =>{
+app.post('/api/tags', function (req,res) {
     // Validation
     // If invalid return 400 bad request
-    const {error} = validateTag(req.body);
+    var error = validateTag(req.body);
     console.log(error);
     if(error){
         res.status(400).send(error.details[0].message);
@@ -337,9 +337,9 @@ app.post('/api/tags', (req,res) =>{
         "latitude":req.body.latitude
     };
 
-    var sql = `insert into tbltag values('${req.body.date}','${req.body.serialNo}','${req.body.truckID}','${req.body.longitude}','${req.body.latitude}')`;
+    var sql = "INSERT INTO tbltag VALUES ('" + req.body.date + "', '" + req.body.serialNo + "', '" + req.body.truckID + "', '" + req.body.longitude + "', '" + req.body.latitude + "')";
 
-    database.query(sql,(err,result) => {
+    database.query(sql, function(err,result) {
         if (err) throw err;
         console.log(result);
     });
@@ -348,13 +348,13 @@ app.post('/api/tags', (req,res) =>{
 });
 
 function validateTag(tag){
-    const schema = {
+    var schema = {
         date: Joi.date().required(),
         serialNo : Joi.string().required(),
         truckID : Joi.string().required(),
         longitude : Joi.number().required(),
         latitude : Joi.number().required(),
-    }
+    };
 
     return Joi.validate(tag,schema);
 }
