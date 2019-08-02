@@ -76,12 +76,20 @@
 
       <div class="row">
           <div class="col-md-12" style="text-align: right; margin-bottom: 10px">
-                <a href="javascript:exportPdf()" class="btn btn-sm btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
+                <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{feedback}}</p>
+                <span style="text-align:left">Form Status: {{status}}</span>
+                <a href="javascript:exportPdf()"  class="btn btn-sm btn-danger clearfix"><span class="fa fa-file-pdf-o" ></span> Export to PDF</a>
                 
-                <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();">Authorize</button>
+                <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();" ng-show="status == 'ACTIVE'">Authorize</button>
                 <span> | </span>
-                <button ng-show="authorize.view == 'A'" class="btn btn-sm btn-success" data-ng-click="approveForm();">Accept</button>
-                <button ng-show="authorize.view == 'A'" class="btn btn-sm btn-danger" data-ng-click="rejectForm();">Reject</button>
+                <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success" data-ng-click="approveForm();">Accept</button>
+                <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-ng-click="rejectForm();">Reject</button>
+                
+                <p ng-show="status == 'SHOW FEEDBACK'">Feedback:</p>
+                <input ng-show="authorize.view == 'A' && status == 'SHOW FEEDBACK'" type="textArea" data-ng-model="dcs.feedback">
+                <button class="btn btn-sm btn-success" ng-show="authorize.view == 'A' && status == 'SHOW FEEDBACK' || status == 'CONFIRM'" data-ng-click="confirm();">Confirm</button>
+                <button class="btn btn-sm btn-danger" ng-show="authorize.view == 'A' && status == 'SHOW FEEDBACK' || status == 'CONFIRM'" data-ng-click="cancel();">Cancel</button>
+            
           </div>
         </div>
 
