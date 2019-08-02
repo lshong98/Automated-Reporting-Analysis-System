@@ -1493,13 +1493,36 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
         $scope.positionList = response.data;
         $scope.initializeStaff();
     });
-
+    
+    $scope.statusList = true;
+    
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.staffList = angular.copy($scope.staffListActive);  
+        }else{
+            $scope.staffList = angular.copy($scope.staffListInactive);
+        }
+        
+        $scope.filterStaffList = angular.copy($scope.staffList);
+        $scope.totalItems = $scope.filterStaffList.length;
+    }
+    
     $http.get('/getAllUser').then(function(response) {
         $scope.staffList = response.data;
         $scope.searchStaff = function(staff) {
             return (staff.id + staff.name + staff.username + staff.position + staff.status).toUpperCase().indexOf($scope.searchStaffFilter.toUpperCase()) >= 0;
         }
-
+        
+        $scope.staffListActive = [];
+        $scope.staffListInactive = [];
+        for(var i=0; i<$scope.staffList.length; i++){
+            if($scope.staffList[i].status == 'ACTIVE'){
+                $scope.staffListActive.push($scope.staffList[i]);
+            }else{
+                $scope.staffListInactive.push($scope.staffList[i]);
+            }
+        }
+        $scope.staffList = angular.copy($scope.staffListActive);
         $scope.filterStaffList = angular.copy($scope.staffList);
 
         $scope.totalItems = $scope.filterStaffList.length;
