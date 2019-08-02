@@ -160,14 +160,22 @@ app.get('/getCount', function (req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (completeReport) {
         results.completeReport = completeReport.completeReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS todayAreaCount FROM tblarea");
-    }).then(function (todayAreaCount) {
-        results.todayAreaCount = todayAreaCount.todayAreaCount;
         return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'I'");
     }).then(function (incompleteReport) {
         results.incompleteReport = incompleteReport.incompleteReport;
         res.json(results);
         res.end();
+    });
+});
+
+app.post('/getTodayAreaCount',function(req, res){
+    'use strict';
+    var sql = "SELECT COUNT(*) AS todayAreaCount FROM tblarea WHERE collection_frequency LIKE '%" + req.body.day + "%'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
     });
 });
 

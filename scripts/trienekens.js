@@ -877,7 +877,29 @@ app.controller('managerController', function($scope, $http, $filter) {
 
         return objReturn;
     }
+    var dateobj = new Date();
+    var getday = dateobj.getDay();
+    $scope.day = "";
     
+    if(getday == 1){
+        $scope.day = "mon";
+    }else if(getday == 2){
+        $scope.day = "tue";
+    }else if(getday == 3){
+        $scope.day = "wed";
+    }else if(getday == 4){
+        $scope.day = "thu";
+    }else if(getday == 5){
+        $scope.day = "fri";
+    }else if(getday == 6){
+        $scope.day = "sat";
+    }else if(getday == 7){
+        $scope.day = "sun";
+    }
+    
+    $http.post('/getTodayAreaCount', {"day":$scope.day}).then(function(response) {
+        $scope.todayAreaCount = response.data[0].todayAreaCount;
+    });
     $http.get('/getCount').then(function (response) {
         console.log(response.data);
         var data = response.data;
@@ -890,9 +912,9 @@ app.controller('managerController', function($scope, $http, $filter) {
         $scope.userCount = data.staff - 1;
         $scope.reportCompleteCount = data.completeReport;
         $scope.reportIncompleteCount = data.incompleteReport;
-        $scope.todayAreaCount = data.todayAreaCount;
     });
-
+    
+    
     $http.post('/getDataVisualization', $scope.visualdate).then(function(response) {
         $scope.visualObject = response.data;
     });
