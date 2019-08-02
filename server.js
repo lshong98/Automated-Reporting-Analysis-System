@@ -11,6 +11,7 @@ var EventEmitter = require('events');
 var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
+var Joi = require('joi');
 require('dotenv').config();
 
 var SVR_PORT = 3000;
@@ -294,15 +295,71 @@ app.get('/livemap', function (req, res) {
 app.post('/insertTag', function (req, res) {
     'use strict';
     
-    var sql = "INSERT into tbltag (date, serialNo, truckID, longitude, latitude) VALUE (CURRENT_DATE, '" + req.body.id + "', 'TRK201907150001', '44.2153000', '-99.7012300')";
+    var sql = "INSERT into tbltag values('2019-08-01 06:34:20','K123875','TRK201908010001','110.348068','1.5089');";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         } else {
             emitter.emit('live map');
         }
+    });    
+
+});
+
+// Tag Rest API
+
+app.get('/api/tags', function (req,res) {
+    var sql = "select * from tbltag";
+
+    database.query(sql, function (err,result) {
+        if (err) throw err;
+        res.json(result);
     });
 });
+
+app.post('/api/tags', function (req,res) {
+    // Validation
+    // If invalid return 400 bad request
+    var error = validateTag(req.body);
+    console.log(error);
+    if(error){
+        res.status(400).send(error.details[0].message);
+        return;
+    }
+    
+
+    // If valid then execute
+    var tag = {
+        "date":req.body.date,
+        "serialNo":req.body.serialNo,
+        "truckID":req.body.truckID,
+        "longitude":req.body.longitude,
+        "latitude":req.body.latitude
+    };
+
+    var sql = "INSERT INTO tbltag VALUES ('" + req.body.date + "', '" + req.body.serialNo + "', '" + req.body.truckID + "', '" + req.body.longitude + "', '" + req.body.latitude + "')";
+
+    database.query(sql, function(err,result) {
+        if (err) throw err;
+        console.log(result);
+    });
+
+    res.send(tag);
+});
+
+function validateTag(tag){
+    var schema = {
+        date: Joi.date().required(),
+        serialNo : Joi.string().required(),
+        truckID : Joi.string().required(),
+        longitude : Joi.number().required(),
+        latitude : Joi.number().required(),
+    };
+
+    return Joi.validate(tag,schema);
+}
+
+// End of Rest API
 
 app.post('/emailandupdate',function(req,res){
     'use strict';
