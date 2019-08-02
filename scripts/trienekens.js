@@ -1515,13 +1515,36 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
         $scope.positionList = response.data;
         $scope.initializeStaff();
     });
-
+    
+    $scope.statusList = true;
+    
+    $scope.updateStatusList = function(){
+        if($scope.statusList){
+            $scope.staffList = angular.copy($scope.staffListActive);  
+        }else{
+            $scope.staffList = angular.copy($scope.staffListInactive);
+        }
+        
+        $scope.filterStaffList = angular.copy($scope.staffList);
+        $scope.totalItems = $scope.filterStaffList.length;
+    }
+    
     $http.get('/getAllUser').then(function(response) {
         $scope.staffList = response.data;
         $scope.searchStaff = function(staff) {
             return (staff.id + staff.name + staff.username + staff.position + staff.status).toUpperCase().indexOf($scope.searchStaffFilter.toUpperCase()) >= 0;
         }
-
+        
+        $scope.staffListActive = [];
+        $scope.staffListInactive = [];
+        for(var i=0; i<$scope.staffList.length; i++){
+            if($scope.staffList[i].status == 'ACTIVE'){
+                $scope.staffListActive.push($scope.staffList[i]);
+            }else{
+                $scope.staffListInactive.push($scope.staffList[i]);
+            }
+        }
+        $scope.staffList = angular.copy($scope.staffListActive);
         $scope.filterStaffList = angular.copy($scope.staffList);
 
         $scope.totalItems = $scope.filterStaffList.length;
@@ -2281,35 +2304,33 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 app.controller('dcsDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
 
     $scope.status = '';
-    $scope.confirm = '';
     
     $scope.requestAuthorization = function() {
         sendFormForAuthorization($routeParams.dcsID, "dcs");
+        $scope.status = 'PENDING';
     };
   
+    $scope.confirm = function(request) {
+        if(request == 'approve'){
+            $scope.approveForm();
+        }else if(request == 'reject') {
+            $scope.rejectForm();
+        }
+    };
+
     $scope.approveForm = function() {
+        $scope.status = 'APPROVED';
         //approveForm($routeParams.dcsID, "dcs");
-        window.alert("SUCCESS");
-        $scope.status = 'CONFIRM';
-    }
-
-    $scope.confirm = function() {
-        $scope.confirm = 'Y'; 
-    }
-
-    $scope.cancel = function() {
-        $scope.confirm = 'N';
+        window.alert("APPROVED");
+        
+        angular.element('#approveConfirmation').modal('toggle');
     }
 
     $scope.rejectForm = function() {
-        $scope.status = 'SHOW FEEDBACK';
+        $scope.status = 'CORRECTION REQUIRED';
+        //rejectForm($routeParams.dcsID, "dcs");
 
-        if($scope.confirmReject == 'Yes'){
-
-            rejectForm($routeParams.dcsID, "dcs");
-        } else {
-            $scope.status = 'ACTIVE'; 
-        }
+        window.alert("CORRECTION REQUIRED");
     }
 
     
