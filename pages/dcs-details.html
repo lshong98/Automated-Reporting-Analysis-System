@@ -70,25 +70,71 @@
             </div>
           </div>
         </div>
-      </div>
+</div>
+
+<div class="modal fade" id="approveConfirmation" tabindex="-1" role="dialog" aria-labelledby="approveConfirmation" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            
+            
+            
+            
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" data-ng-click="confirm('approve');">Confirm</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rejectConfirmation" tabindex="-1" role="dialog" aria-labelledby="rejectConfirmation" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+                    <p>Feedback:</p>
+                    <input type="textArea" data-ng-model="dcs.feedback">
+                
+                
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="confirm('reject');">Confirm</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
       
 
       <div class="row">
-          <div class="col-md-12" style="text-align: right; margin-bottom: 10px">
-                <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{feedback}}</p>
+          <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
+                <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dcs.feedback}}</p>
                 <span style="text-align:left">Form Status: {{status}}</span>
+          </div>
+          <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
                 <a href="javascript:exportPdf()"  class="btn btn-sm btn-danger clearfix"><span class="fa fa-file-pdf-o" ></span> Export to PDF</a>
                 
-                <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();" ng-show="status == 'ACTIVE'">Authorize</button>
+                <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();" ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
                 <span> | </span>
-                <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success" data-ng-click="approveForm();">Accept</button>
-                <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-ng-click="rejectForm();">Reject</button>
-                
-                <p ng-show="status == 'SHOW FEEDBACK'">Feedback:</p>
-                <input ng-show="authorize.view == 'A' && status == 'SHOW FEEDBACK'" type="textArea" data-ng-model="dcs.feedback">
-                <button class="btn btn-sm btn-success" ng-show="authorize.view == 'A' && status == 'SHOW FEEDBACK' || status == 'CONFIRM'" data-ng-click="confirm();">Confirm</button>
-                <button class="btn btn-sm btn-danger" ng-show="authorize.view == 'A' && status == 'SHOW FEEDBACK' || status == 'CONFIRM'" data-ng-click="cancel();">Cancel</button>
+                <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveConfirmation">Approve</button>
+                <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectConfirmation">Reject</button>
             
           </div>
         </div>
