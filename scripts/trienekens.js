@@ -890,6 +890,7 @@ app.controller('managerController', function($scope, $http, $filter) {
         $scope.userCount = data.staff - 1;
         $scope.reportCompleteCount = data.completeReport;
         $scope.reportIncompleteCount = data.incompleteReport;
+        $scope.todayAreaCount = data.todayAreaCount;
     });
 
     $http.post('/getDataVisualization', $scope.visualdate).then(function(response) {
@@ -2182,7 +2183,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             "driver": '',
             "periodFrom": '', 
             "periodTo": '',
-            "replacementDriver": '',
+            "replacementDriver": '', 
             "replacementPeriodFrom": '',
             "replacementPeriodTo": ''
         }; 
@@ -2256,18 +2257,40 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 });
 
 app.controller('dcsDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
-        
+
+    $scope.status = '';
+    $scope.confirm = '';
+    
     $scope.requestAuthorization = function() {
         sendFormForAuthorization($routeParams.dcsID, "dcs");
     };
   
     $scope.approveForm = function() {
-        approveForm($routeParams.dcsID, "dcs");
+        //approveForm($routeParams.dcsID, "dcs");
+        window.alert("SUCCESS");
+        $scope.status = 'CONFIRM';
+    }
+
+    $scope.confirm = function() {
+        $scope.confirm = 'Y'; 
+    }
+
+    $scope.cancel = function() {
+        $scope.confirm = 'N';
     }
 
     $scope.rejectForm = function() {
-        rejectForm($routeParams.dcsID, "dcs");
+        $scope.status = 'SHOW FEEDBACK';
+
+        if($scope.confirmReject == 'Yes'){
+
+            rejectForm($routeParams.dcsID, "dcs");
+        } else {
+            $scope.status = 'ACTIVE'; 
+        }
     }
+
+    
 
     $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
@@ -2312,6 +2335,16 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         
         $scope.dcs = response.data;
         console.log($scope.dcs);
+
+        if($scope.dcs[0].status == 'G'){
+            $scope.status = 'APPROVED';
+        }else if($scope.dcs[0].status == 'P'){
+            $scope.status = 'PENDING';
+        }else if($scope.dcs[0].status == 'R'){
+            $scope.status = 'CORRECTION REQUIRED';
+        }else if($scope.dcs[0].status == 'A'){
+            $scope.status = 'ACTIVE';
+        }
     });
     
     $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {

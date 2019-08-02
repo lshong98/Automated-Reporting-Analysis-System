@@ -13,7 +13,7 @@ app.get('/getAllForms', function (req, res) {
             throw err;
         }
         res.json(result);
-        console.log("ALL TASKS COLLECTED"); 
+        console.log("ALL FORMS COLLECTED");  
     });
 }); // Complete
 

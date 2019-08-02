@@ -67,19 +67,26 @@
     display: block;
 }
 
+.card-counter .count-today-area{
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    font-size: 13px;
+    display: block;
+}
 .card-counter .count-report-complete{
     position: absolute;
     right: 35px;
-    top: 20px;
-    font-size: 18px;
+    top: 30px;
+    font-size: 13px;
     display: block;
 }
 
 .card-counter .count-report-incomplete{
     position: absolute;
     right: 35px;
-    top: 40px;
-    font-size: 18px;
+    top: 45px;
+    font-size: 13px;
     display: block;
 }
 
