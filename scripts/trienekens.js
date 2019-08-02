@@ -890,6 +890,7 @@ app.controller('managerController', function($scope, $http, $filter) {
         $scope.userCount = data.staff - 1;
         $scope.reportCompleteCount = data.completeReport;
         $scope.reportIncompleteCount = data.incompleteReport;
+        $scope.todayAreaCount = data.todayAreaCount;
     });
 
     $http.post('/getDataVisualization', $scope.visualdate).then(function(response) {

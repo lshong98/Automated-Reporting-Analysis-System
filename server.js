@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 var Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -157,9 +157,12 @@ app.get('/getCount', function (req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS staff FROM tblstaff");
     }).then(function (staff) {
         results.staff = staff.staff;
-        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C'");
+        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (completeReport) {
         results.completeReport = completeReport.completeReport;
+        return f.waterfallQuery("SELECT COUNT(*) AS todayAreaCount FROM tblarea");
+    }).then(function (todayAreaCount) {
+        results.todayAreaCount = todayAreaCount.todayAreaCount;
         return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'I'");
     }).then(function (incompleteReport) {
         results.incompleteReport = incompleteReport.incompleteReport;
