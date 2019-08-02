@@ -55,42 +55,61 @@
     </div>
 </div>
 <br />
-<div class="row">
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-clickable">
-                <thead>
-                    <tr>
-                        <th width="15%" data-ng-click="orderBy('reportID');">Report Code <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('reportCollectionDate');">Date <i class="fas fa-sort-down"></i></th>
-                        <th width="20%" data-ng-click="orderBy('areaName');">Area Name <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('collection');">Collection <i class="fas fa-sort-down"></i></th>
-<!--                        <th width="25%" data-ng-click="orderBy('garbageAmount');">Collected Garbage(ton) <i class="fas fa-sort-down"></i></th>-->
-                        <th width="10%" data-ng-click="orderBy('reportStatus');">Status <i class="fas fa-sort-down"></i></th>
-                        
-                        <th width="35%" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
-                    </tr>
-                </thead>
-                <tbody>               
-                    <tr data-ng-repeat="d in reportList | filter: searchReport | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewReport(d.reportID);">
-                        <td data-ng-bind="d.reportID"></td>
-                        <td data-ng-bind="d.reportCollectionDate"></td>
-                        <td data-ng-bind="d.areaName"></td>
-                        <td data-ng-bind="d.frequency"></td>
-<!--                        <td data-ng-bind="d.garbageAmount"></td>-->
-                        <td data-ng-bind="d.completionStatus"></td>
-                        
-                        <td data-ng-bind="d.remark"></td>
-                    </tr>
-                </tbody>
-            </table>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="all-tab" data-toggle="tab" data-target="#all" role="tab" aria-controls="all" aria-selected="true">All</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="complete-tab" data-toggle="tab" data-target="#complete" role="tab" aria-controls="complete" aria-selected="false">Complete</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="incomplete-tab" data-toggle="tab" data-target="#incomplete" role="tab" aria-controls="incomplete" aria-selected="false">Incomplete</a>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-clickable">
+                        <thead>
+                            <tr>
+                                <th width="15%" data-ng-click="orderBy('reportID');">Report Code <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('reportCollectionDate');">Date <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('areaName');">Area Name <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('collection');">Collection <i class="fas fa-sort-down"></i></th>
+        <!--                        <th width="25%" data-ng-click="orderBy('garbageAmount');">Collected Garbage(ton) <i class="fas fa-sort-down"></i></th>-->
+                                <th width="10%" data-ng-click="orderBy('reportStatus');">Status <i class="fas fa-sort-down"></i></th>
+
+                                <th width="35%" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>               
+                            <tr data-ng-repeat="d in reportList | filter: searchReport | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewReport(d.reportID);">
+                                <td data-ng-bind="d.reportID"></td>
+                                <td data-ng-bind="d.reportCollectionDate"></td>
+                                <td data-ng-bind="d.areaName"></td>
+                                <td data-ng-bind="d.frequency"></td>
+        <!--                        <td data-ng-bind="d.garbageAmount"></td>-->
+                                <td data-ng-bind="d.completionStatus"></td>
+
+                                <td data-ng-bind="d.remark"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+            <div class="col-md-12">
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+            </div>
         </div>
     </div>
-</div>
-<div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-    <div class="col-md-12">
-        <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-    </div>
+  <div class="tab-pane fade" id="complete" role="tabpanel" aria-labelledby="profile-tab">...</div>
+  <div class="tab-pane fade" id="incomplete" role="tabpanel" aria-labelledby="contact-tab">...</div>
 </div>
 
 <script>

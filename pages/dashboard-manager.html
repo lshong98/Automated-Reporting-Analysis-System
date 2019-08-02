@@ -84,16 +84,24 @@
     <div class="col-md-4">
         <div class="card-counter info" onclick="window.location.href = '#/reporting'">
             <i class="fa fa-file"></i>
+            <span class="count-today-area">Today: {{todayAreaCount}}</span>
             <span class="count-report-complete">Complete: {{reportCompleteCount}}</span>
             <span class="count-report-incomplete">Incomplete: {{reportIncompleteCount}}</span>
             <span class="count-name">Reports</span>
         </div>
     </div>
-
+    
     <div class="col-md-4">
         <div class="card-counter success" onclick="window.location.href = '#/data-visualization'">
             <i class="fa fa-table"></i>
             <span class="count-name">Data visualization</span>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-counter danger" onclick="window.location.href = '#/data-visualization'">
+            <i class="fa fa-exclamation-triangle"></i>
+            <span class="count-name">Complaint</span>
         </div>
     </div>
 
