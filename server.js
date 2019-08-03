@@ -179,6 +179,31 @@ app.post('/getTodayAreaCount',function(req, res){
     });
 });
 
+app.post('/getUnsubmitted', function(req,res){
+    'use strict';
+    
+    var sql="SELECT DISTINCT tblarea.areaName AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+app.post('/getSubmitted', function(req,res){
+    'use strict';
+    
+    var sql="SELECT DISTINCT tblarea.areaName AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE()";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 //complaint module
 app.get('/getComplaintList',function(req,res){
     var sql="SELECT tblcomplaint.date AS 'date', tblcomplaint.complaintTitle AS 'title', tblcustomer.name AS  'customer', tblcomplainttype.complaintType AS 'type', tblarea.areaName AS 'area', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Confirmation' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'In progress' WHEN tblcomplaint.status ='d' THEN 'Done' END) AS status FROM tblcomplaint JOIN tblcomplainttype ON tblcomplaint.complaintType = tblcomplainttype.complaintType JOIN tblcustomer ON tblcustomer.customerID = tblcomplaint.customerID JOIN tbltaman ON tbltaman.tamanID = tblcustomer.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID";
@@ -302,6 +327,8 @@ app.get('/livemap', function (req, res) {
         }
     });
 });
+
+
 
 app.post('/insertTag', function (req, res) {
     'use strict';

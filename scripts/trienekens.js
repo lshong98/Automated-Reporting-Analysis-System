@@ -944,6 +944,20 @@ app.controller('managerController', function($scope, $http, $filter) {
         $scope.reportIncompleteCount = data.incompleteReport;
     });
     
+    $http.post('/getUnsubmitted', {"day":$scope.day}).then(function (response){
+        if(response.data.length != 0){
+            $scope.unsubmitted = response.data;
+        }else{
+            $scope.unsubmitted = response.data;
+        }
+    });
+    $http.post('/getSubmitted', {"day":$scope.day}).then(function (response){
+        if(response.data.length != 0){
+            $scope.submitted = response.data;
+        }else{
+            $scope.submitted = response.data;
+        }
+    });
     
     $http.post('/getDataVisualization', $scope.visualdate).then(function(response) {
         $scope.visualObject = response.data;
