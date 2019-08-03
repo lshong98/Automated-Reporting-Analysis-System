@@ -439,6 +439,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                             for(var i = 0; i<scope.zoneListInactive.length; i++){
                                 if(scope.zoneListInactive[i].id == scope.z.id){
                                     scope.zoneListInactive.splice(i, 1);
+                                    scope.$parent.zoneList = angular.copy(scope.zoneListInactive);
                                 }
                             }
                         }else{
@@ -446,6 +447,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                             for(var i = 0; i<scope.zoneListActive.length; i++){
                                 if(scope.zoneListActive[i].id == scope.z.id){
                                     scope.zoneListActive.splice(i, 1);
+                                    scope.$parent.zoneList = angular.copy(scope.zoneListActive);
                                 }
                             }
                         }
@@ -504,6 +506,20 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                             scope.z = angular.copy(storeDataService.bin[index]);
                         }
                         return false;
+                    }
+                });
+                
+                $.each(scope.binList, function (index, value) {
+                    if (scope.thisBin.id == value.id) {
+                        if (scope.b.status == 'ACTIVE') {
+                            scope.binListActive.push(scope.b);
+                            scope.binListInactive.splice(index, 1);
+                            scope.$parent.binList = angular.copy(scope.binListInactive);
+                        } else {
+                            scope.binListInactive.push(scope.b);
+                            scope.binListActive.splice(index, 1);
+                            scope.$parent.binList = angular.copy(scope.binListActive);
+                        }
                     }
                 });
             });
@@ -1285,53 +1301,59 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         "zone": '',
         "staff": ''
     };
-    
-    $scope.currentStatus = {
-        "status": true
-    }
 
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.area);
 
-    function getAllArea() {
-        $http.post('/getAllArea', $scope.currentStatus).then(function(response) {
-            $scope.searchAreaFilter = '';
-            $scope.areaList = response.data;
-            $scope.filterAreaList = [];
-
-            $scope.searchArea = function(area) {
-                return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
-            }
-
-            $scope.filterAreaList = angular.copy($scope.areaList);
-
-            $scope.totalItems = $scope.filterAreaList.length;
-
-            $scope.getData = function() {
-                return $filter('filter')($scope.filterAreaList, $scope.searchAreaFilter);
-            };
-
-            $scope.$watch('searchAreaFilter', function(newVal, oldVal) {
-                var vm = this;
-                if (oldVal !== newVal) {
-                    $scope.pagination.currentPage = 1;
-                    $scope.totalItems = $scope.getData().length;
-                }
-                return vm;
-            }, true);
-        });
-    }
-    getAllArea();
-    
     $scope.statusList = true;
     $scope.updateStatusList = function(){
         if($scope.statusList){
-            $scope.currentStatus.status = true;
-        }else{            
-            $scope.currentStatus.status = false;
+            $scope.areaList = angular.copy($scope.areaListActive);  
+        }else{
+            $scope.areaList = angular.copy($scope.areaListInactive);
         }
-        getAllArea(); //call
+        
+        $scope.filterAreaList = angular.copy($scope.areaList);
+        $scope.totalItems = $scope.filterAreaList.length;
     }
+
+    $http.get('/getAllArea').then(function(response) {
+        $scope.searchAreaFilter = '';
+        $scope.areaList = response.data;
+        $scope.filterAreaList = [];
+
+        $scope.searchArea = function(area) {
+            return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.areaListActive = [];
+        $scope.areaListInactive = [];
+        for(var i=0; i<$scope.areaList.length; i++){
+            if($scope.areaList[i].status == 'ACTIVE'){
+                $scope.areaListActive.push($scope.areaList[i]);
+            }else{
+                $scope.areaListInactive.push($scope.areaList[i]);
+            }
+        }
+        $scope.areaList = angular.copy($scope.areaListActive);
+        
+        $scope.filterAreaList = angular.copy($scope.areaList);
+
+        $scope.totalItems = $scope.filterAreaList.length;
+
+        $scope.getData = function() {
+            return $filter('filter')($scope.filterAreaList, $scope.searchAreaFilter);
+        };
+
+        $scope.$watch('searchAreaFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.pagination.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+    });
 
     $http.get('/getZoneList').then(function(response) {
         $scope.zoneList = response.data;
@@ -2143,50 +2165,56 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.bin);
 
-    $scope.currentStatus = {
-        "status": true
-    }
-    
-    function getAllBinCenter() {
-        $http.post('/getAllBinCenter', $scope.currentStatus).then(function(response) {
-            $scope.searchBinFilter = '';
-            $scope.binList = response.data;
-            storeDataService.bin = angular.copy($scope.binList);
-            $scope.filterBinList = [];
-
-            $scope.searchBin = function(bin) {
-                return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
-            };
-
-            $scope.filterBinList = angular.copy($scope.binList);
-
-            $scope.totalItems = $scope.filterBinList.length;
-
-            $scope.getData = function() {
-                return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
-            };
-
-            $scope.$watch('searchBinFilter', function(newVal, oldVal) {
-                var vm = this;
-                if (oldVal !== newVal) {
-                    $scope.pagination.currentPage = 1;
-                    $scope.totalItems = $scope.getData().length;
-                }
-                return vm;
-            }, true);
-        });
-    }
-    getAllBinCenter(); //call
-
     $scope.statusList = true;
     $scope.updateStatusList = function(){
         if($scope.statusList){
-            $scope.currentStatus.status = true;
-        }else{            
-            $scope.currentStatus.status = false;
+            $scope.binList = angular.copy($scope.binListActive);  
+        }else{
+            $scope.binList = angular.copy($scope.binListInactive);
         }
-        getAllBinCenter(); //call
+        
+        $scope.filterAreaList = angular.copy($scope.binList);
+        $scope.totalItems = $scope.filterAreaList.length;
     }
+    
+    $http.get('/getAllBinCenter', $scope.currentStatus).then(function(response) {
+        $scope.searchBinFilter = '';
+        $scope.binList = response.data;
+        storeDataService.bin = angular.copy($scope.binList);
+        $scope.filterBinList = [];
+
+        $scope.searchBin = function(bin) {
+            return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+        };
+
+        $scope.binListActive = [];
+        $scope.binListInactive = [];
+        for(var i=0; i<$scope.binList.length; i++){
+            if($scope.binList[i].status == 'ACTIVE'){
+                $scope.binListActive.push($scope.binList[i]);
+            }else{
+                $scope.binListInactive.push($scope.binList[i]);
+            }
+        }
+        $scope.binList = angular.copy($scope.binListActive);
+        
+        $scope.filterBinList = angular.copy($scope.binList);
+
+        $scope.totalItems = $scope.filterBinList.length;
+
+        $scope.getData = function() {
+            return $filter('filter')($scope.filterBinList, $scope.searchBinFilter);
+        };
+
+        $scope.$watch('searchBinFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.pagination.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+    });
 
     $http.get('/getAreaList').then(function(response) {
         renderSltPicker();

@@ -35,16 +35,10 @@ app.post('/editBinCenter', function (req, res) {
 }); // Complete
 
 // Load all bin center in management
-app.post('/getAllBinCenter', function (req, res) {
+app.get('/getAllBinCenter', function (req, res) {
     'use strict';
     
     var sql = "SELECT binCenterID AS id, areaID AS area, binCenterName as name, binCenterLocation AS location, (CASE WHEN binCenterStatus = 'A' THEN 'ACTIVE' WHEN binCenterStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblbincenter";
-    
-    if(req.body.status){
-        sql += " WHERE binCenterStatus = 'A'";
-    }else{
-        sql += " WHERE binCenterStatus = 'I'";
-    }
     
     database.query(sql, function (err, result) {
         if (err) {
