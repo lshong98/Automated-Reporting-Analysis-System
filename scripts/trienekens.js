@@ -724,6 +724,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         scope.editDcsDetails = function(id, name, location, area, status) {
             scope.showDcsDetails = !scope.showDcsDetails;
 
+            
             scope.thisBin = { "id": id, "name": name, "location": location, "area": area, "status": status };
             console.log("EDIT DCS DETAILS");
         };
@@ -1679,7 +1680,7 @@ app.controller('specificAccController', function($scope, $http, $routeParams, $f
         "ic": '',
         "gender": '',
         "dob": '',
-        "bindDob": '',
+        "bindDob": '', 
         "position": '',
         "status": '',
         "email": '',
@@ -1890,9 +1891,9 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
 
     $scope.initializeZone = function() {
         $scope.zone = {
-            "name": '',
+            "name": '', 
             "creationDate": ''
-        };
+        }; 
     };
 
     $scope.pagination = angular.copy(storeDataService.pagination);
@@ -2434,8 +2435,11 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.dcsDetailsList = [];
     $scope.dcs = [];
     $scope.customerList = [];
+    $scope.filteredCustomerList = [];
     $scope.dcsID = {};
+    $scope.editAddress = {};
     $scope.dcsID.id = $routeParams.dcsID;
+    $scope.dcsEntry = {};
 
     $scope.test = 
         {
@@ -2465,6 +2469,8 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         
         $scope.dcs = response.data;
         console.log($scope.dcs);
+        $scope.disableAddress();
+        
 
         if($scope.dcs[0].status == 'G'){
             $scope.status = 'APPROVED';
@@ -2474,14 +2480,85 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
             $scope.status = 'CORRECTION REQUIRED';
         }else if($scope.dcs[0].status == 'A'){
             $scope.status = 'ACTIVE';
+        }else if($scope.dcs[0].status == 'C') {
+            $scope.status = 'COMPLETE';
+            $scope.show.edit = 'I';
         }
     });
+
+    $scope.editDcsEntry = function(acrID){
+        $scope.enableAddress();
+
+        var i = 0;
+
+        for(i = 0; i < $scope.dcsDetailsList.length; i++){
+            if($scope.dcsDetailsList[i].acrID == acrID){
+                
+
+                $scope.dcsEntry.companyName = $scope.dcsDetailsList[i].companyName;
+                $scope.filterAddress();
+                $scope.dcsEntry.customerID = $scope.dcsDetailsList[i].address;
+                $scope.dcsEntry.beBins = $scope.dcsDetailsList[i].beBins;
+                $scope.dcsEntry.acrBins = $scope.dcsDetailsList[i].acrBins;
+                $scope.dcsEntry.areaCode = $scope.dcsDetailsList[i].areaCode;
+                $scope.dcsEntry.mon = $scope.dcsDetailsList[i].mon;
+                $scope.dcsEntry.tue = $scope.dcsDetailsList[i].tue;
+                $scope.dcsEntry.wed = $scope.dcsDetailsList[i].wed;
+                $scope.dcsEntry.thu = $scope.dcsDetailsList[i].thu;
+                $scope.dcsEntry.fri = $scope.dcsDetailsList[i].fri;
+                $scope.dcsEntry.sat = $scope.dcsDetailsList[i].sat;
+                $scope.dcsEntry.remarks = $scope.dcsDetailsList[i].remarks;
+
+                console.log($scope.dcsDetailsList[i]);
+            }
+        }
+
+
+
+        $scope.dcsEntry.companyName = $scope.dcsEntry.companyName;
+
+    }
+
+    $scope.filterAddress = function(){
+
+        $scope.enableAddress();
+        console.log($scope.dcsEntry);
+        $http.post('/filterAddress', $scope.dcsEntry).then(function(response) {
+        
+            $scope.filteredCustomerList = response.data;
+        });
+    }
+
+    $scope.saveDcsEntry = function(){
+        window.alert("DCS Updated");
+
+        $http.post('/updateDcsEntry', $scope.dcsID).then(function(response) {
+        
+            $scope.dcsDetailsList = response.data;
+            console.log($scope.dcsDetailsList); 
+            console.log("Hello dcsdetails");
+    
+        });
+
+        angular.element('#editDcsEntry').modal('toggle');
+    }
+
+    $scope.disableAddress = function(){
+        document.getElementById("editAddress").disabled=true;
+        document.getElementById("txtAddress").disabled=true;
+    }
+
+    $scope.enableAddress = function(){
+        document.getElementById("editAddress").disabled=false;
+        document.getElementById("txtAddress").disabled=false;
+    }
     
     $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
         
         $scope.dcsDetailsList = response.data;
         console.log($scope.dcsDetailsList); 
         console.log("Hello dcsdetails");
+
     });
 
     $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
@@ -2503,7 +2580,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
                 });
 
 
-                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
+                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "companyName": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
                 
                 angular.element('#createDcsEntry').modal('toggle');
             }

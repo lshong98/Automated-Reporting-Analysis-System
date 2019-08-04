@@ -11,14 +11,14 @@
                 
                 <div class="form-group">
                     <label for="txtCompany form-label">Company Name</label>
-                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.companyName">
-                            <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.companyName}}</option>
+                    <select type="text" class="form-control" id="txtCompany" data-ng-model="dcsEntry.companyName" data-ng-change="filterAddress();">
+                            <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
                     </select>
                 </div>
                 <div class="form-group"> 
                   <label for="txtAddress form-label">Address</label>
                   <select type="text" class="form-control" id="txtAddress" data-ng-model="dcsEntry.customerID">
-                        <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+                        <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -85,28 +85,28 @@
                 <label>DCS ID: {{acrID}}</label>
                 <div class="form-group">
                     <label for="txtCompany form-label">Company Name</label>
-                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.companyName">
-                            <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.companyName}}</option>
+                    <select type="text" class="form-control" id="editCompany" data-ng-model="dcsEntry.companyName" data-ng-change = "filterAddress();">
+                            <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
                     </select>
                 </div>
                 <div class="form-group"> 
                   <label for="txtAddress form-label">Address</label>
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="dcsEntry.customerID">
-                        <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+                  <select type="text" class="form-control" id="editAddress" data-ng-model="dcsEntry.customerID">
+                        <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                   <label for="txtBeBins form-label">BE Bins/Units</label> 
-                  <input type="text" class="form-control" id="txtBeBins" data-ng-model="dcsEntry.beBins" />
+                  <input type="text" class="form-control" id="editBeBins" data-ng-model="dcsEntry.beBins" />
                 </div>
             
                 <div class="form-group">
                     <label for="txtAcrBins form-label">ACR Bins/Units</label>
-                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="dcsEntry.acrBins" />
+                    <input type="text" class="form-control" id="editAcrBins" data-ng-model="dcsEntry.acrBins" />
                 </div>
                 <div class="form-group">
                   <label for="txtAreaCode form-label">Area Code</label>
-                  <input type="text" class="form-control" id="txtAreaCode" data-ng-model="dcsEntry.areaCode" />
+                  <input type="text" class="form-control" id="editAreaCode" data-ng-model="dcsEntry.areaCode" />
                 </div>
                 <div class="form-group">
                     <label>Collection Days</label>
@@ -131,7 +131,7 @@
                 </div>
                 <div class="form-group">
                         <label for="txtRemarks form-label">Remarks</label>
-                        <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="dcsEntry.remarks" />
+                        <input type="textArea" class="form-control" id="editRemarks" data-ng-model="dcsEntry.remarks" />
                       </div>
          
                 
@@ -389,7 +389,7 @@
                                                     </div>
                                         </td>
                                         <td data-ng-show="show.edit == 'A'">
-                                            <button class="btn btn-sm btn-primary" data-ng-show="showDcsDetails" data-toggle="modal" data-target="#editDcsEntry"><i class="fa fa-pencil-alt"></i></button>
+                                            <button class="btn btn-sm btn-primary" data-ng-show="showDcsDetails" data-toggle="modal" data-target="#editDcsEntry" data-ng-click="editDcsEntry(d.acrID);"><i class="fa fa-pencil-alt"></i></button>
                                         </td>
                                     </tr>
                             </tbody>

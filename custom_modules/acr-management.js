@@ -107,6 +107,19 @@ app.post('/getDcsInfo',function(req,res){
     });
 }); // Complete
 
+app.post('/filterAddress',function(req,res){ 
+    'use strict';
+    //console.log("DCS ID: " + req.body.dcsID);
+    var sql = "SELECT * from tblcustomer where companyName = '" + req.body.companyName + "'";
+    database.query(sql, function (err, result) {
+        if (err) { 
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
+
 app.post('/getStaffList', function(req,res){
     'use strict';
     console.log("GET STAFF LIST: " + req.body);
