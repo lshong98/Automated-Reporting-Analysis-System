@@ -333,18 +333,34 @@ app.get('/livemap', function (req, res) {
 
 
 
-app.post('/insertTag', function (req, res) {
+//app.post('/insertTag', function (req, res) {
+//    'use strict';
+//    
+//    var sql = "INSERT into tbltag values('2019-08-01 06:34:20','K123875','TRK201908010001','110.348068','1.5089');";
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            throw err;
+//        } else {
+//            emitter.emit('live map');
+//        }
+//    });
+//});
+
+app.get('/insertTag', function (req, res) {
     'use strict';
+
+    var sql = "INSERT INTO tbltag (date, serialNo, truckID, longitude, latitude) VALUES ('" + req.query.date + "', '" + req.query.serialNo + "', '" + req.query.truckID + "', '" + req.query.longitude + "', '" + req.query.latitude + "')";
     
-    var sql = "INSERT into tbltag values('2019-08-01 06:34:20','K123875','TRK201908010001','110.348068','1.5089');";
     database.query(sql, function (err, result) {
         if (err) {
+            res.end();
             throw err;
         } else {
+            console.log("Tag inserted:{'" + req.query.date + "', '" + req.query.serialNo + "', '" + req.query.truckID + "', '" + req.query.longitude + "', '" + req.query.latitude + "'}");
             emitter.emit('live map');
+            res.end();
         }
     });
-
 });
 
 // Tag Rest API

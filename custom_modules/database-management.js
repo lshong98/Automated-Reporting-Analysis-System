@@ -24,14 +24,14 @@ var config = {
 
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
-  }
+}
  
 // Create connection 
-/*var db = mysql.createConnection({ 
-    host: DB_HOST,
-    user: DB_USER,  
-    password: DB_PASS
-});*/
+//var db = mysql.createConnection({ 
+//    host: DB_HOST,
+//    user: DB_USER,  
+//    password: DB_PASS
+//});
 
 var db = mysql.createConnection(config);
 
