@@ -56,16 +56,10 @@ app.get('/getTruckList', function (req, res) {
 });
 
 // Load all truck in management
-app.post('/getAllTruck', function (req, res) {
+app.get('/getAllTruck', function (req, res) {
     'use strict';
     
     var sql = "SELECT truckID AS id, transporter, truckTon AS ton, truckNum AS no, truckExpiryStatus AS roadtax, (CASE WHEN truckStatus = 'A' THEN 'ACTIVE' WHEN truckStatus = 'I' THEN 'INACTIVE' END) AS status FROM tbltruck";
-    
-    if(req.body.status){
-        sql += " WHERE truckStatus = 'A'";
-    }else{
-        sql += " WHERE truckStatus = 'I'";
-    }
     
     database.query(sql, function (err, result) {
         if (err) {

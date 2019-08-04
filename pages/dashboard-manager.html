@@ -236,6 +236,41 @@
         <div id="googleMap" style="min-height: 650px;"></div>
     </div>
 </div>
+<br/>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Unsubmitted Report</th>
+                    <th>Officer</th>
+                </tr>
+            </thead>
+            <tbody data-ng-repeat = "u in unsubmitted">
+                <tr >
+                    <td>{{u.area}}</td>
+                    <td>{{u.staff}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>    
+    <div class="col-md-6">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Submitted Report</th>
+                    <th>Officer</th>
+                </tr>
+            </thead>
+            <tbody data-ng-repeat = "s in submitted">
+                <tr>
+                    <td>{{s.area}}</td>
+                    <td>{{s.staff}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12">
