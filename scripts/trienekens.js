@@ -679,7 +679,9 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             scope.showDcsDetails = !scope.showDcsDetails;
 
             scope.thisBin = { "id": id, "name": name, "location": location, "area": area, "status": status };
+            console.log("EDIT DCS DETAILS");
         };
+
         scope.saveDcsDetails = function() {
             scope.showDcsDetails = !scope.showDcsDetails;
 
@@ -2254,7 +2256,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     }
     
     
-});
+});  
 
 app.controller('dcsDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
 
@@ -2265,7 +2267,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         $scope.status = 'PENDING';
     };
   
-    $scope.confirm = function(request) {
+    $scope.confirm = function(request) { 
         if(request == 'approve'){
             $scope.approveForm();
         }else if(request == 'reject') {
@@ -2275,7 +2277,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
     $scope.approveForm = function() {
         $scope.status = 'APPROVED';
-        //approveForm($routeParams.dcsID, "dcs");
+        approveForm($routeParams.dcsID, "dcs");
         window.alert("APPROVED");
         
         angular.element('#approveConfirmation').modal('toggle');
@@ -2283,9 +2285,11 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
     $scope.rejectForm = function() {
         $scope.status = 'CORRECTION REQUIRED';
-        //rejectForm($routeParams.dcsID, "dcs");
+        rejectForm($routeParams.dcsID, "dcs");
 
         window.alert("CORRECTION REQUIRED");
+
+        angular.element('#rejectConfirmation').modal('toggle');
     }
 
     
