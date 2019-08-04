@@ -11,10 +11,10 @@ var emitter = new EventEmitter();
  //var DB_NAME = 'trienekenstest';
 
 // Local database access
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = 'trienekens05';
+var DB_NAME = '';
  
 // Create connection 
 var db = mysql.createConnection({ 
@@ -44,7 +44,7 @@ db.connect(function (err) {
                     emitter.emit('createTable');
                     emitter.emit('defaultUser');
                     //emitter.emit('dummyData');
-                    emitter.emit('eventScheduler');
+                    //emitter.emit('eventScheduler');
                 });
             });
         } else {
