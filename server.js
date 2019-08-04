@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 var Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -383,6 +383,7 @@ app.post('/api/tags', function (req,res) {
     });
 
     res.send(tag);
+    emitter.emit('live map');
 });
 
 function validateTag(tag){
