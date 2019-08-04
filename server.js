@@ -157,7 +157,7 @@ app.get('/getCount', function (req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS staff FROM tblstaff");
     }).then(function (staff) {
         results.staff = staff.staff;
-        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C'");
+        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (completeReport) {
         results.completeReport = completeReport.completeReport;
         return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'I'");
@@ -165,6 +165,42 @@ app.get('/getCount', function (req, res) {
         results.incompleteReport = incompleteReport.incompleteReport;
         res.json(results);
         res.end();
+    });
+});
+
+app.post('/getTodayAreaCount',function(req, res){
+    'use strict';
+    var sql = "SELECT COUNT(*) AS todayAreaCount FROM tblarea WHERE collection_frequency LIKE '%" + req.body.day + "%'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.post('/getUnsubmitted', function(req,res){
+    'use strict';
+    
+    var sql="SELECT DISTINCT tblarea.areaName AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+app.post('/getSubmitted', function(req,res){
+    'use strict';
+    
+    var sql="SELECT DISTINCT tblarea.areaName AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE()";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
     });
 });
 
@@ -291,6 +327,8 @@ app.get('/livemap', function (req, res) {
         }
     });
 });
+
+
 
 app.post('/insertTag', function (req, res) {
     'use strict';
