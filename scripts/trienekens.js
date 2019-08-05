@@ -800,7 +800,7 @@ app.run(function($rootScope) {
         var zone = place.zone.replace(" ", "+");
         var concat = area + '+' + zone;
 
-        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
     };
 });
 
@@ -2623,7 +2623,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     //Customer details
     $scope.initializeCustomer = function(){
         $scope.customer = {
-            //customerID
+            "customerID":'',
             "username": '',
             "password": '',
             "contactNumber": '',
@@ -2805,6 +2805,9 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.addCustomer = function() {
         console.log($scope.customer.tamanID);
         console.log("Customer Created");
+
+        //$scope.customer.customerID = f.makeID('customer',$filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+        //console.log($scope.customer.customeriD);
         console.log($scope.customer);
 
         $http.post('/addCustomer', $scope.customer).then(function (response) {
