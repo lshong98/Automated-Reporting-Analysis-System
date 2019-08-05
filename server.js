@@ -349,17 +349,18 @@ app.get('/livemap', function (req, res) {
 app.get('/insertTag', function (req, res) {
     'use strict';
 
-    var sql = "INSERT INTO tbltag (date, serialNo, truckID, longitude, latitude) VALUES ('" + req.query.date + "', '" + req.query.serialNo + "', '" + req.query.truckID + "', '" + req.query.longitude + "', '" + req.query.latitude + "')";
-    
-    database.query(sql, function (err, result) {
-        if (err) {
-            res.end();
-            throw err;
-        } else {
-            console.log("Tag inserted:{'" + req.query.date + "', '" + req.query.serialNo + "', '" + req.query.truckID + "', '" + req.query.longitude + "', '" + req.query.latitude + "'}");
-            emitter.emit('live map');
-            res.end();
-        }
+    f.waterfallQuery("SELECT truckID FROM tbltruck WHERE truckNum = '" + req.query.truckID + "'").then(function (truck) {
+        var sql = "INSERT INTO tbltag (date, serialNo, truckID, longitude, latitude) VALUES ('" + req.query.date + "', '" + req.query.serialNo + "', '" + truck.truckID + "', '" + req.query.longitude + "', '" + req.query.latitude + "')";
+        database.query(sql, function (err, result) {
+            if (err) {
+                res.end();
+                throw err;
+            } else {
+                console.log("Tag inserted:{'" + req.query.date + "', '" + req.query.serialNo + "', '" + req.query.truckID + "', '" + req.query.longitude + "', '" + req.query.latitude + "'}");
+                emitter.emit('live map');
+                res.end();
+            }
+        });
     });
 });
 
