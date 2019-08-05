@@ -72,15 +72,23 @@ app.post('/addCustomer', function (req, res) {
     console.log(`${req.body.tamanID}`);
     console.log(`${req.body.username}`);
     console.log(`${req.body.status}`);
-    var sql = `insert into tblcustomer values(NULL,'${req.body.tamanID}','${req.body.username}','${req.body.password}','${req.body.contactNumber}','${req.body.ic}','${req.body.tradingLicense}','${req.body.name}', '${req.body.companyName}','${req.body.houseNo}','${req.body.streetNo}','${req.body.postCode}','${req.body.city}','${req.body.status}',current_timestamp())`;
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        console.log("Add Customer success");
-        console.log(result);
-        res.json({"status": "success", "message": "Customer created successfully!"});
-        
+
+    var customerDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+    console.log(customerDateTime);
+
+    req.body.customerID = f.makeID('customer',customerDateTime).then(function(ID){
+        console.log(`${req.body.customerID}`);
+        var sql = `insert into tblcustomer values('${req.body.customerID}','${req.body.tamanID}','${req.body.username}','${req.body.password}','${req.body.contactNumber}','${req.body.ic}','${req.body.tradingLicense}','${req.body.name}', '${req.body.companyName}','${req.body.houseNo}','${req.body.streetNo}','${req.body.postCode}','${req.body.city}','${req.body.status}',current_timestamp())`;
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            console.log("Add Customer success");
+            console.log(result);
+            res.json({"status": "success", "message": "Customer created successfully!"});
+                
+    });
     });
 });
 
