@@ -69,24 +69,25 @@ app.post('/editDatabaseBin', function (req, res) {
 
 app.post('/addCustomer', function (req, res) {
     'use strict';
-    console.log(`${req.body.tamanID}`);
-    console.log(`${req.body.username}`);
-    console.log(`${req.body.status}`);
+    // console.log(`${req.body.tamanID}`);
+    // console.log(`${req.body.username}`);
+    // console.log(`${req.body.status}`);
 
-    var customerDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    // let current_datetime = new Date()
+    // let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds();
 
-    console.log(customerDateTime);
+    //console.log(formatted_date);
 
-    req.body.customerID = f.makeID('customer',customerDateTime).then(function(ID){
-        console.log(`${req.body.customerID}`);
-        var sql = `insert into tblcustomer values('${req.body.customerID}','${req.body.tamanID}','${req.body.username}','${req.body.password}','${req.body.contactNumber}','${req.body.ic}','${req.body.tradingLicense}','${req.body.name}', '${req.body.companyName}','${req.body.houseNo}','${req.body.streetNo}','${req.body.postCode}','${req.body.city}','${req.body.status}',current_timestamp())`;
+    req.body.customerID = f.makeID('customer',req.body.creationDateTime).then(function(ID){
+        //console.log(`${ID}`);
+        var sql = "insert into tblcustomer values('"+ ID +"', '"+ req.body.tamanID +"','" + req.body.username +"','" + req.body.password +"','" + req.body.contactNumber +"','" + req.body.ic +"','" + req.body.tradingLicense +"','" + req.body.name +"', '" + req.body.companyName +"','" + req.body.houseNo +"','" + req.body.streetNo +"','" + req.body.postCode +"','" + req.body.city +"','" + req.body.status +"',current_timestamp())";
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
             console.log("Add Customer success");
             console.log(result);
-            res.json({"status": "success", "message": "Customer created successfully!"});
+            res.json({"status": "success", "message": `Customer: ${ID} created successfully!`});
                 
     });
     });

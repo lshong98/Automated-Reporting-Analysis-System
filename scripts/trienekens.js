@@ -2636,8 +2636,8 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
             "tamanID": '',
             "postCode": '',
             "city": '',
-            "status": ''
-            //creationDateTime
+            "status": '',
+            "creationDateTime":''
         };
     }
 
@@ -2805,6 +2805,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.addCustomer = function() {
         console.log($scope.customer.tamanID);
         console.log("Customer Created");
+        $scope.customer.creationDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
         //$scope.customer.customerID = f.makeID('customer',$filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss'));
         //console.log($scope.customer.customeriD);
