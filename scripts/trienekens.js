@@ -6,7 +6,7 @@ global angular, document, google, Highcharts
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap']);
 
 //var socket = io.connect();
-var socket = io('wss://trienekens-deploy.appspot.com:8080', {transports: ['websocket']});
+var socket = io.connect('wss://trienekens-deploy.appspot.com:3000', {transports: ['websocket']});
 socket.on('connect', function() {
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
@@ -967,25 +967,33 @@ app.controller('managerController', function($scope, $http, $filter) {
     });
     
     $http.post('/getUnsubmitted', {"day":$scope.day}).then(function (response){
-        if(response.data.length != 0){
+        if(response.data.length > 0){
             $scope.unsubmitted = response.data;
         }else{
-            $scope.unsubmitted = response.data;
+            $scope.unsubmitted = [];
         }
     });
     $http.post('/getSubmitted', {"day":$scope.day}).then(function (response){
-        if(response.data.length != 0){
+        if(response.data.length > 0){
             $scope.submitted = response.data;
         }else{
-            $scope.submitted = response.data;
+            $scope.submitted = [];
         }
     });
     
     $http.post('/getDataVisualization', $scope.visualdate).then(function(response) {
-        $scope.visualObject = response.data;
+        if (response.data.length > 0) {
+            $scope.visualObject = response.data;
+        } else {
+            $scope.visualObject = [];
+        }
     });
     $http.post('/getDataVisualizationGroupByDate', $scope.visualdate).then(function(response) {
-        $scope.reportListGroupByDate = response.data;
+        if (response.data.length > 0) {
+            $scope.reportListGroupByDate = response.data;
+        } else {
+            $scope.reportListGroupByDate = [];
+        }
         displayChart();
     });
     var displayChart = function() {
