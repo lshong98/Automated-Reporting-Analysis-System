@@ -261,6 +261,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.report.collectionDate = $filter('date')($scope.report.collectionDate, 'yyyy-MM-dd');
         $http.post('/addReport', $scope.report).then(function (response) {
             var returnedData = response.data;
             var newReportID = returnedData.details.reportID;
