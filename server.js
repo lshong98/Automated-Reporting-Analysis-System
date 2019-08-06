@@ -159,6 +159,9 @@ app.get('/getCount', function (req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS staff FROM tblstaff");
     }).then(function (staff) {
         results.staff = staff.staff;
+        return f.waterfallQuery("SELECT COUNT(*) AS complaint FROM tblcomplaint WHERE status != 'c'");
+    }).then(function (complaint) {
+        results.complaint = complaint.complaint;
         return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (completeReport) {
         results.completeReport = completeReport.completeReport;

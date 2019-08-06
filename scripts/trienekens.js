@@ -952,7 +952,7 @@ app.controller('managerController', function($scope, $http, $filter) {
         $scope.todayAreaCount = response.data[0].todayAreaCount;
     });
     $http.get('/getCount').then(function (response) {
-        console.log(response.data);
+//        console.log(response.data);
         var data = response.data;
         
         $scope.zoneCount = data.zone;
@@ -961,6 +961,7 @@ app.controller('managerController', function($scope, $http, $filter) {
         $scope.binCount = data.bin;
         $scope.truckCount = data.truck;
         $scope.userCount = data.staff - 1;
+        $scope.complaintCount = data.complaint;
         $scope.reportCompleteCount = data.completeReport;
         $scope.reportIncompleteCount = data.incompleteReport;
     });
