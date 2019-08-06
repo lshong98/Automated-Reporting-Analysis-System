@@ -286,14 +286,14 @@
                 </div>
             
             </br>
-            <div class="row">
+            <div class="row" style="height:500px;">
                 <div class="col-md-12">
                     <div class="table-responsive">
                         <table class="table table-hover table-striped table-clickable">
                             <thead>
                                 <tr>
-                                    <th width="15%" data-ng-click="orderBy('acrfNo');">ACRF Number <i class="fas fa-sort-down"></i></th>
-                                    <th width="15%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
+                                    <th width="10%" data-ng-click="orderBy('acrfNo');">ACRF Number <i class="fas fa-sort-down"></i></th>
+                                    <th width="10%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
                                     <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
                                     <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
                                     <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
@@ -305,7 +305,7 @@
                                     <th width="5%" data-ng-click="orderBy('Fri');">Fri</i></th>
                                     <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
                                     <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
-                                    <th></th>
+                                    <th width="7%"></th>
                                 </tr>
                             </thead>
                             <tbody>               
@@ -390,6 +390,7 @@
                                         </td>
                                         <td data-ng-show="show.edit == 'A'">
                                             <button class="btn btn-sm btn-primary" data-ng-show="showDcsDetails" data-toggle="modal" data-target="#editDcsEntry" data-ng-click="editDcsEntry(d.acrID);"><i class="fa fa-pencil-alt"></i></button>
+                                            <button class="btn btn-sm btn-danger" data-ng-show="showDcsDetails" data-ng-click="deleteDcsEntry(d.acrID);"><i class="fa fa-times"></i></button>
                                         </td>
                                     </tr>
                             </tbody>

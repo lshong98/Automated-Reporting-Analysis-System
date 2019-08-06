@@ -1,3 +1,4 @@
+
 /*
 jshint: white
 global angular, document, google, Highcharts
@@ -687,10 +688,11 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.saveReusableMgb = function(date, inReusable120, inReusable240, inReusable660, inReusable1000, outReusable120, outReusable240, outReusable660, outReusable1000) {
             scope.showReusableMgb = !scope.showReusableMgb;
+            scope.calculateBalance(scope.rb.date);
 
             scope.thisReusableMgb = { "date": date, "inReusable120": inReusable120, "inReusable240": inReusable240, "inReusable660": inReusable660, "inReusable1000": inReusable1000, "outReusable120": outReusable120, "outReusable240": outReusable240, "outReusable660": outReusable660, "outReusable1000": outReusable1000 };
 
-            scope.calculateBalance(scope.rb.date);
+            
 
             $http.post('/editReusableMgbStock', scope.thisReusableMgb).then(function(response) {
                 var data = response.data;
@@ -800,7 +802,7 @@ app.run(function($rootScope) {
         var zone = place.zone.replace(" ", "+");
         var concat = area + '+' + zone;
 
-        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
     };
 });
 
@@ -2427,7 +2429,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
     
     $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemPerPage = 8; //Record number each page
+    $scope.itemPerPage = 5; //Record number each page
     $scope.maxSize = 10;
     
     //$scope.showDcsDetails = true;
@@ -2495,6 +2497,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
             if($scope.dcsDetailsList[i].acrID == acrID){
                 
 
+                $scope.dcsEntry.acrID = $scope.dcsDetailsList[i].acrID
                 $scope.dcsEntry.companyName = $scope.dcsDetailsList[i].companyName;
                 $scope.filterAddress();
                 $scope.dcsEntry.customerID = $scope.dcsDetailsList[i].address;
@@ -2513,9 +2516,9 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
             }
         }
 
+    }
 
-
-        $scope.dcsEntry.companyName = $scope.dcsEntry.companyName;
+    $scope.deleteDcsEntry = function(acrID) {
 
     }
 
@@ -2532,12 +2535,9 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.saveDcsEntry = function(){
         window.alert("DCS Updated");
 
-        $http.post('/updateDcsEntry', $scope.dcsID).then(function(response) {
+        $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
         
-            $scope.dcsDetailsList = response.data;
-            console.log($scope.dcsDetailsList); 
-            console.log("Hello dcsdetails");
-    
+            $scope.getDcsDetails();
         });
 
         angular.element('#editDcsEntry').modal('toggle');
@@ -2553,13 +2553,19 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         document.getElementById("txtAddress").disabled=false;
     }
     
-    $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
+    
+    $scope.getDcsDetails = function() {
+        $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
         
-        $scope.dcsDetailsList = response.data;
-        console.log($scope.dcsDetailsList); 
-        console.log("Hello dcsdetails");
+            $scope.dcsDetailsList = response.data;
+            console.log($scope.dcsDetailsList); 
+            console.log("Hello dcsdetails");
+    
+        });
+    }
 
-    });
+    $scope.getDcsDetails();
+    
 
     $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
         $scope.customerList = response.data;
@@ -2580,7 +2586,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
                 });
 
 
-                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "companyName": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
+                $scope.dcsDetailsList.push({ "acrID": $scope.dcsEntry.acrID, "companyName": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
                 
                 angular.element('#createDcsEntry').modal('toggle');
             }
@@ -2973,7 +2979,8 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
 
-    $scope.yearMonths = ['2019-01-01', '2019-02-01', '2019-03-01', '2019-04-01', '2019-05-01'];
+
+    $scope.yearMonths = [];
     $scope.stock = $scope.stock || {
         new120: 0,
         new240: 0,
@@ -2998,7 +3005,7 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
         "inNew660": 0,
         "inNew1000": 0,
         "outNew120": 0,
-        "outNew240": 0,
+        "outNew240": 0, 
         "outNew660": 0,
         "outNew1000": 0,
 
@@ -3029,46 +3036,9 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
 
     $scope.show = angular.copy(storeDataService.show.inventory);
 
-    $http.get('/getAllInventoryRecords').then(function(response) {
-        $scope.searchInventoryRecordFilter = '';
-        $scope.inventoryRecordList = response.data;
-        storeDataService.inventoryRecord = angular.copy($scope.inventoryRecord);
-        $scope.filterInventoryRecordList = [];
+    
+    
 
-        // $scope.searchDatabaseBin = function (bin) {
-        //     return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
-        // };
-
-        $scope.filterInventoryRecordList = angular.copy($scope.inventoryRecordList);
-
-        $scope.totalItems = $scope.filterInventoryRecordList.length;
-
-        $scope.getData = function() {
-            return $filter('filter')($scope.filterNewMgbList, $scope.searchNewMgbFilter);
-        };
-
-        $scope.$watch('searchDatabaseBinFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.currentPage = 1;
-                $scope.totalItems = $scope.getData().length;
-            }
-            return vm;
-        }, true);
-    });
-
-    /*$scope.editBin = function(){
-        $http.post('/editBin', $scope.bin).then(function(response){
-            var data = response.data;
-            if(data.status === "success"){
-                angular.element('body').overhang({
-                    type: data.status,
-                    message: data.message
-                });
-            }
-            
-        });
-    }*/
 
     $scope.calculateBalance = function(date) {
 
@@ -3120,7 +3090,14 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
             }
         }
 
+        $scope.calculateStock();
     }
+
+    $scope.calculateStock = function() {
+        $scope.calculateNewStock();
+        $scope.calculateReusableStock();
+        $scope.calculateOverallStock();
+    };
 
     //CALCULATE STOCK
     $scope.calculateOverallStock = function() {
@@ -3166,7 +3143,7 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
         $scope.stock.new660 = 0;
         $scope.stock.new1000 = 0;
 
-        //Calculate new 120L Stock
+        
         var i = 0;
         for (i = 0; i < $scope.inventoryRecordList.length; i++) {
 
@@ -3194,6 +3171,136 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
             }
         }
     };
+
+    function getMonthNum(monthname) {
+        var month = months.indexOf(monthname);
+        return month + 1;
+
+        // ? month + 1 : 0
+    }
+
+    var months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May',
+        'Jun', 'Jul', 'Aug', 'Sep',
+        'Oct', 'Nov', 'Dec'
+        ];
+
+    $http.get('/getAllInventoryRecords').then(function(response) {
+        $scope.inventoryRecordList = response.data;
+        storeDataService.inventoryRecord = angular.copy($scope.inventoryRecord);
+
+        // $scope.searchDatabaseBin = function (bin) {
+        //     return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+        // };
+
+        $scope.filterInventoryRecordList = angular.copy($scope.inventoryRecordList);
+
+        $scope.totalItems = $scope.filterInventoryRecordList.length;
+
+        $scope.getData = function() {
+            return $filter('filter')($scope.filterNewMgbList, $scope.searchNewMgbFilter);
+        };
+
+        $scope.$watch('searchDatabaseBinFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+
+        
+        var date = new Date();
+        
+        var firstDate = Date.parse($scope.inventoryRecordList[0].date);
+        var startMonth = getMonthNum(new Date(firstDate).toString().split(" ")[1]);
+        var startYear = new Date(firstDate).toString().split(" ")[3];
+
+        var lastDate = Date.parse($scope.inventoryRecordList[$scope.inventoryRecordList.length - 1].date);
+        var endMonth = getMonthNum(new Date(lastDate).toString().split(" ")[1]);
+        var endYear = new Date(lastDate).toString().split(" ")[3];
+
+        var startDate = "'" + startYear + "-" + startMonth + "-01'";
+        var endDate = "'" + endYear + "-" + endMonth + "-01'";
+
+        //TEST DATA
+        // var endMonth = '9';
+        // var endYear = '2021';
+        // var endDate = "2020-04-30";
+
+        // var i, j = 0;
+
+        $scope.yearMonths.length = 0;
+
+        if((endYear - startYear) == 0){
+            for(var k = startMonth; k < Number(endMonth) + 1; k++){
+                
+                if(k < 10){
+                    $scope.yearMonths.push("" + startYear + "-0" + k + "-" + "01");
+                }else{
+                    $scope.yearMonths.push("" + startYear + "-" + k + "-" + "01");
+                }
+            }
+        } else {
+            for(var x = startMonth; x < 13; x++){
+                console.log(startYear + '-' + x + '-' + '01');
+
+                if(x < 10){
+
+                    $scope.yearMonths.push("" + startYear + "-0" + x + "-" + "01");
+                }else{
+                    
+                    $scope.yearMonths.push("" + startYear + "-" + x + "-" + "01");
+                }
+            }
+
+            for(var i = Number(startYear) + 1; i < Number(endYear); i++){
+
+                for(var j = 1; j < 13; j++){
+                    console.log(i + '-' + j + '-' + '01');
+                    
+                    if(j < 10){
+
+                        $scope.yearMonths.push("" + i + "-0" + j + "-" + "01");
+                    } else{
+                        
+                        $scope.yearMonths.push("" + i + "-" + j + "-" + "01");
+                  }
+                }
+            }
+
+            for(var y = 1; y < Number(endMonth) + 1; y++){
+                console.log(endYear + '-' + y + '-' + '01');
+
+                if(y < 10){
+
+                    $scope.yearMonths.push("" + endYear + "-0" + y + "-" + "01");
+                }else{
+                        
+                   $scope.yearMonths.push("" + endYear + "-" + y + "-" + "01");
+                }
+            }
+
+        }
+        
+
+        
+
+        
+
+        // for(var i = 0; i <  )
+        
+        //var as = startMonth.split();
+
+        console.log(getMonthNum("Jan"));
+        console.log(i,j);
+        
+
+        $scope.calculateBalance($scope.inventoryRecordList[0].date);
+        $scope.calculateStock();
+    });
+
 
 });
 
