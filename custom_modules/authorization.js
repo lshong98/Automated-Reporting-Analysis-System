@@ -10,7 +10,7 @@ app.get('/getAllTasks', function (req, res) {
     var sql = "SELECT taskId, date, staffID, action, description, rowID, query, authorize, tblName from tblauthorization WHERE authorize = 'M'";
     database.query(sql, function (err, result) {
         if (err) {
-            throw err;
+            throw err; 
         }
         res.json(result);
         console.log("ALL TASKS COLLECTED");

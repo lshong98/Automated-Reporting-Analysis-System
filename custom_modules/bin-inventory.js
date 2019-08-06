@@ -6,7 +6,7 @@ var f = require('./function-management');
 
 app.get('/getAllInventoryRecords', function (req, res) {
     'use strict';
-    var sql = "SELECT * from tblbininventory;";
+    var sql = "SELECT date, doNo, inNew120, inNew240, inNew660, inNew1000, inReusable120, inReusable240, inReusable660, inReusable1000, outNew120, outNew240, outNew660, outNew1000, outReusable120, outReusable240, outReusable660, outReusable1000 from tblbininventory;";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

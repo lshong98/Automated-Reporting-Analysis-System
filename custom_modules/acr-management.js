@@ -62,7 +62,7 @@ app.post('/getDcsDetails', function(req,res){
         res.json(result);
         console.log(result); 
     });
-}); 
+});  
 
 app.post('/addDcsEntry',function(req,res){ 
     'use strict';
@@ -79,6 +79,21 @@ app.post('/addDcsEntry',function(req,res){
 });
 }); // Complete
 
+app.post('/updateDcsEntry', function(req,res){
+    'use strict';
+
+    var sql = "UPDATE tblacr SET customerID = '" + req.body.customerID + "', beBins = '" + req.body.beBins + "', acrBins = '" + req.body.acrBins + "', mon = " + req.body.mon + ", tue = " + req.body.tue + ", wed = " + req.body.wed + ", thu = " + req.body.thu + ", fri = " + req.body.fri + ", sat = " + req.body.sat + ", remarks = '" + req.body.remarks + "' WHERE acrID = '" + req.body.acrID + "'";
+    //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        } 
+         
+        res.json(result);
+        console.log(result); 
+    });
+}); 
 
 app.get('/getCustomerList', function(req,res){
     'use strict';
