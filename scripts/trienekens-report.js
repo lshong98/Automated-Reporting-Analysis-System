@@ -412,10 +412,23 @@ app.controller('reportingController', function ($scope, $http, $filter, $window,
     });
     
     $http.get('/getReportList').then(function(response){
+        $scope.allReport = [];
+        $scope.normalReport = [];
+        $scope.abnormalReport = [];
+        
         $scope.reportList = response.data;
         $.each($scope.reportList, function (index, value) {
             $scope.reportList[index].reportCollectionDate = $filter('date')($scope.reportList[index].reportCollectionDate, 'yyyy-MM-dd');
         });
+        
+        $.each($scope.reportList, function (index, value) {
+            if (value.completionStatus === 'A') {
+                ($scope.abnormalReport).push(value);
+            } else {
+                ($scope.normalReport).push(value);
+            }
+        });
+        console.log($scope.abnormalReport);
         
         $scope.filterReportList = angular.copy($scope.reportList);
         
@@ -443,7 +456,7 @@ app.controller('reportingController', function ($scope, $http, $filter, $window,
         setTimeout(function () {
             window.location.href = '#/view-report/' + reportCode; // +"+"+ name
         }, 500);
-    }
+    };
 
     $scope.thisArea = function (id,name) {
         angular.element('#chooseArea').modal('toggle');
