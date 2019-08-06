@@ -34,7 +34,7 @@ var db = mysql.createConnection({
    password: DB_PASS
 });
 
-// var db = mysql.createConnection(config);
+ var db = mysql.createConnection(config);
 
 
 // Connect

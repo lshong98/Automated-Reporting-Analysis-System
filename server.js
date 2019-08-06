@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 var Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -53,7 +53,7 @@ app.use(express.json({limit: '50mb'}));
 
 app.post('/loadMenu', function (req, res) {
     'use strict';
-    var content = '';
+    var content = '', sql;
     
     if (req.body.position === "Manager") {
         content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
@@ -61,7 +61,7 @@ app.post('/loadMenu', function (req, res) {
         content += '<li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>';
     }
     
-    var sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
+    sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
     
     database.query(sql, function (err, result) {
         result.forEach(function (key, value) {
@@ -256,9 +256,9 @@ app.post('/getDateListForComplaint', function (req, res) {
 });
 app.post('/getReportForComplaint', function (req, res) {
     'use strict';
-    var content = '';
+    var content = '', sql;
     
-    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetMap AS ifleet, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(tbltaman.tamanName) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN tblarea ON tblarea.areaID = tblreport.areaID JOIN tbltaman ON tbltaman.areaID = tblarea.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
+    sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetMap AS ifleet, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(tbltaman.tamanName) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN tblarea ON tblarea.areaID = tblreport.areaID JOIN tbltaman ON tbltaman.areaID = tblarea.areaID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -382,16 +382,15 @@ app.post('/api/tags', function (req, res) {
     'use strict';
     // Validation
     // If invalid return 400 bad request
-    var error = validateTag(req.body);
+    var error = validateTag(req.body), tag, sql;
     console.log(error);
     if (error) {
         res.status(400).send(error.details[0].message);
         return;
     }
     
-
     // If valid then execute
-    var tag = {
+    tag = {
         "date": req.body.date,
         "serialNo": req.body.serialNo,
         "truckID": req.body.truckID,
@@ -399,7 +398,7 @@ app.post('/api/tags', function (req, res) {
         "latitude": req.body.latitude
     };
 
-    var sql = "INSERT INTO tbltag VALUES ('" + req.body.date + "', '" + req.body.serialNo + "', '" + req.body.truckID + "', '" + req.body.longitude + "', '" + req.body.latitude + "')";
+    sql = "INSERT INTO tbltag VALUES ('" + req.body.date + "', '" + req.body.serialNo + "', '" + req.body.truckID + "', '" + req.body.longitude + "', '" + req.body.latitude + "')";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -429,7 +428,9 @@ function validateTag(tag) {
 
 app.post('/emailandupdate', function (req, res) {
     'use strict';
-    var transporter = nodemailer.createTransport({
+    var transporter, subject, text, email, mailOptions;
+    
+    transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: process.env.EMAIL,
@@ -441,11 +442,11 @@ app.post('/emailandupdate', function (req, res) {
 //    var text = "testinggg";
 //    var email = "lshong9899@gmail.com";
         
-    var subject = req.body.subject;
-    var text = req.body.text;
-    var email = req.body.email;
+    subject = req.body.subject;
+    text = req.body.text;
+    email = req.body.email;
     
-    var mailOptions = {
+    mailOptions = {
         from: process.env.EMAIL,
         to: email,
         subject: subject,
