@@ -5,34 +5,34 @@ var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
 // Cloud database access
-var DB_HOST = '35.240.160.118';
-var DB_USER = 'root';
-var DB_PASS = 'root';
-var DB_NAME = 'trienekens_test';
+// var DB_HOST = '35.240.160.118';
+// var DB_USER = 'root';
+// var DB_PASS = 'root';
+// var DB_NAME = 'trienekens_test';
 
 // Local database access
-// var DB_HOST = 'localhost';
-// var DB_USER = 'root';
-// var DB_PASS = '';
-// var DB_NAME = 'trienekens_mobi';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
+var DB_PASS = '';
+var DB_NAME = 'trienekens05';
 
-// Config used for socket connection, important for Google Cloud hosting
-var config = {
-    user: DB_USER,
-    password: DB_PASS,
-    host: DB_HOST
-}
+// // Config used for socket connection, important for Google Cloud hosting
+// var config = {
+//     user: DB_USER,
+//     password: DB_PASS,
+//     host: DB_HOST
+// }
 
-if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
-    config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
-}
+// if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
+//     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+// }
  
-// Create connection 
-//var db = mysql.createConnection({ 
-//    host: DB_HOST,
-//    user: DB_USER,  
-//    password: DB_PASS
-//});
+// // Create connection 
+var db = mysql.createConnection({ 
+   host: DB_HOST,
+   user: DB_USER,  
+   password: DB_PASS
+});
 
 // var db = mysql.createConnection(config);
 

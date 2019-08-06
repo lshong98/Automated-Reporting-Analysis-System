@@ -2409,7 +2409,6 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.approveForm = function() {
         $scope.status = 'APPROVED';
         approveForm($routeParams.dcsID, "dcs");
-        window.alert("APPROVED");
         
         angular.element('#approveConfirmation').modal('toggle');
     }
@@ -2418,10 +2417,10 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         $scope.status = 'CORRECTION REQUIRED';
         rejectForm($routeParams.dcsID, "dcs");
 
-        window.alert("CORRECTION REQUIRED");
 
         angular.element('#rejectConfirmation').modal('toggle');
     }
+    
 
     
 
@@ -3285,20 +3284,10 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
         }
         
 
-        
-
-        
-
-        // for(var i = 0; i <  )
-        
-        //var as = startMonth.split();
-
-        console.log(getMonthNum("Jan"));
-        console.log(i,j);
-        
-
         $scope.calculateBalance($scope.inventoryRecordList[0].date);
         $scope.calculateStock();
+
+        $scope.yearMonth = startMonth;
     });
 
 
@@ -4279,7 +4268,7 @@ app.controller('blostDetailsController', function($scope, $http, $filter, storeD
                 
                 angular.element('#createDcsEntry').modal('toggle');
             }
-        });
+        }); 
     }
 });
 
@@ -4291,6 +4280,10 @@ function approveForm(formID, formType) {
         "formType": formType,
         "authorizedBy": window.sessionStorage.getItem('owner')
     }
+
+    console.log("authorizedBy:" + formDetails.authorizedBy);
+    window.alert(formDetails);
+
 
     $http.post('/approveForm', formDetails).then(function(response) {
 
@@ -4311,7 +4304,8 @@ function rejectForm(formID, formType) {
 
     var formDetails = {
         "formID": formID,
-        "formType": formType
+        "formType": formType,
+        "authorizedBy": window.sessionStorage.getItem('owner')
     }
     
     $http.post('/rejectForm', formDetails).then(function(response) {

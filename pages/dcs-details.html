@@ -1,3 +1,4 @@
+
 <div class="modal fade" id="createDcsEntry" tabindex="-1" role="dialog" aria-labelledby="createDcsEntry" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -197,16 +198,14 @@
 
       
 
-      <div class="row">
+      <div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
           <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
-                <span style="text-align:left">Form Status: {{status}}</span>
+                <span style="text-align:left"><strong>Form Status: {{status}}</strong></span>
                 <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dcs.feedback}}</p>
           </div>
           <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
-                <a href="javascript:exportPdf()"  class="btn btn-sm btn-danger clearfix"><span class="fa fa-file-pdf-o" ></span> Export to PDF</a>
                 
                 <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();" ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
-                <span> | </span>
                 <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveConfirmation">Approve</button>
                 <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectConfirmation">Reject</button>
             
@@ -280,8 +279,13 @@
                
             
             <div class="row" id="createButton" data-ng-show="show.create == 'A'">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <button class="btn btn-success" data-toggle="modal" data-target="#createDcsEntry"><i class="fa fa-plus"></i> New</button>
+                        
+                    </div>
+                    <div class="col-md-6" style="text-align: right">
+                            
+                         <a href="javascript:exportPdf()"  class="btn btn-danger clearfix"><span class="fa fa-file-pdf-o" ></span> Export to PDF</a>
                     </div>
                 </div>
             
@@ -498,10 +502,13 @@
 <script>
 
     // This one lets you improve the PDF sharpness by scaling up the HTML node tree to render as an image before getting pasted on the PDF.
-    function exportPdf(quality = 10) {
+    function exportPdf(quality = 50) {
         var filename = 'dcs[0].pdf';
         
-        document.getElementById("createButton").style.display = "none";
+        window.alert("clicked");
+        document.getElementById("createButton").style.visibility = "hidden";
+
+    
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
             useCORS: true,
             scale: quality,
@@ -509,7 +516,8 @@
                 
                 var img = canvas.toDataURL("image/png", 1.0);
 
-                document.getElementById("createButton").style.display = "block";
+                document.getElementById("createButton").style.visibility = "visible";
+             
 
                 var pdf = new jsPDF('l', 'mm', 'a3');
                 pdf.addImage(img, 'PNG', 45, 45, 350, 200);
