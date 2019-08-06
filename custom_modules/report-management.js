@@ -111,7 +111,7 @@ app.post('/getReport', function(req, res){
 app.post('/getReportingAreaList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "'GROUP BY tblzone.zoneID";
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' GROUP BY tblzone.zoneID";
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
@@ -177,5 +177,51 @@ app.get('/getReportList', function(req, res){
         res.json(result);
     });
 }); // Complete
+
+app.post('/getInitTruck',function(req,res){
+    'use strict';
+    
+    var sql="SELECT tbltruck.truckID, tbltruck.truckNum FROM tbltruck INNER JOIN tbltag ON tbltruck.truckID = tbltag.truckID INNER JOIN tblwheelbindatabase on tbltag.serialNo = tblwheelbindatabase.serialNo WHERE tblwheelbindatabase.areaID = '" + req.body.areaCode+ "' LIMIT 0, 1";
+    
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log(result);
+        res.json(result);
+        
+    }); 
+});
+
+app.post('/getInitTime', function(req,res){
+    'use strict';
+    
+    var result = {};
+
+    f.waterfallQuery("SELECT DATE_FORMAT(tbltag.date,'%H:%i:%s') AS stime FROM tbltag JOIN tblwheelbindatabase ON tbltag.serialNo = tblwheelbindatabase.serialNo WHERE tbltag.date >= CURRENT_DATE AND tblwheelbindatabase.areaID = '" + req.body.areaCode + "' ORDER BY tbltag.date ASC LIMIT 0,1").then(function(time){
+        result.stime = time.stime;
+        return f.waterfallQuery("SELECT DATE_FORMAT(tbltag.date,'%H:%i:%s') AS etime FROM tbltag JOIN tblwheelbindatabase ON tbltag.serialNo = tblwheelbindatabase.serialNo WHERE tbltag.date >= CURRENT_DATE AND tblwheelbindatabase.areaID = '" + req.body.areaCode + "' ORDER BY tbltag.date DESC LIMIT 0,1");
+    }).then(function(time){
+        result.etime = time.etime;
+        res.json(result);
+        res.end();
+    });
+});
+
+app.post('/getInitStatus',function(req,res){
+    'use strict';
+   
+    console.log("SELECT DISTINCT COUNT(tbltag.serialNo) AS actualcount FROM tbltag JOIN tblwheelbindatabase ON tbltag.serialNo = tblwheelbindatabase.serialNo WHERE tbltag.date >= CURRENT_DATE AND tblwheelbindatabase.areaID = '"+ req.body.areaCode+"' AND tblwheelbindatabase.activeStatus = 'a'");
+    var count = {};
+    f.waterfallQuery("SELECT COUNT(*) AS initcount FROM tblwheelbindatabase WHERE activeStatus = 'a' AND areaID = '" + req.body.areaCode + "'").then(function (initcount){
+        count.initcount = initcount.initcount;
+        return f.waterfallQuery("SELECT COUNT(DISTINCT tbltag.serialNo) AS 'actualcount' FROM tbltag JOIN tblwheelbindatabase ON tbltag.serialNo = tblwheelbindatabase.serialNo WHERE tbltag.date >= CURRENT_DATE AND tblwheelbindatabase.areaID = '"+ req.body.areaCode+"' AND tblwheelbindatabase.activeStatus = 'a'");
+    }).then(function (actualcount){
+        count.actualcount = actualcount.actualcount;
+        res.json(count);
+        res.end();
+    });
+});
 
 module.exports = app;

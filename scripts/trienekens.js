@@ -1269,9 +1269,27 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
     $scope.todayDay = days[d.getDay()];
     $scope.areaList = [];
     $scope.reportingOfficerId = {
-        "officerid": $window.sessionStorage.getItem('owner')
+        "officerid": $window.sessionStorage.getItem('owner'),
+        "day" : ""    
     };
-
+    if($scope.todayDay == "Sunday"){
+        $scope.reportingOfficerId.day = "sun"
+    }else if($scope.todayDay == "Monday"){
+        $scope.reportingOfficerId.day = "mon"
+    }else if($scope.todayDay == "Tuesday"){
+        $scope.reportingOfficerId.day = "tue"
+    }else if($scope.todayDay == "Sunday"){
+        $scope.reportingOfficerId.day = "wed"
+    }else if($scope.todayDay == "Sunday"){
+        $scope.reportingOfficerId.day = "thu"
+    }else if($scope.todayDay == "Sunday"){
+        $scope.reportingOfficerId.day = "fri"
+    }else if($scope.todayDay == "Sunday"){
+        $scope.reportingOfficerId.day = "sat"
+    }
+    
+    
+    
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
