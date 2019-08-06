@@ -10,25 +10,23 @@ app.get('/getAllForms', function (req, res) {
     var sql = "SELECT creationDateTime as date, formID, formType, preparedBy, status from tblformauthorization WHERE status = 'P'";
     database.query(sql, function (err, result) { 
         if (err) {
-            throw err;
+            throw err; 
         }
         res.json(result);
         console.log("ALL FORMS COLLECTED"); 
     });
 }); // Complete
-
+ 
 app.post('/approveForm', function (req, res) {
     'use strict';
     var dt = dateTime.create();
     var formatted = dt.format('Y-m-d H:M:S');
     
-    
+    console.log(req);
     var sql = "UPDATE tblformauthorization SET status = 'G' WHERE formID = '"+ req.body.formID + "'";
     var formsql = "UPDATE tbl" + req.body.formType + " set status = 'G', authorizedBy = '" + req.body.authorizedBy + "' where " + req.body.formType + "ID = '"+ req.body.formID + "'";
     
-    console.log(sql);
-    console.log(formsql); 
-    console.log(req.body.formID);
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
