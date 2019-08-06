@@ -6,7 +6,7 @@ global angular, document, google, Highcharts
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap']);
 
 //var socket = io.connect();
-var socket = io('ws://:3000', {transports: ['websocket']});
+var socket = io('wss://trienekens-deploy.appspot.com:8081', {transports: ['websocket']});
 socket.on('connect', function() {
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
