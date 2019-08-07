@@ -11,30 +11,30 @@ var emitter = new EventEmitter();
 // var DB_NAME = 'trienekens_test';
  
 // Local database access
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
-var DB_PASS = '';
-var DB_NAME = 'trienekens05';
+//var DB_HOST = 'localhost';
+//var DB_USER = 'root';
+//var DB_PASS = '';
+//var DB_NAME = 'triemerge';
 
 // // Config used for socket connection, important for Google Cloud hosting
-// var config = {
-//     user: DB_USER,
-//     password: DB_PASS,
-//     host: DB_HOST
-// }
+ var config = {
+     user: DB_USER,
+     password: DB_PASS,
+     host: DB_HOST
+ }
 
-// if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
-//     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
-// }
+ if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
+     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+ }
  
 // // Create connection 
-var db = mysql.createConnection({ 
-   host: DB_HOST,
-   user: DB_USER,  
-   password: DB_PASS
-});
+//var db = mysql.createConnection({ 
+//   host: DB_HOST,
+//   user: DB_USER,  
+//   password: DB_PASS
+//});
 
-//  var db = mysql.createConnection(config);
+ //var db = mysql.createConnection(config);
 
 
 // Connect

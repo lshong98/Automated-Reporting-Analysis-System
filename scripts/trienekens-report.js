@@ -119,13 +119,33 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     };
 //    $scope.report.area = areaCode;
     
+    $http.post('/getInitTime',$scope.params).then(function (response){
+        console.log(response.data);
+        $scope.report.startTime = response.data.stime;
+        $scope.report.endTime = response.data.etime;
+    })
+    
     $http.get('/getTruckList').then(function (response) {
         $scope.truckList = response.data;
+    });
+    
+    $http.post('/getInitTruck', $scope.params).then(function (response) {
+        console.log(response.data[0].truckID);
+        $scope.report.truck = response.data[0].truckID;
     });
     
     $http.get('/getDriverList').then(function (response) {
         $scope.driverList = response.data;
     });
+    
+    $http.post('/getInitStatus',$scope.params).then(function (response){
+        if(response.data.initcount = response.data.actualcount){
+            $scope.report.status = 'N';
+        }else{
+            $scope.report.status= 'A';
+        }
+    });
+    
     
     $http.post('/getAreaLngLat',$scope.params).then(function (response) {
         console.log(response.data);
@@ -241,6 +261,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.report.collectionDate = $filter('date')($scope.report.collectionDate, 'yyyy-MM-dd');
         $http.post('/addReport', $scope.report).then(function (response) {
             var returnedData = response.data;
             var newReportID = returnedData.details.reportID;
