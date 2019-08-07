@@ -206,7 +206,7 @@ app.service('storeDataService', function() {
                 "create": 'I',
                 "edit": 'I',
                 "view": 'I'
-            },
+            }, 
             "inventory": {
                 "edit": 'I',
                 "view": 'I'
@@ -4348,12 +4348,13 @@ function rejectForm(formID, formType) {
 }
 function sendFormForAuthorization(formID, formType) {
 
+    var today = new Date();
     $http = angular.injector(["ng"]).get("$http");
     var formDetails = {
         "formID": formID,
         "formType": formType,
-        "preparedBy": "",
-        "date": ""
+        "preparedBy": window.sessionStorage.getItem('owner'),
+        "date": today
     }
 
     var status = '';
@@ -4384,7 +4385,7 @@ function sendFormForAuthorization(formID, formType) {
                             "message": "Form sent for authorization!"
                         });
                     }
-                });
+                }); 
             });
         }
 

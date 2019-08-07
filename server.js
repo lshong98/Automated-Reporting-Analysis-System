@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 var Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = ;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -30,7 +30,7 @@ var truckManagement = require('./custom_modules/truck-management');
 var zoneManagement = require('./custom_modules/zone-management');
 var transactionLog = require('./custom_modules/transaction-log');
 var authorization = require('./custom_modules/authorization');
-var formAuthorization = require('./custom_modules/form-authorization');
+var formAuthorization = require('./custom_modules/form-authorization'); 
 var databaseBinManagement = require('./custom_modules/bin-database');
 var binInventoryManagement = require('./custom_modules/bin-inventory');
 var chatManagement = require('./custom_modules/chat-management');

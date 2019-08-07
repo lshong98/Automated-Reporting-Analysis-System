@@ -10,6 +10,7 @@ app.post('/addDcs',function(req,res){
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
         
         var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', 'A')";
+        
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
@@ -69,6 +70,7 @@ app.post('/addDcsEntry',function(req,res){
     //console.log("DCS ID: " + req.body.dcsID);
     f.makeID("acr", req.body.creationDate).then(function (ID) {
         var sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
