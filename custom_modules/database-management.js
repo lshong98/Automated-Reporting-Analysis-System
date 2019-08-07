@@ -5,16 +5,16 @@ var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
 // Cloud database access
- var DB_HOST = '35.240.160.118';
- var DB_USER = 'root';
- var DB_PASS = 'root';
- var DB_NAME = 'trienekens_test';
+var DB_HOST = '35.240.160.118';
+var DB_USER = 'root';
+var DB_PASS = 'root';
+var DB_NAME = 'trienekens_test';
 
 // Local database access
-//var DB_HOST = 'localhost';
-//var DB_USER = 'root';
+//var DB_HOST = '';
+//var DB_USER = '';
 //var DB_PASS = '';
-//var DB_NAME = 'triemerge';
+//var DB_NAME = '';
 
 // // Config used for socket connection, important for Google Cloud hosting
  var config = {
@@ -34,7 +34,7 @@ var emitter = new EventEmitter();
 //   password: DB_PASS
 //});
 
- //var db = mysql.createConnection(config);
+ var db = mysql.createConnection(config);
 
 
 // Connect

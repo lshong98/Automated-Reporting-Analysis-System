@@ -618,6 +618,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
 //    $window.setTimeout(function() {
 //        var image = GMapCircle($scope.thisReport.lat, $scope.thisReport.lng, $scope.circles);
 //        $('.googleMap').attr("src", image);
+//        console.log(image);
 //    }, 1000);
     
     $http.post('/getReportRect', $scope.report).then(function (response) {
