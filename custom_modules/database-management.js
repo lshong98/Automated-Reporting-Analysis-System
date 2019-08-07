@@ -11,10 +11,10 @@ var emitter = new EventEmitter();
 // var DB_NAME = 'trienekens_test';
  
 // Local database access
-//var DB_HOST = 'localhost';
-//var DB_USER = 'root';
-//var DB_PASS = '';
-//var DB_NAME = 'triemerge';
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
+var DB_PASS = '';
+var DB_NAME = '';
 
 // // Config used for socket connection, important for Google Cloud hosting
  var config = {
@@ -28,11 +28,11 @@ var emitter = new EventEmitter();
  }
  
 // // Create connection 
-//var db = mysql.createConnection({ 
-//   host: DB_HOST,
-//   user: DB_USER,  
-//   password: DB_PASS
-//});
+var db = mysql.createConnection({ 
+   host: DB_HOST,
+   user: DB_USER,  
+   password: DB_PASS
+});
 
  //var db = mysql.createConnection(config);
 
@@ -90,7 +90,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbins (serialNo varchar(15),size int,  status char(1),  longitude double(10,7),  latitude double(10,7), PRIMARY KEY (serialNo))", 
         "CREATE TABLE tblmanagement (mgmtID int auto_increment,  mgmtName varchar(50),  PRIMARY KEY (mgmtID))",
         "CREATE TABLE tblbininventory (date date,  doNo varchar(10), inNew120 int, inNew240 int, inNew660 int, inNew1000 int, outNew120 int, outNew240 int, outNew660 int, outNew1000 int, inReusable120 int, inReusable240 int, inReusable660 int,  inReusable1000 int, outReusable120 int, outReusable240 int, outReusable660 int, outReusable1000 int, newBalance120 int, newBalance240 int, newBalance660 int, newBalance1000 int, reusableBalance120 int, reusableBalance240 int, reusableBalance660 int, reusableBalance1000 int, overallBalance120 int, overallBalance240 int, overallBalance660 int, overallBalance1000 int, PRIMARY KEY (date))",
-        "CREATE TABLE tbltruck (  truckID varchar(15),  transporter varchar(15),  truckTon int(11),  truckNum varchar(10),  truckExpiryStatus date,  truckStatus char(1),  creationDateTime datetime,  PRIMARY KEY (truckID))",
+        "CREATE TABLE tbltruck (  truckID varchar(15), staffID varchar(15), transporter varchar(15),  truckTon int(11),  truckNum varchar(10),  truckExpiryStatus date,  truckStatus char(1),  creationDateTime datetime,  PRIMARY KEY (truckID), foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tbldbd (  dbdID int auto_increment,  creationDateTime datetime,  status char(1),  PRIMARY KEY (dbdID))",
         "CREATE TABLE tbldbdentry (  idNo int auto_increment,  dbdID int,  serialNo varchar(15),  reportedBy varchar(15),  damageType varchar(15),  reason mediumtext,  repair char(1),  replacement char(1),  costCharged varchar(5),  status char(1),  rectifiedDate datetime,  PRIMARY KEY (idNo),  foreign KEY  (dbdID) references tbldbd(dbdID),  foreign KEY  (serialNo) references tblbins(serialNo),  foreign KEY  (reportedBy) references tblstaff(staffID))",
         "CREATE TABLE tblblost (  blostID varchar(15),  creationDateTime datetime, preparedBy varchar(15), authorizedBy varchar(15), authorizedDate dateTime,  status char(1),  formStatus char(1), PRIMARY KEY (blostID), foreign key (preparedBy) references tblstaff (staffID), foreign key (authorizedBy) references tblstaff (staffID))",

@@ -118,9 +118,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         "areaName" : $routeParams.areaName
     };
 //    $scope.report.area = areaCode;
-    
     $http.post('/getInitTime',$scope.params).then(function (response){
-        console.log(response.data);
         $scope.report.startTime = response.data.stime;
         $scope.report.endTime = response.data.etime;
     })
@@ -130,13 +128,22 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     });
     
     $http.post('/getInitTruck', $scope.params).then(function (response) {
-        console.log(response.data[0].truckID);
-        $scope.report.truck = response.data[0].truckID;
+        if(response.data.length == 0){
+            $scope.report.truck = "";
+        }else{
+            $scope.report.truck = response.data[0].truckID;
+            
+            $http.post('/getInitDriver', {"truckID" : $scope.report.truck}).then(function (response){
+                $scope.report.driver = response.data[0].driver;
+            });
+        }
     });
     
     $http.get('/getDriverList').then(function (response) {
         $scope.driverList = response.data;
     });
+    
+
     
     $http.post('/getInitStatus',$scope.params).then(function (response){
         if(response.data.initcount = response.data.actualcount){
@@ -148,6 +155,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     
     $http.post('/getAreaLngLat',$scope.params).then(function (response) {
+        console.log("area lang and lat V ");
         console.log(response.data);
         var $googleMap = document.getElementById('googleMap');
         var visualizeMap = {
