@@ -9,7 +9,7 @@ var emitter = new EventEmitter();
 // var DB_USER = 'root';
 // var DB_PASS = 'root';
 // var DB_NAME = 'trienekens_test';
-
+ 
 // Local database access
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
@@ -34,7 +34,7 @@ var db = mysql.createConnection({
    password: DB_PASS
 });
 
- var db = mysql.createConnection(config);
+//  var db = mysql.createConnection(config);
 
 
 // Connect
