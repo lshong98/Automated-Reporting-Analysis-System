@@ -417,9 +417,9 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
 
         };
 
-        scope.editZone = function(id, name, status) {
+        scope.editZone = function(id, code, name, status) {
             scope.showZone = !scope.showZone;
-            scope.thisZone = { "id": id, "name": name, "status": status };
+            scope.thisZone = { "id": id, "code": code, "name": name, "status": status };
         };
         scope.saveZone = function() {
             scope.showZone = !scope.showZone;
@@ -1920,6 +1920,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
 
     $scope.initializeZone = function() {
         $scope.zone = {
+            "code": '',
             "name": '', 
             "creationDate": ''
         }; 
@@ -1946,7 +1947,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         $scope.zoneList = response.data;
 
         $scope.searchZone = function(zone) {
-            return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
+            return (zone.id + zone.code + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
         }
 
         $scope.zoneListActive = [];
@@ -1989,6 +1990,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
             if (data.status === "success") {
                 $scope.zoneList.push({
                     "id": newZoneID,
+                    "code": $scope.zone.code,
                     "name": $scope.zone.name,
                     "status": 'ACTIVE'
                 });
