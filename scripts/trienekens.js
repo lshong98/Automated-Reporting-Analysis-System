@@ -1272,32 +1272,11 @@ app.controller('managerController', function($scope, $http, $filter) {
 app.controller('officerController', function($scope, $filter, $http, $window) {
     'use strict';
 
-    var d = new Date()
-    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    $scope.todayDate = $filter('date')(new Date(), 'yyyy-MM-dd');
-    $scope.todayDay = days[d.getDay()];
     $scope.areaList = [];
     $scope.reportingOfficerId = {
         "officerid": $window.sessionStorage.getItem('owner'),
-        "day" : ""    
+        "day" : $filter('date')(new Date(), 'EEE').toLowerCase()
     };
-    if($scope.todayDay == "Sunday"){
-        $scope.reportingOfficerId.day = "sun"
-    }else if($scope.todayDay == "Monday"){
-        $scope.reportingOfficerId.day = "mon"
-    }else if($scope.todayDay == "Tuesday"){
-        $scope.reportingOfficerId.day = "tue"
-    }else if($scope.todayDay == "Sunday"){
-        $scope.reportingOfficerId.day = "wed"
-    }else if($scope.todayDay == "Sunday"){
-        $scope.reportingOfficerId.day = "thu"
-    }else if($scope.todayDay == "Sunday"){
-        $scope.reportingOfficerId.day = "fri"
-    }else if($scope.todayDay == "Sunday"){
-        $scope.reportingOfficerId.day = "sat"
-    }
-    
-    
     
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
         $.each(response.data, function(index, value) {
@@ -1311,7 +1290,6 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
                 });
             });
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
-
         });
         console.log($scope.areaList);
     });

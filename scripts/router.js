@@ -367,6 +367,9 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'damagedLostController',
         controllerAs:'damagedLost'
     })
+    .when('/boundary', {
+        templateUrl: '/boundary'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {
