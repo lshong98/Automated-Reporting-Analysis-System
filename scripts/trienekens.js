@@ -1391,7 +1391,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.zoneList = response.data;
         $scope.area.zone = $scope.zoneList[0];
         for (var i = 0; i < (response.data).length; i++) {
-            $scope.zoneList[i].zoneidname = response.data[i].name + ' - ' + response.data[i].id;
+            $scope.zoneList[i].zoneidname = response.data[i].code + ' - ' + response.data[i].name;
         }
     });
 
@@ -1419,11 +1419,11 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
                     "id": newAreaID,
                     "name": $scope.area.name,
                     "status": 'ACTIVE',
-                    "zoneName": $scope.area.zone.id + ' - ' + $scope.area.zone.name,
+                    "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
                     "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
                 });
                 $scope.area.id = newAreaID;
-                $scope.area.zoneName = $scope.area.zone.id + ' - ' + $scope.area.zone.name;
+                $scope.area.zoneName = $scope.area.zone.code + ' - ' + $scope.area.zone.name;
                 $scope.area.staffName = $scope.area.staff.id + ' - ' + $scope.area.staff.name;
                 socket.emit('create new area', $scope.area);
                 $scope.filterAreaList = angular.copy($scope.areaList);
