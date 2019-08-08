@@ -140,14 +140,30 @@ app.post('/filterAddress',function(req,res){
 app.post('/getStaffList', function(req,res){
     'use strict';
     console.log("GET STAFF LIST: " + req.body);
-    var sql = "SELECT * from tblstaff where positionID = '" + req.body.positionID + "'";
+
+    var positionID = '';
+
+    var sql = "SELECT positionID from tblposition WHERE positionName = '" + req.body.position + "'";
     
     database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+        console.log(result[0].positionID);
+        positionID = result[0].positionID;
+
+        var newsql = "SELECT * from tblstaff where positionID = '" + result[0].positionID + "'";
+
+    database.query(newsql, function (err, result) {
         if (err) {
             throw err; 
         }
         res.json(result);
         console.log(result);
     }); 
+    }); 
+
+    
+    
 });
 module.exports = app; 

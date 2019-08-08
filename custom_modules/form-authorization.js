@@ -7,7 +7,7 @@ var dateTime = require('node-datetime');
 app.get('/getAllForms', function (req, res) {
     'use strict';
     
-    var sql = "SELECT creationDateTime as date, formID, formType, preparedBy, status from tblformauthorization WHERE status = 'P'";
+    var sql = "SELECT creationDateTime as date, dcsID as formID, preparedBy, authorizedBy, status from tbldcs WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, bdafID as formID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, blostID as formID, preparedBy, authorizedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
     database.query(sql, function (err, result) { 
         if (err) {
             throw err; 
@@ -91,13 +91,13 @@ app.post('/sendFormForAuthorization', function (req, res) {
     'use strict';
 
     console.log(req.body);
-    var sql = "insert into tblformauthorization (formID, formType, tblname, preparedBy, status) value ('" + req.body.formID + "', '" + req.body.formType + "', 'tbl" + req.body.formType + "', '" + req.body.preparedBy + "', 'P')";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json({"status": "success", "message": "Task sent for Authorization!", "details": {"formID": req.body.formID}});
-    });
+    // var sql = "insert into tblformauthorization (formID, formType, tblname, preparedBy, status) value ('" + req.body.formID + "', '" + req.body.formType + "', 'tbl" + req.body.formType + "', '" + req.body.preparedBy + "', 'P')";
+    // database.query(sql, function (err, result) {
+    //     if (err) {
+    //         throw err;
+    //     }
+    //     res.json({"status": "success", "message": "Task sent for Authorization!", "details": {"formID": req.body.formID}});
+    // });
 
     var updatesql = "update tbl" + req.body.formType + " set status = 'P' where " + req.body.formType + "ID = '" + req.body.formID + "'";
 
@@ -105,6 +105,8 @@ app.post('/sendFormForAuthorization', function (req, res) {
         if (err) {
             throw err;
         }
+
+        res.json({"status": "success", "message": "Task sent for Authorization!", "details": {"formID": req.body.formID}});
     });
 });
 
