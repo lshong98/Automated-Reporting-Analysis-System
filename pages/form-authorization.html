@@ -26,21 +26,21 @@
                                     <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i class="fas fa-sort-down"></i></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr data-ng-repeat="f in formList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-show="f.status == 'P'" data-ng-click="getForm(f.formID, f.formType);">
-                                    <td>
+                            <tbody><!-- data-ng-show="f.status == 'P'" -->
+                                <tr data-ng-repeat="f in formList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-click="getForm(f.formID, f.formType);">
+                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
                                         <span data-ng-bind="f.date"></span>
                                     </td>
-                                    <td>
+                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
                                         <span data-ng-bind="f.formType"></span>
                                     </td>
-                                    <td>
+                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
                                           <span data-ng-bind="f.formID"></span>
                                     </td>
-                                    <td>
+                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
                                           <span data-ng-bind="f.preparedBy"></span>
                                     </td>
-                                    <td>
+                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
                                             <span data-ng-bind="f.status"></span>
                                     </td>
                                 </tr>

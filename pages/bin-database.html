@@ -52,6 +52,7 @@
                 <div class="form-group">
                     <label for="txtAcr form-label">ACRF Serial No</label>
                     <select type="text" class="form-control" id="txtAcr" data-ng-model="databaseBin.acrID">
+                        <option value='null'>N/A</option>
                         <option data-ng-repeat="a in acrList" value={{a.acrID}}>{{a.acrID}}</option>
                     </select>
                 </div>
@@ -220,7 +221,7 @@
                     <div class="form-group">
                         <label for="txtTamanArea form-label">Area ID</label>
                         <select type="text" class="form-control" id="txtTamanArea" data-ng-model="taman.areaID">
-                            <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaName}}</option>
+                            <option data-ng-repeat="a in areaList" value={{a.id}}>{{a.id}} - {{a.name}}</option>
                         </select>
                     </div>
     

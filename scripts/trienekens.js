@@ -417,9 +417,9 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
 
         };
 
-        scope.editZone = function(id, name, status) {
+        scope.editZone = function(id, code, name, status) {
             scope.showZone = !scope.showZone;
-            scope.thisZone = { "id": id, "name": name, "status": status };
+            scope.thisZone = { "id": id, "code": code, "name": name, "status": status };
         };
         scope.saveZone = function() {
             scope.showZone = !scope.showZone;
@@ -1369,7 +1369,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.zoneList = response.data;
         $scope.area.zone = $scope.zoneList[0];
         for (var i = 0; i < (response.data).length; i++) {
-            $scope.zoneList[i].zoneidname = response.data[i].name + ' - ' + response.data[i].id;
+            $scope.zoneList[i].zoneidname = response.data[i].code + ' - ' + response.data[i].name;
         }
     });
 
@@ -1397,11 +1397,11 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
                     "id": newAreaID,
                     "name": $scope.area.name,
                     "status": 'ACTIVE',
-                    "zoneName": $scope.area.zone.id + ' - ' + $scope.area.zone.name,
+                    "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
                     "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
                 });
                 $scope.area.id = newAreaID;
-                $scope.area.zoneName = $scope.area.zone.id + ' - ' + $scope.area.zone.name;
+                $scope.area.zoneName = $scope.area.zone.code + ' - ' + $scope.area.zone.name;
                 $scope.area.staffName = $scope.area.staff.id + ' - ' + $scope.area.staff.name;
                 socket.emit('create new area', $scope.area);
                 $scope.filterAreaList = angular.copy($scope.areaList);
@@ -1898,6 +1898,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
 
     $scope.initializeZone = function() {
         $scope.zone = {
+            "code": '',
             "name": '', 
             "creationDate": ''
         }; 
@@ -1924,7 +1925,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         $scope.zoneList = response.data;
 
         $scope.searchZone = function(zone) {
-            return (zone.id + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
+            return (zone.id + zone.code + zone.name + zone.status).toUpperCase().indexOf($scope.searchZoneFilter.toUpperCase()) >= 0;
         }
 
         $scope.zoneListActive = [];
@@ -1967,6 +1968,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
             if (data.status === "success") {
                 $scope.zoneList.push({
                     "id": newZoneID,
+                    "code": $scope.zone.code,
                     "name": $scope.zone.name,
                     "status": 'ACTIVE'
                 });
@@ -2347,10 +2349,9 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             console.log("DCS data received by controller");
             console.log(response.data);
         });
-        $http.post('/getStaffList', {"positionID" : driverPosition}).then(function(response) {
-            $scope.searchAcrFilter = '';
+        $http.post('/getStaffList', {"position" : 'Driver'}).then(function(response) {
             $scope.driverList = response.data;
-
+            console.log($scope.driverList);
         }); 
     }
     getAllDcs(); //call
@@ -2712,12 +2713,16 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         console.log("Hello from acr controller");
     })
 
-    $http.get('/getAllDatabaseBin').then(function(response) {
+    $scope.getAllDatabaseBin = function(){
+        $http.get('/getAllDatabaseBin').then(function(response) {
 
-        $scope.databaseBinList = response.data;
-        console.log($scope.databaseBinList);
-        storeDataService.databaseBin = angular.copy($scope.databaseBinList);
-    });
+            $scope.databaseBinList = response.data;
+            console.log($scope.databaseBinList);
+            storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+        });
+    }
+
+    $scope.getAllDatabaseBin();
 
     $scope.databaseBinList = [];
     $scope.customerList = [];
@@ -2761,6 +2766,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                 angular.element('#createDatabaseBin').modal('toggle');
                 //$scope.totalItems = $scope.filterDatabaseBinList.length;
                 $scope.initializeBinDatabase();
+                $scope.getAllDatabaseBin();
             }
         });
         /*$http.post('/addTaskAuthorization', today, ).then(function(response) {
@@ -3295,8 +3301,139 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
         $scope.yearMonth = startMonth;
     });
 
+    
+    
+    
+    var headers = {
+        doNo: 'DO No.',
+        date: 'Date',
+        inNew120: 'New 120L In',
+        inNew240: 'New 240L In',
+        inNew660: 'New 660L In',
+        inNew1000: 'New 1000L In',
+        inReusable120: 'Reusable 120L In',
+        inReusable240: 'Reusable 240L In',
+        inReusable660: 'Reusable 660L In',
+        inReusable1000: 'Reusable 1000L In',
+        outNew120: 'New 120L Out',
+        outNew240: 'New 240L Out',
+        outNew660: 'New 660L Out',
+        outNew1000: 'New 1000L Out',
+        outReusable120: 'Reusable 120L Out',
+        outReusable240: 'Reusable 240L Out',
+        outReusable660: 'Reusable 660L Out',
+        outReusable1000: 'Reusable 1000L Out',
+        newBalance120: 'New 120L Balance',
+        newBalance240: 'New 240L Balance',
+        newBalance660: 'New 660L Balance',
+        newBalance1000: 'New 1000L Balance',
+        reusableBalance120: 'Reusable 120L Balance',
+        reusableBalance240: 'Reusable 240L Balance',
+        reusableBalance660: 'Reusable 660L Balance',
+        reusableBalance1000: 'Reusable 1000L Balance',
+        overallBalance120: 'Overall 120L balance',
+        overallBalance240: 'Overall 240L balance',
+        overallBalance660: 'Overall 660L balance',
+        overallBalance1000: 'Overall 1000L balance'
+    };
+    
+    var itemsFormatted = $scope.inventoryRecordList;
+    
+    var itemsFormatted = [];
+    
+    // format the data
+    // itemsNotFormatted.forEach((item) => {
+    //     itemsFormatted.push({
+    //         doNo: item.doNo,
+    //         date: item.date,
+    //         inNew120: item.inNew120,
+    //         inNew240: item.inNew240,
+    //         inNew660: item.inNew660,
+    //         inNew1000: item.inNew1000,
+    //         inReusable120: item.inReusable120,
+    //         inReusable240: item.inReusable240,
+    //         inReusable660: item.inReusable660,
+    //         inReusable1000: item.inReusable1000,
+    //         outNew120: item.outNew120,
+    //         outNew240: item.outNew240,
+    //         outNew660: item.outNew660,
+    //         outNew1000: item.outNew1000,
+    //         outReusable120: item.outReusable120,
+    //         outReusable240: item.outReusable240,
+    //         outReusable660: item.outReusable660,
+    //         outReusable1000: item.outReusable1000,
+    //         newBalance120: item.newBalance120,
+    //         newBalance240: item.newBalance240,
+    //         newBalance660: item.newBalance660,
+    //         newBalance1000: item.newBalance1000,
+    //         reusableBalance120: item.reusableBalance120,
+    //         reusableBalance240: item.reusableBalance240,
+    //         reusableBalance660: item.reusableBalance660,
+    //         reusableBalance1000: item.reusableBalance1000,
+    //         overallBalance120: item.overallBalance120,
+    //         overallBalance240: item.overallBalance240,
+    //         overallBalance660: item.overallBalance660,
+    //         overallBalance1000: item.overallBalance1000
+    //     });
+    // });
+    
+    var fileTitle = 'wheelstock'; // or 'my-unique-title'
 
+    $scope.exportCSVFile = function(){
+        exportCSVFile(headers, itemsFormatted, fileTitle); // call the exportCSVFile() function to process the JSON and trigger the download
+
+    }
+    
+    
 });
+
+function exportCSVFile(headers, items, fileTitle) {
+    if (headers) {
+        items.unshift(headers);
+    }
+
+    // Convert Object to JSON
+    var jsonObject = JSON.stringify(items);
+
+    var csv = this.convertToCSV(jsonObject);
+
+    var exportedFilenmae = fileTitle + '.csv' || 'export.csv';
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilenmae);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", exportedFilenmae);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+}
+
+function convertToCSV(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+
+    for (var i = 0; i < array.length; i++) {
+        var line = '';
+        for (var index in array[i]) {
+            if (line != '') line += ','
+
+            line += array[i][index];
+        }
+
+        str += line + '\r\n';
+    }
+
+    return str;
+}
 
 app.controller('taskAuthorizationController', function($scope, $window, $http, $filter, storeDataService) {
     'use strict';
@@ -3373,8 +3510,14 @@ app.controller('formAuthorizationController', function($scope, $window, $http, $
     }
 
     $http.get('/getAllForms').then(function(response) {
-        storeDataService.task = angular.copy(response.data);
+        // storeDataService.task = angular.copy(response.data);
         $scope.formList = response.data;
+
+        console.log($scope.formList);
+
+        for(var i = 0; i < $scope.formList.length; i++){
+             $scope.formList[i].formType = $scope.formList[i].formID.match(/[a-zA-Z]+/g)[0].toLowerCase();
+        }
     });
 
     
@@ -3865,13 +4008,13 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
             console.log(response.data);
         });
 
-        $http.post('/getStaffList', {"positionID" : driverPosition}).then(function(response) {
+        $http.post('/getStaffList', {"position" : 'Driver'}).then(function(response) {
             $scope.searchAcrFilter = '';
             $scope.driverList = response.data;
 
         }); 
 
-        $http.post('/getStaffList', {"positionID" : generalWorkerPosition}).then(function(response) {
+        $http.post('/getStaffList', {"position" : 'General Worker'}).then(function(response) {
             $scope.searchAcrFilter = '';
             $scope.generalWorkerList = response.data;
 

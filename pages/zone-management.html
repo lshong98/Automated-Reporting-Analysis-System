@@ -18,6 +18,10 @@ TODO LIST:
       </div>
       <div class="modal-body">
           <div class="form-group">
+              <label for="txtZoneCode form-label">Zone Code</label>
+              <input type="text" class="form-control" id="txtZoneCode" data-ng-model="zone.code" />
+          </div>
+          <div class="form-group">
               <label for="txtZoneName form-label">Zone Name</label>
               <input type="text" class="form-control" id="txtZoneName" data-ng-model="zone.name" />
           </div>
@@ -59,8 +63,8 @@ TODO LIST:
                     <table class="table table-hover table-striped table-clickable">
                         <thead>
                             <tr>
-                                <th width="20%" data-ng-click="orderBy('id');">Zone Code <i class="fas fa-sort-down"></i></th>
-                                <th width="25%" data-ng-click="orderBy('name');">Zone Name <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('id');">Zone Code <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('name');">Zone Name <i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                 <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
                             </tr>
@@ -68,7 +72,10 @@ TODO LIST:
                         <tbody>
                             <tr data-ng-repeat="z in zoneList | filter: searchZone | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
                                 <td>
-                                    <span data-ng-bind="z.id"></span>
+                                   <div editable>
+                                      <input type="text" class="form-control" data-ng-model="z.code" data-ng-show="!showZone" />
+                                      <span data-ng-show="showZone" data-ng-bind="z.code"></span>   
+                                   </div>
                                 </td>
                                 <td>
                                     <div editable>
@@ -86,7 +93,7 @@ TODO LIST:
                                     </div>
                                 </td>
                                 <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showZone" data-ng-click="editZone(z.id, z.name, z.status);"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showZone" data-ng-click="editZone(z.id, z.code, z.name, z.status);"><i class="fa fa-pencil-alt"></i></button>
                                     <button class="btn btn-sm btn-warning" data-ng-show="!showZone" data-ng-click="saveZone();"><i class="fa fa-save"></i></button>
                                     <button class="btn btn-sm btn-default" data-ng-show="!showZone" data-ng-click="cancelZone();"><i class="fa fa-times"></i></button>
                                 </td>

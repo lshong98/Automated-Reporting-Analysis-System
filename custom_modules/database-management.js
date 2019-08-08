@@ -19,7 +19,7 @@ var DB_NAME = '';
 // // Config used for socket connection, important for Google Cloud hosting
  var config = {
      user: DB_USER,
-     password: DB_PASS,
+     password: DB_PASS, 
      host: DB_HOST
  }
 
@@ -29,9 +29,9 @@ var DB_NAME = '';
  
 // // Create connection 
 var db = mysql.createConnection({ 
-   host: DB_HOST,
-   user: DB_USER,  
-   password: DB_PASS
+  host: DB_HOST,
+  user: DB_USER,  
+  password: DB_PASS
 });
 
 // var db = mysql.createConnection(config);
@@ -82,7 +82,7 @@ emitter.on('createTable', function () {
      
     sqls = [ 
         "CREATE TABLE tblposition (positionID varchar(15),  positionName varchar(30),  positionStatus char(1),  creationDateTime datetime,  primary key (positionID))",
-        "CREATE TABLE tblzone (zoneID varchar(15),  zoneName varchar(100), zoneStatus char(1),  creationDateTime datetime,  PRIMARY KEY (zoneID))",
+        "CREATE TABLE tblzone (zoneID varchar(15),  zoneCode varchar(5), zoneName varchar(100), zoneStatus char(1),  creationDateTime datetime,  PRIMARY KEY (zoneID))",
         "CREATE TABLE tblstaff (  staffID varchar(15),  username varchar(20),  password mediumtext,  staffName varchar(50),  staffIC varchar(15),  staffGender char(1),  staffDOB date,  staffAddress varchar(255),  handphone varchar(11),  phone varchar(10),  email varchar(50),  positionID varchar(15),  staffStatus char(1),  creationDateTime datetime,  staffPic mediumtext,  PRIMARY KEY (staffID),  foreign key (positionID) references tblposition(positionID))",
         "CREATE TABLE tblarea (  areaID varchar(15),  zoneID varchar(15),  staffID varchar(15),  areaName varchar(30),  collection_frequency varchar(30),  longitude double(10,7),  latitude double(10,7),  areaStatus char(1),  creationDateTime datetime,  PRIMARY KEY (areaID),  foreign key (zoneID) references tblzone(zoneID),  foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tbltaman (  tamanID int auto_increment,  areaID varchar(15),  tamanName mediumtext,  longitude double(10,7),  latitude double(10,7),  areaCollStatus char(1),  PRIMARY KEY (tamanID),  foreign key (areaID) references tblarea(areaID))",
@@ -97,7 +97,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblblostentry (  idNo int auto_increment,  creationDateTime datetime, blostID varchar(15),  customerID varchar(15), serialNo varchar(15),  sharedBin boolean,  dateOfLoss datetime,  reason longtext,  status char(1), PRIMARY KEY (idNo),  foreign KEY  (blostID) references tblblost(blostID),  foreign KEY  (serialNo) references tblbins(serialNo),  foreign KEY  (customerID) references tblcustomer(customerID))",
         "CREATE TABLE tbldcs (dcsID varchar(15),creationDateTime datetime,status char(1), formStatus char(1), periodFrom date,periodTo date,driverID varchar(15),replacementDriverID varchar(15),replacementPeriodFrom date,replacementPeriodTo date,authorizedBy varchar(15),authorizedDate datetime,preparedBy varchar(15),PRIMARY KEY (dcsID),foreign key (driverID) references tblstaff(staffID),foreign key (replacementDriverID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID),foreign key (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblacr (acrID varchar(15),creationDateTime datetime,dcsID varchar(15),areaID varchar(15),customerID VARCHAR(15),beBins int,acrBins int,mon boolean,tue boolean,wed boolean,thu boolean,fri boolean,sat boolean,remarks longtext,PRIMARY KEY (acrID),foreign key (dcsID) references tbldcs(dcsID),foreign key (customerID) references tblcustomer(customerID))",
-        "CREATE TABLE tblbdaf (  bdafID varchar(15),  creationDateTime datetime,  driverID varchar(15), staffID varchar(15), authorizedBy varchar(15), authorizedDate dateTime, status char(1), formStatus char(1), PRIMARY KEY (bdafID), foreign key (driverID) references tblstaff(staffID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
+        "CREATE TABLE tblbdaf (  bdafID varchar(15),  creationDateTime datetime,  driverID varchar(15), staffID varchar(15), preparedBy varchar(15), authorizedBy varchar(15), authorizedDate dateTime, status char(1), formStatus char(1), PRIMARY KEY (bdafID), foreign key (driverID) references tblstaff(staffID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID), foreign key (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblbdafentry (  idNo int auto_increment,  bdafID varchar(15),  customerID VARCHAR(15),  acrID varchar(15), acrSticker varchar(20),  serialNo varchar(15),  binDelivered varchar(15),  binPulled varchar(15),  jobDesc longtext,  remarks longtext,  completed boolean,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (acrID) references tblacr(acrID),  foreign key (bdafID) references tblbdaf(bdafID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (binDelivered) references tblbins(serialNo),  foreign key (binPulled) references tblbins(serialNo))",
         "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID VARCHAR(15),  areaID varchar(15),  serialNo varchar(15),  acrID varchar(15),  activeStatus char(1), rcDwell varchar(20), comment mediumtext, itemType varchar(20), path varchar(20),PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
         "CREATE TABLE tbluseractions (  date datetime,  staffID varchar(15),  action varchar(20),  onObject varchar(20),  PRIMARY KEY (date, staffID),  foreign key (staffID) references tblstaff(staffID))",
