@@ -15,6 +15,24 @@
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
+            <label for="editAreaZoneName" class="form-label">Zone Name</label>
+            <select id="editAreaZoneName" class="form-control" data-ng-model="area.zone" data-ng-options="zone.name as zone.name for zone in zoneList"></select>
+        </div>
+    </div>
+</div>  
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+              <label for="editAreaCode form-label">Area ID</label>
+              <input type="text" class="form-control" id="editAreaCode" data-ng-model="area.code" />
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
           <label for="editAreaName" class="form-label">Area Name</label>
           <input type="text" class="form-control" id="editAreaName" data-ng-model="area.name" />
         </div>
@@ -49,14 +67,7 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group">
-            <label for="editAreaZoneName" class="form-label">Zone Name</label>
-            <select id="editAreaZoneName" class="form-control" data-ng-model="area.zone" data-ng-options="zone.name as zone.name for zone in zoneList"></select>
-        </div>
-    </div>
-</div>          
+        
   
 <div class="row">
     <div class="col-md-12">

@@ -1344,8 +1344,6 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         }else{
             $scope.areaList = angular.copy($scope.areaListInactive);
         }
-        
-        $scope.filterAreaList = angular.copy($scope.areaList);
         $scope.totalItems = $scope.filterAreaList.length;
     }
 
@@ -1353,9 +1351,13 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.searchAreaFilter = '';
         $scope.areaList = response.data;
         $scope.filterAreaList = [];
+        
+        $.each($scope.areaList, function(index, value){
+            value.code = value.zoneCode + value.code;
+        });
 
         $scope.searchArea = function(area) {
-            return (area.id + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
+            return (area.code + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
         }
 
         $scope.areaListActive = [];
@@ -1404,64 +1406,84 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
     });
 
     $scope.addArea = function() {
+
         $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-
-        $http.post('/addArea', $scope.area).then(function(response) {
-            var data = response.data;
-            var newAreaID;
-
-            $scope.notify(data.status, data.message);
+        $http.post('/addArea', $scope.area).then(function(response){
+            var data= response.data;
+            console.log(response.data);
             
-            if (data.status === "success") {
-                newAreaID = data.details.areaID;
-                $scope.newArea.areaCode = newAreaID;
+            if(data.status === "success"){
+               
                 $scope.areaList.push({
-                    "id": newAreaID,
+                    "code": $scope.area.code,
                     "name": $scope.area.name,
                     "status": 'ACTIVE',
                     "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
                     "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
                 });
-                $scope.area.id = newAreaID;
-                $scope.area.zoneName = $scope.area.zone.code + ' - ' + $scope.area.zone.name;
-                $scope.area.staffName = $scope.area.staff.id + ' - ' + $scope.area.staff.name;
-                socket.emit('create new area', $scope.area);
-                $scope.filterAreaList = angular.copy($scope.areaList);
-                angular.element('#createArea').modal('toggle');
-                $scope.totalItems = $scope.filterAreaList.length;
-            
-                var $googleMap, visualizeMap, map, lat = 0,
-                    lng = 0,
-                    myPlace, address;
-
-                $http.post('/getGoogleLocation', $scope.newArea).then(function(response) {
-                    address = $scope.geocodeLink(response.data[0]);
-
-                    $http.get(address).then(function(response) {
-                        if(response.data.status == "ZERO_RESULTS"){
-                            angular.element('body').overhang({
-                                type: "error",
-                                message: "Cant obtain area's Longitude and Latitude."
-                            });
-                            
-                        }else{
-                        // JSON data returned by API above
-                            var myPlace = response.data;
-
-                            $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
-                            $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
-                            $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
-                                angular.element('body').overhang({
-                                    type: response.data.type,
-                                    message: response.data.msg
-                                });                                
-                            });
-                        }
-
-                    });
-                });
-            }
+                    $scope.filterAreaList = angular.copy($scope.areaList);
+                    angular.element('#createArea').modal('toggle');
+                    $scope.totalItems = $scope.filterAreaList.length;
+                    $scope.notify(data.status, data.message);
+               }
         });
+//
+//        $http.post('/addArea', $scope.area).then(function(response) {
+//            var data = response.data;
+//            var newAreaID;
+//
+//            $scope.notify(data.status, data.message);
+//            
+//            if (data.status === "success") {
+//                newAreaID = data.details.areaID;
+//                $scope.newArea.areaCode = newAreaID;
+//                $scope.areaList.push({
+//                    "id": newAreaID,
+//                    "name": $scope.area.name,
+//                    "status": 'ACTIVE',
+//                    "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
+//                    "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
+//                });
+//                $scope.area.id = newAreaID;
+//                $scope.area.zoneName = $scope.area.zone.code + ' - ' + $scope.area.zone.name;
+//                $scope.area.staffName = $scope.area.staff.id + ' - ' + $scope.area.staff.name;
+//                socket.emit('create new area', $scope.area);
+//                $scope.filterAreaList = angular.copy($scope.areaList);
+//                angular.element('#createArea').modal('toggle');
+//                $scope.totalItems = $scope.filterAreaList.length;
+//            
+//                var $googleMap, visualizeMap, map, lat = 0,
+//                    lng = 0,
+//                    myPlace, address;
+//
+//                $http.post('/getGoogleLocation', $scope.newArea).then(function(response) {
+//                    address = $scope.geocodeLink(response.data[0]);
+//
+//                    $http.get(address).then(function(response) {
+//                        if(response.data.status == "ZERO_RESULTS"){
+//                            angular.element('body').overhang({
+//                                type: "error",
+//                                message: "Cant obtain area's Longitude and Latitude."
+//                            });
+//                            
+//                        }else{
+//                        // JSON data returned by API above
+//                            var myPlace = response.data;
+//
+//                            $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
+//                            $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
+//                            $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
+//                                angular.element('body').overhang({
+//                                    type: response.data.type,
+//                                    message: response.data.msg
+//                                });                                
+//                            });
+//                        }
+//
+//                    });
+//                });
+//            }
+//        });
     }
 
     socket.on('append area list', function(data) {
@@ -1477,8 +1499,8 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         $scope.$apply();
     });
 
-    $scope.orderBy = function(property) {
-        $scope.areaList = $filter('orderBy')($scope.areaList, ['' + property + ''], asc);
+    $scope.orderBy = function(property, property2) {
+        $scope.areaList = $filter('orderBy')($scope.areaList, ['' + property + '', '' + property2 + ''], asc);
         asc == true ? asc = false : asc = true;
     };
 });
@@ -1490,6 +1512,7 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
 
     $scope.area = {
         "id": areaID,
+        "code": '',
         "name": '',
         "zone": '',
         "staff": '',
@@ -1521,7 +1544,9 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
 
     $scope.show = angular.copy(storeDataService.show.area);
 
+    //in area-management.js
     $http.get('/getZoneList').then(function(response) {
+        console.log(response.data);
         var data = response.data;
         $scope.zoneList = data;
     });
