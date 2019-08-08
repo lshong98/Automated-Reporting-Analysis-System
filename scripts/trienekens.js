@@ -6,7 +6,7 @@ global angular, document, google, Highcharts
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap']);
 
 var socket = io.connect();
-//var socket = io.connect('ws://trienekens-deploy.appspot.com:3000', {transports: ['websocket']});
+//var socket = io.connect('wss://trienekens-deploy.appspot.com:3000', {transports: ['websocket']});
 socket.on('connect', function() {
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
@@ -2733,12 +2733,16 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         console.log("Hello from acr controller");
     })
 
-    $http.get('/getAllDatabaseBin').then(function(response) {
+    $scope.getAllDatabaseBin = function(){
+        $http.get('/getAllDatabaseBin').then(function(response) {
 
-        $scope.databaseBinList = response.data;
-        console.log($scope.databaseBinList);
-        storeDataService.databaseBin = angular.copy($scope.databaseBinList);
-    });
+            $scope.databaseBinList = response.data;
+            console.log($scope.databaseBinList);
+            storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+        });
+    }
+
+    $scope.getAllDatabaseBin();
 
     $scope.databaseBinList = [];
     $scope.customerList = [];
@@ -2782,6 +2786,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                 angular.element('#createDatabaseBin').modal('toggle');
                 //$scope.totalItems = $scope.filterDatabaseBinList.length;
                 $scope.initializeBinDatabase();
+                $scope.getAllDatabaseBin();
             }
         });
         /*$http.post('/addTaskAuthorization', today, ).then(function(response) {
