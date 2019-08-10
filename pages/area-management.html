@@ -37,8 +37,12 @@
           </div>
           
           <div class="form-group">
-              <label for="sltStaffName form-label">Staff Name</label>
+              <label for="sltStaffName form-label">Reporting Officer</label>
               <select id="sltStaffName" class="form-control" data-ng-model="area.staff" data-ng-options="staff as staff.staffidname for staff in staffList"></select>
+          </div>
+          <div class="form-group">
+              <label for="sltDriverName form-label">Driver</label>
+              <select id="sltDriverName" class="form-control" data-ng-model="area.driver" data-ng-options="driver as driver.driveridname for driver in driverList"></select>
           </div>
           <div class="form-group">
               <label for="sltBoundaries form-label">Boundaries</label>
@@ -85,7 +89,6 @@
                                 <th width="25%" data-ng-click="orderBy('name', '');">Area Name <i class="fas fa-sort-down"></i></th>
 <!--                                <th width = "5%">Collection Day</th>-->
                                 <th width="20%" data-ng-click="orderBy('staffName', '');">Staff <i class="fas fa-sort-down"></i></th>
-                                <!--<th>Collection Frequency</th>-->
                                 <th width="10%" data-ng-click="orderBy('id', '');">Status <i class="fas fa-sort-down"></i></th>
                                 <th data-ng-show="show.edit == 'A'" width="10%">Action</th>
                             </tr>
@@ -94,9 +97,7 @@
                             <tr data-ng-repeat="a in areaList | filter: searchArea | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
                                 <td data-ng-bind="(a.code)"></td>
                                 <td data-ng-bind="a.name"></td>
-                                <!--<td data-ng-bind="a.address"></td><!-- this shud be repeat-->
                                 <td data-ng-bind="a.staffName"></td>
-                                <!--<td data-ng-bind="a.collectionFrequency"></td>-->
                                 <td data-ng-bind="a.status"></td>
                                 <td data-ng-show="show.edit == 'A'">
                                     <button class="btn btn-sm btn-primary" data-ng-click="loadDetails('area', a.id);"><i class="fa fa-pencil-alt"></i></button>

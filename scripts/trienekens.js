@@ -1382,6 +1382,14 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
             $scope.staffList[i].staffidname = response.data[i].name + ' - ' + response.data[i].id;
         }
     });
+    
+    $http.get('/getDriverList').then(function (response){
+        $scope.driverList = response.data;
+        $scope.area.driver = $scope.driverList[0];
+        for (var i = 0; i < $scope.driverList.length; i++) {
+            $scope.driverList[i].driveridname = response.data[i].name + ' - ' + response.data[i].id;
+        }
+    });
 
     $scope.addArea = function() {
 
@@ -1393,7 +1401,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
             if(data.status === "success"){
                
                 $scope.areaList.push({
-                    "code": $scope.area.code,
+                    "code": $scope.area.zone.code + $scope.area.code,
                     "name": $scope.area.name,
                     "status": 'ACTIVE',
                     "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
@@ -1494,6 +1502,7 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
         "name": '',
         "zone": '',
         "staff": '',
+        "driver": '',
         "status": '',
         "days": {
             "mon": '',
@@ -1524,7 +1533,6 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
 
     //in area-management.js
     $http.get('/getZoneList').then(function(response) {
-        console.log(response.data);
         var data = response.data;
         $scope.zoneList = data;
     });
@@ -1532,6 +1540,12 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
     $http.get('/getStaffList').then(function(response) {
         var data = response.data;
         $scope.staffList = data;
+    });
+    
+    $http.get('/getDriverList').then(function (response){
+        var data = response.data;
+        $scope.driverList = data;
+        
     });
 
     $http.post('/thisArea', $scope.area).then(function(response) {
@@ -1543,6 +1557,9 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
                 $scope.days[value] = 'A';
             });
         }
+        $http.post('/thisAreaDriver',{"id" : areaID}).then(function(response){
+            $scope.area.driver = response.data[0].driver;
+        });
     });
 
     $http.post('/getCollection', $scope.area).then(function(response) {
@@ -1568,6 +1585,7 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
         }
     };
 
+    
     $scope.updateArea = function() {
         var concatDays = "";
         $.each($scope.days, function(index, value) {
@@ -1588,6 +1606,18 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
             }
 
         });
+        
+//        var tamanArray = $scope.taman.split(',');
+//        $scope.updateTamanObj = {
+//            "taman": tamanArray,
+//            "length" : tamanArray.length,
+//            "area" : areaID
+//        }
+//        $http.post("/updateTamanSet", $scope.updateTamanObj).then(function(response){
+//            window.location.href = '#/area-management';
+//        });
+//        console.log($scope.taman);
+//        console.log($scope.updateTamanObj);
     };
 
 });

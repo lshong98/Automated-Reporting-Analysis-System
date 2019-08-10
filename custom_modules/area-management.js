@@ -8,7 +8,7 @@ var f = require('./function-management');
 app.post('/addArea', function (req, res) {
     'use strict';
     f.makeID("area", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, areaName, areaCode, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.name + "', '" + req.body.code +"','" + req.body.creationDate + "', 'A')";
+        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, driverID, areaName, areaCode, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.driver.id + "', '" + req.body.name + "', '" + req.body.code +"','" + req.body.creationDate + "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
                 res.json({"status": "error", "message": "Something error!"});
@@ -60,7 +60,7 @@ app.post('/updateArea', function (req, res) {
         information.zoneID = zoneID.zoneID;
         req.body.status = req.body.status === "Active" ? 'A' : 'I';
         
-        var sql = "UPDATE tblarea SET areaName = '" + req.body.name + "', areaCode = '" + req.body.code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '" + req.body.id + "'";
+        var sql = "UPDATE tblarea SET areaName = '" + req.body.name + "', areaCode = '" + req.body.code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + req.body.driver + "', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '" + req.body.id + "'";
         
         database.query(sql, function (err, result) {
             if (err) {
@@ -73,11 +73,38 @@ app.post('/updateArea', function (req, res) {
     });
 }); // Complete
 
+//app.post('/updateTamanSet',function (req, res){
+//    'use strict';
+//    
+//    for(var i=0; i<req.body.length; i++){
+//        var sql="INSERT INTO tbltaman(areaID, tamanName) VALUE ('" + req.body.area + "', '" + req.body.taman[i] + "')";
+//        
+//        database.query(sql, function (err, result) {
+//            if (err) {
+//                throw err;
+//            }
+//        });
+//    }
+//});
+
 // Load specific area
 app.post('/thisArea', function (req, res) {
     'use strict';
     
     var sql = "SELECT tblarea.areaID AS id, tblarea.areaCode AS code, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.post('/thisAreaDriver', function(req,res){
+    'use strict';
+    
+    var sql="SELECT tblarea.driverID AS driver FROM tblarea JOIN tblstaff ON tblarea.driverID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0,1 "
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
