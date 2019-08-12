@@ -12,6 +12,36 @@
     </div>
 </div>
 
+<!--
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="editAreaTaman" class="form-label">Taman Name</label>
+            <input type="text" class="form-control" id="editAreaTaman" data-ng-model="taman" />
+        </div>
+    </div>
+</div>  
+-->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="editAreaZoneName" class="form-label">Zone Name</label>
+            <select id="editAreaZoneName" class="form-control" data-ng-model="area.zone" data-ng-options="zone.name as zone.name for zone in zoneList"></select>
+        </div>
+    </div>
+</div>  
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+              <label for="editAreaCode form-label">Area ID</label>
+              <input type="text" class="form-control" id="editAreaCode" data-ng-model="area.code" />
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
@@ -49,20 +79,22 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group">
-            <label for="editAreaZoneName" class="form-label">Zone Name</label>
-            <select id="editAreaZoneName" class="form-control" data-ng-model="area.zone" data-ng-options="zone.name as zone.name for zone in zoneList"></select>
-        </div>
-    </div>
-</div>          
+        
   
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
             <label for="editAreaStaffName" class="form-label">Staff Name</label>
             <select id="editAreaStaffName" class="form-control" data-ng-model="area.staff" data-ng-options="staff.name as staff.name for staff in staffList"></select>
+        </div>
+    </div>
+</div> 
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="editAreaDriverName" class="form-label">Driver Name</label>
+            <select id="editAreaDriverName" class="form-control" data-ng-model="area.driver" data-ng-options="driver.id as driver.name for driver in driverList"></select>
         </div>
     </div>
 </div>          

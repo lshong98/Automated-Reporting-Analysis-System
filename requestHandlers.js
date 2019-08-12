@@ -156,5 +156,9 @@ app.get('/damaged-lost-bin', function (req, res) {
     'use strict';
     res.sendFile('pages/damaged-lost-bin.html', {root: __dirname});
 });
+app.get('/boundary', function (req, res) {
+    'use strict';
+    res.sendFile('pages/boundary.html', {root: __dirname});
+});
 
 module.exports = app;
