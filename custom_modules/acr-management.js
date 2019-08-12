@@ -9,7 +9,7 @@ app.post('/addDcs',function(req,res){
     console.log(req.body);
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', 'A')";
+        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', '" + req.body.preparedby + "', 'A')";
         
         database.query(sql, function (err, result) {
             if (err) {

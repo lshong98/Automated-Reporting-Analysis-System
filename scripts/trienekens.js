@@ -2403,7 +2403,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         $http.post('/completeDcs', $scope.currentStatus).then(function(response){
 
         });
-        
+
         $http.post('/getAllDcs', $scope.currentStatus).then(function(response) {
             $scope.searchAcrFilter = '';
             $scope.dcsList = response.data;
@@ -2434,6 +2434,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 
     $scope.addDcs = function() {
         $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.dcs.preparedBy = window.sessionStorage.getItem('owner');
         $http.post('/addDcs', $scope.dcs).then(function(response) {
             var returnedData = response.data; 
             var newDcsID = returnedData.details.dcsID;
@@ -4152,6 +4153,37 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
 
 app.controller('bdafDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
 
+    $scope.status = '';
+    
+    $scope.requestAuthorization = function() {
+        sendFormForAuthorization($routeParams.dcsID, "bdaf");
+        $scope.status = 'PENDING';
+    };
+  
+    $scope.confirm = function(request) { 
+        if(request == 'approve'){
+            $scope.approveForm();
+        }else if(request == 'reject') {
+            $scope.rejectForm();
+        }
+    };
+
+    $scope.approveForm = function() {
+        $scope.status = 'APPROVED';
+        approveForm($routeParams.dcsID, "bdaf");
+        
+        angular.element('#approveConfirmation').modal('toggle');
+    }
+
+    $scope.rejectForm = function() {
+        $scope.status = 'CORRECTION REQUIRED';
+        rejectForm($routeParams.dcsID, "bdaf");
+
+
+        angular.element('#rejectConfirmation').modal('toggle');
+    }
+
+    $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.bdafDetails);
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
@@ -4186,19 +4218,46 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
         }
     //}
 
+
     $http.post('/getBdafInfo', $scope.bdafID).then(function(response) {
         
         $scope.bdaf = response.data;
-        console.log($scope.dcs);
+        console.log($scope.bdaf);
+
+        if($scope.bdaf[0].status == 'G'){
+            $scope.status = 'APPROVED';
+        }else if($scope.bdaf[0].status == 'P'){
+            $scope.status = 'PENDING';
+        }else if($scope.bdaf[0].status == 'R'){
+            $scope.status = 'CORRECTION REQUIRED';
+        }else if($scope.bdaf[0].status == 'A'){
+            $scope.status = 'ACTIVE';
+        }else if($scope.bdaf[0].status == 'C') {
+            $scope.status = 'COMPLETE';
+            $scope.show.edit = 'I';
+        }
     });
     
-    $http.post('/getBdafDetails', $scope.bdafID).then(function(response) {
-        
-        $scope.bdafDetailsList = response.data;
-        console.log($scope.bdafDetailsList); 
-    });
+    $scope.saveDcsEntry = function(){
+        window.alert("BDAF Updated");
 
-    $http.get('/getCustomerList', $scope.bdafID).then(function(response) {
+        $http.post('/updateBdafEntry', $scope.bdafEntry).then(function(response) {
+        
+            $scope.getBdafDetails();
+        });
+
+        angular.element('#editDcsEntry').modal('toggle');
+    }
+
+
+    $scope.getBdafDetails = function() {
+        $http.post('/getBdafDetails', $scope.bdafID).then(function(response) {
+        
+            $scope.bdafDetailsList = response.data;
+            console.log($scope.bdafDetailsList); 
+        });
+
+        $http.get('/getCustomerList', $scope.bdafID).then(function(response) {
         $scope.customerList = response.data;
     });
 
@@ -4209,6 +4268,12 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
     $http.get('/getBinList', $scope.bdafID).then(function(response) {
         $scope.binList = response.data;
     });
+    }
+
+    $scope.getBdafDetails();
+    
+
+    
 
     $scope.addBdafEntry = function() {
         $scope.bdafEntry.bdafID = $routeParams.bdafID;
@@ -4438,6 +4503,38 @@ app.controller('dbdDetailsController', function($scope, $http, $filter, storeDat
 
 app.controller('blostDetailsController', function($scope, $http, $filter, storeDataService, $routeParams) {
 
+    $scope.status = '';
+    
+    $scope.requestAuthorization = function() {
+        sendFormForAuthorization($routeParams.dcsID, "blost");
+        $scope.status = 'PENDING';
+    };
+  
+    $scope.confirm = function(request) { 
+        if(request == 'approve'){
+            $scope.approveForm();
+        }else if(request == 'reject') {
+            $scope.rejectForm();
+        }
+    };
+
+    $scope.approveForm = function() {
+        $scope.status = 'APPROVED';
+        approveForm($routeParams.dcsID, "blost");
+        
+        angular.element('#approveConfirmation').modal('toggle');
+    }
+
+    $scope.rejectForm = function() {
+        $scope.status = 'CORRECTION REQUIRED';
+        rejectForm($routeParams.dcsID, "blost");
+
+
+        angular.element('#rejectConfirmation').modal('toggle');
+    }
+
+    
+    $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
@@ -4445,11 +4542,11 @@ app.controller('blostDetailsController', function($scope, $http, $filter, storeD
     
     $scope.showDcsDetails = true;
    
-    $scope.dcsDetailsList = [];
-    $scope.dcs = [];
+    $scope.blostDetailsList = [];
+    $scope.blost = [];
     $scope.customerList = [];
-    $scope.dcsID = {};
-    $scope.dcsID.id = $routeParams.dcsID;
+    $scope.blostID = {};
+    $scope.blostID.id = $routeParams.blostID;
 
     $scope.test = 
         {
@@ -4458,7 +4555,7 @@ app.controller('blostDetailsController', function($scope, $http, $filter, storeD
         }
     
     //$scope.initializeDcsDetails = function(){
-        $scope.dcsDetails = {
+        $scope.blostDetails = {
             "dcsID":'',
             "acrID":'',
             "areaID":'',
@@ -4475,40 +4572,54 @@ app.controller('blostDetailsController', function($scope, $http, $filter, storeD
         }
     //}
 
-    $http.post('/getDcsInfo', $scope.dcsID).then(function(response) {
+    $http.post('/getBlostInfo', $scope.blostID).then(function(response) {
         
-        $scope.dcs = response.data;
-        console.log($scope.dcs);
+        $scope.blost = response.data;
+        console.log($scope.blost);
+
+        
+        if($scope.blost[0].status == 'G'){
+            $scope.status = 'APPROVED';
+        }else if($scope.blost[0].status == 'P'){
+            $scope.status = 'PENDING';
+        }else if($scope.blost[0].status == 'R'){
+            $scope.status = 'CORRECTION REQUIRED';
+        }else if($scope.blost[0].status == 'A'){
+            $scope.status = 'ACTIVE';
+        }else if($scope.blost[0].status == 'C') {
+            $scope.status = 'COMPLETE';
+            $scope.show.edit = 'I';
+        }
     });
     
-    $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
+    $http.post('/getBlostDetails', $scope.blostID).then(function(response) {
         
         $scope.dcsDetailsList = response.data;
-        console.log($scope.dcsDetailsList); 
-        console.log("Hello dcsdetails");
+        console.log($scope.blostDetailsList); 
+        console.log("Hello blostdetails");
     });
 
-    $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
+    $http.get('/getCustomerList', $scope.blostID).then(function(response) {
         $scope.customerList = response.data;
     });
 
-    $scope.addDcsEntry = function() {
-        $scope.dcsEntry.dcsID = $routeParams.dcsID;
+    $scope.addBlostEntry = function() {
+        $scope.dcsEntry.blostID = $routeParams.blostID;
 
-        $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
+        $http.post('/addBlostEntry', $scope.blostEntry).then(function(response) {
             
             var returnedData = response.data;
 
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
-                    "message": "DCS Entry added successfully!"
+                    "message": "BLOST Entry added successfully!"
                 });
 
 
-                $scope.dcsDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
+                $scope.blostDetailsList.push({ "acrfNo": $scope.dcsEntry.acrfNo, "company": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsDetails.remarks });
                 
-                angular.element('#createDcsEntry').modal('toggle');
+                angular.element('#createBlostEntry').modal('toggle');
             }
         }); 
     }

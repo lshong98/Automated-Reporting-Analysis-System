@@ -1,74 +1,52 @@
-<div class="modal fade" id="createBdafEntry" tabindex="-1" role="dialog" aria-labelledby="createBdafEntry" aria-hidden="true">
+<div class="modal fade" id="createBlostEntry" tabindex="-1" role="dialog" aria-labelledby="createBlostEntry" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Add a BDAF</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">Add a BLOST</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
                 
-                <div class="form-group">
-                    <label for="txtCompany form-label">Location</label>
-                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="bdafEntry.customerID">
-                            <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
-                    </select>
-                </div>
                 <div class="form-group"> 
                   <label for="txtAddress form-label">Contact Person</label>
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.customerName">
+                  <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.customerName">
                         <option data-ng-repeat="c in customerList" value={{c.name}}>{{c.name}} - {{c.ic}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                  <label for="txtBeBins form-label">Contact No</label> 
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.contactNumber">
+                    <label for="txtCompany form-label">Address</label>
+                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="blostEntry.customerID">
+                            <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                  <label for="txtBeBins form-label">Phone No</label> 
+                  <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.contactNumber">
                         <option data-ng-repeat="c in customerList" value={{c.contactNumber}}>{{c.contactNumber}}</option>
                     </select>
                 </div>
             
                 <div class="form-group">
-                    <label for="txtAcrBins form-label">ACR Sticker</label>
-                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.acrSticker" />
-                </div>
-                <div class="form-group">
-                  <label for="txtAreaCode form-label">ACRF No.</label>
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.acrID">
-                        <option data-ng-repeat="a in acrList" value={{a.acrID}}>{{a.acrID}}</option>
+                    <label for="txtAcrBins form-label">Collection Area</label>
+                    <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.areaID">
+                        <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaID}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="txtRemarks form-label">Job Description</label>
-                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.jobDesc" />
-                </div>
-                <div class="form-group">
-                    <label for="txtRemarks form-label">Unit</label>
-                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.unit" />
-                </div>
-                <div class="form-group">
-                    <label for="txtRemarks form-label">Bin Size</label>
-                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.binSize" />
-                </div>
-                <div class="form-group">
-                    <label for="txtRemarks form-label">Remarks</label>
-                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.remarks" />
-                </div>
-                <div class="form-group">
-                    <label for="txtRemarks form-label">binDelivered</label>
-                    <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.binDelivered">
+                  <label for="txtAreaCode form-label">Serial No.</label>
+                  <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.acrID">
                         <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="txtRemarks form-label">binPulled</label>
-                    <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.binPulled">
-                        <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
-                    </select>
+                    <label for="txtRemarks form-label">Date of Loss</label>
+                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="blostEntry.dateOfLoss" />
                 </div>
                 <div class="form-group">
-                    <label for="txtRemarks form-label">Completed</label>
-                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.Completed" />
+                    <label for="txtRemarks form-label">Reason of Loss</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="blostEntry.reasonForLoss" />
                 </div>
     
          
@@ -78,7 +56,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="addBdafEntry();">Create</button>
+              <button type="button" class="btn btn-primary" data-ng-click="addblostEntry();">Create</button>
             </div>
           </div>
         </div>
@@ -86,12 +64,21 @@
     
       
     
-      <div class="row">
-          <div class="col-md-1">
-                <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
-    
+
+
+        <div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
+            <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
+                  <span style="text-align:left"><strong>Form Status: {{status}}</strong></span>
+                  <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dcs.feedback}}</p>
+            </div>
+            <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
+                  
+                  <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();" ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
+                  <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveConfirmation">Approve</button>
+                  <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectConfirmation">Reject</button>
+              
+            </div>
           </div>
-        </div>
     
     <div id="nodeToRenderAsPDF">
         <div class="row">
@@ -111,11 +98,16 @@
         
                
             
-            <div class="row" id="createButton" data-ng-show="show.create == 'A'">
-                    <div class="col-md-12">
-                        <button class="btn btn-success" data-toggle="modal" data-target="#createBdafEntry"><i class="fa fa-plus"></i> New</button>
-                    </div>
-                </div>
+        <div class="row" id="createButton" data-ng-show="show.create == 'A'">
+            <div class="col-md-6">
+                <button class="btn btn-success" data-toggle="modal" data-target="#createBlostEntry"><i class="fa fa-plus"></i> New</button>
+                
+            </div>
+            <div class="col-md-6" style="text-align: right">
+                    
+                 <a href="javascript:exportPdf()"  class="btn btn-danger clearfix"><span class="fa fa-file-pdf-o" ></span> Export to PDF</a>
+            </div>
+        </div>
             
             </br>
             <div class="row">
@@ -138,65 +130,65 @@
                                 </tr>
                             </thead>
                             <tbody>               
-                                    <tr data-ng-repeat="b in bdafDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                                    <tr data-ng-repeat="b in blostDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.customerName" data-ng-show="!showBdafDetails" /> 
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.customerName"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.customerName" data-ng-show="!showBlostDetails" /> 
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.customerName"></span>
                                                 </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.company" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.company"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.company" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.company"></span>
                                                     </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.address" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.address"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.address" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.address"></span>
                                                     </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.phoneNo" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.phoneNo"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.phoneNo" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.phoneNo"></span>
                                                     </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.collectionArea" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.collectionArea"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.collectionArea" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.collectionArea"></span>
                                                     </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.binSize"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.binSize"></span>
                                                     </div>
                                         </td>   
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.serialNo" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.serialNo"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.serialNo" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.serialNo"></span>
                                                     </div>
                                         </td>       
                                         <td>    
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.sharedBin" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.sharedBin"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.sharedBin" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.sharedBin"></span>
                                                     </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.dateOfLoss" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.dateOfLoss"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.dateOfLoss" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.dateOfLoss"></span>
                                                     </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.reasonForLoss" data-ng-show="!showBdafDetails" />
-                                                        <span data-ng-show="showBdafDetails" data-ng-bind="b.reasonForLoss"></span>
+                                                        <input type="text" class="form-control" data-ng-model="b.reasonForLoss" data-ng-show="!showBlostDetails" />
+                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.reasonForLoss"></span>
                                                     </div>
                                         </td>
                                         

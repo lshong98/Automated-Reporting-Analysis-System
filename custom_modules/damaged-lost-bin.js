@@ -38,7 +38,20 @@ app.post('/getAllBlost', function(req,res){
     });  
 });
 
-app.post('/getBdafDetails', function(req,res){
+app.post('/getBlostInfo',function(req,res){ 
+    'use strict';
+    //console.log("DCS ID: " + req.body.dcsID);
+    var sql = "SELECT * from tblblost where blostID = '" + req.body.id + "'";
+    database.query(sql, function (err, result) {
+        if (err) { 
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
+
+app.post('/getBlostDetails', function(req,res){
     'use strict';
     console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
     console.log(req.body);
@@ -57,7 +70,7 @@ app.post('/getBdafDetails', function(req,res){
     });
 }); 
 
-app.post('/addBdafEntry',function(req,res){ 
+app.post('/addBlostEntry',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     if(req.body.binDelivered == ''){
@@ -67,7 +80,7 @@ app.post('/addBdafEntry',function(req,res){
     if(req.body.binPulled == ''){
         req.body.binPulled = null;
     }
-    var sql = "INSERT INTO tblbdafentry (idNo, bdafID, customerID, acrID, acrSticker, serialNo, binDelivered, binPulled, jobDesc, remarks, completed) VALUE ('" + null + "', '" + req.body.bdafID + "' , '"  + req.body.customerID + "', '"  + req.body.acrID + "', '" + req.body.acrSticker + "', '" + req.body.serialNo + "', '" + req.body.binDelivered + "', '" + req.body.binPulled + "', '" + req.body.jobDesc + "', '" + req.body.remarks + "', '"+ req.body.completed + "')";
+    var sql = "INSERT INTO tblblostentry (idNo, bdafID, customerID, acrID, acrSticker, serialNo, binDelivered, binPulled, jobDesc, remarks, completed) VALUE ('" + null + "', '" + req.body.bdafID + "' , '"  + req.body.customerID + "', '"  + req.body.acrID + "', '" + req.body.acrSticker + "', '" + req.body.serialNo + "', '" + req.body.binDelivered + "', '" + req.body.binPulled + "', '" + req.body.jobDesc + "', '" + req.body.remarks + "', '"+ req.body.completed + "')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -106,10 +119,10 @@ app.get('/getAcrList', function(req,res){
     }); 
 });
 
-app.post('/getBdafInfo',function(req,res){ 
+app.post('/getBlostInfo',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
-    var sql = "SELECT * from tblbdaf where bdafID = '" + req.body.id + "'";
+    var sql = "SELECT * from tblblost where blostI D = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) { 
             throw err;
