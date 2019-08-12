@@ -4,7 +4,7 @@ var sanitizer = require('sanitizer');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var path = require('path');
+var path = require('path'); 
 var mysql = require('mysql');
 var bcrypt = require('bcryptjs');
 var EventEmitter = require('events');
@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 var Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = ;
+var SVR_PORT = 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');

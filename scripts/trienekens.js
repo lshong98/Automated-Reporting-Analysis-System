@@ -3,10 +3,10 @@
 jshint: white
 global angular, document, google, Highcharts
 */
-var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap']);
+var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv']);
 
 var socket = io.connect();
-//var socket = io.connect('wss://trienekens-deploy.appspot.com:3000', {transports: ['websocket']});
+//var socket = io.connect('ws://trienekens-deploy.appspot.com:3000', {transports: ['websocket']});
 socket.on('connect', function() {
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
@@ -2357,11 +2357,18 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         angular.element('.selectpicker').selectpicker('render');
     }
 
+    var today = new Date();
+
     $scope.currentStatus = {
-        "status": true
+        "status": true,
+        "date": formatDateDash(today)
     }
     
     function getAllDcs() {
+        $http.post('/completeDcs', $scope.currentStatus).then(function(response){
+
+        });
+        
         $http.post('/getAllDcs', $scope.currentStatus).then(function(response) {
             $scope.searchAcrFilter = '';
             $scope.dcsList = response.data;
@@ -2373,6 +2380,8 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             $scope.driverList = response.data;
             console.log($scope.driverList);
         }); 
+
+        
     }
     getAllDcs(); //call
 
@@ -2733,16 +2742,12 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         console.log("Hello from acr controller");
     })
 
-    $scope.getAllDatabaseBin = function(){
-        $http.get('/getAllDatabaseBin').then(function(response) {
+    $http.get('/getAllDatabaseBin').then(function(response) {
 
-            $scope.databaseBinList = response.data;
-            console.log($scope.databaseBinList);
-            storeDataService.databaseBin = angular.copy($scope.databaseBinList);
-        });
-    }
-
-    $scope.getAllDatabaseBin();
+        $scope.databaseBinList = response.data;
+        console.log($scope.databaseBinList);
+        storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+    });
 
     $scope.databaseBinList = [];
     $scope.customerList = [];
@@ -2786,7 +2791,6 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                 angular.element('#createDatabaseBin').modal('toggle');
                 //$scope.totalItems = $scope.filterDatabaseBinList.length;
                 $scope.initializeBinDatabase();
-                $scope.getAllDatabaseBin();
             }
         });
         /*$http.post('/addTaskAuthorization', today, ).then(function(response) {
@@ -3001,6 +3005,31 @@ app.filter("yearMonthFilter", function() {
         return filtered;
     };
 });
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('');
+}
+
+function formatDateDash(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
 app.controller('inventoryBinController', function($scope, $http, $filter, storeDataService) {
     'use strict';
     var asc = true;
@@ -3008,6 +3037,16 @@ app.controller('inventoryBinController', function($scope, $http, $filter, storeD
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
+
+    var today = formatDate(new Date());
+
+    //ng-csv
+    $scope.separator = ",";
+    $scope.decimalSeparator = ".";
+    $scope.filename = today + "_wheelstock.csv"
+    $scope.getDataHeader = function() {
+        return ["Date", "DO No", "New 120 IN", "New 240 IN", "New 660 IN", "New 1000 IN", "New 120 Out", "New 240 Out", "New 660 Out", "New 1000 Out", "Reusable 120 IN", "Reusable 240 IN", "Reusable 660 IN", "Reusable 1000 IN", "Reusable 120 Out", "Reusable 240 Out", "Reusable 660 Out", "Reusable 1000 Out", "New 120 Balance", "New 240 Balance", "New 660 Balance", "New 1000 Balance", "Reusable 120 Balance", "Reusable 240 Balance", "Reusable 660 Balance", "Reusable 1000 Balance"];
+    }
 
 
     $scope.yearMonths = [];

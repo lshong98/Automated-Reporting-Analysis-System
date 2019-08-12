@@ -80,11 +80,11 @@
               </thead>
               <tbody>               
                   <tr data-ng-repeat="d in dcsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewdcs(d.id);">
-                      <td data-ng-bind="d.id"></td>
-                      <td data-ng-bind="d.periodFrom"></td>
-                      <td data-ng-bind="d.periodTo"></td>
-                      <td data-ng-bind="d.driverID"></td>
-                      <td data-ng-bind="d.status"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.id"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.periodFrom | date: dd/MM/yyyy"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.periodTo | date: dd/MM/yyyy"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.driverID"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.status"></td>
                   </tr>
               </tbody>
           </table>
