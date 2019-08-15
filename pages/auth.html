@@ -82,13 +82,24 @@ input:checked + .slider:before {
         <form>
             <div class="form-group row">
                 <label for="roleName" class="col-sm-1 col-form-label">Role</label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="roleName" data-ng-model="role.name" disabled />
+                <div class=" col-md-10 col-sm-10">
+                    <input type="text" class="form-control" id="roleName" data-ng-model="role.name" />
+                </div>
+                <div class="col-md-1 col-sm-1">
+                    <button type="button" class="btn btn-primary" data-ng-click="updateRoleName()">Save</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+        <label><input type="checkbox" data-ng-click="checkAllAuth()"> All</label>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-6">
 	    <div class="card">

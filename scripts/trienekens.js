@@ -802,7 +802,7 @@ app.run(function($rootScope) {
         var zone = place.zone.replace(" ", "+");
         var concat = area + '+' + zone;
 
-        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<apikey>";
     };
 });
 
@@ -2090,8 +2090,10 @@ app.controller('roleController', function($scope, $http, $filter) {
 
 app.controller('specificAuthController', function($scope, $http, $routeParams, storeDataService) {
     $scope.role = {
-        "name": $routeParams.auth
+        "name": $routeParams.auth,
+        "oriname" : $routeParams.auth
     };
+    $scope.checkall = false;
     $scope.auth = {
         "account": {
             "create": 'I',
@@ -2213,6 +2215,206 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             $scope.notify(data.status, data.message);
             storeDataService.show = angular.copy($scope.auth);
         });
+    }
+    
+    $scope.updateRoleName = function(){
+        $http.post('/updateRoleName',$scope.role).then(function(response){
+            if(response.data.status == "success"){
+                $scope.role.oriname = $scope.role.name;
+                angular.element('body').overhang({
+                    "type": response.data.status,
+                    "message": response.data.message
+                });
+
+            }else{
+                console.log("fail");
+                angular.element('body').overhang({
+                    "type": response.data.status,
+                    "message":response.data.message
+                });
+            }
+        });
+    }
+    
+    $scope.checkAllAuth = function(){
+        if($scope.checkall == false){
+            $scope.checkall = true;
+            $scope.allAuth = {
+                "name":$scope.role.oriname,
+                "value": $scope.checkall
+            }
+            $http.post('/setAllAuth',$scope.allAuth).then(function(response){
+                if(response.data.status == "success"){
+                    $scope.auth = {
+                        "account": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "driver": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "truck": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "zone": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "area": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A',
+                            "collection": {
+                                "add": 'A',
+                                "edit": 'A'
+                            }
+                        },
+                        "bin": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "acr": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "database": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "inventory": {
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "authorization": {
+                            "view": 'A'
+                        },
+                        "formAuthorization": {
+                            "view": 'A'
+                        },
+                        "complaintlist": {
+                            "view": 'A'
+                        },
+                        "transactionLog": {
+                            "view": 'A'
+                        },
+                        "reporting":{
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A',
+                            "export": 'A'
+                        },
+                        "delivery":{
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
+                        "damagedlost":{
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        }
+                    };
+                }
+            });
+        }else if($scope.checkall == true){
+            $scope.checkall = false;
+            $scope.allAuth = {
+                "name":$scope.role.oriname,
+                "value": $scope.checkall
+            }
+            $http.post('/setAllAuth',$scope.allAuth).then(function(response){
+                if(response.data.status == "success"){
+                    $scope.auth = {
+                        "account": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "driver": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "truck": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "zone": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "area": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I',
+                            "collection": {
+                                "add": 'I',
+                                "edit": 'I'
+                            }
+                        },
+                        "bin": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "acr": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "database": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "inventory": {
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "authorization": {
+                            "view": 'I'
+                        },
+                        "formAuthorization": {
+                            "view": 'I'
+                        },
+                        "complaintlist": {
+                            "view": 'I'
+                        },
+                        "transactionLog": {
+                            "view": 'I'
+                        },
+                        "reporting":{
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I',
+                            "export": 'I'
+                        },
+                        "delivery":{
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
+                        "damagedlost":{
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        }
+                    };
+                }
+            });
+        }
+        
     }
 
 });

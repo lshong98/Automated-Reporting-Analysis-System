@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'trienekens05';
+var DB_NAME = '';
 
 // // Config used for socket connection, important for Google Cloud hosting
  var config = {
@@ -275,6 +275,39 @@ emitter.on('defaultUser', function () {
             }
             console.log('Administrator generated...');
         });
+        }
+    });
+    
+    //create default manager
+    var roleIDmgr = "ATH" + roleFormat + "0002";
+    var sqlmgr = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleIDmgr + "', 'Manager', '" + formatted + "', 'A')";
+    db.query(sqlmgr, function (err, result) {
+        if (err) {
+            throw err;
+        }else{
+            console.log("Manager Role generated");
+        }
+    });
+    
+    //create default reporting officer
+    var roleIDro = "ATH" + roleFormat + "0003";
+    var sqlro = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleIDro + "', 'Reporting Officer', '" + formatted + "', 'A')";
+        db.query(sqlro, function (err, result) {
+        if (err) {
+            throw err;
+        }else{
+            console.log("Reporting Officer Role generated");
+        }
+    });
+    
+    //create default driver
+    var roleIDdrv = "ATH" + roleFormat + "0004";
+    var sqldrv = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleIDdrv + "', 'Driver', '" + formatted + "', 'A')";
+    db.query(sqldrv, function (err, result) {
+        if (err) {
+            throw err;
+        }else{
+            console.log("Driver Role generated");
         }
     });
 }); // Complete
