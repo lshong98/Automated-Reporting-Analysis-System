@@ -389,15 +389,31 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                             scope.t = angular.copy(storeDataService.truck[index]);
                         }
                     }
+<<<<<<< HEAD
 //                });
 //                
 //                $.each(scope.truckList, function (index, value) {
+=======
+                });
+                var existActive = false, existInactive = false;
+                $.each(scope.truckListActive, function(index, value){
+                   if(scope.truckListActive[index].id == scope.thisTruck.id) {
+                       existActive = true;
+                   }
+                });
+                $.each(scope.truckListInactive, function(index, value){
+                   if(scope.truckListInactive[index].id == scope.thisTruck.id) {
+                       existInactive = true;
+                   }
+                });
+                $.each(scope.truckList, function (index, value) {
+>>>>>>> a19f205e71ba269ae2eecc4cde93b9cd41f578a1
                     if (scope.thisTruck.id == value.id) {
-                        if (scope.t.status == 'ACTIVE') {
+                        if (scope.t.status == 'ACTIVE' && existInactive) {
                             scope.truckListActive.push(scope.t);
                             scope.truckListInactive.splice(index, 1);
                             scope.$parent.truckList = angular.copy(scope.truckListInactive);
-                        } else {
+                        } else if(scope.t.status == 'INACTIVE' && existActive){
                             scope.truckListInactive.push(scope.t);
                             scope.truckListActive.splice(index, 1);
                             scope.$parent.truckList = angular.copy(scope.truckListActive);
@@ -434,23 +450,30 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                         } else {
                             scope.z = angular.copy(storeDataService.zone[index]);
                         }
-                        
-                        if(scope.z.status == 'ACTIVE'){
+                    }
+                });
+                
+                var existActive = false, existInactive = false;
+                $.each(scope.zoneListActive, function(index, value){
+                   if(scope.zoneListActive[index].id == scope.thisZone.id) {
+                       existActive = true;
+                   }
+                });
+                $.each(scope.zoneListInactive, function(index, value){
+                   if(scope.zoneListInactive[index].id == scope.thisZone.id) {
+                       existInactive = true;
+                   }
+                });
+                $.each(scope.zoneList, function (index, value) {
+                    if (scope.thisZone.id == value.id) {
+                        if(scope.z.status == 'ACTIVE' && existInactive){
                             scope.zoneListActive.push(scope.z);
-                            for(var i = 0; i<scope.zoneListInactive.length; i++){
-                                if(scope.zoneListInactive[i].id == scope.z.id){
-                                    scope.zoneListInactive.splice(i, 1);
-                                    scope.$parent.zoneList = angular.copy(scope.zoneListInactive);
-                                }
-                            }
-                        }else{
+                            scope.zoneListInactive.splice(index, 1);
+                            scope.$parent.zoneList = angular.copy(scope.zoneListInactive);
+                        }else if(scope.z.status == 'INACTIVE' && existActive){
                             scope.zoneListInactive.push(scope.z);
-                            for(var i = 0; i<scope.zoneListActive.length; i++){
-                                if(scope.zoneListActive[i].id == scope.z.id){
-                                    scope.zoneListActive.splice(i, 1);
-                                    scope.$parent.zoneList = angular.copy(scope.zoneListActive);
-                                }
-                            }
+                            scope.zoneListActive.splice(index, 1);
+                            scope.$parent.zoneList = angular.copy(scope.zoneListActive);
                         }
                     }
                 });
@@ -510,13 +533,24 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                     }
                 });
                 
+                var existActive = false, existInactive = false;
+                $.each(scope.binListActive, function(index, value){
+                   if(scope.binListActive[index].id == scope.thisBin.id) {
+                       existActive = true;
+                   }
+                });
+                $.each(scope.binListInactive, function(index, value){
+                   if(scope.binListInactive[index].id == scope.thisBin.id) {
+                       existInactive = true;
+                   }
+                });
                 $.each(scope.binList, function (index, value) {
                     if (scope.thisBin.id == value.id) {
-                        if (scope.b.status == 'ACTIVE') {
+                        if (scope.b.status == 'ACTIVE' && existInactive) {
                             scope.binListActive.push(scope.b);
                             scope.binListInactive.splice(index, 1);
                             scope.$parent.binList = angular.copy(scope.binListInactive);
-                        } else {
+                        } else if(scope.b.status == 'INACTIVE' && existActive){
                             scope.binListInactive.push(scope.b);
                             scope.binListActive.splice(index, 1);
                             scope.$parent.binList = angular.copy(scope.binListActive);
