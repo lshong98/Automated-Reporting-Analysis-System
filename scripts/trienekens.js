@@ -530,23 +530,25 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                     }
                 });
                 
-                var existActive = false, existInactive = false;
-                $.each(scope.binListActive, function(index, value){
-                   if(scope.binListActive[index].id == scope.thisBin.id) {
-                       existActive = true;
-                   }
-                });
-                $.each(scope.binListInactive, function(index, value){
-                   if(scope.binListInactive[index].id == scope.thisBin.id) {
-                       existInactive = true;
-                   }
-                });
+//                var existActive = false, existInactive = false;
+//                $.each(scope.binListActive, function(index, value){
+//                   if(scope.binListActive[index].id == scope.thisBin.id) {
+//                       existActive = true;
+//                   }
+//                });
+//                $.each(scope.binListInactive, function(index, value){
+//                   if(scope.binListInactive[index].id == scope.thisBin.id) {
+//                       existInactive = true;
+//                   }
+//                });
                 $.each(scope.binList, function (index, value) {
                     if (scope.thisBin.id == value.id) {
-                        if (scope.b.status == 'ACTIVE' && scope.$parent.statusList !== true) {
+                        if (scope.b.status == 'ACTIVE') {
+                            if (scope.$parent.statusList !== true) {
                                 scope.binListActive.push(scope.b);
                                 scope.binListInactive.splice(index, 1);
                                 scope.$parent.binList = angular.copy(scope.binListInactive);
+                            }
                         } else {
                             if (scope.$parent.statusList !== false) {
                                 scope.binListInactive.push(scope.b);
@@ -2520,6 +2522,11 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     $http.get('/getAllBinCenter', $scope.currentStatus).then(function(response) {
         $scope.searchBinFilter = '';
         $scope.binList = response.data;
+        
+        $.each($scope.binList, function (index, value) {
+            $scope.binList[index].areacode = $scope.binList[index].area + ',' + $scope.binList[index].areaCode;
+        });
+        
         storeDataService.bin = angular.copy($scope.binList);
         $scope.filterBinList = [];
 
@@ -2592,7 +2599,8 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             var aid = area.split(",")[0];
             var acode = area.split(",")[1];
             $scope.bin.area = aid;
-            $scope.bin.areaCode = acode
+            $scope.bin.areaCode = acode;
+            console.log($scope.bin);
             $http.post('/addBinCenter', $scope.bin).then(function(response) {
                 var data = response.data;
                 var newBinID = data.details.binID;
