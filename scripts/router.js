@@ -368,7 +368,14 @@ app.config(function($routeProvider, $locationProvider){
         controllerAs:'damagedLost'
     })
     .when('/boundary', {
-        templateUrl: '/boundary'
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/boundary');
+            }
+        },
+        templateUrl: '/boundary',
+        controller: 'boundaryController',
+        controllerAs: 'boundary'
     })
     .when('/logout', {
         resolve: {

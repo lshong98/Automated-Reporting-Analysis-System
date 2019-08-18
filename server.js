@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 var Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = ;
+var SVR_PORT = 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -36,6 +36,7 @@ var binInventoryManagement = require('./custom_modules/bin-inventory');
 var chatManagement = require('./custom_modules/chat-management');
 var deliveryManagement = require('./custom_modules/delivery-management');
 var damagedLostBin = require('./custom_modules/damaged-lost-bin');
+var boundaryManagement = require('./custom_modules/boundary-management');
 
 users = [];
 connections = [];
@@ -734,3 +735,4 @@ app.use('/', chatManagement);
 app.use('/', deliveryManagement);
 app.use('/', damagedLostBin);
 app.use('/', formAuthorization);
+app.use('/', boundaryManagement);

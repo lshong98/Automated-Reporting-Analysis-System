@@ -11,8 +11,8 @@ var emitter = new EventEmitter();
 // var DB_NAME = 'trienekens_test';
  
 // Local database access
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
 var DB_NAME = '';
 
@@ -114,7 +114,9 @@ emitter.on('createTable', function () {
         "CREATE TABLE tbllog (transactionID int auto_increment, date datetime, staffID varchar(15), authorizedBy varchar(15), action varchar(15), description mediumtext, rowID varchar(15), tblName varchar(50), primary key (transactionID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblformauthorization (formentryID int auto_increment, creationDateTime dateTime, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), status char(1), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
-        "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID INT, creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))"
+        "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID INT, creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",
+        "CREATE TABLE tblboundary (boundaryID VARCHAR(15), color CHAR(6), creationDateTime DATETIME, status CHAR(1), PRIMARY KEY(boundaryID))",
+        "CREATE TABLE tblboundaryplot (boundaryID VARCHAR(15), lat DOUBLE(10, 7), lng DOUBLE(10, 7), status CHAR(1), PRIMARY KEY(boundaryID, lat, lng), FOREIGN KEY(boundaryID) REFERENCES tblboundary(boundaryID))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -194,7 +196,7 @@ emitter.on('defaultUser', function () {
     }
     
     var dt = dateTime.create();
-    var formatted = dt.format('Y-m-d H:M:S'); 
+    var formatted = dt.format('Y-m-d H:M:S');
     var roleFormat = dt.format('Ymd');
     
     var roleID = "ATH" + roleFormat + "0001";
