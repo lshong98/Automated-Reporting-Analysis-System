@@ -121,15 +121,19 @@
     </div>
 </div>
 
-<div class="row" style="margin-top: 10px;">
-    <div class="col-md-12">
+<div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+    <div class="col-md-6">
+        <button class="btn btn-danger" ng-csv="inventoryRecordList" csv-header="getDataHeader()" filename="{{filename}}" field-separator="{{separator}}" decimal-separator="{{decimalSeparator}}">Export CSV</button>
+       
+    </div>
+    <div class="col-md-6">
         <div class="form-inline" style="float: right">
+            
             <h6 style="margin-right: 20px;">Month: </h6>
             <select ng-change="" class="form-control month-select" ng-model="yearMonth" ng-options="(ym | date: 'yyyy - MMM') for ym in yearMonths">
                 <option value="">Select Month</option>
             </select>
             
-        <button class="btn btn-danger"ng-click="exportCSVFile()">Export</button>
         </div>
     </div>
 </div>

@@ -69,6 +69,13 @@
 
 .card-counter .count-today-area{
     position: absolute;
+    right: 160px;
+    top: 15px;
+    font-size: 13px;
+    display: block;
+}
+.card-counter .count-unsubmitted{
+    position: absolute;
     right: 35px;
     top: 15px;
     font-size: 13px;

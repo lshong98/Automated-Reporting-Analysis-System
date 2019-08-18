@@ -38,7 +38,7 @@ app.get('/getAllArea', function (req, res) {
 // Used in comboBox - Zone with area
 app.get('/getAreaList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS code FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -46,6 +46,18 @@ app.get('/getAreaList', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+app.get('/getAreaCodeList', function(req,res){
+    'use strict';
+    var sql = "SELECT CONCAT(tblzone.zoneCode, tblarea.areaCode) AS code, tblarea.areaID FROM tblzone JOIN tblarea ON tblzone.zoneID = tblarea.areaID";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log(result);
+        res.json(result);
+    });    
+});
 
 // Update specific area information
 app.post('/updateArea', function (req, res) {

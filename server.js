@@ -4,7 +4,7 @@ var sanitizer = require('sanitizer');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var path = require('path');
+var path = require('path'); 
 var mysql = require('mysql');
 var bcrypt = require('bcryptjs');
 var EventEmitter = require('events');
@@ -188,7 +188,7 @@ app.post('/getTodayAreaCount', function (req, res) {
 app.post('/getUnsubmitted', function (req, res) {
     'use strict';
     
-    var sql = "SELECT DISTINCT tblarea.areaName AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -200,7 +200,7 @@ app.post('/getUnsubmitted', function (req, res) {
 app.post('/getSubmitted', function (req, res) {
     'use strict';
     
-    var sql = "SELECT DISTINCT tblarea.areaName AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE()";
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE()";
     
     database.query(sql, function (err, result) {
         if (err) {
