@@ -131,6 +131,21 @@ app.post('/getReportBinCenter', function(req,res){
         res.json(result);
     });
 });
+
+app.post('/getReportingStaff',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT tblstaff.staffName FROM tblstaff JOIN tblarea ON tblstaff.staffID = tblarea.staffID WHERE tblarea.areaID = '" + req.body.areaID + "' ";
+    console.log(req.body);
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 //app.post('/getReportACR', function (req, res) {
 //    'use strict';
 //    
@@ -234,7 +249,7 @@ app.post('/getInitStatus',function(req,res){
 app.post('/getInitDriver',function(req,res){
     'use strict';
     
-    var sql = " SELECT tblstaff.staffID AS 'driver' FROM tblstaff JOIN tbltruck ON tblstaff.staffID = tbltruck.staffID WHERE tbltruck.truckID = '" + req.body.truckID + "'";
+    var sql = " SELECT tblstaff.staffID AS 'driver' FROM tblstaff JOIN tblarea ON tblstaff.staffID = tblarea.driverID WHERE tblarea.areaID = '" + req.body.area + "' ";
     
     database.query(sql, function (err, result) {
         if (err) {

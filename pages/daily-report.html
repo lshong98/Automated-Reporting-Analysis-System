@@ -192,7 +192,16 @@ textarea {
 <div class="row">
    <div class="col-md-6">
         <!--<div class="target"></div>-->
-        <input type="file" data-ng-model="report.ifleetImg" accept="image/*" app-filereader>
+       <div class="row">
+           <div class= col-md-6><input type="file" data-ng-model="report.ifleetImg" accept="image/*" app-filereader></div>
+<!--           <div class= col-md-6><button data-ng-click="cancelImg()">Cancel Image</button></div>-->
+       </div>
+       <div class="row">
+           <div class="col-md-12">
+               <img id="myImg" src="{{report.ifleetImg}}" style="width:650px; height: 500px;" />
+           </div>
+       </div>
+
     </div>
     <div class="col-md-6">
         <div id="googleMap"></div>
