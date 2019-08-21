@@ -389,15 +389,28 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                             scope.t = angular.copy(storeDataService.truck[index]);
                         }
                     }
+//                });
+//                
+//                $.each(scope.truckList, function (index, value) {
                 });
-                
+                var existActive = false, existInactive = false;
+                $.each(scope.truckListActive, function(index, value){
+                   if(scope.truckListActive[index].id == scope.thisTruck.id) {
+                       existActive = true;
+                   }
+                });
+                $.each(scope.truckListInactive, function(index, value){
+                   if(scope.truckListInactive[index].id == scope.thisTruck.id) {
+                       existInactive = true;
+                   }
+                });
                 $.each(scope.truckList, function (index, value) {
                     if (scope.thisTruck.id == value.id) {
-                        if (scope.t.status == 'ACTIVE') {
+                        if (scope.t.status == 'ACTIVE' && existInactive) {
                             scope.truckListActive.push(scope.t);
                             scope.truckListInactive.splice(index, 1);
                             scope.$parent.truckList = angular.copy(scope.truckListInactive);
-                        } else {
+                        } else if(scope.t.status == 'INACTIVE' && existActive){
                             scope.truckListInactive.push(scope.t);
                             scope.truckListActive.splice(index, 1);
                             scope.$parent.truckList = angular.copy(scope.truckListActive);
@@ -434,23 +447,30 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                         } else {
                             scope.z = angular.copy(storeDataService.zone[index]);
                         }
-                        
-                        if(scope.z.status == 'ACTIVE'){
+                    }
+                });
+                
+                var existActive = false, existInactive = false;
+                $.each(scope.zoneListActive, function(index, value){
+                   if(scope.zoneListActive[index].id == scope.thisZone.id) {
+                       existActive = true;
+                   }
+                });
+                $.each(scope.zoneListInactive, function(index, value){
+                   if(scope.zoneListInactive[index].id == scope.thisZone.id) {
+                       existInactive = true;
+                   }
+                });
+                $.each(scope.zoneList, function (index, value) {
+                    if (scope.thisZone.id == value.id) {
+                        if(scope.z.status == 'ACTIVE' && existInactive){
                             scope.zoneListActive.push(scope.z);
-                            for(var i = 0; i<scope.zoneListInactive.length; i++){
-                                if(scope.zoneListInactive[i].id == scope.z.id){
-                                    scope.zoneListInactive.splice(i, 1);
-                                    scope.$parent.zoneList = angular.copy(scope.zoneListInactive);
-                                }
-                            }
-                        }else{
+                            scope.zoneListInactive.splice(index, 1);
+                            scope.$parent.zoneList = angular.copy(scope.zoneListInactive);
+                        }else if(scope.z.status == 'INACTIVE' && existActive){
                             scope.zoneListInactive.push(scope.z);
-                            for(var i = 0; i<scope.zoneListActive.length; i++){
-                                if(scope.zoneListActive[i].id == scope.z.id){
-                                    scope.zoneListActive.splice(i, 1);
-                                    scope.$parent.zoneList = angular.copy(scope.zoneListActive);
-                                }
-                            }
+                            scope.zoneListActive.splice(index, 1);
+                            scope.$parent.zoneList = angular.copy(scope.zoneListActive);
                         }
                     }
                 });
@@ -510,18 +530,34 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                     }
                 });
                 
+//                var existActive = false, existInactive = false;
+//                $.each(scope.binListActive, function(index, value){
+//                   if(scope.binListActive[index].id == scope.thisBin.id) {
+//                       existActive = true;
+//                   }
+//                });
+//                $.each(scope.binListInactive, function(index, value){
+//                   if(scope.binListInactive[index].id == scope.thisBin.id) {
+//                       existInactive = true;
+//                   }
+//                });
                 $.each(scope.binList, function (index, value) {
                     if (scope.thisBin.id == value.id) {
                         if (scope.b.status == 'ACTIVE') {
-                            scope.binListActive.push(scope.b);
-                            scope.binListInactive.splice(index, 1);
-                            scope.$parent.binList = angular.copy(scope.binListInactive);
+                            if (scope.$parent.statusList !== true) {
+                                scope.binListActive.push(scope.b);
+                                scope.binListInactive.splice(index, 1);
+                                scope.$parent.binList = angular.copy(scope.binListInactive);
+                            }
                         } else {
-                            scope.binListInactive.push(scope.b);
-                            scope.binListActive.splice(index, 1);
-                            scope.$parent.binList = angular.copy(scope.binListActive);
+                            if (scope.$parent.statusList !== false) {
+                                scope.binListInactive.push(scope.b);
+                                scope.binListActive.splice(index, 1);
+                                scope.$parent.binList = angular.copy(scope.binListActive);
+                            }
                         }
                     }
+                    return false;
                 });
             });
         };
@@ -952,7 +988,7 @@ app.controller('managerController', function($scope, $http, $filter) {
         $scope.todayAreaCount = response.data[0].todayAreaCount;
     });
     $http.get('/getCount').then(function (response) {
-//        console.log(response.data);
+        //console.log(response.data);
         var data = response.data;
         
         $scope.zoneCount = data.zone;
@@ -964,6 +1000,7 @@ app.controller('managerController', function($scope, $http, $filter) {
         $scope.complaintCount = data.complaint;
         $scope.reportCompleteCount = data.completeReport;
         $scope.reportIncompleteCount = data.incompleteReport;
+        $scope.unsubmittedCount = $scope.todayAreaCount - $scope.reportCompleteCount + $scope.reportIncompleteCount;
     });
     
     $http.post('/getUnsubmitted', {"day":$scope.day}).then(function (response){
@@ -1335,7 +1372,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
         });
 
         $scope.searchArea = function(area) {
-            return (area.code + area.name + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
+            return (area.code + area.name + area.staffName + area.status).toUpperCase().indexOf($scope.searchAreaFilter.toUpperCase()) >= 0;
         }
 
         $scope.areaListActive = [];
@@ -1568,20 +1605,29 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
     });
 
     $scope.addCollection = function() {
-        if ($scope.collection.add != "") {
-            $http.post('/addCollection', $scope.collection).then(function(response) {
-                var data = response.data;
+        if($scope.collection.address == ""){
+//            angular.element('body').overhang({
+//                "type": "error",
+//                "message": "Address Cannot Be Blank"
+//            });
+            $scope.notify("error", "Address Cannot Be Blank");
+        }else{
+            if ($scope.collection.add != "") {
+                $http.post('/addCollection', $scope.collection).then(function(response) {
+                    var data = response.data;
 
-                if (data.status == "success") {
-                    $scope.collectionList.push({ "id": data.details.id, "address": $scope.collection.address });
-                    storeDataService.collection = angular.copy($scope.collectionList);
-                    $scope.collection.address = "";
-                }
-                angular.element('body').overhang({
-                    "status": data.status,
-                    "message": data.message
+                    if (data.status == "success") {
+                        $scope.collectionList.push({ "id": data.details.id, "address": $scope.collection.address });
+                        storeDataService.collection = angular.copy($scope.collectionList);
+                        $scope.collection.address = "";
+                    }
+//                    angular.element('body').overhang({
+//                        "status": data.status,
+//                        "message": data.message
+//                    });
+                    $scope.notify(data.status, data.message);
                 });
-            });
+            }
         }
     };
 
@@ -1595,17 +1641,38 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
         });
         concatDays = concatDays.slice(0, -1);
         $scope.area.frequency = concatDays;
-        $http.post('/updateArea', $scope.area).then(function(response) {
-            var data = response.data;
-            if (data.status === "success") {
+        //console.log($scope.collectionList.length);
+        if($scope.area.frequency == "" || $scope.collectionList.length == 0){
+            if($scope.area.frequency == "" && $scope.collectionList.length == 0){
                 angular.element('body').overhang({
-                    type: data.status,
-                    message: data.message
+                    "type": "error",
+                    "message": "Please Fill In Collection Frequency And Area Collection "
+                });  
+            }else if($scope.area.frequency == ""){
+                angular.element('body').overhang({
+                    "type": "error",
+                    "message": "Please Fill In Collection Frequency"
+                });  
+            }else if($scope.collectionList.length == 0){
+                angular.element('body').overhang({
+                    "type": "error",
+                    "message": "Please Fill In Area Collection"
                 });
-                window.location.href = '#/area-management';
             }
+        }else{
+            $http.post('/updateArea', $scope.area).then(function(response) {
+                var data = response.data;
+                if (data.status === "success") {
+                    angular.element('body').overhang({
+                        type: data.status,
+                        message: data.message
+                    });
+                    window.location.href = '#/area-management';
+                }
 
-        });
+            }); 
+        }
+
         
 //        var tamanArray = $scope.taman.split(',');
 //        $scope.updateTamanObj = {
@@ -1730,6 +1797,7 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
         $scope.staffList = $filter('orderBy')($scope.staffList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
+
 });
 
 app.controller('specificAccController', function($scope, $http, $routeParams, $filter, storeDataService) {
@@ -1784,6 +1852,10 @@ app.controller('specificAccController', function($scope, $http, $routeParams, $f
             }
         });
     };
+    
+    $scope.backPage = function(){
+        window.location.href = "#/account-management"
+    }
 });
 
 app.controller('errorController', function($scope, $window) {
@@ -2090,8 +2162,10 @@ app.controller('roleController', function($scope, $http, $filter) {
 
 app.controller('specificAuthController', function($scope, $http, $routeParams, storeDataService) {
     $scope.role = {
-        "name": $routeParams.auth
+        "name": $routeParams.auth,
+        "oriname" : $routeParams.auth
     };
+    $scope.checkall = false;
     $scope.auth = {
         "account": {
             "create": 'I',
@@ -2214,6 +2288,206 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             storeDataService.show = angular.copy($scope.auth);
         });
     }
+    
+    $scope.updateRoleName = function(){
+        $http.post('/updateRoleName',$scope.role).then(function(response){
+            if(response.data.status == "success"){
+                $scope.role.oriname = $scope.role.name;
+                angular.element('body').overhang({
+                    "type": response.data.status,
+                    "message": response.data.message
+                });
+
+            }else{
+                console.log("fail");
+                angular.element('body').overhang({
+                    "type": response.data.status,
+                    "message":response.data.message
+                });
+            }
+        });
+    }
+    
+    $scope.checkAllAuth = function(){
+        if($scope.checkall == false){
+            $scope.checkall = true;
+            $scope.allAuth = {
+                "name":$scope.role.oriname,
+                "value": $scope.checkall
+            }
+            $http.post('/setAllAuth',$scope.allAuth).then(function(response){
+                if(response.data.status == "success"){
+                    $scope.auth = {
+                        "account": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "driver": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "truck": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "zone": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "area": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A',
+                            "collection": {
+                                "add": 'A',
+                                "edit": 'A'
+                            }
+                        },
+                        "bin": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "acr": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "database": {
+                            "create": 'A',
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "inventory": {
+                            "edit": 'A',
+                            "view": 'A'
+                        },
+                        "authorization": {
+                            "view": 'A'
+                        },
+                        "formAuthorization": {
+                            "view": 'A'
+                        },
+                        "complaintlist": {
+                            "view": 'A'
+                        },
+                        "transactionLog": {
+                            "view": 'A'
+                        },
+                        "reporting":{
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A',
+                            "export": 'A'
+                        },
+                        "delivery":{
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
+                        "damagedlost":{
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        }
+                    };
+                }
+            });
+        }else if($scope.checkall == true){
+            $scope.checkall = false;
+            $scope.allAuth = {
+                "name":$scope.role.oriname,
+                "value": $scope.checkall
+            }
+            $http.post('/setAllAuth',$scope.allAuth).then(function(response){
+                if(response.data.status == "success"){
+                    $scope.auth = {
+                        "account": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "driver": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "truck": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "zone": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "area": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I',
+                            "collection": {
+                                "add": 'I',
+                                "edit": 'I'
+                            }
+                        },
+                        "bin": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "acr": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "database": {
+                            "create": 'I',
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "inventory": {
+                            "edit": 'I',
+                            "view": 'I'
+                        },
+                        "authorization": {
+                            "view": 'I'
+                        },
+                        "formAuthorization": {
+                            "view": 'I'
+                        },
+                        "complaintlist": {
+                            "view": 'I'
+                        },
+                        "transactionLog": {
+                            "view": 'I'
+                        },
+                        "reporting":{
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I',
+                            "export": 'I'
+                        },
+                        "delivery":{
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
+                        "damagedlost":{
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        }
+                    };
+                }
+            });
+        }
+        
+    }
 
 });
 
@@ -2226,7 +2500,8 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         "id": '',
         "name": '',
         "location": '',
-        "area": ''
+        "area": '',
+        "areaCode": ''
     };
 
     $scope.pagination = angular.copy(storeDataService.pagination);
@@ -2247,11 +2522,16 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     $http.get('/getAllBinCenter', $scope.currentStatus).then(function(response) {
         $scope.searchBinFilter = '';
         $scope.binList = response.data;
+        
+        $.each($scope.binList, function (index, value) {
+            $scope.binList[index].areacode = $scope.binList[index].area + ',' + $scope.binList[index].areaCode;
+        });
+        
         storeDataService.bin = angular.copy($scope.binList);
         $scope.filterBinList = [];
 
         $scope.searchBin = function(bin) {
-            return (bin.id + bin.name + bin.location + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
+            return (bin.id + bin.name + bin.location + bin.areaCode + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
         };
 
         $scope.binListActive = [];
@@ -2288,11 +2568,13 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
+            var code = value.code.split(",");
             var area = [];
             $.each(areaID, function(index, value) {
                 area.push({
                     "id": areaID[index],
-                    "name": areaName[index]
+                    "name": areaName[index],
+                    "code": code[index]
                 });
             });
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
@@ -2302,35 +2584,46 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         });
     });
 
+
     function renderSltPicker() {
         angular.element('.selectpicker').selectpicker('refresh');
         angular.element('.selectpicker').selectpicker('render');
     }
 
     $scope.addBin = function() {
-        $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        console.log($scope.bin);
-        $http.post('/addBinCenter', $scope.bin).then(function(response) {
-            var data = response.data;
-            var newBinID = data.details.binID;
+        if($scope.bin.name == "" || $scope.bin.name == null || $scope.bin.location == "" ||$scope.bin.location == null || $scope.bin.areaconcat == "" || $scope.bin.areaconcat == null){
+            $scope.notify("error", "Cannot Be Blank");
+        }else{
+            $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            var area = $scope.bin.areaconcat;
+            var aid = area.split(",")[0];
+            var acode = area.split(",")[1];
+            $scope.bin.area = aid;
+            $scope.bin.areaCode = acode;
+            console.log($scope.bin);
+            $http.post('/addBinCenter', $scope.bin).then(function(response) {
+                var data = response.data;
+                var newBinID = data.details.binID;
 
-            $scope.notify(data.status, data.message);
-            if (data.status === "success") {
-                $scope.binList.push({
-                    "id": newBinID,
-                    "name": $scope.bin.name,
-                    "location": $scope.bin.location,
-                    "area": $scope.bin.area,
-                    "status": 'ACTIVE'
-                });
-                $scope.bin.id = newBinID;
-                socket.emit('create new bin', $scope.bin);
-                storeDataService.bin = angular.copy($scope.binList);
-                $scope.filterBinList = angular.copy($scope.binList);
-                angular.element('#createBin').modal('toggle');
-                $scope.totalItems = $scope.filterBinList.length;
-            }
-        });
+                $scope.notify(data.status, data.message);
+                if (data.status === "success") {
+                    $scope.binList.push({
+                        "id": newBinID,
+                        "name": $scope.bin.name,
+                        "location": $scope.bin.location,
+                        "area": $scope.bin.area,
+                        "areaCode": $scope.bin.areaCode,
+                        "status": 'ACTIVE'
+                    });
+                    $scope.bin.id = newBinID;
+                    socket.emit('create new bin', $scope.bin);
+                    storeDataService.bin = angular.copy($scope.binList);
+                    $scope.filterBinList = angular.copy($scope.binList);
+                    angular.element('#createBin').modal('toggle');
+                    $scope.totalItems = $scope.filterBinList.length;
+                }
+            });
+        }
     }
 
     socket.on('append bin list', function(data) {
@@ -2339,6 +2632,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             "name": data.name,
             "location": data.location,
             "area": data.area,
+            "areaCode": $scope.bin.areaCode,
             "status": data.status
         });
         $scope.filterBinList = angular.copy($scope.binList);
@@ -2350,6 +2644,128 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         $scope.binList = $filter('orderBy')($scope.binList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
+});
+
+app.controller('boundaryController', function ($scope, $http, $filter, storeDataService) {
+    'use strict';
+    
+    var geocoder, map, all_overlays = [], polygons = [], polygonID = 1;
+    
+    map = new google.maps.Map(
+        document.getElementById("map_canvas"), {
+            center: new google.maps.LatLng(1.5503052, 110.3394602),
+            zoom: 13,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapTypeControl: false,
+            panControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+            disableDefaultUI: true,
+            editable: false
+        });
+    
+    var polyOptions = {
+        id: polygonID,
+        strokeWeight: 2,
+        strokeColor: '#FF1493',
+        fillColor: '#FF1493',
+        fillOpacity: 0.45,
+        editable: true
+    };
+    
+    var selectedShape;
+    
+    $('.jscolor').on('blur', function (e) {
+        setColor(e.target.value);
+    });
+
+    var drawingManager = new google.maps.drawing.DrawingManager({
+        drawingMode: google.maps.drawing.OverlayType.POLYGON,
+        drawingControl: false,
+        markerOptions: {
+            draggable: true
+        },
+        polygonOptions: polyOptions
+    });
+
+    $('#enablePolygon').click(function() {
+        setColor($('.jscolor').val());
+        drawingManager.setMap(map);
+        polyOptions.id = polygonID;
+        drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+    });
+    
+    $('#resetPolygon').click(function() {
+        if (selectedShape) {
+            selectedShape.setMap(null);
+            $.each(polygons, function (index, value) {
+                if (value.id === selectedShape.id) {
+                    polygons.splice(index, 1);
+                    return false;
+                }
+            });
+        }
+        drawingManager.setMap(null);
+        $('#showonPolygon').hide();
+        $('#resetPolygon').hide();
+    });
+    
+    google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+        var latLngs = [];
+        var color = $('#boundaryColor').val();
+//        var area = google.maps.geometry.spherical.computeArea(selectedShape.getPath());
+//        $('#areaPolygon').html(area.toFixed(2)+' Sq meters');
+        $('#resetPolygon').show();
+        $.each(polygon.latLngs.j[0].j, function (index, value) {
+            latLngs.push({"lat": value.lat(), "lng": value.lng()});
+        });
+        polygons.push({"id": polygon.id, "latLngs": latLngs, "color": color});
+        polygonID += 1;
+    });
+    
+    function clearSelection() {
+        if (selectedShape) {
+            selectedShape.setEditable(false);
+            selectedShape = null;
+            $('#resetPolygon').hide();
+        }
+    }
+
+    function setSelection(shape) {
+        clearSelection();
+        selectedShape = shape;
+        shape.setEditable(true);
+        $('#resetPolygon').show();
+    }
+    
+    function setColor(color) {
+        color = '#' + color;
+        polyOptions.fillColor = color;
+        polyOptions.strokeColor = color;
+    }
+
+    google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
+        all_overlays.push(e);
+        if (e.type != google.maps.drawing.OverlayType.MARKER) {
+            // Switch back to non-drawing mode after drawing a shape.
+            drawingManager.setDrawingMode(null);
+
+            // Add an event listener that selects the newly-drawn shape when the user
+            // mouses down on it.
+            var newShape = e.overlay;
+            newShape.type = e.type;
+            google.maps.event.addListener(newShape, 'click', function() {
+                setSelection(newShape);
+            });
+            setSelection(newShape);
+        }
+    });
+    
+    $('#btnSaveBoundary').click(function (e) {
+        $http.post('/boundary/create', {"polygons": polygons}).then(function (response) {
+            console.log(response.data);
+        });
+    });
 });
 
 //-----------Check Line------------------

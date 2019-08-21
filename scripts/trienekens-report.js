@@ -90,6 +90,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         "status" : ''
     };
     
+    
     angular.element('.btnShape').click(function () {
         $scope.shape = angular.element(this).data('shape');
     });
@@ -132,11 +133,11 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
             $scope.report.truck = "";
         }else{
             $scope.report.truck = response.data[0].truckID;
-            
-            $http.post('/getInitDriver', {"truckID" : $scope.report.truck}).then(function (response){
-                $scope.report.driver = response.data[0].driver;
-            });
         }
+    });
+    
+    $http.post('/getInitDriver', {"area" : $scope.report.areaCode}).then(function (response){
+        $scope.report.driver = response.data[0].driver;
     });
     
     $http.get('/getDriverList').then(function (response) {
@@ -285,6 +286,10 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         });
     };
     
+//    $scope.cancelImg = function(){
+//        $scope.report.ifleetImg = "";
+//    };
+    
     (function($) {
         var defaults;
         $.event.fix = (function(originalFix) {
@@ -408,6 +413,8 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
             alert("Unable to copy text");
         }
     }
+    
+
 });
 
 app.controller('reportingController', function ($scope, $http, $filter, $window, storeDataService) {
@@ -588,7 +595,14 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
                 }
             });
         });
+        
+        $http.post('/getReportingStaff', $scope.area).then(function (response){
+            $scope.thisReport.reportingStaff = response.data[0].staffName;
+        });
     });
+    
+
+    
     
 //    $http.post('/getReportACR', $scope.report).then(function (response) {
 //        if(response.data.length != 0){

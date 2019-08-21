@@ -57,6 +57,41 @@ app.post('/setAuth', function (req, res) {
     });
 }); // Complete
 
+app.post('/setAllAuth',function (req, res){
+    'use strict';
+    
+    var sqlgetposid = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.name + "' LIMIT 0, 1";
+    console.log(req.body);
+    database.query(sqlgetposid, function(err, result){
+        if(err){
+            throw err;
+        }else{
+            
+            if(req.body.value == true){
+                var sqlupdtacs = "UPDATE tblaccess SET status = 'A' WHERE positionID = '" + result[0].id + "'";
+
+                 database.query(sqlupdtacs, function(err2, result2){
+                     if(err2){
+                         throw err2;
+                     }else{
+                        res.json({"status": "success"});
+                     }
+                 });
+            }else if(req.body.value == false){
+                var sqlupdtacs = "UPDATE tblaccess SET status = 'I' WHERE positionID = '" + result[0].id + "'";
+
+                 database.query(sqlupdtacs, function(err2, result2){
+                     if(err2){
+                         throw err2;
+                     }else{
+                        res.json({"status": "success"});
+                     }
+                 });
+            }
+        }
+    });
+});
+
 // Used in comboBox - Role
 app.get('/getPositionList', function (req, res) {
     'use strict';
@@ -85,5 +120,19 @@ app.post('/getAllAuth', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+app.post('/updateRoleName', function(req,res){
+    'use strict';
+    var sql = "UPDATE tblposition SET positionName = '" + req.body.name + "' WHERE positionName = '" + req.body.oriname + "'";
+        database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+            res.json({"status": "error", "message": "Role Name Updated Failed..."});
+        }else{
+            res.json({"status": "success", "message": "Role Name Updated Successfully!"});            
+        }
+
+    });
+});
 
 module.exports = app;

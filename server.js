@@ -36,6 +36,7 @@ var binInventoryManagement = require('./custom_modules/bin-inventory');
 var chatManagement = require('./custom_modules/chat-management');
 var deliveryManagement = require('./custom_modules/delivery-management');
 var damagedLostBin = require('./custom_modules/damaged-lost-bin');
+var boundaryManagement = require('./custom_modules/boundary-management');
 
 users = [];
 connections = [];
@@ -187,7 +188,7 @@ app.post('/getTodayAreaCount', function (req, res) {
 app.post('/getUnsubmitted', function (req, res) {
     'use strict';
     
-    var sql = "SELECT DISTINCT tblarea.areaName AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -199,7 +200,7 @@ app.post('/getUnsubmitted', function (req, res) {
 app.post('/getSubmitted', function (req, res) {
     'use strict';
     
-    var sql = "SELECT DISTINCT tblarea.areaName AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE()";
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE()";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -734,3 +735,4 @@ app.use('/', chatManagement);
 app.use('/', deliveryManagement);
 app.use('/', damagedLostBin);
 app.use('/', formAuthorization);
+app.use('/', boundaryManagement);

@@ -21,9 +21,9 @@
           
           <div class="form-group">
               <label for="txtBinArea form-label">Area</label>
-              <select id="txtBinArea" data-ng-model="bin.area" class="selectpicker" data-live-search="true" data-width="100%">
+              <select id="txtBinArea" data-ng-model="bin.areaconcat" class="selectpicker" data-live-search="true" data-width="100%">
                   <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
-                      <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.id}} - {{a.name}}</option>
+                      <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
                   </optgroup>
               </select>
           </div>
@@ -67,7 +67,7 @@
                                 <th width="10%" data-ng-click="orderBy('id');">Bin Centre Code <i class="fas fa-sort-down"></i></th>
                                 <th width="35%" data-ng-click="orderBy('name');">Bin Centre Name <i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('location');">Location <i class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('area');">Belong Area <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('areaCode');">Belong Area <i class="fas fa-sort-down"></i></th>
                                 <th width="20%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                 <th data-ng-show="show.edit == 'A'" width="10%">Action</th>
                             </tr>
@@ -90,13 +90,13 @@
                                 <td>
                                     <div editable>
                                         <div data-ng-show="!showBin">
-                                            <select data-ng-model="b.area" class="selectpicker" data-live-search="true" data-width="100%">
+                                            <select data-ng-model="b.areacode" class="selectpicker" data-live-search="true" data-width="100%">
                                                 <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
-                                                    <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.id}} - {{a.name}}</option>
+                                                    <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
                                                 </optgroup>
                                             </select>
                                         </div>
-                                        <p data-ng-show="showBin" data-ng-bind="b.area"></p>
+                                        <p data-ng-show="showBin" data-ng-bind="b.areaCode"></p>
                                     </div>
                                 </td>
                                 <td>
@@ -126,14 +126,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $('.clickable').click(function() {
-            $(this).children().find('i').toggleClass("fa-chevron-circle-right fa-chevron-circle-down");
-            $('html, body').animate({
-                scrollTop: $(this).offset().top - 20
-            }, 'slow');
-        });
-    });
-</script>

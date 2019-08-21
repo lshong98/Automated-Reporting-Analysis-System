@@ -77,6 +77,12 @@ function makeID(keyword, creationDate) {
             table = "tblchat";
             property = "chatID";
             header = "CHT";
+            break;
+        case "boundary":
+            table = "tblboundary";
+            property = "boundaryID";
+            header = "BND";
+            break;
         default: break;
     }
     
@@ -101,6 +107,34 @@ function makeID(keyword, creationDate) {
         });
     });
     console.log(database);
+};
+
+function boundaryID(date, polygons) {
+    'use strict';
+    
+    date = date.split(' ');
+    var prefix, ID, getDateArr, row, stringRow, i, header = "BND", boundaryJSON;
+    
+    var sql = "SELECT boundaryID FROM tblboundary WHERE creationDateTime LIKE '%" + date[0] + "%'";
+    return new Promise(function (resolve, reject) {
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            } else {
+                getDateArr = date[0].split('-');
+                row = result.length;
+                row += 1;
+                stringRow = row.toString();
+                prefix = '';
+                for (i = stringRow.length; i < 4; i += 1) {
+                    prefix += '0';
+                }
+                ID = header + getDateArr[0] + getDateArr[1] + getDateArr[2] + prefix + row;
+                boundaryJSON = {"ID": ID, "polygons": polygons};
+                resolve(boundaryJSON);
+            }
+        });
+    })
 };
 
 function checkAuthority(keyword, whoIs) {
@@ -254,3 +288,4 @@ exports.sendForAuthorization = sendForAuthorization;
 exports.menuItem = menuItem;
 exports.insertNewData = insertNewData;
 exports.waterfallQuery = waterfallQuery;
+exports.boundaryID = boundaryID;
