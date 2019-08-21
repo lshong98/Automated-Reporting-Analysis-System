@@ -271,19 +271,31 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.report.collectionDate = $filter('date')($scope.report.collectionDate, 'yyyy-MM-dd');
-        $http.post('/addReport', $scope.report).then(function (response) {
-            var returnedData = response.data;
-            var newReportID = returnedData.details.reportID;
+        
+        console.log($scope.report);
+        
+        if($scope.collectionDate == "" || $scope.startTime == 0 || $scope.endTime == 0){
+            $scope.notify("error", "Collection Date and Time Cannot Be Blank");
+        }else if($scope.report.truck == ""){
+            $scope.notify("error", "Truck Cannot Be Blank");
+        }else if($scope.driver == ""){
+            $scope.notify("error", "Driver Cannot Be Blank");
+        }else{
+            $http.post('/addReport', $scope.report).then(function (response) {
+                var returnedData = response.data;
+                var newReportID = returnedData.details.reportID;
 
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    message: "Report added successfully!"
-                });
-                socket.emit('make report', {"reportID": newReportID, "owner": $window.sessionStorage.getItem("owner")});
-                window.location.href = '#/reporting';
-            }
-        });
+                if (returnedData.status === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        message: "Report added successfully!"
+                    });
+                    socket.emit('make report', {"reportID": newReportID, "owner": $window.sessionStorage.getItem("owner")});
+                    window.location.href = '#/dashboard-officer';
+                }
+            });            
+        }
+
     };
     
 //    $scope.cancelImg = function(){
@@ -357,7 +369,6 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
         $type.val(results.file.type);
         var img = document.createElement("img");
         img.src = dataURL;
-        $scope.report.ifleetImg = dataURL;
         var w = img.width;
         var h = img.height;
         $width.val(w);
@@ -665,6 +676,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     };
     
 });
+});
 
 app.controller('editReportController', function($scope, $http, $routeParams, $window, $filter){
     $scope.reportCode = $routeParams.reportCode;
@@ -896,5 +908,4 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         
               
     };
- 
 });
