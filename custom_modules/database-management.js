@@ -11,10 +11,10 @@ var emitter = new EventEmitter();
 // var DB_NAME = 'trienekens_test';
  
 // Local database access
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = 'triemerge';
+var DB_NAME = '';
 
 // // Config used for socket connection, important for Google Cloud hosting
  var config = {
@@ -116,7 +116,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblformauthorization (formentryID int auto_increment, creationDateTime dateTime, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), status char(1), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID INT, creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",
         "CREATE TABLE tblboundary (boundaryID VARCHAR(15), color CHAR(6), creationDateTime DATETIME, status CHAR(1), PRIMARY KEY(boundaryID))",
-        "CREATE TABLE tblboundaryplot (boundaryID VARCHAR(15), lat DOUBLE(10, 7), lng DOUBLE(10, 7), status CHAR(1), PRIMARY KEY(boundaryID, lat, lng), FOREIGN KEY(boundaryID) REFERENCES tblboundary(boundaryID))"
+        "CREATE TABLE tblboundaryplot (boundaryID VARCHAR(15), lat DOUBLE(10, 7), lng DOUBLE(10, 7), ordering INT, status CHAR(1), PRIMARY KEY(boundaryID, lat, lng), FOREIGN KEY(boundaryID) REFERENCES tblboundary(boundaryID))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {

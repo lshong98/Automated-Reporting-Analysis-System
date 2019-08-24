@@ -2651,7 +2651,70 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 app.controller('boundaryController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
     
-    var geocoder, map, all_overlays = [], polygons = [], polygonID = 1;
+    var geocoder, map, all_overlays = [], polygons = [], polygonID = 1, selectedShape;
+    
+    function clearSelection() {
+        if (selectedShape) {
+            selectedShape.setEditable(false);
+            selectedShape = null;
+            $('#resetPolygon').hide();
+        }
+    }
+
+    function setSelection(shape) {
+        var newPoint = [];
+        
+        clearSelection();
+        selectedShape = shape;
+        shape.setEditable(true);
+        $('#resetPolygon').show();
+        
+        selectedShape.getPaths().forEach(function (path, index) {
+            google.maps.event.addListener(path, 'insert_at', function () {
+                for (var i = 0; i < selectedShape.getPath().length; i++) {
+                    newPoint.push({"lat": selectedShape.getPath().getAt(i).lat(), "lng": selectedShape.getPath().getAt(i).lng()});
+                }
+                
+                for (var j = 0; j < polygons.length; j++) {
+                    if (polygons[j].id === selectedShape.id) {
+                        polygons[j].latLngs = newPoint;
+                    }
+                }
+//                console.log(polygons);
+            });
+
+            google.maps.event.addListener(path, 'remove_at', function () {
+                alert('remove a point');
+                for (var i = 0; i < selectedShape.getPath().length; i++) {
+                    console.log({"lat": selectedShape.getPath().getAt(i).lat(), "lng": selectedShape.getPath().getAt(i).lng()});
+                }
+                
+                for (var j = 0; j < polygons.length; j++) {
+                    if (polygons[j].id === selectedShape.id) {
+                        polygons[j].latLngs = newPoint;
+                    }
+                }
+            });
+
+            google.maps.event.addListener(path, 'set_at', function () {
+                for (var i = 0; i < selectedShape.getPath().length; i++) {
+                    newPoint.push({"lat": selectedShape.getPath().getAt(i).lat(), "lng": selectedShape.getPath().getAt(i).lng()});
+                }
+                
+                for (var j = 0; j < polygons.length; j++) {
+                    if (polygons[j].id === selectedShape.id) {
+                        polygons[j].latLngs = newPoint;
+                    }
+                }
+            });
+        });
+    }
+    
+    function setColor(color) {
+        color = '#' + color;
+        polyOptions.fillColor = color;
+        polyOptions.strokeColor = color;
+    }
     
     map = new google.maps.Map(
         document.getElementById("map_canvas"), {
@@ -2674,12 +2737,6 @@ app.controller('boundaryController', function ($scope, $http, $filter, storeData
         fillOpacity: 0.45,
         editable: true
     };
-    
-    var selectedShape;
-    
-    $('.jscolor').on('blur', function (e) {
-        setColor(e.target.value);
-    });
 
     var drawingManager = new google.maps.drawing.DrawingManager({
         drawingMode: google.maps.drawing.OverlayType.POLYGON,
@@ -2688,6 +2745,10 @@ app.controller('boundaryController', function ($scope, $http, $filter, storeData
             draggable: true
         },
         polygonOptions: polyOptions
+    });
+    
+    $('.jscolor').on('blur', function (e) {
+        setColor(e.target.value);
     });
 
     $('#enablePolygon').click(function() {
@@ -2712,39 +2773,26 @@ app.controller('boundaryController', function ($scope, $http, $filter, storeData
         $('#resetPolygon').hide();
     });
     
+    $('#clearSelection').click(function() {
+        clearSelection();
+    });
+    
     google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
         var latLngs = [];
         var color = $('#boundaryColor').val();
 //        var area = google.maps.geometry.spherical.computeArea(selectedShape.getPath());
 //        $('#areaPolygon').html(area.toFixed(2)+' Sq meters');
         $('#resetPolygon').show();
-        $.each(polygon.latLngs.j[0].j, function (index, value) {
-            latLngs.push({"lat": value.lat(), "lng": value.lng()});
-        });
+        
+        var polygonBounds = polygon.getPath();
+        
+        for (var i = 0 ; i < polygonBounds.length; i++) {
+            latLngs.push({"lat": polygonBounds.getAt(i).lat(), "lng": polygonBounds.getAt(i).lng()});
+        }
+
         polygons.push({"id": polygon.id, "latLngs": latLngs, "color": color});
         polygonID += 1;
     });
-    
-    function clearSelection() {
-        if (selectedShape) {
-            selectedShape.setEditable(false);
-            selectedShape = null;
-            $('#resetPolygon').hide();
-        }
-    }
-
-    function setSelection(shape) {
-        clearSelection();
-        selectedShape = shape;
-        shape.setEditable(true);
-        $('#resetPolygon').show();
-    }
-    
-    function setColor(color) {
-        color = '#' + color;
-        polyOptions.fillColor = color;
-        polyOptions.strokeColor = color;
-    }
 
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
         all_overlays.push(e);
@@ -2764,8 +2812,60 @@ app.controller('boundaryController', function ($scope, $http, $filter, storeData
     });
     
     $('#btnSaveBoundary').click(function (e) {
+        var existingPolygons = [];
+        for (var i = 0; i < polygons.length; i++) {
+            if (typeof(polygons[i].id) !== typeof(0)) {
+                existingPolygons.push(polygons[i]);
+            }
+        }
+        for (var j = 0; j < existingPolygons.length; j++) {
+            polygons.splice(existingPolygons[j], 1);
+        }
+        
         $http.post('/boundary/create', {"polygons": polygons}).then(function (response) {
             console.log(response.data);
+            $http.post('/boundary/update', {"polygons": existingPolygons}).then(function (response) {
+                console.log(response.data);
+            });
+        });
+    });
+    
+    $http.get('/boundary/load').then(function (response) {
+        var data = response.data;
+        var boundaries = [];
+        
+        for (var i = 0; i < data.length; i++) {
+            if (i === 0) {
+                boundaries.push({"id": data[i].id, "color": data[i].color, "latLngs": [], "coordinate": []});
+            } else if (i > 0 && data[i - 1].id !== data[i].id) {
+                boundaries.push({"id": data[i].id, "color": data[i].color, "latLngs": [], "coordinate": []});
+            }
+        }
+        
+        for (var j = 0; j < data.length; j++) {
+            
+            for (var k = 0; k < boundaries.length; k++) {
+                if (data[j].id === boundaries[k].id) {
+                    boundaries[k].coordinate.push(new google.maps.LatLng(data[j].lat, data[j].lng));
+                    boundaries[k].latLngs.push({"lat": data[j].lat, "lng": data[j].lng});
+                }
+            }
+        }
+        
+        $.each(boundaries, function (index, value) {
+            var myPolygon = new google.maps.Polygon({
+                id: value.id,
+                paths: value.coordinate,
+                strokeColor: '#' + value.color,
+                strokeWeight: 2,
+                fillColor: '#' + value.color,
+                fillOpacity: 0.45
+            });
+            myPolygon.setMap(map);
+            google.maps.event.addListener(myPolygon, 'click', function() {
+                setSelection(myPolygon);
+            });
+            polygons.push({"id": value.id, "latLngs": value.latLngs, "color": value.color});
         });
     });
 });

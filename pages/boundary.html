@@ -9,6 +9,15 @@
 </style>
 <div class="row">
     <div class="col-12">
+<!--
+        <div class="form-group row">
+            <label for="boundaryColor" class="col-sm-2 col-form-label">Mode:</label>
+            <div class="col-sm-3">
+                <button class="btn btn-primary"><i class="fa fa-eye"></i> View Mode</button>
+                <button class="btn btn-warning"><i class="fa fa-pencil-alt"></i> Edit Mode</button>
+            </div>
+        </div>
+-->
         <div class="form-group row">
             <label for="boundaryColor" class="col-sm-2 col-form-label">Boundary Color:</label>
             <div class="col-sm-3">
@@ -16,10 +25,10 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Boundary Tools</label>
+            <label class="col-sm-2 col-form-label">Boundary Tools:</label>
             <div class="col-sm-10">
                 <input type="button" id="enablePolygon" value="Draw Boundary" />
-                <input type="button" id="clearSelection" value="Clear Selection" onclick="clearSelection();" />
+                <input type="button" id="clearSelection" value="Clear Selection" />
                 <input type="button" id="resetPolygon" value="Reset" style="display: none;" />
                 <div id="showonPolygon" style="display:none;"><b>Area:</b> <span id="areaPolygon">&nbsp;</span></div>
             </div>
