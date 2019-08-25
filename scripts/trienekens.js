@@ -308,6 +308,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             "name": '',
             "location": '',
             "area": '',
+            "areaCode": '',
             "status": ''
         };
         scope.thisCollection = {
@@ -504,15 +505,18 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             scope.thisAccount = angular.copy(scope.originalData);
         };
 
-        scope.editBin = function(id, name, location, area, status) {
+        scope.editBin = function(id, name, location, area, areaCode, status) {
             scope.showBin = !scope.showBin;
             scope.b.area = area;
             angular.element('.selectpicker').selectpicker('refresh');
             angular.element('.selectpicker').selectpicker('render');
-            scope.thisBin = { "id": id, "name": name, "location": location, "area": area, "status": status };
+            scope.thisBin = { "id": id, "name": name, "location": location, "area": area, "areaCode": areaCode, "status": status };
         };
         scope.saveBin = function() {
             scope.showBin = !scope.showBin;
+            var areaFullString = (scope.b.areacode).split(',');
+            scope.b.area = areaFullString[0];
+            scope.b.areaCode = areaFullString[1];
 
             $http.post('/editBinCenter', scope.b).then(function(response) {
                 var data = response.data;
@@ -2503,7 +2507,8 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         "name": '',
         "location": '',
         "area": '',
-        "areaCode": ''
+        "areaCode": '',
+        "areacode": ''
     };
 
     $scope.pagination = angular.copy(storeDataService.pagination);
