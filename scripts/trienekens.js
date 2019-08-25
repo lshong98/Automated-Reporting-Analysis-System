@@ -2651,7 +2651,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 app.controller('boundaryController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
     
-    var geocoder, map, all_overlays = [], polygons = [], polygonID = 1, selectedShape;
+    var geocoder, map, all_overlays = [], polygons = [], polygonID = 1, selectedShape, removedPolygons = [];
     
     function clearSelection() {
         if (selectedShape) {
@@ -2763,6 +2763,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, storeData
             selectedShape.setMap(null);
             $.each(polygons, function (index, value) {
                 if (value.id === selectedShape.id) {
+                    removedPolygons.push(value);
                     polygons.splice(index, 1);
                     return false;
                 }
@@ -2771,6 +2772,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, storeData
         drawingManager.setMap(null);
         $('#showonPolygon').hide();
         $('#resetPolygon').hide();
+        console.log(polygons);
     });
     
     $('#clearSelection').click(function() {
@@ -2826,6 +2828,12 @@ app.controller('boundaryController', function ($scope, $http, $filter, storeData
             console.log(response.data);
             $http.post('/boundary/update', {"polygons": existingPolygons}).then(function (response) {
                 console.log(response.data);
+                
+                if (removedPolygons.length > 0) {
+                    $http.post('/boundary/remove', {"polygons": removedPolygons}).then(function (response) {
+                        console.log(response.data);
+                    });
+                }
             });
         });
     });

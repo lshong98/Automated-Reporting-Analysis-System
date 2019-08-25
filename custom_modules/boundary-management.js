@@ -128,4 +128,38 @@ app.post('/boundary/update', function (req, res) {
     }
 });
 
+app.post('/boundary/remove', function (req, res) {
+    'use strict';
+    
+    var removedPolygons = req.body.polygons;
+    var removedBoundarySQL = "UPDATE tblboundary SET status = 'I' WHERE ",
+        removedPlotSQL = "UPDATE tblboundaryplot SET status = 'I' WHERE ";
+    
+    if (removedPolygons.length > 0) {
+        for (var i = 0; i < removedPolygons.length; i++) {
+            removedBoundarySQL += "boundaryID = '" + removedPolygons[i].id + "' OR ";
+            removedPlotSQL += "boundaryID = '" + removedPolygons[i].id + "' OR ";
+        }
+    }
+    removedBoundarySQL = removedBoundarySQL.slice(0, -4);
+    removedPlotSQL = removedPlotSQL.slice(0, -4);
+    
+    database.query(removedBoundarySQL, function (err, result) {
+        if (err) {
+            res.end();
+            throw err;
+        } else {
+            database.query(removedPlotSQL, function (err, result) {
+                if (err) {
+                    res.end();
+                    throw err;
+                } else {
+                    res.json({"status": "success"});
+                    res.end();
+                }
+            });
+        }
+    });
+});
+
 module.exports = app;
