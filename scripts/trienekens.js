@@ -2667,7 +2667,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
         $scope.areaCode = response.data[0].code;
     });
     
-    var geocoder, map, all_overlays = [], polygons = [], polygonID = 1, selectedShape, removedPolygons = [];
+    var geocoder, map, all_overlays = [], polygons = [], polygonID = 1, selectedShape, removedPolygons = [], myPolygons = [];
     
     function clearSelection() {
         if (selectedShape) {
@@ -2696,7 +2696,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
                         polygons[j].latLngs = newPoint;
                     }
                 }
-//                console.log(polygons);
+                newPoint = [];
             });
 
             google.maps.event.addListener(path, 'remove_at', function () {
@@ -2713,6 +2713,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
             });
 
             google.maps.event.addListener(path, 'set_at', function () {
+                alert('call set');
                 for (var i = 0; i < selectedShape.getPath().length; i++) {
                     newPoint.push({"lat": selectedShape.getPath().getAt(i).lat(), "lng": selectedShape.getPath().getAt(i).lng()});
                 }
@@ -2722,6 +2723,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
                         polygons[j].latLngs = newPoint;
                     }
                 }
+                newPoint = [];
             });
         });
     }
@@ -2810,6 +2812,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
 
         polygons.push({"id": polygon.id, "latLngs": latLngs, "color": color});
         polygonID += 1;
+        myPolygons.push(polygon);
     });
 
     google.maps.event.addListener(drawingManager, 'overlaycomplete', function(e) {
@@ -2841,58 +2844,68 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
         }
         
         $http.post('/boundary/create', {"polygons": polygons}).then(function (response) {
-            console.log(response.data);
             $http.post('/boundary/update', {"polygons": existingPolygons}).then(function (response) {
-                console.log(response.data);
                 
                 if (removedPolygons.length > 0) {
                     $http.post('/boundary/remove', {"polygons": removedPolygons}).then(function (response) {
                         console.log(response.data);
                     });
                 }
+                polygons = [];
+                existingPolygons = [];
+                
+                for (var i = 0; i < myPolygons.length; i++) {
+                    myPolygons[i].setMap(null);
+                }
+                myPolygons = [];
+                loadBoundary();
             });
         });
     });
     
-    $http.get('/boundary/load').then(function (response) {
-        var data = response.data;
-        var boundaries = [];
-        
-        for (var i = 0; i < data.length; i++) {
-            if (i === 0) {
-                boundaries.push({"id": data[i].id, "color": data[i].color, "latLngs": [], "coordinate": []});
-            } else if (i > 0 && data[i - 1].id !== data[i].id) {
-                boundaries.push({"id": data[i].id, "color": data[i].color, "latLngs": [], "coordinate": []});
-            }
-        }
-        
-        for (var j = 0; j < data.length; j++) {
-            
-            for (var k = 0; k < boundaries.length; k++) {
-                if (data[j].id === boundaries[k].id) {
-                    boundaries[k].coordinate.push(new google.maps.LatLng(data[j].lat, data[j].lng));
-                    boundaries[k].latLngs.push({"lat": data[j].lat, "lng": data[j].lng});
+    function loadBoundary() {
+        $http.get('/boundary/load').then(function (response) {
+            var data = response.data;
+            var boundaries = [];
+
+            for (var i = 0; i < data.length; i++) {
+                if (i === 0) {
+                    boundaries.push({"id": data[i].id, "color": data[i].color, "latLngs": [], "coordinate": []});
+                } else if (i > 0 && data[i - 1].id !== data[i].id) {
+                    boundaries.push({"id": data[i].id, "color": data[i].color, "latLngs": [], "coordinate": []});
                 }
             }
-        }
-        
-        $.each(boundaries, function (index, value) {
-            var myPolygon = new google.maps.Polygon({
-                id: value.id,
-                paths: value.coordinate,
-                strokeColor: '#' + value.color,
-                strokeWeight: 2,
-                fillColor: '#' + value.color,
-                fillOpacity: 0.45
+
+            for (var j = 0; j < data.length; j++) {
+
+                for (var k = 0; k < boundaries.length; k++) {
+                    if (data[j].id === boundaries[k].id) {
+                        boundaries[k].coordinate.push(new google.maps.LatLng(data[j].lat, data[j].lng));
+                        boundaries[k].latLngs.push({"lat": data[j].lat, "lng": data[j].lng});
+                    }
+                }
+            }
+
+            $.each(boundaries, function (index, value) {
+                var myPolygon = new google.maps.Polygon({
+                    id: value.id,
+                    paths: value.coordinate,
+                    strokeColor: '#' + value.color,
+                    strokeWeight: 2,
+                    fillColor: '#' + value.color,
+                    fillOpacity: 0.45
+                });
+                myPolygon.setMap(map);
+                myPolygons.push(myPolygon);
+                google.maps.event.addListener(myPolygon, 'click', function() {
+                    setSelection(myPolygon);
+                });
+                polygons.push({"id": value.id, "latLngs": value.latLngs, "color": value.color});
             });
-            myPolygon.setMap(map);
-            google.maps.event.addListener(myPolygon, 'click', function() {
-                setSelection(myPolygon);
-            });
-            polygons.push({"id": value.id, "latLngs": value.latLngs, "color": value.color});
         });
-    });
+    }
     
+    loadBoundary();
     $scope.backToArea = function() {
         var linking = '#/area/' + areaID.areaID;
         window.location.href = linking;

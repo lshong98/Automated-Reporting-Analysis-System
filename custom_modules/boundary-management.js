@@ -1,7 +1,6 @@
 /*jslint node:true*/
 var express = require('express');
 var app = express();
-var bcrypt = require('bcryptjs');
 var database = require('./database-management');
 var dateTime = require('node-datetime');
 var f = require('./function-management');
