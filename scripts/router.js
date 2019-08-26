@@ -367,13 +367,15 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'damagedLostController',
         controllerAs:'damagedLost'
     })
-    .when('/boundary', {
+    .when('/boundary/:areaID', {
         resolve: {
-            "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/boundary');
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/boundary/' + $route.current.params.areaID);
             }
         },
-        templateUrl: '/boundary',
+        templateUrl: function(params){
+            return '/boundary/' + params.areaID;
+        },
         controller: 'boundaryController',
         controllerAs: 'boundary'
     })

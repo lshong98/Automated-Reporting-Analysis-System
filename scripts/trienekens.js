@@ -1692,6 +1692,11 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
 //        console.log($scope.taman);
 //        console.log($scope.updateTamanObj);
     };
+    
+    $scope.areaEditBoundaries = function(){
+        var linking = '#/boundary/' + areaID;
+        window.location.href = linking
+    }
 
 });
 
@@ -2653,8 +2658,14 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     };
 });
 
-app.controller('boundaryController', function ($scope, $http, $filter, storeDataService) {
+app.controller('boundaryController', function ($scope, $http, $filter, $routeParams, storeDataService) {
     'use strict';
+    
+    var areaID = $routeParams;
+    
+    $http.post('/getAreaCode',$routeParams).then(function(response){
+        $scope.areaCode = response.data[0].code;
+    });
     
     var geocoder, map, all_overlays = [], polygons = [], polygonID = 1, selectedShape, removedPolygons = [];
     
@@ -2881,6 +2892,11 @@ app.controller('boundaryController', function ($scope, $http, $filter, storeData
             polygons.push({"id": value.id, "latLngs": value.latLngs, "color": value.color});
         });
     });
+    
+    $scope.backToArea = function() {
+        var linking = '#/area/' + areaID.areaID;
+        window.location.href = linking;
+    };
 });
 
 //-----------Check Line------------------
