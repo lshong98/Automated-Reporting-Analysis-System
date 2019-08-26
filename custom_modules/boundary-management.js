@@ -5,7 +5,7 @@ var database = require('./database-management');
 var dateTime = require('node-datetime');
 var f = require('./function-management');
 
-app.post('/boundary/create', function (req, res) {
+app.post('/createBoundary', function (req, res) {
     'use strict';
     
     var dt = dateTime.create().format('Y-m-d H:M:S');
@@ -67,7 +67,7 @@ app.post('/boundary/create', function (req, res) {
     
 });
 
-app.get('/boundary/load', function (req, res) {
+app.get('/loadBoundary', function (req, res) {
     'use strict';
     
     var sql = "SELECT tblboundaryplot.boundaryID AS id, tblboundary.color, tblboundaryplot.lat, tblboundaryplot.lng FROM tblboundaryplot JOIN tblboundary ON tblboundaryplot.boundaryID = tblboundary.boundaryID WHERE tblboundary.status = 'A' ORDER BY tblboundaryplot.boundaryID ASC, tblboundaryplot.ordering ASC";
@@ -83,7 +83,7 @@ app.get('/boundary/load', function (req, res) {
     });
 });
 
-app.post('/boundary/update', function (req, res) {
+app.post('/updateBoundary', function (req, res) {
     'use strict';
     
     var deletePlotSQL = "DELETE FROM tblboundaryplot WHERE ";
@@ -127,7 +127,7 @@ app.post('/boundary/update', function (req, res) {
     }
 });
 
-app.post('/boundary/remove', function (req, res) {
+app.post('/removeBoundary', function (req, res) {
     'use strict';
     
     var removedPolygons = req.body.polygons;

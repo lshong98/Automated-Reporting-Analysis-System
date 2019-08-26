@@ -1544,6 +1544,7 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
         "code": '',
         "name": '',
         "zone": '',
+        "zoneCode": '',
         "staff": '',
         "driver": '',
         "status": '',
@@ -1694,8 +1695,8 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
     };
     
     $scope.areaEditBoundaries = function(){
-        var linking = '#/boundary/' + areaID;
-        window.location.href = linking
+        var areaCode = $scope.area.zoneCode + $scope.area.code;
+        window.location.href = '#/boundary/' + areaCode;
     }
 
 });
@@ -2661,11 +2662,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 app.controller('boundaryController', function ($scope, $http, $filter, $routeParams, storeDataService) {
     'use strict';
     
-    var areaID = $routeParams;
-    
-    $http.post('/getAreaCode',$routeParams).then(function(response){
-        $scope.areaCode = response.data[0].code;
-    });
+    $scope.areaCode = $routeParams.areaID;
     
     var geocoder, map, all_overlays = [], polygons = [], polygonID = 1, selectedShape, removedPolygons = [], myPolygons = [];
     
@@ -2843,11 +2840,11 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
             polygons.splice(existingPolygons[j], 1);
         }
         
-        $http.post('/boundary/create', {"polygons": polygons}).then(function (response) {
-            $http.post('/boundary/update', {"polygons": existingPolygons}).then(function (response) {
+        $http.post('/createBoundary', {"polygons": polygons}).then(function (response) {
+            $http.post('/updateBoundary', {"polygons": existingPolygons}).then(function (response) {
                 
                 if (removedPolygons.length > 0) {
-                    $http.post('/boundary/remove', {"polygons": removedPolygons}).then(function (response) {
+                    $http.post('/removeBoundary', {"polygons": removedPolygons}).then(function (response) {
                         console.log(response.data);
                     });
                 }
@@ -2864,7 +2861,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
     });
     
     function loadBoundary() {
-        $http.get('/boundary/load').then(function (response) {
+        $http.get('/loadBoundary').then(function (response) {
             var data = response.data;
             var boundaries = [];
 
@@ -2907,8 +2904,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
     
     loadBoundary();
     $scope.backToArea = function() {
-        var linking = '#/area/' + areaID.areaID;
-        window.location.href = linking;
+        window.history.go(-1);
     };
 });
 
