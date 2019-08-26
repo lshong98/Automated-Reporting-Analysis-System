@@ -2867,9 +2867,9 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
 
             for (var i = 0; i < data.length; i++) {
                 if (i === 0) {
-                    boundaries.push({"id": data[i].id, "color": data[i].color, "latLngs": [], "coordinate": []});
+                    boundaries.push({"id": data[i].id, "color": data[i].color, "area": (data[i].zone + data[i].area), "latLngs": [], "coordinate": []});
                 } else if (i > 0 && data[i - 1].id !== data[i].id) {
-                    boundaries.push({"id": data[i].id, "color": data[i].color, "latLngs": [], "coordinate": []});
+                    boundaries.push({"id": data[i].id, "color": data[i].color, "area": (data[i].zone + data[i].area), "latLngs": [], "coordinate": []});
                 }
             }
 
@@ -2894,9 +2894,11 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
                 });
                 myPolygon.setMap(map);
                 myPolygons.push(myPolygon);
-                google.maps.event.addListener(myPolygon, 'click', function() {
-                    setSelection(myPolygon);
-                });
+                if (value.area === $scope.areaCode) {
+                    google.maps.event.addListener(myPolygon, 'click', function() {
+                        setSelection(myPolygon);
+                    });
+                }
                 polygons.push({"id": value.id, "latLngs": value.latLngs, "color": value.color});
             });
         });
