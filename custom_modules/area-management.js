@@ -112,7 +112,7 @@ app.post('/updateArea', function (req, res) {
 app.post('/thisArea', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblarea.areaID AS id, tblarea.areaCode AS code, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneCode, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
+    var sql = "SELECT tblarea.areaID AS id, tblarea.areaCode AS code, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
