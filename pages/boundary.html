@@ -8,6 +8,11 @@
 }
 </style>
 <div class="row">
+    <div class="col-md-12">
+        <h1>Area: {{areaCode}}</h1>
+    </div>
+</div>
+<div class="row">
     <div class="col-12">
 <!--
         <div class="form-group row">
@@ -44,8 +49,8 @@
 <div class="row">
     <div class="col-12">
         <button id="btnSaveBoundary" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+        <button class="btn btn-secondary" data-ng-click="backToArea()">Back</button>
     </div>
 </div>
 <br />
-
 <script src="/jscolor-2.0.5/jscolor.js"></script>

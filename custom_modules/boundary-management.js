@@ -1,12 +1,11 @@
 /*jslint node:true*/
 var express = require('express');
 var app = express();
-var bcrypt = require('bcryptjs');
 var database = require('./database-management');
 var dateTime = require('node-datetime');
 var f = require('./function-management');
 
-app.post('/boundary/create', function (req, res) {
+app.post('/createBoundary', function (req, res) {
     'use strict';
     
     var dt = dateTime.create().format('Y-m-d H:M:S');
@@ -19,7 +18,7 @@ app.post('/boundary/create', function (req, res) {
         res.end();
     } else {
         f.boundaryID(dt, polygons).then(function (boundaryJSON) {
-            var boundarySQL = "INSERT INTO tblboundary (boundaryID, color, creationDateTime, status) VALUES ", prefix = '';
+            var boundarySQL = "INSERT INTO tblboundary (boundaryID, color, areaID, creationDateTime, status) VALUES ", prefix = '';
             var plotSQL = "INSERT INTO tblboundaryplot (boundaryID, lat, lng, ordering, status) VALUES ";
             var boundaryNum = parseInt(boundaryJSON.ID.substring(boundaryJSON.ID.length - 4));
 
@@ -34,7 +33,7 @@ app.post('/boundary/create', function (req, res) {
                 }
                 boundaryID = "BND" + dWithoutSymbol + prefix + boundaryNum;
 
-                boundarySQL += "('" + boundaryID + "', '" + boundaryJSON.polygons[i].color + "', '" + dt + "', 'A')";
+                boundarySQL += "('" + boundaryID + "', '" + boundaryJSON.polygons[i].color + "', '" + boundaryJSON.polygons[i].areaID + "', '" + dt + "', 'A')";
 
                 for (var k = 0; k < boundaryJSON.polygons[i].latLngs.length; k++) {
                     plotSQL += "('" + boundaryID + "', '" + boundaryJSON.polygons[i].latLngs[k].lat + "', '" + boundaryJSON.polygons[i].latLngs[k].lng + "', '" + (k + 1) + "', 'A')";
@@ -68,10 +67,10 @@ app.post('/boundary/create', function (req, res) {
     
 });
 
-app.get('/boundary/load', function (req, res) {
+app.get('/loadBoundary', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblboundaryplot.boundaryID AS id, tblboundary.color, tblboundaryplot.lat, tblboundaryplot.lng FROM tblboundaryplot JOIN tblboundary ON tblboundaryplot.boundaryID = tblboundary.boundaryID WHERE tblboundary.status = 'A' ORDER BY tblboundaryplot.boundaryID ASC, tblboundaryplot.ordering ASC";
+    var sql = "SELECT tblboundaryplot.boundaryID AS id, tblboundary.color, tblboundaryplot.lat, tblboundaryplot.lng, tblarea.areaCode AS area, tblzone.zoneCode AS zone, tblboundary.areaID FROM tblboundaryplot JOIN tblboundary ON tblboundaryplot.boundaryID = tblboundary.boundaryID JOIN tblarea ON tblarea.areaID = tblboundary.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID WHERE tblboundary.status = 'A' ORDER BY tblboundaryplot.boundaryID ASC, tblboundaryplot.ordering ASC";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -84,7 +83,7 @@ app.get('/boundary/load', function (req, res) {
     });
 });
 
-app.post('/boundary/update', function (req, res) {
+app.post('/updateBoundary', function (req, res) {
     'use strict';
     
     var deletePlotSQL = "DELETE FROM tblboundaryplot WHERE ";
@@ -128,7 +127,7 @@ app.post('/boundary/update', function (req, res) {
     }
 });
 
-app.post('/boundary/remove', function (req, res) {
+app.post('/removeBoundary', function (req, res) {
     'use strict';
     
     var removedPolygons = req.body.polygons;

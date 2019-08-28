@@ -54,7 +54,16 @@ app.get('/getAreaCodeList', function(req,res){
         if (err) {
             throw err;
         }
-        console.log(result);
+        res.json(result);
+    });    
+});
+app.post('/getAreaCode', function(req,res){
+    'use strict';
+    var sql = "SELECT CONCAT(tblzone.zoneCode, tblarea.areaCode) AS code FROM tblzone JOIN tblarea ON tblzone.zoneID = tblarea.zoneID WHERE tblarea.areaID = '" + req.body.areaID+ "' ";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
         res.json(result);
     });    
 });

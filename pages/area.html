@@ -4,14 +4,16 @@
     }
 </style>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10">
         <div class="form-group">
               <label for="editAreaId form-label">Area ID</label>
               <input type="text" class="form-control" id="editAreaId" data-ng-model="area.id" readonly />
         </div>
     </div>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-primary" data-ng-click="areaEditBoundaries()">Edit Boundaries</button>
+    </div>
 </div>
-
 <!--
 
 <div class="row">
@@ -36,7 +38,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
-              <label for="editAreaCode form-label">Area ID</label>
+              <label for="editAreaCode form-label">Area Code</label>
               <input type="text" class="form-control" id="editAreaCode" data-ng-model="area.code" />
         </div>
     </div>
