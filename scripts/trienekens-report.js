@@ -96,7 +96,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     });
     
     
-    $scope.report.collectionDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+    $scope.colDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
 
     $scope.startTimeChange = function(time) {
         $scope.report.startTime = time == undefined ? "" : time;
@@ -268,7 +268,7 @@ app.controller('dailyController', function ($scope, $window, $routeParams, $http
     
     $scope.addReport = function () {
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $scope.report.collectionDate = $filter('date')($scope.report.collectionDate, 'yyyy-MM-dd');
+        $scope.report.collectionDate = $filter('date')($scope.colDate, 'yyyy-MM-dd');
         
         console.log($scope.report);
         
