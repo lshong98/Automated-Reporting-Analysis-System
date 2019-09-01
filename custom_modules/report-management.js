@@ -111,7 +111,7 @@ app.post('/getReport', function(req, res){
 app.post('/getReportingAreaList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' GROUP BY tblzone.zoneID";
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS areaCode FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' GROUP BY tblzone.zoneID";
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
@@ -136,7 +136,6 @@ app.post('/getReportingStaff',function(req,res){
     'use strict';
     
     var sql = "SELECT tblstaff.staffName FROM tblstaff JOIN tblarea ON tblstaff.staffID = tblarea.staffID WHERE tblarea.areaID = '" + req.body.areaID + "' ";
-    console.log(req.body);
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -147,9 +146,12 @@ app.post('/getReportingStaff',function(req,res){
 });
 
 //app.post('/getReportACR', function (req, res) {
+//
 //    'use strict';
 //    
-//    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
+////    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
+//    var sql = "SELECT tblcustomer.name FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID JOIN tbldcs ON tblacr.dcsID = tbldcs.dcsID WHERE tbldcs.areaID = '" + req.body.area + "' AND ('" + req.body.date + "' BETWEEN tbldcs.periodFrom AND tbldcs.periodTo) AND tbldcs.driverID = '" + req.body.driverID + "'";
+//    console.log(sql);
 //    
 //    database.query(sql, function (err, result) {
 //        if (err) {
