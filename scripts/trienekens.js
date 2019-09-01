@@ -2922,6 +2922,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     $scope.areaList = [];
     $scope.dcsList = [];
     $scope.driverList = [];
+    $scope.areaList = [];
     
 
 
@@ -2978,10 +2979,29 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             $scope.driverList = response.data;
             console.log($scope.driverList);
         }); 
-
+        // $scope.disableArea();
         
     }
     getAllDcs(); //call
+
+    $scope.filterArea = function(){
+
+        $scope.enableArea();
+        console.log($scope.dcs);
+        $http.post('/filterArea', $scope.dcs).then(function(response) {
+        
+            $scope.areaList = response.data;
+            console.log($scope.areaList);
+        });
+    }
+
+    $scope.disableArea = function(){
+        document.getElementById("editArea").disabled=true;
+    }
+
+    $scope.enableArea = function(){
+        document.getElementById("editArea").disabled=false;
+    }
 
     $scope.statusList = true;
     $scope.updateStatusList = function(){

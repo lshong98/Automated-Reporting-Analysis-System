@@ -115,7 +115,7 @@ app.post('/getDcsInfo',function(req,res){
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "SELECT * from tbldcs where dcsID = '" + req.body.id + "'";
-    database.query(sql, function (err, result) {
+    database.query(sql, function (err, result) { 
         if (err) { 
             throw err;
         }
@@ -134,6 +134,20 @@ app.post('/filterAddress',function(req,res){
         }
 
         res.json(result);
+    });
+}); // Complete
+
+app.post('/filterArea',function(req,res){ 
+    'use strict';
+    console.log(req.body);
+    var sql = "SELECT * from tblarea where staffID = '" + req.body.driverID + "'";
+    database.query(sql, function (err, result) {
+        if (err) { 
+            throw err;
+        }
+
+        res.json(result);
+        console.log(result);
     });
 }); // Complete
 
