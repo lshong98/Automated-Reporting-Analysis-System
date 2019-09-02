@@ -4356,16 +4356,19 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
     $http.post('/getComplaintDetail', $scope.req).then(function(response) {
         var complaint = response.data;
         $scope.comDetail = {
-            'ctype': complaint[0].complaint,
-            'title': complaint[0].complaintTitle,
-            'content': complaint[0].complaintContent,
-            'date': $filter('date')(complaint[0].date, 'medium'),
+            'ctype': complaint[0].premiseType,
+            'title': complaint[0].complaint,
+            'content': complaint[0].remarks,
+            'date': $filter('date')(complaint[0].complaintDate, 'medium'),
             'customer': complaint[0].name,
             'address': complaint[0].address,
             'areaID': complaint[0].areaID,
             'area': complaint[0].areaName,
-            'status': complaint[0].status
+            'status': complaint[0].status,
+            'code' : complaint[0].code,
+            'id' : complaint[0].complaintID
         };
+        console.log($scope.comDetail);
 
         //get report dates for certain area id
         $scope.reportList = [];
@@ -4420,6 +4423,11 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             $scope.emailobj.text = "";
         }
         
+        $scope.updateStatus = function(){
+            $http.post('/updateComplaintStatus', $scope.comDetail).then(function (response){
+               console.log(response.data); 
+            });
+        }
     
     });
 

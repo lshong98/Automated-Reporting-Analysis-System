@@ -213,7 +213,7 @@ app.post('/getSubmitted', function (req, res) {
 //complaint module
 app.get('/getComplaintList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaint.date AS 'date', tblcomplaint.complaintTitle AS 'title', tblcustomer.name AS  'customer', tblcomplainttype.complaintType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Confirmation' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'In progress' WHEN tblcomplaint.status ='d' THEN 'Done' END) AS status FROM tblcomplaint JOIN tblcomplainttype ON tblcomplaint.complaintType = tblcomplainttype.complaintType JOIN tblcustomer ON tblcustomer.customerID = tblcomplaint.customerID JOIN tbltaman ON tbltaman.tamanID = tblcustomer.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID";
+    var sql = "SELECT tblcomplaint.complaintDate AS 'date', tblcomplaint.complaint AS 'title', tblcustomer.name AS  'customer', tblcomplaint.premiseType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Confirmation' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'In progress' WHEN tblcomplaint.status ='d' THEN 'Done' END) AS status FROM tblcomplaint JOIN tblcustomer ON tblcustomer.customerID = tblcomplaint.customerID JOIN tbltaman ON tbltaman.tamanID = tblcustomer.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -224,7 +224,7 @@ app.get('/getComplaintList', function (req, res) {
 
 app.get('/getComplaintLoc', function (req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaint.complaintID, tblcomplaint.date AS 'date', tbltaman.longitude AS 'longitude', tbltaman.latitude AS 'latitude', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tbltaman.tamanName as 'taman', tblcustomer.name AS 'customer', tblcomplaint.status AS 'status' FROM tblcustomer JOIN tbltaman ON tblcustomer.tamanID = tbltaman.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID";
+    var sql = "SELECT tblcomplaint.complaintID, tblcomplaint.complaintDate AS 'date', tbltaman.longitude AS 'longitude', tbltaman.latitude AS 'latitude', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tbltaman.tamanName as 'taman', tblcustomer.name AS 'customer', tblcomplaint.status AS 'status' FROM tblcustomer JOIN tbltaman ON tblcustomer.tamanID = tbltaman.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -236,7 +236,7 @@ app.get('/getComplaintLoc', function (req, res) {
 //get complaint detail by id
 app.post('/getComplaintDetail', function (req, res) {
     'use strict';
-    var sql = "SELECT t.complaint, co.complaintTitle, co.complaintContent, co.date, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', tbltaman.tamanName, ', ', cu.postCode, ', ', cu.city) AS address, a.areaID, a.areaName, (CASE WHEN co.status = 'c' THEN 'Confirmation' WHEN co.status = 'p' THEN 'Pending' WHEN co.status = 'i' THEN 'In progress' WHEN co.status = 'd' THEN 'Done' END) AS status from tblcomplaint co JOIN tblcomplainttype t ON co.complaintType = t.complaintType JOIN tblcustomer cu ON co.customerID = cu.customerID JOIN tbltaman ON tbltaman.tamanID = cu.tamanID JOIN tblarea a ON a.areaID = tbltaman.areaID WHERE co.complaintID = '" + req.body.id + "'";
+    var sql = "SELECT co.complaintID, co.premiseType, co.complaint, co.remarks, co.complaintDate, cu.name, CONCAT(cu.houseNo, ', ', cu.streetNo, ', ', tbltaman.tamanName, ', ', cu.postCode, ', ', cu.city) AS address, a.areaID, a.areaName, CONCAT(z.zoneCode,a.areaCode) AS 'code', (CASE WHEN co.status = 'c' THEN 'Confirmation' WHEN co.status = 'p' THEN 'Pending' WHEN co.status = 'i' THEN 'In progress' WHEN co.status = 'd' THEN 'Done' END) AS status from tblcomplaint co JOIN tblcustomer cu ON co.customerID = cu.customerID JOIN tbltaman ON tbltaman.tamanID = cu.tamanID JOIN tblarea a ON a.areaID = tbltaman.areaID JOIN tblzone z ON z.zoneID = a.zoneID WHERE co.complaintID = '" + req.body.id + "'";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -277,6 +277,20 @@ app.post('/getReportForComplaint', function (req, res) {
     });
     
 });
+
+app.post('/updateComplaintStatus', function(req,res){
+    
+    var sql = "UPDATE tblcomplaint SET status = (CASE WHEN '" + req.body.status + "' = 'Confirmation' THEN 'c' WHEN '" + req.body.status + "' = 'Pending' THEN 'p' WHEN '" + req.body.status + "' = 'In progress' THEN 'i' WHEN '" + req.body.status + "' = 'Done' THEN 'd' END) WHERE complaintID = '" + req.body.id + "'";
+    
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+});
+
 app.post('/updateAreaLngLat', function (req, res) {
     'use strict';
     var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat + "' WHERE areaID = '" + req.body.areaCode + "'";
