@@ -14,7 +14,7 @@ var nodemailer = require('nodemailer');
 var Joi = require('joi');
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -213,7 +213,7 @@ app.post('/getSubmitted', function (req, res) {
 //complaint module
 app.get('/getComplaintList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaint.date AS 'date', tblcomplaint.complaintTitle AS 'title', tblcustomer.name AS  'customer', tblcomplainttype.complaintType AS 'type', tblarea.areaName AS 'area', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Confirmation' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'In progress' WHEN tblcomplaint.status ='d' THEN 'Done' END) AS status FROM tblcomplaint JOIN tblcomplainttype ON tblcomplaint.complaintType = tblcomplainttype.complaintType JOIN tblcustomer ON tblcustomer.customerID = tblcomplaint.customerID JOIN tbltaman ON tbltaman.tamanID = tblcustomer.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID";
+    var sql = "SELECT tblcomplaint.date AS 'date', tblcomplaint.complaintTitle AS 'title', tblcustomer.name AS  'customer', tblcomplainttype.complaintType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Confirmation' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'In progress' WHEN tblcomplaint.status ='d' THEN 'Done' END) AS status FROM tblcomplaint JOIN tblcomplainttype ON tblcomplaint.complaintType = tblcomplainttype.complaintType JOIN tblcustomer ON tblcustomer.customerID = tblcomplaint.customerID JOIN tbltaman ON tbltaman.tamanID = tblcustomer.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -224,7 +224,7 @@ app.get('/getComplaintList', function (req, res) {
 
 app.get('/getComplaintLoc', function (req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaint.complaintID, tblcomplaint.date AS 'date', tblarea.longitude AS 'longitude', tblarea.latitude AS 'latitude', tblarea.areaName AS 'area', tblcustomer.name AS 'customer', tblcomplaint.status AS 'status' FROM tblcustomer JOIN tbltaman ON tblcustomer.tamanID = tbltaman.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID";
+    var sql = "SELECT tblcomplaint.complaintID, tblcomplaint.date AS 'date', tbltaman.longitude AS 'longitude', tbltaman.latitude AS 'latitude', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tbltaman.tamanName as 'taman', tblcustomer.name AS 'customer', tblcomplaint.status AS 'status' FROM tblcustomer JOIN tbltaman ON tblcustomer.tamanID = tbltaman.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID JOIN tblcomplaint ON tblcomplaint.customerID = tblcustomer.customerID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID";
     
     database.query(sql, function (err, result) {
         if (err) {

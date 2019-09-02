@@ -4237,7 +4237,7 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         $scope.filterComplaintList = angular.copy($scope.complaintList);
 
         $scope.searchComplaint = function(complaint) {
-            return (complaint.date + complaint.title + complaint.customer + complaint.type + complaint.area).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.date + complaint.title + complaint.customer + complaint.type + complaint.code).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.totalItems = $scope.filterComplaintList.length;
@@ -4301,8 +4301,10 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         console.log($scope.complaintLocList);
         $.each($scope.complaintLocList, function(index, value) {
             myLatLng[index] = { lat: value.latitude, lng: value.longitude };
+            
             value.date = $filter('date')(value.date, 'yyyy-MM-dd');
-            complaintInfo[index] = value.customer + ',' + value.date + ',' + value.area + ',' + 'View Detail.'.link('#/complaint-detail/' + value.complaintID);
+            
+            complaintInfo[index] = value.customer + ',' + value.date + ',' + value.code + '-' + value.taman +  ',' + 'View Detail.'.link('#/complaint-detail/' + value.complaintID);
 
             marker[index] = new google.maps.Marker({
                 position: myLatLng[index],

@@ -672,22 +672,22 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         $http.post('/getReportingStaff', $scope.area).then(function (response){
             $scope.thisReport.reportingStaff = response.data[0].staffName;
         });
-//        $http.post('/getReportACR', $scope.thisReport).then(function (response) {
-//    //        if(response.data.length != 0){
-//    //            $scope.thisReport.acr = response.data;            
-//    //        }
-//    //        else{
-//    //            $scope.thisReport.acr = [];
-//    //        }
-//    //        $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-//    //        $.each($scope.thisReport.acr, function (index, value) {
-//    //            $scope.acr += value.name;
-//    //            if ((index + 1) != $scope.acrRow) {
-//    //                $scope.acr += ', ';
-//    //            }
-//    //        });
-//        });
-//    });
+        $http.post('/getReportACR', $scope.thisReport).then(function (response) {
+            if(response.data.length != 0){
+                $scope.thisReport.acr = response.data;            
+            }
+            else{
+                $scope.thisReport.acr = [];
+            }
+            $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+            $scope.acr = "";
+            $.each($scope.thisReport.acr, function (index, value) {
+                $scope.acr += value.name;
+                if ((index + 1) != $scope.acrRow) {
+                    $scope.acr += ', ';
+                }
+            });
+        });
     
 
     

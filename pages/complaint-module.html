@@ -27,7 +27,7 @@
                                 <th width="30%" data-ng-click="orderBy('title');">Title <i class="fas fa-sort-down"></i></th>
                                 <th width="20%" data-ng-click="orderBy('customer');">Customer <i class="fas fa-sort-down"></i></th>
                                 <th width="10%" data-ng-click="orderBy('type');">Type <i class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('area');">Area <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('code');">Area <i class="fas fa-sort-down"></i></th>
                                 <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                             </tr>
                         </thead>
@@ -37,7 +37,7 @@
                                 <td data-ng-bind="c.title"></td>
                                 <td data-ng-bind="c.customer"></td>
                                 <td data-ng-bind="c.type"></td>
-                                <td data-ng-bind="c.area"></td>
+                                <td data-ng-bind="c.code"></td>
                                 <td><span data-ng-bind="c.status" data-ng-class="{{showbadge}}"></span></td>
                             </tr>
                         </tbody>

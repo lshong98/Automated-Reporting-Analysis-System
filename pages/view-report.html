@@ -14,7 +14,7 @@
             <table border="1">
                 <thead>
                     <tr>
-                        <th colspan="2" data-ng-bind="'IVWM INSPECTION REPORT ID: ' + (reportID)"></th>
+                        <th colspan="2" data-ng-bind="' REPORT ID: ' + (reportID)"></th>
                         <!--REPORT ID HERE-->
                         <th  data-ng-bind="'Completion Status:' + (thisReport.status)"></th>
                         <th data-ng-bind="'Collection Date: ' + (thisReport.date)"></th>
@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td data-ng-bind="thisReport.area"></td>
+                        <td data-ng-bind="thisReport.areaCode"></td>
                         <td data-ng-bind="thisReport.collection"></td>
                         <td data-ng-bind="thisReport.frequency"></td>
                         <td data-ng-bind="bin"></td>
