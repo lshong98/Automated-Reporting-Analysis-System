@@ -15,11 +15,11 @@ var Joi = require('joi');
 var fs = require('fs');
 var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
-//var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
+// var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
 
 require('dotenv').config();
 
-var SVR_PORT = 8080;
+var SVR_PORT = 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');

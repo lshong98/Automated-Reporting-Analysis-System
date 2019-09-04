@@ -14,18 +14,18 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'triemerge';
+var DB_NAME = 'trienekens05';
 
 // // Config used for socket connection, important for Google Cloud hosting
- var config = {
-     user: DB_USER,
-     password: DB_PASS, 
-     host: DB_HOST
- }
+//  var config = {
+//      user: DB_USER,
+//      password: DB_PASS, 
+//      host: DB_HOST
+//  }
 
- if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
-     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
- }
+//  if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
+//      config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+//  }
  
 // // Create connection 
 var db = mysql.createConnection({ 
