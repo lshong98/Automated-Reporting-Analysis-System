@@ -14,9 +14,9 @@
             <table border="1">
                 <thead>
                     <tr>
-                        <th colspan="2" data-ng-bind="'IVWM INSPECTION REPORT ID: ' + (reportID)"></th>
+                        <th colspan="2" data-ng-bind="' REPORT ID: ' + (reportID)"></th>
                         <!--REPORT ID HERE-->
-                        <th  data-ng-bind="'Completion Status:' + (thisReport.status)"></th>
+                        <th data-ng-bind="'Completion Status:' + (thisReport.status)"></th>
                         <th data-ng-bind="'Collection Date: ' + (thisReport.date)"></th>
                         <th data-ng-bind="'Garbage Amount(ton): ' + (thisReport.ton)"></th>
                         <th data-ng-bind="'Time Start: ' + (thisReport.startTime)"></th>
@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td data-ng-bind="thisReport.area"></td>
+                        <td data-ng-bind="thisReport.areaCode"></td>
                         <td data-ng-bind="thisReport.collection"></td>
                         <td data-ng-bind="thisReport.frequency"></td>
                         <td data-ng-bind="bin"></td>
@@ -56,7 +56,7 @@
     <br /><br />
     <div class="row">
         <div class="col-md-6">
-            <img id="myImg" style="width: 600px; height: 500px; margin: 15px;" src="{{thisReport.ifleet}}" />
+            <img id="myImg" style="width: 600px; height: 500px;" src="{{thisReport.ifleet}}" />
         </div>
         <div class="col-md-6">
             <div id="googleMap" style="min-height: 500px"></div>
@@ -88,7 +88,7 @@
             "left": mapleft,
             "top": maptop
         });
-        
+
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
             useCORS: true,
             scale: quality,
@@ -98,7 +98,7 @@
                     "left": 0,
                     "top": 0
                 });
-                
+
                 var img = canvas.toDataURL("image/png", 1.0);
                 var pdf = new jsPDF('l', 'mm', 'a3');
                 pdf.addImage(img, 'PNG', 45, 45, 350, 200);
@@ -106,5 +106,4 @@
             }
         });
     }
-
 </script>

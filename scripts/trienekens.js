@@ -130,6 +130,15 @@ app.service('storeDataService', function() {
             "id": '',
             "address": ''
         },
+        "collectionSchedule":{
+            "id": '',
+            "mon": '',
+            "tue": '',
+            "wed": '',
+            "thur": '',
+            "fri": '',
+            "sat": ''
+        },
         "databaseBin": {
             "date": '',
             "name": '',
@@ -290,6 +299,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         scope.showBdafDetails = true;
         scope.showDbdDetails = true;
         scope.showBlostDetails = true;
+        scope.showCollectionSchedule = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -317,6 +327,16 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.collection = {
             "id": ''
+        };
+
+        scope.thisCollectionSchedule = {
+            "id":'',
+            "mon": '',
+            "tue": '',
+            "wed": '',
+            "thur": '',
+            "fri": '',
+            "sat": ''
         };
 
         scope.thisDatabaseBin = {
@@ -626,6 +646,37 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                 }
             });
         };
+
+        scope.editCollectionSchedule = function(){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+        };
+
+        scope.saveCollectionSchedule = function(id, mon, tue, wed, thur, fri, sat){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            scope.thisCollectionSchedule = {"id":id, "mon":mon, "tue":tue, "wed":wed, "thur":thur, "fri":fri, "sat":sat};
+
+            $http.post('/editCollectionSchedule', scope.thisCollectionSchedule).then(function(response){
+                var data = response.data;
+                console.log(data);
+            }, function(error){
+                console.log(error);
+            });
+        };
+
+        scope.cancelCollectionSchedule = function(){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            $.each(storeDataService.collectionSchedule, function(index, value) {
+                if (storeDataService.collectionSchedule[index].id == scope.thisCollectionSchedule.id) {
+                    scope.x = angular.copy(storeDataService.collectionSchedule[index]);
+                }
+            });
+        };
+
         //BIN INVENTORY MODULE EDITABLE TABLES
         scope.editDatabaseBin = function() {
             scope.showDatabaseBin = !scope.showDatabaseBin;
@@ -815,6 +866,19 @@ app.directive('dateNow', ['$filter', function($filter) {
     };
 }]);
 
+app.directive("fileInput", function($parse){
+    return{
+        restrict: 'A',
+        link: function(scope, element, attribute){
+            element.bind("change", function(){
+                scope.$apply(function(){
+                    $parse(attribute.fileInput).assign(scope,element[0].files)
+                });
+            });
+        }
+    }
+});
+
 /*
     -Sharing Function
 */
@@ -843,6 +907,116 @@ app.run(function($rootScope) {
         var concat = area + '+' + zone;
 
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+    };
+});
+
+//Customer Service Pages Controller
+app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window){
+    $scope.loggedUser = localStorage.getItem('user');
+    
+    // $scope.loginBtn = function(){
+    //     if($scope.uname === "admin" && $scope.pass === "admin"){
+    //         localStorage.setItem('user', 'admin');
+    //         $rootScope.loggedInUser = true;
+    //         $location.path("/dashboard");
+    //     }
+    // };
+    
+    // $scope.logoutBtn = function(){
+    //     localStorage.clear();
+    //     $rootScope.loggedInUser = false;
+    //     $window.location.href = "#!";
+    //     $window.location.reload();
+    // };
+
+    $scope.sendNotifToDevice = function(){
+        $http.post('/sendNotifToDevice').then(function(response){
+            console.log(response.data);
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.uploadImg = function(){
+        var fd = new FormData();
+        angular.forEach($scope.files, function(file){
+            fd.append('file[]', file);
+        });
+        
+        // console.log(fd);
+        // $http.post("upload.php", fd, {
+        //     transformRequest: angular.identity,
+        //     headers:{'Content-Type': undefined}
+        // }).then(function(response){
+        //     alert(response.data);
+        //     $scope.displayImg();
+        // }, function(error){
+        //     console.log(error);
+        // });
+        console.log($scope.files);
+        $http.post('/uploadCarouselImg').then(function(response){
+            console.log(response.data);
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.displayImg = function(){
+        $http.get('/fetchCarouselImg').then(function(response){
+            console.log(response.data.output);
+            $scope.imgs = response.data.output;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.deleteImg = function(id, name){
+        $scope.delCarouselImg = {"id":id, "name":name};
+
+        $http.post('/deleteCarouselImg', $scope.delCarouselImg).then(function(response){
+            alert(response.data);
+            $scope.displayImg();
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.getSchedule = function(){
+        $http.get('/getAllSchedule').then(function(response){
+            console.log(response.data);
+            $scope.schedule = response.data;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.getPendingUser = function(){
+        $http.get('/getPendingUser').then(function(response){
+            console.log(response.data);
+            $scope.pendingUsers = response.data;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    // $scope.updatePendingUser = function(id, status){
+    //     $http.put('updatePendingUser.php?id='+id+"&status="+status).then(function(response){
+    //         alert(response.data);
+    //         $scope.getPendingUser();
+    //     }, function(error){
+    //         console.log(error);
+    //     });
+    // };
+
+    $scope.updatePendingUser = function(id, status){
+        $scope.pUsers = {"pendingID":id, "status":status};
+
+        $http.post('/updatePendingUser', $scope.pUsers).then(function(response){
+            alert(response.data);
+            $scope.getPendingUser();
+        }, function(error){
+            console.log(error);
+        });
     };
 });
 
@@ -1334,7 +1508,6 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
             });
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
         });
-        console.log($scope.areaList);
     });
 
     $scope.thisArea = function(areaID, areaName) {
@@ -2888,22 +3061,43 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
                 }
             }
 
+            console.log(boundaries);
             $.each(boundaries, function (index, value) {
+                var sumOfCoLat = 0;
+                var sumOfCoLng = 0;
+                for (var i=0; i<value.latLngs.length; i++){
+                    sumOfCoLat += value.latLngs[i].lat;
+                    sumOfCoLng += value.latLngs[i].lng;
+                    //console.log(value.latLngs[i]);
+                }
+                
+                var avgOfCoLat = sumOfCoLat / value.latLngs.length;
+                var avgOfCoLng = sumOfCoLng / value.latLngs.length;
+
                 var myPolygon = new google.maps.Polygon({
                     id: value.id,
                     paths: value.coordinate,
                     strokeColor: '#' + value.color,
                     strokeWeight: 2,
                     fillColor: '#' + value.color,
-                    fillOpacity: 0.45
+                    fillOpacity: 0.45,
+                    content: value.area,
+                    centercoordinate: new google.maps.LatLng(avgOfCoLat, avgOfCoLng)
                 });
                 myPolygon.setMap(map);
                 myPolygons.push(myPolygon);
-                if (value.area === $scope.areaCode) {
-                    google.maps.event.addListener(myPolygon, 'click', function() {
+                
+                var infoWindow = new google.maps.InfoWindow;
+                
+                
+                google.maps.event.addListener(myPolygon, 'click', function() {
+                    if (value.area === $scope.areaCode) {
                         setSelection(myPolygon);
-                    });
-                }
+                    }
+                    infoWindow.setContent(this.content);
+                    infoWindow.setPosition(this.centercoordinate);
+                    infoWindow.open(map);
+                });
                 polygons.push({"id": value.id, "color": value.color, "areaID": value.areaID, "area": value.area, "latLngs": value.latLngs});
             });
         });
@@ -4236,7 +4430,7 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         $scope.filterComplaintList = angular.copy($scope.complaintList);
 
         $scope.searchComplaint = function(complaint) {
-            return (complaint.date + complaint.title + complaint.customer + complaint.type + complaint.area).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.date + complaint.title + complaint.customer + complaint.type + complaint.code).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.totalItems = $scope.filterComplaintList.length;
@@ -4300,8 +4494,10 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         console.log($scope.complaintLocList);
         $.each($scope.complaintLocList, function(index, value) {
             myLatLng[index] = { lat: value.latitude, lng: value.longitude };
+            
             value.date = $filter('date')(value.date, 'yyyy-MM-dd');
-            complaintInfo[index] = value.customer + ',' + value.date + ',' + value.area + ',' + 'View Detail.'.link('#/complaint-detail/' + value.complaintID);
+            
+            complaintInfo[index] = value.customer + ',' + value.date + ',' + value.code + '-' + value.taman +  ',' + 'View Detail.'.link('#/complaint-detail/' + value.complaintID);
 
             marker[index] = new google.maps.Marker({
                 position: myLatLng[index],
@@ -4353,16 +4549,19 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
     $http.post('/getComplaintDetail', $scope.req).then(function(response) {
         var complaint = response.data;
         $scope.comDetail = {
-            'ctype': complaint[0].complaint,
-            'title': complaint[0].complaintTitle,
-            'content': complaint[0].complaintContent,
-            'date': $filter('date')(complaint[0].date, 'medium'),
+            'ctype': complaint[0].premiseType,
+            'title': complaint[0].complaint,
+            'content': complaint[0].remarks,
+            'date': $filter('date')(complaint[0].complaintDate, 'medium'),
             'customer': complaint[0].name,
             'address': complaint[0].address,
             'areaID': complaint[0].areaID,
             'area': complaint[0].areaName,
-            'status': complaint[0].status
+            'status': complaint[0].status,
+            'code' : complaint[0].code,
+            'id' : complaint[0].complaintID
         };
+        console.log($scope.comDetail);
 
         //get report dates for certain area id
         $scope.reportList = [];
@@ -4417,6 +4616,11 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             $scope.emailobj.text = "";
         }
         
+        $scope.updateStatus = function(){
+            $http.post('/updateComplaintStatus', $scope.comDetail).then(function (response){
+               console.log(response.data); 
+            });
+        }
     
     });
 
@@ -4426,31 +4630,67 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             "reportID": reportCode
         };
         
-        var $googleMap, map;
+        
 
         $http.post('/getReportForComplaint', $scope.report).then(function(response) {
             $('div.report_reference').html(response.data.content);
             $scope.thisReport = response.data.result[0];
+            
+            $scope.area = {
+                "areaID": $scope.thisReport.area
+            };    
+            $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
+                var $googleMap, map;
+                
+                if(response.data.length != 0 ){    
+                    var sumOfCoLat = 0;
+                    var sumOfCoLng = 0;
+                    for (var i = 0; i < response.data.length; i++) {
+                        sumOfCoLat += response.data[i].lat;
+                        sumOfCoLng += response.data[i].lng;
+                    }
+                    var avgOfCoLat = sumOfCoLat / response.data.length;
+                    var avgOfCoLng = sumOfCoLng / response.data.length;
+                    var data = response.data;
+                    var boundary = [];
+
+                    for (var i = 0; i < response.data.length; i++) {
+                        boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+
+                    }      
+                    var polygonColorCode = "#" + response.data[0].color;
+                    var myPolygon = new google.maps.Polygon({
+                        paths: boundary,
+                        strokeColor: polygonColorCode,
+                        strokeWeight: 2,
+                        fillColor: polygonColorCode,
+                        fillOpacity: 0.45
+                    });
+                    
+                    $googleMap = document.getElementById('googleMap');
+                    var visualizeMap = {
+                        center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        mapTypeControl: false,
+                        panControl: false,
+                        zoomControl: false,
+                        streetViewControl: false,
+                        disableDefaultUI: true,
+                        editable: false
+                    };
+
+                    map = new google.maps.Map($googleMap, visualizeMap);
+                    myPolygon.setMap(map);
+
+                    $window.setTimeout(function () {
+                        map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+                        map.setZoom(12);
+                    }, 1000);
+                }else{
+                    $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+                }                     
+            });
         });
-        
-        $googleMap = document.getElementById('googleMap');
-        var visualizeMap = {
-            center: new google.maps.LatLng(1, 1),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapTypeControl: false,
-            panControl: false,
-            zoomControl: false,
-            streetViewControl: false,
-            disableDefaultUI: true,
-            editable: false
-        };
-
-        map = new google.maps.Map($googleMap, visualizeMap);
-
-        $window.setTimeout(function () {
-            map.panTo(new google.maps.LatLng($scope.thisReport.lat, $scope.thisReport.lng));
-            map.setZoom(17);
-        }, 1000);
     }
 
     $scope.sendEmail = function(actioncode) {

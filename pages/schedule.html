@@ -1,0 +1,68 @@
+<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getSchedule()">
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <h1>Bin Collection Schedule</h1><br/><br/>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Area ID</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="x in schedule track by $index">
+                        <td>{{x.areaID}}</td>
+                        <td>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="x.mon" data-ng-show="!showCollectionSchedule"/>
+                                <span data-ng-show="showCollectionSchedule">{{x.mon}}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div editable>
+                                <input type="text" class="form-control" data-ng-model="x.tue" data-ng-show="!showCollectionSchedule"/>
+                                <span data-ng-show="showCollectionSchedule">{{x.tue}}</span>
+                            </div>
+                        </td>
+                        <td>
+                                <div editable>
+                                        <input type="text" class="form-control" data-ng-model="x.wed" data-ng-show="!showCollectionSchedule"/>
+                                        <span data-ng-show="showCollectionSchedule">{{x.wed}}</span>
+                                    </div>
+                        </td>
+                        <td>
+                                <div editable>
+                                        <input type="text" class="form-control" data-ng-model="x.thur" data-ng-show="!showCollectionSchedule"/>
+                                        <span data-ng-show="showCollectionSchedule">{{x.thur}}</span>
+                                    </div>
+                        </td>
+                        <td>
+                                <div editable>
+                                        <input type="text" class="form-control" data-ng-model="x.fri" data-ng-show="!showCollectionSchedule"/>
+                                        <span data-ng-show="showCollectionSchedule">{{x.fri}}</span>
+                                    </div>
+                        </td>
+                        <td>
+                                <div editable>
+                                        <input type="text" class="form-control" data-ng-model="x.sat" data-ng-show="!showCollectionSchedule"/>
+                                        <span data-ng-show="showCollectionSchedule">{{x.sat}}</span>
+                                    </div>
+                        </td>
+                        <!-- <td><button class="btn btn-default">Edit</button></td> -->
+                        <td>
+                            <button class="btn btn-sm btn-primary" data-ng-show="showCollectionSchedule" data-ng-click="editCollectionSchedule();"><i class="fa fa-pencil-alt"></i></button>
+                            <button class="btn btn-sm btn-warning" data-ng-show="!showCollectionSchedule" data-ng-click="saveCollectionSchedule(x.areaID, x.mon, x.tue, x.wed, x.thur, x.fri, x.sat);"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-sm btn-default" data-ng-show="!showCollectionSchedule" data-ng-click="cancelCollectionSchedule();"><i class="fa fa-times"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
