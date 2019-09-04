@@ -1050,7 +1050,7 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         var ctx = c.getContext("2d");
         var image = new Image();
         image.onload = function() {
-            ctx.drawImage(image, 0, 0);
+            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
         };
         image.src = $scope.editField.ifleet;
     });
@@ -1079,14 +1079,6 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             }
         });
     };
-
-    window.onload = function() {
-
-
-
-
-
-    }
 
     function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
         if (pasteEvent.clipboardData == false) {
