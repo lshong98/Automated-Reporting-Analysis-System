@@ -83,6 +83,22 @@ app.get('/loadBoundary', function (req, res) {
     });
 });
 
+app.post('/loadSpecificBoundary', function(req, res){
+   'use strict';
+    
+    var sql = "SELECT tblboundary.boundaryID, tblboundaryplot.lat, tblboundaryplot.lng FROM tblboundary JOIN tblboundaryplot ON tblboundary.boundaryID = tblboundaryplot.boundaryID WHERE tblboundary.areaID = '" + req.body.areaID + "' ORDER BY tblboundaryplot.boundaryID ASC, tblboundaryplot.ordering ASC";
+    
+    database.query(sql, function(err, result){
+       if(err) {
+           req.end();
+           throw err;
+       }else{
+           res.json(result);
+           res.end();
+       } 
+    });
+});
+
 app.post('/updateBoundary', function (req, res) {
     'use strict';
     

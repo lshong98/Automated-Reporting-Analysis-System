@@ -2888,22 +2888,43 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
                 }
             }
 
+            console.log(boundaries);
             $.each(boundaries, function (index, value) {
+                var sumOfCoLat = 0;
+                var sumOfCoLng = 0;
+                for (var i=0; i<value.latLngs.length; i++){
+                    sumOfCoLat += value.latLngs[i].lat;
+                    sumOfCoLng += value.latLngs[i].lng;
+                    //console.log(value.latLngs[i]);
+                }
+                
+                var avgOfCoLat = sumOfCoLat / value.latLngs.length;
+                var avgOfCoLng = sumOfCoLng / value.latLngs.length;
+
                 var myPolygon = new google.maps.Polygon({
                     id: value.id,
                     paths: value.coordinate,
                     strokeColor: '#' + value.color,
                     strokeWeight: 2,
                     fillColor: '#' + value.color,
-                    fillOpacity: 0.45
+                    fillOpacity: 0.45,
+                    content: value.area,
+                    centercoordinate: new google.maps.LatLng(avgOfCoLat, avgOfCoLng)
                 });
                 myPolygon.setMap(map);
                 myPolygons.push(myPolygon);
-                if (value.area === $scope.areaCode) {
-                    google.maps.event.addListener(myPolygon, 'click', function() {
+                
+                var infoWindow = new google.maps.InfoWindow;
+                
+                
+                google.maps.event.addListener(myPolygon, 'click', function() {
+                    if (value.area === $scope.areaCode) {
                         setSelection(myPolygon);
-                    });
-                }
+                    }
+                    infoWindow.setContent(this.content);
+                    infoWindow.setPosition(this.centercoordinate);
+                    infoWindow.open(map);
+                });
                 polygons.push({"id": value.id, "color": value.color, "areaID": value.areaID, "area": value.area, "latLngs": value.latLngs});
             });
         });
