@@ -118,6 +118,15 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "areaCode": $routeParams.areaCode,
         "areaName": $routeParams.areaName
     };
+    
+    $scope.getCode = {
+        "areaID": $routeParams.areaCode
+    }
+    //get code
+    $http.post('/getAreaCode', $scope.getCode).then(function (response){
+        $scope.code = response.data[0].code;
+    });
+    
     //    $scope.report.area = areaCode;
     $http.post('/getInitTime', $scope.params).then(function(response) {
         $scope.report.startTime = response.data.stime;
@@ -158,6 +167,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "areaID": $routeParams.areaCode
     }
     $http.post('/loadSpecificBoundary', $scope.passArea).then(function(response) {
+        if(response.data.length != 0 ){
         var sumOfCoLat = 0;
         var sumOfCoLng = 0;
         for (var i = 0; i < response.data.length; i++) {
@@ -186,11 +196,12 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             editable: false
         };
 
+        var polygonColorCode = "#" + response.data[0].color;
         var myPolygon = new google.maps.Polygon({
             paths: boundary,
-            strokeColor: '#FF0000',
+            strokeColor: polygonColorCode,
             strokeWeight: 2,
-            fillColor: '#FF0000',
+            fillColor: polygonColorCode,
             fillOpacity: 0.45
         });
 
@@ -289,6 +300,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
             map.setZoom(13);
         }, 1000);
+        }else{
+            $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+        }         
     });
 
     $scope.addReport = function() {
@@ -526,18 +540,22 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
     $scope.show = angular.copy(storeDataService.show.reporting);
 
     $scope.reportingOfficerId = {
-        "officerid": $window.sessionStorage.getItem('owner')
+        "officerid": $window.sessionStorage.getItem('owner'),
+        "day" : $filter('date')(new Date(), 'EEE').toLowerCase()
     };
 
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
+        console.log(response.data);
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
+            var areaCode = value.areaCode.split(",");
             var area = [];
             $.each(areaID, function(index, value) {
                 area.push({
                     "id": areaID[index],
-                    "name": areaName[index]
+                    "name": areaName[index],
+                    "code": areaCode[index]
                 });
             });
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
@@ -562,12 +580,11 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
                 ($scope.normalReport).push(value);
             }
         });
-        console.log($scope.abnormalReport);
 
         $scope.filterReportList = angular.copy($scope.reportList);
 
         $scope.searchReport = function(report) {
-            return (report.reportID + report.reportCollectionDate + report.areaName + report.reportStatus + report.frequency + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+            return (report.reportID + report.reportCollectionDate + report.areaCode + report.reportStatus + report.frequency + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
         }
 
         $scope.totalItems = $scope.filterReportList.length;
@@ -657,6 +674,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     };
 
     $http.post('/getReport', $scope.report).then(function(response) {
+
         $scope.thisReport = response.data[0];
         $scope.thisReport.date = $filter('date')($scope.thisReport.date, 'yyyy-MM-dd');
         $scope.area = {
@@ -668,13 +686,13 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         };
 
         $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
+        if(response.data.length != 0 ){    
             var sumOfCoLat = 0;
             var sumOfCoLng = 0;
             for (var i = 0; i < response.data.length; i++) {
                 sumOfCoLat += response.data[i].lat;
                 sumOfCoLng += response.data[i].lng;
             }
-
             var avgOfCoLat = sumOfCoLat / response.data.length;
             var avgOfCoLng = sumOfCoLng / response.data.length;
             var data = response.data;
@@ -702,12 +720,17 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             //                }
             //            }        
             //            
-            //            
+            //
+
+
+
+
+            var polygonColorCode = "#" + response.data[0].color;
             var myPolygon = new google.maps.Polygon({
                 paths: boundary,
-                strokeColor: '#FF0000',
+                strokeColor: polygonColorCode,
                 strokeWeight: 2,
-                fillColor: '#FF0000',
+                fillColor: polygonColorCode,
                 fillOpacity: 0.45
             });
 
@@ -731,7 +754,11 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             $window.setTimeout(function() {
                 map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
                 map.setZoom(12);
-            }, 1000);
+                }, 1000);
+            
+            }else{
+                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+            }               
         });
 
         $http.post('/getReportBinCenter', $scope.area).then(function(response) {
@@ -847,145 +874,81 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
 
         $scope.editField = response.data[0];
         $scope.editField.date = new Date(response.data[0].date);
-
+        $scope.areaCode = response.data[0].areaCode;
         $scope.area = {
             "areaID": response.data[0].area
         };
 
         $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
-            var sumOfCoLat = 0;
-            var sumOfCoLng = 0;
-            for (var i = 0; i < response.data.length; i++) {
-                sumOfCoLat += response.data[i].lat;
-                sumOfCoLng += response.data[i].lng;
-            }
-
-            var avgOfCoLat = sumOfCoLat / response.data.length;
-            var avgOfCoLng = sumOfCoLng / response.data.length;
-            var data = response.data;
-            var boundary = [];
-
-            for (var i = 0; i < response.data.length; i++) {
-                boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
-
-            }
-            var myPolygon = new google.maps.Polygon({
-                paths: boundary,
-                strokeColor: '#FF0000',
-                strokeWeight: 2,
-                fillColor: '#FF0000',
-                fillOpacity: 0.45
-            });
-
-            var $googleMap = document.getElementById('googleMap');
-            var visualizeMap = {
-                center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                mapTypeControl: false,
-                panControl: false,
-                zoomControl: false,
-                streetViewControl: false,
-                disableDefaultUI: true,
-                editable: false
-            };
-
-            map = new google.maps.Map($googleMap, visualizeMap);
-            myPolygon.setMap(map);
-
-            $window.setTimeout(function() {
-                map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
-                map.setZoom(12);
-            }, 1000);
-
-            // OnClick add Marker and get address
-            google.maps.event.addListener(map, "click", function(e) {
-                var latLng, latitude, longtitude, circle, rectangle;
-
-                latLng = e.latLng;
-                latitude = latLng.lat();
-                longtitude = latLng.lng();
-
-                if ($scope.shape == "circle") {
-                    $scope.circleID++;
-                    circle = new google.maps.Circle({
-                        id: $scope.circleID,
-                        map: map,
-                        center: new google.maps.LatLng(latitude, longtitude),
-                        radius: 200,
-                        fillColor: 'transparent',
-                        strokeColor: 'red',
-                        editable: true,
-                        draggable: true
-                    });
-                    centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
-
-
-                    google.maps.event.addListener(circle, "radius_changed", function() {
-                        $.each(centerArray, function(index, value) {
-                            if (circle.id == (index + 1)) {
-                                centerArray[index].radius = circle.getRadius();
-                            }
-                        });
-                    });
-                    google.maps.event.addListener(circle, "center_changed", function() {
-                        $.each(centerArray, function(index, value) {
-                            if (circle.id == (index + 1)) {
-                                console.log(index);
-                                centerArray[index].cLat = circle.getCenter().lat();
-                                centerArray[index].cLong = circle.getCenter().lng();
-                            }
-                        });
-                    });
-                } else if ($scope.shape == "rectangle") {
-                    $scope.rectangleID++;
-                    rectangle = new google.maps.Rectangle({
-                        id: $scope.rectangleID,
-                        strokeColor: '#FF0000',
-                        strokeWeight: 2,
-                        fillColor: 'transparent',
-                        map: map,
-                        editable: true,
-                        draggable: true,
-                        center: new google.maps.LatLng(latitude, longtitude),
-                        bounds: new google.maps.LatLngBounds(
-                            new google.maps.LatLng(latitude, longtitude),
-                            new google.maps.LatLng(latitude + 0.001, longtitude + 0.001),
-                        )
-                    });
-                    rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
-
-                    google.maps.event.addListener(rectangle, "bounds_changed", function() {
-                        var bounds = rectangle.getBounds();
-                        var ne = bounds.getNorthEast();
-                        var sw = bounds.getSouthWest();
-                        $.each(rectArray, function(index, value) {
-                            if (rectangle.id == (index + 1)) {
-                                rectArray[index].neLat = ne.lat();
-                                rectArray[index].neLng = ne.lng();
-                                rectArray[index].swLat = sw.lat();
-                                rectArray[index].swLng = sw.lng();
-                            }
-                        });
-                    });
+            if(response.data.length != 0){
+                var sumOfCoLat = 0;
+                var sumOfCoLng = 0;
+                for (var i = 0; i < response.data.length; i++) {
+                    sumOfCoLat += response.data[i].lat;
+                    sumOfCoLng += response.data[i].lng;
                 }
-            });
 
-            $http.post('/getReportCircle', $scope.reportObj).then(function(response) {
+                var avgOfCoLat = sumOfCoLat / response.data.length;
+                var avgOfCoLng = sumOfCoLng / response.data.length;
                 var data = response.data;
+                var boundary = [];
+
+                for (var i = 0; i < response.data.length; i++) {
+                    boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+
+                }
+
+                var polygonColorCode = "#" + response.data[0].color;
+                var myPolygon = new google.maps.Polygon({
+                    paths: boundary,
+                    strokeColor: polygonColorCode,
+                    strokeWeight: 2,
+                    fillColor: polygonColorCode,
+                    fillOpacity: 0.45
+                });
+
+                var $googleMap = document.getElementById('googleMap');
+                var visualizeMap = {
+                    center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: false,
+                    panControl: false,
+                    zoomControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: true,
+                    editable: false
+                };
+
+                map = new google.maps.Map($googleMap, visualizeMap);
+                myPolygon.setMap(map);
+
                 $window.setTimeout(function() {
-                    $.each(data, function(index, value) {
+                    map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+                    map.setZoom(12);
+                }, 1000);
+
+                // OnClick add Marker and get address
+                google.maps.event.addListener(map, "click", function(e) {
+                    var latLng, latitude, longtitude, circle, rectangle;
+
+                    latLng = e.latLng;
+                    latitude = latLng.lat();
+                    longtitude = latLng.lng();
+
+                    if ($scope.shape == "circle") {
                         $scope.circleID++;
-                        var circle = new google.maps.Circle({
+                        circle = new google.maps.Circle({
                             id: $scope.circleID,
                             map: map,
-                            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
-                            radius: parseFloat(data[index].radius),
+                            center: new google.maps.LatLng(latitude, longtitude),
+                            radius: 200,
                             fillColor: 'transparent',
                             strokeColor: 'red',
                             editable: true,
                             draggable: true
                         });
                         centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
+
 
                         google.maps.event.addListener(circle, "radius_changed", function() {
                             $.each(centerArray, function(index, value) {
@@ -997,34 +960,27 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                         google.maps.event.addListener(circle, "center_changed", function() {
                             $.each(centerArray, function(index, value) {
                                 if (circle.id == (index + 1)) {
-                                    centerArray[index].lat = circle.getCenter().lat();
-                                    centerArray[index].lng = circle.getCenter().lng();
+                                    console.log(index);
+                                    centerArray[index].cLat = circle.getCenter().lat();
+                                    centerArray[index].cLong = circle.getCenter().lng();
                                 }
                             });
                         });
-                    });
-                }, 1000);
-
-            });
-
-            $http.post('/getReportRect', $scope.reportObj).then(function(response) {
-                var data = response.data;
-                $window.setTimeout(function() {
-                    $.each(data, function(index, value) {
+                    } else if ($scope.shape == "rectangle") {
                         $scope.rectangleID++;
-                        var rectangle = new google.maps.Rectangle({
+                        rectangle = new google.maps.Rectangle({
                             id: $scope.rectangleID,
-                            map: map,
-                            center: new google.maps.LatLng(data[index].lat, data[index].lng),
-                            bounds: new google.maps.LatLngBounds(
-                                new google.maps.LatLng(data[index].swLat, data[index].swLng),
-                                new google.maps.LatLng(data[index].neLat, data[index].neLng),
-                            ),
-                            fillColor: 'transparent',
-                            strokeColor: 'red',
+                            strokeColor: '#FF0000',
                             strokeWeight: 2,
+                            fillColor: 'transparent',
+                            map: map,
                             editable: true,
-                            draggable: true
+                            draggable: true,
+                            center: new google.maps.LatLng(latitude, longtitude),
+                            bounds: new google.maps.LatLngBounds(
+                                new google.maps.LatLng(latitude, longtitude),
+                                new google.maps.LatLng(latitude + 0.001, longtitude + 0.001),
+                            )
                         });
                         rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
 
@@ -1041,10 +997,86 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                                 }
                             });
                         });
-                    })
-                }, 1000);
-            });
+                    }
+                });
 
+                $http.post('/getReportCircle', $scope.reportObj).then(function(response) {
+                    var data = response.data;
+                    $window.setTimeout(function() {
+                        $.each(data, function(index, value) {
+                            $scope.circleID++;
+                            var circle = new google.maps.Circle({
+                                id: $scope.circleID,
+                                map: map,
+                                center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+                                radius: parseFloat(data[index].radius),
+                                fillColor: 'transparent',
+                                strokeColor: 'red',
+                                editable: true,
+                                draggable: true
+                            });
+                            centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
+
+                            google.maps.event.addListener(circle, "radius_changed", function() {
+                                $.each(centerArray, function(index, value) {
+                                    if (circle.id == (index + 1)) {
+                                        centerArray[index].radius = circle.getRadius();
+                                    }
+                                });
+                            });
+                            google.maps.event.addListener(circle, "center_changed", function() {
+                                $.each(centerArray, function(index, value) {
+                                    if (circle.id == (index + 1)) {
+                                        centerArray[index].lat = circle.getCenter().lat();
+                                        centerArray[index].lng = circle.getCenter().lng();
+                                    }
+                                });
+                            });
+                        });
+                    }, 1000);
+
+                });
+
+                $http.post('/getReportRect', $scope.reportObj).then(function(response) {
+                    var data = response.data;
+                    $window.setTimeout(function() {
+                        $.each(data, function(index, value) {
+                            $scope.rectangleID++;
+                            var rectangle = new google.maps.Rectangle({
+                                id: $scope.rectangleID,
+                                map: map,
+                                center: new google.maps.LatLng(data[index].lat, data[index].lng),
+                                bounds: new google.maps.LatLngBounds(
+                                    new google.maps.LatLng(data[index].swLat, data[index].swLng),
+                                    new google.maps.LatLng(data[index].neLat, data[index].neLng),
+                                ),
+                                fillColor: 'transparent',
+                                strokeColor: 'red',
+                                strokeWeight: 2,
+                                editable: true,
+                                draggable: true
+                            });
+                            rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
+
+                            google.maps.event.addListener(rectangle, "bounds_changed", function() {
+                                var bounds = rectangle.getBounds();
+                                var ne = bounds.getNorthEast();
+                                var sw = bounds.getSouthWest();
+                                $.each(rectArray, function(index, value) {
+                                    if (rectangle.id == (index + 1)) {
+                                        rectArray[index].neLat = ne.lat();
+                                        rectArray[index].neLng = ne.lng();
+                                        rectArray[index].swLat = sw.lat();
+                                        rectArray[index].swLng = sw.lng();
+                                    }
+                                });
+                            });
+                        })
+                    }, 1000);
+                });
+            }else{
+                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+            }  
         });
         var c = document.getElementById("mycanvas");
         var ctx = c.getContext("2d");

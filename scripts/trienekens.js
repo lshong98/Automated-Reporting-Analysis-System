@@ -1334,7 +1334,6 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
             });
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
         });
-        console.log($scope.areaList);
     });
 
     $scope.thisArea = function(areaID, areaName) {
@@ -4458,31 +4457,67 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             "reportID": reportCode
         };
         
-        var $googleMap, map;
+        
 
         $http.post('/getReportForComplaint', $scope.report).then(function(response) {
             $('div.report_reference').html(response.data.content);
             $scope.thisReport = response.data.result[0];
+            
+            $scope.area = {
+                "areaID": $scope.thisReport.area
+            };    
+            $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
+                var $googleMap, map;
+                
+                if(response.data.length != 0 ){    
+                    var sumOfCoLat = 0;
+                    var sumOfCoLng = 0;
+                    for (var i = 0; i < response.data.length; i++) {
+                        sumOfCoLat += response.data[i].lat;
+                        sumOfCoLng += response.data[i].lng;
+                    }
+                    var avgOfCoLat = sumOfCoLat / response.data.length;
+                    var avgOfCoLng = sumOfCoLng / response.data.length;
+                    var data = response.data;
+                    var boundary = [];
+
+                    for (var i = 0; i < response.data.length; i++) {
+                        boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+
+                    }      
+                    var polygonColorCode = "#" + response.data[0].color;
+                    var myPolygon = new google.maps.Polygon({
+                        paths: boundary,
+                        strokeColor: polygonColorCode,
+                        strokeWeight: 2,
+                        fillColor: polygonColorCode,
+                        fillOpacity: 0.45
+                    });
+                    
+                    $googleMap = document.getElementById('googleMap');
+                    var visualizeMap = {
+                        center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        mapTypeControl: false,
+                        panControl: false,
+                        zoomControl: false,
+                        streetViewControl: false,
+                        disableDefaultUI: true,
+                        editable: false
+                    };
+
+                    map = new google.maps.Map($googleMap, visualizeMap);
+                    myPolygon.setMap(map);
+
+                    $window.setTimeout(function () {
+                        map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+                        map.setZoom(12);
+                    }, 1000);
+                }else{
+                    $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+                }                     
+            });
         });
-        
-        $googleMap = document.getElementById('googleMap');
-        var visualizeMap = {
-            center: new google.maps.LatLng(1, 1),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapTypeControl: false,
-            panControl: false,
-            zoomControl: false,
-            streetViewControl: false,
-            disableDefaultUI: true,
-            editable: false
-        };
-
-        map = new google.maps.Map($googleMap, visualizeMap);
-
-        $window.setTimeout(function () {
-            map.panTo(new google.maps.LatLng($scope.thisReport.lat, $scope.thisReport.lng));
-            map.setZoom(17);
-        }, 1000);
     }
 
     $scope.sendEmail = function(actioncode) {

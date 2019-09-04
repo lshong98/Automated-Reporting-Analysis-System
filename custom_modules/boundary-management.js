@@ -86,7 +86,7 @@ app.get('/loadBoundary', function (req, res) {
 app.post('/loadSpecificBoundary', function(req, res){
    'use strict';
     
-    var sql = "SELECT tblboundary.boundaryID, tblboundaryplot.lat, tblboundaryplot.lng FROM tblboundary JOIN tblboundaryplot ON tblboundary.boundaryID = tblboundaryplot.boundaryID WHERE tblboundary.areaID = '" + req.body.areaID + "' ORDER BY tblboundaryplot.boundaryID ASC, tblboundaryplot.ordering ASC";
+    var sql = "SELECT tblboundary.boundaryID, tblboundary.color, tblboundaryplot.lat, tblboundaryplot.lng FROM tblboundary JOIN tblboundaryplot ON tblboundary.boundaryID = tblboundaryplot.boundaryID WHERE tblboundary.status = 'A' AND tblboundary.areaID = '" + req.body.areaID + "' ORDER BY tblboundaryplot.boundaryID ASC, tblboundaryplot.ordering ASC";
     
     database.query(sql, function(err, result){
        if(err) {
