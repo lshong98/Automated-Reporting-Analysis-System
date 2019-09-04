@@ -79,9 +79,11 @@
     </div>
 </div>
 <div class="form-group row">
+<!--
     <div class="col-md-6">
         <input type="file" data-ng-model="editField.ifleet" accept="image/*" app-filereader>
     </div>
+-->
     
     <div class="col-md-6">
         <button class="btn btn-primary btnShape" data-shape="circle">Circle</button>
@@ -120,13 +122,21 @@ textarea {
 }
 </style>
 <div class="row">
+<!--
         <div class="col-md-6" style="width: 50%">
             <img id="myImg" src="{{editField.ifleet}}" style="width:650px; height: 650px;" />
         </div>
-        <div class="col-md-6" style="width: 50%" data-html2canvas-ignore="true">
-            <div id="googleMap" style="min-height: 650px; min-width: 650px;"></div>
+-->
+        <div class="col-md-6">
+            <canvas style="border:1px solid grey; width: 600px; height: 500px;" id="mycanvas"></canvas>
+        </div>
+        <div class="col-md-6" data-html2canvas-ignore="true">
+            <div id="googleMap" style="min-height: 500px;"></div>
         </div>
 </div>
+<script>
+
+</script>
 <!--
 <div class="row">
    <div class="col-md-6">

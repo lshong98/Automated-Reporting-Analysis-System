@@ -940,7 +940,15 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                     });
                 })
             }, 1000);
-        });        
+        });
+        
+        var c = document.getElementById("mycanvas");
+        var ctx = c.getContext("2d");
+        var image = new Image();
+        image.onload = function() {
+          ctx.drawImage(image, 0, 0);
+        };
+        image.src = $scope.editField.ifleet;
         
     });
     
@@ -966,8 +974,81 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                 });
                 window.location.href = '#/reporting';
             }
-        });
-        
-              
+        });      
     };
+    
+    window.onload = function() {
+      
+        
+      
+        
+
+    }
+    
+    function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
+        if (pasteEvent.clipboardData == false) {
+            if (typeof(callback) == "function") {
+                callback(undefined);
+            }
+        };
+
+        var items = pasteEvent.clipboardData.items;
+
+        if (items == undefined) {
+            if (typeof(callback) == "function") {
+                callback(undefined);
+            }
+        };
+
+        for (var i = 0; i < items.length; i++) {
+            // Skip content if not image
+            if (items[i].type.indexOf("image") == -1) continue;
+            // Retrieve image on clipboard as blob
+            var blob = items[i].getAsFile();
+
+            if (typeof(callback) == "function") {
+                callback(blob);
+            }
+        }
+    }
+
+    window.addEventListener("paste", function(e) {
+
+        // Handle the event
+        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+            // If there's an image, display it in the canvas
+            if (imageBlob) {
+                var canvas = document.getElementById("mycanvas");
+                var ctx = canvas.getContext('2d');
+//                ctx.drawImage($scope.editField.ifleet)
+
+                // Create an image to render the blob on the canvas
+                var img = new Image();
+
+                // Once the image loads, render the img on the canvas
+                img.onload = function() {
+                    // Update dimensions of the canvas with the dimensions of the image
+                    canvas.width = this.width;
+                    canvas.height = this.height;
+
+                    // Draw the image
+                    ctx.drawImage(img, 0, 0);
+                };
+
+                // Crossbrowser support for URL
+                var URLObj = window.URL || window.webkitURL;
+
+                // Creates a DOMString containing a URL representing the object given in the parameter
+                // namely the original Blob
+                img.src = URLObj.createObjectURL(imageBlob);
+                //console.log(imageBlob);
+                var reader = new FileReader();
+                reader.readAsDataURL(imageBlob); 
+                reader.onloadend = function() {
+                    var base64data = reader.result;                
+                    $scope.editField.ifleet = base64data;
+                }
+            }
+        });
+    }, false);
 });
