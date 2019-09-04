@@ -219,6 +219,18 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/reporting"><i class="fa fa-file"></i> Reporting</a></li>';
             }
+            case "upload banner":
+                if (status == 'A') {
+                    return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/upload-image-carousel"><i class="fa fa-file"></i> Upload Banner</a></li>';
+                }
+            case "approve user":
+                if (status == 'A') {
+                    return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-app-user"><i class="fa fa-file"></i> Approve Users</a></li>';
+                }
+            case "send notif":
+                if (status == 'A') {
+                    return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/post-announcement"><i class="fa fa-file"></i> Post Announcements</a></li>';
+                }
             
         
     }

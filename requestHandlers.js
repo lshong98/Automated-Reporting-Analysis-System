@@ -156,5 +156,21 @@ app.get('/damaged-lost-bin', function (req, res) {
     'use strict';
     res.sendFile('pages/damaged-lost-bin.html', {root: __dirname});
 });
+app.get('/post-announcement', function (req, res) {
+    'use strict';
+    res.sendFile('pages/postAnnouncement.html', {root: __dirname});
+});
+app.get('/upload-image-carousel', function (req, res) {
+    'use strict';
+    res.sendFile('pages/upload_img.html', {root: __dirname});
+});
+app.get('/approve-app-user', function (req, res) {
+    'use strict';
+    res.sendFile('pages/approveUser.html', {root: __dirname});
+});
+app.get('/bin-collection-schedule', function (req, res) {
+    'use strict';
+    res.sendFile('pages/schedule.html', {root: __dirname});
+});
 
 module.exports = app;

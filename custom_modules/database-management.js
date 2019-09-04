@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = '';
+var DB_NAME = 'trienekens';
 
 // // Config used for socket connection, important for Google Cloud hosting
  var config = {
@@ -31,7 +31,8 @@ var DB_NAME = '';
 var db = mysql.createConnection({ 
    host: DB_HOST,
    user: DB_USER,  
-   password: DB_PASS
+   password: DB_PASS,
+   port: 3307
 });
 
 // var db = mysql.createConnection(config);
@@ -181,7 +182,9 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view dbdDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create blostDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit blostDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view blostDetails')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('upload banner')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('approve user')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('send notif')"
         
     ], i;
     
@@ -264,6 +267,9 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '50', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '51', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '52', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '53', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '54', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '55', 'A')"
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {

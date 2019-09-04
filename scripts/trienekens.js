@@ -130,6 +130,15 @@ app.service('storeDataService', function() {
             "id": '',
             "address": ''
         },
+        "collectionSchedule":{
+            "id": '',
+            "mon": '',
+            "tue": '',
+            "wed": '',
+            "thur": '',
+            "fri": '',
+            "sat": ''
+        },
         "databaseBin": {
             "date": '',
             "name": '',
@@ -290,6 +299,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         scope.showBdafDetails = true;
         scope.showDbdDetails = true;
         scope.showBlostDetails = true;
+        scope.showCollectionSchedule = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -316,6 +326,16 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.collection = {
             "id": ''
+        };
+
+        scope.thisCollectionSchedule = {
+            "id":'',
+            "mon": '',
+            "tue": '',
+            "wed": '',
+            "thur": '',
+            "fri": '',
+            "sat": ''
         };
 
         scope.thisDatabaseBin = {
@@ -586,6 +606,37 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                 }
             });
         };
+
+        scope.editCollectionSchedule = function(){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+        };
+
+        scope.saveCollectionSchedule = function(id, mon, tue, wed, thur, fri, sat){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            scope.thisCollectionSchedule = {"id":id, "mon":mon, "tue":tue, "wed":wed, "thur":thur, "fri":fri, "sat":sat};
+
+            $http.post('/editCollectionSchedule', scope.thisCollectionSchedule).then(function(response){
+                var data = response.data;
+                console.log(data);
+            }, function(error){
+                console.log(error);
+            });
+        };
+
+        scope.cancelCollectionSchedule = function(){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            $.each(storeDataService.collectionSchedule, function(index, value) {
+                if (storeDataService.collectionSchedule[index].id == scope.thisCollectionSchedule.id) {
+                    scope.x = angular.copy(storeDataService.collectionSchedule[index]);
+                }
+            });
+        };
+
         //BIN INVENTORY MODULE EDITABLE TABLES
         scope.editDatabaseBin = function() {
             scope.showDatabaseBin = !scope.showDatabaseBin;
@@ -775,6 +826,19 @@ app.directive('dateNow', ['$filter', function($filter) {
     };
 }]);
 
+app.directive("fileInput", function($parse){
+    return{
+        restrict: 'A',
+        link: function(scope, element, attribute){
+            element.bind("change", function(){
+                scope.$apply(function(){
+                    $parse(attribute.fileInput).assign(scope,element[0].files)
+                });
+            });
+        }
+    }
+});
+
 /*
     -Sharing Function
 */
@@ -803,6 +867,116 @@ app.run(function($rootScope) {
         var concat = area + '+' + zone;
 
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+    };
+});
+
+//Customer Service Pages Controller
+app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window){
+    $scope.loggedUser = localStorage.getItem('user');
+    
+    // $scope.loginBtn = function(){
+    //     if($scope.uname === "admin" && $scope.pass === "admin"){
+    //         localStorage.setItem('user', 'admin');
+    //         $rootScope.loggedInUser = true;
+    //         $location.path("/dashboard");
+    //     }
+    // };
+    
+    // $scope.logoutBtn = function(){
+    //     localStorage.clear();
+    //     $rootScope.loggedInUser = false;
+    //     $window.location.href = "#!";
+    //     $window.location.reload();
+    // };
+
+    $scope.sendNotifToDevice = function(){
+        $http.post('/sendNotifToDevice').then(function(response){
+            console.log(response.data);
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.uploadImg = function(){
+        var fd = new FormData();
+        angular.forEach($scope.files, function(file){
+            fd.append('file[]', file);
+        });
+        
+        // console.log(fd);
+        // $http.post("upload.php", fd, {
+        //     transformRequest: angular.identity,
+        //     headers:{'Content-Type': undefined}
+        // }).then(function(response){
+        //     alert(response.data);
+        //     $scope.displayImg();
+        // }, function(error){
+        //     console.log(error);
+        // });
+        console.log($scope.files);
+        $http.post('/uploadCarouselImg').then(function(response){
+            console.log(response.data);
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.displayImg = function(){
+        $http.get('/fetchCarouselImg').then(function(response){
+            console.log(response.data.output);
+            $scope.imgs = response.data.output;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.deleteImg = function(id, name){
+        $scope.delCarouselImg = {"id":id, "name":name};
+
+        $http.post('/deleteCarouselImg', $scope.delCarouselImg).then(function(response){
+            alert(response.data);
+            $scope.displayImg();
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.getSchedule = function(){
+        $http.get('/getAllSchedule').then(function(response){
+            console.log(response.data);
+            $scope.schedule = response.data;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.getPendingUser = function(){
+        $http.get('/getPendingUser').then(function(response){
+            console.log(response.data);
+            $scope.pendingUsers = response.data;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    // $scope.updatePendingUser = function(id, status){
+    //     $http.put('updatePendingUser.php?id='+id+"&status="+status).then(function(response){
+    //         alert(response.data);
+    //         $scope.getPendingUser();
+    //     }, function(error){
+    //         console.log(error);
+    //     });
+    // };
+
+    $scope.updatePendingUser = function(id, status){
+        $scope.pUsers = {"pendingID":id, "status":status};
+
+        $http.post('/updatePendingUser', $scope.pUsers).then(function(response){
+            alert(response.data);
+            $scope.getPendingUser();
+        }, function(error){
+            console.log(error);
+        });
     };
 });
 
