@@ -9,7 +9,7 @@ app.post('/addDcs',function(req,res){
     console.log(req.body);
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', 'A')";
+        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', '" + req.body.preparedby + "', 'A')";
         
         database.query(sql, function (err, result) {
             if (err) {
@@ -31,7 +31,7 @@ app.post('/addDcs',function(req,res){
 }); // Complete
 app.post('/getAllDcs', function(req,res){
     'use strict';
-    var sql = "SELECT dcsID AS id, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, (CASE WHEN status = 'A' THEN 'ACTIVE' WHEN status = 'I' THEN 'INACTIVE'  WHEN status = 'P' THEN 'PENDING' WHEN status = 'G' THEN 'APPROVED' WHEN status = 'C' THEN 'COMPLETE' WHEN status = 'R' THEN 'CORRECTION REQUIERD' END) AS status from tbldcs where status != 'I'";
+    var sql = "SELECT dcsID AS id, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, (CASE WHEN status = 'A' THEN 'ACTIVE' WHEN status = 'I' THEN 'INACTIVE'  WHEN status = 'P' THEN 'PENDING' WHEN status = 'G' THEN 'APPROVED' WHEN status = 'C' THEN 'COMPLETE' WHEN status = 'R' THEN 'CORRECTION REQUIRED' END) AS status from tbldcs where status != 'I'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     
     // if(req.body.status){
@@ -115,7 +115,7 @@ app.post('/getDcsInfo',function(req,res){
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "SELECT * from tbldcs where dcsID = '" + req.body.id + "'";
-    database.query(sql, function (err, result) {
+    database.query(sql, function (err, result) { 
         if (err) { 
             throw err;
         }
@@ -137,17 +137,60 @@ app.post('/filterAddress',function(req,res){
     });
 }); // Complete
 
+app.post('/filterArea',function(req,res){ 
+    'use strict';
+    console.log(req.body);
+    var sql = "SELECT * from tblarea where staffID = '" + req.body.driverID + "'";
+    database.query(sql, function (err, result) {
+        if (err) { 
+            throw err;
+        }
+
+        res.json(result);
+        console.log(result);
+    });
+}); // Complete
+
 app.post('/getStaffList', function(req,res){
     'use strict';
     console.log("GET STAFF LIST: " + req.body);
-    var sql = "SELECT * from tblstaff where positionID = '" + req.body.positionID + "'";
+
+    var positionID = '';
+
+    var sql = "SELECT positionID from tblposition WHERE positionName = '" + req.body.position + "'";
     
     database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+        console.log(result[0].positionID);
+        positionID = result[0].positionID;
+
+        var newsql = "SELECT * from tblstaff where positionID = '" + result[0].positionID + "'";
+
+    database.query(newsql, function (err, result) {
         if (err) {
             throw err; 
         }
         res.json(result);
         console.log(result);
     }); 
+    }); 
+    
 });
+
+app.post('/completeDcs',function(req,res){ 
+    'use strict';
+
+    console.log(req.date);
+    //console.log("DCS ID: " + req.body.dcsID);
+    var sql = "update tbldcs set status = 'C' where status = 'G' AND periodTo < '" + req.body.date + "'";
+    database.query(sql, function (err, result) {
+        if (err) { 
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
 module.exports = app; 

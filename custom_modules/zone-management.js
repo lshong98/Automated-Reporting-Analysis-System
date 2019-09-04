@@ -8,7 +8,7 @@ var f = require('./function-management');
 app.post('/addZone', function (req, res) {
     'use strict';
     f.makeID("zone", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblzone (zoneID, zoneName, creationDateTime, zoneStatus) VALUE ('" + ID + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
+        var sql = "INSERT INTO tblzone (zoneID, zoneCode, zoneName, creationDateTime, zoneStatus) VALUE ('" + ID + "', '" + req.body.code + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
                 res.end();
@@ -24,7 +24,7 @@ app.post('/addZone', function (req, res) {
 // Used in comboBox - Zone
 app.get('/getZoneList', function (req, res) {
     'use strict';
-    var sql = "SELECT zoneID AS id, zoneName AS name FROM tblzone WHERE zoneStatus = 'A'";
+    var sql = "SELECT zoneID AS id, zoneCode AS code, zoneName AS name FROM tblzone WHERE zoneStatus = 'A'";
     database.query(sql, function (err, result) {
         if (err) {
             res.end();
@@ -39,7 +39,7 @@ app.get('/getZoneList', function (req, res) {
 // Load all zone in management
 app.get('/getAllZone', function (req, res) {
     'use strict';
-    var sql = "SELECT zoneID AS id, zoneName AS name, (CASE WHEN zoneStatus = 'A' THEN 'ACTIVE' WHEN zoneStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblzone";
+    var sql = "SELECT zoneID AS id, zoneCode AS code, zoneName AS name, (CASE WHEN zoneStatus = 'A' THEN 'ACTIVE' WHEN zoneStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblzone";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -55,7 +55,7 @@ app.get('/getAllZone', function (req, res) {
 // Update zone
 app.post('/editZone', function (req, res) {
     'use strict';
-    var sql = "UPDATE tblzone SET zoneName = '" + req.body.name + "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '" + req.body.id + "'";
+    var sql = "UPDATE tblzone SET zoneCode = '" + req.body.code + "', zoneName = '" + req.body.name + "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
             res.json({"status": "error", "message": "Update failed."});

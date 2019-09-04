@@ -153,17 +153,28 @@
 /*    */
 </style>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-9">
         <h3>Complaint Detail</h3>
+    </div>
+    <div class="col-md-3">
+        <label for="statusUpdate" >Status</label>
+        <select id="statusUpdate" data-ng-model="comDetail.status" data-live-search="true">
+            <option value="Pending">Pending</option>
+            <option value="In progress">In Progress</option>
+            <option value="Confirmation">Confirmation</option>
+            <option value="Done">Done</option>
+        </select>
+        <button class="btn btn-sm btn-primary" data-ng-click="updateStatus()">Update</button>
     </div>
 </div>
 <div class="row">
     <div class="col-md-6 detailBox">
-        <p><strong>Complaint Type: </strong>{{comDetail.ctype}}</p>
+        <p><strong>Premise Type: </strong>{{comDetail.ctype}}</p>
         <p><strong>Complaint Title: </strong> {{comDetail.title}}</p>
         <p><strong>Date Time: </strong>{{comDetail.date}}</p>
         <p><strong>Customer: </strong>{{comDetail.customer}}</p>
-        <p><strong>Area: </strong>{{comDetail.area}}</p>
+        <p><strong>Area Code: </strong>{{comDetail.code}}</p>
+        <p><strong>Area Name: </strong>{{comDetail.area}}</p>
         <p><strong>Address:</strong></p>
         <p>{{comDetail.address}}</p>
         <p><strong>Content: </strong></p>
@@ -364,9 +375,10 @@
         <div class="report_reference"></div>
     </div>
 </div>
+<br />
 <div class="row" data-ng-show="showReference">
     <div class="col-md-6">
-        <img id="myImg" src="{{thisReport.ifleet}}" />
+        <img id="myImg" style="width: 600px; height: 500px;" src="{{thisReport.ifleet}}" />
     </div>
     <div class="col-md-6">
         <div id="googleMap" style="height: 500px"></div>

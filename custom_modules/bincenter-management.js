@@ -38,7 +38,7 @@ app.post('/editBinCenter', function (req, res) {
 app.get('/getAllBinCenter', function (req, res) {
     'use strict';
     
-    var sql = "SELECT binCenterID AS id, areaID AS area, binCenterName as name, binCenterLocation AS location, (CASE WHEN binCenterStatus = 'A' THEN 'ACTIVE' WHEN binCenterStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblbincenter";
+    var sql = "SELECT tblbincenter.binCenterID AS id, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, tblarea.areaID AS area, tblbincenter.binCenterName as name, tblbincenter.binCenterLocation AS location, (CASE WHEN tblbincenter.binCenterStatus = 'A' THEN 'ACTIVE' WHEN tblbincenter.binCenterStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblbincenter JOIN tblarea ON tblbincenter.areaID = tblarea.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID";
     
     database.query(sql, function (err, result) {
         if (err) {

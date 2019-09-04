@@ -64,7 +64,7 @@ app.post('/addBdafEntry',function(req,res){
     //console.log("DCS ID: " + req.body.dcsID);
     if(req.body.binDelivered == ''){
         req.body.binDelivered = null; 
-    }
+    } 
 
     if(req.body.binPulled == ''){
         req.body.binPulled = null;

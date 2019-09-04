@@ -8,7 +8,7 @@ var f = require('./function-management');
 app.post('/addArea', function (req, res) {
     'use strict';
     f.makeID("area", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, areaName, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
+        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, driverID, areaName, areaCode, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.driver.id + "', '" + req.body.name + "', '" + req.body.code +"','" + req.body.creationDate + "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
                 res.json({"status": "error", "message": "Something error!"});
@@ -25,7 +25,7 @@ app.post('/addArea', function (req, res) {
 // Load all area in management
 app.get('/getAllArea', function (req, res) {
     'use strict';
-    var sql = "SELECT a.areaID AS id, a.areaName AS name, z.zoneID as zone, z.zoneName as zoneName, s.staffID as staff, s.staffName as staffName, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea a INNER JOIN tblzone z ON a.zoneID = z.zoneID INNER JOIN tblstaff s ON a.staffID = s.staffID";
+    var sql = "SELECT a.areaID AS id, a.areaCode AS code, a.areaName AS name, z.zoneID as zone, z.zoneCode as zoneCode, z.zoneName as zoneName, s.staffID as staff, s.staffName as staffName, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea a INNER JOIN tblzone z ON a.zoneID = z.zoneID INNER JOIN tblstaff s ON a.staffID = s.staffID";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -38,7 +38,7 @@ app.get('/getAllArea', function (req, res) {
 // Used in comboBox - Zone with area
 app.get('/getAreaList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS code FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -46,6 +46,27 @@ app.get('/getAreaList', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+app.get('/getAreaCodeList', function(req,res){
+    'use strict';
+    var sql = "SELECT CONCAT(tblzone.zoneCode, tblarea.areaCode) AS code, tblarea.areaID FROM tblzone JOIN tblarea ON tblzone.zoneID = tblarea.areaID";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+});
+app.post('/getAreaCode', function(req,res){
+    'use strict';
+    var sql = "SELECT CONCAT(tblzone.zoneCode, tblarea.areaCode) AS code FROM tblzone JOIN tblarea ON tblzone.zoneID = tblarea.zoneID WHERE tblarea.areaID = '" + req.body.areaID+ "' ";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+});
 
 // Update specific area information
 app.post('/updateArea', function (req, res) {
@@ -60,7 +81,7 @@ app.post('/updateArea', function (req, res) {
         information.zoneID = zoneID.zoneID;
         req.body.status = req.body.status === "Active" ? 'A' : 'I';
         
-        var sql = "UPDATE tblarea SET areaName = '" + req.body.name + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '" + req.body.id + "'";
+        var sql = "UPDATE tblarea SET areaName = '" + req.body.name + "', areaCode = '" + req.body.code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + req.body.driver + "', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '" + req.body.id + "'";
         
         database.query(sql, function (err, result) {
             if (err) {
@@ -73,11 +94,38 @@ app.post('/updateArea', function (req, res) {
     });
 }); // Complete
 
+//app.post('/updateTamanSet',function (req, res){
+//    'use strict';
+//    
+//    for(var i=0; i<req.body.length; i++){
+//        var sql="INSERT INTO tbltaman(areaID, tamanName) VALUE ('" + req.body.area + "', '" + req.body.taman[i] + "')";
+//        
+//        database.query(sql, function (err, result) {
+//            if (err) {
+//                throw err;
+//            }
+//        });
+//    }
+//});
+
 // Load specific area
 app.post('/thisArea', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblarea.areaID AS id, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
+    var sql = "SELECT tblarea.areaID AS id, tblarea.areaCode AS code, tblarea.areaName AS name, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.post('/thisAreaDriver', function(req,res){
+    'use strict';
+    
+    var sql="SELECT tblarea.driverID AS driver FROM tblarea JOIN tblstaff ON tblarea.driverID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0,1 "
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

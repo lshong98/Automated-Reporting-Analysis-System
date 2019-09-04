@@ -20,8 +20,14 @@
           </div>
           <div class="form-group">
             <label for="txtDcsDriver form-label">Driver</label>
-            <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.driverID">
+            <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.driverID" data-ng-change="filterArea();">
                 <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffID}}: {{d.staffName}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="txtArea form-label">Area ID</label>
+            <select type="text" class="form-control" id="editArea" data-ng-model="dcs.areaID">
+                <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaID}}</option>
             </select>
           </div>
           <div class="form-group">
@@ -71,7 +77,7 @@
           <table class="table table-hover table-striped table-clickable">
               <thead>
                   <tr>
-                      <th width="20%" data-ng-click="orderBy('dcsID');">DCS ID <i class="fas fa-sort-down"></i></th>
+                      <th width="20%" data-ick="orderBy('dcsID');">DCS ID <i class="fas fa-sort-down"></i></th>
                       <th width="15%" data-ng-click="orderBy('periodFrom');">Period From <i class="fas fa-sort-down"></i></th>
                       <th width="20%" data-ng-click="orderBy('periodTo');">Period To <i class="fas fa-sort-down"></i></th>
                       <th width="20%" data-ng-click="orderBy('periodTo');">Driver <i class="fas fa-sort-down"></i></th>
@@ -80,11 +86,11 @@
               </thead>
               <tbody>               
                   <tr data-ng-repeat="d in dcsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewdcs(d.id);">
-                      <td data-ng-bind="d.id"></td>
-                      <td data-ng-bind="d.periodFrom"></td>
-                      <td data-ng-bind="d.periodTo"></td>
-                      <td data-ng-bind="d.driverID"></td>
-                      <td data-ng-bind="d.status"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.id"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.periodFrom | date: dd/MM/yyyy"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.periodTo | date: dd/MM/yyyy"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.driverID"></td>
+                      <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.status"></td>
                   </tr>
               </tbody>
           </table>

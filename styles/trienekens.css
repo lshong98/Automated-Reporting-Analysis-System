@@ -69,6 +69,13 @@
 
 .card-counter .count-today-area{
     position: absolute;
+    right: 160px;
+    top: 15px;
+    font-size: 13px;
+    display: block;
+}
+.card-counter .count-unsubmitted{
+    position: absolute;
     right: 35px;
     top: 15px;
     font-size: 13px;
@@ -317,3 +324,20 @@ td[colspan] {
     color: #0062cc;
 }
 /* Personal Profile */
+
+
+
+
+/*table row colors*/
+.green {
+    background-color: rgb(54, 180, 54);
+  }
+  
+  .red {
+    background-color: rgb(255, 47, 47);
+    color: white;
+  }
+
+  .orange{
+      background-color: orange;
+  }

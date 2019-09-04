@@ -5,97 +5,97 @@
 </style>
 <!--  Modal  -->
 <div class="modal fade" id="previewReport" tabindex="-1" role="dialog" aria-labelledby="previewReport" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Preview</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-      <div class="modal-body">
-          <div class="row">
-    <div class="col-md-12">
-        <center>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th colspan="2">IVMW INSPECTION REPORT</th>
-                    <th>DATE</th>
-                    <th colspan="2" date-now="yyyy-MM-dd"></th>
-                    <th>TIME</th>
-                    <th colspan="3">0430 - 1500</th>
-                </tr>
-                <tr>
-                    <th>AREA CODE</th>
-                    <th>COLLECTION AREA</th>
-                    <th>COLLECTION FREQUENCY</th>
-                    <th>BIN CENTERS</th>
-                    <th>ACR CUSTOMER</th>
-                    <th>TRANSPORTER</th>
-                    <th>TRUCK NO.</th>
-                    <th>DRIVER</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td rowspan="5" data-ng-bind="$params_areaCode"></td>
-                    <td rowspan="5">....</td>
-                    <td rowspan="5">TUE &amp; FRI</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td rowspan="5">TS</td>
-                    <td rowspan="5">QAA3604N</td>
-                    <td rowspan="5">NORSUTIADI BIN SENO</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-            </tbody>
-        </table>
-        </center>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <center>
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">IVMW INSPECTION REPORT</th>
+                                        <th>DATE</th>
+                                        <th colspan="2" date-now="yyyy-MM-dd"></th>
+                                        <th>TIME</th>
+                                        <th colspan="3">0430 - 1500</th>
+                                    </tr>
+                                    <tr>
+                                        <th>AREA CODE</th>
+                                        <th>COLLECTION AREA</th>
+                                        <th>COLLECTION FREQUENCY</th>
+                                        <th>BIN CENTERS</th>
+                                        <th>ACR CUSTOMER</th>
+                                        <th>TRANSPORTER</th>
+                                        <th>TRUCK NO.</th>
+                                        <th>DRIVER</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td rowspan="5" data-ng-bind="$params_areaCode"></td>
+                                        <td rowspan="5">....</td>
+                                        <td rowspan="5">TUE &amp; FRI</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td rowspan="5">TS</td>
+                                        <td rowspan="5">QAA3604N</td>
+                                        <td rowspan="5">NORSUTIADI BIN SENO</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </center>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 
 <div class="row">
     <div class="col-md-12">
-        <h5>IVMW Inspection Report - (<span data-ng-bind="(params.areaCode) + ' - ' + (params.areaName)"></span>)</h5>
+        <h5>Inspection Report - (<span data-ng-bind="(params.areaCode) + ' - ' + (code)"></span>)</h5>
     </div>
 </div>
 
 <div class="form-group row">
     <label for="inputDate form-label" class="col-xs-3 col-form-label form-label-width">Date</label>
     <div class="col-md-9">
-<!--        <input data-provide="datepicker" type="text" id="inputDate" class="form-control mx-sm-3 datepicker" data-date-format="yyyy-mm-dd" />-->
-        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="report.collectionDate" />
+        <!--        <input data-provide="datepicker" type="text" id="inputDate" class="form-control mx-sm-3 datepicker" data-date-format="yyyy-mm-dd" />-->
+        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="colDate" />
     </div>
 </div>
 
 <div class="form-group row">
     <label for="inputStartTime form-label" class="col-xs-3 col-form-label form-label-width">Start Time</label>
     <div class="col-md-9">
-<!--        <input type="text" id="inputStartTime" class="form-control mx-sm-3 clockpicker-start" readonly />-->
+        <!--        <input type="text" id="inputStartTime" class="form-control mx-sm-3 clockpicker-start" readonly />-->
         <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="report.startTime" data-ng-change="startTimeChange(report.startTime)" str-to-time="" />
     </div>
 </div>
@@ -103,7 +103,7 @@
 <div class="form-group row">
     <label for="inputEndTime form-label" class="col-xs-3 col-form-label form-label-width">End Time</label>
     <div class="col-md-9">
-<!--        <input type="text" id="inputEndTime" class="form-control mx-sm-3 clockpicker-end" readonly />-->
+        <!--        <input type="text" id="inputEndTime" class="form-control mx-sm-3 clockpicker-end" readonly />-->
         <input type="time" id="inputEndTime" class="form-control mx-sm-3" data-ng-model="report.endTime" data-ng-change="endTimeChange(report.endTime)" str-to-time />
     </div>
 </div>
@@ -141,14 +141,14 @@
 <div class="form-group row">
     <label for="inputGAmount form-label" class="col-xs-3 col-form-label form-label-width">Garbage Amount (TON)</label>
     <div class="col-md-9">
-        <input type="text" id="inputGAmount" placeholder="(ton)" class="form-control mx-sm-3" data-ng-model="report.ton"/>
+        <input type="text" id="inputGAmount" placeholder="(ton)" class="form-control mx-sm-3" data-ng-model="report.ton" />
     </div>
 </div>
 
 <div class="form-group row">
     <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
     <div class="col-md-9">
-    <!--<input type="text" id="inputRemark" class="form-control mx-sm-3" />-->
+        <!--<input type="text" id="inputRemark" class="form-control mx-sm-3" />-->
         <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="report.remark"></textarea>
     </div>
 </div>
@@ -160,39 +160,51 @@
 </div>
 
 <style>
-.target {
-  border: solid 1px #aaa;
-  min-height: 500px;
-/*  width: 50%;*/
-  margin-top: 1em;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: 300ms all;
-  position: relative;
-}
-#googleMap{
-    margin-top: 1em;
-    height: 500px
-}
-style="padingwidth:600px;height:500px;"
-.contain {
-    background-size: cover;
-  position: relative;
-  z-index: 10;
-  top: 0px;
-  left: 0px;
-}
-textarea {
-  background-color: white;
-}
-.active {
-  box-shadow: 0px 0px 10px 10px rgb(50, 205, 50);
-}
+    .target {
+        border: solid 1px #aaa;
+        min-height: 500px;
+        /*  width: 50%;*/
+        margin-top: 1em;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 300ms all;
+        position: relative;
+    }
+    
+    #googleMap {
+        margin-top: 1em;
+        height: 500px
+    }
+    
+    .contain {
+        background-size: cover;
+        position: relative;
+        z-index: 10;
+        top: 0px;
+        left: 0px;
+    }
+    
+    textarea {
+        background-color: white;
+    }
+    
+    .active {
+        box-shadow: 0px 0px 10px 10px rgb(50, 205, 50);
+    }
 </style>
 <div class="row">
-   <div class="col-md-6">
+    <div class="col-md-6">
         <!--<div class="target"></div>-->
-        <input type="file" data-ng-model="report.ifleetImg" accept="image/*" app-filereader>
+        <canvas style="border:1px solid grey; width: 600px; height: 500px; margin: 15px;" id="mycanvas"></canvas>
+        <!--           <div class= col-md-6><input type="file" data-ng-model="report.ifleetImg" accept="image/*" app-filereader></div>-->
+        <!--           <div class= col-md-6><button data-ng-click="cancelImg()">Cancel Image</button></div>-->
+        <!--
+       <div class="row">
+           <div class="col-md-12">
+               <img id="myImg" src="{{report.ifleetImg}}" style="width:650px; height: 500px;" />
+           </div>
+       </div>
+-->
     </div>
     <div class="col-md-6">
         <div id="googleMap"></div>
@@ -204,3 +216,70 @@ textarea {
         <button class="btn btn-primary submit" data-ng-click="addReport()">Submit</button>
     </div>
 </div>
+<script>
+//    function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
+//        if (pasteEvent.clipboardData == false) {
+//            if (typeof(callback) == "function") {
+//                callback(undefined);
+//            }
+//        };
+//
+//        var items = pasteEvent.clipboardData.items;
+//
+//        if (items == undefined) {
+//            if (typeof(callback) == "function") {
+//                callback(undefined);
+//            }
+//        };
+//
+//        for (var i = 0; i < items.length; i++) {
+//            // Skip content if not image
+//            if (items[i].type.indexOf("image") == -1) continue;
+//            // Retrieve image on clipboard as blob
+//            var blob = items[i].getAsFile();
+//
+//            if (typeof(callback) == "function") {
+//                callback(blob);
+//            }
+//        }
+//    }
+//
+//    window.addEventListener("paste", function(e) {
+//
+//        // Handle the event
+//        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+//            // If there's an image, display it in the canvas
+//            if (imageBlob) {
+//                var canvas = document.getElementById("mycanvas");
+//                var ctx = canvas.getContext('2d');
+//
+//                // Create an image to render the blob on the canvas
+//                var img = new Image();
+//
+//                // Once the image loads, render the img on the canvas
+//                img.onload = function() {
+//                    // Update dimensions of the canvas with the dimensions of the image
+//                    canvas.width = this.width;
+//                    canvas.height = this.height;
+//
+//                    // Draw the image
+//                    ctx.drawImage(img, 0, 0);
+//                };
+//
+//                // Crossbrowser support for URL
+//                var URLObj = window.URL || window.webkitURL;
+//
+//                // Creates a DOMString containing a URL representing the object given in the parameter
+//                // namely the original Blob
+//                img.src = URLObj.createObjectURL(imageBlob);
+//                //console.log(imageBlob);
+//                var reader = new FileReader();
+//                reader.readAsDataURL(imageBlob); 
+//                reader.onloadend = function() {
+//                    var base64data = reader.result;                
+//                    console.log(base64data);
+//                }
+//            }
+//        });
+//    }, false);
+</script>

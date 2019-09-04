@@ -38,13 +38,26 @@ app.post('/getAllBlost', function(req,res){
     });  
 });
 
-app.post('/getBdafDetails', function(req,res){
+app.post('/getBlostInfo',function(req,res){ 
+    'use strict';
+    //console.log("DCS ID: " + req.body.dcsID);
+    var sql = "SELECT * from tblblost where blostID = '" + req.body.id + "'";
+    database.query(sql, function (err, result) {
+        if (err) { 
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
+
+app.post('/getBlostDetails', function(req,res){
     'use strict';
     console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
     console.log(req.body);
 
     
-    var sql = "SELECT b.bdafID, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as location, c.name as contactPerson, c.contactNumber as contactNo, b.acrID, b.acrSticker, b.jobDesc, db.size as binSize, b.serialNo, b.remarks, b.binDelivered, b.binPulled, b.completed from tblcustomer as c inner join tblbdafentry as b on b.customerID = c.customerID inner join tblbins as db on b.serialNo = db.serialNo where b.bdafID = '" + req.body.id + "'";
+    var sql = "SELECT b.blostID, c.name as contactPerson, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, c.contactNumber as contactNo, a.areaID, db.size, db.serialNo, b.sharedBin, b.dateOfLoss, b.reasonForLoss from tblcustomer as c inner join tblwheelbindatabase as wbd on c.customerID = wbd.customerID innerjoin tblbins as db on wbd.serialNo = db.serialNo inner join tblblostentry as b on b.serialNo = db.serialNo inner join tblarea as a on db.areaID = a.areaID where b.blostID = '" + req.body.id + "'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     console.log(sql);
     database.query(sql, function (err, result) {
@@ -57,7 +70,7 @@ app.post('/getBdafDetails', function(req,res){
     });
 }); 
 
-app.post('/addBdafEntry',function(req,res){ 
+app.post('/addBlostEntry',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     if(req.body.binDelivered == ''){
@@ -67,13 +80,13 @@ app.post('/addBdafEntry',function(req,res){
     if(req.body.binPulled == ''){
         req.body.binPulled = null;
     }
-    var sql = "INSERT INTO tblbdafentry (idNo, bdafID, customerID, acrID, acrSticker, serialNo, binDelivered, binPulled, jobDesc, remarks, completed) VALUE ('" + null + "', '" + req.body.bdafID + "' , '"  + req.body.customerID + "', '"  + req.body.acrID + "', '" + req.body.acrSticker + "', '" + req.body.serialNo + "', '" + req.body.binDelivered + "', '" + req.body.binPulled + "', '" + req.body.jobDesc + "', '" + req.body.remarks + "', '"+ req.body.completed + "')";
+    var sql = "INSERT INTO tblblostentry (idNo, blostID, customerID, serialNo, sharedBin, dateOfLoss, reasonForLoss, status) VALUE ('" + null + "', '" + req.body.blostID + "' , '"  + req.body.customerID + "', '"  + req.body.serialNo + "', '" + req.body.sharedBin + "', '" + req.body.dateOfLoss + "', '" + req.body.reasonForLoss + "', '" + req.body.status + "')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
 
-        res.json({"status": "success", "message": "BDAF entry added!", "details": {"bdafID": req.body.bdafJD}});
+        res.json({"status": "success", "message": "BLOST entry added!", "details": {"BLOSTID": req.body.blostID}});
     });
 }); // Complete
 
@@ -106,10 +119,10 @@ app.get('/getAcrList', function(req,res){
     }); 
 });
 
-app.post('/getBdafInfo',function(req,res){ 
+app.post('/getBlostInfo',function(req,res){ 
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
-    var sql = "SELECT * from tblbdaf where bdafID = '" + req.body.id + "'";
+    var sql = "SELECT * from tblblost where blostID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) { 
             throw err;

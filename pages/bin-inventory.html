@@ -121,13 +121,19 @@
     </div>
 </div>
 
-<div class="row" style="margin-top: 10px;">
-    <div class="col-md-12">
+<div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+    <div class="col-md-6">
+        <button class="btn btn-danger" ng-csv="inventoryRecordList" csv-header="getDataHeader()" filename="{{filename}}" field-separator="{{separator}}" decimal-separator="{{decimalSeparator}}">Export CSV</button>
+       
+    </div>
+    <div class="col-md-6">
         <div class="form-inline" style="float: right">
+            
             <h6 style="margin-right: 20px;">Month: </h6>
             <select ng-change="" class="form-control month-select" ng-model="yearMonth" ng-options="(ym | date: 'yyyy - MMM') for ym in yearMonths">
                 <option value="">Select Month</option>
             </select>
+            
         </div>
     </div>
 </div>
@@ -177,49 +183,49 @@
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.doNo"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="green">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="nb.inNew120" data-ng-show="!showNewMgb" />
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.inNew120"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="green">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="nb.inNew240" data-ng-show="!showNewMgb" />
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.inNew240"></span>
                                     </div>
-                                </td>
-                                <td>
+                                </td >
+                                <td class="green">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="nb.inNew660" data-ng-show="!showNewMgb" />
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.inNew660"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="green">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="nb.inNew1000" data-ng-show="!showNewMgb" />
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.inNew1000"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="red"> 
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="nb.outNew120" data-ng-show="!showNewMgb" />
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.outNew120"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="red">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="nb.outNew240" data-ng-show="!showNewMgb" />
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.outNew240"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="red">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="nb.outNew660" data-ng-show="!showNewMgb" />
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.outNew660"></span>
                                     </div>
-                                </td>
-                                <td>
+                                </td >
+                                <td class="red">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="nb.outNew1000" data-ng-show="!showNewMgb" />
                                         <span data-ng-show="showNewMgb" data-ng-bind="nb.outNew1000"></span>
@@ -273,49 +279,49 @@
                                 <td>
                                     <span data-ng-show="showReusableMgb" data-ng-bind="rb.date | date:'dd/MM/yyyy'"></span>
                                 </td>
-                                <td>
+                                <td class="green">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="rb.inReusable120" data-ng-show="!showReusableMgb" />
                                         <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable120"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="green">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="rb.inReusable240" data-ng-show="!showReusableMgb" />
                                         <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable240"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="green">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="rb.inReusable660" data-ng-show="!showReusableMgb" />
                                         <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable660"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="green">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="rb.inReusable1000" data-ng-show="!showReusableMgb" />
                                         <span data-ng-show="showReusableMgb" data-ng-bind="rb.inReusable1000"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="red">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="rb.outReusable120" data-ng-show="!showReusableMgb" />
                                         <span data-ng-show="showReusableMgb" data-ng-bind="rb.outReusable120"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="red"> 
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="rb.outReusable240" data-ng-show="!showReusableMgb" />
                                         <span data-ng-show="showReusableMgb" data-ng-bind="rb.outReusable240"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="red">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="rb.outReusable660" data-ng-show="!showReusableMgb" />
                                         <span data-ng-show="showReusableMgb" data-ng-bind="rb.outReusable660"></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="red">
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="rb.outReusable1000" data-ng-show="!showReusableMgb" />
                                         <span data-ng-show="showReusableMgb" data-ng-bind="rb.outReusable1000"></span>

@@ -1,0 +1,56 @@
+<style>
+#map_canvas {
+  height: 800px;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+    margin-bottom: 100px;
+}
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Area: {{areaCode}}</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+<!--
+        <div class="form-group row">
+            <label for="boundaryColor" class="col-sm-2 col-form-label">Mode:</label>
+            <div class="col-sm-3">
+                <button class="btn btn-primary"><i class="fa fa-eye"></i> View Mode</button>
+                <button class="btn btn-warning"><i class="fa fa-pencil-alt"></i> Edit Mode</button>
+            </div>
+        </div>
+-->
+        <div class="form-group row">
+            <label for="boundaryColor" class="col-sm-2 col-form-label">Boundary Color:</label>
+            <div class="col-sm-3">
+                <input type="text" id="boundaryColor" class="form-control jscolor" value="FF1493" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Boundary Tools:</label>
+            <div class="col-sm-10">
+                <input type="button" id="enablePolygon" value="Draw Boundary" />
+                <input type="button" id="clearSelection" value="Clear Selection" />
+                <input type="button" id="resetPolygon" value="Reset" style="display: none;" />
+                <div id="showonPolygon" style="display:none;"><b>Area:</b> <span id="areaPolygon">&nbsp;</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div id="map_canvas"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <button id="btnSaveBoundary" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+        <button class="btn btn-secondary" data-ng-click="backToArea()">Back</button>
+    </div>
+</div>
+<br />
+<script src="/jscolor-2.0.5/jscolor.js"></script>

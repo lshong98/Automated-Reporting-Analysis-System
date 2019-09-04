@@ -14,12 +14,12 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'trienekens';
+var DB_NAME = 'triemerge';
 
 // // Config used for socket connection, important for Google Cloud hosting
  var config = {
      user: DB_USER,
-     password: DB_PASS,
+     password: DB_PASS, 
      host: DB_HOST
  }
 
@@ -29,10 +29,9 @@ var DB_NAME = 'trienekens';
  
 // // Create connection 
 var db = mysql.createConnection({ 
-   host: DB_HOST,
-   user: DB_USER,  
-   password: DB_PASS,
-   port: 3307
+  host: DB_HOST,
+  user: DB_USER,  
+  password: DB_PASS
 });
 
 // var db = mysql.createConnection(config);
@@ -80,12 +79,12 @@ db.connect(function (err) {
 emitter.on('createTable', function () {
     'use strict';
     var sqls, i;  
-     
+      
     sqls = [ 
         "CREATE TABLE tblposition (positionID varchar(15),  positionName varchar(30),  positionStatus char(1),  creationDateTime datetime,  primary key (positionID))",
-        "CREATE TABLE tblzone (zoneID varchar(15),  zoneName varchar(100), zoneStatus char(1),  creationDateTime datetime,  PRIMARY KEY (zoneID))",
+        "CREATE TABLE tblzone (zoneID varchar(15),  zoneCode varchar(5), zoneName varchar(100), zoneStatus char(1),  creationDateTime datetime,  PRIMARY KEY (zoneID))",
         "CREATE TABLE tblstaff (  staffID varchar(15),  username varchar(20),  password mediumtext,  staffName varchar(50),  staffIC varchar(15),  staffGender char(1),  staffDOB date,  staffAddress varchar(255),  handphone varchar(11),  phone varchar(10),  email varchar(50),  positionID varchar(15),  staffStatus char(1),  creationDateTime datetime,  staffPic mediumtext,  PRIMARY KEY (staffID),  foreign key (positionID) references tblposition(positionID))",
-        "CREATE TABLE tblarea (  areaID varchar(15),  zoneID varchar(15),  staffID varchar(15),  areaName varchar(30),  collection_frequency varchar(30),  longitude double(10,7),  latitude double(10,7),  areaStatus char(1),  creationDateTime datetime,  PRIMARY KEY (areaID),  foreign key (zoneID) references tblzone(zoneID),  foreign key (staffID) references tblstaff(staffID))",
+        "CREATE TABLE tblarea (  areaID varchar(15),  zoneID varchar(15),  staffID varchar(15), driverID varchar(15), areaName varchar(30), areaCode varchar(15), collection_frequency varchar(30),  longitude double(10,7),  latitude double(10,7),  areaStatus char(1),  creationDateTime datetime,  PRIMARY KEY (areaID),  foreign key (zoneID) references tblzone(zoneID),  foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tbltaman (  tamanID int auto_increment,  areaID varchar(15),  tamanName mediumtext,  longitude double(10,7),  latitude double(10,7),  areaCollStatus char(1),  PRIMARY KEY (tamanID),  foreign key (areaID) references tblarea(areaID))",
         "CREATE TABLE tblcustomer (customerID VARCHAR(15), tamanID int , username varchar(30),  password varchar(30),  contactNumber int, ic varchar(20), tradingLicense varchar(20),  name varchar(50), companyName varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  status char(1),  creationDateTime datetime, PRIMARY KEY (customerID),foreign key (tamanID) references tbltaman(tamanID))",
         "CREATE TABLE tblbins (serialNo varchar(15),size int,  status char(1),  longitude double(10,7),  latitude double(10,7), PRIMARY KEY (serialNo))", 
@@ -96,9 +95,9 @@ emitter.on('createTable', function () {
         "CREATE TABLE tbldbdentry (  idNo int auto_increment,  dbdID int,  serialNo varchar(15),  reportedBy varchar(15),  damageType varchar(15),  reason mediumtext,  repair char(1),  replacement char(1),  costCharged varchar(5),  status char(1),  rectifiedDate datetime,  PRIMARY KEY (idNo),  foreign KEY  (dbdID) references tbldbd(dbdID),  foreign KEY  (serialNo) references tblbins(serialNo),  foreign KEY  (reportedBy) references tblstaff(staffID))",
         "CREATE TABLE tblblost (  blostID varchar(15),  creationDateTime datetime, preparedBy varchar(15), authorizedBy varchar(15), authorizedDate dateTime,  status char(1),  formStatus char(1), PRIMARY KEY (blostID), foreign key (preparedBy) references tblstaff (staffID), foreign key (authorizedBy) references tblstaff (staffID))",
         "CREATE TABLE tblblostentry (  idNo int auto_increment,  creationDateTime datetime, blostID varchar(15),  customerID varchar(15), serialNo varchar(15),  sharedBin boolean,  dateOfLoss datetime,  reason longtext,  status char(1), PRIMARY KEY (idNo),  foreign KEY  (blostID) references tblblost(blostID),  foreign KEY  (serialNo) references tblbins(serialNo),  foreign KEY  (customerID) references tblcustomer(customerID))",
-        "CREATE TABLE tbldcs (dcsID varchar(15),creationDateTime datetime,status char(1), formStatus char(1), periodFrom date,periodTo date,driverID varchar(15),replacementDriverID varchar(15),replacementPeriodFrom date,replacementPeriodTo date,authorizedBy varchar(15),authorizedDate datetime,preparedBy varchar(15),PRIMARY KEY (dcsID),foreign key (driverID) references tblstaff(staffID),foreign key (replacementDriverID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID),foreign key (preparedBy) references tblstaff(staffID))",
+        "CREATE TABLE tbldcs (dcsID varchar(15),creationDateTime datetime,status char(1), formStatus char(1), periodFrom date,periodTo date,driverID varchar(15), areaID varchar(15), replacementDriverID varchar(15),replacementPeriodFrom date,replacementPeriodTo date, replacementAreaID varchar(15), authorizedBy varchar(15),authorizedDate datetime,preparedBy varchar(15),PRIMARY KEY (dcsID),foreign key (driverID) references tblstaff(staffID),foreign key (replacementDriverID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID),foreign key (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblacr (acrID varchar(15),creationDateTime datetime,dcsID varchar(15),areaID varchar(15),customerID VARCHAR(15),beBins int,acrBins int,mon boolean,tue boolean,wed boolean,thu boolean,fri boolean,sat boolean,remarks longtext,PRIMARY KEY (acrID),foreign key (dcsID) references tbldcs(dcsID),foreign key (customerID) references tblcustomer(customerID))",
-        "CREATE TABLE tblbdaf (  bdafID varchar(15),  creationDateTime datetime,  driverID varchar(15), staffID varchar(15), authorizedBy varchar(15), authorizedDate dateTime, status char(1), formStatus char(1), PRIMARY KEY (bdafID), foreign key (driverID) references tblstaff(staffID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
+        "CREATE TABLE tblbdaf (  bdafID varchar(15),  creationDateTime datetime,  driverID varchar(15), staffID varchar(15), preparedBy varchar(15), authorizedBy varchar(15), authorizedDate dateTime, status char(1), formStatus char(1), PRIMARY KEY (bdafID), foreign key (driverID) references tblstaff(staffID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID), foreign key (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblbdafentry (  idNo int auto_increment,  bdafID varchar(15),  customerID VARCHAR(15),  acrID varchar(15), acrSticker varchar(20),  serialNo varchar(15),  binDelivered varchar(15),  binPulled varchar(15),  jobDesc longtext,  remarks longtext,  completed boolean,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (acrID) references tblacr(acrID),  foreign key (bdafID) references tblbdaf(bdafID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (binDelivered) references tblbins(serialNo),  foreign key (binPulled) references tblbins(serialNo))",
         "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID VARCHAR(15),  areaID varchar(15),  serialNo varchar(15),  acrID varchar(15),  activeStatus char(1), rcDwell varchar(20), comment mediumtext, itemType varchar(20), path varchar(20),PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
         "CREATE TABLE tbluseractions (  date datetime,  staffID varchar(15),  action varchar(20),  onObject varchar(20),  PRIMARY KEY (date, staffID),  foreign key (staffID) references tblstaff(staffID))",
@@ -110,12 +109,14 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbincenter (  binCenterID varchar(15),  areaID varchar(15),  binCenterName varchar(100),  binCenterLocation varchar(100),  binCenterStatus char(1),  creationDateTime datetime,  PRIMARY KEY (binCenterID),  foreign key (areaID) references tblarea(areaID))",
         "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID VARCHAR(15),  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
         "CREATE TABLE tbltag (date datetime,  serialNo VARCHAR(15),  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tbltruck(truckID))",
-        "CREATE TABLE tblcomplainttype ( complaintType int auto_increment, complaint varchar(15), primary key (complaintType))",
-        "CREATE TABLE tblcomplaint ( complaintID int auto_increment, customerID VARCHAR(15), date datetime, complaintType int, complaintTitle mediumtext, complaintContent longtext, status char(1), primary key (complaintID), foreign key (customerID) references tblcustomer(customerID), foreign key (complaintType) references tblcomplainttype(complaintType))",
+//        "CREATE TABLE tblcomplainttype ( complaintType int auto_increment, complaint varchar(15), primary key (complaintType))",
+        "CREATE TABLE tblcomplaint ( complaintID int auto_increment, customerID VARCHAR(15), complaintDate datetime, premiseType int, complaint mediumtext, remarks longtext, status char(1), primary key (complaintID), foreign key (customerID) references tblcustomer(customerID))",
         "CREATE TABLE tbllog (transactionID int auto_increment, date datetime, staffID varchar(15), authorizedBy varchar(15), action varchar(15), description mediumtext, rowID varchar(15), tblName varchar(50), primary key (transactionID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblformauthorization (formentryID int auto_increment, creationDateTime dateTime, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), status char(1), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
-        "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID INT, creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))"
+        "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID INT, creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",
+        "CREATE TABLE tblboundary (boundaryID VARCHAR(15), color CHAR(6), areaID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), PRIMARY KEY(boundaryID), foreign key(areaID) references tblarea(areaID))",
+        "CREATE TABLE tblboundaryplot (boundaryID VARCHAR(15), lat DOUBLE(10, 7), lng DOUBLE(10, 7), ordering INT, status CHAR(1), PRIMARY KEY(boundaryID, lat, lng), FOREIGN KEY(boundaryID) REFERENCES tblboundary(boundaryID))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -197,7 +198,7 @@ emitter.on('defaultUser', function () {
     }
     
     var dt = dateTime.create();
-    var formatted = dt.format('Y-m-d H:M:S'); 
+    var formatted = dt.format('Y-m-d H:M:S');
     var roleFormat = dt.format('Ymd');
     
     var roleID = "ATH" + roleFormat + "0001";
@@ -281,6 +282,39 @@ emitter.on('defaultUser', function () {
             }
             console.log('Administrator generated...');
         });
+        }
+    });
+    
+    //create default manager
+    var roleIDmgr = "ATH" + roleFormat + "0002";
+    var sqlmgr = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleIDmgr + "', 'Manager', '" + formatted + "', 'A')";
+    db.query(sqlmgr, function (err, result) {
+        if (err) {
+            throw err;
+        }else{
+            console.log("Manager Role generated");
+        }
+    });
+    
+    //create default reporting officer
+    var roleIDro = "ATH" + roleFormat + "0003";
+    var sqlro = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleIDro + "', 'Reporting Officer', '" + formatted + "', 'A')";
+        db.query(sqlro, function (err, result) {
+        if (err) {
+            throw err;
+        }else{
+            console.log("Reporting Officer Role generated");
+        }
+    });
+    
+    //create default driver
+    var roleIDdrv = "ATH" + roleFormat + "0004";
+    var sqldrv = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleIDdrv + "', 'Driver', '" + formatted + "', 'A')";
+    db.query(sqldrv, function (err, result) {
+        if (err) {
+            throw err;
+        }else{
+            console.log("Driver Role generated");
         }
     });
 }); // Complete

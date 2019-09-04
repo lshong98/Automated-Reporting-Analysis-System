@@ -407,6 +407,18 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
+    .when('/boundary/:areaID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/boundary/' + $route.current.params.areaID);
+            }
+        },
+        templateUrl: function(params){
+            return '/boundary/' + params.areaID;
+        },
+        controller: 'boundaryController',
+        controllerAs: 'boundary'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {
