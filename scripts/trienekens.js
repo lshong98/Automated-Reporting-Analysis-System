@@ -130,6 +130,15 @@ app.service('storeDataService', function() {
             "id": '',
             "address": ''
         },
+        "collectionSchedule":{
+            "id": '',
+            "mon": '',
+            "tue": '',
+            "wed": '',
+            "thur": '',
+            "fri": '',
+            "sat": ''
+        },
         "databaseBin": {
             "date": '',
             "name": '',
@@ -290,6 +299,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         scope.showBdafDetails = true;
         scope.showDbdDetails = true;
         scope.showBlostDetails = true;
+        scope.showCollectionSchedule = true;
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -317,6 +327,16 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.collection = {
             "id": ''
+        };
+
+        scope.thisCollectionSchedule = {
+            "id":'',
+            "mon": '',
+            "tue": '',
+            "wed": '',
+            "thur": '',
+            "fri": '',
+            "sat": ''
         };
 
         scope.thisDatabaseBin = {
@@ -626,6 +646,37 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                 }
             });
         };
+
+        scope.editCollectionSchedule = function(){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+        };
+
+        scope.saveCollectionSchedule = function(id, mon, tue, wed, thur, fri, sat){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            scope.thisCollectionSchedule = {"id":id, "mon":mon, "tue":tue, "wed":wed, "thur":thur, "fri":fri, "sat":sat};
+
+            $http.post('/editCollectionSchedule', scope.thisCollectionSchedule).then(function(response){
+                var data = response.data;
+                console.log(data);
+            }, function(error){
+                console.log(error);
+            });
+        };
+
+        scope.cancelCollectionSchedule = function(){
+            scope.showCollectionSchedule = !scope.showCollectionSchedule;
+
+            $.each(storeDataService.collectionSchedule, function(index, value) {
+                if (storeDataService.collectionSchedule[index].id == scope.thisCollectionSchedule.id) {
+                    scope.x = angular.copy(storeDataService.collectionSchedule[index]);
+                }
+            });
+        };
+
         //BIN INVENTORY MODULE EDITABLE TABLES
         scope.editDatabaseBin = function() {
             scope.showDatabaseBin = !scope.showDatabaseBin;
@@ -815,6 +866,19 @@ app.directive('dateNow', ['$filter', function($filter) {
     };
 }]);
 
+app.directive("fileInput", function($parse){
+    return{
+        restrict: 'A',
+        link: function(scope, element, attribute){
+            element.bind("change", function(){
+                scope.$apply(function(){
+                    $parse(attribute.fileInput).assign(scope,element[0].files)
+                });
+            });
+        }
+    }
+});
+
 /*
     -Sharing Function
 */
@@ -843,6 +907,116 @@ app.run(function($rootScope) {
         var concat = area + '+' + zone;
 
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
+    };
+});
+
+//Customer Service Pages Controller
+app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window){
+    $scope.loggedUser = localStorage.getItem('user');
+    
+    // $scope.loginBtn = function(){
+    //     if($scope.uname === "admin" && $scope.pass === "admin"){
+    //         localStorage.setItem('user', 'admin');
+    //         $rootScope.loggedInUser = true;
+    //         $location.path("/dashboard");
+    //     }
+    // };
+    
+    // $scope.logoutBtn = function(){
+    //     localStorage.clear();
+    //     $rootScope.loggedInUser = false;
+    //     $window.location.href = "#!";
+    //     $window.location.reload();
+    // };
+
+    $scope.sendNotifToDevice = function(){
+        $http.post('/sendNotifToDevice').then(function(response){
+            console.log(response.data);
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.uploadImg = function(){
+        var fd = new FormData();
+        angular.forEach($scope.files, function(file){
+            fd.append('file[]', file);
+        });
+        
+        // console.log(fd);
+        // $http.post("upload.php", fd, {
+        //     transformRequest: angular.identity,
+        //     headers:{'Content-Type': undefined}
+        // }).then(function(response){
+        //     alert(response.data);
+        //     $scope.displayImg();
+        // }, function(error){
+        //     console.log(error);
+        // });
+        console.log($scope.files);
+        $http.post('/uploadCarouselImg').then(function(response){
+            console.log(response.data);
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.displayImg = function(){
+        $http.get('/fetchCarouselImg').then(function(response){
+            console.log(response.data.output);
+            $scope.imgs = response.data.output;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.deleteImg = function(id, name){
+        $scope.delCarouselImg = {"id":id, "name":name};
+
+        $http.post('/deleteCarouselImg', $scope.delCarouselImg).then(function(response){
+            alert(response.data);
+            $scope.displayImg();
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.getSchedule = function(){
+        $http.get('/getAllSchedule').then(function(response){
+            console.log(response.data);
+            $scope.schedule = response.data;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    $scope.getPendingUser = function(){
+        $http.get('/getPendingUser').then(function(response){
+            console.log(response.data);
+            $scope.pendingUsers = response.data;
+        }, function(error){
+            console.log(error);
+        });
+    };
+    
+    // $scope.updatePendingUser = function(id, status){
+    //     $http.put('updatePendingUser.php?id='+id+"&status="+status).then(function(response){
+    //         alert(response.data);
+    //         $scope.getPendingUser();
+    //     }, function(error){
+    //         console.log(error);
+    //     });
+    // };
+
+    $scope.updatePendingUser = function(id, status){
+        $scope.pUsers = {"pendingID":id, "status":status};
+
+        $http.post('/updatePendingUser', $scope.pUsers).then(function(response){
+            alert(response.data);
+            $scope.getPendingUser();
+        }, function(error){
+            console.log(error);
+        });
     };
 });
 
@@ -1334,7 +1508,6 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
             });
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
         });
-        console.log($scope.areaList);
     });
 
     $scope.thisArea = function(areaID, areaName) {
@@ -3207,7 +3380,6 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     }
 
     $scope.saveDcsEntry = function(){
-        window.alert("DCS Updated");
 
         $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
         
@@ -4458,31 +4630,67 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             "reportID": reportCode
         };
         
-        var $googleMap, map;
+        
 
         $http.post('/getReportForComplaint', $scope.report).then(function(response) {
             $('div.report_reference').html(response.data.content);
             $scope.thisReport = response.data.result[0];
+            
+            $scope.area = {
+                "areaID": $scope.thisReport.area
+            };    
+            $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
+                var $googleMap, map;
+                
+                if(response.data.length != 0 ){    
+                    var sumOfCoLat = 0;
+                    var sumOfCoLng = 0;
+                    for (var i = 0; i < response.data.length; i++) {
+                        sumOfCoLat += response.data[i].lat;
+                        sumOfCoLng += response.data[i].lng;
+                    }
+                    var avgOfCoLat = sumOfCoLat / response.data.length;
+                    var avgOfCoLng = sumOfCoLng / response.data.length;
+                    var data = response.data;
+                    var boundary = [];
+
+                    for (var i = 0; i < response.data.length; i++) {
+                        boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+
+                    }      
+                    var polygonColorCode = "#" + response.data[0].color;
+                    var myPolygon = new google.maps.Polygon({
+                        paths: boundary,
+                        strokeColor: polygonColorCode,
+                        strokeWeight: 2,
+                        fillColor: polygonColorCode,
+                        fillOpacity: 0.45
+                    });
+                    
+                    $googleMap = document.getElementById('googleMap');
+                    var visualizeMap = {
+                        center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        mapTypeControl: false,
+                        panControl: false,
+                        zoomControl: false,
+                        streetViewControl: false,
+                        disableDefaultUI: true,
+                        editable: false
+                    };
+
+                    map = new google.maps.Map($googleMap, visualizeMap);
+                    myPolygon.setMap(map);
+
+                    $window.setTimeout(function () {
+                        map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+                        map.setZoom(12);
+                    }, 1000);
+                }else{
+                    $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+                }                     
+            });
         });
-        
-        $googleMap = document.getElementById('googleMap');
-        var visualizeMap = {
-            center: new google.maps.LatLng(1, 1),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapTypeControl: false,
-            panControl: false,
-            zoomControl: false,
-            streetViewControl: false,
-            disableDefaultUI: true,
-            editable: false
-        };
-
-        map = new google.maps.Map($googleMap, visualizeMap);
-
-        $window.setTimeout(function () {
-            map.panTo(new google.maps.LatLng($scope.thisReport.lat, $scope.thisReport.lng));
-            map.setZoom(17);
-        }, 1000);
     }
 
     $scope.sendEmail = function(actioncode) {
@@ -4853,7 +5061,6 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
     });
     
     $scope.saveDcsEntry = function(){
-        window.alert("BDAF Updated");
 
         $http.post('/updateBdafEntry', $scope.bdafEntry).then(function(response) {
         
@@ -5249,7 +5456,6 @@ function approveForm(formID, formType) {
     }
 
     console.log("authorizedBy:" + formDetails.authorizedBy);
-    window.alert(formDetails);
 
 
     $http.post('/approveForm', formDetails).then(function(response) {
@@ -5257,7 +5463,6 @@ function approveForm(formID, formType) {
         returnedData = response.data;
 
         if (returnedData.status === "success") {
-            window.alert("SUCCESS");
             angular.element('body').overhang({
                 type: "success",
                 "message": "Form approved!"

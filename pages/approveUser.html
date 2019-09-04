@@ -1,0 +1,34 @@
+<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getPendingUser()">
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <h1>Pending Customers</h1><br/><br/>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>IC Number</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Details</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="pUser in pendingUsers track by $index">
+                        <td>{{pUser.pendingID}}</td>
+                        <td>{{pUser.ic}}</td>
+                        <td>{{pUser.email}}</td>
+                        <td>{{pUser.pNo}}</td>
+                        <td>
+                            <div style="height:80px;width:80px;">
+                                <img ng-src=../scripts/pendingImg/{{pUser.imgPath}} style="width: 100%;height:100%;object-fit: contain;">
+                            </div>
+                        </td>
+                        <td><button class="btn btn-success" data-ng-click="updatePendingUser(pUser.pendingID, 'Approved')">Approve</button></td>
+                        <td><button class="btn btn-danger" data-ng-click="updatePendingUser(pUser.pendingID, 'Declined')">Decline</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

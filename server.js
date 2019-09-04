@@ -12,9 +12,14 @@ var dateTime = require('node-datetime');
 var emitter = new EventEmitter();
 var nodemailer = require('nodemailer');
 var Joi = require('joi');
+var fs = require('fs');
+var upload = require('express-fileupload');
+var FCMAdmin = require("firebase-admin");
+// var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
+
 require('dotenv').config();
 
-var SVR_PORT = 8080;
+var SVR_PORT = 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -52,6 +57,164 @@ app.use(express.json({limit: '50mb'}));
 // Parse URL-encoded bodies (as sent by HTML forms)
 //app.use(express.urlencoded());
 
+//Use express file upload
+app.use(upload());
+
+//FCM
+FCMAdmin.initializeApp({
+    credential: FCMAdmin.credential.cert(FCMServiceAccount),
+    databaseURL: "https://trienekens-994df.firebaseio.com"
+});
+
+var token = "f0v_0-sp90k:APA91bEHmvURYoN_LQNyGE1Q_jPddru6XLConuEW6hEthJTJk-SOUmrYCf5UBjtse8Xtg-3HaB3ua80b1CX-Hf6u9ymTbThrHYvZCwVicytd2d4bONBiejIs7FdK5MXspzmDU4_p8YgB";
+var payload = {
+    'notification': 
+        {
+            'title': 'Test',
+            'body': 'Message Nodejs'
+        }
+    
+};
+
+var options = {
+    priority: 'high'
+};
+
+app.post('/sendNotifToDevice', function(req,res){
+    'use strict';
+    FCMAdmin.messaging().sendToDevice(token, payload, options)
+    .then(function(response){
+        console.log("Message sent successfully");
+    }).catch(function(err){
+        console.log(err);
+    });
+});
+
+app.get('/fetchCarouselImg', function(req, res){
+    'use strict';
+    var sql = "SELECT * FROM tblcarouselimg";
+    var output = {};
+    output["output"] = [];
+    database.query(sql, function(err, result){
+        for(var i = 0; i<result.length; i++){
+            output["output"].push({"imageName":result[i].fileName, "id":result[i].id});
+        }
+        console.log(output);
+        res.json(output);
+    });
+});
+
+app.get('/getAllSchedule', function(req, res){
+    'use strict';
+
+    var sql = "SELECT * FROM tblschedule";
+    var output = [];
+    database.query(sql, function(err, result){
+        for (var i = 0; i<result.length; i++){
+            output.push(result[i]);
+        }
+        console.log(output);
+        res.json(output);
+    });
+});
+
+app.get('/getPendingUser', function(req, res){
+    'use strict';
+
+    var sql = "SELECT * FROM tblpending WHERE status = 'Pending'";
+    var output = [];
+    database.query(sql, function(err, result){
+        for (var i = 0; i<result.length; i++){
+            output.push(result[i]);
+        }
+        console.log(output);
+        res.json(output);
+    });
+});
+
+app.post('/updatePendingUser', function(req, res){
+    'use strict';
+    console.log(req.body);
+    var sql = "UPDATE tblpending SET status = '"+req.body.status+"' WHERE pendingID = '"+req.body.pendingID+"'";
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.send("User Status Updated");
+    });
+});
+
+app.post('/deleteCarouselImg', function(req, res){
+    'use strict';
+    console.log(req.body);
+    var imgDir = "scripts/img/" + req.body.name;
+    var sql = "DELETE FROM tblcarouselimg WHERE id = '"+req.body.id+"'";
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        fs.unlink(imgDir, function(err){
+            if(err){
+                throw err;
+            }
+            console.log("Image Deleted");
+            res.send("Image Deleted");
+        });
+    });
+});
+
+app.post('/editCollectionSchedule', function(req, res){
+    'use strict';
+    console.log(req.body);
+    var sql = "UPDATE tblschedule SET mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thur = '" + req.body.thur + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE areaID = '"+req.body.id+"'";
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+
+        console.log("Updated");
+    });
+});
+
+app.post('/uploadCarouselImg', function(req, res){
+    'use strict';
+    //console.log(req.files);
+    
+    if(req.files){
+        var file = req.files.carouselImg;
+
+        for(var x = 0;x<file.length;x++){
+            var fileName = file[x].name,
+            fileSize = file[x].size,
+            fileExt = file[x].name.split('.'),
+            actualFileExt = fileExt[1].toLowerCase(),
+            allowed = ["png", "jpg", "jpeg"];
+
+            for(var i=0;i<allowed.length;i++){
+                if(actualFileExt == allowed[i]){
+                    if(file[x].size <= 2000000){
+                        var sql = "INSERT INTO tblcarouselimg(fileName) VALUES('"+file[x].name+"')";
+                        database.query(sql, function(err, result){
+                            if(err){
+                                throw err;
+                            }
+                            //console.log("Image Uploaded");
+                        });
+                        file[x].mv('./scripts/img/'+file[x].name, function(err){
+                            if(err){
+                                throw err;
+                            }
+                        });
+                    }
+                }
+            }
+        }
+        res.redirect('/pages/#/upload-image-carousel');
+        console.log("fileExt: " + fileExt);
+        console.log("actualFileExt: ", actualFileExt);
+    }
+});
+
 app.post('/loadMenu', function (req, res) {
     'use strict';
     var content = '', sql;
@@ -66,7 +229,7 @@ app.post('/loadMenu', function (req, res) {
     
     database.query(sql, function (err, result) {
         result.forEach(function (key, value) {
-            if ((key.mgmtName).indexOf("view") !== -1) {
+            if ((key.mgmtName).indexOf("view") !== -1 || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
                 content += f.menuItem(key.mgmtName, key.status);
             }
         });

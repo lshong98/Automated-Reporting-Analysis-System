@@ -1,0 +1,12 @@
+<div class="container" data-ng-controller="custServiceCtrl">
+    <div class="row">
+        <div class="col-md-12 notif">
+            <h1>Post Announcement</h1><br/><br/>
+            <form action="/sendNotifToDevice" method="post">
+                <p>Title: <br /><input type="text" name="title" /></p>
+                <p>Message: <br /><textarea name="message"></textarea></p>
+                <input type="submit" value="Submit" data-ng-click="" class="btn btn-primary" />
+            </form>
+        </div>
+    </div>
+</div>

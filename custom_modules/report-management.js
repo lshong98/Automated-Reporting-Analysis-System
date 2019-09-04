@@ -183,7 +183,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function(req, res){
     'use strict';
     
-    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, completionStatus, garbageAmount, remark, tblarea.collection_frequency AS frequency FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID ORDER BY reportCollectionDate DESC";
+    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, completionStatus, garbageAmount, remark, tblarea.collection_frequency AS frequency FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID ORDER BY reportCollectionDate DESC";
     
     database.query(sql, function (err, result) {
         if (err) {

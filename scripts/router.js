@@ -367,6 +367,46 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'damagedLostController',
         controllerAs:'damagedLost'
     })
+    .when('/post-announcement', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/post-announcement');
+            }
+        },
+        templateUrl: '/post-announcement',
+        controller: 'custServiceCtrl',
+        controllerAs:'custService'
+    })
+    .when('/upload-image-carousel', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/upload-image-carousel');
+            }
+        },
+        templateUrl: '/upload-image-carousel',
+        controller: 'custServiceCtrl',
+        controllerAs:'custService'
+    })
+    .when('/approve-app-user', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/approve-app-user');
+            }
+        },
+        templateUrl: '/approve-app-user',
+        controller: 'custServiceCtrl',
+        controllerAs:'custService'
+    })
+    .when('/bin-collection-schedule', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/bin-collection-schedule');
+            }
+        },
+        templateUrl: '/bin-collection-schedule',
+        controller: 'custServiceCtrl',
+        controllerAs:'custService'
+    })
     .when('/boundary/:areaID', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {

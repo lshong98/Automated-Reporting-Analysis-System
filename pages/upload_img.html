@@ -1,0 +1,31 @@
+<div class="container" data-ng-controller="custServiceCtrl">
+    <div class="row upload">
+        <div class="col-md-12">
+            <h1>Upload Image</h1><br/><br/>
+            <form method="post" enctype="multipart/form-data" action="/uploadCarouselImg">
+                <p>Upload Images (PNG/JPG/JPEG files only and not more than 2MB)</p>
+                <p><input type="file" id="img" name="carouselImg" file-input="files" multiple /><br/></p>
+                <input type="submit" value="Submit" data-ng-click="" class="btn btn-primary"/>
+                
+            </form>
+            <br/><br/><br/><br/>
+        </div>
+
+        <div class="col-md-12 table-responsive" data-ng-init="displayImg()">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="image in imgs track by $index">
+                        <td><img ng-src=../scripts/img/{{image.imageName}} class="thumbnail"></td>
+                        <td class="action"><button class="btn btn-danger" data-ng-click="deleteImg(image.id, image.imageName)">Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

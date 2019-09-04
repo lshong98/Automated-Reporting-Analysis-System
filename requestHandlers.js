@@ -113,7 +113,7 @@ app.get('/bdaf-details/:bdafID', function (req, res) {
     res.sendFile('pages/bdaf-details.html', {root: __dirname});
 });
 app.get('/dbd-details/:dbdID', function (req, res) {
-    'use strict';
+    'use strict'; 
     res.sendFile('pages/dbd-details.html', {root: __dirname});
 });
 app.get('/blost-details/:blostID', function (req, res) {
@@ -129,7 +129,7 @@ app.get('/bin-database', function (req, res) {
     res.sendFile('pages/bin-database.html', {root: __dirname});
 });
 app.get('/bin-inventory', function (req, res) {
-    'use strict';
+    'use strict'; 
     res.sendFile('pages/bin-inventory.html', {root: __dirname});
 });
 app.get('/authorization', function (req, res) {
@@ -155,6 +155,22 @@ app.get('/delivery-management', function (req, res) {
 app.get('/damaged-lost-bin', function (req, res) {
     'use strict';
     res.sendFile('pages/damaged-lost-bin.html', {root: __dirname});
+});
+app.get('/post-announcement', function (req, res) {
+    'use strict';
+    res.sendFile('pages/postAnnouncement.html', {root: __dirname});
+});
+app.get('/upload-image-carousel', function (req, res) {
+    'use strict';
+    res.sendFile('pages/upload_img.html', {root: __dirname});
+});
+app.get('/approve-app-user', function (req, res) {
+    'use strict';
+    res.sendFile('pages/approveUser.html', {root: __dirname});
+});
+app.get('/bin-collection-schedule', function (req, res) {
+    'use strict';
+    res.sendFile('pages/schedule.html', {root: __dirname});
 });
 app.get('/boundary/:areaID', function (req, res) {
     'use strict';

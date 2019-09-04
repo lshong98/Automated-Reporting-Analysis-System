@@ -9,7 +9,7 @@ app.post('/addDcs',function(req,res){
     console.log(req.body);
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', '" + req.body.preparedby + "', 'A')";
+        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" +  req.body.areaID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
         
         database.query(sql, function (err, result) {
             if (err) {
@@ -30,7 +30,7 @@ app.post('/addDcs',function(req,res){
     });
 }); // Complete
 app.post('/getAllDcs', function(req,res){
-    'use strict';
+    'use strict'; 
     var sql = "SELECT dcsID AS id, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, (CASE WHEN status = 'A' THEN 'ACTIVE' WHEN status = 'I' THEN 'INACTIVE'  WHEN status = 'P' THEN 'PENDING' WHEN status = 'G' THEN 'APPROVED' WHEN status = 'C' THEN 'COMPLETE' WHEN status = 'R' THEN 'CORRECTION REQUIRED' END) AS status from tbldcs where status != 'I'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     
@@ -140,7 +140,7 @@ app.post('/filterAddress',function(req,res){
 app.post('/filterArea',function(req,res){ 
     'use strict';
     console.log(req.body);
-    var sql = "SELECT * from tblarea where staffID = '" + req.body.driverID + "'";
+    var sql = "SELECT * from tblarea where driverID = '" + req.body.driverID + "'";
     database.query(sql, function (err, result) {
         if (err) { 
             throw err;

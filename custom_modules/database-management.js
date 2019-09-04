@@ -26,6 +26,17 @@ var DB_NAME = '';
 // if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
 //     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
 // }
+
+// // Config used for socket connection, important for Google Cloud hosting
+//  var config = {
+//      user: DB_USER,
+//      password: DB_PASS, 
+//      host: DB_HOST
+//  }
+
+//  if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
+//      config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+//  }
  
 // Create connection
 var db;
@@ -200,7 +211,9 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view dbdDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create blostDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit blostDetails')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('view blostDetails')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('upload banner')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('approve user')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('send notif')"
         
     ], i;
     
@@ -283,6 +296,9 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '50', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '51', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '52', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '53', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '54', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '55', 'A')"
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {
