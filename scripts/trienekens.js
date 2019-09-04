@@ -3186,7 +3186,6 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     }
 
     $scope.saveDcsEntry = function(){
-        window.alert("DCS Updated");
 
         $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
         
@@ -4822,7 +4821,6 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
     });
     
     $scope.saveDcsEntry = function(){
-        window.alert("BDAF Updated");
 
         $http.post('/updateBdafEntry', $scope.bdafEntry).then(function(response) {
         
@@ -5218,7 +5216,6 @@ function approveForm(formID, formType) {
     }
 
     console.log("authorizedBy:" + formDetails.authorizedBy);
-    window.alert(formDetails);
 
 
     $http.post('/approveForm', formDetails).then(function(response) {
@@ -5226,7 +5223,6 @@ function approveForm(formID, formType) {
         returnedData = response.data;
 
         if (returnedData.status === "success") {
-            window.alert("SUCCESS");
             angular.element('body').overhang({
                 type: "success",
                 "message": "Form approved!"

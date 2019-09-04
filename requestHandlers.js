@@ -113,7 +113,7 @@ app.get('/bdaf-details/:bdafID', function (req, res) {
     res.sendFile('pages/bdaf-details.html', {root: __dirname});
 });
 app.get('/dbd-details/:dbdID', function (req, res) {
-    'use strict';
+    'use strict'; 
     res.sendFile('pages/dbd-details.html', {root: __dirname});
 });
 app.get('/blost-details/:blostID', function (req, res) {
@@ -129,7 +129,7 @@ app.get('/bin-database', function (req, res) {
     res.sendFile('pages/bin-database.html', {root: __dirname});
 });
 app.get('/bin-inventory', function (req, res) {
-    'use strict';
+    'use strict'; 
     res.sendFile('pages/bin-inventory.html', {root: __dirname});
 });
 app.get('/authorization', function (req, res) {
