@@ -1050,7 +1050,21 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         var ctx = c.getContext("2d");
         var image = new Image();
         image.onload = function() {
-            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
+//            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
+            // step 1
+            const oc = document.getElementById('mycanvas');
+            const octx = oc.getContext('2d');
+            oc.width = this.width;
+            oc.height = this.height;
+
+            // steo 2: pre-filter image using steps as radius
+            const steps = (oc.width / c.width)>>1;
+            octx.filter = `blur(${steps}px)`;
+            octx.drawImage(this, 0, 0);
+
+            // step 3, draw scaled
+            ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, c.width, c.height);
+            
         };
         image.src = $scope.editField.ifleet;
     });
