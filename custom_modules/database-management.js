@@ -11,8 +11,8 @@ var emitter = new EventEmitter();
 // var DB_NAME = 'trienekens_test';
  
 // Local database access
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
+var DB_HOST = '';
+var DB_USER = '';
 var DB_PASS = '';
 var DB_NAME = 'triepres';
 
@@ -27,52 +27,69 @@ var DB_NAME = 'triepres';
 //      config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
 //  }
  
-// // Create connection 
-var db = mysql.createConnection({ 
-  host: DB_HOST,
-  user: DB_USER,  
-  password: DB_PASS
-});
+// Create connection
+var db;
+function handleDisconnect() {
+//    db = mysql.createConnection({ 
+//        host: DB_HOST,
+//        user: DB_USER,  
+//        password: DB_PASS
+//    });
 
-// var db = mysql.createConnection(config);
+    db = mysql.createConnection(config);
 
 
-// Connect
-db.connect(function (err) {
-    'use strict';
-    if (err) {
-        throw err;
-    }
-    db.query('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' + DB_NAME + '"', function (err, result) {
-        if (result[0] === undefined) {
-            db.query('CREATE DATABASE ' + DB_NAME + '', function (err, result) {
-                if (err) {
-                    throw err;
+    // Connect
+    db.connect(function (err) {
+        'use strict';
+        if (err) {
+            throw err;
+        }
+        db.query('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' + DB_NAME + '"', function (err, result) {
+            if (result[0] === undefined) {
+                db.query('CREATE DATABASE ' + DB_NAME + '', function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log('Database created...');
+                    db.query('USE ' + DB_NAME + '', function (err, result) {
+                        if (err) {
+                            setTimeout(handleDisconnect, 2000);
+                            console.log('error when connecting to db:', err);
+                        }
+                        console.log('MySQL Connected...');
+                        emitter.emit('createTable');
+                        emitter.emit('defaultUser');
+                        //emitter.emit('dummyData');
+                        //emitter.emit('eventScheduler');
+                    });
+                });
+            } else {
+                if (result[0].schema_name === DB_NAME) {
+                    db.query('USE ' + DB_NAME + '', function (err, result) {
+                        if (err) {
+                            setTimeout(handleDisconnect, 2000);
+                            console.log('error when connecting to db:', err);
+                        }
+                        console.log('MySQL Connected...');
+                    });
                 }
-                console.log('Database created...');
-                db.query('USE ' + DB_NAME + '', function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    console.log('MySQL Connected...');
-                    emitter.emit('createTable');
-                    emitter.emit('defaultUser');
-                    //emitter.emit('dummyData');
-                    //emitter.emit('eventScheduler');
-                });
-            });
-        } else {
-            if (result[0].schema_name === DB_NAME) {
-                db.query('USE ' + DB_NAME + '', function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    console.log('MySQL Connected...');
-                });
             }
+        });
+    });
+
+
+    db.on('error', function(err) {
+        console.log('db error', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+            handleDisconnect();                         // lost due to either server restart, or a
+        } else {                                      // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
         }
     });
-});
+}
+
+handleDisconnect();
 
 /* Emitter Registered */
 // Create Database Tables

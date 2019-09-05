@@ -152,7 +152,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 }
             } else if (element === "completionStatusArea") {
                 exist = false;
-                complete = data[i].completionStatus === "C" ? true : false;
+                complete = data[i].completionStatus === "N" ? true : false;
                 
                 if (!dimension) {
                     for (var num = 0; num < 3; num += 1) {
@@ -177,7 +177,8 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 }
             } else if (element === "completionStatusDate") {
                 exist = false;
-                complete = data[i].reportStatus === "C" ? true : false;
+                console.log(data);
+                complete = data[i].completionStatus === "N" ? true : false;
 
                 if (!dimension) {
                     for (num = 0; num < 3; num += 1) {

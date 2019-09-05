@@ -156,7 +156,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
 
 
     $http.post('/getInitStatus', $scope.params).then(function(response) {
-        if (response.data.initcount = response.data.actualcount) {
+        if (response.data.initcount == response.data.actualcount) {
             $scope.report.status = 'N';
         } else {
             $scope.report.status = 'A';
