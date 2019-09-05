@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'trienekens05';
+var DB_NAME = 'triepres';
 
 // // Config used for socket connection, important for Google Cloud hosting
 //  var config = {
