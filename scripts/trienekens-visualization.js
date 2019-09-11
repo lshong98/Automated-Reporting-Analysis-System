@@ -1,25 +1,25 @@
 /*jslint white:true */
 /*global angular, Highcharts, $ */
 //Felix handsome boi2 doing visualization
-app.controller('visualizationController', function ($scope, $http, $window, $filter) {
+app.controller('visualizationController', function($scope, $http, $window, $filter) {
     'use strict';
     $scope.chartDurationGarbageSelected = "Line";
     $scope.chartCompleteStatusSelected = "Area";
-    $scope.changeChartDurationGarbage = function (chart) {
+    $scope.changeChartDurationGarbage = function(chart) {
         if (chart === 'Line') {
             $scope.chartDurationGarbageSelected = "Line";
         } else if (chart === 'Bar') {
             $scope.chartDurationGarbageSelected = "Bar";
         }
     }
-    $scope.changeCompleteStatus = function (chart) {
-        if (chart === 'Area') {
-            $scope.chartCompleteStatusSelected = "Area";
-        } else if (chart === 'Date') {
-            $scope.chartCompleteStatusSelected = "Date";
+    $scope.changeCompleteStatus = function(chart) {
+            if (chart === 'Area') {
+                $scope.chartCompleteStatusSelected = "Area";
+            } else if (chart === 'Date') {
+                $scope.chartCompleteStatusSelected = "Date";
+            }
         }
-    }
-    //date configuration
+        //date configuration
     var currentDate = new Date();
     var startDate = new Date();
     startDate.setDate(currentDate.getDate() - 7);
@@ -31,9 +31,10 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
     $scope.visualdate.dateStart = $filter('date')(startDate, 'yyyy-MM-dd');
     $scope.visualdate.dateEnd = $filter('date')(currentDate, 'yyyy-MM-dd');
     //data range picker filter
-    $(function () {
+    $(function() {
         var start = moment().subtract(7, 'days');
         var end = moment();
+
         function putRange(start, end) {
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         }
@@ -42,7 +43,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             startDate: start,
             endDate: end,
             opens: 'right'
-        }, function (start, end, label) {
+        }, function(start, end, label) {
             putRange(start, end);
             $scope.visualdate.dateStart = start.format('YYYY-MM-DD');
             $scope.visualdate.dateEnd = end.format('YYYY-MM-DD');
@@ -51,31 +52,31 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
         putRange(start, end);
     });
 
-    var stringToTime = function (string) {
+    var stringToTime = function(string) {
         var strArray = string.split(":");
         var d = new Date();
         d.setHours(strArray[0], strArray[1], strArray[2]);
         return d;
     }
-    
+
     //areaList for filtering
-    $scope.zoneList = [];  
-    $scope.onAreaFilterSelectionChange = function(){ //from selection
-        $scope.visualdate.zoneID = $scope.areaSelected
-        getDataVisualization(); //call get new data visualization when area selected
-    }
-    //function to reshape data for fit into charts
-    var getElementList = function (element, data) {
+    $scope.zoneList = [];
+    $scope.onAreaFilterSelectionChange = function() { //from selection
+            $scope.visualdate.zoneID = $scope.areaSelected
+            getDataVisualization(); //call get new data visualization when area selected
+        }
+        //function to reshape data for fit into charts
+    var getElementList = function(element, data) {
         var objReturn = [];
         var i, j, k;
         var exist = false,
             complete;
 
         var dimension = false;
-        
+
         if (element === "area & duration") {
             var timeStart, timeEnd, duration;
-            var dateArray = getElementList("reportCollectionDate", data);        
+            var dateArray = getElementList("reportCollectionDate", data);
             var areaArray = getElementList("areaName", data);
             for (i = 0; i < areaArray.length; i += 1) {
                 objReturn.push({
@@ -84,7 +85,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 });
             }
             for (i = 0; i < areaArray.length; i += 1) {
-                for(j=0; j<dateArray.length; j+=1){
+                for (j = 0; j < dateArray.length; j += 1) {
                     objReturn[i].data[j] = dateArray[j];
                 }
             }
@@ -108,155 +109,157 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                     }
                 }
             }
-        }else{
-        for (i = 0; i < data.length; i += 1) {
-            if (element === "reportCollectionDate") {
-                exist = false;
-                var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j] === formattedDate) {
-                        exist = true;
+        } else {
+            for (i = 0; i < data.length; i += 1) {
+                if (element === "reportCollectionDate") {
+                    exist = false;
+                    var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j] === formattedDate) {
+                            exist = true;
+                        }
                     }
-                }
-                if (!exist) {
-                    objReturn.push(formattedDate);
-                }
-            } else if (element === "areaName") {
-                exist = false;
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j] === data[i].areaName) {
-                        exist = true;
+                    if (!exist) {
+                        objReturn.push(formattedDate);
                     }
-                }
-                if (!exist) {
-                    objReturn.push(data[i].areaName);
-                }
-            } else if (element === "garbageAmount") {
-                objReturn.push(parseInt(data[i].garbageAmount));
-            } else if (element === "duration") {
-                duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
-                objReturn.push(duration);
-            }else if (element === "amountGarbageOnArea") {
-                exist = false;
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j].name === data[i].areaName) {
-                        objReturn[j].y += parseInt(data[i].garbageAmount);
-                        exist = true;
+                } else if (element === "areaName") {
+                    exist = false;
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j] === data[i].areaName) {
+                            exist = true;
+                        }
                     }
-                }
-                if (!exist) {
-                    objReturn.push({
-                        "name": data[i].areaName,
-                        "y": parseInt(data[i].garbageAmount)
-                    });
-                }
-            } else if (element === "completionStatusArea") {
-                exist = false;
-                complete = data[i].completionStatus === "C" ? true : false;
-                
-                if (!dimension) {
-                    for (var num = 0; num < 3; num += 1) {
-                        objReturn[num] = [];
+                    if (!exist) {
+                        objReturn.push(data[i].areaName);
                     }
-                    dimension = true;
-                }
+                } else if (element === "garbageAmount") {
+                    objReturn.push(parseInt(data[i].garbageAmount));
+                } else if (element === "duration") {
+                    duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
+                    objReturn.push(duration);
+                } else if (element === "amountGarbageOnArea") {
+                    exist = false;
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j].name === data[i].areaName) {
+                            objReturn[j].y += parseInt(data[i].garbageAmount);
+                            exist = true;
+                        }
+                    }
+                    if (!exist) {
+                        objReturn.push({
+                            "name": data[i].areaName,
+                            "y": parseInt(data[i].garbageAmount)
+                        });
+                    }
+                } else if (element === "completionStatusArea") {
+                    exist = false;
+                    complete = data[i].completionStatus === "N" ? true : false;
 
-                for (j = 0; j < objReturn[0].length; j += 1) {
-                    if (objReturn[0][j] === data[i].areaName) {
-                        objReturn[1][j] += complete === true ? -1 : 0;
-                        objReturn[2][j] += complete === false ? 1 : 0;
-
-                        exist = true;
+                    if (!dimension) {
+                        for (var num = 0; num < 3; num += 1) {
+                            objReturn[num] = [];
+                        }
+                        dimension = true;
                     }
-                }
-                //add new area
-                if (!exist) {
-                    objReturn[0].push(data[i].areaName);
-                    objReturn[1].push(complete === true ? -1 : 0);
-                    objReturn[2].push(complete === false ? 1 : 0);
-                }
-            } else if (element === "completionStatusDate") {
-                exist = false;
-                complete = data[i].reportStatus === "C" ? true : false;
 
-                if (!dimension) {
-                    for (num = 0; num < 3; num += 1) {
-                        objReturn[num] = [];
-                    }
-                    dimension = true;
-                }
+                    for (j = 0; j < objReturn[0].length; j += 1) {
+                        if (objReturn[0][j] === data[i].areaName) {
+                            objReturn[1][j] += complete === true ? -1 : 0;
+                            objReturn[2][j] += complete === false ? 1 : 0;
 
-                for (j = 0; j < objReturn[0].length; j += 1) {
-                    if (objReturn[0][j] === $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d')) {
-                        objReturn[1][j] += complete === true ? -1 : 0;
-                        objReturn[2][j] += complete === false ? 1 : 0;
+                            exist = true;
+                        }
+                    }
+                    //add new area
+                    if (!exist) {
+                        objReturn[0].push(data[i].areaName);
+                        objReturn[1].push(complete === true ? -1 : 0);
+                        objReturn[2].push(complete === false ? 1 : 0);
+                    }
+                } else if (element === "completionStatusDate") {
+                    exist = false;
+                    // console.log(data);
+                    complete = data[i].completionStatus === "N" ? true : false;
 
-                        exist = true;
+                    if (!dimension) {
+                        for (num = 0; num < 3; num += 1) {
+                            objReturn[num] = [];
+                        }
+                        dimension = true;
                     }
-                }
-                //add new area
-                if (!exist) {
-                    objReturn[0].push($filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d'));
-                    objReturn[1].push(complete === true ? -1 : 0);
-                    objReturn[2].push(complete === false ? 1 : 0);
-                }
-            } else if (element === "timeSeries") {
-                var date = new Date(data[i].reportCollectionDate);
-                exist = false;
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j][0] === date.getTime()) {
-                        objReturn[j][1] += parseInt(data[i].garbageAmount);
-                        exist = true;
+
+                    for (j = 0; j < objReturn[0].length; j += 1) {
+                        if (objReturn[0][j] === $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d')) {
+                            objReturn[1][j] += complete === true ? -1 : 0;
+                            objReturn[2][j] += complete === false ? 1 : 0;
+
+                            exist = true;
+                        }
                     }
-                }
-                if (!exist) {
-                    objReturn.push([date.getTime(), parseInt(data[i].garbageAmount)]);
+                    //add new area
+                    if (!exist) {
+                        objReturn[0].push($filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d'));
+                        objReturn[1].push(complete === true ? -1 : 0);
+                        objReturn[2].push(complete === false ? 1 : 0);
+                    }
+                } else if (element === "timeSeries") {
+                    var date = new Date(data[i].reportCollectionDate);
+                    exist = false;
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j][0] === date.getTime()) {
+                            objReturn[j][1] += parseInt(data[i].garbageAmount);
+                            exist = true;
+                        }
+                    }
+                    if (!exist) {
+                        objReturn.push([date.getTime(), parseInt(data[i].garbageAmount)]);
+                    }
                 }
             }
         }
-        }
         return objReturn;
     }
-    
-    var getDataVisualization = function () {
+
+    var getDataVisualization = function() {
         $http.post("/getDataVisualization", $scope.visualdate)
-            .then(function (response) {
+            .then(function(response) {
                     $scope.reportList = response.data;
-//                    var obj = getElementList("completionStatusArea", $scope.reportList);
-//                    console.log(obj);
+                    //                    var obj = getElementList("completionStatusArea", $scope.reportList);
+                    console.log(response.data);
                 },
-                function (response) {
+                function(response) {
                     $window.console.log("errror retrieving json file - " + response);
                 });
         $http.post("/getDataVisualizationGroupByDate", $scope.visualdate)
-            .then(function (response) {
+            .then(function(response) {
                     $scope.reportListGroupByDate = response.data;
                     displayChart();
 
                 },
-                function (response) {
+                function(response) {
                     $window.console.log("errror retrieving json file - " + response);
                 });
     }
-    
-    $http.get('/getAreaList').then(function (response) {
-            renderSltPicker();
-            $.each(response.data, function(index, value) {
-                $scope.zoneList.push({"id": value.zoneID, "name": value.zoneName});
-            });
-            function renderSltPicker() {
-                angular.element('.selectpicker').selectpicker('refresh');
-                angular.element('.selectpicker').selectpicker('render');
-            }
-            $('.selectpicker').on('change', function() {
-                renderSltPicker();
-            });
+
+    $http.get('/getAreaList').then(function(response) {
+        renderSltPicker();
+        $.each(response.data, function(index, value) {
+            $scope.zoneList.push({ "id": value.zoneID, "name": value.zoneName });
         });
-    
+
+        function renderSltPicker() {
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+        }
+        $('.selectpicker').on('change', function() {
+            renderSltPicker();
+        });
+    });
+
     //get data visualization when load the page
     getDataVisualization();
     //chart-line-duration-garbage
-    var displayChart = function () {
+    var displayChart = function() {
 
         //chart-bar-duration-garbage
         Highcharts.chart('chart-bar-duration-garbage', {
@@ -327,7 +330,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 name: 'Percentage',
                 colorByPoint: true,
                 data: getElementList("amountGarbageOnArea", $scope.reportList)
-    }]
+            }]
         });
 
         //chart-line-volume-day
@@ -400,7 +403,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             xAxis: [{
                 categories: getElementList("reportCollectionDate", $scope.reportListGroupByDate),
                 crosshair: true
-    }],
+            }],
             yAxis: [{ // Primary yAxis
                 labels: {
                     format: '{value}minutes',
@@ -414,7 +417,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                         color: Highcharts.getOptions().colors[1]
                     }
                 }
-    }, { // Secondary yAxis
+            }, { // Secondary yAxis
                 title: {
                     text: 'Garbage Amount',
                     style: {
@@ -428,7 +431,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                     }
                 },
                 opposite: true
-    }],
+            }],
             tooltip: {
                 shared: true
             },
@@ -450,16 +453,16 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                     valueSuffix: ' ton'
                 }
 
-    }, {
+            }, {
                 name: 'Duration',
                 type: 'spline',
                 data: getElementList("duration", $scope.reportListGroupByDate),
                 tooltip: {
                     valueSuffix: ' minutes'
                 }
-    }]
+            }]
         });
-//        console.log($scope.reportListGroupByDate);
+        //        console.log($scope.reportListGroupByDate);
 
         //chart-negativebar-status-area
         Highcharts.chart('chart-negativebar-status-area', {
@@ -478,7 +481,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 labels: {
                     step: 1
                 }
-    }, { // mirror axis on right side
+            }, { // mirror axis on right side
                 opposite: true,
                 reversed: false,
                 categories: getElementList("completionStatusArea", $scope.reportList)[0],
@@ -486,13 +489,13 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 labels: {
                     step: 1
                 }
-    }],
+            }],
             yAxis: {
                 title: {
                     text: null
                 },
                 labels: {
-                    formatter: function () {
+                    formatter: function() {
                         return Math.abs(this.value);
                     }
                 }
@@ -505,7 +508,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             },
 
             tooltip: {
-                formatter: function () {
+                formatter: function() {
                     return '<b>' + this.series.name + ', area ' + this.point.category + '</b><br/>' +
                         'Complete/Incomplete Count: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
                 }
@@ -514,10 +517,10 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             series: [{
                 name: 'Complete',
                 data: getElementList("completionStatusArea", $scope.reportList)[1]
-    }, {
+            }, {
                 name: 'Incomplete',
                 data: getElementList("completionStatusArea", $scope.reportList)[2]
-    }]
+            }]
         });
         //chart-negativebar-status-date
         Highcharts.chart('chart-negativebar-status-date', {
@@ -536,7 +539,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 labels: {
                     step: 1
                 }
-    }, { // mirror axis on right side
+            }, { // mirror axis on right side
                 opposite: true,
                 reversed: false,
                 categories: getElementList("completionStatusDate", $scope.reportList)[0],
@@ -544,13 +547,13 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
                 labels: {
                     step: 1
                 }
-    }],
+            }],
             yAxis: {
                 title: {
                     text: null
                 },
                 labels: {
-                    formatter: function () {
+                    formatter: function() {
                         return Math.abs(this.value);
                     }
                 }
@@ -563,7 +566,7 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             },
 
             tooltip: {
-                formatter: function () {
+                formatter: function() {
                     return '<b>' + this.series.name + ', area ' + this.point.category + '</b><br/>' +
                         'Complete/Incomplete Count: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
                 }
@@ -572,10 +575,10 @@ app.controller('visualizationController', function ($scope, $http, $window, $fil
             series: [{
                 name: 'Complete',
                 data: getElementList("completionStatusDate", $scope.reportList)[1]
-    }, {
+            }, {
                 name: 'Incomplete',
                 data: getElementList("completionStatusDate", $scope.reportList)[2]
-    }]
+            }]
         });
     }
 });
