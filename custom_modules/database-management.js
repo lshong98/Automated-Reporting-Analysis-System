@@ -4,51 +4,25 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-// Cloud database access
-// var DB_HOST = '35.240.160.118';
-// var DB_USER = 'root';
-// var DB_PASS = 'root';
-// var DB_NAME = 'trienekens_test';
- 
-// Local database access
-var DB_HOST = '';
-var DB_USER = '';
-var DB_PASS = '';
-var DB_NAME = '';
+var DB_HOST = process.env.DATABASE_HOST || '192.168.64.2';
+var DB_USER = process.env.DATABASE_USER || 'username';
+var DB_PASS = process.env.DATABASE_PASSWORD || 'password';
+var DB_NAME = process.env.DATABASE_NAME || 'dbtrienekens';
 
-// Config used for socket connection, important for Google Cloud hosting
  var config = {
      user: DB_USER,
      password: DB_PASS, 
      host: DB_HOST
  }
-//
-// if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
-//     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
-// }
 
-// // Config used for socket connection, important for Google Cloud hosting
-//  var config = {
-//      user: DB_USER,
-//      password: DB_PASS, 
-//      host: DB_HOST
-//  }
-
-//  if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
-//      config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
-//  }
+if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
+    config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+}
  
 // Create connection
 var db;
 function handleDisconnect() {
-//    db = mysql.createConnection({ 
-//        host: DB_HOST,
-//        user: DB_USER,  
-//        password: DB_PASS
-//    });
-
     db = mysql.createConnection(config);
-
 
     // Connect
     db.connect(function (err) {
@@ -214,7 +188,6 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('upload banner')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('approve user')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('send notif')"
-        
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -297,8 +270,7 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '51', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '52', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '53', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '54', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '55', 'A')"
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '54', 'A')"
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {

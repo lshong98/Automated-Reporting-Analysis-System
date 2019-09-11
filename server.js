@@ -15,11 +15,11 @@ var Joi = require('joi');
 var fs = require('fs');
 var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
-// var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
+//var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
 
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = process.env.SERVER_PORT || 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -94,10 +94,10 @@ app.get('/fetchCarouselImg', function(req, res){
     'use strict';
     var sql = "SELECT * FROM tblcarouselimg";
     var output = {};
-    output["output"] = [];
+    output.output = [];
     database.query(sql, function(err, result){
         for(var i = 0; i<result.length; i++){
-            output["output"].push({"imageName":result[i].fileName, "id":result[i].id});
+            output.output.push({"imageName":result[i].fileName, "id":result[i].id});
         }
         console.log(output);
         res.json(output);
@@ -210,8 +210,8 @@ app.post('/uploadCarouselImg', function(req, res){
             }
         }
         res.redirect('/pages/#/upload-image-carousel');
-        console.log("fileExt: " + fileExt);
-        console.log("actualFileExt: ", actualFileExt);
+//        console.log("fileExt: " + fileExt);
+//        console.log("actualFileExt: ", actualFileExt);
     }
 });
 

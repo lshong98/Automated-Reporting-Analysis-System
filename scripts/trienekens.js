@@ -1472,7 +1472,7 @@ app.controller('managerController', function($scope, $http, $filter) {
                         icon: value.icon
                     });
                     marker.setMap(map);
-                }, 10000);
+                }, 3000);
             }
         });
     });
