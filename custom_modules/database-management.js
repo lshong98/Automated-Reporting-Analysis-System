@@ -14,18 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = '';
 var DB_USER = '';
 var DB_PASS = '';
-var DB_NAME = '';
-
-// Config used for socket connection, important for Google Cloud hosting
- var config = {
-     user: DB_USER,
-     password: DB_PASS, 
-     host: DB_HOST
- }
-//
-// if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
-//     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
-// }
+var DB_NAME = 'triepres';
 
 // // Config used for socket connection, important for Google Cloud hosting
 //  var config = {

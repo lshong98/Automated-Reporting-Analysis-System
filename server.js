@@ -15,7 +15,7 @@ var Joi = require('joi');
 var fs = require('fs');
 var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
-// var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
+var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
 
 require('dotenv').config();
 

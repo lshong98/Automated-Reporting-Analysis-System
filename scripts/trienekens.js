@@ -3222,6 +3222,8 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     $scope.addDcs = function() {
         $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.dcs.preparedBy = window.sessionStorage.getItem('owner');
+
+        console.log($scope.dcs.preparedBy);
         $http.post('/addDcs', $scope.dcs).then(function(response) {
             var returnedData = response.data;
             var newDcsID = returnedData.details.dcsID;
