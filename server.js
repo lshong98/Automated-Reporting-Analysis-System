@@ -19,7 +19,7 @@ var FCMAdmin = require("firebase-admin");
 
 require('dotenv').config();
 
-var SVR_PORT = 8080;
+var SVR_PORT = process.env.SERVER_PORT || 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -120,10 +120,10 @@ app.get('/fetchCarouselImg', function(req, res){
     'use strict';
     var sql = "SELECT * FROM tblcarouselimg";
     var output = {};
-    output["output"] = [];
+    output.output = [];
     database.query(sql, function(err, result){
         for(var i = 0; i<result.length; i++){
-            output["output"].push({"imageName":result[i].fileName, "id":result[i].id});
+            output.output.push({"imageName":result[i].fileName, "id":result[i].id});
         }
         console.log(output);
         res.json(output);
@@ -236,8 +236,8 @@ app.post('/uploadCarouselImg', function(req, res){
             }
         }
         res.redirect('/pages/#/upload-image-carousel');
-        console.log("fileExt: " + fileExt);
-        console.log("actualFileExt: ", actualFileExt);
+//        console.log("fileExt: " + fileExt);
+//        console.log("actualFileExt: ", actualFileExt);
     }
 });
 

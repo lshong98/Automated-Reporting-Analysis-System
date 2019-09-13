@@ -11,69 +11,90 @@ var emitter = new EventEmitter();
 // var DB_NAME = 'trienekens_test';
  
 // Local database access
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
-var DB_PASS = '';
-var DB_NAME = 'trienekens';
+// var DB_HOST = 'localhost';
+// var DB_USER = 'root';
+// var DB_PASS = '';
+// var DB_NAME = 'trienekens';
+var DB_HOST = process.env.DATABASE_HOST || 'localhost';
+var DB_USER = process.env.DATABASE_USER || 'root';
+var DB_PASS = process.env.DATABASE_PASSWORD || '';
+var DB_NAME = process.env.DATABASE_NAME || 'trienekens';
 
-// // Config used for socket connection, important for Google Cloud hosting
  var config = {
      user: DB_USER,
      password: DB_PASS, 
      host: DB_HOST
  }
 
- if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
-     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
- }
+if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
+    config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+}
  
 // // Create connection 
-var db = mysql.createConnection({ 
-  host: DB_HOST,
-  user: DB_USER,  
-  password: DB_PASS,
-  port: 3307
-});
+// var db = mysql.createConnection({ 
+//   host: DB_HOST,
+//   user: DB_USER,  
+//   password: DB_PASS,
+//   port: 3307
+// });
 
 // var db = mysql.createConnection(config);
+// Create connection
+var db;
+function handleDisconnect() {
+    db = mysql.createConnection(config);
 
-
-// Connect
-db.connect(function (err) {
-    'use strict';
-    if (err) {
-        throw err;
-    }
-    db.query('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' + DB_NAME + '"', function (err, result) {
-        if (result[0] === undefined) {
-            db.query('CREATE DATABASE ' + DB_NAME + '', function (err, result) {
-                if (err) {
-                    throw err;
+    // Connect
+    db.connect(function (err) {
+        'use strict';
+        if (err) {
+            throw err;
+        }
+        db.query('SELECT schema_name FROM information_schema.schemata WHERE schema_name = "' + DB_NAME + '"', function (err, result) {
+            if (result[0] === undefined) {
+                db.query('CREATE DATABASE ' + DB_NAME + '', function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log('Database created...');
+                    db.query('USE ' + DB_NAME + '', function (err, result) {
+                        if (err) {
+                            setTimeout(handleDisconnect, 2000);
+                            console.log('error when connecting to db:', err);
+                        }
+                        console.log('MySQL Connected...');
+                        emitter.emit('createTable');
+                        emitter.emit('defaultUser');
+                        //emitter.emit('dummyData');
+                        //emitter.emit('eventScheduler');
+                    });
+                });
+            } else {
+                if (result[0].schema_name === DB_NAME) {
+                    db.query('USE ' + DB_NAME + '', function (err, result) {
+                        if (err) {
+                            setTimeout(handleDisconnect, 2000);
+                            console.log('error when connecting to db:', err);
+                        }
+                        console.log('MySQL Connected...');
+                    });
                 }
-                console.log('Database created...');
-                db.query('USE ' + DB_NAME + '', function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    console.log('MySQL Connected...');
-                    emitter.emit('createTable');
-                    emitter.emit('defaultUser');
-                    //emitter.emit('dummyData');
-                    //emitter.emit('eventScheduler');
-                });
-            });
-        } else {
-            if (result[0].schema_name === DB_NAME) {
-                db.query('USE ' + DB_NAME + '', function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                    console.log('MySQL Connected...');
-                });
             }
+        });
+    });
+
+
+    db.on('error', function(err) {
+        console.log('db error', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+            handleDisconnect();                         // lost due to either server restart, or a
+        } else {                                      // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
         }
     });
-});
+}
+
+handleDisconnect();
 
 /* Emitter Registered */
 // Create Database Tables
@@ -187,7 +208,6 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('upload banner')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('approve user')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('send notif')"
-        
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -270,8 +290,7 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '51', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '52', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '53', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '54', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '55', 'A')"
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '54', 'A')"
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {
