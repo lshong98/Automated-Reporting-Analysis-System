@@ -66,28 +66,54 @@ FCMAdmin.initializeApp({
     databaseURL: "https://trienekens-994df.firebaseio.com"
 });
 
-var token = "f0v_0-sp90k:APA91bEHmvURYoN_LQNyGE1Q_jPddru6XLConuEW6hEthJTJk-SOUmrYCf5UBjtse8Xtg-3HaB3ua80b1CX-Hf6u9ymTbThrHYvZCwVicytd2d4bONBiejIs7FdK5MXspzmDU4_p8YgB";
-var payload = {
-    'notification': 
-        {
-            'title': 'Test',
-            'body': 'Message Nodejs'
-        }
-    
-};
-
-var options = {
-    priority: 'high'
-};
-
 app.post('/sendNotifToDevice', function(req,res){
     'use strict';
-    FCMAdmin.messaging().sendToDevice(token, payload, options)
-    .then(function(response){
-        console.log("Message sent successfully");
-    }).catch(function(err){
-        console.log(err);
-    });
+    var token = "f0v_0-sp90k:APA91bEHmvURYoN_LQNyGE1Q_jPddru6XLConuEW6hEthJTJk-SOUmrYCf5UBjtse8Xtg-3HaB3ua80b1CX-Hf6u9ymTbThrHYvZCwVicytd2d4bONBiejIs7FdK5MXspzmDU4_p8YgB";
+    var topic = req.body.target;
+    var payload = {
+        'notification': 
+            {
+                'title': req.body.title,
+                'body': req.body.message
+            }
+    };
+
+    var payloadWithTopic = {
+        'notification': 
+            {
+                'title': req.body.title,
+                'body': req.body.message
+            },
+        topic: topic
+    };
+
+    var options = {
+        priority: 'high'
+    };
+
+    console.log(req.body);
+    console.log(req.body.target);
+    console.log(req.body.title);
+    console.log(req.body.message);
+
+    //var target = req.body.target;
+    // if(target == "all"){
+    //     console.log("all customers have been selected");
+    //     FCMAdmin.messaging().sendToDevice(token, payload, options)
+    //     .then(function(response){
+    //         console.log("Message sent successfully");
+    //     }).catch(function(err){
+    //         console.log(err);
+    //     });
+    // }
+    //else{
+        FCMAdmin.messaging().send(payloadWithTopic)
+        .then(function(response){
+            console.log("Topic message sent successfully");
+        }).catch(function(err){
+            console.log(err);
+        });
+    //}
 });
 
 app.get('/fetchCarouselImg', function(req, res){

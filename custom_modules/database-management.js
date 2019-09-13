@@ -14,7 +14,7 @@ var emitter = new EventEmitter();
 var DB_HOST = 'localhost';
 var DB_USER = 'root';
 var DB_PASS = '';
-var DB_NAME = 'triemerge';
+var DB_NAME = 'trienekens';
 
 // // Config used for socket connection, important for Google Cloud hosting
  var config = {
@@ -31,7 +31,8 @@ var DB_NAME = 'triemerge';
 var db = mysql.createConnection({ 
   host: DB_HOST,
   user: DB_USER,  
-  password: DB_PASS
+  password: DB_PASS,
+  port: 3307
 });
 
 // var db = mysql.createConnection(config);

@@ -930,7 +930,13 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     // };
 
     $scope.sendNotifToDevice = function(){
-        $http.post('/sendNotifToDevice').then(function(response){
+        $scope.data = {
+            'target' : $scope.notifTarget,
+            'title' : $scope.notifTitle,
+            'message' : $scope.notifMessage
+        };
+
+        $http.post('/sendNotifToDevice', $scope.data).then(function(response){
             console.log(response.data);
         }, function(error){
             console.log(error);
