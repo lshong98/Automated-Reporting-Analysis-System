@@ -907,7 +907,7 @@ app.run(function($rootScope) {
         var zone = place.zone.replace(" ", "+");
         var concat = area + '+' + zone;
 
-        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
     };
 });
 
@@ -1528,7 +1528,7 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
 
 app.controller('areaController', function($scope, $http, $filter, storeDataService) {
     'use strict';
-
+    $scope.showCreateBtn = true;
     var asc = true;
     $scope.newArea = {
         "areaCode": ''
@@ -1619,27 +1619,34 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
     });
 
     $scope.addArea = function() {
+        $scope.showCreateBtn = false;
+        if($scope.area.code == null || $scope.area.code == "" || $scope.area.name == null || $scope.area.name == "" || $scope.area.zone == null || $scope.area.zone == "" || $scope.area.staff == null || $scope.area.staff == "" || $scope.area.driver == null || $scope.area.driver == ""){
+            $scope.notify("error","There Has Blank Column.");
+            $scope.showCreateBtn = true;
+        }else{
+            $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            $http.post('/addArea', $scope.area).then(function(response) {
+                var data = response.data;
+                console.log(response.data);
 
-        $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addArea', $scope.area).then(function(response) {
-            var data = response.data;
-            console.log(response.data);
+                if (data.status === "success") {
 
-            if (data.status === "success") {
+                    $scope.areaList.push({
+                        "code": $scope.area.zone.code + $scope.area.code,
+                        "name": $scope.area.name,
+                        "status": 'ACTIVE',
+                        "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
+                        "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
+                    });
+                    $scope.filterAreaList = angular.copy($scope.areaList);
+                    angular.element('#createArea').modal('toggle');
+                    $scope.totalItems = $scope.filterAreaList.length;
+                    $scope.notify(data.status, data.message);
+                }
+                $scope.showCreateBtn = true;
+            });            
+        }
 
-                $scope.areaList.push({
-                    "code": $scope.area.zone.code + $scope.area.code,
-                    "name": $scope.area.name,
-                    "status": 'ACTIVE',
-                    "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
-                    "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
-                });
-                $scope.filterAreaList = angular.copy($scope.areaList);
-                angular.element('#createArea').modal('toggle');
-                $scope.totalItems = $scope.filterAreaList.length;
-                $scope.notify(data.status, data.message);
-            }
-        });
         //
         //        $http.post('/addArea', $scope.area).then(function(response) {
         //            var data = response.data;
@@ -1890,7 +1897,8 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
     $scope.filterStaffList = [];
     $scope.searchStaffFilter = '';
     $scope.staffList = [];
-
+    $scope.showCreateBtn = true;
+    
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.account);
 
@@ -1956,22 +1964,48 @@ app.controller('accountController', function($scope, $http, $filter, $window, st
     });
 
     $scope.addUser = function() {
+        $scope.showCreateBtn = false;
+        $scope.sendRequest = false;
         $scope.staff.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.staff.owner = $window.sessionStorage.getItem('owner');
-
-        //create variables in json object
-        $http.post('/addUser', $scope.staff).then(function(response) {
-            var data = response.data;
-
-            if (data.status === "success") {
-                socket.emit('authorize request', { "action": "create user" });
-                var rowId = 1;
+        
+        if($scope.staff.name==""){
+            $scope.notify("error", "Staff Name Cannot Be Blank");
+            $scope.showCreateBtn = true;
+            $scope.sendRequest = false;
+        }else{
+            if($scope.staff.position.name == "Driver"){
+                $scope.showCreateBtn = false;
+                $scope.sendRequest = true;
+            }else{
+                if($scope.staff.username == "" || $scope.staff.password == ""){
+                    $scope.notify("error", "Staff User Name and Password Cannot Be Blank");
+                    $scope.showCreateBtn = true;
+                    $scope.sendRequest = false;
+                }else{
+                    $scope.showCreateBtn = false;
+                    $scope.sendRequest = true;
+                }
             }
+        }
+        
+        if($scope.sendRequest == true){
+            
+            //create variables in json object
+            $http.post('/addUser', $scope.staff).then(function(response) {
+                var data = response.data;
 
-            $scope.notify(data.status, data.message);
-            angular.element('#createAccount').modal('toggle');
-            $scope.initializeStaff();
-        });
+                if (data.status === "success") {
+                    socket.emit('authorize request', { "action": "create user" });
+                    var rowId = 1;
+                }
+
+                $scope.notify(data.status, data.message);
+                angular.element('#createAccount').modal('toggle');
+                $scope.initializeStaff();
+                $scope.showCreateBtn = true;
+            });
+        }
     };
 
     socket.on('append user list', function(data) {
@@ -2072,6 +2106,7 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
             "area": ''
         };
     };
+    $scope.showCreateBtn = true;
 
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.truck);
@@ -2164,31 +2199,41 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
     });
 
     $scope.addTruck = function() {
-        $scope.truck.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $scope.truck.roadtax = $filter('date')($scope.truck.roadtax, 'yyyy-MM-dd');
-        $http.post('/addTruck', $scope.truck).then(function(response) {
-            var data = response.data;
-            var newTruckID = data.details.truckID;
+        $scope.showCreateBtn = false;
+        if($scope.truck.no == null || $scope.truck.transporter == null || $scope.truck.ton == null || $scope.truck.roadtax == null ||  $scope.truck.no == "" || $scope.truck.transporter == "" || $scope.truck.ton == "" || $scope.truck.roadtax == "" ){
+            $scope.notify("error", "There Has Blank Column");
+            $scope.showCreateBtn = true;
+        }else{       
+        
+            $scope.truck.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            $scope.truck.roadtax = $filter('date')($scope.truck.roadtax, 'yyyy-MM-dd');
+            $http.post('/addTruck', $scope.truck).then(function(response) {
+                var data = response.data;
+                var newTruckID = data.details.truckID;
 
-            $scope.notify(data.status, data.message);
-            if (data.status === "success") {
-                $scope.truckList.push({
-                    "id": newTruckID,
-                    "no": $scope.truck.no,
-                    "transporter": $scope.truck.transporter,
-                    "ton": $scope.truck.ton,
-                    "roadtax": $scope.truck.roadtax,
-                    "status": 'Active'
-                });
-                $scope.truck.id = newTruckID;
-                socket.emit('create new truck', $scope.truck);
-                storeDataService.truck = angular.copy($scope.truckList);
-                $scope.filterTruckList = angular.copy($scope.truckList);
-                $scope.totalItems = $scope.filterTruckList.length;
-                angular.element('#createTruck').modal('toggle');
-                $scope.initializeTruck();
-            }
-        });
+                $scope.notify(data.status, data.message);
+                if (data.status === "success") {
+                    $scope.truckList.push({
+                        "id": newTruckID,
+                        "no": $scope.truck.no,
+                        "transporter": $scope.truck.transporter,
+                        "ton": $scope.truck.ton,
+                        "roadtax": $scope.truck.roadtax,
+                        "status": 'Active'
+                    });
+                    $scope.truck.id = newTruckID;
+                    socket.emit('create new truck', $scope.truck);
+                    storeDataService.truck = angular.copy($scope.truckList);
+                    $scope.filterTruckList = angular.copy($scope.truckList);
+                    $scope.totalItems = $scope.filterTruckList.length;
+                    angular.element('#createTruck').modal('toggle');
+                    $scope.initializeTruck();
+                    
+                }
+                $scope.showCreateBtn = true; 
+            });
+            
+        }
     };
 
     socket.on('append truck list', function(data) {
@@ -2216,6 +2261,7 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
 
     var asc = true;
     $scope.filterZoneList = [];
+    $scope.showCreateBtn = true;
 
     $scope.initializeZone = function() {
         $scope.zone = {
@@ -2280,28 +2326,37 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
     });
 
     $scope.addZone = function() {
-        $scope.zone.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addZone', $scope.zone).then(function(response) {
-            var data = response.data;
-            var newZoneID = data.details.zoneID;
+        $scope.showCreateBtn = false;
+        if($scope.zone.code == null || $scope.zone.code == "" || $scope.zone.name == null || $scope.zone.code == ""){
+            $scope.notify("error", "There Has Blank Column");
+            $scope.showCreateBtn = true;
+        }else{
+            $scope.zone.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            $http.post('/addZone', $scope.zone).then(function(response) {
+                var data = response.data;
+                var newZoneID = data.details.zoneID;
 
-            $scope.notify(data.status, data.message);
-            if (data.status === "success") {
-                $scope.zoneList.push({
-                    "id": newZoneID,
-                    "code": $scope.zone.code,
-                    "name": $scope.zone.name,
-                    "status": 'ACTIVE'
-                });
-                $scope.zone.id = newZoneID;
-                socket.emit('create new zone', $scope.zone);
-                $scope.filterZoneList = angular.copy($scope.zoneList);
-                storeDataService.zone = angular.copy($scope.zoneList);
-                $scope.totalItems = $scope.filterZoneList.length;
-                angular.element('#createZone').modal('toggle');
-                $scope.initializeZone();
-            }
-        });
+                $scope.notify(data.status, data.message);
+                if (data.status === "success") {
+                    $scope.zoneList.push({
+                        "id": newZoneID,
+                        "code": $scope.zone.code,
+                        "name": $scope.zone.name,
+                        "status": 'ACTIVE'
+                    });
+                    $scope.zone.id = newZoneID;
+                    socket.emit('create new zone', $scope.zone);
+                    $scope.filterZoneList = angular.copy($scope.zoneList);
+                    storeDataService.zone = angular.copy($scope.zoneList);
+                    $scope.totalItems = $scope.filterZoneList.length;
+                    angular.element('#createZone').modal('toggle');
+                    $scope.initializeZone();
+                    $scope.showCreateBtn = true;
+                }
+            });            
+            
+        }
+
     }
 
     socket.on('append zone list', function(data) {
@@ -2323,11 +2378,16 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
 
 app.controller('roleController', function($scope, $http, $filter) {
     'use strict';
-
+    $scope.showCreateBtn = true;
+    $scope.role = {
+        "name": "",
+        "creationDate": ""
+    };
+    
     $scope.initializeRole = function() {
         $scope.role = {
-            "name": '',
-            "creationDate": ''
+            "name": "",
+            "creationDate": ""
         };
     };
 
@@ -2340,25 +2400,35 @@ app.controller('roleController', function($scope, $http, $filter) {
     };
 
     $scope.addRole = function() {
+        $scope.showCreateBtn = false;
         $scope.role.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $http.post('/addRole', $scope.role).then(function(response) {
-            var data = response.data;
-            $scope.notify(data.status, data.message);
-            if (data.status == "success") {
-                $scope.roleList.push({ "id": data.details.roleID, "name": $scope.role.name, "status": "ACTIVE" });
-                angular.element('#createRole').modal('toggle');
-                $scope.initializeRole();
-            }
-        });
+        if($scope.role.name == null || $scope.role.name == ""){
+            $scope.notify("error","Role Name Cannot be Blank.");
+            $scope.showCreateBtn = true;
+        }
+        else{
+            $http.post('/addRole', $scope.role).then(function(response) {
+                var data = response.data;
+                $scope.notify(data.status, data.message);
+                if (data.status == "success") {
+                    $scope.roleList.push({ "id": data.details.roleID, "name": $scope.role.name, "status": "ACTIVE" });
+                    angular.element('#createRole').modal('toggle');
+                    $scope.initializeRole();
+                    $scope.showCreateBtn = true;
+                }
+            });
+        }
     };
 
 });
 
-app.controller('specificAuthController', function($scope, $http, $routeParams, storeDataService) {
+app.controller('specificAuthController', function($scope, $http, $routeParams, storeDataService, $location) {
     $scope.role = {
         "name": $routeParams.auth,
         "oriname": $routeParams.auth
     };
+    $scope.showSaveBtn = true;
+    $scope.showCheckBtn = true;
     $scope.checkall = false;
     $scope.auth = {
         "account": {
@@ -2485,32 +2555,48 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
     }
 
     $scope.updateRoleName = function() {
-        $http.post('/updateRoleName', $scope.role).then(function(response) {
-            if (response.data.status == "success") {
-                $scope.role.oriname = $scope.role.name;
-                angular.element('body').overhang({
-                    "type": response.data.status,
-                    "message": response.data.message
-                });
-
-            } else {
-                console.log("fail");
-                angular.element('body').overhang({
-                    "type": response.data.status,
-                    "message": response.data.message
-                });
-            }
-        });
+        $scope.showSaveBtn = false;
+        if($scope.role.name == null || $scope.role.name == ""){
+            $scope.notify("error","Role Name Cannot be Blank.");
+            $scope.showSaveBtn = true;
+        }
+        else{
+            
+            
+            $http.post('/updateRoleName', $scope.role).then(function(response) {
+                $scope.showSaveBtn = true;
+                if (response.data.status == "success") {
+                    $scope.role.oriname = $scope.role.name;
+                    
+                    var url = "/auth/" + $scope.role.name;
+                    $location.path(url);
+                    
+                    angular.element('body').overhang({
+                        "type": response.data.status,
+                        "message": response.data.message
+                    });
+                } else {
+                    angular.element('body').overhang({
+                        "type": response.data.status,
+                        "message": response.data.message
+                    });
+                    
+                    $scope.role.name = $scope.role.oriname;
+                }
+            });
+        }
     }
 
     $scope.checkAllAuth = function() {
         if ($scope.checkall == false) {
+            $scope.showCheckBtn = false;
             $scope.checkall = true;
             $scope.allAuth = {
                 "name": $scope.role.oriname,
                 "value": $scope.checkall
             }
             $http.post('/setAllAuth', $scope.allAuth).then(function(response) {
+                $scope.showCheckBtn = true;
                 if (response.data.status == "success") {
                     $scope.auth = {
                         "account": {
@@ -2592,13 +2678,16 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                     };
                 }
             });
-        } else if ($scope.checkall == true) {
+        }
+        else if ($scope.checkall == true) {
+            $scope.showCheckBtn = false;
             $scope.checkall = false;
             $scope.allAuth = {
                 "name": $scope.role.oriname,
                 "value": $scope.checkall
             }
             $http.post('/setAllAuth', $scope.allAuth).then(function(response) {
+                $scope.showCheckBtn = true;
                 if (response.data.status == "success") {
                     $scope.auth = {
                         "account": {
@@ -2689,6 +2778,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
 app.controller('binController', function($scope, $http, $filter, storeDataService) {
     'use strict';
     var asc = true;
+    $scope.showCreateBtn = true;
     $scope.areaList = [];
 
     $scope.bin = {
@@ -2787,8 +2877,10 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
     }
 
     $scope.addBin = function() {
+        $scope.showCreateBtn = false;
         if ($scope.bin.name == "" || $scope.bin.name == null || $scope.bin.location == "" || $scope.bin.location == null || $scope.bin.areaconcat == "" || $scope.bin.areaconcat == null) {
             $scope.notify("error", "Cannot Be Blank");
+            $scope.showCreateBtn = true;
         } else {
             $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
             var area = $scope.bin.areaconcat;
@@ -2818,6 +2910,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
                     angular.element('#createBin').modal('toggle');
                     $scope.totalItems = $scope.filterBinList.length;
                 }
+                $scope.showCreateBtn = true;
             });
         }
     }
@@ -2844,7 +2937,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
 
 app.controller('boundaryController', function($scope, $http, $filter, $routeParams, storeDataService) {
     'use strict';
-
+    
     var areaID = $routeParams;
 
     $http.post('/getAreaCode', $routeParams).then(function(response) {
@@ -4544,6 +4637,7 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
 //complaint detail controller
 app.controller('complaintDetailController', function($scope, $http, $filter, $window, $routeParams) {
     'use strict';
+    $scope.showUpdateBtn = true;
     $scope.req = {
         'id': $routeParams.complaintCode
     };
@@ -4578,7 +4672,6 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             'code': complaint[0].code,
             'id': complaint[0].complaintID
         };
-        console.log($scope.comDetail);
 
         //get report dates for certain area id
         $scope.reportList = [];
@@ -4631,8 +4724,15 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         }
 
         $scope.updateStatus = function() {
+            $scope.showUpdateBtn = false;
             $http.post('/updateComplaintStatus', $scope.comDetail).then(function(response) {
-                console.log(response.data);
+                if(response.data.status = "success"){
+                    $scope.notify("success","Status Has Been Updated");
+                    $scope.showUpdateBtn = true;
+                }else{
+                    $scope.notify("error","Update Status Error");
+                    $scope.showUpdateBtn = true;                    
+                }
             });
         }
 

@@ -63,6 +63,7 @@ app.directive("strToTime", function() {
     };
 });
 app.controller('dailyController', function($scope, $window, $routeParams, $http, $filter) {
+    $scope.showSubmitBtn = true;
     'use strict';
 
     $scope.circleID = 0;
@@ -306,18 +307,23 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
     });
 
     $scope.addReport = function() {
+        $scope.showSubmitBtn = false;
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.report.collectionDate = $filter('date')($scope.colDate, 'yyyy-MM-dd');
 
-        console.log($scope.report);
-
-        if ($scope.collectionDate == "" || $scope.startTime == 0 || $scope.endTime == 0) {
-            $scope.notify("error", "Collection Date and Time Cannot Be Blank");
+        if ($scope.report.collectionDate == "" || $scope.report.collectionDate == null) {
+            $scope.notify("error", "Collection Date Cannot Be Blank");
+            $scope.showSubmitBtn = true;
+        } else if($scope.report.startTime == 0 || $scope.report.endTime == 0){
+            $scope.notify("error", "Please Fill In Start Time and End Time");
+            $scope.showSubmitBtn = true;
         } else if ($scope.report.truck == "") {
             $scope.notify("error", "Truck Cannot Be Blank");
+            $scope.showSubmitBtn = true;
         } else if ($scope.driver == "") {
             $scope.notify("error", "Driver Cannot Be Blank");
-        } else {
+            $scope.showSubmitBtn = true;
+        }else {
             $http.post('/addReport', $scope.report).then(function(response) {
                 var returnedData = response.data;
                 var newReportID = returnedData.details.reportID;
@@ -329,6 +335,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
                     });
                     socket.emit('make report', { "reportID": newReportID, "owner": $window.sessionStorage.getItem("owner") });
                     window.location.href = '#/dashboard-officer';
+                }else{
+                    $scope.notify("error", "Report Has Error When Submitting");
+                    $scope.showSubmitBtn = true;
                 }
             });
         }
@@ -841,6 +850,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
 });
 
 app.controller('editReportController', function($scope, $http, $routeParams, $window, $filter) {
+    $scope.showEditBtn = true;
     $scope.reportCode = $routeParams.reportCode;
     $scope.reportObj = {
         "reportID": $routeParams.reportCode
@@ -1110,20 +1120,41 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
     });
 
     $scope.edit = function() {
+        $scope.showEditBtn = false;
         $scope.editField.marker = centerArray;
         $scope.editField.rectangle = rectArray;
+        if($scope.editField.date == "" || $scope.editField.date == null){
+            $scope.notify("error","Date Cannot Be Blank.");
+            $scope.showEditBtn = true;
+        } else if($scope.editField.startTime == 0 || $scope.editField.startTime == null){
+            $scope.notify("error","Start Time Cannot Be Blank.");
+            $scope.showEditBtn = true;
+        } else if($scope.editField.endTime == 0 || $scope.editField.endTime == null){
+            $scope.notify("error","End Time Cannot Be Blank.");
+            $scope.showEditBtn = true;
+        } else if($scope.editField.truckID == "" || $scope.editField.truckID == null){
+            $scope.notify("error","Truck Cannot Be Blank.");
+            $scope.showEditBtn = true;
+        } else if($scope.editField.driverID == "" || $scope.editField.driverID == null){
+            $scope.notify("error","Driver Cannot Be Blank.");
+            $scope.showEditBtn = true;
+        } else if($scope.editField.status == "" || $scope.editField.status == null){
+            $scope.notify("error","Status Cannot Be Blank.");
+            $scope.showEditBtn = true;
+        } else{
+            $http.post('/editReport', $scope.editField).then(function(response) {
+                var returnedReportData = response.data;
 
-        $http.post('/editReport', $scope.editField).then(function(response) {
-            var returnedReportData = response.data;
-
-            if (returnedReportData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    message: "Report edit successfully!"
-                });
-                window.location.href = '#/reporting';
-            }
-        });
+                if (returnedReportData.status === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        message: "Report edit successfully!"
+                    });
+                    window.location.href = '#/reporting';
+                }
+                $scope.showEditBtn = true;
+            });
+        }
     };
 
     function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {

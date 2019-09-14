@@ -19,7 +19,7 @@ var FCMAdmin = require("firebase-admin");
 
 require('dotenv').config();
 
-var SVR_PORT = process.env.SERVER_PORT || 8080;
+var SVR_PORT = process.env.SERVER_PORT || 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -470,13 +470,22 @@ app.post('/getReportForComplaint', function (req, res) {
 app.post('/updateComplaintStatus', function(req,res){
     
     var sql = "UPDATE tblcomplaint SET status = (CASE WHEN '" + req.body.status + "' = 'Confirmation' THEN 'c' WHEN '" + req.body.status + "' = 'Pending' THEN 'p' WHEN '" + req.body.status + "' = 'In progress' THEN 'i' WHEN '" + req.body.status + "' = 'Done' THEN 'd' END) WHERE complaintID = '" + req.body.id + "'";
-    
-    console.log(sql);
+
+    var status = {
+        "status":""
+    }
     database.query(sql, function (err, result) {
         if (err) {
+            
+            status.status = "error";
+            res.json(status);
             throw err;
+        }else{
+            status.status = "success";
+            res.json(status);
         }
-        res.json(result);
+        
+        
     });    
 });
 
