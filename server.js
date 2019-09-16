@@ -15,11 +15,11 @@ var Joi = require('joi');
 var fs = require('fs');
 var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
-var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
+//var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
 
 require('dotenv').config();
 
-var SVR_PORT = process.env.SERVER_PORT || 8080;
+var SVR_PORT = process.env.SERVER_PORT || 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -68,15 +68,8 @@ FCMAdmin.initializeApp({
 
 app.post('/sendNotifToDevice', function(req,res){
     'use strict';
-    var token = "f0v_0-sp90k:APA91bEHmvURYoN_LQNyGE1Q_jPddru6XLConuEW6hEthJTJk-SOUmrYCf5UBjtse8Xtg-3HaB3ua80b1CX-Hf6u9ymTbThrHYvZCwVicytd2d4bONBiejIs7FdK5MXspzmDU4_p8YgB";
+    
     var topic = req.body.target;
-    var payload = {
-        'notification': 
-            {
-                'title': req.body.title,
-                'body': req.body.message
-            }
-    };
 
     var payloadWithTopic = {
         'notification': 
@@ -85,10 +78,6 @@ app.post('/sendNotifToDevice', function(req,res){
                 'body': req.body.message
             },
         topic: topic
-    };
-
-    var options = {
-        priority: 'high'
     };
 
     console.log(req.body);
@@ -496,13 +485,22 @@ app.post('/getReportForComplaint', function (req, res) {
 app.post('/updateComplaintStatus', function(req,res){
     
     var sql = "UPDATE tblcomplaint SET status = (CASE WHEN '" + req.body.status + "' = 'Confirmation' THEN 'c' WHEN '" + req.body.status + "' = 'Pending' THEN 'p' WHEN '" + req.body.status + "' = 'In progress' THEN 'i' WHEN '" + req.body.status + "' = 'Done' THEN 'd' END) WHERE complaintID = '" + req.body.id + "'";
-    
-    console.log(sql);
+
+    var status = {
+        "status":""
+    }
     database.query(sql, function (err, result) {
         if (err) {
+            
+            status.status = "error";
+            res.json(status);
             throw err;
+        }else{
+            status.status = "success";
+            res.json(status);
         }
-        res.json(result);
+        
+        
     });    
 });
 

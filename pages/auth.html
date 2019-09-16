@@ -86,7 +86,7 @@ input:checked + .slider:before {
                     <input type="text" class="form-control" id="roleName" data-ng-model="role.name" />
                 </div>
                 <div class="col-md-1 col-sm-1">
-                    <button type="button" class="btn btn-primary" data-ng-click="updateRoleName()">Save</button>
+                    <button type="button" class="btn btn-primary" data-ng-click="updateRoleName()" data-ng-show="showSaveBtn">Save</button>
                 </div>
             </div>
         </form>
@@ -96,7 +96,7 @@ input:checked + .slider:before {
 <div class="row">
     <div class="col-md-10"></div>
     <div class="col-md-2">
-        <label><input type="checkbox" data-ng-click="checkAllAuth()"> All</label>
+        <label data-ng-show="showCheckBtn"><input type="checkbox" data-ng-click="checkAllAuth()" > All</label>
     </div>
 </div>
 
