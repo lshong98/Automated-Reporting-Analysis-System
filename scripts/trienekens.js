@@ -1025,6 +1025,26 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(error);
         });
     };
+
+    $scope.getPendingBinRequest = function() {
+        $http.get('/getPendingBinRequest').then(function(response) {
+            console.log(response.data);
+            $scope.pendingBinRequests = response.data;
+        }, function(error) {
+            console.log(error);
+        });
+    };
+
+    $scope.updateBinRequest = function(id, status) {
+        $scope.pReqs = { "reqID": id, "status": status };
+
+        $http.post('/updateBinRequest', $scope.pReqs).then(function(response) {
+            alert(response.data);
+            $scope.getPendingBinRequest();
+        }, function(error) {
+            console.log(error);
+        });
+    };
 });
 
 app.controller('navigationController', function($scope, $http, $window, storeDataService) {

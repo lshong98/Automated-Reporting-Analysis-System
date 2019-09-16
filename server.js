@@ -15,7 +15,7 @@ var Joi = require('joi');
 var fs = require('fs');
 var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
-//var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
+var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
 
 require('dotenv').config();
 
@@ -158,6 +158,20 @@ app.get('/getPendingUser', function(req, res){
     });
 });
 
+app.get('/getPendingBinRequest', function(req, res){
+    'use strict';
+
+    var sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tblcustomer WHERE tblbinrequest.status = 'PENDING'AND tblbinrequest.customerID = tblcustomer.customerID";
+    var output = [];
+    database.query(sql, function(err, result){
+        for (var i = 0; i<result.length; i++){
+            output.push(result[i]);
+        }
+        console.log(output);
+        res.json(output);
+    });
+});
+
 app.post('/updatePendingUser', function(req, res){
     'use strict';
     console.log(req.body);
@@ -167,6 +181,18 @@ app.post('/updatePendingUser', function(req, res){
             throw err;
         }
         res.send("User Status Updated");
+    });
+});
+
+app.post('/updateBinRequest', function(req, res){
+    'use strict';
+    console.log(req.body);
+    var sql = "UPDATE tblbinrequest SET status = '"+req.body.status+"' WHERE reqID = '"+req.body.reqID+"'";
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.send("Bin Request Updated");
     });
 });
 
