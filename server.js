@@ -15,11 +15,11 @@ var Joi = require('joi');
 var fs = require('fs');
 var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
-//var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
+//var FCMServiceAccount = require("./trienekens-994df-d5d29b87e6a8.json");
 
 require('dotenv').config();
 
-var SVR_PORT = process.env.SERVER_PORT || 3000;
+var SVR_PORT = process.env.SERVER_PORT || 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -222,14 +222,14 @@ app.post('/uploadCarouselImg', function(req, res){
     //console.log(req.files);
     
     if(req.files){
-        var file = req.files.carouselImg;
+        var file = req.files.carouselImg,
+        allowed = ["png", "jpg", "jpeg"];
 
         for(var x = 0;x<file.length;x++){
             var fileName = file[x].name,
             fileSize = file[x].size,
             fileExt = file[x].name.split('.'),
-            actualFileExt = fileExt[1].toLowerCase(),
-            allowed = ["png", "jpg", "jpeg"];
+            actualFileExt = fileExt[1].toLowerCase();
 
             for(var i=0;i<allowed.length;i++){
                 if(actualFileExt == allowed[i]){
