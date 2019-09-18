@@ -19,7 +19,7 @@ var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18
 
 require('dotenv').config();
 
-var SVR_PORT = 3000;
+var SVR_PORT = 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');

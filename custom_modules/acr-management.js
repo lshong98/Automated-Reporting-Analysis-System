@@ -6,7 +6,7 @@ var f = require('./function-management');
 // ACR Management
 app.post('/addDcs',function(req,res){
     'use strict';
-    console.log(req.body);
+    console.log("PREPARED BY:" + req.body.preparedBy);
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
          
         var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" +  req.body.areaID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
