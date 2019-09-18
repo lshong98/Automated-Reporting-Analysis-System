@@ -19,7 +19,7 @@ var FCMAdmin = require("firebase-admin");
 
 require('dotenv').config();
 
-var SVR_PORT = process.env.SERVER_PORT || 8080;
+var SVR_PORT = process.env.SERVER_PORT || 3000;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -488,7 +488,7 @@ app.post('/updateComplaintStatus', function(req,res){
 
     var status = {
         "status":""
-    }
+    };
     database.query(sql, function (err, result) {
         if (err) {
             
@@ -862,6 +862,19 @@ io.sockets.on('connection', function (socket) {
                     "serialNumber": result[0].serialNo,
                     "status": "COLLECTED"
                 });
+            }
+        });
+    });
+    
+    emitter.on('customer to staff message', function (complaintID) {
+        var sql = "SELECT message, sender, recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date FROM tblchat WHERE complaintID = '" + complaintID + "' LIMIT 0, 1 ORDER BY creationDateTime DESC";
+        db.query(sql, function (err, result) {
+            if (err) {
+                res.end();
+                throw err;
+            } else {
+                res.json(result);
+                res.end();
             }
         });
     });
