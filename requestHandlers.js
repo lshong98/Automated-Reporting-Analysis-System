@@ -168,6 +168,10 @@ app.get('/approve-app-user', function (req, res) {
     'use strict';
     res.sendFile('pages/approveUser.html', {root: __dirname});
 });
+app.get('/approve-bin-request', function (req, res) {
+    'use strict';
+    res.sendFile('pages/approve-bin-request.html', {root: __dirname});
+});
 app.get('/bin-collection-schedule', function (req, res) {
     'use strict';
     res.sendFile('pages/schedule.html', {root: __dirname});

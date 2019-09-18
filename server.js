@@ -15,11 +15,11 @@ var Joi = require('joi');
 var fs = require('fs');
 var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
-var FCMServiceAccount = require("./trienekens-994df-firebase-adminsdk-peca1-6f18196e8f.json");
+//var FCMServiceAccount = require("./trienekens-994df-d5d29b87e6a8.json");
 
 require('dotenv').config();
 
-var SVR_PORT = 8080;
+var SVR_PORT = process.env.SERVER_PORT || 8080;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -66,38 +66,53 @@ FCMAdmin.initializeApp({
     databaseURL: "https://trienekens-994df.firebaseio.com"
 });
 
-var token = "f0v_0-sp90k:APA91bEHmvURYoN_LQNyGE1Q_jPddru6XLConuEW6hEthJTJk-SOUmrYCf5UBjtse8Xtg-3HaB3ua80b1CX-Hf6u9ymTbThrHYvZCwVicytd2d4bONBiejIs7FdK5MXspzmDU4_p8YgB";
-var payload = {
-    'notification': 
-        {
-            'title': 'Test',
-            'body': 'Message Nodejs'
-        }
-    
-};
-
-var options = {
-    priority: 'high'
-};
-
 app.post('/sendNotifToDevice', function(req,res){
     'use strict';
-    FCMAdmin.messaging().sendToDevice(token, payload, options)
-    .then(function(response){
-        console.log("Message sent successfully");
-    }).catch(function(err){
-        console.log(err);
-    });
+    
+    var topic = req.body.target;
+
+    var payloadWithTopic = {
+        'notification': 
+            {
+                'title': req.body.title,
+                'body': req.body.message
+            },
+        topic: topic
+    };
+
+    console.log(req.body);
+    console.log(req.body.target);
+    console.log(req.body.title);
+    console.log(req.body.message);
+
+    //var target = req.body.target;
+    // if(target == "all"){
+    //     console.log("all customers have been selected");
+    //     FCMAdmin.messaging().sendToDevice(token, payload, options)
+    //     .then(function(response){
+    //         console.log("Message sent successfully");
+    //     }).catch(function(err){
+    //         console.log(err);
+    //     });
+    // }
+    //else{
+        FCMAdmin.messaging().send(payloadWithTopic)
+        .then(function(response){
+            console.log("Topic message sent successfully");
+        }).catch(function(err){
+            console.log(err);
+        });
+    //}
 });
 
 app.get('/fetchCarouselImg', function(req, res){
     'use strict';
     var sql = "SELECT * FROM tblcarouselimg";
     var output = {};
-    output["output"] = [];
+    output.output = [];
     database.query(sql, function(err, result){
         for(var i = 0; i<result.length; i++){
-            output["output"].push({"imageName":result[i].fileName, "id":result[i].id});
+            output.output.push({"imageName":result[i].fileName, "id":result[i].id});
         }
         console.log(output);
         res.json(output);
@@ -132,6 +147,20 @@ app.get('/getPendingUser', function(req, res){
     });
 });
 
+app.get('/getPendingBinRequest', function(req, res){
+    'use strict';
+
+    var sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tblcustomer WHERE tblbinrequest.status = 'PENDING'AND tblbinrequest.customerID = tblcustomer.customerID";
+    var output = [];
+    database.query(sql, function(err, result){
+        for (var i = 0; i<result.length; i++){
+            output.push(result[i]);
+        }
+        console.log(output);
+        res.json(output);
+    });
+});
+
 app.post('/updatePendingUser', function(req, res){
     'use strict';
     console.log(req.body);
@@ -141,6 +170,18 @@ app.post('/updatePendingUser', function(req, res){
             throw err;
         }
         res.send("User Status Updated");
+    });
+});
+
+app.post('/updateBinRequest', function(req, res){
+    'use strict';
+    console.log(req.body);
+    var sql = "UPDATE tblbinrequest SET status = '"+req.body.status+"' WHERE reqID = '"+req.body.reqID+"'";
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.send("Bin Request Updated");
     });
 });
 
@@ -181,14 +222,14 @@ app.post('/uploadCarouselImg', function(req, res){
     //console.log(req.files);
     
     if(req.files){
-        var file = req.files.carouselImg;
+        var file = req.files.carouselImg,
+        allowed = ["png", "jpg", "jpeg"];
 
         for(var x = 0;x<file.length;x++){
             var fileName = file[x].name,
             fileSize = file[x].size,
             fileExt = file[x].name.split('.'),
-            actualFileExt = fileExt[1].toLowerCase(),
-            allowed = ["png", "jpg", "jpeg"];
+            actualFileExt = fileExt[1].toLowerCase();
 
             for(var i=0;i<allowed.length;i++){
                 if(actualFileExt == allowed[i]){
@@ -210,8 +251,8 @@ app.post('/uploadCarouselImg', function(req, res){
             }
         }
         res.redirect('/pages/#/upload-image-carousel');
-        console.log("fileExt: " + fileExt);
-        console.log("actualFileExt: ", actualFileExt);
+//        console.log("fileExt: " + fileExt);
+//        console.log("actualFileExt: ", actualFileExt);
     }
 });
 
@@ -444,13 +485,22 @@ app.post('/getReportForComplaint', function (req, res) {
 app.post('/updateComplaintStatus', function(req,res){
     
     var sql = "UPDATE tblcomplaint SET status = (CASE WHEN '" + req.body.status + "' = 'Confirmation' THEN 'c' WHEN '" + req.body.status + "' = 'Pending' THEN 'p' WHEN '" + req.body.status + "' = 'In progress' THEN 'i' WHEN '" + req.body.status + "' = 'Done' THEN 'd' END) WHERE complaintID = '" + req.body.id + "'";
-    
-    console.log(sql);
+
+    var status = {
+        "status":""
+    }
     database.query(sql, function (err, result) {
         if (err) {
+            
+            status.status = "error";
+            res.json(status);
             throw err;
+        }else{
+            status.status = "success";
+            res.json(status);
         }
-        res.json(result);
+        
+        
     });    
 });
 

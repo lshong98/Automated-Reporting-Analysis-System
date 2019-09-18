@@ -407,6 +407,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
+    .when('/approve-bin-request', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/approve-bin-request');
+            }
+        },
+        templateUrl: '/approve-bin-request',
+        controller: 'custServiceCtrl',
+        controllerAs:'custService'
+    })
     .when('/boundary/:areaID', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {

@@ -1,7 +1,9 @@
 function login() {
+    document.getElementById("loginBtn").style.display = "none";
+    
     $username = $('input[name=txtusername]');
     $password = $('input[name=txtpassword]');
-
+    
     $.ajax({
         method: 'POST',
         url: '/login',
@@ -17,6 +19,9 @@ function login() {
                 sessionStorage['position'] = data.details.position;
                 sessionStorage['owner'] = data.details.id;
                 window.location.href = '/pages/';
+            }
+            if(data.status == "error"){
+                document.getElementById("loginBtn").style.display = "block";
             }
         }
     });

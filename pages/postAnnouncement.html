@@ -2,10 +2,15 @@
     <div class="row">
         <div class="col-md-12 notif">
             <h1>Post Announcement</h1><br/><br/>
-            <form action="/sendNotifToDevice" method="post">
-                <p>Title: <br /><input type="text" name="title" /></p>
-                <p>Message: <br /><textarea name="message"></textarea></p>
-                <input type="submit" value="Submit" data-ng-click="" class="btn btn-primary" />
+            <form  method="post">
+                <p>Title: <br /><input type="text" name="title" data-ng-model="notifTitle"/></p>
+                <p>Message: <br /><textarea name="message" data-ng-model="notifMessage"></textarea></p>
+                <p>Select target customers</p>
+                <select name="target" data-ng-model="notifTarget">
+                    <option value="a001" >Area A001</option>
+                    <option value="all" >All Customers</option>
+                </select><br/><br/><br/>
+                <input type="submit" value="Submit" data-ng-click="sendNotifToDevice()" class="btn btn-primary" />
             </form>
         </div>
     </div>
