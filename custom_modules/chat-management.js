@@ -5,6 +5,12 @@ var emitter = new EventEmitter();
 var dateTime = require('node-datetime');
 var f = require('./function-management');
 var database = require('./database-management');
+var socket = require('./socket-management');
+
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+
 //SELECT customerID AS id FROM tblcustomer UNION SELECT staffID AS id FROM tblstaff
 
 // Staff to Customer
@@ -35,19 +41,6 @@ app.post('/messageSend', function (req, res) {
                     }
                 });
             });
-        }
-    });
-});
-
-emitter.on('customer to staff message', function (complaintID) {
-    var sql = "SELECT content, sender, recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date FROM tblchat WHERE complaintID = '" + complaintID + "' LIMIT 0, 1 ORDER BY creationDateTime DESC";
-    database.query(sql, function (err, result) {
-        if (err) {
-            res.end();
-            throw err;
-        } else {
-            res.json(result);
-            res.end();
         }
     });
 });

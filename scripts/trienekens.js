@@ -907,7 +907,7 @@ app.run(function($rootScope) {
         var zone = place.zone.replace(" ", "+");
         var concat = area + '+' + zone;
 
-        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=AIzaSyCuJowvWcaKkGZj2mokAtLuKTsiLHl6rgU";
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
     };
 });
 
@@ -4706,7 +4706,6 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         $scope.sendMessage = function() {
             $scope.message.content = $scope.mymsg;
             $http.post('/messageSend', $scope.message).then(function(response) {
-                console.log($scope.message);
                 chatContent += '<div class="message right"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
                 angular.element('.chat-box').html(chatContent);
             });
@@ -4724,7 +4723,9 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             angular.element('.chat-box').html(chatContent);
         });
 
-
+        socket.on('new message', function (data) {
+            console.log(data);
+        });
 
 
         //initialize email subject and text
