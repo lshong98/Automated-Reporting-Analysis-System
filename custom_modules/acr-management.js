@@ -69,15 +69,40 @@ app.post('/addDcsEntry',function(req,res){
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     f.makeID("acr", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
-        console.log(sql);
+
+        var sql = "SELECT areaID FROM tbltaman t inner join tblcustomer c on c.tamanID = t.tamanID WHERE customerID = '" + req.body.customerID + "'";
+
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
 
-            res.json({"status": "success", "message": "ACR created!", "details": {"acrID": req.body.acrID}});
+            console.log(result);
+            var areaID = result[0].areaID;
+            
+
+            var sql1 = "SELECT concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address FROM tblcustomer c where customerID = '" + req.body.customerID + "'";
+            
+
+            sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, areaID, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + areaID + "', '"+ req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
+            console.log(sql);
+            database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+
+            }
+
+                 
+
+                    res.json({"status": "success", "message": "ACR created!", "details": {"acrID": ID}});
+              
+
+            
+           });
+
         });
+
+        
 });
 }); // Complete
 
@@ -93,6 +118,24 @@ app.post('/updateDcsEntry', function(req,res){
         } 
          
         res.json(result);
+        console.log(result); 
+    });
+}); 
+
+app.post('/deleteDcsEntry', function(req,res){
+    'use strict';
+
+    var sql = "DELETE FROM tblacr WHERE acrID = '" + req.body.acrID + "'";
+    
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        } 
+         
+        
+        res.json({"status": "success", "message": "ACR created!", "details": {"acrID": req.body.acrID}});
+  
         console.log(result); 
     });
 }); 
@@ -141,6 +184,20 @@ app.post('/filterArea',function(req,res){
     'use strict';
     console.log(req.body);
     var sql = "SELECT * from tblarea where driverID = '" + req.body.driverID + "'";
+    database.query(sql, function (err, result) {
+        if (err) { 
+            throw err;
+        }
+
+        res.json(result);
+        console.log(result);
+    });
+}); // Complete
+
+app.post('/getAreaList',function(req,res){ 
+    'use strict';
+    console.log(req.body);
+    var sql = "SELECT * from tblarea";
     database.query(sql, function (err, result) {
         if (err) { 
             throw err;

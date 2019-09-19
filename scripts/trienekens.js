@@ -3356,8 +3356,8 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 
                 //     var area = $('.selectpicker option:selected').text();
                 //    var areastr = area.split(" ")[2];
-                //                console.log(areastr);
-                $scope.dcsList.push({ "id": newDcsID, "creationDateTime": today, "driver": $scope.dcs.driver, "periodFrom": $scope.dcs.periodFrom, "periodTo": $scope.dcs.periodTo, "replacementDriver": $scope.dcs.replacementDriver, "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom, "replacementPeriodTo": $scope.dcs.replacementPeriodTo, "status": 'ACTIVE' });
+                //                console.log(areastr); 
+                $scope.dcsList.push({ "id": newDcsID, "creationDateTime": today, "driverID": $scope.dcs.driverID, "periodFrom": $scope.dcs.periodFrom, "periodTo": $scope.dcs.periodTo, "replacementDriver": $scope.dcs.replacementDriver, "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom, "replacementPeriodTo": $scope.dcs.replacementPeriodTo, "status": 'ACTIVE' });
                 // $scope.filterAcrList = angular.copy($scope.acrList);
                 angular.element('#createDCS').modal('toggle');
                 // $scope.totalItems = $scope.filterAcrList.length;
@@ -3420,6 +3420,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.editAddress = {};
     $scope.dcsID.id = $routeParams.dcsID;
     $scope.dcsEntry = {};
+    $scope.areaList = {};
 
     $scope.test = {
         "id": "sdfs",
@@ -3495,8 +3496,19 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
     }
 
-    $scope.deleteDcsEntry = function(acrID) {
+    $scope.deleteDcsEntry = function(d,index) {
+        
+        $http.post('/deleteDcsEntry', d).then(function(response) {
 
+            if (response.data.status === "success") {
+                angular.element('body').overhang({
+                    type: "danger",
+                    "message": "DCS Entry deleted!"
+                });
+
+                $scope.dcsDetailsList.splice(index,1);
+            };
+        });
     }
 
     $scope.filterAddress = function() {
@@ -3538,19 +3550,81 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
             console.log("Hello dcsdetails");
 
         });
+
+        $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
+            $scope.customerList = response.data;
+        });
+
+        $http.post('/getAreaList').then(function(response) {
+
+            $scope.areaList = response.data;
+            console.log("this is my areaList:" + $scope.areaList);
+        });
     }
 
     $scope.getDcsDetails();
 
+    $scope.resetForm = function() {
+        $scope.dcsEntry.companyName = '';
+        $scope.dcsEntry.customerID = '';
+        $scope.dcsEntry.beBins = '';
+        $scope.dcsEntry.acrBins = '';
+        $scope.dcsEntry.mon = '';
+        $scope.dcsEntry.tue = '';
+        $scope.dcsEntry.wed = '';
+        $scope.dcsEntry.thu = '';
+        $scope.dcsEntry.fri = '';
+        $scope.dcsEntry.sat = '';
+        $scope.dcsEntry.remarks = '';
 
-    $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
-        $scope.customerList = response.data;
-    });
+        $scope.disableAddress();
+    }
+
+    
 
     $scope.addDcsEntry = function() {
         $scope.dcsEntry.dcsID = $routeParams.dcsID;
 
         $scope.dcsEntry.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+        if($scope.dcsEntry.mon){
+            $scope.dcsEntry.mon = 1;
+        } else {
+            $scope.dcsEntry.mon = 0;
+        }
+
+        if($scope.dcsEntry.tue){
+            $scope.dcsEntry.tue = 1;
+        } else {
+            $scope.dcsEntry.tue = 0;
+        }
+
+        if($scope.dcsEntry.wed){
+            $scope.dcsEntry.wed = 1;
+        } else {
+            $scope.dcsEntry.wed = 0;
+        }
+
+        if($scope.dcsEntry.thu){
+            $scope.dcsEntry.thu = 1;
+        } else {
+            $scope.dcsEntry.thu = 0;
+        }
+
+        if($scope.dcsEntry.fri){
+            $scope.dcsEntry.fri = 1;
+        } else {
+            $scope.dcsEntry.fri = 0;
+        }
+
+        if($scope.dcsEntry.sat){
+            $scope.dcsEntry.sat = 1;
+        } else {
+            $scope.dcsEntry.sat = 0;
+        }
+
+        console.log("DCS ENTRY: " + $scope.dcsEntry.mon);
+
         $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
 
             var returnedData = response.data;
@@ -3560,9 +3634,11 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
                     type: "success",
                     "message": "DCS Entry added successfully!"
                 });
+                
 
-
-                $scope.dcsDetailsList.push({ "acrID": $scope.dcsEntry.acrID, "companyName": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
+                //$scope.dcsDetailsList.push({ "acrID": returnedData.details.acrID, "companyName": $scope.dcsEntry.companyName, "address": returnedData.details.address, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
+                
+                $scope.getDcsDetails(); //REFRESH DETAILS
 
                 angular.element('#createDcsEntry').modal('toggle');
             }
