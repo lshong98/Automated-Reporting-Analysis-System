@@ -4,21 +4,10 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-// Cloud database access
-// var DB_HOST = '35.240.160.118';
-// var DB_USER = 'root';
-// var DB_PASS = 'root';
-// var DB_NAME = 'trienekens_test';
- 
-// Local database access
-// var DB_HOST = 'localhost';
-// var DB_USER = 'root';
-// var DB_PASS = '';
-// var DB_NAME = 'trienekens';
-var DB_HOST = process.env.DATABASE_HOST || 'localhost';
-var DB_USER = process.env.DATABASE_USER || 'root';
+var DB_HOST = process.env.DATABASE_HOST || '';
+var DB_USER = process.env.DATABASE_USER || '';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || 'triepres3';
+var DB_NAME = process.env.DATABASE_NAME || '';
 
  var config = {
      user: DB_USER,
@@ -30,16 +19,7 @@ var DB_NAME = process.env.DATABASE_NAME || 'triepres3';
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
     config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
 }
- 
-// // Create connection 
-// var db = mysql.createConnection({ 
-//   host: DB_HOST,
-//   user: DB_USER,  
-//   password: DB_PASS,
-//   port: 3307
-// });
 
-// var db = mysql.createConnection(config);
 // Create connection
 var db;
 function handleDisconnect() {
