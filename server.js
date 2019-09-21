@@ -16,6 +16,7 @@ var fs = require('fs');
 var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
 //var FCMServiceAccount = require("./trienekens-994df-d5d29b87e6a8.json");
+var dateTime = require('node-datetime');
 
 require('dotenv').config();
 
@@ -105,6 +106,19 @@ app.post('/sendNotifToDevice', function(req,res){
     //}
 });
 
+app.post('/insertAnnouncement', function(req, res){
+    'use strict';
+    var target = req.body.target;
+    var message = req.body.message;
+    var date = dateTime.create().format('Y-m-d');
+    var sql = "INSERT INTO tblannouncement(announcement, announceDate, target) VALUES('"+message+"','"+date+"','"+target+"')";
+    database.query(sql, function(err, result){
+        if(!err){
+            console.log("announcement inserted");
+        }
+    });
+});
+
 app.get('/fetchCarouselImg', function(req, res){
     'use strict';
     var sql = "SELECT * FROM tblcarouselimg";
@@ -133,10 +147,24 @@ app.get('/getAllSchedule', function(req, res){
     });
 });
 
+app.get('/getAreas', function(req, res){
+    'use strict';
+
+    var sql = "SELECT * FROM tblarea";
+    var output = [];
+    database.query(sql, function(err, result){
+        for (var i=0; i<result.length; i++){
+            output.push(result[i]);
+        }
+        console.log(output);
+        res.json(output);
+    });
+});
+
 app.get('/getPendingUser', function(req, res){
     'use strict';
 
-    var sql = "SELECT * FROM tblpending WHERE status = 'Pending'";
+    var sql = "SELECT * FROM tblcustomer WHERE status = 0";
     var output = [];
     database.query(sql, function(err, result){
         for (var i = 0; i<result.length; i++){
@@ -164,11 +192,51 @@ app.get('/getPendingBinRequest', function(req, res){
 app.post('/updatePendingUser', function(req, res){
     'use strict';
     console.log(req.body);
-    var sql = "UPDATE tblpending SET status = '"+req.body.status+"' WHERE pendingID = '"+req.body.pendingID+"'";
+    var sql = "UPDATE tblcustomer SET status = '"+req.body.status+"' WHERE customerID = '"+req.body.pendingID+"'";
+    var transporter, subject, text, email, mailOptions;
+    var date = dateTime.create().format('Y-m-d H:i:s');
+    var tbluserSql = "INSERT INTO tbluser(customerID,userEmail,password,status,creationDate) VALUES('"+req.body.pendingID+"','"+req.body.email+"','"+req.body.pass+"',1,'"+date+"')";
+
     database.query(sql, function(err, result){
         if(err){
             throw err;
         }
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'fravleinulan@gmail.com',
+                pass: 'trienekens123'
+            }
+        });
+
+        if(req.body.status == 1){
+            text = "Dear user, we are pleased to inform you that your registration has been approved. You can log in to our app using the email and password that you have entered during registration. ";
+            database.query(tbluserSql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                console.log("Succeess");
+            });
+        }else{
+            text = "Dear user, we regret to inform you that your registration has been declined. We apologise for any inconveniences caused.";
+        }
+
+        subject = "Trienekens Account Status";
+        email = req.body.email;
+        mailOptions = {
+            from: 'fravleinulan@gmail.com',
+            to: email,
+            subject: subject,
+            text: text
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                resp.send("Mail Failed");
+                console.log(error);
+            }
+            console.log("Email sent: "+info.response);
+        });
         res.send("User Status Updated");
     });
 });
@@ -223,12 +291,11 @@ app.post('/uploadCarouselImg', function(req, res){
     
     if(req.files){
         var file = req.files.carouselImg,
-        allowed = ["png", "jpg", "jpeg"];
+        allowed = ["png", "jpg", "jpeg"],
+        fileExt, actualFileExt;
 
         for(var x = 0;x<file.length;x++){
-            var fileName = file[x].name,
-            fileSize = file[x].size,
-            fileExt = file[x].name.split('.'),
+            fileExt = file[x].name.split('.');
             actualFileExt = fileExt[1].toLowerCase();
 
             for(var i=0;i<allowed.length;i++){
@@ -242,6 +309,30 @@ app.post('/uploadCarouselImg', function(req, res){
                             //console.log("Image Uploaded");
                         });
                         file[x].mv('./scripts/img/'+file[x].name, function(err){
+                            if(err){
+                                throw err;
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        if(file.length == undefined){
+            fileExt = file.name.split('.');
+            actualFileExt = fileExt[1].toLowerCase();
+
+            for(var i=0;i<allowed.length;i++){
+                if(actualFileExt == allowed[i]){
+                    if(file.size <= 2000000){
+                        var sql = "INSERT INTO tblcarouselimg(fileName) VALUES('"+file.name+"')";
+                        database.query(sql, function(err, result){
+                            if(err){
+                                throw err;
+                            }
+                            //console.log("Image Uploaded");
+                        });
+                        file.mv('./scripts/img/'+file.name, function(err){
                             if(err){
                                 throw err;
                             }

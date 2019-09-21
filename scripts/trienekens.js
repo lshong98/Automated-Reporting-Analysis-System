@@ -942,6 +942,12 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         }, function(error) {
             console.log(error);
         });
+
+        $http.post('/insertAnnouncement', $scope.data).then(function(response){
+            console.log(response.data);
+        }, function(error){
+            console.log(error);
+        });
     };
 
     $scope.uploadImg = function() {
@@ -1015,8 +1021,8 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     //     });
     // };
 
-    $scope.updatePendingUser = function(id, status) {
-        $scope.pUsers = { "pendingID": id, "status": status };
+    $scope.updatePendingUser = function(id, status, email, pass) {
+        $scope.pUsers = { "pendingID": id, "status": status, "email":email, "pass":pass };
 
         $http.post('/updatePendingUser', $scope.pUsers).then(function(response) {
             alert(response.data);
@@ -1042,6 +1048,15 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             alert(response.data);
             $scope.getPendingBinRequest();
         }, function(error) {
+            console.log(error);
+        });
+    };
+
+    $scope.getAreas = function(){
+        $http.get('/getAreas').then(function(response){
+            console.log(response.data);
+            $scope.areaList = response.data;
+        }, function(error){
             console.log(error);
         });
     };

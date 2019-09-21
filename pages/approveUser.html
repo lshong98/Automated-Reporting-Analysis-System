@@ -15,17 +15,17 @@
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="pUser in pendingUsers track by $index">
-                        <td>{{pUser.pendingID}}</td>
+                        <td>{{$index+1}}</td>
                         <td>{{pUser.ic}}</td>
-                        <td>{{pUser.email}}</td>
-                        <td>{{pUser.pNo}}</td>
+                        <td>{{pUser.userEmail}}</td>
+                        <td>{{pUser.contactNumber}}</td>
                         <td>
                             <div style="height:80px;width:80px;">
-                                <img ng-src=../scripts/pendingImg/{{pUser.imgPath}} style="width: 100%;height:100%;object-fit: contain;">
+                                <img ng-src=../scripts/{{pUser.imgPath}} style="width: 100%;height:100%;object-fit: contain;">
                             </div>
                         </td>
-                        <td><button class="btn btn-success" data-ng-click="updatePendingUser(pUser.pendingID, 'Approved')">Approve</button></td>
-                        <td><button class="btn btn-danger" data-ng-click="updatePendingUser(pUser.pendingID, 'Declined')">Decline</button></td>
+                        <td><button class="btn btn-success" data-ng-click="updatePendingUser(pUser.customerID, 1, pUser.userEmail, pUser.password)">Approve</button></td>
+                        <td><button class="btn btn-danger" data-ng-click="updatePendingUser(pUser.customerID, 2, pUser.userEmail, pUser.password)">Decline</button></td>
                     </tr>
                 </tbody>
             </table>
