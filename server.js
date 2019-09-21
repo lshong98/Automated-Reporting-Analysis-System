@@ -7,7 +7,7 @@ var SVR_PORT = variable.SVR_PORT;
 var emitter = variable.emitter;
 var fs = variable.fs;
 var upload = variable.upload;
-var FCMAdmin = variable.FCMAdmin;
+var FCMAdmin = variable.FCMAdmin; 
 var FCMServiceAccount = variable.FCMServiceAccount;
 
 var requestHandler = require('./requestHandlers');

@@ -176,7 +176,7 @@ app.post('/filterAddress',function(req,res){
             throw err;
         }
 
-        res.json(result);
+        res.json(result); 
     });
 }); // Complete
 

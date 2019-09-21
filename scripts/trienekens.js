@@ -272,6 +272,11 @@ app.service('storeDataService', function() {
             "currentPage": 1, //Initial current page to 1
             "itemsPerPage": 8, //Record number each page
             "maxSize": 10 //Show the number in page
+        },
+        "formPagination": {
+            "currentPage": 1,
+            "itemsPerPage": 5,
+            "maxSize": 10
         }
     };
 
@@ -3396,13 +3401,14 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         $scope.status = 'CORRECTION REQUIRED';
         rejectForm($routeParams.dcsID, "dcs");
 
-
+ 
         angular.element('#rejectConfirmation').modal('toggle');
     }
 
 
 
 
+    $scope.pagination = angular.copy(storeDataService.formPagination);
     $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
 
@@ -3478,19 +3484,56 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
                 $scope.dcsEntry.acrID = $scope.dcsDetailsList[i].acrID
                 $scope.dcsEntry.companyName = $scope.dcsDetailsList[i].companyName;
                 $scope.filterAddress();
-                $scope.dcsEntry.customerID = $scope.dcsDetailsList[i].address;
+                $scope.dcsEntry.customerID = $scope.dcsDetailsList[i].customerID;
                 $scope.dcsEntry.beBins = $scope.dcsDetailsList[i].beBins;
                 $scope.dcsEntry.acrBins = $scope.dcsDetailsList[i].acrBins;
-                $scope.dcsEntry.areaCode = $scope.dcsDetailsList[i].areaCode;
-                $scope.dcsEntry.mon = $scope.dcsDetailsList[i].mon;
-                $scope.dcsEntry.tue = $scope.dcsDetailsList[i].tue;
-                $scope.dcsEntry.wed = $scope.dcsDetailsList[i].wed;
-                $scope.dcsEntry.thu = $scope.dcsDetailsList[i].thu;
-                $scope.dcsEntry.fri = $scope.dcsDetailsList[i].fri;
-                $scope.dcsEntry.sat = $scope.dcsDetailsList[i].sat;
+
+                if($scope.dcsDetailsList[i].mon == 1){
+                    document.getElementById("mon").checked = true;
+                    $scope.dcsEntry.mon = true;
+                }else{
+                    document.getElementById("mon").checked = false;
+                    $scope.dcsEntry.mon = false;
+                }
+                if($scope.dcsDetailsList[i].tue == 1){
+                    document.getElementById("tue").checked = true;
+                    $scope.dcsEntry.tue = true;
+                }else{
+                    document.getElementById("tue").checked = false;
+                    $scope.dcsEntry.tue = false;
+                }
+                if($scope.dcsDetailsList[i].wed == 1){
+                    document.getElementById("wed").checked = true;
+                    $scope.dcsEntry.wed = true;
+                }else{
+                    document.getElementById("wed").checked = false;
+                    $scope.dcsEntry.wed = false;
+                }
+                if($scope.dcsDetailsList[i].thu == 1){
+                    document.getElementById("thu").checked = true;
+                    $scope.dcsEntry.thu = true;
+                }else{
+                    document.getElementById("thu").checked = false;
+                    $scope.dcsEntry.thu = false;
+                }
+                if($scope.dcsDetailsList[i].fri == 1){
+                    document.getElementById("fri").checked = true;
+                    $scope.dcsEntry.fri = true;
+                }else{
+                    document.getElementById("fri").checked = false;
+                    $scope.dcsEntry.fri = false;
+                }
+                if($scope.dcsDetailsList[i].sat == 1){
+                    document.getElementById("sat").checked = true;
+                    $scope.dcsEntry.sat = true;
+                }else{
+                    document.getElementById("sat").checked = false;
+                    $scope.dcsEntry.sat = false;
+                }
+
                 $scope.dcsEntry.remarks = $scope.dcsDetailsList[i].remarks;
 
-                console.log($scope.dcsDetailsList[i]);
+                console.log($scope.dcsDetailsList[i]); 
             }
         }
 
@@ -3523,12 +3566,18 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
     $scope.saveDcsEntry = function() {
 
-        $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
+        console.log($scope.dcsEntry.customerID);
+        if($scope.dcsEntry.customerID != null){
+            $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
 
-            $scope.getDcsDetails();
-        });
-
-        angular.element('#editDcsEntry').modal('toggle');
+                $scope.getDcsDetails();
+            });
+    
+            angular.element('#editDcsEntry').modal('toggle');
+        }else{
+            window.alert("Please select customer address"); 
+        }
+        
     }
 
     $scope.disableAddress = function() {
@@ -3546,7 +3595,6 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
 
             $scope.dcsDetailsList = response.data;
-            console.log($scope.dcsDetailsList);
             console.log("Hello dcsdetails");
 
         });
@@ -3558,10 +3606,9 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         $http.post('/getAreaList').then(function(response) {
 
             $scope.areaList = response.data;
-            console.log("this is my areaList:" + $scope.areaList);
         });
     }
-
+ 
     $scope.getDcsDetails();
 
     $scope.resetForm = function() {
@@ -3623,12 +3670,12 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
             $scope.dcsEntry.sat = 0;
         }
 
-        console.log("DCS ENTRY: " + $scope.dcsEntry.mon);
+        console.log("DCS ENTRY: " + $scope.dcsEntry.mon); 
 
         $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
 
             var returnedData = response.data;
-
+  
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
@@ -3667,7 +3714,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         "binSize": '',
         "address": '',
         "companyName": '',
-        "customerID": '',
+        "customerID": '', 
         "areaID": '',
         "serialNo": '',
         "acrID": '',
@@ -3675,7 +3722,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         "rcDwell": '',
         "comment": '',
         "itemType": '',
-        "path": ''
+        "path": '' 
     };
 
     //Customer details
