@@ -55,6 +55,7 @@ var damagedLostBin = require('./custom_modules/damaged-lost-bin');
 var boundaryManagement = require('./custom_modules/boundary-management');
 var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
+var custApp = require('./custom_modules/cust-app');
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json({limit: '50mb'}));
@@ -359,6 +360,7 @@ app.post('/uploadCarouselImg', function (req, res) {
 app.post('/loadMenu', function (req, res) {
     'use strict';
     var content = '', sql;
+    console.log("position: "+req.body.position);
     
     if (req.body.position === "Manager") {
         content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
@@ -697,3 +699,4 @@ app.use('/', formAuthorization);
 app.use('/', boundaryManagement);
 app.use('/', socketManagement);
 app.use('/', complaintManagement);
+app.use('/', custApp);

@@ -80,8 +80,8 @@ app.post('/sendMessage', function(req, resp){
     });
     
     req.addListener('end', function () {
-        var sql = "SELECT customerID, staffID FROM tblcustomer, tblcomplaint WHERE tblcustomer.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' LIMIT 0, 1";
-        db.query(sql, function (err, result) {
+        var sql = "SELECT tblcustomer.customerID, tblcomplaint.staffID FROM tblcustomer, tblcomplaint WHERE tblcustomer.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' LIMIT 0, 1";
+        database.query(sql, function (err, result) {
             if (err) {
                 resp.send("error getting user id");
                 resp.end();
@@ -97,6 +97,7 @@ app.post('/sendMessage', function(req, resp){
                         } else {
                             resp.send("Message Sent");
                             resp.end();
+                            console.log('ok');
                             emitter.emit('customer to staff message', data.id);
                         }
                     });
@@ -145,17 +146,17 @@ app.post('/getMessage', function(req, resp){
 
     req.addListener('end', function(){
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
-        db.query(sqlUser, function(err, res){
+        database.query(sqlUser, function(err, res){
             if(!err){
                 userID = res[0].userID;
                 var sql = "SELECT content, creationDateTime, CASE WHEN sender = '"+userID+"' THEN 'me' ELSE 'officer' END AS sender FROM tblchat WHERE complaintID = '"+data.id+"' ORDER BY creationDateTime ASC";
                 //var sql2 = "SELECT message as offmsg, createdAt as offtime from tblchat WHERE complaintID ='"+data.id+"' AND sender!='"+userID+"' ORDER BY createdAt ASC";
-                db.query(sql, function(err, res){
+                database.query(sql, function(err, res){
                     if(res != undefined){
                         for(var i = 0; i<res.length; i++){
                             msgs.push(res[i]);
                         }
-                        console.log(msgs);
+                        //console.log(msgs);
                         if(msgs == null){
                             resp.send("No Messages");
                         }
@@ -185,18 +186,18 @@ app.post('/getChats', function(req, resp){
 
     req.addListener('end', function(){
         var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
-        db.query(sqlUser, function(err, res){
+        database.query(sqlUser, function(err, res){
             if(!err){
                 userID = res[0].customerID;
                 var sql = "SELECT * FROM tblcomplaint WHERE customerID = '"+userID+"'";
-                db.query(sql, function(err, res){
+                database.query(sql, function(err, res){
                     if(err){
                         resp.send("Error");
                     }
                     for(var i = 0; i<res.length; i++){
                         info.push(res[i]);
                     }
-                    console.log(info);
+                    //console.log(info);
                     if(info == null){
                         resp.send("No Chats");
                     }
