@@ -272,6 +272,11 @@ app.service('storeDataService', function() {
             "currentPage": 1, //Initial current page to 1
             "itemsPerPage": 8, //Record number each page
             "maxSize": 10 //Show the number in page
+        },
+        "formPagination": {
+            "currentPage": 1,
+            "itemsPerPage": 5,
+            "maxSize": 10
         }
     };
 
@@ -3371,8 +3376,8 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
 
                 //     var area = $('.selectpicker option:selected').text();
                 //    var areastr = area.split(" ")[2];
-                //                console.log(areastr);
-                $scope.dcsList.push({ "id": newDcsID, "creationDateTime": today, "driver": $scope.dcs.driver, "periodFrom": $scope.dcs.periodFrom, "periodTo": $scope.dcs.periodTo, "replacementDriver": $scope.dcs.replacementDriver, "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom, "replacementPeriodTo": $scope.dcs.replacementPeriodTo, "status": 'ACTIVE' });
+                //                console.log(areastr); 
+                $scope.dcsList.push({ "id": newDcsID, "creationDateTime": today, "driverID": $scope.dcs.driverID, "periodFrom": $scope.dcs.periodFrom, "periodTo": $scope.dcs.periodTo, "replacementDriver": $scope.dcs.replacementDriver, "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom, "replacementPeriodTo": $scope.dcs.replacementPeriodTo, "status": 'ACTIVE' });
                 // $scope.filterAcrList = angular.copy($scope.acrList);
                 angular.element('#createDCS').modal('toggle');
                 // $scope.totalItems = $scope.filterAcrList.length;
@@ -3411,13 +3416,14 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         $scope.status = 'CORRECTION REQUIRED';
         rejectForm($routeParams.dcsID, "dcs");
 
-
+ 
         angular.element('#rejectConfirmation').modal('toggle');
     }
 
 
 
 
+    $scope.pagination = angular.copy(storeDataService.formPagination);
     $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
 
@@ -3435,6 +3441,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.editAddress = {};
     $scope.dcsID.id = $routeParams.dcsID;
     $scope.dcsEntry = {};
+    $scope.areaList = {};
 
     $scope.test = {
         "id": "sdfs",
@@ -3492,26 +3499,74 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
                 $scope.dcsEntry.acrID = $scope.dcsDetailsList[i].acrID
                 $scope.dcsEntry.companyName = $scope.dcsDetailsList[i].companyName;
                 $scope.filterAddress();
-                $scope.dcsEntry.customerID = $scope.dcsDetailsList[i].address;
+                $scope.dcsEntry.customerID = $scope.dcsDetailsList[i].customerID;
                 $scope.dcsEntry.beBins = $scope.dcsDetailsList[i].beBins;
                 $scope.dcsEntry.acrBins = $scope.dcsDetailsList[i].acrBins;
-                $scope.dcsEntry.areaCode = $scope.dcsDetailsList[i].areaCode;
-                $scope.dcsEntry.mon = $scope.dcsDetailsList[i].mon;
-                $scope.dcsEntry.tue = $scope.dcsDetailsList[i].tue;
-                $scope.dcsEntry.wed = $scope.dcsDetailsList[i].wed;
-                $scope.dcsEntry.thu = $scope.dcsDetailsList[i].thu;
-                $scope.dcsEntry.fri = $scope.dcsDetailsList[i].fri;
-                $scope.dcsEntry.sat = $scope.dcsDetailsList[i].sat;
+
+                if($scope.dcsDetailsList[i].mon == 1){
+                    document.getElementById("mon").checked = true;
+                    $scope.dcsEntry.mon = true;
+                }else{
+                    document.getElementById("mon").checked = false;
+                    $scope.dcsEntry.mon = false;
+                }
+                if($scope.dcsDetailsList[i].tue == 1){
+                    document.getElementById("tue").checked = true;
+                    $scope.dcsEntry.tue = true;
+                }else{
+                    document.getElementById("tue").checked = false;
+                    $scope.dcsEntry.tue = false;
+                }
+                if($scope.dcsDetailsList[i].wed == 1){
+                    document.getElementById("wed").checked = true;
+                    $scope.dcsEntry.wed = true;
+                }else{
+                    document.getElementById("wed").checked = false;
+                    $scope.dcsEntry.wed = false;
+                }
+                if($scope.dcsDetailsList[i].thu == 1){
+                    document.getElementById("thu").checked = true;
+                    $scope.dcsEntry.thu = true;
+                }else{
+                    document.getElementById("thu").checked = false;
+                    $scope.dcsEntry.thu = false;
+                }
+                if($scope.dcsDetailsList[i].fri == 1){
+                    document.getElementById("fri").checked = true;
+                    $scope.dcsEntry.fri = true;
+                }else{
+                    document.getElementById("fri").checked = false;
+                    $scope.dcsEntry.fri = false;
+                }
+                if($scope.dcsDetailsList[i].sat == 1){
+                    document.getElementById("sat").checked = true;
+                    $scope.dcsEntry.sat = true;
+                }else{
+                    document.getElementById("sat").checked = false;
+                    $scope.dcsEntry.sat = false;
+                }
+
                 $scope.dcsEntry.remarks = $scope.dcsDetailsList[i].remarks;
 
-                console.log($scope.dcsDetailsList[i]);
+                console.log($scope.dcsDetailsList[i]); 
             }
         }
 
     }
 
-    $scope.deleteDcsEntry = function(acrID) {
+    $scope.deleteDcsEntry = function(d,index) {
+        
+        $http.post('/deleteDcsEntry', d).then(function(response) {
 
+            if (response.data.status === "success") {
+                angular.element('body').overhang({
+                    type: "danger",
+                    "message": "DCS Entry deleted!"
+                });
+
+                $scope.dcsDetailsList.splice(index,1);
+            };
+        });
     }
 
     $scope.filterAddress = function() {
@@ -3526,12 +3581,18 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
     $scope.saveDcsEntry = function() {
 
-        $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
+        console.log($scope.dcsEntry.customerID);
+        if($scope.dcsEntry.customerID != null){
+            $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
 
-            $scope.getDcsDetails();
-        });
-
-        angular.element('#editDcsEntry').modal('toggle');
+                $scope.getDcsDetails();
+            });
+    
+            angular.element('#editDcsEntry').modal('toggle');
+        }else{
+            window.alert("Please select customer address"); 
+        }
+        
     }
 
     $scope.disableAddress = function() {
@@ -3549,35 +3610,97 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
 
             $scope.dcsDetailsList = response.data;
-            console.log($scope.dcsDetailsList);
             console.log("Hello dcsdetails");
 
         });
-    }
 
+        $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
+            $scope.customerList = response.data;
+        });
+
+        $http.post('/getAreaList').then(function(response) {
+
+            $scope.areaList = response.data;
+        });
+    }
+ 
     $scope.getDcsDetails();
 
+    $scope.resetForm = function() {
+        $scope.dcsEntry.companyName = '';
+        $scope.dcsEntry.customerID = '';
+        $scope.dcsEntry.beBins = '';
+        $scope.dcsEntry.acrBins = '';
+        $scope.dcsEntry.mon = '';
+        $scope.dcsEntry.tue = '';
+        $scope.dcsEntry.wed = '';
+        $scope.dcsEntry.thu = '';
+        $scope.dcsEntry.fri = '';
+        $scope.dcsEntry.sat = '';
+        $scope.dcsEntry.remarks = '';
 
-    $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
-        $scope.customerList = response.data;
-    });
+        $scope.disableAddress();
+    }
+
+    
 
     $scope.addDcsEntry = function() {
         $scope.dcsEntry.dcsID = $routeParams.dcsID;
 
         $scope.dcsEntry.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+        if($scope.dcsEntry.mon){
+            $scope.dcsEntry.mon = 1;
+        } else {
+            $scope.dcsEntry.mon = 0;
+        }
+
+        if($scope.dcsEntry.tue){
+            $scope.dcsEntry.tue = 1;
+        } else {
+            $scope.dcsEntry.tue = 0;
+        }
+
+        if($scope.dcsEntry.wed){
+            $scope.dcsEntry.wed = 1;
+        } else {
+            $scope.dcsEntry.wed = 0;
+        }
+
+        if($scope.dcsEntry.thu){
+            $scope.dcsEntry.thu = 1;
+        } else {
+            $scope.dcsEntry.thu = 0;
+        }
+
+        if($scope.dcsEntry.fri){
+            $scope.dcsEntry.fri = 1;
+        } else {
+            $scope.dcsEntry.fri = 0;
+        }
+
+        if($scope.dcsEntry.sat){
+            $scope.dcsEntry.sat = 1;
+        } else {
+            $scope.dcsEntry.sat = 0;
+        }
+
+        console.log("DCS ENTRY: " + $scope.dcsEntry.mon); 
+
         $http.post('/addDcsEntry', $scope.dcsEntry).then(function(response) {
 
             var returnedData = response.data;
-
+  
             if (returnedData.status === "success") {
                 angular.element('body').overhang({
                     type: "success",
                     "message": "DCS Entry added successfully!"
                 });
+                
 
-
-                $scope.dcsDetailsList.push({ "acrID": $scope.dcsEntry.acrID, "companyName": $scope.dcsEntry.companyName, "address": $scope.dcsEntry.customerID, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
+                //$scope.dcsDetailsList.push({ "acrID": returnedData.details.acrID, "companyName": $scope.dcsEntry.companyName, "address": returnedData.details.address, "beBins": $scope.dcsEntry.beBins, "acrBins": $scope.dcsEntry.acrBins, "areaCode": $scope.dcsEntry.areaCode, "mon": $scope.dcsEntry.mon, "tue": $scope.dcsEntry.tue, "wed": $scope.dcsEntry.wed, "thu": $scope.dcsEntry.thu, "fri": $scope.dcsEntry.fri, "sat": $scope.dcsEntry.sat, "remarks": $scope.dcsEntry.remarks });
+                
+                $scope.getDcsDetails(); //REFRESH DETAILS
 
                 angular.element('#createDcsEntry').modal('toggle');
             }
@@ -3606,7 +3729,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         "binSize": '',
         "address": '',
         "companyName": '',
-        "customerID": '',
+        "customerID": '', 
         "areaID": '',
         "serialNo": '',
         "acrID": '',
@@ -3614,7 +3737,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
         "rcDwell": '',
         "comment": '',
         "itemType": '',
-        "path": ''
+        "path": '' 
     };
 
     //Customer details
@@ -4721,7 +4844,6 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         $scope.sendMessage = function() {
             $scope.message.content = $scope.mymsg;
             $http.post('/messageSend', $scope.message).then(function(response) {
-                console.log($scope.message);
                 chatContent += '<div class="message right"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
                 angular.element('.chat-box').html(chatContent);
             });
@@ -4739,7 +4861,9 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             angular.element('.chat-box').html(chatContent);
         });
 
-
+        socket.on('new message', function (data) {
+            console.log(data);
+        });
 
 
         //initialize email subject and text

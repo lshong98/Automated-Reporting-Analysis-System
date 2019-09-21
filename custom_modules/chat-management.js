@@ -1,8 +1,17 @@
 var express = require('express');
 var app = express();
+var EventEmitter = require('events');
+var emitter = new EventEmitter();
 var dateTime = require('node-datetime');
 var f = require('./function-management');
 var database = require('./database-management');
+var socket = require('./socket-management');
+
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+
+//SELECT customerID AS id FROM tblcustomer UNION SELECT staffID AS id FROM tblstaff
 
 // Staff to Customer
 app.post('/messageSend', function (req, res) {
@@ -27,6 +36,7 @@ app.post('/messageSend', function (req, res) {
                         throw err;
                     } else {
                         res.end();
+                        emitter.emit('customer to staff message', 1);
                         // Emitter
                     }
                 });
@@ -68,32 +78,59 @@ app.post('/sendMessage', function(req, resp){
     req.addListener('data', function(postDataChunk){
         data = JSON.parse(postDataChunk);
     });
-
-    req.addListener('end', function(){
-        var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
-        var sqlStaff = "SELECT staffID FROM tblcomplaint WHERE complaintID = '" +data.id + "'";
-        db.query(sqlUser, function(err, res){
-            if(!err){
-                userID = res[0].customerID;
-                db.query(sqlStaff, function(err, res){
-                    if(!err){
-                        staffID = res[0].staffID;
-                        console.log("id: " + staffID);
-                        var sql = "INSERT INTO tblchat (sender, recipient, content, complaintID, creationDateTime) VALUES ('"+userID+"','"+staffID+"','"+data.message+"','"+data.id+"','"+date+"')";
-                        db.query(sql, function(err, res){
-                            if(err){
-                                resp.send("Error Sending Message");
-                                throw err;
-                            }
-                            resp.send("Message Sent");
-                        });
-                    }
-                });
-            }else{
+    
+    req.addListener('end', function () {
+        var sql = "SELECT customerID, staffID FROM tblcustomer, tblcomplaint WHERE tblcustomer.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' LIMIT 0, 1";
+        db.query(sql, function (err, result) {
+            if (err) {
                 resp.send("error getting user id");
+                resp.end();
+                throw err;
+            } else {
+                f.makeID('chat', date).then(function (ID) {
+                    sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status) VALUE ('" + ID + "', '" + result[0].customerID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', '" + date + "', 'A')";
+                    database.query(sql, function (err, result) {
+                        if (err) {
+                            resp.send("Error Sending Message");
+                            resp.end();
+                            throw err;
+                        } else {
+                            resp.send("Message Sent");
+                            resp.end();
+                            emitter.emit('customer to staff message', data.id);
+                        }
+                    });
+                });
             }
         });
     });
+
+//    req.addListener('end', function(){
+//        var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
+//        var sqlStaff = "SELECT staffID FROM tblcomplaint WHERE complaintID = '" + data.id + "'";
+//        db.query(sqlUser, function(err, res){
+//            if(!err){
+//                userID = res[0].customerID;
+//                db.query(sqlStaff, function(err, res){
+//                    if(!err){
+//                        staffID = res[0].staffID;
+//                        console.log("id: " + staffID);
+//                        var sql = "INSERT INTO tblchat (sender, recipient, content, complaintID, creationDateTime) VALUES ('"+userID+"','"+staffID+"','"+data.message+"','"+data.id+"','"+date+"')";
+//                        db.query(sql, function(err, res){
+//                            if(err){
+//                                resp.send("Error Sending Message");
+//                                throw err;
+//                            }
+//                            resp.send("Message Sent");
+//                            emitter.emit('customer to staff message');
+//                        });
+//                    }
+//                });
+//            }else{
+//                resp.send("error getting user id");
+//            }
+//        });
+//    });
 });
 
 app.post('/getMessage', function(req, resp){ 

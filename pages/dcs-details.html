@@ -32,28 +32,24 @@
                     <input type="text" class="form-control" id="txtAcrBins" data-ng-model="dcsEntry.acrBins" />
                 </div>
                 <div class="form-group">
-                  <label for="txtAreaCode form-label">Area Code</label>
-                  <input type="text" class="form-control" id="txtAreaCode" data-ng-model="dcsEntry.areaCode" />
-                </div>
-                <div class="form-group">
                     <label>Collection Days</label>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.mon" value="true"> Mon</label>
+                            <label><input type="checkbox" data-ng-model="dcsEntry.mon"> Mon</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.tue" value="true"> Tue</label>
+                            <label><input type="checkbox" data-ng-model="dcsEntry.tue"> Tue</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.wed" value="true"> Wed</label>
+                            <label><input type="checkbox" data-ng-model="dcsEntry.wed"> Wed</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.thu" value="true"> Thu</label>
+                            <label><input type="checkbox" data-ng-model="dcsEntry.thu"> Thu</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.fri" value="true"> Fri</label>
+                            <label><input type="checkbox" data-ng-model="dcsEntry.fri"> Fri</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.sat" value="true"> Sat</label>
+                            <label><input type="checkbox" data-ng-model="dcsEntry.sat"> Sat</label>
                         </div>
                 </div>
                 <div class="form-group">
@@ -106,28 +102,24 @@
                     <input type="text" class="form-control" id="editAcrBins" data-ng-model="dcsEntry.acrBins" />
                 </div>
                 <div class="form-group">
-                  <label for="txtAreaCode form-label">Area Code</label>
-                  <input type="text" class="form-control" id="editAreaCode" data-ng-model="dcsEntry.areaCode" />
-                </div>
-                <div class="form-group">
                     <label>Collection Days</label>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.mon" value="true"> Mon</label>
+                            <label><input id="mon" type="checkbox" data-ng-model="dcsEntry.mon" value="true"> Mon</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.tue" value="true"> Tue</label>
+                            <label><input id="tue" type="checkbox" data-ng-model="dcsEntry.tue" value="true"> Tue</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.wed" value="true"> Wed</label>
+                            <label><input id="wed" type="checkbox" data-ng-model="dcsEntry.wed" value="true"> Wed</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.thu" value="true"> Thu</label>
+                            <label><input id="thu" type="checkbox" data-ng-model="dcsEntry.thu" value="true"> Thu</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.fri" value="true"> Fri</label>
+                            <label><input id="fri" type="checkbox" data-ng-model="dcsEntry.fri" value="true"> Fri</label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.sat" value="true"> Sat</label>
+                            <label><input id="sat" type="checkbox" data-ng-model="dcsEntry.sat" value="true"> Sat</label>
                         </div>
                 </div>
                 <div class="form-group">
@@ -253,12 +245,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="col-md-6"><h6>Driver Name: </h6></div>
-                        <div class="col-md-6"><h6>Replacement Driver Name: </h6></div>
+                        <div class="col-md-6"><h6>Driver: </h6></div>
+                        <div class="col-md-6"><h6>Replacement Driver: </h6></div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">{{dcs[0].driver}}</div>
-                        <div class="col-md-6">{{dcs[0].replacementDriver}}</div>
+                        <div class="col-md-6">{{dcs[0].driverID}}</div>
+                        <div class="col-md-6">{{dcs[0].replacementDriverID}}</div>
                     </div>
                         
                 </div>
@@ -278,9 +270,9 @@
             </div>
                
             
-            <div class="row" id="createButton" data-ng-show="show.create == 'A'">
+            <div class="row" id="createButton" data-ng-show="show.create == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">
                     <div class="col-md-6">
-                        <button class="btn btn-success" data-toggle="modal" data-target="#createDcsEntry"><i class="fa fa-plus"></i> New</button>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#createDcsEntry" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
                         
                     </div>
                     <div class="col-md-6" style="text-align: right">
@@ -293,15 +285,15 @@
             <div class="row" style="height:500px;">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-clickable">
+                        <table id="table" class="table table-hover table-striped table-clickable">
                             <thead>
                                 <tr>
-                                    <th width="10%" data-ng-click="orderBy('acrfNo');">ACRF Number <i class="fas fa-sort-down"></i></th>
+                                    <th width="10%" data-ng-click="orderBy('acrID');">ACRF Number <i class="fas fa-sort-down"></i></th>
                                     <th width="10%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
                                     <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
                                     <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
                                     <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
-                                    <th width="5%" data-ng-click="orderBy('areaCode');">Area Code <i class="fas fa-sort-down"></i></th>
+                                    <th width="5%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i></th>
                                     <th width="5%" data-ng-click="orderBy('Mon');">Mon</i></th>
                                     <th width="5%" data-ng-click="orderBy('Tue');">Tue</i></th>
                                     <th width="5%" data-ng-click="orderBy('Wed');">Wed</i></th>
@@ -309,11 +301,11 @@
                                     <th width="5%" data-ng-click="orderBy('Fri');">Fri</i></th>
                                     <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
                                     <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
-                                    <th width="7%"></th>
+                                    <th width="7%" id="editButtons" data-ng-show="show.edit == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'"></th>
                                 </tr>
                             </thead>
                             <tbody>               
-                                    <tr data-ng-repeat="d in dcsDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                                    <tr data-ng-repeat="d in dcsDetailsList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" class="clickable-row">
                                         <td>
                                                 <div editable>
                                                         <input type="text" class="form-control" data-ng-model="d.acrID" data-ng-show="!showDcsDetails" /> 
@@ -346,60 +338,60 @@
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="d.areaCode" data-ng-show="!showDcsDetails" />
-                                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.areaCode"></span>
-                                                    </div>
+                                                    <input type="text" class="form-control" data-ng-model="d.areaID" data-ng-show="!showDcsDetails" />
+                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.areaID"></span>
+                                                </div>
                                         </td>   
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="d.mon" data-ng-show="!showDcsDetails" />
-                                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.mon"></span>
-                                                    </div>
+                                                    <span data-ng-show="d.mon">&#10004;</span>
+                                                </div>
                                         </td>       
                                         <td>    
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="d.tue" data-ng-show="!showDcsDetails" />
-                                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.tue"></span>
-                                                    </div>
+                                                    <span data-ng-show="d.tue">&#10004;</span>
+                                                </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="d.wed" data-ng-show="!showDcsDetails" />
-                                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.wed"></span>
-                                                    </div>
+                                                    <span data-ng-show="d.wed">&#10004;</span>
+                                                </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="d.thu" data-ng-show="!showDcsDetails" />
-                                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.thu"></span>
-                                                    </div>
+                                                    <span data-ng-show="d.thu">&#10004;</span>
+                                                </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="d.fri" data-ng-show="!showDcsDetails" />
-                                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.fri"></span>
-                                                    </div>
+                                                    <span data-ng-show="d.fri">&#10004;</span>
+                                                </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="d.sat" data-ng-show="!showDcsDetails" />
-                                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.sat"></span>
-                                                    </div>
+                                                    <span data-ng-show="d.sat">&#10004;</span>
+                                                </div>
                                         </td>
                                         <td>
                                                 <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="d.remarks" data-ng-show="!showDcsDetails" />
-                                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.remarks"></span>
-                                                    </div>
+                                                    <input type="text" class="form-control" data-ng-model="d.remarks" data-ng-show="!showDcsDetails" />
+                                                    <span data-ng-show="showDcsDetails" data-ng-bind="d.remarks"></span>
+                                                </div>
                                         </td>
-                                        <td data-ng-show="show.edit == 'A'">
+                                       
+                                        <td data-ng-show="show.edit == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">
                                             <button class="btn btn-sm btn-primary" data-ng-show="showDcsDetails" data-toggle="modal" data-target="#editDcsEntry" data-ng-click="editDcsEntry(d.acrID);"><i class="fa fa-pencil-alt"></i></button>
-                                            <button class="btn btn-sm btn-danger" data-ng-show="showDcsDetails" data-ng-click="deleteDcsEntry(d.acrID);"><i class="fa fa-times"></i></button>
+                                            <button class="btn btn-sm btn-danger" data-ng-show="showDcsDetails" data-ng-click="deleteDcsEntry(d,$index);"><i class="fa fa-times"></i></button>
                                         </td>
                                     </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+            <div class="row" style="" id="pagination">
+                <div class="col-md-12">
+                    <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
                 </div>
             </div>
             <div class="row">
@@ -416,12 +408,12 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            Name:
+                            Name: {{dcs[0].preparedBy}}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            Date:
+                            Date: {{dcs[0].creationDateTime | date: dd/MM/yyyy}}
                         </div>
                     </div>
                 </div>
@@ -438,12 +430,12 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                                Name:
+                                Name: {{dcs[0].authorizedBy}}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                                Date:
+                                Date: {{dcs[0].authorizedDate | date: dd/MM/yyyy}}
                         </div>
                     </div>
                 </div>
@@ -460,12 +452,12 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                                Name:
+                                Name: {{dcs[0].authorizedBy}}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                                Date:
+                                Date: {{dcs[0].authorizedDate | date: dd/MM/yyyy}}
                         </div>
                     </div>
                 </div>
@@ -505,8 +497,13 @@
     function exportPdf(quality = 50) {
         var filename = 'dcs[0].pdf';
         
-        window.alert("clicked");
-        document.getElementById("createButton").style.visibility = "hidden";
+        document.getElementById("createButton").style.visibility = "hidden"; 
+        document.getElementById("pagination").style.visibility = "hidden";
+
+        var tbl = document.getElementById("table");
+        var rows = tbl.getElementsByTagName('tr');
+        $('#table th:last-child, #table td:last-child').hide();
+
 
     
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
@@ -516,14 +513,21 @@
                 
                 var img = canvas.toDataURL("image/png", 1.0);
 
+                var width = img.width;
+                var height = img.height;
+
                 document.getElementById("createButton").style.visibility = "visible";
+                $('#table th:last-child, #table td:last-child').show();
              
 
                 var pdf = new jsPDF('l', 'mm', 'a3');
-                pdf.addImage(img, 'PNG', 45, 45, 350, 200);
+                
+                pdf.addImage(img, 'PNG', 25, 20, width, height);
                 pdf.save(filename);
             }
         });
+
+        
     }
 
 </script>
