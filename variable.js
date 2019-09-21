@@ -17,7 +17,7 @@ var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
 var FCMServiceAccount = require("./trienekens-994df-d5d29b87e6a8.json");
 
-var SVR_PORT = process.env.SERVER_PORT || 3000;
+var SVR_PORT = process.env.SERVER_PORT || 8080;
 
 exports.express = express;
 exports.app = app;

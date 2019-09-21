@@ -1,4 +1,25 @@
 /*jslint node:true*/
+// var express = require('express');
+// var sanitizer = require('sanitizer');
+// var app = express();
+// var server = require('http').createServer(app);
+// var io = require('socket.io').listen(server);
+// var path = require('path'); 
+// var mysql = require('mysql');
+// var bcrypt = require('bcryptjs');
+// var EventEmitter = require('events');
+// var dateTime = require('node-datetime');
+// var emitter = new EventEmitter();
+// var nodemailer = require('nodemailer');
+// var Joi = require('joi');
+// var fs = require('fs');
+// var upload = require('express-fileupload');
+// var FCMAdmin = require("firebase-admin");
+//var FCMServiceAccount = require("./trienekens-994df-d5d29b87e6a8.json");
+
+require('dotenv').config();
+
+//var SVR_PORT = process.env.SERVER_PORT || 8080;
 var variable = require('./variable');
 var express = variable.express;
 var app = variable.app;
@@ -9,6 +30,7 @@ var fs = variable.fs;
 var upload = variable.upload;
 var FCMAdmin = variable.FCMAdmin; 
 var FCMServiceAccount = variable.FCMServiceAccount;
+var dateTime = require('node-datetime');
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -33,6 +55,7 @@ var damagedLostBin = require('./custom_modules/damaged-lost-bin');
 var boundaryManagement = require('./custom_modules/boundary-management');
 var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
+var custApp = require('./custom_modules/cust-app');
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json({limit: '50mb'}));
@@ -87,6 +110,19 @@ app.post('/sendNotifToDevice', function (req, res) {
     //}
 });
 
+app.post('/insertAnnouncement', function(req, res){
+    'use strict';
+    var target = req.body.target;
+    var message = req.body.message;
+    var date = dateTime.create().format('Y-m-d');
+    var sql = "INSERT INTO tblannouncement(announcement, announceDate, target) VALUES('"+message+"','"+date+"','"+target+"')";
+    database.query(sql, function(err, result){
+        if(!err){
+            console.log("announcement inserted");
+        }
+    });
+});
+
 app.get('/fetchCarouselImg', function (req, res) {
     'use strict';
     var sql = "", output = {}, i = 0;
@@ -117,12 +153,26 @@ app.get('/getAllSchedule', function (req, res) {
     });
 });
 
+app.get('/getAreas', function(req, res){
+    'use strict';
+
+    var sql = "SELECT * FROM tblarea";
+    var output = [];
+    database.query(sql, function(err, result){
+        for (var i=0; i<result.length; i++){
+            output.push(result[i]);
+        }
+        console.log(output);
+        res.json(output);
+    });
+});
+
 app.get('/getPendingUser', function (req, res) {
     'use strict';
 
     var sql = "", output = [], i = 0;
     
-    sql = "SELECT * FROM tblpending WHERE status = 'Pending'";
+    sql = "SELECT * FROM tblcustomer WHERE status = 0";
     database.query(sql, function (err, result) {
         for (i = 0; i < result.length; i += 1) {
             output.push(result[i]);
@@ -150,11 +200,51 @@ app.get('/getPendingBinRequest', function (req, res) {
 app.post('/updatePendingUser', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "UPDATE tblpending SET status = '" + req.body.status + "' WHERE pendingID = '" + req.body.pendingID + "'";
-    database.query(sql, function (err, result) {
-        if (err) {
+    var sql = "UPDATE tblcustomer SET status = '"+req.body.status+"' WHERE customerID = '"+req.body.pendingID+"'";
+    var transporter, subject, text, email, mailOptions;
+    var date = dateTime.create().format('Y-m-d H:i:s');
+    var tbluserSql = "INSERT INTO tbluser(customerID,userEmail,password,status,creationDate) VALUES('"+req.body.pendingID+"','"+req.body.email+"','"+req.body.pass+"',1,'"+date+"')";
+
+    database.query(sql, function(err, result){
+        if(err){
             throw err;
         }
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'fravleinulan@gmail.com',
+                pass: 'trienekens123'
+            }
+        });
+
+        if(req.body.status == 1){
+            text = "Dear user, we are pleased to inform you that your registration has been approved. You can log in to our app using the email and password that you have entered during registration. ";
+            database.query(tbluserSql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                console.log("Succeess");
+            });
+        }else{
+            text = "Dear user, we regret to inform you that your registration has been declined. We apologise for any inconveniences caused.";
+        }
+
+        subject = "Trienekens Account Status";
+        email = req.body.email;
+        mailOptions = {
+            from: 'fravleinulan@gmail.com',
+            to: email,
+            subject: subject,
+            text: text
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                resp.send("Mail Failed");
+                console.log(error);
+            }
+            console.log("Email sent: "+info.response);
+        });
         res.send("User Status Updated");
     });
 });
@@ -211,18 +301,10 @@ app.post('/uploadCarouselImg', function (req, res) {
     
     if (req.files) {
         var file = req.files.carouselImg,
-            allowed = ["png", "jpg", "jpeg"],
-            x = 0,
-            i = 0,
-            fileName,
-            fileSize,
-            fileExt,
-            actualFileExt,
-            sql;
+        allowed = ["png", "jpg", "jpeg"],
+        fileExt, actualFileExt;
 
-        for (x = 0; x < file.length; x += 1) {
-            fileName = file[x].name;
-            fileSize = file[x].size;
+        for(var x = 0;x<file.length;x++){
             fileExt = file[x].name.split('.');
             actualFileExt = fileExt[1].toLowerCase();
 
@@ -245,6 +327,30 @@ app.post('/uploadCarouselImg', function (req, res) {
                 }
             }
         }
+
+        if(file.length == undefined){
+            fileExt = file.name.split('.');
+            actualFileExt = fileExt[1].toLowerCase();
+
+            for(var i=0;i<allowed.length;i++){
+                if(actualFileExt == allowed[i]){
+                    if(file.size <= 2000000){
+                        var sql = "INSERT INTO tblcarouselimg(fileName) VALUES('"+file.name+"')";
+                        database.query(sql, function(err, result){
+                            if(err){
+                                throw err;
+                            }
+                            //console.log("Image Uploaded");
+                        });
+                        file.mv('./scripts/img/'+file.name, function(err){
+                            if(err){
+                                throw err;
+                            }
+                        });
+                    }
+                }
+            }
+        }
         res.redirect('/pages/#/upload-image-carousel');
 //        console.log("fileExt: " + fileExt);
 //        console.log("actualFileExt: ", actualFileExt);
@@ -254,6 +360,7 @@ app.post('/uploadCarouselImg', function (req, res) {
 app.post('/loadMenu', function (req, res) {
     'use strict';
     var content = '', sql;
+    console.log("position: "+req.body.position);
     
     if (req.body.position === "Manager") {
         content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
@@ -592,3 +699,4 @@ app.use('/', formAuthorization);
 app.use('/', boundaryManagement);
 app.use('/', socketManagement);
 app.use('/', complaintManagement);
+app.use('/', custApp);

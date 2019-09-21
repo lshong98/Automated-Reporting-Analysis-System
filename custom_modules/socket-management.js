@@ -136,7 +136,7 @@ io.sockets.on('connection', function (socket) {
     
     emitter.on('customer to staff message', function (complaintID) {
         var sql = "SELECT content AS content, sender AS sender, recipient AS recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date FROM tblchat WHERE complaintID = '" + complaintID + "' ORDER BY creationDateTime DESC LIMIT 0, 1";
-
+console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
