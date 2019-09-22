@@ -13,7 +13,7 @@
 // var EventEmitter = require('events');
 // var emitter = new EventEmitter();
 // var dateTime = require('node-datetime');
-// var nodemailer = require('nodemailer');
+var nodemailer = require('nodemailer');
 
 var express = require('express');
 var app = express();
@@ -26,12 +26,30 @@ var socket = require('./socket-management');
 var upload = require('express-fileupload');
 var nodemailer = require('nodemailer');
 var path = require('path');
+//var connect = require('connect');
+var fs = require('fs');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
 app.use(upload());
+app.use('/img', express.static(__dirname+'/img'));
+//app.use(express.static(__dirname + '/pendingImg'));
+// app.use(cookieParser());
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded());
+// app.use(bodyParser());
+//app.use(connect.cookieParser());
+//app.use(connect.logger('dev'));
+//app.use(connect.bodyParser());
+//app.use(express.urlencoded());
+//app.use(express.json());
+
+//app.use(connect.json());
+//app.use(connect.urlencoded());
 
 // Cloud database access
 // var DB_HOST = '35.247.180.192';
@@ -364,9 +382,9 @@ app.post('/complaint', function(req, resp){
             if(!err){
                 userID = res[0].customerID;
                 if(data.compRemarks == null || data.compRemarks == ""){
-                    var sql = "INSERT INTO tblcomplaint (customerID, premiseType, complaint, complaintDate, complaintAddress) VALUES ('" +userID+"','"+data.premise+"','"+data.complaint+"','"+date+"','"+data.compAdd+"')";
+                    var sql = "INSERT INTO tblcomplaint (customerID, staffID, premiseType, complaint, complaintDate, complaintAddress) VALUES ('" +userID+"','ACC201908070001','"+data.premise+"','"+data.complaint+"','"+date+"','"+data.compAdd+"')";
                 }else{
-                    var sql = "INSERT INTO tblcomplaint (customerID, premiseType, complaint, remarks, complaintDate, complaintAddress) VALUES ('" +userID+"','"+data.premise+"','"+data.complaint+"','"+data.compRemarks+"','"+date+"','"+data.compAdd+"')";
+                    var sql = "INSERT INTO tblcomplaint (customerID, staffID, premiseType, complaint, remarks, complaintDate, complaintAddress) VALUES ('" +userID+"','ACC201908070001','"+data.premise+"','"+data.complaint+"','"+data.compRemarks+"','"+date+"','"+data.compAdd+"')";
                 }
                 database.query(sql, function(err, res){
                     if(!err){
@@ -933,10 +951,11 @@ app.post('/getRequestList', function(req, resp){
     });
 
     req.addListener('end', function(){
-        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
+        console.log(data);
+        var sqlUser = "SELECT customerID FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function(err, res){
             if(!err){
-                userID = res[0].userID;
+                userID = res[0].customerID;
                 var sql = "SELECT * FROM tblbinrequest WHERE customerID = '"+userID+"'";
                 //var sql2 = "SELECT message as offmsg, createdAt as offtime from tblchat WHERE complaintID ='"+data.id+"' AND sender!='"+userID+"' ORDER BY createdAt ASC";
                 database.query(sql, function(err, res){
@@ -1028,6 +1047,101 @@ app.post('/getwasteChart', function(req, resp){
     });
 });
 
+function rawBody(req, res, next){
+    var chunks = [];
+
+    req.on('data', function(chunk){
+        chunks.push(chunk);
+    });
+
+    req.on('end', function(){
+        var buffer = Buffer.concat(chunks);
+
+        req.bodyLength = buffer.length;
+        req.rawBody = buffer;
+        next();
+    });
+
+    req.on('error', function(err){
+        console.log(err);
+    });
+}
+
+app.post('/uploadRegNewImage', rawBody, function(req, resp){
+    // if(req.rawBody && req.bodyLength > 0){
+    //     console.log(req.rawBody);
+    // }
+    'use strict';
+    var data, sql;
+
+    // req.addListener('data', function(postDataChunk){
+    //     data = JSON.parse(postDataChunk);
+    // });
+
+    // req.addListener('end', function(){
+    //     console.log(data);
+    // });
+
+    data = JSON.parse(req.rawBody);
+    sql = "UPDATE tblcustomer SET imgPath ='pendingImg/"+data.ic+".jpg' WHERE ic ='"+data.ic+"'"
+    console.log(req.rawBody);
+    //console.log(data);
+    fs.writeFile(__dirname+'/../scripts/pendingImg/'+data.ic+'.jpg', Buffer.from(data.image, 'base64'), function(err){
+        if (err){
+            console.log(err);
+        }else{
+            database.query(sql, function(err, res){
+                if(!err){
+                    resp.send("Information Has Been Submitted! We Will Be In Contact Soon. Thank You!");
+                }else{
+                    resp.send("Please Try Again");
+                }
+            });
+            console.log("success");
+        }
+    });
+
+    //var data, chunks = [];
+
+    // req.addListener('data', function(postDataChunk){
+    //     // chunks.push(postDataChunk);
+    //     data = new Buffer(postDataChunk, 'base64');
+    // });
+
+    // req.addListener('end', function(){
+    //     //console.log(data);
+    //     //var buffer = Buffer.from(chunks, 'base64');
+    //     var text = data.toString('utf-8');
+    //     console.log(text);
+    // });
+});
+
+// app.post('/uploadRegNewImage', function(req, resp){
+//     'use strict';
+//     // var data;
+
+//     // req.addListener('data', function(postDataChunk){
+//     //     data = JSON.parse(postDataChunk);
+//     // });
+
+//     // req.addListener('end', function(){
+
+//     // });
+
+//     fs.readFile(req.files.image.path, function(err, data){
+//         var dirname = "../scripts/pendingImg/";
+//         var newpath = dirname + req.files.image.originalFilename;
+//         fs.writeFile(newpath, data, function(err){
+//             if(err){
+//                 resp.json({'response':"Error"});
+//             }else{
+//                 resp.json({'response':"Saved"});
+//             }
+//         })
+//     })
+
+// });
+
 //app.use('/img', express.static(imgPath));
 // app.get('/img', function(req,res){
 //     res.sendFile(path.join(__dirname+'/img/image7.png'));
@@ -1035,7 +1149,7 @@ app.post('/getwasteChart', function(req, resp){
 //     console.log('hello');
 // });
 
-app.use('/img', express.static(__dirname+'/img'));
+// app.use('/img', express.static(__dirname+'/img'));
 
 // server.listen(process.env.PORT || SVR_PORT, function () {
 //     'use strict';

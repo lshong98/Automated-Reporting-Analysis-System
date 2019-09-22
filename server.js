@@ -31,6 +31,7 @@ var upload = variable.upload;
 var FCMAdmin = variable.FCMAdmin; 
 var FCMServiceAccount = variable.FCMServiceAccount;
 var dateTime = require('node-datetime');
+var nodemailer = require('nodemailer');
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
