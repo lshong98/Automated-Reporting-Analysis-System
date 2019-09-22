@@ -70,7 +70,7 @@ app.post('/sendMessage', function(req, resp){
     });
     
     req.addListener('end', function () {
-        var sql = "SELECT customerID, staffID FROM tblcustomer, tblcomplaint WHERE tblcustomer.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' LIMIT 0, 1";
+        var sql = "SELECT tblcustomer.customerID, tblcomplaint.staffID FROM tblcustomer, tblcomplaint WHERE tblcustomer.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' LIMIT 0, 1";
         database.query(sql, function (err, result) {
             if (err) {
                 resp.send("error getting user id");
@@ -145,7 +145,7 @@ app.post('/getMessage', function(req, resp){
                         for(var i = 0; i<res.length; i++){
                             msgs.push(res[i]);
                         }
-                        console.log(msgs);
+                        //console.log(msgs);
                         if(msgs == null){
                             resp.send("No Messages");
                         }
@@ -186,7 +186,7 @@ app.post('/getChats', function(req, resp){
                     for(var i = 0; i<res.length; i++){
                         info.push(res[i]);
                     }
-                    console.log(info);
+                    //console.log(info);
                     if(info == null){
                         resp.send("No Chats");
                     }

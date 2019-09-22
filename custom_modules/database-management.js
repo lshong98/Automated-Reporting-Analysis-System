@@ -190,9 +190,11 @@ emitter.on('defaultUser', function () {
         "INSERT INTO tblmanagement (mgmtName) VALUE ('view dbdDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('create blostDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('edit blostDetails')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('view blostDetails')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('upload banner')",
         "INSERT INTO tblmanagement (mgmtName) VALUE ('approve user')",
-        "INSERT INTO tblmanagement (mgmtName) VALUE ('send notif')"
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('send notif')",
+        "INSERT INTO tblmanagement (mgmtName) VALUE ('approve binrequest')"
     ], i;
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -275,7 +277,9 @@ emitter.on('defaultUser', function () {
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '51', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '52', 'A')",
                 "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '53', 'A')",
-                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '54', 'A')"
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '54', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '55', 'A')",
+                "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + roleID + "', '56', 'A')"
             ], j;
 
             for (j = 0; j < sqls.length; j += 1) {

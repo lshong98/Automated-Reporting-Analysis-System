@@ -272,11 +272,6 @@ app.service('storeDataService', function() {
             "currentPage": 1, //Initial current page to 1
             "itemsPerPage": 8, //Record number each page
             "maxSize": 10 //Show the number in page
-        },
-        "formPagination": {
-            "currentPage": 1,
-            "itemsPerPage": 5,
-            "maxSize": 10
         }
     };
 
@@ -3423,13 +3418,15 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
 
 
-    $scope.pagination = angular.copy(storeDataService.formPagination);
+    $scope.pagination = angular.copy(storeDataService.pagination);
+    $scope.pagination.itemsPerPage = 5;
+
     $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
 
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemPerPage = 5; //Record number each page
-    $scope.maxSize = 10;
+    //$scope.currentPage = 1; //Initial current page to 1
+    //$scope.itemPerPage = 5; //Record number each page
+    //$scope.maxSize = 10;
 
     //$scope.showDcsDetails = true;
 
@@ -3612,7 +3609,11 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
             $scope.dcsDetailsList = response.data;
             console.log("Hello dcsdetails");
 
+            $scope.totalItems = $scope.dcsDetailsList.length;
+
         });
+
+
 
         $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
             $scope.customerList = response.data;
