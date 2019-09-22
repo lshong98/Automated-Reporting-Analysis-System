@@ -157,10 +157,8 @@ function checkAuthority(keyword, whoIs) {
     });
 };
 
-function logTransaction(date, staffId, action, description, authorizedBy, rowID, tblName) {
-
-    var sql = "insert into tbllog (transactionID, date, staffId, action, description, authorizedBy, rowID, tblName) values ( null, \"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", \"" + authorizedBy +  "\", \"" + rowID +"\", \""+ tblName + "\")";
-    console.log(sql);
+function logTransaction(date, staffID, action, description, authorizedBy, rowID, tblName) {
+    var sql = "INSERT INTO tbllog (date, staffID, authorizedBy, action, description, rowID, tblName) VALUE ('" + date + "', '" + staffID + "', NULL, '" + action + "', '" + description + "', '" + rowID + "', '" + tblName + "')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

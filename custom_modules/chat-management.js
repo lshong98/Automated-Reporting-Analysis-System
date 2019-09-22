@@ -6,10 +6,9 @@ var dateTime = require('node-datetime');
 var f = require('./function-management');
 var database = require('./database-management');
 var socket = require('./socket-management');
-
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+var variable = require('../variable');
+var emitter = variable.emitter;
+var io = variable.io;
 
 //SELECT customerID AS id FROM tblcustomer UNION SELECT staffID AS id FROM tblstaff
 
@@ -35,21 +34,13 @@ app.post('/messageSend', function (req, res) {
                         res.end();
                         throw err;
                     } else {
+                        //emitter.emit('customer to staff message', 1);
                         res.end();
-                        emitter.emit('customer to staff message', 1);
-                        // Emitter
                     }
                 });
             });
         }
     });
-});
-
-// Customer to Staff
-app.post('/messageSend-customer', function (req, res) {
-    'use strict';
-    
-    
 });
 
 app.post('/chatList', function (req, res) {
@@ -64,7 +55,6 @@ app.post('/chatList', function (req, res) {
         }
     });
 });
-
 
 //Customer to staff
 app.post('/sendMessage', function(req, resp){ 
@@ -81,7 +71,7 @@ app.post('/sendMessage', function(req, resp){
     
     req.addListener('end', function () {
         var sql = "SELECT customerID, staffID FROM tblcustomer, tblcomplaint WHERE tblcustomer.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' LIMIT 0, 1";
-        db.query(sql, function (err, result) {
+        database.query(sql, function (err, result) {
             if (err) {
                 resp.send("error getting user id");
                 resp.end();
@@ -96,8 +86,8 @@ app.post('/sendMessage', function(req, resp){
                             throw err;
                         } else {
                             resp.send("Message Sent");
-                            resp.end();
                             emitter.emit('customer to staff message', data.id);
+                            resp.end();
                         }
                     });
                 });
@@ -145,12 +135,12 @@ app.post('/getMessage', function(req, resp){
 
     req.addListener('end', function(){
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
-        db.query(sqlUser, function(err, res){
+        database.query(sqlUser, function(err, res){
             if(!err){
                 userID = res[0].userID;
                 var sql = "SELECT content, creationDateTime, CASE WHEN sender = '"+userID+"' THEN 'me' ELSE 'officer' END AS sender FROM tblchat WHERE complaintID = '"+data.id+"' ORDER BY creationDateTime ASC";
                 //var sql2 = "SELECT message as offmsg, createdAt as offtime from tblchat WHERE complaintID ='"+data.id+"' AND sender!='"+userID+"' ORDER BY createdAt ASC";
-                db.query(sql, function(err, res){
+                database.query(sql, function(err, res){
                     if(res != undefined){
                         for(var i = 0; i<res.length; i++){
                             msgs.push(res[i]);
@@ -185,11 +175,11 @@ app.post('/getChats', function(req, resp){
 
     req.addListener('end', function(){
         var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
-        db.query(sqlUser, function(err, res){
+        database.query(sqlUser, function(err, res){
             if(!err){
                 userID = res[0].customerID;
                 var sql = "SELECT * FROM tblcomplaint WHERE customerID = '"+userID+"'";
-                db.query(sql, function(err, res){
+                database.query(sql, function(err, res){
                     if(err){
                         resp.send("Error");
                     }

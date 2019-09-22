@@ -301,7 +301,7 @@ app.post('/uploadCarouselImg', function (req, res) {
     if (req.files) {
         var file = req.files.carouselImg,
         allowed = ["png", "jpg", "jpeg"],
-        fileExt, actualFileExt;
+        fileExt, actualFileExt, i, sql;
 
         for(var x = 0;x<file.length;x++){
             fileExt = file[x].name.split('.');
@@ -331,10 +331,10 @@ app.post('/uploadCarouselImg', function (req, res) {
             fileExt = file.name.split('.');
             actualFileExt = fileExt[1].toLowerCase();
 
-            for(var i=0;i<allowed.length;i++){
+            for(i=0;i<allowed.length;i++){
                 if(actualFileExt == allowed[i]){
                     if(file.size <= 2000000){
-                        var sql = "INSERT INTO tblcarouselimg(fileName) VALUES('"+file.name+"')";
+                        sql = "INSERT INTO tblcarouselimg(fileName) VALUES('"+file.name+"')";
                         database.query(sql, function(err, result){
                             if(err){
                                 throw err;
