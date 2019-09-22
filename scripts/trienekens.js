@@ -2904,7 +2904,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             renderSltPicker();
         });
     });
-
+ 
 
     function renderSltPicker() {
         angular.element('.selectpicker').selectpicker('refresh');
@@ -3419,7 +3419,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
 
     $scope.pagination = angular.copy(storeDataService.pagination);
-    $scope.pagination.itemsPerPage = 5;
+    $scope.pagination.itemsPerPage = 11;
 
     $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);

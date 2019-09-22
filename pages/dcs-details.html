@@ -270,9 +270,9 @@
             </div>
                
             
-            <div class="row" id="createButton" data-ng-show="show.create == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">
+            <div class="row" id="createButton" data-ng-show="show.create == 'A'">
                     <div class="col-md-6">
-                        <button class="btn btn-success" data-toggle="modal" data-target="#createDcsEntry" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
+                        <button  data-ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'" class="btn btn-success" data-toggle="modal" data-target="#createDcsEntry" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
                         
                     </div>
                     <div class="col-md-6" style="text-align: right">
@@ -282,9 +282,9 @@
                 </div>
             
             </br>
-            <div class="row" style="height:500px;">
+            <div class="row">
                 <div class="col-md-12">
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="height:650px;">
                         <table id="table" class="table table-hover table-striped table-clickable">
                             <thead>
                                 <tr>
@@ -496,17 +496,16 @@
 
     // This one lets you improve the PDF sharpness by scaling up the HTML node tree to render as an image before getting pasted on the PDF.
     function exportPdf(quality = 50) {
-        var filename = 'dcs[0].pdf';
+        var filename = 'dcs.pdf';
         
         document.getElementById("createButton").style.visibility = "hidden"; 
         document.getElementById("pagination").style.visibility = "hidden";
-
-        var tbl = document.getElementById("table");
-        var rows = tbl.getElementsByTagName('tr');
         $('#table th:last-child, #table td:last-child').hide();
 
+        var rows = document.getElementById('table').getElementsByTagName("tr").length;
+        var pages = Math.ceil(rows/11);
+        
 
-    
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
             useCORS: true,
             scale: quality,
@@ -518,10 +517,16 @@
                 var height = img.height;
 
                 document.getElementById("createButton").style.visibility = "visible";
+                document.getElementById("pagination").style.visibility = "visible";
                 $('#table th:last-child, #table td:last-child').show();
              
 
                 var pdf = new jsPDF('l', 'mm', 'a3');
+                if(pages > 1){
+                    for(var i = 1; i < pages; i++){
+                        pdf.addPage();
+                    }   
+                }
                 
                 pdf.addImage(img, 'PNG', 25, 20, width, height);
                 pdf.save(filename);
