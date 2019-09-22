@@ -6,10 +6,9 @@ var dateTime = require('node-datetime');
 var f = require('./function-management');
 var database = require('./database-management');
 var socket = require('./socket-management');
-
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+var variable = require('../variable');
+var emitter = variable.emitter;
+var io = variable.io;
 
 //SELECT customerID AS id FROM tblcustomer UNION SELECT staffID AS id FROM tblstaff
 
@@ -35,21 +34,13 @@ app.post('/messageSend', function (req, res) {
                         res.end();
                         throw err;
                     } else {
+                        //emitter.emit('customer to staff message', 1);
                         res.end();
-                        emitter.emit('customer to staff message', 1);
-                        // Emitter
                     }
                 });
             });
         }
     });
-});
-
-// Customer to Staff
-app.post('/messageSend-customer', function (req, res) {
-    'use strict';
-    
-    
 });
 
 app.post('/chatList', function (req, res) {
@@ -64,7 +55,6 @@ app.post('/chatList', function (req, res) {
         }
     });
 });
-
 
 //Customer to staff
 app.post('/sendMessage', function(req, resp){ 
@@ -96,9 +86,8 @@ app.post('/sendMessage', function(req, resp){
                             throw err;
                         } else {
                             resp.send("Message Sent");
-                            resp.end();
-                            console.log('ok');
                             emitter.emit('customer to staff message', data.id);
+                            resp.end();
                         }
                     });
                 });
