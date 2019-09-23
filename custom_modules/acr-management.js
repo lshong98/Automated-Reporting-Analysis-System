@@ -60,7 +60,7 @@ app.post('/getDcsDetails', function(req,res){
             throw err; 
         } 
          
-        res.json(result);
+        res.json(result); 
         console.log(result); 
     });
 });  

@@ -98,22 +98,25 @@ app.post('/loginCustServiceApp', function (req, resp) {
             if (err) {
                 throw err;
             }
-            //console.log(result);
+            if(result[0] == undefined){
+                resp.send("Your Account is still awaiting verification from our staff");
+            }else{
+                if (result[0].userEmail == data.email && result[0].password == data.pass) {
+                    if(result[0].status == 1){
+                        resp.send("Login Success");
+                    }else{
+                        resp.send("Activate Acc");
+                    }
+                }else{
+                    resp.send("Failed");
+                }
+            }
+            console.log(result[0]);
             //resp.json(result);
 
-            console.log(result);
-            console.log("userEmail: " + result[0].userEmail);
-            console.log("postDataEmail: "+data.email);
-            
-            if (result[0].userEmail == data.email && result[0].password == data.pass) {
-                if(result[0].status == 1){
-                    resp.send("Login Success");
-                }else{
-                    resp.send("Activate Acc");
-                }
-            }else{
-                resp.send("Failed");
-            }
+            //console.log(result);
+            //console.log("userEmail: " + result[0].userEmail);
+            //console.log("postDataEmail: "+data.email);
         });
     });
 });
