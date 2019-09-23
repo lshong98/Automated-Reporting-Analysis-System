@@ -4,16 +4,21 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = process.env.DATABASE_HOST || '';
-var DB_USER = process.env.DATABASE_USER || '';
-var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || '';
+// var DB_HOST = process.env.DATABASE_HOST || '';
+// var DB_USER = process.env.DATABASE_USER || '';
+// var DB_PASS = process.env.DATABASE_PASSWORD || '';
+// var DB_NAME = process.env.DATABASE_NAME || '';
+
+var DB_HOST = 'localhost';
+var DB_USER = 'root';
+var DB_PASS = '';
+var DB_NAME = 'trienekens';
 
  var config = {
      user: DB_USER,
      password: DB_PASS, 
      host: DB_HOST,
-     port: 3306
+     port: 3307
  }
 
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
@@ -123,7 +128,11 @@ emitter.on('createTable', function () {
         "CREATE TABLE fcm_info(id int auto_increment, fcm_token varchar(400), PRIMARY KEY(id), UNIQUE KEY(fcm_token))",
         "CREATE TABLE tblannouncement(id int auto_increment, announcement varchar(400), announceDate date, PRIMARY KEY(id))",
         "CREATE TABLE tblcarouselimg(id int auto_increment, fileName varchar(255), PRIMARY KEY(id))",
-        "CREATE TABLE tblnotif(notifID int auto_increment, customerID varchar(15), notifDate date, notifText varchar(255), PRIMARY KEY(notifID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))"
+        "CREATE TABLE tblnotif(notifID int auto_increment, customerID varchar(15), notifDate date, notifText varchar(255), PRIMARY KEY(notifID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))",
+        "CREATE TABLE tblbinrequest(reqID int auto_increment, customerID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), status varchar(10), PRIMARY KEY(reqID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))",
+        "CREATE TABLE tblsatisfaction(satisfactionID int auto_increment, customerID varchar(15), companyRating varchar(7), teamEfficiency varchar(7), collectionPromptness varchar(7), binHandling varchar(7), spillageControl varchar(7), queryResponse varchar(7), extraComment varchar(7), submissionDate datetime, PRIMARY KEY (satisfactionID), FOREIGN KEY (customerID) REFERENCES tblcustomer(customerID))",
+        "CREATE TABLE tbluser(customerID varchar(15), userID int auto_increment, userEmail varchar(50), password varchar(20), vCode varchar(5), status tinyint(1), creationDate datetime, PRIMARY KEY (userID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID), UNIQUE KEY(userEmail))",
+        "CREATE TABLE tblschedule(scheduleID int auto_increment, areaID varchar(15), customerID varchar(15), beBins int, acrBins int, mon tinyint(1), tue tinyint(1), wed tinyint(1), thur tinyint(1), fri tinyint(1), sat tinyint(1), remarks longtext, PRIMARY KEY(scheduleID), FOREIGN KEY(areaID) REFERENCES tblarea(areaID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
