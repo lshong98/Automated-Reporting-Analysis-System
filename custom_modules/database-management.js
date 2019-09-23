@@ -4,10 +4,10 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = process.env.DATABASE_HOST || '';
-var DB_USER = process.env.DATABASE_USER || '';
-var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || '';
+var DB_HOST = process.env.DATABASE_HOST || '192.168.64.2';
+var DB_USER = process.env.DATABASE_USER || 'username';
+var DB_PASS = process.env.DATABASE_PASSWORD || 'password';
+var DB_NAME = process.env.DATABASE_NAME || 'triepres3';
 
  var config = {
      user: DB_USER,

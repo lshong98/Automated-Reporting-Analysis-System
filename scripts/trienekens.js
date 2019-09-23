@@ -5,8 +5,19 @@ global angular, document, google, Highcharts
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv']);
 
 var socket = io.connect();
+var flag = false;
 //var socket = io.connect('ws://trienekens-deploy.appspot.com:3000', {transports: ['websocket']});
 socket.on('connect', function() {
+    if (flag === true) {
+        angular.element('body').overhang({
+            type: 'success',
+            message: 'Network Connected.'
+        });
+        flag = false;
+    }
+    if(socket.readyState != socket.OPEN){
+        socket = io.connect('ws://localhost:3000', {transports: ['websocket']});
+    }
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
         "socketID": sessionID,
@@ -31,6 +42,15 @@ socket.on('connect', function() {
             img: data.avatar
         });
     });
+});
+
+socket.on('disconnect', function() {
+    angular.element('body').overhang({
+        type: 'error',
+        message: 'Network Disconnected.',
+        closeConfirm: true
+    });
+    flag = true;
 });
 
 /*
@@ -2079,13 +2099,15 @@ app.controller('specificAccController', function($scope, $http, $routeParams, $f
         "email": '',
         "handphone": '',
         "phone": '',
-        "address": ''
+        "address": '',
+        "iam": window.sessionStorage.getItem('owner')
     };
 
     $scope.password = {
         "id": $routeParams.userID,
         "password": '',
-        "again": ''
+        "again": '',
+        "iam": window.sessionStorage.getItem('owner')
     };
 
     $scope.show = angular.copy(storeDataService.show.account);
@@ -4863,7 +4885,13 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         });
 
         socket.on('new message', function (data) {
-            console.log(data);
+            var content = data.content,
+                sender = data.sender,
+                recipient = data.recipient,
+                date = data.date;
+
+            chatContent += '<div class="message left"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
+            angular.element('.chat-box').html(chatContent);
         });
 
 

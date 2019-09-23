@@ -576,14 +576,11 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         $scope.allReport = [];
         $scope.normalReport = [];
         $scope.abnormalReport = [];
-
         $scope.reportList = response.data;
+        
         $.each($scope.reportList, function(index, value) {
-            $scope.reportList[index].reportCollectionDate = $filter('date')($scope.reportList[index].reportCollectionDate, 'yyyy-MM-dd');
-        });
-
-        $.each($scope.reportList, function(index, value) {
-            if (value.completionStatus === 'A') {
+            $scope.reportList[index].date = $filter('date')(value.date, 'yyyy-MM-dd');
+            if (value.status === 'A') {
                 ($scope.abnormalReport).push(value);
             } else {
                 ($scope.normalReport).push(value);
@@ -593,7 +590,7 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         $scope.filterReportList = angular.copy($scope.reportList);
 
         $scope.searchReport = function(report) {
-            return (report.reportID + report.reportCollectionDate + report.areaCode + report.reportStatus + report.frequency + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+            return (report.area + report.date + report.truck + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
         }
 
         $scope.totalItems = $scope.filterReportList.length;
