@@ -554,7 +554,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
     };
 
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
-        console.log(response.data);
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
@@ -577,7 +576,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         $scope.normalReport = [];
         $scope.abnormalReport = [];
         $scope.reportList = response.data;
-        
         $.each($scope.reportList, function(index, value) {
             $scope.reportList[index].date = $filter('date')(value.date, 'yyyy-MM-dd');
             if (value.status === 'A') {
@@ -680,7 +678,6 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     };
 
     $http.post('/getReport', $scope.report).then(function(response) {
-
         $scope.thisReport = response.data[0];
         $scope.thisReport.date = $filter('date')($scope.thisReport.date, 'yyyy-MM-dd');
         $scope.area = {
