@@ -545,6 +545,7 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
     $scope.areaList = [];
+    $scope.passAreaList = [];
     $scope.filterReportList = [];
     $scope.show = angular.copy(storeDataService.show.reporting);
 
@@ -552,6 +553,18 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         "officerid": $window.sessionStorage.getItem('owner'),
         "day" : $filter('date')(new Date(), 'EEE').toLowerCase()
     };
+    
+    var passdate1 = new Date();
+    passdate1.setDate(passdate1.getDate() - 1);
+    var passdate2 = new Date();
+    passdate2.setDate(passdate2.getDate() - 2);
+    
+    $scope.getPassReport = {
+        "officerid": $window.sessionStorage.getItem('owner'),
+        "day1": $filter('date')(passdate1, 'EEE').toLowerCase(),
+        "day2": $filter('date')(passdate2, 'EEE').toLowerCase(),
+        "date2": $filter('date')(passdate2, 'yyyy-MM-dd').toLowerCase()
+    }
 
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
         $.each(response.data, function(index, value) {
@@ -568,6 +581,24 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
             });
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
 
+        });
+    });
+    
+    $http.post('/getPassReportingAreaList', $scope.getPassReport).then(function(response){
+        console.log(response.data)
+        $.each(response.data, function(index, value) {
+            var passAreaID = value.id.split(",");
+            var passAreaName = value.name.split(",");
+            var passAreaCode = value.areaCode.split(",");
+            var passArea = [];
+            $.each(passAreaID, function(index, value) {
+                passArea.push({
+                    "id": passAreaID[index],
+                    "name": passAreaName[index],
+                    "code": passAreaCode[index]
+                });
+            });
+            $scope.passAreaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": passArea });
         });
     });
 
@@ -613,8 +644,14 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         }, 500);
     };
 
-    $scope.thisArea = function(id, name) {
-        angular.element('#chooseArea').modal('toggle');
+    $scope.thisArea = function(id, name, modalfrom) {
+        console.log(modalfrom);
+        if(modalfrom == "today"){
+            angular.element('#chooseArea').modal('toggle');
+        }else if(modalfrom == "pass"){
+            angular.element('#choosePassArea').modal('toggle');
+        }
+        
         setTimeout(function() {
             window.location.href = '#/daily-report/' + id + "/" + name
         }, 500);

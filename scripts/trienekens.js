@@ -1554,11 +1554,24 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
     'use strict';
 
     $scope.areaList = [];
+    $scope.passAreaList = [];
     $scope.reportingOfficerId = {
         "officerid": $window.sessionStorage.getItem('owner'),
         "day": $filter('date')(new Date(), 'EEE').toLowerCase()
     };
-
+    
+    var passdate1 = new Date();
+    passdate1.setDate(passdate1.getDate() - 1);
+    var passdate2 = new Date();
+    passdate2.setDate(passdate2.getDate() - 2);
+    
+    $scope.getPassReport = {
+        "officerid": $window.sessionStorage.getItem('owner'),
+        "day1": $filter('date')(passdate1, 'EEE').toLowerCase(),
+        "day2": $filter('date')(passdate2, 'EEE').toLowerCase(),
+        "date2": $filter('date')(passdate2, 'yyyy-MM-dd').toLowerCase()
+    }
+    
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
@@ -1575,6 +1588,24 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
         });
     });
+    
+    $http.post('/getPassReportingAreaList', $scope.getPassReport).then(function(response){
+        $.each(response.data, function(index, value) {
+            var passAreaID = value.id.split(",");
+            var passAreaName = value.name.split(",");
+            var passAreaCode = value.areaCode.split(",");
+            var passArea = [];
+            $.each(passAreaID, function(index, value) {
+                passArea.push({
+                    "id": passAreaID[index],
+                    "name": passAreaName[index],
+                    "code": passAreaCode[index]
+                });
+            });
+            $scope.passAreaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": passArea });
+        });
+    });
+    
 
     $scope.thisArea = function(areaID, areaName) {
         window.location.href = '#/daily-report/' + areaID + '/' + areaName;
