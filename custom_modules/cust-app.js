@@ -17,23 +17,13 @@ var nodemailer = require('nodemailer');
 
 var express = require('express');
 var app = express();
-var EventEmitter = require('events');
-var emitter = new EventEmitter();
 var dateTime = require('node-datetime');
 var f = require('./function-management');
 var database = require('./database-management');
-var socket = require('./socket-management');
 var upload = require('express-fileupload');
 var nodemailer = require('nodemailer');
 var path = require('path');
-//var connect = require('connect');
 var fs = require('fs');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
 
 app.use(upload());
 app.use('/img', express.static(__dirname+'/img'));
@@ -1086,7 +1076,8 @@ app.post('/uploadRegNewImage', rawBody, function(req, resp){
     // });
 
     data = JSON.parse(req.rawBody);
-    sql = "UPDATE tblcustomer SET imgPath ='pendingImg/"+data.ic+".jpg' WHERE ic ='"+data.ic+"'"
+    sql = "UPDATE tblcustomer SET imgPath ='pendingImg/"+data.ic+".jpg' WHERE ic ='"+data.ic+"'";
+    console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
     fs.writeFile(__dirname+'/../scripts/pendingImg/'+data.ic+'.jpg', Buffer.from(data.image, 'base64'), function(err){

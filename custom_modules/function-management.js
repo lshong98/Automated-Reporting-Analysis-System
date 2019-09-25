@@ -163,7 +163,6 @@ function logTransaction(date, staffID, action, description, authorizedBy, rowID,
         if (err) {
             throw err;
         }
-        
     });
 }
 

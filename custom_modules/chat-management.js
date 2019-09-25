@@ -34,7 +34,6 @@ app.post('/messageSend', function (req, res) {
                         res.end();
                         throw err;
                     } else {
-                        //emitter.emit('customer to staff message', 1);
                         res.end();
                     }
                 });

@@ -9,10 +9,12 @@ app.get('/getAllTransaction', function (req, res) {
     var sql = "SELECT date, description, staffID, authorizedBy from tbllog";
     database.query(sql, function (err, result) {
         if (err) {
+            res.end();
             throw err;
+        } else {
+            res.json(result);
+            res.end();
         }
-        res.json(result);
-        console.log("script success");
     });
 });
 

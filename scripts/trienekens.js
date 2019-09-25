@@ -5,8 +5,19 @@ global angular, document, google, Highcharts
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv']);
 
 var socket = io.connect();
+var flag = false;
 //var socket = io.connect('ws://trienekens-deploy.appspot.com:3000', {transports: ['websocket']});
 socket.on('connect', function() {
+    if (flag === true) {
+        angular.element('body').overhang({
+            type: 'success',
+            message: 'Network Connected.'
+        });
+        flag = false;
+    }
+    if(socket.readyState != socket.OPEN){
+        socket = io.connect('ws://localhost:3000', {transports: ['websocket']});
+    }
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
         "socketID": sessionID,
@@ -31,6 +42,15 @@ socket.on('connect', function() {
             img: data.avatar
         });
     });
+});
+
+socket.on('disconnect', function() {
+    angular.element('body').overhang({
+        type: 'error',
+        message: 'Network Disconnected.',
+        closeConfirm: true
+    });
+    flag = true;
 });
 
 /*
@@ -1574,11 +1594,24 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
     'use strict';
 
     $scope.areaList = [];
+    $scope.passAreaList = [];
     $scope.reportingOfficerId = {
         "officerid": $window.sessionStorage.getItem('owner'),
         "day": $filter('date')(new Date(), 'EEE').toLowerCase()
     };
-
+    
+    var passdate1 = new Date();
+    passdate1.setDate(passdate1.getDate() - 1);
+    var passdate2 = new Date();
+    passdate2.setDate(passdate2.getDate() - 2);
+    
+    $scope.getPassReport = {
+        "officerid": $window.sessionStorage.getItem('owner'),
+        "day1": $filter('date')(passdate1, 'EEE').toLowerCase(),
+        "day2": $filter('date')(passdate2, 'EEE').toLowerCase(),
+        "date2": $filter('date')(passdate2, 'yyyy-MM-dd').toLowerCase()
+    }
+    
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
@@ -1595,6 +1628,24 @@ app.controller('officerController', function($scope, $filter, $http, $window) {
             $scope.areaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": area });
         });
     });
+    
+    $http.post('/getPassReportingAreaList', $scope.getPassReport).then(function(response){
+        $.each(response.data, function(index, value) {
+            var passAreaID = value.id.split(",");
+            var passAreaName = value.name.split(",");
+            var passAreaCode = value.areaCode.split(",");
+            var passArea = [];
+            $.each(passAreaID, function(index, value) {
+                passArea.push({
+                    "id": passAreaID[index],
+                    "name": passAreaName[index],
+                    "code": passAreaCode[index]
+                });
+            });
+            $scope.passAreaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": passArea });
+        });
+    });
+    
 
     $scope.thisArea = function(areaID, areaName) {
         window.location.href = '#/daily-report/' + areaID + '/' + areaName;
@@ -2119,13 +2170,15 @@ app.controller('specificAccController', function($scope, $http, $routeParams, $f
         "email": '',
         "handphone": '',
         "phone": '',
-        "address": ''
+        "address": '',
+        "iam": window.sessionStorage.getItem('owner')
     };
 
     $scope.password = {
         "id": $routeParams.userID,
         "password": '',
-        "again": ''
+        "again": '',
+        "iam": window.sessionStorage.getItem('owner')
     };
 
     $scope.show = angular.copy(storeDataService.show.account);
@@ -4903,7 +4956,13 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         });
 
         socket.on('new message', function (data) {
-            console.log(data);
+            var content = data.content,
+                sender = data.sender,
+                recipient = data.recipient,
+                date = data.date;
+
+            chatContent += '<div class="message left"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
+            angular.element('.chat-box').html(chatContent);
         });
 
 

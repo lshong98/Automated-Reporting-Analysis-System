@@ -545,6 +545,7 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
     $scope.areaList = [];
+    $scope.passAreaList = [];
     $scope.filterReportList = [];
     $scope.show = angular.copy(storeDataService.show.reporting);
 
@@ -552,9 +553,20 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         "officerid": $window.sessionStorage.getItem('owner'),
         "day" : $filter('date')(new Date(), 'EEE').toLowerCase()
     };
+    
+    var passdate1 = new Date();
+    passdate1.setDate(passdate1.getDate() - 1);
+    var passdate2 = new Date();
+    passdate2.setDate(passdate2.getDate() - 2);
+    
+    $scope.getPassReport = {
+        "officerid": $window.sessionStorage.getItem('owner'),
+        "day1": $filter('date')(passdate1, 'EEE').toLowerCase(),
+        "day2": $filter('date')(passdate2, 'EEE').toLowerCase(),
+        "date2": $filter('date')(passdate2, 'yyyy-MM-dd').toLowerCase()
+    }
 
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
-        console.log(response.data);
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
@@ -571,19 +583,33 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
 
         });
     });
+    
+    $http.post('/getPassReportingAreaList', $scope.getPassReport).then(function(response){
+        console.log(response.data)
+        $.each(response.data, function(index, value) {
+            var passAreaID = value.id.split(",");
+            var passAreaName = value.name.split(",");
+            var passAreaCode = value.areaCode.split(",");
+            var passArea = [];
+            $.each(passAreaID, function(index, value) {
+                passArea.push({
+                    "id": passAreaID[index],
+                    "name": passAreaName[index],
+                    "code": passAreaCode[index]
+                });
+            });
+            $scope.passAreaList.push({ "zone": { "id": value.zoneID, "name": value.zoneName }, "area": passArea });
+        });
+    });
 
     $http.get('/getReportList').then(function(response) {
         $scope.allReport = [];
         $scope.normalReport = [];
         $scope.abnormalReport = [];
-
         $scope.reportList = response.data;
         $.each($scope.reportList, function(index, value) {
-            $scope.reportList[index].reportCollectionDate = $filter('date')($scope.reportList[index].reportCollectionDate, 'yyyy-MM-dd');
-        });
-
-        $.each($scope.reportList, function(index, value) {
-            if (value.completionStatus === 'A') {
+            $scope.reportList[index].date = $filter('date')(value.date, 'yyyy-MM-dd');
+            if (value.status === 'A') {
                 ($scope.abnormalReport).push(value);
             } else {
                 ($scope.normalReport).push(value);
@@ -593,7 +619,7 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         $scope.filterReportList = angular.copy($scope.reportList);
 
         $scope.searchReport = function(report) {
-            return (report.reportID + report.reportCollectionDate + report.areaCode + report.reportStatus + report.frequency + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+            return (report.area + report.date + report.truck + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
         }
 
         $scope.totalItems = $scope.filterReportList.length;
@@ -618,8 +644,14 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         }, 500);
     };
 
-    $scope.thisArea = function(id, name) {
-        angular.element('#chooseArea').modal('toggle');
+    $scope.thisArea = function(id, name, modalfrom) {
+        console.log(modalfrom);
+        if(modalfrom == "today"){
+            angular.element('#chooseArea').modal('toggle');
+        }else if(modalfrom == "pass"){
+            angular.element('#choosePassArea').modal('toggle');
+        }
+        
         setTimeout(function() {
             window.location.href = '#/daily-report/' + id + "/" + name
         }, 500);
@@ -683,7 +715,6 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     };
 
     $http.post('/getReport', $scope.report).then(function(response) {
-
         $scope.thisReport = response.data[0];
         $scope.thisReport.date = $filter('date')($scope.thisReport.date, 'yyyy-MM-dd');
         $scope.area = {
