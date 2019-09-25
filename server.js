@@ -188,7 +188,7 @@ app.get('/getPendingBinRequest', function (req, res) {
 
     var sql = "", output = [], i = 0;
     
-    sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tblcustomer WHERE tblbinrequest.status = 'PENDING'AND tblbinrequest.customerID = tblcustomer.customerID";
+    sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tblcustomer WHERE tblbinrequest.customerID = tblcustomer.customerID";
     database.query(sql, function (err, result) {
         for (i = 0; i < result.length; i += 1) {
             output.push(result[i]);
@@ -253,7 +253,7 @@ app.post('/updatePendingUser', function (req, res) {
 app.post('/updateBinRequest', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.reqID + "'";
+    var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

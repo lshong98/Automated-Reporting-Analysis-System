@@ -138,6 +138,10 @@ app.service('storeDataService', function() {
             "fri": '',
             "sat": ''
         },
+        "binRequest": {
+            "id": '',
+            "status": ''
+        },
         "databaseBin": {
             "date": '',
             "name": '',
@@ -289,6 +293,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         scope.showProfile = true;
         scope.showBin = true;
         scope.showCollection = true;
+        scope.showBinRequest = true;
         scope.deleteCollection = true;
         scope.showDatabaseBin = true;
         scope.showNewMgb = true;
@@ -336,6 +341,11 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             "thur": '',
             "fri": '',
             "sat": ''
+        };
+
+        scope.thisBinRequest = {
+            "id": '',
+            "status": ''
         };
 
         scope.thisDatabaseBin = {
@@ -674,6 +684,36 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             $.each(storeDataService.collectionSchedule, function(index, value) {
                 if (storeDataService.collectionSchedule[index].id == scope.thisCollectionSchedule.id) {
                     scope.x = angular.copy(storeDataService.collectionSchedule[index]);
+                }
+            });
+        };
+
+        scope.editBinRequestStatus = function() {
+            scope.showBinRequest = !scope.showBinRequest;
+
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+        };
+
+        scope.saveBinRequestStatus = function(status, id) {
+            scope.showBinRequest = !scope.showBinRequest;
+
+            scope.thisBinRequest = { "status":status, "id":id };
+
+            $http.post('/updateBinRequest', scope.thisBinRequest).then(function(response) {
+                var data = response.data;
+                console.log(data);
+            }, function(error) {
+                console.log(error);
+            });
+        };
+
+        scope.cancelBinRequestStatus = function() {
+            scope.showBinRequest = !scope.showBinRequest;
+
+            $.each(storeDataService.binRequest, function(index, value) {
+                if (storeDataService.binRequest[index].id == scope.thisBinRequest.id) {
+                    scope.x = angular.copy(storeDataService.binRequest[index]);
                 }
             });
         };
