@@ -28,18 +28,7 @@ var fs = require('fs');
 app.use(upload());
 app.use('/img', express.static(__dirname+'/img'));
 //app.use(express.static(__dirname + '/pendingImg'));
-// app.use(cookieParser());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded());
-// app.use(bodyParser());
-//app.use(connect.cookieParser());
-//app.use(connect.logger('dev'));
-//app.use(connect.bodyParser());
-//app.use(express.urlencoded());
-//app.use(express.json());
 
-//app.use(connect.json());
-//app.use(connect.urlencoded());
 
 // Cloud database access
 // var DB_HOST = '35.247.180.192';
@@ -408,7 +397,11 @@ app.post('/satisfaction', function(req, resp){
         database.query(sqlUser, function(err, res){
             if(!err){
                 userID = res[0].customerID;
-                var sql = "INSERT INTO tblsatisfaction (customerID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate) VALUES ('" + userID + "','" + data.companyRating + "','" + data.teamEfficiency + "','" + data.collectionPromptness + "','" + data.binHandling + "','" + data.spillageControl + "','" + data.queryResponse + "','" + data.extraComment + "','" + date + "')";
+                var sql = "INSERT INTO tblsatisfaction (customerID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate) VALUES ('" 
+                          + userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness)
+                          + "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" 
+                          + data.extraComment + "','" + date + "')";
+                
                 database.query(sql, function(err, res){
                     if(!err){
                         resp.send("Satisfaction Survey Submitted");
