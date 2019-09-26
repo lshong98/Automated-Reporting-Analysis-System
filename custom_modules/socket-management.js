@@ -52,13 +52,14 @@ function searchSocketID(userKey, myArray){
 
 var roomManager = "manager";
 
-io.sockets.once('connection', function (socket) {
+io.sockets.on('connection', function (socket) {
     'use strict';
     connections.push(socket);
     console.log('Connected: %s sockets connected', connections.length);
-    
     // Disconnect
     socket.on('disconnect', function (data) {
+        emitter.removeAllListeners('customer to staff message', this);
+        emitter.removeAllListeners('live map', this);
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
         connections.splice(connections.indexOf(socket), 1);

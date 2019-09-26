@@ -6,7 +6,7 @@ var f = require('./function-management');
 
 app.get('/getAllTransaction', function (req, res) {
     'use strict';
-    var sql = "SELECT date, description, staffID, authorizedBy from tbllog";
+    var sql = "SELECT date, description, staffID, authorizedBy from tbllog ORDER BY date DESC";
     database.query(sql, function (err, result) {
         if (err) {
             res.end();

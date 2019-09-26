@@ -3,6 +3,8 @@ var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
+var variable = require('../variable');
+var dateTime = variable.dateTime;
 
 // Create Zone
 app.post('/addZone', function (req, res) {
@@ -14,6 +16,7 @@ app.post('/addZone', function (req, res) {
                 res.end();
                 throw err;
             } else {
+                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Zone", '', ID, "tblzone");
                 res.json({"status": "success", "message": "Zone added successfully!", "details": {"zoneID": ID}});
                 res.end();
             }
@@ -55,6 +58,8 @@ app.get('/getAllZone', function (req, res) {
 // Update zone
 app.post('/editZone', function (req, res) {
     'use strict';
+    
+    var dt = dateTime.create().format('Y-m-d H:M:S');
     var sql = "UPDATE tblzone SET zoneCode = '" + req.body.code + "', zoneName = '" + req.body.name + "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
@@ -62,6 +67,7 @@ app.post('/editZone', function (req, res) {
             res.end();
             throw err;
         } else {
+            f.logTransaction(dt, req.body.iam, "update", "Update Zone - " + req.body.id + "", '', req.body.id, "tblzone");
             res.json({"status": "success", "message": "Zone Information Updated."});
             res.end();
         }

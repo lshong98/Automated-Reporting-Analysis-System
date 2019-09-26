@@ -3,6 +3,8 @@ var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
+var variable = require('../variable');
+var dateTime = variable.dateTime;
 
 // Create Bin Center
 app.post('/addBinCenter', function (req, res) {
@@ -11,10 +13,13 @@ app.post('/addBinCenter', function (req, res) {
         var sql = "INSERT INTO tblbincenter (binCenterID, areaID, binCenterName, binCenterLocation, binCenterStatus, creationDateTime) VALUE ('" + ID + "', '" + req.body.area + "' , '" + req.body.name + "', '" + req.body.location + "', 'A', '" + req.body.creationDate + "')";
         database.query(sql, function (err, result) {
             if (err) {
+                res.end();
                 throw err;
+            } else {
+                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Bin Center", '', ID, "tblbincenter");
+                res.json({"status": "success", "message": "Bin Center added successfully!", "details": {"binID": ID}});
+                res.end();
             }
-            res.json({"status": "success", "message": "Bin Center added successfully!", "details": {"binID": ID}});
-            res.end();
         });
     });
 }); // Complete
@@ -24,13 +29,17 @@ app.post('/editBinCenter', function (req, res) {
     'use strict';
     
     req.body.status = req.body.status === "ACTIVE" ? 'A' : 'I';
-    
+    var dt = dateTime.create().format('Y-m-d H:M:S');
     var sql = "UPDATE tblbincenter SET binCenterName = '" + req.body.name + "', binCenterLocation = '" + req.body.location + "', areaID = '" + req.body.area + "', binCenterStatus = '" + req.body.status + "' WHERE binCenterID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
+            res.end();
             throw err;
+        } else {
+            f.logTransaction(dt, req.body.iam, "update", "Update Bin Center - " + req.body.name + "", '', req.body.id, "tblbincenter");
+            res.json({"status": "success", "message": "Successfully updated!"});
+            res.end();
         }
-        res.json({"status": "success", "message": "Successfully updated!"});
     });
 }); // Complete
 

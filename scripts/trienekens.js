@@ -15,9 +15,18 @@ socket.on('connect', function() {
         });
         flag = false;
     }
-    if(socket.readyState != socket.OPEN){
-        socket = io.connect('ws://localhost:3000', {transports: ['websocket']});
-    }
+    
+//    console.log(socket);
+//    if (socket.disconnected === true) {
+//        socket = io.connect('ws://localhost:3000', {transports: ['websocket']});
+//    }
+//    setInterval(function () {
+//        window.alert(socket.readyState);
+//    }, 5000);
+    
+//    if(socket.readyState != socket.OPEN){
+//        socket = io.connect('ws://localhost:3000', {transports: ['websocket']});
+//    }
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
         "socketID": sessionID,
@@ -427,6 +436,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.saveTruck = function() {
             scope.showTruck = !scope.showTruck;
+            scope.t.iam = window.sessionStorage.getItem('owner');
             $http.post('/editTruck', scope.t).then(function(response) {
                 var data = response.data;
                 scope.notify(data.status, data.message);
@@ -487,6 +497,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.saveZone = function() {
             scope.showZone = !scope.showZone;
+            scope.z.iam = window.sessionStorage.getItem('owner');
             $http.post('/editZone', scope.z).then(function(response) {
                 var data = response.data;
                 scope.notify(data.status, data.message);
@@ -568,7 +579,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             var areaFullString = (scope.b.areacode).split(',');
             scope.b.area = areaFullString[0];
             scope.b.areaCode = areaFullString[1];
-
+            scope.b.iam = window.sessionStorage.getItem('owner');
             $http.post('/editBinCenter', scope.b).then(function(response) {
                 var data = response.data;
 
@@ -634,8 +645,7 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.saveCollection = function() {
             scope.showCollection = !scope.showCollection;
-            console.log(scope.thisCollection);
-            console.log(scope.c);
+            scope.c.iam = window.sessionStorage.getItem('owner');
             $http.post('/updateCollection', scope.c).then(function(response) {
                 var data = response.data;
 
@@ -1662,9 +1672,10 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
 
     $scope.area = {
         "zone": '',
-        "staff": ''
+        "staff": '',
+        "iam": ''
     };
-
+    
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.area);
 
@@ -1751,6 +1762,7 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
             $scope.showCreateBtn = true;
         }else{
             $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            $scope.area.iam = window.sessionStorage.getItem('owner');
             $http.post('/addArea', $scope.area).then(function(response) {
                 var data = response.data;
                 console.log(response.data);
@@ -1873,7 +1885,8 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
             "sat": '',
             "sun": ''
         },
-        "frequency": ''
+        "frequency": '',
+        "iam": ''
     };
     $scope.days = {
         "mon": '',
@@ -1936,6 +1949,7 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
             $scope.notify("error", "Address Cannot Be Blank");
         } else {
             if ($scope.collection.add != "") {
+                $scope.collection.iam = window.sessionStorage.getItem('owner');
                 $http.post('/addCollection', $scope.collection).then(function(response) {
                     var data = response.data;
 
@@ -1957,6 +1971,7 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
 
     $scope.updateArea = function() {
         var concatDays = "";
+        $scope.area.iam = window.sessionStorage.getItem('owner');
         $.each($scope.days, function(index, value) {
             if (value == "A") {
                 concatDays += index + ',';
@@ -2227,13 +2242,16 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
     var asc = true;
     $scope.areaList = [];
     $scope.filterTruckList = [];
+    
     $scope.initializeTruck = function() {
         $scope.truck = {
             "no": '',
             "driver": '',
-            "area": ''
+            "area": '',
+            "iam": window.sessionStorage.getItem('owner')
         };
     };
+    $scope.initializeTruck();
     $scope.showCreateBtn = true;
 
     $scope.pagination = angular.copy(storeDataService.pagination);
@@ -2395,10 +2413,11 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         $scope.zone = {
             "code": '',
             "name": '',
-            "creationDate": ''
+            "creationDate": '',
+            "iam": window.sessionStorage.getItem('owner')
         };
     };
-
+    $scope.initializeZone();
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.zone);
 
@@ -2915,7 +2934,8 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         "location": '',
         "area": '',
         "areaCode": '',
-        "areacode": ''
+        "areacode": '',
+        "iam": ''
     };
 
     $scope.pagination = angular.copy(storeDataService.pagination);
@@ -3011,6 +3031,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             $scope.showCreateBtn = true;
         } else {
             $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            $scope.bin.iam = window.sessionStorage.getItem('owner');
             var area = $scope.bin.areaconcat;
             var aid = area.split(",")[0];
             var acode = area.split(",")[1];
@@ -5221,9 +5242,6 @@ app.controller('transactionLogController', function($scope, $http, $filter, stor
     'use strict';
 
     var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
 
     $scope.initializeTransaction = function() {
         $scope.transaction = {
@@ -5233,15 +5251,15 @@ app.controller('transactionLogController', function($scope, $http, $filter, stor
             "authorizedBy": ""
         };
     };
+    
+    $scope.pagination = angular.copy(storeDataService.pagination);
 
     $scope.show = angular.copy(storeDataService.show.zone);
     $scope.transactionList = [];
 
     $http.get('/getAllTransaction').then(function(response) {
-        storeDataService.zone = angular.copy(response.data);
         $scope.transactionList = response.data;
-
-        console.log(response.data);
+        $scope.totalItems = $scope.transactionList.length;
     });
 
 

@@ -13,7 +13,7 @@ var DB_NAME = process.env.DATABASE_NAME || '';
      user: DB_USER,
      password: DB_PASS, 
      host: DB_HOST,
-     port: 3307
+     port: 3306
  }
 
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {

@@ -3,6 +3,8 @@ var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
+var variable = require('../variable');
+var dateTime = variable.dateTime;
 
 // Create Area
 app.post('/addArea', function (req, res) {
@@ -15,6 +17,7 @@ app.post('/addArea', function (req, res) {
                 res.end();
                 throw err;
             } else {
+                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Area", '', ID, "tblarea");
                 res.json({"status": "success", "message": "Area added successfully!", "details": {"areaID": ID}});
                 res.end();
             }
@@ -73,6 +76,7 @@ app.post('/updateArea', function (req, res) {
     'use strict';
     
     var information = {};
+    var dt = dateTime.create().format('Y-m-d H:M:S');
     
     f.waterfallQuery("SELECT staffID FROM tblstaff WHERE staffName = '" + req.body.staff + "' LIMIT 0, 1").then(function (staffID) {
         information.staffID = staffID.staffID;
@@ -86,9 +90,13 @@ app.post('/updateArea', function (req, res) {
         database.query(sql, function (err, result) {
             if (err) {
                 res.json({"status": "error", "message": "Update failed."});
+                res.end();
                 throw err;
+            } else {
+                f.logTransaction(dt, req.body.iam, "update", "Update Area - " + req.body.id + "", '', req.body.id, "tblarea");
+                res.json({"status": "success", "message": "Area Information Updated."});
+                res.end();
             }
-            res.json({"status": "success", "message": "Area Information Updated."});
         });
         
     });
@@ -138,13 +146,17 @@ app.post('/thisAreaDriver', function(req,res){
 app.post('/addCollection', function (req, res) {
     'use strict';
     
+    var dt = dateTime.create().format('Y-m-d H:M:S');
     var sql = "INSERT INTO tbltaman(areaID, tamanName) VALUE ('" + req.body.area + "', '" + req.body.address + "')";
     database.query(sql, function (err, result) {
         if (err) {
+            res.end();
             throw err;
+        } else {
+            f.logTransaction(dt, req.body.iam, "add", "Create New Area Collection - " + req.body.address + "", '', req.body.address, "tbltaman");
+            res.json({"status": "success", "message": "Taman Added!", "details": {"id": result.insertId}});
+            res.end();
         }
-        res.json({"status": "success", "message": "Taman Added!", "details": {"id": result.insertId}});
-        res.end();
     });
 });
 
@@ -166,12 +178,17 @@ app.post('/getCollection', function (req, res) {
 app.post('/deleteCollection', function (req, res) {
     'use strict';
     
+    var dt = dateTime.create().format('Y-m-d H:M:S');
     var sql = "DELETE FROM tbltaman WHERE tamanID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
+            res.end();
             throw err;
+        } else {
+            f.logTransaction(dt, req.body.iam, "delete", "Delete Area Collection - " + req.body.address + "", '', req.body.id, "tbltaman");
+            res.json({"status": "success", "message": "Delete successfully!"});
+            res.end();
         }
-        res.json({"status": "success", "message": "Delete successfully!"});
     });
 });
 
@@ -179,12 +196,17 @@ app.post('/deleteCollection', function (req, res) {
 app.post('/updateCollection', function (req, res) {
     'use strict';
     
+    var dt = dateTime.create().format('Y-m-d H:M:S');
     var sql = "UPDATE tbltaman SET tamanName = '" + req.body.address + "' WHERE tamanID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
+            res.end();
             throw err;
+        } else {
+            f.logTransaction(dt, req.body.iam, "update", "Update Area Collection - " + req.body.address + "", '', req.body.id, "tbltaman");
+            res.json({"status": "success", "message": "taman updated!"});
+            res.end();
         }
-        res.json({"status": "success", "message": "taman updated!"});
     });
 });
 
