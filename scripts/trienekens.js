@@ -16,17 +16,6 @@ socket.on('connect', function() {
         flag = false;
     }
     
-//    console.log(socket);
-//    if (socket.disconnected === true) {
-//        socket = io.connect('ws://localhost:3000', {transports: ['websocket']});
-//    }
-//    setInterval(function () {
-//        window.alert(socket.readyState);
-//    }, 5000);
-    
-//    if(socket.readyState != socket.OPEN){
-//        socket = io.connect('ws://localhost:3000', {transports: ['websocket']});
-//    }
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
         "socketID": sessionID,
@@ -441,18 +430,15 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                 var data = response.data;
                 scope.notify(data.status, data.message);
 
-                $.each(storeDataService.truck, function(index, value) {
-                    if (storeDataService.truck[index].id == scope.thisTruck.id) {
-                        if (data.status == "success") {
-                            storeDataService.truck[index] = angular.copy(scope.t);
-                        } else {
-                            scope.t = angular.copy(storeDataService.truck[index]);
-                        }
-                    }
-                    //                });
-                    //                
-                    //                $.each(scope.truckList, function (index, value) {
-                });
+//                $.each(storeDataService.truck, function(index, value) {
+//                    if (storeDataService.truck[index].id == scope.thisTruck.id) {
+//                        if (data.status == "success") {
+//                            storeDataService.truck[index] = angular.copy(scope.t);
+//                        } else {
+//                            scope.t = angular.copy(storeDataService.truck[index]);
+//                        }
+//                    }
+//                });
                 var existActive = false,
                     existInactive = false;
                 $.each(scope.truckListActive, function(index, value) {
@@ -2353,25 +2339,26 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
         
             $scope.truck.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
             $scope.truck.roadtax = $filter('date')($scope.truck.roadtax, 'yyyy-MM-dd');
+            $scope.truck.iam = window.sessionStorage.getItem('owner');
             $http.post('/addTruck', $scope.truck).then(function(response) {
                 var data = response.data;
-                var newTruckID = data.details.truckID;
+//                var newTruckID = data.details.truckID;
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    $scope.truckList.push({
-                        "id": newTruckID,
-                        "no": $scope.truck.no,
-                        "transporter": $scope.truck.transporter,
-                        "ton": $scope.truck.ton,
-                        "roadtax": $scope.truck.roadtax,
-                        "status": 'Active'
-                    });
-                    $scope.truck.id = newTruckID;
-                    socket.emit('create new truck', $scope.truck);
-                    storeDataService.truck = angular.copy($scope.truckList);
-                    $scope.filterTruckList = angular.copy($scope.truckList);
-                    $scope.totalItems = $scope.filterTruckList.length;
+//                    $scope.truckList.push({
+//                        "id": newTruckID,
+//                        "no": $scope.truck.no,
+//                        "transporter": $scope.truck.transporter,
+//                        "ton": $scope.truck.ton,
+//                        "roadtax": $scope.truck.roadtax,
+//                        "status": 'Active'
+//                    });
+//                    $scope.truck.id = newTruckID;
+//                    socket.emit('create new truck', $scope.truck);
+//                    storeDataService.truck = angular.copy($scope.truckList);
+//                    $scope.filterTruckList = angular.copy($scope.truckList);
+//                    $scope.totalItems = $scope.filterTruckList.length;
                     angular.element('#createTruck').modal('toggle');
                     $scope.initializeTruck();
                     
@@ -3365,6 +3352,17 @@ app.controller('boundaryController', function($scope, $http, $filter, $routePara
     $scope.backToArea = function() {
         window.history.go(-1);
     };
+});
+
+app.controller('historyController', function ($scope, $http, storeDataService) {
+    'use strict';
+    
+    $scope.pagination = angular.copy(storeDataService.pagination);
+    
+    $http.get('/historyList').then(function (response) {
+        $scope.historyList = response.data;
+        $scope.totalItems = $scope.historyList.length;
+    });
 });
 
 //-----------Check Line------------------

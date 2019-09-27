@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 var database = require('./database-management');
+var variable = require('../variable');
+var dateTime = variable.dateTime;
 
 function makeID(keyword, creationDate) {
     var table, property, header, ID;
@@ -83,6 +85,11 @@ function makeID(keyword, creationDate) {
             property = "boundaryID";
             header = "BND";
             break;
+        case "history":
+            table = "tblhistory";
+            property = "historyID";
+            header = "HIS";
+            break;
         default: break;
     }
     
@@ -157,9 +164,9 @@ function checkAuthority(keyword, whoIs) {
     });
 };
 
-function logTransaction(date, staffID, action, description, authorizedBy, rowID, tblName) {
+function logTransaction(date, staffID, action, description, rowID, tblName) {
     var sql = "INSERT INTO tbllog (date, staffID, authorizedBy, action, description, rowID, tblName) VALUE ('" + date + "', '" + staffID + "', NULL, '" + action + "', '" + description + "', '" + rowID + "', '" + tblName + "')";
-    //console.log(sql);
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -167,10 +174,10 @@ function logTransaction(date, staffID, action, description, authorizedBy, rowID,
     });
 }
 
-function sendForAuthorization(date, staffId, action, description, authorizedBy, rowID, tblName, query) {
+function sendForAuthorization(date, staffId, action, description, rowID, tblName, query) {
     
     var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (\"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", NULL, \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
-    
+
     //var sql = "INSERT INTO tblauthorization (date, staffID, action, description, rowID, tblName, authorize, query) VALUES ('"+ date +"', '"+ staffId +"', '"+ action +"', '"+ description +"', '"+ rowID +"', '"+ tblName +"', 'M', '"+ query +"')";
 
     database.query(sql, function (err, result) {
@@ -288,12 +295,26 @@ function menuItem(keyword, status) {
 }
 
 function insertNewData(query, req, res) {
+    var dt = dateTime.create().format('Y-m-d H:M:S');
     database.query(query, function (err, result) {
         if (err) {
             throw err;
         }
         res.json({"status": "success", "message": "Task Approved."})
         res.end();
+    });
+}
+
+function log(dt, content, staff) {
+    var sql = "";
+    
+    makeID('history', dt).then(function (ID) {
+        sql = "INSERT INTO tblhistory (historyID, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + content + "', '" + staff + "', '" + dt + "', 'A')";
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+        });
     });
 }
 
@@ -318,3 +339,4 @@ exports.menuItem = menuItem;
 exports.insertNewData = insertNewData;
 exports.waterfallQuery = waterfallQuery;
 exports.boundaryID = boundaryID;
+exports.log = log;
