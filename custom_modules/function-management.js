@@ -5,92 +5,94 @@ var variable = require('../variable');
 var dateTime = variable.dateTime;
 
 function makeID(keyword, creationDate) {
-    var table, property, header, ID;
-    var getDateArr, row, stringRow, prefix, i, generatedID;
-    var getDate = creationDate.split(' ');
+    'use strict';
+    var table, property, header, ID,
+        getDateArr, row, stringRow, prefix, i, generatedID,
+        getDate = creationDate.split(' ');
     
     switch (keyword) {
-        case "account":
-            table = "tblstaff";
-            property = "staffID";
-            header = "ACC";
-            break;
-        case "truck":
-            table = "tbltruck";
-            property = "truckID";
-            header = "TRK";
-            break;
-        case "zone":
-            table = "tblzone";
-            property = "zoneID";
-            header = "ZON";
-            break;
-        case "area":
-            table = "tblarea";
-            property = "areaID";
-            header = "ARE";
-            break;
-        case "bincenter":
-            table = "tblbincenter";
-            property = "binCenterID";
-            header = "BIN";
-            break;
-        case "role":
-            table = "tblposition";
-            property = "positionID";
-            header = "ATH";
-            break;
-        case "acr":
-            table = "tblacr";
-            property = "acrID";
-            header = "ACR";
-            break;
-        case "report":
-            table = "tblreport";
-            property = "reportID";
-            header = "RPT";
-            break;
-        case "dcs":
-            table = "tbldcs";
-            property = "dcsID";
-            header = "DCS";
-            break;
-        case "bdaf":
-            table = "tblbdaf";
-            property = "bdafID";
-            header = "BDAF";
-            break;
-        case "dbd":
-            table = "tbldbd";
-            property = "dbdID";
-            header = "DBD";
-            break;
-        case "blost":
-            table = "tblblost";
-            property = "blostID";
-            header = "BLOST";
-            break;
-        case "customer":
-            table = "tblcustomer";
-            property = "customerID";
-            header = "CUS";
-            break;
-        case "chat":
-            table = "tblchat";
-            property = "chatID";
-            header = "CHT";
-            break;
-        case "boundary":
-            table = "tblboundary";
-            property = "boundaryID";
-            header = "BND";
-            break;
-        case "history":
-            table = "tblhistory";
-            property = "historyID";
-            header = "HIS";
-            break;
-        default: break;
+    case "account":
+        table = "tblstaff";
+        property = "staffID";
+        header = "ACC";
+        break;
+    case "truck":
+        table = "tbltruck";
+        property = "truckID";
+        header = "TRK";
+        break;
+    case "zone":
+        table = "tblzone";
+        property = "zoneID";
+        header = "ZON";
+        break;
+    case "area":
+        table = "tblarea";
+        property = "areaID";
+        header = "ARE";
+        break;
+    case "bincenter":
+        table = "tblbincenter";
+        property = "binCenterID";
+        header = "BIN";
+        break;
+    case "role":
+        table = "tblposition";
+        property = "positionID";
+        header = "ATH";
+        break;
+    case "acr":
+        table = "tblacr";
+        property = "acrID";
+        header = "ACR";
+        break;
+    case "report":
+        table = "tblreport";
+        property = "reportID";
+        header = "RPT";
+        break;
+    case "dcs":
+        table = "tbldcs";
+        property = "dcsID";
+        header = "DCS";
+        break;
+    case "bdaf":
+        table = "tblbdaf";
+        property = "bdafID";
+        header = "BDAF";
+        break;
+    case "dbd":
+        table = "tbldbd";
+        property = "dbdID";
+        header = "DBD";
+        break;
+    case "blost":
+        table = "tblblost";
+        property = "blostID";
+        header = "BLOST";
+        break;
+    case "customer":
+        table = "tblcustomer";
+        property = "customerID";
+        header = "CUS";
+        break;
+    case "chat":
+        table = "tblchat";
+        property = "chatID";
+        header = "CHT";
+        break;
+    case "boundary":
+        table = "tblboundary";
+        property = "boundaryID";
+        header = "BND";
+        break;
+    case "history":
+        table = "tblhistory";
+        property = "historyID";
+        header = "HIS";
+        break;
+    default:
+        break;
     }
     
     var sql = "SELECT " + property + " FROM " + table + " WHERE creationDateTime LIKE '%" + getDate[0] + "%'";
@@ -113,8 +115,7 @@ function makeID(keyword, creationDate) {
             resolve(ID);
         });
     });
-    console.log(database);
-};
+}
 
 function boundaryID(date, polygons) {
     'use strict';
@@ -141,8 +142,8 @@ function boundaryID(date, polygons) {
                 resolve(boundaryJSON);
             }
         });
-    })
-};
+    });
+}
 
 function checkAuthority(keyword, whoIs) {
     'use strict';
@@ -150,9 +151,9 @@ function checkAuthority(keyword, whoIs) {
     var sql;
     
     switch (keyword) {
-        case "create account":
-            sql = "SELECT tblaccess.status FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID JOIN tblaccess ON tblposition.positionID = tblaccess.positionID JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblmanagement.mgmtName = 'create account' AND tblstaff.staffID = '" + whoIs + "'";
-            break;
+    case "create account":
+        sql = "SELECT tblaccess.status FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID JOIN tblaccess ON tblposition.positionID = tblaccess.positionID JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblmanagement.mgmtName = 'create account' AND tblstaff.staffID = '" + whoIs + "'";
+        break;
     }
     return new Promise(resolve => {
         database.query(sql, function (err, result) {

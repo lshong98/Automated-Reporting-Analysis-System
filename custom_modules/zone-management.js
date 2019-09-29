@@ -11,16 +11,23 @@ app.post('/addZone', function (req, res) {
     'use strict';
     f.makeID("zone", req.body.creationDate).then(function (ID) {
         var sql = "INSERT INTO tblzone (zoneID, zoneCode, zoneName, creationDateTime, zoneStatus) VALUE ('" + ID + "', '" + req.body.code + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')";
-        database.query(sql, function (err, result) {
-            if (err) {
-                res.end();
-                throw err;
-            } else {
-                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Zone", '', ID, "tblzone");
-                res.json({"status": "success", "message": "Zone added successfully!", "details": {"zoneID": ID}});
-                res.end();
-            }
-        });
+        
+        f.sendForAuthorization(req.body.creationDate, req.body.iam, "add", "Create new zone", ID, "tblzone", "\"" + sql + "\"");
+        f.logTransaction(req.body.creationDate, req.body.iam, "add", "Request to create new zone", ID, "tblzone");
+        f.log(req.body.creationDate, "Request to create new zone.", req.body.iam);
+        res.json({"status": "success", "message": "Request pending.."});
+        res.end();
+         
+//        database.query(sql, function (err, result) {
+//            if (err) {
+//                res.end();
+//                throw err;
+//            } else {
+//                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Zone", '', ID, "tblzone");
+//                res.json({"status": "success", "message": "Zone added successfully!", "details": {"zoneID": ID}});
+//                res.end();
+//            }
+//        });
     });
 }); // Complete
 
@@ -61,17 +68,24 @@ app.post('/editZone', function (req, res) {
     
     var dt = dateTime.create().format('Y-m-d H:M:S');
     var sql = "UPDATE tblzone SET zoneCode = '" + req.body.code + "', zoneName = '" + req.body.name + "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '" + req.body.id + "'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            res.json({"status": "error", "message": "Update failed."});
-            res.end();
-            throw err;
-        } else {
-            f.logTransaction(dt, req.body.iam, "update", "Update Zone - " + req.body.id + "", '', req.body.id, "tblzone");
-            res.json({"status": "success", "message": "Zone Information Updated."});
-            res.end();
-        }
-    });
+    
+    f.sendForAuthorization(dt, req.body.iam, "update", "Update zone", req.body.id, "tblzone", "\"" + sql + "\"");
+    f.logTransaction(dt, req.body.iam, "update", "Request to update zone", req.body.id, "tblzone");
+    f.log(dt, "Request to update zone.", req.body.iam);
+    res.json({"status": "success", "message": "Request pending.."});
+    res.end();
+    
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            res.json({"status": "error", "message": "Update failed."});
+//            res.end();
+//            throw err;
+//        } else {
+//            f.logTransaction(dt, req.body.iam, "update", "Update Zone - " + req.body.id + "", '', req.body.id, "tblzone");
+//            res.json({"status": "success", "message": "Zone Information Updated."});
+//            res.end();
+//        }
+//    });
 }); // Complete
 
 module.exports = app;

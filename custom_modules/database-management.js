@@ -11,7 +11,7 @@ var DB_NAME = process.env.DATABASE_NAME || '';
 
  var config = {
      user: DB_USER,
-     password: DB_PASS, 
+     password: DB_PASS,
      host: DB_HOST,
      port: 3306
  }

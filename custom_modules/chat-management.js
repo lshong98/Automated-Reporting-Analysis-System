@@ -16,10 +16,9 @@ var io = variable.io;
 app.post('/messageSend', function (req, res) {
     'use strict';
     
-    var dt = dateTime.create();
-    var formatted = dt.format('Y-m-d H:M:S');
-    
-    var sql = "SELECT customerID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1";
+    var dt = dateTime.create(),
+        formatted = dt.format('Y-m-d H:M:S'),
+        sql = "SELECT customerID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -56,15 +55,16 @@ app.post('/chatList', function (req, res) {
 });
 
 //Customer to staff
-app.post('/sendMessage', function(req, resp){ 
+app.post('/sendMessage', function (req, resp) {
     'use strict';
 
-    var data;
-    var userID, staffID;
-    var date = dateTime.create().format('Y-m-d H:M:S');
+    var data,
+        userID,
+        staffID,
+        date = dateTime.create().format('Y-m-d H:M:S');
     //var msgs = [];
 
-    req.addListener('data', function(postDataChunk){
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
     
@@ -122,30 +122,31 @@ app.post('/sendMessage', function(req, resp){
 //    });
 });
 
-app.post('/getMessage', function(req, resp){ 
+app.post('/getMessage', function (req, resp) {
     'use strict';
-    var data;
-    var userID;
-    var msgs = [];
+    var data,
+        userID,
+        msgs = [],
+        i;
 
-    req.addListener('data', function(postDataChunk){
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
+    req.addListener('end', function () {
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
-        database.query(sqlUser, function(err, res){
-            if(!err){
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
                 userID = res[0].userID;
-                var sql = "SELECT content, creationDateTime, CASE WHEN sender = '"+userID+"' THEN 'me' ELSE 'officer' END AS sender FROM tblchat WHERE complaintID = '"+data.id+"' ORDER BY creationDateTime ASC";
+                var sql = "SELECT content, creationDateTime, CASE WHEN sender = '" + userID + "' THEN 'me' ELSE 'officer' END AS sender FROM tblchat WHERE complaintID = '" + data.id + "' ORDER BY creationDateTime ASC";
                 //var sql2 = "SELECT message as offmsg, createdAt as offtime from tblchat WHERE complaintID ='"+data.id+"' AND sender!='"+userID+"' ORDER BY createdAt ASC";
-                database.query(sql, function(err, res){
-                    if(res != undefined){
-                        for(var i = 0; i<res.length; i++){
+                database.query(sql, function (err, res) {
+                    if (res != undefined) {
+                        for (i = 0; i < res.length; i += 1) {
                             msgs.push(res[i]);
                         }
                         //console.log(msgs);
-                        if(msgs == null){
+                        if (msgs == null) {
                             resp.send("No Messages");
                         }
                         resp.json(msgs);
@@ -157,41 +158,41 @@ app.post('/getMessage', function(req, resp){
                         // });
                     }
                 });
-            }else{
+            } else {
                 resp.send("error getting user id");
             }
         });
     });
 });
 
-app.post('/getChats', function(req, resp){
+app.post('/getChats', function (req, resp) {
     'use strict';
 
-    var data, userID, info = [];
-    req.addListener('data', function(postDataChunk){
+    var data, userID, info = [], i;
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
+    req.addListener('end', function () {
         var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
-        database.query(sqlUser, function(err, res){
-            if(!err){
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
                 userID = res[0].customerID;
-                var sql = "SELECT * FROM tblcomplaint WHERE customerID = '"+userID+"'";
-                database.query(sql, function(err, res){
-                    if(err){
+                var sql = "SELECT * FROM tblcomplaint WHERE customerID = '" + userID + "'";
+                database.query(sql, function (err, res) {
+                    if (err) {
                         resp.send("Error");
                     }
-                    for(var i = 0; i<res.length; i++){
+                    for (i = 0; i < res.length; i += 1) {
                         info.push(res[i]);
                     }
                     //console.log(info);
-                    if(info == null){
+                    if (info == null) {
                         resp.send("No Chats");
                     }
                     resp.json(info);
                 });
-            }else{
+            } else {
                 resp.send("error getting user id");
             }
         });
