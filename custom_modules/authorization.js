@@ -19,11 +19,12 @@ app.get('/getAllTasks', function (req, res) {
 
 app.post('/approveTask', function (req, res) {
     'use strict';
-    var dt = dateTime.create();
-    var formatted = dt.format('Y-m-d H:M:S');
+    var dt = dateTime.create(),
+        formatted = dt.format('Y-m-d H:M:S'),
+        content = "";
     
     var sql = "UPDATE tblauthorization SET authorize = 'Y', authorizedBy = '" + req.body.approvedBy + "' WHERE taskID = '"+ req.body.id + "'";
-    var findSQL = "SELECT action, query, tblName FROM tblauthorization WHERE taskID = '" + req.body.id + "' LIMIT 0, 1";
+    var findSQL = "SELECT action, description, authorize, query, tblName FROM tblauthorization WHERE taskID = '" + req.body.id + "' LIMIT 0, 1";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -35,6 +36,8 @@ app.post('/approveTask', function (req, res) {
                 throw err;
             }
             
+            content = result[0].description + " approved.";
+            
             if (result[0].action == "add" && result[0].tblName == "tblstaff") {
                 f.makeID("account", formatted).then(function (ID) {
                     var firstPosition = (result[0].query).indexOf('ACC');
@@ -42,7 +45,11 @@ app.post('/approveTask', function (req, res) {
                     var oldID = (result[0].query).substring(firstPosition, lastPosition);
                     result[0].query = (result[0].query).replace(oldID, ID);
                     f.insertNewData(result[0].query, req, res);
+                    f.log(formatted, content, req.body.approvedBy);
                 });
+            } else {
+                f.log(formatted, content, req.body.approvedBy);
+                f.insertNewData(result[0].query, req, res);
             }
         });
     });

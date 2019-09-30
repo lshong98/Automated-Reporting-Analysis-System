@@ -1,0 +1,54 @@
+<style>
+.table-borderless td, .borderless th {
+    border: none;
+}
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>User Log</h5>
+    </div>
+</div>
+<br />
+
+<div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>By</th>
+                                    <th>On</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="h in historyList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
+                                    <td>
+                                        <span data-ng-bind="h.content"></span>
+                                    </td>
+                                    <td>
+                                        <span data-ng-bind="h.staff"></span>
+                                    </td>
+                                    <td>
+                                        <span data-ng-bind="h.date"></span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary"><i class="fa fa-info-circle"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                <div class="col-md-12">
+                    <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                </div>
+            </div>
+        </div>
+    </div>

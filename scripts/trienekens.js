@@ -15,9 +15,7 @@ socket.on('connect', function() {
         });
         flag = false;
     }
-    if(socket.readyState != socket.OPEN){
-        socket = io.connect('ws://localhost:3000', {transports: ['websocket']});
-    }
+    
     var sessionID = socket.io.engine.id;
     socket.emit('socketID', {
         "socketID": sessionID,
@@ -427,22 +425,21 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.saveTruck = function() {
             scope.showTruck = !scope.showTruck;
+            scope.t.iam = window.sessionStorage.getItem('owner');
             $http.post('/editTruck', scope.t).then(function(response) {
+                scope.t = angular.copy(scope.thisTruck);
                 var data = response.data;
                 scope.notify(data.status, data.message);
 
-                $.each(storeDataService.truck, function(index, value) {
-                    if (storeDataService.truck[index].id == scope.thisTruck.id) {
-                        if (data.status == "success") {
-                            storeDataService.truck[index] = angular.copy(scope.t);
-                        } else {
-                            scope.t = angular.copy(storeDataService.truck[index]);
-                        }
-                    }
-                    //                });
-                    //                
-                    //                $.each(scope.truckList, function (index, value) {
-                });
+//                $.each(storeDataService.truck, function(index, value) {
+//                    if (storeDataService.truck[index].id == scope.thisTruck.id) {
+//                        if (data.status == "success") {
+//                            storeDataService.truck[index] = angular.copy(scope.t);
+//                        } else {
+//                            scope.t = angular.copy(storeDataService.truck[index]);
+//                        }
+//                    }
+//                });
                 var existActive = false,
                     existInactive = false;
                 $.each(scope.truckListActive, function(index, value) {
@@ -487,45 +484,47 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.saveZone = function() {
             scope.showZone = !scope.showZone;
+            scope.z.iam = window.sessionStorage.getItem('owner');
             $http.post('/editZone', scope.z).then(function(response) {
+                scope.z = angular.copy(scope.thisZone);
                 var data = response.data;
                 scope.notify(data.status, data.message);
 
-                $.each(storeDataService.zone, function(index, value) {
-                    if (storeDataService.zone[index].id == scope.thisZone.id) {
-                        if (data.status == "success") {
-                            storeDataService.zone[index] = angular.copy(scope.z);
-                        } else {
-                            scope.z = angular.copy(storeDataService.zone[index]);
-                        }
-                    }
-                });
-
-                var existActive = false,
-                    existInactive = false;
-                $.each(scope.zoneListActive, function(index, value) {
-                    if (scope.zoneListActive[index].id == scope.thisZone.id) {
-                        existActive = true;
-                    }
-                });
-                $.each(scope.zoneListInactive, function(index, value) {
-                    if (scope.zoneListInactive[index].id == scope.thisZone.id) {
-                        existInactive = true;
-                    }
-                });
-                $.each(scope.zoneList, function(index, value) {
-                    if (scope.thisZone.id == value.id) {
-                        if (scope.z.status == 'ACTIVE' && existInactive) {
-                            scope.zoneListActive.push(scope.z);
-                            scope.zoneListInactive.splice(index, 1);
-                            scope.$parent.zoneList = angular.copy(scope.zoneListInactive);
-                        } else if (scope.z.status == 'INACTIVE' && existActive) {
-                            scope.zoneListInactive.push(scope.z);
-                            scope.zoneListActive.splice(index, 1);
-                            scope.$parent.zoneList = angular.copy(scope.zoneListActive);
-                        }
-                    }
-                });
+//                $.each(storeDataService.zone, function(index, value) {
+//                    if (storeDataService.zone[index].id == scope.thisZone.id) {
+//                        if (data.status == "success") {
+//                            storeDataService.zone[index] = angular.copy(scope.z);
+//                        } else {
+//                            scope.z = angular.copy(storeDataService.zone[index]);
+//                        }
+//                    }
+//                });
+//
+//                var existActive = false,
+//                    existInactive = false;
+//                $.each(scope.zoneListActive, function(index, value) {
+//                    if (scope.zoneListActive[index].id == scope.thisZone.id) {
+//                        existActive = true;
+//                    }
+//                });
+//                $.each(scope.zoneListInactive, function(index, value) {
+//                    if (scope.zoneListInactive[index].id == scope.thisZone.id) {
+//                        existInactive = true;
+//                    }
+//                });
+//                $.each(scope.zoneList, function(index, value) {
+//                    if (scope.thisZone.id == value.id) {
+//                        if (scope.z.status == 'ACTIVE' && existInactive) {
+//                            scope.zoneListActive.push(scope.z);
+//                            scope.zoneListInactive.splice(index, 1);
+//                            scope.$parent.zoneList = angular.copy(scope.zoneListInactive);
+//                        } else if (scope.z.status == 'INACTIVE' && existActive) {
+//                            scope.zoneListInactive.push(scope.z);
+//                            scope.zoneListActive.splice(index, 1);
+//                            scope.$parent.zoneList = angular.copy(scope.zoneListActive);
+//                        }
+//                    }
+//                });
             });
         };
         scope.cancelZone = function() {
@@ -568,23 +567,26 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             var areaFullString = (scope.b.areacode).split(',');
             scope.b.area = areaFullString[0];
             scope.b.areaCode = areaFullString[1];
-
+            scope.b.iam = window.sessionStorage.getItem('owner');
             $http.post('/editBinCenter', scope.b).then(function(response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
+                scope.thisBin.areaCode = (scope.thisBin.areaCode).split(',')[1];
+                scope.b = angular.copy(scope.thisBin);
 
-                $.each(storeDataService.bin, function(index, value) {
-                    if (storeDataService.bin[index].id == scope.thisBin.id) {
-                        if (data.status == "success") {
-                            storeDataService.bin[index] = angular.copy(scope.b);
-                        } else {
-                            scope.z = angular.copy(storeDataService.bin[index]);
-                        }
-                        return false;
-                    }
-                });
+//                $.each(storeDataService.bin, function(index, value) {
+//                    if (storeDataService.bin[index].id == scope.thisBin.id) {
+//                        if (data.status == "success") {
+//                            storeDataService.bin[index] = angular.copy(scope.b);
+//                        } else {
+//                            scope.z = angular.copy(storeDataService.bin[index]);
+//                        }
+//                        return false;
+//                    }
+//                });
 
+                // ----------------------------------------------------------------------------------------------------
                 //                var existActive = false, existInactive = false;
                 //                $.each(scope.binListActive, function(index, value){
                 //                   if(scope.binListActive[index].id == scope.thisBin.id) {
@@ -596,24 +598,25 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
                 //                       existInactive = true;
                 //                   }
                 //                });
-                $.each(scope.binList, function(index, value) {
-                    if (scope.thisBin.id == value.id) {
-                        if (scope.b.status == 'ACTIVE') {
-                            if (scope.$parent.statusList !== true) {
-                                scope.binListActive.push(scope.b);
-                                scope.binListInactive.splice(index, 1);
-                                scope.$parent.binList = angular.copy(scope.binListInactive);
-                            }
-                        } else {
-                            if (scope.$parent.statusList !== false) {
-                                scope.binListInactive.push(scope.b);
-                                scope.binListActive.splice(index, 1);
-                                scope.$parent.binList = angular.copy(scope.binListActive);
-                            }
-                        }
-                    }
-                    return false;
-                });
+                // ----------------------------------------------------------------------------------------------------
+//                $.each(scope.binList, function(index, value) {
+//                    if (scope.thisBin.id == value.id) {
+//                        if (scope.b.status == 'ACTIVE') {
+//                            if (scope.$parent.statusList !== true) {
+//                                scope.binListActive.push(scope.b);
+//                                scope.binListInactive.splice(index, 1);
+//                                scope.$parent.binList = angular.copy(scope.binListInactive);
+//                            }
+//                        } else {
+//                            if (scope.$parent.statusList !== false) {
+//                                scope.binListInactive.push(scope.b);
+//                                scope.binListActive.splice(index, 1);
+//                                scope.$parent.binList = angular.copy(scope.binListActive);
+//                            }
+//                        }
+//                    }
+//                    return false;
+//                });
             });
         };
         scope.cancelBin = function() {
@@ -634,19 +637,19 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.saveCollection = function() {
             scope.showCollection = !scope.showCollection;
-            console.log(scope.thisCollection);
-            console.log(scope.c);
+            scope.c.iam = window.sessionStorage.getItem('owner');
             $http.post('/updateCollection', scope.c).then(function(response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
                 if (data.status == "success") {
-                    $.each(storeDataService.collection, function(index, value) {
-                        if (storeDataService.collection[index].id = scope.thisCollection.id) {
-                            storeDataService.collection[index] = angular.copy(scope.c);
-                            return false;
-                        }
-                    });
+                    scope.c = angular.copy(scope.thisCollection);
+//                    $.each(storeDataService.collection, function(index, value) {
+//                        if (storeDataService.collection[index].id = scope.thisCollection.id) {
+//                            storeDataService.collection[index] = angular.copy(scope.c);
+//                            return false;
+//                        }
+//                    });
                 } else {
                     scope.c = angular.copy(storeDataService.collection[index]);
                 }
@@ -663,17 +666,18 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
         };
         scope.deleteCollection = function(id) {
             scope.collection.id = id;
+            scope.collection.iam = window.sessionStorage.getItem('owner');
             $http.post('/deleteCollection', scope.collection).then(function(response) {
                 var data = response.data;
                 scope.notify(data.status, data.message);
                 if (data.status == "success") {
-                    $.each(storeDataService.collection, function(index, value) {
-                        if (storeDataService.collection[index].id == scope.collection.id) {
-                            scope.deleteCollection = !scope.deleteCollection;
-                            storeDataService.collection.splice(index, 1);
-                            return false;
-                        }
-                    });
+//                    $.each(storeDataService.collection, function(index, value) {
+//                        if (storeDataService.collection[index].id == scope.collection.id) {
+//                            scope.deleteCollection = !scope.deleteCollection;
+//                            storeDataService.collection.splice(index, 1);
+//                            return false;
+//                        }
+//                    });
                 }
             });
         };
@@ -1724,9 +1728,10 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
 
     $scope.area = {
         "zone": '',
-        "staff": ''
+        "staff": '',
+        "iam": ''
     };
-
+    
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.area);
 
@@ -1813,23 +1818,22 @@ app.controller('areaController', function($scope, $http, $filter, storeDataServi
             $scope.showCreateBtn = true;
         }else{
             $scope.area.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            $scope.area.iam = window.sessionStorage.getItem('owner');
             $http.post('/addArea', $scope.area).then(function(response) {
                 var data = response.data;
-                console.log(response.data);
-
+                $scope.notify(data.status, data.message);
+                
                 if (data.status === "success") {
-
-                    $scope.areaList.push({
-                        "code": $scope.area.zone.code + $scope.area.code,
-                        "name": $scope.area.name,
-                        "status": 'ACTIVE',
-                        "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
-                        "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
-                    });
-                    $scope.filterAreaList = angular.copy($scope.areaList);
+//                    $scope.areaList.push({
+//                        "code": $scope.area.zone.code + $scope.area.code,
+//                        "name": $scope.area.name,
+//                        "status": 'ACTIVE',
+//                        "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
+//                        "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
+//                    });
+//                    $scope.filterAreaList = angular.copy($scope.areaList);
                     angular.element('#createArea').modal('toggle');
-                    $scope.totalItems = $scope.filterAreaList.length;
-                    $scope.notify(data.status, data.message);
+//                    $scope.totalItems = $scope.filterAreaList.length;
                 }
                 $scope.showCreateBtn = true;
             });            
@@ -1935,7 +1939,8 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
             "sat": '',
             "sun": ''
         },
-        "frequency": ''
+        "frequency": '',
+        "iam": ''
     };
     $scope.days = {
         "mon": '',
@@ -1979,9 +1984,9 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
                 $scope.days[value] = 'A';
             });
         }
-        $http.post('/thisAreaDriver', { "id": areaID }).then(function(response) {
-            $scope.area.driver = response.data[0].driver;
-        });
+//        $http.post('/thisAreaDriver', { "id": areaID }).then(function(response) {
+//            $scope.area.driver = response.data[0].driver;
+//        });
     });
 
     $http.post('/getCollection', $scope.area).then(function(response) {
@@ -1998,19 +2003,19 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
             $scope.notify("error", "Address Cannot Be Blank");
         } else {
             if ($scope.collection.add != "") {
+                $scope.collection.iam = window.sessionStorage.getItem('owner');
                 $http.post('/addCollection', $scope.collection).then(function(response) {
                     var data = response.data;
-
+                    $scope.notify(data.status, data.message);
                     if (data.status == "success") {
-                        $scope.collectionList.push({ "id": data.details.id, "address": $scope.collection.address });
-                        storeDataService.collection = angular.copy($scope.collectionList);
+                        //$scope.collectionList.push({ "id": data.details.id, "address": $scope.collection.address });
+                        //storeDataService.collection = angular.copy($scope.collectionList);
                         $scope.collection.address = "";
                     }
                     //                    angular.element('body').overhang({
                     //                        "status": data.status,
                     //                        "message": data.message
                     //                    });
-                    $scope.notify(data.status, data.message);
                 });
             }
         }
@@ -2019,6 +2024,7 @@ app.controller('thisAreaController', function($scope, $http, $routeParams, store
 
     $scope.updateArea = function() {
         var concatDays = "";
+        $scope.area.iam = window.sessionStorage.getItem('owner');
         $.each($scope.days, function(index, value) {
             if (value == "A") {
                 concatDays += index + ',';
@@ -2289,13 +2295,16 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
     var asc = true;
     $scope.areaList = [];
     $scope.filterTruckList = [];
+    
     $scope.initializeTruck = function() {
         $scope.truck = {
             "no": '',
             "driver": '',
-            "area": ''
+            "area": '',
+            "iam": window.sessionStorage.getItem('owner')
         };
     };
+    $scope.initializeTruck();
     $scope.showCreateBtn = true;
 
     $scope.pagination = angular.copy(storeDataService.pagination);
@@ -2397,25 +2406,26 @@ app.controller('truckController', function($scope, $http, $filter, storeDataServ
         
             $scope.truck.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
             $scope.truck.roadtax = $filter('date')($scope.truck.roadtax, 'yyyy-MM-dd');
+            $scope.truck.iam = window.sessionStorage.getItem('owner');
             $http.post('/addTruck', $scope.truck).then(function(response) {
                 var data = response.data;
-                var newTruckID = data.details.truckID;
+//                var newTruckID = data.details.truckID;
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    $scope.truckList.push({
-                        "id": newTruckID,
-                        "no": $scope.truck.no,
-                        "transporter": $scope.truck.transporter,
-                        "ton": $scope.truck.ton,
-                        "roadtax": $scope.truck.roadtax,
-                        "status": 'Active'
-                    });
-                    $scope.truck.id = newTruckID;
-                    socket.emit('create new truck', $scope.truck);
-                    storeDataService.truck = angular.copy($scope.truckList);
-                    $scope.filterTruckList = angular.copy($scope.truckList);
-                    $scope.totalItems = $scope.filterTruckList.length;
+//                    $scope.truckList.push({
+//                        "id": newTruckID,
+//                        "no": $scope.truck.no,
+//                        "transporter": $scope.truck.transporter,
+//                        "ton": $scope.truck.ton,
+//                        "roadtax": $scope.truck.roadtax,
+//                        "status": 'Active'
+//                    });
+//                    $scope.truck.id = newTruckID;
+//                    socket.emit('create new truck', $scope.truck);
+//                    storeDataService.truck = angular.copy($scope.truckList);
+//                    $scope.filterTruckList = angular.copy($scope.truckList);
+//                    $scope.totalItems = $scope.filterTruckList.length;
                     angular.element('#createTruck').modal('toggle');
                     $scope.initializeTruck();
                     
@@ -2457,10 +2467,11 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
         $scope.zone = {
             "code": '',
             "name": '',
-            "creationDate": ''
+            "creationDate": '',
+            "iam": window.sessionStorage.getItem('owner')
         };
     };
-
+    $scope.initializeZone();
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.zone);
 
@@ -2522,23 +2533,24 @@ app.controller('zoneController', function($scope, $http, $filter, storeDataServi
             $scope.showCreateBtn = true;
         }else{
             $scope.zone.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            $scope.zone.iam = window.sessionStorage.getItem('owner');
             $http.post('/addZone', $scope.zone).then(function(response) {
                 var data = response.data;
-                var newZoneID = data.details.zoneID;
+                //var newZoneID = data.details.zoneID;
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    $scope.zoneList.push({
-                        "id": newZoneID,
-                        "code": $scope.zone.code,
-                        "name": $scope.zone.name,
-                        "status": 'ACTIVE'
-                    });
-                    $scope.zone.id = newZoneID;
-                    socket.emit('create new zone', $scope.zone);
-                    $scope.filterZoneList = angular.copy($scope.zoneList);
-                    storeDataService.zone = angular.copy($scope.zoneList);
-                    $scope.totalItems = $scope.filterZoneList.length;
+//                    $scope.zoneList.push({
+//                        "id": newZoneID,
+//                        "code": $scope.zone.code,
+//                        "name": $scope.zone.name,
+//                        "status": 'ACTIVE'
+//                    });
+//                    $scope.zone.id = newZoneID;
+//                    socket.emit('create new zone', $scope.zone);
+//                    $scope.filterZoneList = angular.copy($scope.zoneList);
+//                    storeDataService.zone = angular.copy($scope.zoneList);
+//                    $scope.totalItems = $scope.filterZoneList.length;
                     angular.element('#createZone').modal('toggle');
                     $scope.initializeZone();
                     $scope.showCreateBtn = true;
@@ -2977,7 +2989,8 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
         "location": '',
         "area": '',
         "areaCode": '',
-        "areacode": ''
+        "areacode": '',
+        "iam": ''
     };
 
     $scope.pagination = angular.copy(storeDataService.pagination);
@@ -3073,6 +3086,7 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             $scope.showCreateBtn = true;
         } else {
             $scope.bin.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            $scope.bin.iam = window.sessionStorage.getItem('owner');
             var area = $scope.bin.areaconcat;
             var aid = area.split(",")[0];
             var acode = area.split(",")[1];
@@ -3081,24 +3095,24 @@ app.controller('binController', function($scope, $http, $filter, storeDataServic
             console.log($scope.bin);
             $http.post('/addBinCenter', $scope.bin).then(function(response) {
                 var data = response.data;
-                var newBinID = data.details.binID;
+                //var newBinID = data.details.binID;
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    $scope.binList.push({
-                        "id": newBinID,
-                        "name": $scope.bin.name,
-                        "location": $scope.bin.location,
-                        "area": $scope.bin.area,
-                        "areaCode": $scope.bin.areaCode,
-                        "status": 'ACTIVE'
-                    });
-                    $scope.bin.id = newBinID;
-                    socket.emit('create new bin', $scope.bin);
-                    storeDataService.bin = angular.copy($scope.binList);
-                    $scope.filterBinList = angular.copy($scope.binList);
+//                    $scope.binList.push({
+//                        "id": newBinID,
+//                        "name": $scope.bin.name,
+//                        "location": $scope.bin.location,
+//                        "area": $scope.bin.area,
+//                        "areaCode": $scope.bin.areaCode,
+//                        "status": 'ACTIVE'
+//                    });
+                    //$scope.bin.id = newBinID;
+                    //socket.emit('create new bin', $scope.bin);
+                    //storeDataService.bin = angular.copy($scope.binList);
+                    //$scope.filterBinList = angular.copy($scope.binList);
                     angular.element('#createBin').modal('toggle');
-                    $scope.totalItems = $scope.filterBinList.length;
+                    //$scope.totalItems = $scope.filterBinList.length;
                 }
                 $scope.showCreateBtn = true;
             });
@@ -3406,6 +3420,17 @@ app.controller('boundaryController', function($scope, $http, $filter, $routePara
     $scope.backToArea = function() {
         window.history.go(-1);
     };
+});
+
+app.controller('historyController', function ($scope, $http, storeDataService) {
+    'use strict';
+    
+    $scope.pagination = angular.copy(storeDataService.pagination);
+    
+    $http.get('/historyList').then(function (response) {
+        $scope.historyList = response.data;
+        $scope.totalItems = $scope.historyList.length;
+    });
 });
 
 //-----------Check Line------------------
@@ -5283,9 +5308,6 @@ app.controller('transactionLogController', function($scope, $http, $filter, stor
     'use strict';
 
     var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
 
     $scope.initializeTransaction = function() {
         $scope.transaction = {
@@ -5295,15 +5317,15 @@ app.controller('transactionLogController', function($scope, $http, $filter, stor
             "authorizedBy": ""
         };
     };
+    
+    $scope.pagination = angular.copy(storeDataService.pagination);
 
     $scope.show = angular.copy(storeDataService.show.zone);
     $scope.transactionList = [];
 
     $http.get('/getAllTransaction').then(function(response) {
-        storeDataService.zone = angular.copy(response.data);
         $scope.transactionList = response.data;
-
-        console.log(response.data);
+        $scope.totalItems = $scope.transactionList.length;
     });
 
 

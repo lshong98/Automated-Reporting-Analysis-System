@@ -439,6 +439,17 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'boundaryController',
         controllerAs: 'boundary'
     })
+    .when('/history', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/history');
+            }
+        },
+        templateUrl: function () {
+            return '/history'
+        },
+        controller : 'historyController'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {

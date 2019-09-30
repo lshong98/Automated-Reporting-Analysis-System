@@ -4,21 +4,21 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-// var DB_HOST = process.env.DATABASE_HOST || '';
-// var DB_USER = process.env.DATABASE_USER || '';
-// var DB_PASS = process.env.DATABASE_PASSWORD || '';
-// var DB_NAME = process.env.DATABASE_NAME || '';
+var DB_HOST = process.env.DATABASE_HOST || '';
+var DB_USER = process.env.DATABASE_USER || '';
+var DB_PASS = process.env.DATABASE_PASSWORD || '';
+var DB_NAME = process.env.DATABASE_NAME || '';
 
-var DB_HOST = 'localhost';
-var DB_USER = 'root';
-var DB_PASS = '';
-var DB_NAME = 'trienekens';
+// var DB_HOST = 'localhost';
+// var DB_USER = 'root';
+// var DB_PASS = '';
+// var DB_NAME = 'trienekens';
 
  var config = {
      user: DB_USER,
-     password: DB_PASS, 
+     password: DB_PASS,
      host: DB_HOST,
-     port: 3307
+     port: 3306
  }
 
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
@@ -132,7 +132,8 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbinrequest(reqID int auto_increment, customerID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), status varchar(10), PRIMARY KEY(reqID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))",
         "CREATE TABLE tblsatisfaction(satisfactionID int auto_increment, customerID varchar(15), companyRating varchar(7), teamEfficiency varchar(7), collectionPromptness varchar(7), binHandling varchar(7), spillageControl varchar(7), queryResponse varchar(7), extraComment varchar(7), submissionDate datetime, PRIMARY KEY (satisfactionID), FOREIGN KEY (customerID) REFERENCES tblcustomer(customerID))",
         "CREATE TABLE tbluser (userID VARCHAR(15), tamanID int , userEmail varchar(30),  password varchar(30),  contactNumber int, tradingLicense varchar(20),  name varchar(50), companyName varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  State varchar(30), vCode varchar(5), status char(1), creationDateTime datetime, PRIMARY KEY (userID),foreign key (tamanID) references tbltaman(tamanID), UNIQUE KEY(userEmail))",
-        "CREATE TABLE tblschedule(scheduleID int auto_increment, areaID varchar(15), customerID varchar(15), beBins int, acrBins int, mon tinyint(1), tue tinyint(1), wed tinyint(1), thur tinyint(1), fri tinyint(1), sat tinyint(1), remarks longtext, PRIMARY KEY(scheduleID), FOREIGN KEY(areaID) REFERENCES tblarea(areaID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))"
+        "CREATE TABLE tblschedule(scheduleID int auto_increment, areaID varchar(15), customerID varchar(15), beBins int, acrBins int, mon tinyint(1), tue tinyint(1), wed tinyint(1), thur tinyint(1), fri tinyint(1), sat tinyint(1), remarks longtext, PRIMARY KEY(scheduleID), FOREIGN KEY(areaID) REFERENCES tblarea(areaID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))",
+        "CREATE TABLE tblhistory (historyID VARCHAR(15), content MEDIUMTEXT, staffID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(staffID) REFERENCES tblstaff(staffID), PRIMARY KEY (historyID))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
