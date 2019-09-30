@@ -1,0 +1,118 @@
+<style>
+    div.chart{
+        position: relative;
+        width: 110px;
+        height: 110px;
+        margin-left: 15%;
+        margin-right: auto;
+        text-align: center;
+        font-size: 1.5em;
+        line-height: 110px;
+    }
+    canvas{
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .overall{
+        float: right;
+        margin-top: -24%;
+        margin-right: 20%;
+    }
+</style>
+<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getCustFeedback()">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Customer Feedback</h1><br /><br />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card" style="width: 20rem">
+                <div class="card-body">
+                    <h5>Company Rating</h5><br/>
+                    <div easypiechart options="options" percent="compRate" class="chart">
+                        {{reviews.compRate | number:1}}
+                    </div>
+                    <span class="overall">Out of 3</span>
+                    <br/>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="width: 20rem">
+                <div class="card-body">
+                    <h5>Team Efficiency</h5><br/>
+                    <div easypiechart options="options" percent="teamEff" class="chart">
+                            {{reviews.teamEff | number:1}}
+                        </div>
+                        <span class="overall">Out of 3</span>
+                        <br/>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="width: 20rem">
+                <div class="card-body">
+                    <h5>Collection Promptness</h5><br/>
+                    <div easypiechart options="options" percent="collPrompt" class="chart">
+                            {{reviews.collPrompt | number:1}}
+                        </div>
+                        <span class="overall">Out of 3</span>
+                        <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card" style="width: 20rem">
+                <div class="card-body">
+                    <h5>Bin Handling</h5><br/>
+                    <div easypiechart options="options" percent="binHand" class="chart">
+                            {{reviews.binHand | number:1}}
+                        </div>
+                        <span class="overall">Out of 3</span>
+                        <br/>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="width: 20rem">
+                <div class="card-body">
+                    <h5>Spillage Control</h5><br/>
+                    <div easypiechart options="options" percent="spillCtrl" class="chart">
+                            {{reviews.spillCtrl | number:1}}
+                        </div>
+                        <span class="overall">Out of 3</span>
+                        <br/>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="width: 20rem">
+                <div class="card-body">
+                    <h5>Query Response</h5><br/>
+                    <div easypiechart options="options" percent="qryResp" class="chart">
+                            {{reviews.qryResp | number:1}}
+                        </div>
+                        <span class="overall">Out of 3</span>
+                        <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br /><br/>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Comments</h4><br/>
+            <div class="card" data-ng-repeat="comment in reviews.comments track by $index" style="margin-bottom: 3%">
+                <div class="card-body">
+                    <span>{{comment}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/><br/>
+</div>

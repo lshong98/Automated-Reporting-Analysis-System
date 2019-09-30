@@ -167,7 +167,7 @@ app.get('/getPendingBinRequest', function (req, res) {
 
     var sql = "", output = [], i = 0;
     
-    sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tblcustomer WHERE tblbinrequest.customerID = tblcustomer.customerID";
+    sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tbluser WHERE tblbinrequest.userID = tbluser.userID";
     database.query(sql, function (err, result) {
         for (i = 0; i < result.length; i += 1) {
             output.push(result[i]);
@@ -272,6 +272,30 @@ app.post('/editCollectionSchedule', function (req, res) {
             throw err;
         }
         console.log("Updated");
+    });
+});
+
+app.get('/customerFeedback', function(req, res){
+    'use strict';
+    var sql = "SELECT * FROM tblsatisfaction";
+    var compRate = 0, teamEff = 0, collPrompt = 0, binHand = 0, spillCtrl = 0, qryResp = 0, comments = [];
+    var json = {};
+    database.query(sql, function(err,result){
+        console.log(result);
+        var totalReview = result.length;
+        for(var i = 0; i<totalReview; i++){
+            compRate += parseInt(result[i].companyRating);
+            teamEff += parseInt(result[i].teamEfficiency);
+            collPrompt += parseInt(result[i].collectionPromptness);
+            binHand += parseInt(result[i].binHandling);
+            spillCtrl += parseInt(result[i].spillageControl);
+            qryResp += parseInt(result[i].queryResponse);
+            if(result[i].extraComment != "" && result[i].extraComment != null){
+                comments.push(result[i].extraComment);
+            }
+        }
+        json = {"compRate":compRate/totalReview,"teamEff":teamEff/totalReview,"collPrompt":collPrompt/totalReview,"binHand":binHand/totalReview,"spillCtrl":spillCtrl/totalReview,"qryResp":qryResp/totalReview,"comments":comments};
+        res.json(json);
     });
 });
 

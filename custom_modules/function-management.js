@@ -274,14 +274,18 @@ function menuItem(keyword, status) {
                     if (status == 'A') {
                         return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> DBD Details</a></li>';
                     }   
-                    case "view blostDetails":
-                            if (status == 'A') {
-                                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BLOST Details</a></li>';
-                            } 
-                            case "view bdafDetails":
-                                    if (status == 'A') {
-                                        return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BDAF Details</a></li>';
-                                    } 
+            case "view blostDetails":
+                    if (status == 'A') {
+                        return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BLOST Details</a></li>';
+                    } 
+            case "view bdafDetails":
+                    if (status == 'A') {
+                        return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BDAF Details</a></li>';
+                    } 
+                    case "view feedback":
+                        if (status == 'A') {
+                            return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback</a></li>';
+                        } 
         
     }
 }

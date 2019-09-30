@@ -2,7 +2,7 @@
 jshint: white
 global angular, document, google, Highcharts
 */
-var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv']);
+var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv', 'easypiechart']);
 
 var socket = io.connect();
 var flag = false;
@@ -975,21 +975,6 @@ app.run(function($rootScope) {
 app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window) {
     $scope.loggedUser = localStorage.getItem('user');
 
-    // $scope.loginBtn = function(){
-    //     if($scope.uname === "admin" && $scope.pass === "admin"){
-    //         localStorage.setItem('user', 'admin');
-    //         $rootScope.loggedInUser = true;
-    //         $location.path("/dashboard");
-    //     }
-    // };
-
-    // $scope.logoutBtn = function(){
-    //     localStorage.clear();
-    //     $rootScope.loggedInUser = false;
-    //     $window.location.href = "#!";
-    //     $window.location.reload();
-    // };
-
     $scope.sendNotifToDevice = function(){
         $scope.data = {
             'target' : $scope.notifTarget,
@@ -1120,6 +1105,83 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(error);
         });
     };
+
+    $scope.getCustFeedback = function(){
+        $http.get('/customerFeedback').then(function(response){
+            console.log(response.data);
+            $scope.reviews = response.data;
+            $scope.collPrompt = (response.data.collPrompt/3)*100;
+            $scope.compRate = (response.data.compRate/3)*100;
+            $scope.teamEff = (response.data.teamEff/3)*100;
+            $scope.binHand = (response.data.binHand/3)*100;
+            $scope.spillCtrl = (response.data.spillCtrl/3)*100;
+            $scope.qryResp = (response.data.qryResp/3)*100;
+
+            $scope.options = {
+                animate: {
+                    duration: 0,
+                    enabled: false
+                },
+                barColor:'#2C3E50',
+                scaleColor:false,
+                lineWidth:20,
+                lineCap:'circle'
+            };
+
+            //console.log(value);
+            // if($scope.collPrompt < 2 && $scope.collPrompt >= 1.5){
+            //     $('#collPrompt').css('color', 'orange');
+            // }else if($scope.collPrompt >= 2){
+            //     $('#collPrompt').css('color', 'green');
+            // }else{
+            //     $('#collPrompt').css('color', 'red');
+            // }
+
+            // if($scope.compRate < 2 && $scope.compRate >= 1.5){
+            //     $('#compRate').css('color', 'orange');
+            // }else if($scope.compRate >= 2){
+            //     $('#compRate').css('color', 'green');
+            // }else{
+            //     $('#compRate').css('color', 'red');
+            // }
+
+            // if($scope.teamEff < 2 && $scope.teamEff >= 1.5){
+            //     $('#teamEff').css('color', 'orange');
+            // }else if($scope.teamEff >= 2){
+            //     $('#teamEff').css('color', 'green');
+            // }else{
+            //     $('#teamEff').css('color', 'red');
+            // }
+
+            // if($scope.binHand < 2 && $scope.binHand >= 1.5){
+            //     $('#binHand').css('color', 'orange');
+            // }else if($scope.binHand >= 2){
+            //     $('#binHand').css('color', 'green');
+            // }else{
+            //     $('#binHand').css('color', 'red');
+            // }
+
+            // if($scope.spillCtrl < 2 && $scope.spillCtrl >= 1.5){
+            //     $('#spillCtrl').css('color', 'orange');
+            // }else if($scope.spillCtrl >= 2){
+            //     $('#spillCtrl').css('color', 'green');
+            // }else{
+            //     $('#spillCtrl').css('color', 'red');
+            // }
+
+            // if($scope.qryResp < 2 && $scope.qryResp >= 1.5){
+            //     $('#qryResp').css('color', 'orange');
+            // }else if($scope.qryResp >= 2){
+            //     $('#qryResp').css('color', 'green');
+            // }else{
+            //     $('#qryResp').css('color', 'red');
+            // }
+        }, function(err){
+            console.log(err);
+        });
+    };
+
+
 });
 
 app.controller('navigationController', function($scope, $http, $window, storeDataService) {

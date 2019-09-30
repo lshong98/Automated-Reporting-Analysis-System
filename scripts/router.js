@@ -417,6 +417,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
+    .when('/customer-feedback', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/customer-feedback');
+            }
+        },
+        templateUrl: '/customer-feedback',
+        controller: 'custServiceCtrl',
+        controllerAs:'custService'
+    })
     .when('/boundary/:areaID', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {
