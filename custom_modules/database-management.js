@@ -18,7 +18,7 @@ var DB_NAME = process.env.DATABASE_NAME || '';
      user: DB_USER,
      password: DB_PASS,
      host: DB_HOST,
-     port: 3306
+     port: 3307
  }
 
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
@@ -118,7 +118,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID VARCHAR(15),  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
         "CREATE TABLE tbltag (date datetime,  serialNo VARCHAR(15),  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tbltruck(truckID))",
 //        "CREATE TABLE tblcomplainttype ( complaintType int auto_increment, complaint varchar(15), primary key (complaintType))",
-        "CREATE TABLE tblcomplaint ( complaintID int auto_increment, customerID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), primary key (complaintID), foreign key (customerID) references tblcustomer(customerID), foreign key (staffID) references tblstaff(staffID))",
+        "CREATE TABLE tblcomplaint ( complaintID varchar(15), userID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), complaintAddress varchar(300), complaintImg varchar(50), primary key (complaintID), foreign key (userID) references tbluser(userID), foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tbllog (transactionID int auto_increment, date datetime, staffID varchar(15), authorizedBy varchar(15), action varchar(15), description mediumtext, rowID varchar(15), tblName varchar(50), primary key (transactionID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblformauthorization (formentryID int auto_increment, creationDateTime dateTime, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), status char(1), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
@@ -128,11 +128,11 @@ emitter.on('createTable', function () {
         "CREATE TABLE fcm_info(id int auto_increment, fcm_token varchar(400), PRIMARY KEY(id), UNIQUE KEY(fcm_token))",
         "CREATE TABLE tblannouncement(id int auto_increment, announcement varchar(400), announceDate date, PRIMARY KEY(id))",
         "CREATE TABLE tblcarouselimg(id int auto_increment, fileName varchar(255), PRIMARY KEY(id))",
-        "CREATE TABLE tblnotif(notifID int auto_increment, customerID varchar(15), notifDate date, notifText varchar(255), PRIMARY KEY(notifID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))",
-        "CREATE TABLE tblbinrequest(reqID int auto_increment, customerID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), status varchar(10), PRIMARY KEY(reqID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))",
-        "CREATE TABLE tblsatisfaction(satisfactionID int auto_increment, customerID varchar(15), companyRating varchar(7), teamEfficiency varchar(7), collectionPromptness varchar(7), binHandling varchar(7), spillageControl varchar(7), queryResponse varchar(7), extraComment varchar(7), submissionDate datetime, PRIMARY KEY (satisfactionID), FOREIGN KEY (customerID) REFERENCES tblcustomer(customerID))",
+        "CREATE TABLE tblnotif(notifID int auto_increment, userID varchar(15), notifDate date, notifText varchar(255), PRIMARY KEY(notifID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
+        "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), status varchar(10), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tblcustomer(userID))",
+        "CREATE TABLE tblsatisfaction(satisfactionID int auto_increment, userID varchar(15), companyRating varchar(7), teamEfficiency varchar(7), collectionPromptness varchar(7), binHandling varchar(7), spillageControl varchar(7), queryResponse varchar(7), extraComment varchar(7), submissionDate datetime, PRIMARY KEY (satisfactionID), FOREIGN KEY (userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tbluser (userID VARCHAR(15), tamanID int , userEmail varchar(30),  password varchar(30),  contactNumber int, tradingLicense varchar(20),  name varchar(50), companyName varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  State varchar(30), vCode varchar(5), status char(1), creationDateTime datetime, PRIMARY KEY (userID),foreign key (tamanID) references tbltaman(tamanID), UNIQUE KEY(userEmail))",
-        "CREATE TABLE tblschedule(scheduleID int auto_increment, areaID varchar(15), customerID varchar(15), beBins int, acrBins int, mon tinyint(1), tue tinyint(1), wed tinyint(1), thur tinyint(1), fri tinyint(1), sat tinyint(1), remarks longtext, PRIMARY KEY(scheduleID), FOREIGN KEY(areaID) REFERENCES tblarea(areaID), FOREIGN KEY(customerID) REFERENCES tblcustomer(customerID))",
+        "CREATE TABLE tblschedule(scheduleID int auto_increment, areaID varchar(15), beBins int, acrBins int, mon tinyint(1), tue tinyint(1), wed tinyint(1), thur tinyint(1), fri tinyint(1), sat tinyint(1), remarks longtext, PRIMARY KEY(scheduleID), FOREIGN KEY(areaID) REFERENCES tblarea(areaID))",
         "CREATE TABLE tblhistory (historyID VARCHAR(15), content MEDIUMTEXT, staffID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(staffID) REFERENCES tblstaff(staffID), PRIMARY KEY (historyID))"
     ];
     
