@@ -978,6 +978,9 @@ app.run(function($rootScope) {
 //Customer Service Pages Controller
 app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window) {
     $scope.loggedUser = localStorage.getItem('user');
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 5; //Record number each page
+    $scope.maxSize = 8; //Show the number in page
 
     $scope.sendNotifToDevice = function(){
         $scope.data = {
@@ -1114,6 +1117,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         $http.get('/customerFeedback').then(function(response){
             console.log(response.data);
             $scope.reviews = response.data;
+            $scope.totalItems = response.data.length;
             $scope.collPrompt = (response.data.collPrompt/3)*100;
             $scope.compRate = (response.data.compRate/3)*100;
             $scope.teamEff = (response.data.teamEff/3)*100;
