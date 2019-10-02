@@ -1,25 +1,4 @@
 /*jslint node:true*/
-// var express = require('express');
-// var sanitizer = require('sanitizer');
-// var app = express();
-// var server = require('http').createServer(app);
-// var io = require('socket.io').listen(server);
-// var path = require('path'); 
-// var mysql = require('mysql');
-// var bcrypt = require('bcryptjs');
-// var EventEmitter = require('events');
-// var dateTime = require('node-datetime');
-// var emitter = new EventEmitter();
-// var nodemailer = require('nodemailer');
-// var Joi = require('joi');
-// var fs = require('fs');
-// var upload = require('express-fileupload');
-// var FCMAdmin = require("firebase-admin");
-//var FCMServiceAccount = require("./trienekens-994df-d5d29b87e6a8.json");
-
-require('dotenv').config();
-
-//var SVR_PORT = process.env.SERVER_PORT || 8080;
 var variable = require('./variable');
 var express = variable.express;
 var app = variable.app;
@@ -188,7 +167,7 @@ app.get('/getPendingBinRequest', function (req, res) {
 
     var sql = "", output = [], i = 0;
     
-    sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tblcustomer WHERE tblbinrequest.status = 'PENDING'AND tblbinrequest.customerID = tblcustomer.customerID";
+    sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tbluser WHERE tblbinrequest.userID = tbluser.userID";
     database.query(sql, function (err, result) {
         for (i = 0; i < result.length; i += 1) {
             output.push(result[i]);
@@ -253,7 +232,7 @@ app.post('/updatePendingUser', function (req, res) {
 app.post('/updateBinRequest', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.reqID + "'";
+    var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -293,6 +272,30 @@ app.post('/editCollectionSchedule', function (req, res) {
             throw err;
         }
         console.log("Updated");
+    });
+});
+
+app.get('/customerFeedback', function(req, res){
+    'use strict';
+    var sql = "SELECT * FROM tblsatisfaction";
+    var compRate = 0, teamEff = 0, collPrompt = 0, binHand = 0, spillCtrl = 0, qryResp = 0, comments = [];
+    var json = {};
+    database.query(sql, function(err,result){
+        console.log(result);
+        var totalReview = result.length;
+        for(var i = 0; i<totalReview; i++){
+            compRate += parseInt(result[i].companyRating);
+            teamEff += parseInt(result[i].teamEfficiency);
+            collPrompt += parseInt(result[i].collectionPromptness);
+            binHand += parseInt(result[i].binHandling);
+            spillCtrl += parseInt(result[i].spillageControl);
+            qryResp += parseInt(result[i].queryResponse);
+            if(result[i].extraComment != "" && result[i].extraComment != null){
+                comments.push(result[i].extraComment);
+            }
+        }
+        json = {"compRate":compRate/totalReview,"teamEff":teamEff/totalReview,"collPrompt":collPrompt/totalReview,"binHand":binHand/totalReview,"spillCtrl":spillCtrl/totalReview,"qryResp":qryResp/totalReview,"comments":comments};
+        res.json(json);
     });
 });
 

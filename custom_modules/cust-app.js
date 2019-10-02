@@ -17,39 +17,18 @@ var nodemailer = require('nodemailer');
 
 var express = require('express');
 var app = express();
-var EventEmitter = require('events');
-var emitter = new EventEmitter();
 var dateTime = require('node-datetime');
 var f = require('./function-management');
 var database = require('./database-management');
-var socket = require('./socket-management');
 var upload = require('express-fileupload');
 var nodemailer = require('nodemailer');
 var path = require('path');
-//var connect = require('connect');
 var fs = require('fs');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
 
 app.use(upload());
 app.use('/img', express.static(__dirname+'/img'));
 //app.use(express.static(__dirname + '/pendingImg'));
-// app.use(cookieParser());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded());
-// app.use(bodyParser());
-//app.use(connect.cookieParser());
-//app.use(connect.logger('dev'));
-//app.use(connect.bodyParser());
-//app.use(express.urlencoded());
-//app.use(express.json());
 
-//app.use(connect.json());
-//app.use(connect.urlencoded());
 
 // Cloud database access
 // var DB_HOST = '35.247.180.192';
@@ -108,22 +87,25 @@ app.post('/loginCustServiceApp', function (req, resp) {
             if (err) {
                 throw err;
             }
-            //console.log(result);
+            if(result[0] == undefined){
+                resp.send("Your Account is still awaiting verification from our staff");
+            }else{
+                if (result[0].userEmail == data.email && result[0].password == data.pass) {
+                    if(result[0].status == 1){
+                        resp.send("Login Success");
+                    }else{
+                        resp.send("Activate Acc");
+                    }
+                }else{
+                    resp.send("Failed");
+                }
+            }
+            console.log(result[0]);
             //resp.json(result);
 
-            console.log(result);
-            console.log("userEmail: " + result[0].userEmail);
-            console.log("postDataEmail: "+data.email);
-            
-            if (result[0].userEmail == data.email && result[0].password == data.pass) {
-                if(result[0].status == 1){
-                    resp.send("Login Success");
-                }else{
-                    resp.send("Activate Acc");
-                }
-            }else{
-                resp.send("Failed");
-            }
+            //console.log(result);
+            //console.log("userEmail: " + result[0].userEmail);
+            //console.log("postDataEmail: "+data.email);
         });
     });
 });
@@ -137,7 +119,7 @@ app.post('/getAreaID', function(req, resp){
     });
 
     req.addListener('end', function(){
-        var sql = "SELECT tamanID FROM tblcustomer WHERE userEmail = '"+data.email+"'";
+        var sql = "SELECT tamanID FROM tbluser WHERE userEmail = '"+data.email+"'";
         database.query(sql, function(err, res){
             tamanID = res[0].tamanID;
             var getAreaSql = "SELECT areaID FROM tbltaman WHERE tamanID = "+tamanID;
@@ -215,7 +197,7 @@ app.post('/getNotifs', function(req, resp){
 
     req.addListener('end', function(){
         console.log(data);
-        var sql = "SELECT * FROM tblnotif JOIN tblcustomer WHERE tblcustomer.userEmail = '"+ data.email +"' AND tblcustomer.customerID = tblnotif.customerID ORDER BY notifID DESC, notifDate DESC";
+        var sql = "SELECT * FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '"+ data.email +"' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
         var sql2 = "SELECT * FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
         var sql3 = "SELECT * FROM tblannouncement WHERE target = '"+data.areaID+"'";
 
@@ -259,12 +241,12 @@ app.post('/insertNotif', function(req, resp){
 
     req.addListener('end', function(){
         console.log(data);
-        var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.email + "'";
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.email + "'";
         database.query(sqlUser, function(err, res){
             if(!err){
-                userID = res[0].customerID;
+                userID = res[0].userID;
                 console.log("user id: " + userID);
-                var insertSql = "INSERT INTO tblnotif(customerID, notifDate, notifText) VALUES('"+ userID + "','"+date+"','"+data.text+"')";
+                var insertSql = "INSERT INTO tblnotif(userID, notifDate, notifText) VALUES('"+ userID + "','"+date+"','"+data.text+"')";
                 database.query(insertSql, function(err, res){
                     if(!err){
                         resp.send("Notif Inserted");
@@ -290,12 +272,12 @@ app.post('/binRequest', function(req, resp){
     });
 
     req.addListener('end', function(){
-        var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function(err, res){
             if(!err){
-                userID = res[0].customerID;
+                userID = res[0].userID;
                 console.log("user id: " + userID);
-                var insertSql = "INSERT INTO tblbinrequest(customerID,requestDate,binType,reason,remarks,status) VALUES('"+ userID + "','"+date+"','"+data.binType+"','"+ data.reason + "','"+data.remarks+"','"+data.status+"')";
+                var insertSql = "INSERT INTO tblbinrequest(userID,requestDate,binType,reason,remarks,status) VALUES('"+ userID + "','"+date+"','"+data.binType+"','"+ data.reason + "','"+data.remarks+"','"+data.status+"')";
                 database.query(insertSql, function(err, res){
                     if(!err){
                         resp.send("Sucessfully Submit Request");
@@ -314,7 +296,7 @@ app.post('/getSchedule', function(req, resp){
     'use strict';
 
     var data;
-    var userID;
+    var tamanID;
     var results = [];
     var json = {};
 
@@ -324,40 +306,44 @@ app.post('/getSchedule', function(req, resp){
 
     req.addListener('end', function(){
         console.log(data);
-        var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.email + "'";
-        database.query(sqlUser, function(err, res){
+        var sqlTaman = "SELECT tamanID FROM tbluser WHERE userEmail ='" + data.email + "'";
+        database.query(sqlTaman, function(err, res){
             if(res[0] != undefined){
-                userID = res[0].customerID;
-                var sqlSched = "SELECT * FROM tblschedule WHERE customerID = '"+userID+"'";
-                database.query(sqlSched, function(err, res){
-                    if(!err){
-                        for(var i=0; i<res.length; i++){
-                            if(res[i].mon == 1){
-                                results.push("Monday");
+                tamanID = res[0].tamanID;
+                var sqlarea = "SELECT areaID FROM tbltaman WHERE tamanID = '"+tamanID+"'";
+                database.query(sqlarea, function(err, res){
+                    var areaID = res[0].areaID;
+                    var sqlSched = "SELECT * FROM tblschedule WHERE areaID = '"+areaID+"'";
+                    database.query(sqlSched, function(err, res){
+                        if(!err){
+                            for(var i=0; i<res.length; i++){
+                                if(res[i].mon == 1){
+                                    results.push("Monday");
+                                }
+                                if(res[i].tue == 1){
+                                    results.push("Tuesday");
+                                }
+                                if(res[i].wed == 1){
+                                    results.push("Wednesday");
+                                }
+                                if(res[i].thur == 1){
+                                    results.push("Thursday");
+                                }
+                                if(res[i].fri == 1){
+                                    results.push("Friday");
+                                }
+                                if(res[i].sat == 1){
+                                    results.push("Saturday");
+                                }
                             }
-                            if(res[i].tue == 1){
-                                results.push("Tuesday");
+    
+                            for(var i = 0; i<results.length; i++){
+                                json[i] = results[i];
                             }
-                            if(res[i].wed == 1){
-                                results.push("Wednesday");
-                            }
-                            if(res[i].thur == 1){
-                                results.push("Thursday");
-                            }
-                            if(res[i].fri == 1){
-                                results.push("Friday");
-                            }
-                            if(res[i].sat == 1){
-                                results.push("Saturday");
-                            }
+                            console.log(json);
+                            resp.json(json);
                         }
-
-                        for(var i = 0; i<results.length; i++){
-                            json[i] = results[i];
-                        }
-                        console.log(json);
-                        resp.json(json);
-                    }
+                    });
                 });
             }else{
                 resp.send("error getting user id");
@@ -371,28 +357,40 @@ app.post('/complaint', function(req, resp){
     var data;
     var userID;
     var date = dateTime.create().format('Y-m-d H:M:S');
+    var complaintID = 0;
+    var sqlComplaintID = "SELECT MAX(complaintID) AS max FROM tblcomplaint";
 
     req.addListener('data', function(postDataChunk){
         data = JSON.parse(postDataChunk);
     });
 
     req.addListener('end', function(){
-        var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function(err, res){
             if(!err){
-                userID = res[0].customerID;
-                if(data.compRemarks == null || data.compRemarks == ""){
-                    var sql = "INSERT INTO tblcomplaint (customerID, staffID, premiseType, complaint, complaintDate, complaintAddress) VALUES ('" +userID+"','ACC201908070001','"+data.premise+"','"+data.complaint+"','"+date+"','"+data.compAdd+"')";
-                }else{
-                    var sql = "INSERT INTO tblcomplaint (customerID, staffID, premiseType, complaint, remarks, complaintDate, complaintAddress) VALUES ('" +userID+"','ACC201908070001','"+data.premise+"','"+data.complaint+"','"+data.compRemarks+"','"+date+"','"+data.compAdd+"')";
-                }
-                database.query(sql, function(err, res){
-                    if(!err){
-                        resp.send("Complaint Submitted");
-                    }else{
-                        resp.send("Failed to Submit");
-                    }
-                });
+                userID = res[0].userID;
+                //database.query(sql, function(err, res){
+                    //if(!err){
+                        database.query(sqlComplaintID, function (err, res) {
+                            complaintID = res[0].max;
+                            complaintID = parseInt(complaintID)+1;
+                            if(data.compRemarks == null || data.compRemarks == ""){
+                                var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, complaintDate, complaintAddress) VALUES ('" +complaintID+"','" +userID+"','ACC201908070001','"+data.premise+"','"+data.complaint+"','"+date+"','"+data.compAdd+"')";
+                            }else{
+                                var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, remarks, complaintDate, complaintAddress) VALUES ('" +complaintID+"','" +userID+"','ACC201908070001','"+data.premise+"','"+data.complaint+"','"+data.compRemarks+"','"+date+"','"+data.compAdd+"')";
+                            }
+                            database.query(sql, function(err, res){
+                                if(!err){
+                                    resp.send("Complaint Submitted for Complaint ID " + complaintID);
+                                }else{
+                                    resp.send("Failed to Submit");
+                                    throw err;
+                                }
+                            });
+                        });
+                    //}else{
+                    //}
+                //});
             }else{
                 resp.send("error getting user id");
             }
@@ -411,11 +409,15 @@ app.post('/satisfaction', function(req, resp){
     });
 
     req.addListener('end', function(){
-        var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function(err, res){
             if(!err){
-                userID = res[0].customerID;
-                var sql = "INSERT INTO tblsatisfaction (customerID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate) VALUES ('" + userID + "','" + data.companyRating + "','" + data.teamEfficiency + "','" + data.collectionPromptness + "','" + data.binHandling + "','" + data.spillageControl + "','" + data.queryResponse + "','" + data.extraComment + "','" + date + "')";
+                userID = res[0].userID;
+                var sql = "INSERT INTO tblsatisfaction (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate) VALUES ('" 
+                          + userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness)
+                          + "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" 
+                          + data.extraComment + "','" + date + "')";
+                
                 database.query(sql, function(err, res){
                     if(!err){
                         resp.send("Satisfaction Survey Submitted");
@@ -799,7 +801,7 @@ app.post('/getInfo', function(req, resp){
     });
 
     req.addListener('end', function(){
-        var sql = "SELECT * FROM tblcustomer WHERE userEmail = '"+data.user+"'";
+        var sql = "SELECT * FROM tbluser WHERE userEmail = '"+data.user+"'";
         database.query(sql, function(err, res){
             info["pno"] = res[0].contactNumber;
             info["hno"] = res[0].houseNo;
@@ -952,11 +954,11 @@ app.post('/getRequestList', function(req, resp){
 
     req.addListener('end', function(){
         console.log(data);
-        var sqlUser = "SELECT customerID FROM tbluser WHERE userEmail ='" + data.user + "'";
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function(err, res){
             if(!err){
-                userID = res[0].customerID;
-                var sql = "SELECT * FROM tblbinrequest WHERE customerID = '"+userID+"'";
+                userID = res[0].userID;
+                var sql = "SELECT * FROM tblbinrequest WHERE userID = '"+userID+"'";
                 //var sql2 = "SELECT message as offmsg, createdAt as offtime from tblchat WHERE complaintID ='"+data.id+"' AND sender!='"+userID+"' ORDER BY createdAt ASC";
                 database.query(sql, function(err, res){
                     if(res != undefined){
@@ -983,6 +985,29 @@ app.post('/getRequestList', function(req, resp){
     });
 });
 
+app.post('/cancelBinRequest', function (req, resp) {
+    'use strict';
+    var data;
+
+    req.addListener('data', function (postDataChunk) {
+        data = JSON.parse(postDataChunk);
+    });
+
+
+    req.addListener('end', function () {
+
+        var sql = "UPDATE tblbinrequest SET status = 'Cancelled' WHERE reqID = " + parseInt(data.requestID);
+
+        database.query(sql, function (err, res) {
+            if (!err) {
+                resp.send("Bin Request Cancellation Success");
+            } else {
+                resp.send("Bin Request Cancellation Failed");
+            }
+        });
+
+    });
+});
 
 app.post('/getUserID', function(req, resp){
     'use strict';
@@ -994,10 +1019,10 @@ app.post('/getUserID', function(req, resp){
     });
 
     req.addListener('end', function(){
-        var sqlUser = "SELECT customerID FROM tblcustomer WHERE userEmail ='" + data.user + "'";
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function(err, res){
             if(!err){
-                userID = res[0].customerID;
+                userID = res[0].userID;
                 resp.send(userID);
                 console.log("hello from getUserID");
             }
@@ -1083,7 +1108,8 @@ app.post('/uploadRegNewImage', rawBody, function(req, resp){
     // });
 
     data = JSON.parse(req.rawBody);
-    sql = "UPDATE tblcustomer SET imgPath ='pendingImg/"+data.ic+".jpg' WHERE ic ='"+data.ic+"'"
+    sql = "UPDATE tblcustomer SET imgPath ='pendingImg/"+data.ic+".jpg' WHERE ic ='"+data.ic+"'";
+    console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
     fs.writeFile(__dirname+'/../scripts/pendingImg/'+data.ic+'.jpg', Buffer.from(data.image, 'base64'), function(err){
@@ -1114,6 +1140,32 @@ app.post('/uploadRegNewImage', rawBody, function(req, resp){
     //     var text = data.toString('utf-8');
     //     console.log(text);
     // });
+});
+
+app.post('/uploadComplaintImage', rawBody, function (req, resp) {
+    
+    'use strict';
+    var data, sql;
+
+    data = JSON.parse(req.rawBody);
+    sql = "UPDATE tblcomplaint SET complaintImg ='complaintImg/ComplaintCase_" + data.cID + ".jpg' WHERE complaintID =" + data.cID + "";
+    console.log(sql);
+    console.log(req.rawBody);
+    //console.log(data);
+    fs.writeFile(__dirname + '/../scripts/complaintImg/ComplaintCase_' + data.cID + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            database.query(sql, function (err, res) {
+                if (!err) {
+                    resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
+                } else {
+                    resp.send("Please Try Again");
+                }
+            });
+            console.log("success");
+        }
+    });
 });
 
 // app.post('/uploadRegNewImage', function(req, resp){

@@ -52,13 +52,14 @@ function searchSocketID(userKey, myArray){
 
 var roomManager = "manager";
 
-io.sockets.once('connection', function (socket) {
+io.sockets.on('connection', function (socket) {
     'use strict';
     connections.push(socket);
     console.log('Connected: %s sockets connected', connections.length);
-    
     // Disconnect
     socket.on('disconnect', function (data) {
+        emitter.removeAllListeners('customer to staff message', this);
+        emitter.removeAllListeners('live map', this);
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
         connections.splice(connections.indexOf(socket), 1);
@@ -136,6 +137,7 @@ io.sockets.once('connection', function (socket) {
     
     emitter.on('customer to staff message', function (complaintID) {
         var sql = "SELECT content AS content, sender AS sender, recipient AS recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date FROM tblchat WHERE complaintID = '" + complaintID + "' ORDER BY creationDateTime DESC LIMIT 0, 1";
+        
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;

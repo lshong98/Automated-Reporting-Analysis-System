@@ -118,6 +118,20 @@ app.post('/getReportingAreaList', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+app.post('/getPassReportingAreaList', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS areaCode FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND (tblarea.collection_frequency LIKE '%" + req.body.day1 + "%' OR tblarea.collection_frequency LIKE '%" + req.body.day2 + "%') AND tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE tblreport.creationDateTime BETWEEN '" + req.body.date2+ "' AND CURDATE() + 1 )GROUP BY tblzone.zoneID";
+    console.log(sql);
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
+
 app.post('/getReportBinCenter', function(req,res){
     'use strict';
     
@@ -183,7 +197,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function(req, res){
     'use strict';
     
-    var sql ="SELECT reportID, reportCollectionDate, tblarea.areaName, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, completionStatus, garbageAmount, remark, tblarea.collection_frequency AS frequency FROM tblreport INNER JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID ORDER BY reportCollectionDate DESC";
+    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark FROM tblreport JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.reportCollectionDate DESC";
     
     database.query(sql, function (err, result) {
         if (err) {
