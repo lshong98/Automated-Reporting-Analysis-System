@@ -192,7 +192,7 @@ app.post('/filterArea',function(req,res){
         res.json(result);
         console.log(result);
     });
-}); // Complete
+}); // Complete 
 
 app.post('/getAreaList',function(req,res){ 
     'use strict';

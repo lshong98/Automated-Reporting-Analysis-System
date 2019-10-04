@@ -230,7 +230,9 @@ app.service('storeDataService', function() {
             "acr": {
                 "create": 'I',
                 "edit": 'I',
-                "view": 'I'
+                "view": 'I',
+                "lgview": 'I',
+                "bdview": 'I'
             },
             "database": {
                 "create": 'I',
@@ -2674,7 +2676,9 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         "acr": {
             "create": 'I',
             "edit": 'I',
-            "view": 'I'
+            "view": 'I',
+            "lgview": 'I',
+            "bdview": 'I'
         },
         "database": {
             "create": 'I',
@@ -2732,7 +2736,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         key = "edit";
                     }
                 }
-                if (bigKey == "status") {
+                if (bigKey == "status") { 
                     if (flag == false) {
                         $scope.auth[splitName[1]][splitName[0]] = bigValue;
                     } else {
@@ -2740,7 +2744,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         flag = false;
                     }
                 }
-            });
+            });  
         });
         //storeDataService.show = angular.copy($scope.auth);
     });
@@ -2842,7 +2846,9 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         "acr": {
                             "create": 'A',
                             "edit": 'A',
-                            "view": 'A'
+                            "view": 'A',
+                            "lgview": 'A',
+                            "bdview": 'A'
                         },
                         "database": {
                             "create": 'A',
@@ -2933,7 +2939,9 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         "acr": {
                             "create": 'I',
                             "edit": 'I',
-                            "view": 'I'
+                            "view": 'I',
+                            "lgview": 'I',
+                            "bdview": 'I'
                         },
                         "database": {
                             "create": 'I',
@@ -3497,10 +3505,10 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             console.log("DCS data received by controller");
             console.log(response.data);
         });
-        $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
-            $scope.driverList = response.data;
-            console.log($scope.driverList);
-        });
+        // $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
+        //     $scope.driverList = response.data;
+        //     console.log($scope.driverList);
+        // });
         // $scope.disableArea();
 
     }
