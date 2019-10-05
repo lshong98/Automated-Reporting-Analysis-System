@@ -316,6 +316,20 @@ input:checked + .slider:before {
                         <span class="slider"></span>
                     </label>
                 </li>
+                <li class="list-group-item">
+                    Logistics View
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acr.lgview" data-ng-change="changeValue(auth.acr.lgview, 'lgview acr');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item"> 
+                    Business Development View
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acr.bdview" data-ng-change="changeValue(auth.acr.bdview, 'bdview acr');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
             </ul>
         </div> 
     </div>

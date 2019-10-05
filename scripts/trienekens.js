@@ -230,7 +230,9 @@ app.service('storeDataService', function() {
             "acr": {
                 "create": 'I',
                 "edit": 'I',
-                "view": 'I'
+                "view": 'I',
+                "lgview": 'I',
+                "bdview": 'I'
             },
             "database": {
                 "create": 'I',
@@ -2674,7 +2676,9 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         "acr": {
             "create": 'I',
             "edit": 'I',
-            "view": 'I'
+            "view": 'I',
+            "lgview": 'I',
+            "bdview": 'I'
         },
         "database": {
             "create": 'I',
@@ -2732,7 +2736,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         key = "edit";
                     }
                 }
-                if (bigKey == "status") {
+                if (bigKey == "status") { 
                     if (flag == false) {
                         $scope.auth[splitName[1]][splitName[0]] = bigValue;
                     } else {
@@ -2740,7 +2744,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         flag = false;
                     }
                 }
-            });
+            });  
         });
         //storeDataService.show = angular.copy($scope.auth);
     });
@@ -2842,7 +2846,9 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         "acr": {
                             "create": 'A',
                             "edit": 'A',
-                            "view": 'A'
+                            "view": 'A',
+                            "lgview": 'A',
+                            "bdview": 'A'
                         },
                         "database": {
                             "create": 'A',
@@ -2933,7 +2939,9 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         "acr": {
                             "create": 'I',
                             "edit": 'I',
-                            "view": 'I'
+                            "view": 'I',
+                            "lgview": 'I',
+                            "bdview": 'I'
                         },
                         "database": {
                             "create": 'I',
@@ -3445,6 +3453,8 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     $scope.dcsList = [];
     $scope.driverList = [];
     $scope.areaList = [];
+    $scope.acrList = [];
+    $scope.filteredCustomerList = [];
 
 
 
@@ -3488,6 +3498,23 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     function getAllDcs() {
         $http.post('/completeDcs', $scope.currentStatus).then(function(response) {
 
+        }); 
+
+        $http.post('/getAllAcr', $scope.currentStatus).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.acrList = response.data;
+
+            console.log("ACR retrieved!");  
+            console.log(response.data);
+        });
+
+        $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
+            $scope.customerList = response.data;
+        });
+    
+        $http.post('/getAreaList').then(function(response) {
+    
+            $scope.areaList = response.data;
         });
 
         $http.post('/getAllDcs', $scope.currentStatus).then(function(response) {
@@ -3497,11 +3524,12 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             console.log("DCS data received by controller");
             console.log(response.data);
         });
+
         $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
             $scope.driverList = response.data;
             console.log($scope.driverList);
         });
-        // $scope.disableArea();
+
 
     }
     getAllDcs(); //call
@@ -3515,14 +3543,6 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
             $scope.areaList = response.data;
             console.log($scope.areaList);
         });
-    }
-
-    $scope.disableArea = function() {
-        document.getElementById("editArea").disabled = true;
-    }
-
-    $scope.enableArea = function() {
-        document.getElementById("editArea").disabled = false;
     }
 
     $scope.statusList = true;
@@ -3564,6 +3584,196 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         });
     }
 
+    $scope.editAcr = function(acrID) {
+        $scope.enableAddress();
+
+        var i = 0;
+
+        for (i = 0; i < $scope.dcsDetailsList.length; i++) {
+            if ($scope.dcsDetailsList[i].acrID == acrID) {
+
+
+                $scope.dcsEntry.acrID = $scope.dcsDetailsList[i].acrID
+                $scope.dcsEntry.companyName = $scope.dcsDetailsList[i].companyName;
+                $scope.filterAddress();
+                $scope.dcsEntry.customerID = $scope.dcsDetailsList[i].customerID;
+                $scope.dcsEntry.beBins = $scope.dcsDetailsList[i].beBins;
+                $scope.dcsEntry.acrBins = $scope.dcsDetailsList[i].acrBins;
+
+                if($scope.dcsDetailsList[i].mon == 1){
+                    document.getElementById("mon").checked = true;
+                    $scope.dcsEntry.mon = true;
+                }else{
+                    document.getElementById("mon").checked = false;
+                    $scope.dcsEntry.mon = false;
+                }
+                if($scope.dcsDetailsList[i].tue == 1){
+                    document.getElementById("tue").checked = true;
+                    $scope.dcsEntry.tue = true;
+                }else{
+                    document.getElementById("tue").checked = false;
+                    $scope.dcsEntry.tue = false;
+                }
+                if($scope.dcsDetailsList[i].wed == 1){
+                    document.getElementById("wed").checked = true;
+                    $scope.dcsEntry.wed = true;
+                }else{
+                    document.getElementById("wed").checked = false;
+                    $scope.dcsEntry.wed = false;
+                }
+                if($scope.dcsDetailsList[i].thu == 1){
+                    document.getElementById("thu").checked = true;
+                    $scope.dcsEntry.thu = true;
+                }else{
+                    document.getElementById("thu").checked = false;
+                    $scope.dcsEntry.thu = false;
+                }
+                if($scope.dcsDetailsList[i].fri == 1){
+                    document.getElementById("fri").checked = true;
+                    $scope.dcsEntry.fri = true;
+                }else{
+                    document.getElementById("fri").checked = false;
+                    $scope.dcsEntry.fri = false;
+                }
+                if($scope.dcsDetailsList[i].sat == 1){
+                    document.getElementById("sat").checked = true;
+                    $scope.dcsEntry.sat = true;
+                }else{
+                    document.getElementById("sat").checked = false;
+                    $scope.dcsEntry.sat = false;
+                }
+
+                $scope.dcsEntry.remarks = $scope.dcsDetailsList[i].remarks;
+
+                console.log($scope.dcsDetailsList[i]); 
+            }
+        }
+
+    }
+
+    $scope.addAcr = function() {
+
+        if($scope.acr.mon){
+            $scope.acr.mon = 1;
+        } else {
+            $scope.acr.mon = 0;
+        }
+
+        if($scope.acr.tue){
+            $scope.acr.tue = 1;
+        } else {
+            $scope.acr.tue = 0;
+        }
+
+        if($scope.acr.wed){
+            $scope.acr.wed = 1;
+        } else {
+            $scope.acr.wed = 0;
+        }
+
+        if($scope.acr.thu){
+            $scope.acr.thu = 1;
+        } else {
+            $scope.acr.thu = 0;
+        }
+
+        if($scope.acr.fri){
+            $scope.acr.fri = 1;
+        } else {
+            $scope.acr.fri = 0;
+        }
+
+        if($scope.acr.sat){
+            $scope.acr.sat = 1;
+        } else {
+            $scope.acr.sat = 0;
+        }
+
+        $http.post('/addAcr', $scope.acr).then(function(response) {
+
+            var returnedData = response.data;
+  
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "DCS Entry added successfully!"
+                });
+                
+                $scope.getDcsDetails(); //REFRESH DETAILS
+
+                angular.element('#createAcr').modal('toggle');
+            }
+        });
+    }
+
+    $scope.deleteAcr = function(a,index) {
+        
+        $http.post('/deleteAcr', a).then(function(response) {
+
+            if (response.data.status === "success") {
+                angular.element('body').overhang({
+                    type: "danger",
+                    "message": "ACR deleted!"
+                });
+
+                $scope.acrList.splice(index,1);
+            };
+        });
+    }
+
+    $scope.resetForm = function() {
+        $scope.acr.companyName = '';
+        $scope.acr.customerID = '';
+        $scope.acr.beBins = '';
+        $scope.acr.acrBins = '';
+        $scope.acr.mon = '';
+        $scope.acr.tue = '';
+        $scope.acr.wed = '';
+        $scope.acr.thu = '';
+        $scope.acr.fri = '';
+        $scope.acr.sat = '';
+        $scope.acr.remarks = '';
+
+        $scope.disableAddress();
+    }
+
+    $scope.disableAddress = function() {
+        document.getElementById("editAddress").disabled = true;
+        document.getElementById("txtAddress").disabled = true;
+    }
+
+    $scope.enableAddress = function() {
+        document.getElementById("editAddress").disabled = false;
+        document.getElementById("txtAddress").disabled = false;
+    }
+
+    $scope.filterAddress = function() {
+
+        $scope.enableAddress();
+        console.log($scope.acr);
+        $http.post('/filterAddress', $scope.acr).then(function(response) {
+
+            $scope.filteredCustomerList = response.data;
+        });
+    }
+
+    $scope.saveDcsEntry = function() {
+
+        console.log($scope.dcsEntry.customerID);
+        if($scope.dcsEntry.customerID != null){
+            $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
+
+                $scope.getDcsDetails();
+            });
+    
+            angular.element('#editDcsEntry').modal('toggle');
+        }else{
+            window.alert("Please select customer address"); 
+        }
+        
+    }
+
+    
 
 });
 
