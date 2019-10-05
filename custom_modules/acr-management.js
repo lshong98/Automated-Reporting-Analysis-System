@@ -48,6 +48,18 @@ app.post('/getAllDcs', function(req,res){
     }); 
 });
 
+app.post('/getAllAcr', function(req,res){
+    'use strict'; 
+    var sql = "SELECT acrID AS id, areaID, customerID, 'from', 'to', beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks FROM tblacr";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+        res.json(result);
+    }); 
+});
+
 app.post('/getDcsDetails', function(req,res){
     'use strict';
     console.log("HELLO FROM THE SERVER");
@@ -122,7 +134,7 @@ app.post('/updateDcsEntry', function(req,res){
     });
 }); 
 
-app.post('/deleteDcsEntry', function(req,res){
+app.post('/deleteAcr', function(req,res){
     'use strict';
 
     var sql = "DELETE FROM tblacr WHERE acrID = '" + req.body.acrID + "'";

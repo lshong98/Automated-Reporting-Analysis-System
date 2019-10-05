@@ -12,53 +12,53 @@
             
             <div class="form-group">
                 <label for="txtBeBins form-label">ACRF Number</label> 
-                <input type="text" class="form-control" id="txtAcrfNumber" data-ng-model="dcsEntry.acrfNumber" />
+                <input type="text" class="form-control" id="txtAcrfNumber" data-ng-model="acr.acrfNumber" />
               </div>
             <div class="form-group">
                 <label for="txtCompany form-label">Company Name</label>
-                <select type="text" class="form-control" id="txtCompany" data-ng-model="dcsEntry.companyName" data-ng-change="filterAddress();">
+                <select type="text" class="form-control" id="txtCompany" data-ng-model="acr.companyName" data-ng-change="filterAddress();">
                         <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
                 </select>
             </div>
             <div class="form-group"> 
               <label for="txtAddress form-label">Address</label>
-              <select type="text" class="form-control" id="txtAddress" data-ng-model="dcsEntry.customerID">
+              <select type="text" class="form-control" id="txtAddress" data-ng-model="acr.customerID">
                     <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
                 </select>
             </div>
             <div class="form-group">
               <label for="txtBeBins form-label">BE Bins/Units</label> 
-              <input type="text" class="form-control" id="txtBeBins" data-ng-model="dcsEntry.beBins" />
+              <input type="text" class="form-control" id="txtBeBins" data-ng-model="acr.beBins" />
             </div>
         
             <div class="form-group">
                 <label for="txtAcrBins form-label">ACR Bins/Units</label>
-                <input type="text" class="form-control" id="txtAcrBins" data-ng-model="dcsEntry.acrBins" />
+                <input type="text" class="form-control" id="txtAcrBins" data-ng-model="acr.acrBins" />
             </div>
             <div class="form-group">
                 <label>Collection Days</label>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.mon"> Mon</label>
+                        <label><input type="checkbox" data-ng-model="acr.mon"> Mon</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.tue"> Tue</label>
+                        <label><input type="checkbox" data-ng-model="acr.tue"> Tue</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.wed"> Wed</label>
+                        <label><input type="checkbox" data-ng-model="acr.wed"> Wed</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.thu"> Thu</label>
+                        <label><input type="checkbox" data-ng-model="acr.thu"> Thu</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.fri"> Fri</label>
+                        <label><input type="checkbox" data-ng-model="acr.fri"> Fri</label>
                     </div>
                     <div class="checkbox">
-                        <label><input type="checkbox" data-ng-model="dcsEntry.sat"> Sat</label>
+                        <label><input type="checkbox" data-ng-model="acr.sat"> Sat</label>
                     </div>
             </div>
             <div class="form-group">
                     <label for="txtRemarks form-label">Remarks</label>
-                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="dcsEntry.remarks" />
+                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="acr.remarks" />
                   </div>
      
             
@@ -67,116 +67,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-ng-click="addDcsEntry();">Create</button>
+          <button type="button" class="btn btn-primary" data-ng-click="addAcr();">Create</button>
         </div>
       </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive" style="height:650px;">
-                <table id="table" class="table table-hover table-striped table-clickable">
-                    <thead>
-                        <tr>
-                            <th width="10%" data-ng-click="orderBy('acrID');">ACRF Number <i class="fas fa-sort-down"></i></th>
-                            <th width="10%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
-                            <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
-                            <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
-                            <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
-                            <th width="5%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i></th>
-                            <th width="5%" data-ng-click="orderBy('Mon');">Mon</i></th>
-                            <th width="5%" data-ng-click="orderBy('Tue');">Tue</i></th>
-                            <th width="5%" data-ng-click="orderBy('Wed');">Wed</i></th>
-                            <th width="5%" data-ng-click="orderBy('Thu');">Thu</i></th>
-                            <th width="5%" data-ng-click="orderBy('Fri');">Fri</i></th>
-                            <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
-                            <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
-                            <th width="7%" id="editButtons" data-ng-show="show.edit == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'"></th>
-                        </tr>
-                    </thead>
-                    <tbody>               
-                            <tr data-ng-repeat="d in dcsDetailsList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" class="clickable-row">
-                                <td>
-                                        <div editable>
-                                                <input type="text" class="form-control" data-ng-model="d.acrID" data-ng-show="!showDcsDetails" /> 
-                                                <span data-ng-show="showDcsDetails" data-ng-bind="d.acrID"></span>
-                                        </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                                <input type="text" class="form-control" data-ng-model="d.customerID" data-ng-show="!showDcsDetails" />
-                                                <span data-ng-show="showDcsDetails" data-ng-bind="d.companyName"></span>
-                                            </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                                <input type="text" class="form-control" data-ng-model="d.customerID" data-ng-show="!showDcsDetails" />
-                                                <span data-ng-show="showDcsDetails" data-ng-bind="d.address"></span>
-                                            </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                                <input type="text" class="form-control" data-ng-model="d.beBins" data-ng-show="!showDcsDetails" />
-                                                <span data-ng-show="showDcsDetails" data-ng-bind="d.beBins"></span>
-                                            </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                                <input type="text" class="form-control" data-ng-model="d.acrBins" data-ng-show="!showDcsDetails" />
-                                                <span data-ng-show="showDcsDetails" data-ng-bind="d.acrBins"></span>
-                                            </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                            <span data-ng-show="d.mon">&#10004;</span>
-                                        </div>
-                                </td>       
-                                <td>    
-                                        <div editable>
-                                            <span data-ng-show="d.tue">&#10004;</span>
-                                        </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                            <span data-ng-show="d.wed">&#10004;</span>
-                                        </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                            <span data-ng-show="d.thu">&#10004;</span>
-                                        </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                            <span data-ng-show="d.fri">&#10004;</span>
-                                        </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                            <span data-ng-show="d.sat">&#10004;</span>
-                                        </div>
-                                </td>
-                                <td>
-                                        <div editable>
-                                            <input type="text" class="form-control" data-ng-model="d.remarks" data-ng-show="!showDcsDetails" />
-                                            <span data-ng-show="showDcsDetails" data-ng-bind="d.remarks"></span>
-                                        </div>
-                                </td>
-                               
-                                <td data-ng-show="show.edit == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showDcsDetails" data-toggle="modal" data-target="#editDcsEntry" data-ng-click="editDcsEntry(d.acrID);"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-danger" data-ng-show="showDcsDetails" data-ng-click="deleteDcsEntry(d,$index);"><i class="fa fa-times"></i></button>
-                                </td>
-                            </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="row" style="" id="pagination">
-        <div class="col-md-12">
-            <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-        </div>
     </div>
 </div>
 
@@ -373,6 +266,7 @@
                         <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
                         <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
                         <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
+                        <th width="5%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i></th>
                         <th width="5%" data-ng-click="orderBy('Mon');">Mon</i></th>
                         <th width="5%" data-ng-click="orderBy('Tue');">Tue</i></th>
                         <th width="5%" data-ng-click="orderBy('Wed');">Wed</i></th>
@@ -380,81 +274,54 @@
                         <th width="5%" data-ng-click="orderBy('Fri');">Fri</i></th>
                         <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
                         <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
-                        <th width="7%" id="editButtons" data-ng-show="show.edit == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'"></th>
+                        <th width="7%" id="editButtons" data-ng-show="show.edit == 'A'"></th>
                     </tr>
                 </thead>
                 <tbody>               
-                        <tr data-ng-repeat="d in dcsDetailsList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" class="clickable-row">
+                        <tr data-ng-repeat="a in acrList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" class="clickable-row">
                             <td>
-                                    <div editable>
-                                            <input type="text" class="form-control" data-ng-model="d.acrID" data-ng-show="!showDcsDetails" /> 
-                                            <span data-ng-show="showDcsDetails" data-ng-bind="d.acrID"></span>
-                                    </div>
+                                            <span data-ng-bind="a.acrID"></span>
                             </td>
                             <td>
-                                    <div editable>
-                                            <input type="text" class="form-control" data-ng-model="d.customerID" data-ng-show="!showDcsDetails" />
-                                            <span data-ng-show="showDcsDetails" data-ng-bind="d.companyName"></span>
-                                        </div>
+                                            <span data-ng-bind="a.companyName"></span>
                             </td>
                             <td>
-                                    <div editable>
-                                            <input type="text" class="form-control" data-ng-model="d.customerID" data-ng-show="!showDcsDetails" />
-                                            <span data-ng-show="showDcsDetails" data-ng-bind="d.address"></span>
-                                        </div>
+                                            <span data-ng-bind="a.address"></span>
                             </td>
                             <td>
-                                    <div editable>
-                                            <input type="text" class="form-control" data-ng-model="d.beBins" data-ng-show="!showDcsDetails" />
-                                            <span data-ng-show="showDcsDetails" data-ng-bind="d.beBins"></span>
-                                        </div>
+                                            <span data-ng-bind="a.areaID"></span>
                             </td>
                             <td>
-                                    <div editable>
-                                            <input type="text" class="form-control" data-ng-model="d.acrBins" data-ng-show="!showDcsDetails" />
-                                            <span data-ng-show="showDcsDetails" data-ng-bind="d.acrBins"></span>
-                                        </div>
+                                            <span data-ng-bind="a.beBins"></span>
                             </td>
                             <td>
-                                    <div editable>
-                                        <span data-ng-show="d.mon">&#10004;</span>
-                                    </div>
+                                            <span data-ng-bind="a.acrBins"></span>
+                            </td>
+                            <td>
+                                        <span data-ng-show="a.mon">&#10004;</span>
                             </td>       
                             <td>    
-                                    <div editable>
-                                        <span data-ng-show="d.tue">&#10004;</span>
-                                    </div>
+                                        <span data-ng-show="a.tue">&#10004;</span>
                             </td>
                             <td>
-                                    <div editable>
-                                        <span data-ng-show="d.wed">&#10004;</span>
-                                    </div>
+                                        <span data-ng-show="a.wed">&#10004;</span>
                             </td>
                             <td>
-                                    <div editable>
-                                        <span data-ng-show="d.thu">&#10004;</span>
-                                    </div>
+                                        <span data-ng-show="a.thu">&#10004;</span>
                             </td>
                             <td>
-                                    <div editable>
-                                        <span data-ng-show="d.fri">&#10004;</span>
-                                    </div>
+                                        <span data-ng-show="a.fri">&#10004;</span>
                             </td>
                             <td>
-                                    <div editable>
-                                        <span data-ng-show="d.sat">&#10004;</span>
-                                    </div>
+                                        <span data-ng-show="a.sat">&#10004;</span>
                             </td>
                             <td>
-                                    <div editable>
-                                        <input type="text" class="form-control" data-ng-model="d.remarks" data-ng-show="!showDcsDetails" />
-                                        <span data-ng-show="showDcsDetails" data-ng-bind="d.remarks"></span>
-                                    </div>
+                                        <span data-ng-bind="a.remarks"></span>
                             </td>
                            
-                            <td data-ng-show="show.edit == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">
-                                <button class="btn btn-sm btn-primary" data-ng-show="showDcsDetails" data-toggle="modal" data-target="#editAcr" data-ng-click="editDcsEntry(d.acrID);"><i class="fa fa-pencil-alt"></i></button>
-                                <button class="btn btn-sm btn-danger" data-ng-show="showDcsDetails" data-ng-click="deleteDcsEntry(d,$index);"><i class="fa fa-times"></i></button>
+                            <td data-ng-show="show.edit == 'A'">
+                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editAcr" data-ng-click="editAcr(a.acrID);"><i class="fa fa-pencil-alt"></i></button>
+                                <button class="btn btn-sm btn-danger" data-ng-click="deleteAcr(a,$index);"><i class="fa fa-times"></i></button>
                             </td>
                         </tr>
                 </tbody>
