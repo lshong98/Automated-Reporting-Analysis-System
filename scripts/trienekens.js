@@ -3584,73 +3584,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         });
     }
 
-    $scope.editAcr = function(acrID) {
-        $scope.enableAddress();
-
-        var i = 0;
-
-        for (i = 0; i < $scope.dcsDetailsList.length; i++) {
-            if ($scope.dcsDetailsList[i].acrID == acrID) {
-
-
-                $scope.dcsEntry.acrID = $scope.dcsDetailsList[i].acrID
-                $scope.dcsEntry.companyName = $scope.dcsDetailsList[i].companyName;
-                $scope.filterAddress();
-                $scope.dcsEntry.customerID = $scope.dcsDetailsList[i].customerID;
-                $scope.dcsEntry.beBins = $scope.dcsDetailsList[i].beBins;
-                $scope.dcsEntry.acrBins = $scope.dcsDetailsList[i].acrBins;
-
-                if($scope.dcsDetailsList[i].mon == 1){
-                    document.getElementById("mon").checked = true;
-                    $scope.dcsEntry.mon = true;
-                }else{
-                    document.getElementById("mon").checked = false;
-                    $scope.dcsEntry.mon = false;
-                }
-                if($scope.dcsDetailsList[i].tue == 1){
-                    document.getElementById("tue").checked = true;
-                    $scope.dcsEntry.tue = true;
-                }else{
-                    document.getElementById("tue").checked = false;
-                    $scope.dcsEntry.tue = false;
-                }
-                if($scope.dcsDetailsList[i].wed == 1){
-                    document.getElementById("wed").checked = true;
-                    $scope.dcsEntry.wed = true;
-                }else{
-                    document.getElementById("wed").checked = false;
-                    $scope.dcsEntry.wed = false;
-                }
-                if($scope.dcsDetailsList[i].thu == 1){
-                    document.getElementById("thu").checked = true;
-                    $scope.dcsEntry.thu = true;
-                }else{
-                    document.getElementById("thu").checked = false;
-                    $scope.dcsEntry.thu = false;
-                }
-                if($scope.dcsDetailsList[i].fri == 1){
-                    document.getElementById("fri").checked = true;
-                    $scope.dcsEntry.fri = true;
-                }else{
-                    document.getElementById("fri").checked = false;
-                    $scope.dcsEntry.fri = false;
-                }
-                if($scope.dcsDetailsList[i].sat == 1){
-                    document.getElementById("sat").checked = true;
-                    $scope.dcsEntry.sat = true;
-                }else{
-                    document.getElementById("sat").checked = false;
-                    $scope.dcsEntry.sat = false;
-                }
-
-                $scope.dcsEntry.remarks = $scope.dcsDetailsList[i].remarks;
-
-                console.log($scope.dcsDetailsList[i]); 
-            }
-        }
-
-    }
-
+ 
     $scope.addAcr = function() {
 
         if($scope.acr.mon){
@@ -3658,7 +3592,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         } else {
             $scope.acr.mon = 0;
         }
-
+ 
         if($scope.acr.tue){
             $scope.acr.tue = 1;
         } else {
@@ -3699,7 +3633,7 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
                     "message": "DCS Entry added successfully!"
                 });
                 
-                $scope.getDcsDetails(); //REFRESH DETAILS
+                getAllDcs(); //REFRESH DETAILS
 
                 angular.element('#createAcr').modal('toggle');
             }
@@ -3738,12 +3672,10 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
     }
 
     $scope.disableAddress = function() {
-        document.getElementById("editAddress").disabled = true;
         document.getElementById("txtAddress").disabled = true;
     }
 
     $scope.enableAddress = function() {
-        document.getElementById("editAddress").disabled = false;
         document.getElementById("txtAddress").disabled = false;
     }
 
@@ -3757,18 +3689,82 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         });
     }
 
-    $scope.saveDcsEntry = function() {
+    $scope.editAcr = function(acrID) {
+        $scope.disableAddress();
 
-        console.log($scope.dcsEntry.customerID);
-        if($scope.dcsEntry.customerID != null){
-            $http.post('/updateDcsEntry', $scope.dcsEntry).then(function(response) {
+        var i = 0;
 
-                $scope.getDcsDetails();
+        for (i = 0; i < $scope.acrList.length; i++) {
+            if ($scope.acrList[i].acrID == acrID) {
+
+                $scope.acr.acrID = $scope.acrList[i].acrID;
+                $scope.acr.from = $scope.acrList[i].from;
+                $scope.acr.to = $scope.acrList[i].to;
+                $scope.acr.company = $scope.acrList[i].companyName;
+                $scope.acr.beBins = $scope.acrList[i].beBins;
+                $scope.acr.acrBins = $scope.acrList[i].acrBins;
+
+                if($scope.acrList[i].mon == 1){
+                    document.getElementById("mon").checked = true;
+                    $scope.acr.mon = true;
+                }else{
+                    document.getElementById("mon").checked = false;
+                    $scope.acr.mon = false;
+                }
+                if($scope.acrList[i].tue == 1){
+                    document.getElementById("tue").checked = true;
+                    $scope.acr.tue = true;
+                }else{
+                    document.getElementById("tue").checked = false;
+                    $scope.acr.tue = false;
+                }
+                if($scope.acrList[i].wed == 1){
+                    document.getElementById("wed").checked = true;
+                    $scope.acr.wed = true;
+                }else{
+                    document.getElementById("wed").checked = false;
+                    $scope.acr.wed = false;
+                }
+                if($scope.acrList[i].thu == 1){
+                    document.getElementById("thu").checked = true;
+                    $scope.acr.thu = true;
+                }else{
+                    document.getElementById("thu").checked = false;
+                    $scope.acr.thu = false;
+                }
+                if($scope.acrList[i].fri == 1){
+                    document.getElementById("fri").checked = true;
+                    $scope.acr.fri = true;
+                }else{
+                    document.getElementById("fri").checked = false;
+                    $scope.acr.fri = false;
+                }
+                if($scope.acrList[i].sat == 1){
+                    document.getElementById("sat").checked = true;
+                    $scope.acr.sat = true;
+                }else{
+                    document.getElementById("sat").checked = false;
+                    $scope.acr.sat = false;
+                }
+
+                $scope.acr.remarks = $scope.acrList[i].remarks;
+            }
+        }
+
+    }
+
+    $scope.saveAcr = function() {
+
+        console.log($scope.acr.customerID);
+        if($scope.acr.customerID != null || $scope.acr.from != null || $scope.acr.to != null){
+            $http.post('/updateAcr', $scope.acr).then(function(response) {
+
+                getAllDcs();
             });
     
-            angular.element('#editDcsEntry').modal('toggle');
+            angular.element('#editAcr').modal('toggle');
         }else{
-            window.alert("Please select customer address"); 
+            window.alert("Please fill all fields."); 
         }
         
     }

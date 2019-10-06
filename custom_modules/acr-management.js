@@ -50,7 +50,7 @@ app.post('/getAllDcs', function(req,res){
 
 app.post('/getAllAcr', function(req,res){
     'use strict'; 
-    var sql = "SELECT acrID AS id, areaID, customerID, 'from', 'to', beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks FROM tblacr";
+    var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr as a inner join tblcustomer as c on a.customerID = c.customerID";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -117,6 +117,44 @@ app.post('/addDcsEntry',function(req,res){
         
 });
 }); // Complete
+ 
+app.post('/addAcr',function(req,res){ 
+    'use strict';
+
+        var sql = "INSERT INTO tblacr (acrID, `from`, `to`, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + req.body.acrID + "', '" + req.body.from + "', '" + req.body.to + "', '" + req.body.customerID + "', '" + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.remarks + "')";
+
+        console.log(sql);
+        database.query(sql, function (err, result) { 
+        if (err) {
+            throw err;
+
+        }
+
+                
+
+                res.json({"status": "success", "message": "ACR created!", "details": {"acrID": req.body.acrID}});
+            
+
+        
+        });
+
+}); // Complete
+
+app.post('/updateAcr', function(req,res){
+    'use strict';
+
+    var sql = "UPDATE tblacr SET `from` = '" + req.body.from + "', `to` = '" + req.body.to + "', customerID = '" + req.body.customerID + "', beBins = '" + req.body.beBins + "', acrBins = '" + req.body.acrBins + "', mon = " + req.body.mon + ", tue = " + req.body.tue + ", wed = " + req.body.wed + ", thu = " + req.body.thu + ", fri = " + req.body.fri + ", sat = " + req.body.sat + ", remarks = '" + req.body.remarks + "' WHERE acrID = '" + req.body.acrID + "'";
+    //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        } 
+         
+        res.json(result);
+        console.log(result); 
+    });
+}); 
 
 app.post('/updateDcsEntry', function(req,res){
     'use strict';

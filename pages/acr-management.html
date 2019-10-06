@@ -12,14 +12,31 @@
             
             <div class="form-group">
                 <label for="txtBeBins form-label">ACRF Number</label> 
-                <input type="text" class="form-control" id="txtAcrfNumber" data-ng-model="acr.acrfNumber" />
+                <input type="text" class="form-control" id="txtAcrfNumber" data-ng-model="acr.acrID" />
               </div>
-            <div class="form-group">
-                <label for="txtCompany form-label">Company Name</label>
-                <select type="text" class="form-control" id="txtCompany" data-ng-model="acr.companyName" data-ng-change="filterAddress();">
-                        <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
-                </select>
-            </div>
+              
+              <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtDcsPeriodFrom form-label">From</label>
+                        <input type="date" class="form-control" id="txtFrom" data-ng-model="acr.from" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtDcsPeriodTo form-label">To</label>
+                        <input type="date" class="form-control" id="txtTo" data-ng-model="acr.to" />
+                    </div>
+                </div>
+                  
+                
+              </div>
+              <div class="form-group">
+                  <label for="txtCompany form-label">Company Name</label>
+                  <select type="text" class="form-control" id="txtCompany" data-ng-model="acr.companyName" data-ng-change="filterAddress();">
+                          <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
+                  </select>
+              </div>
             <div class="form-group"> 
               <label for="txtAddress form-label">Address</label>
               <select type="text" class="form-control" id="txtAddress" data-ng-model="acr.customerID">
@@ -78,57 +95,80 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">Edit ACR</h5>
+        <br>
+          <h6>ACR ID: {{acr.acrID}}</h6>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <label>ACRF NO.: {{acrID}}</label>
-            <div class="form-group">
-                <label for="txtCompany form-label">Company Name</label>
-                <select type="text" class="form-control" id="editCompany" data-ng-model="dcsEntry.companyName" data-ng-change = "filterAddress();">
-                        <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
-                </select>
-            </div>
+            
+            <!-- <div class="form-group">
+                <label for="txtBeBins form-label">ACRF Number</label> 
+                <input type="text" class="form-control" id="txtAcrfNumber" data-ng-model="acr.acrID" />
+              </div>
+               -->
+              <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtDcsPeriodFrom form-label">From</label>
+                        <input type="date" class="form-control" id="txtFrom" data-ng-model="acr.from" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtDcsPeriodTo form-label">To</label>
+                        <input type="date" class="form-control" id="txtTo" data-ng-model="acr.to" />
+                    </div>
+                </div>
+                  
+                
+              </div>
+              <div class="form-group">
+                  <label for="txtCompany form-label">Company Name</label>
+                  <select type="text" class="form-control" id="txtCompany" data-ng-model="acr.companyName" data-ng-change="filterAddress();">
+                          <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
+                  </select>
+              </div>
             <div class="form-group"> 
               <label for="txtAddress form-label">Address</label>
-              <select type="text" class="form-control" id="editAddress" data-ng-model="dcsEntry.customerID">
+              <select type="text" class="form-control" id="txtAddress" data-ng-model="acr.customerID">
                     <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
                 </select>
             </div>
             <div class="form-group">
               <label for="txtBeBins form-label">BE Bins/Units</label> 
-              <input type="text" class="form-control" id="editBeBins" data-ng-model="dcsEntry.beBins" />
+              <input type="text" class="form-control" id="txtBeBins" data-ng-model="acr.beBins" />
             </div>
         
             <div class="form-group">
                 <label for="txtAcrBins form-label">ACR Bins/Units</label>
-                <input type="text" class="form-control" id="editAcrBins" data-ng-model="dcsEntry.acrBins" />
+                <input type="text" class="form-control" id="txtAcrBins" data-ng-model="acr.acrBins" />
             </div>
             <div class="form-group">
                 <label>Collection Days</label>
                     <div class="checkbox">
-                        <label><input id="mon" type="checkbox" data-ng-model="dcsEntry.mon" value="true"> Mon</label>
+                        <label><input id="mon" type="checkbox" data-ng-model="acr.mon"> Mon</label>
                     </div>
                     <div class="checkbox">
-                        <label><input id="tue" type="checkbox" data-ng-model="dcsEntry.tue" value="true"> Tue</label>
+                        <label><input id="tue" type="checkbox" data-ng-model="acr.tue"> Tue</label>
                     </div>
                     <div class="checkbox">
-                        <label><input id="wed" type="checkbox" data-ng-model="dcsEntry.wed" value="true"> Wed</label>
+                        <label><input id="wed" type="checkbox" data-ng-model="acr.wed"> Wed</label>
                     </div>
                     <div class="checkbox">
-                        <label><input id="thu" type="checkbox" data-ng-model="dcsEntry.thu" value="true"> Thu</label>
+                        <label><input id="thu" type="checkbox" data-ng-model="acr.thu"> Thu</label>
                     </div>
                     <div class="checkbox">
-                        <label><input id="fri" type="checkbox" data-ng-model="dcsEntry.fri" value="true"> Fri</label>
+                        <label><input id="fri" type="checkbox" data-ng-model="acr.fri"> Fri</label>
                     </div>
                     <div class="checkbox">
-                        <label><input id="sat" type="checkbox" data-ng-model="dcsEntry.sat" value="true"> Sat</label>
+                        <label><input id="sat" type="checkbox" data-ng-model="acr.sat"> Sat</label>
                     </div>
             </div>
             <div class="form-group">
                     <label for="txtRemarks form-label">Remarks</label>
-                    <input type="textArea" class="form-control" id="editRemarks" data-ng-model="dcsEntry.remarks" />
+                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="acr.remarks" />
                   </div>
      
             
@@ -137,7 +177,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-ng-click="saveDcsEntry();">Save</button>
+          <button type="button" class="btn btn-primary" data-ng-click="saveAcr();">Save</button>
         </div>
       </div>
     </div>
@@ -150,12 +190,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">Add a DCS</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
+        <div class="form-group">
                 <label for="txtDcsPeriodFrom form-label">Period From</label>
                 <input type="date" class="form-control" id="txtDcsPeriodFrom" data-ng-model="dcs.periodFrom" />
             </div>
@@ -163,7 +198,12 @@
             <div class="form-group">
                 <label for="txtDcsPeriodTo form-label">Period To</label>
                 <input type="date" class="form-control" id="txtDcsPeriodTo" data-ng-model="dcs.periodTo" />
-            </div>
+            </div>  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            
             <div class="form-group">
               <label for="txtDcsDriver form-label">Driver</label>
               <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.driverID" data-ng-change="filterArea();">
@@ -264,6 +304,8 @@
                         <th width="10%" data-ng-click="orderBy('acrID');">ACRF Number <i class="fas fa-sort-down"></i></th>
                         <th width="10%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
                         <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('from');">From <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('to');">To <i class="fas fa-sort-down"></i></th>
                         <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
                         <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
                         <th width="5%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i></th>
@@ -289,13 +331,19 @@
                                             <span data-ng-bind="a.address"></span>
                             </td>
                             <td>
-                                            <span data-ng-bind="a.areaID"></span>
+                                            <span data-ng-bind="a.from"></span>
+                            </td>
+                            <td>
+                                            <span data-ng-bind="a.to"></span>
                             </td>
                             <td>
                                             <span data-ng-bind="a.beBins"></span>
                             </td>
                             <td>
                                             <span data-ng-bind="a.acrBins"></span>
+                            </td>
+                            <td>
+                                            <span data-ng-bind="a.areaID"></span>
                             </td>
                             <td>
                                         <span data-ng-show="a.mon">&#10004;</span>
