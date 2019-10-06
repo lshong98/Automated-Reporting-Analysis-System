@@ -3,19 +3,31 @@ var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
+var variable = require('../variable');
+var dateTime = variable.dateTime;
 
 // Create Bin Center
 app.post('/addBinCenter', function (req, res) {
     'use strict';
     f.makeID("bincenter", req.body.creationDate).then(function (ID) {
         var sql = "INSERT INTO tblbincenter (binCenterID, areaID, binCenterName, binCenterLocation, binCenterStatus, creationDateTime) VALUE ('" + ID + "', '" + req.body.area + "' , '" + req.body.name + "', '" + req.body.location + "', 'A', '" + req.body.creationDate + "')";
-        database.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            res.json({"status": "success", "message": "Bin Center added successfully!", "details": {"binID": ID}});
-            res.end();
-        });
+        
+        f.sendForAuthorization(req.body.creationDate, req.body.iam, "add", "Create new bin center", ID, "tblbincenter", "\"" + sql + "\"");
+        f.logTransaction(req.body.creationDate, req.body.iam, "add", "Request to create new bin center", ID, "tblbincenter");
+        f.log(req.body.creationDate, "Request to create new bin center.", req.body.iam);
+        res.json({"status": "success", "message": "Request pending.."});
+        res.end();
+        
+//        database.query(sql, function (err, result) {
+//            if (err) {
+//                res.end();
+//                throw err;
+//            } else {
+//                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Bin Center", '', ID, "tblbincenter");
+//                res.json({"status": "success", "message": "Bin Center added successfully!", "details": {"binID": ID}});
+//                res.end();
+//            }
+//        });
     });
 }); // Complete
 
@@ -24,14 +36,25 @@ app.post('/editBinCenter', function (req, res) {
     'use strict';
     
     req.body.status = req.body.status === "ACTIVE" ? 'A' : 'I';
+    var dt = dateTime.create().format('Y-m-d H:M:S'),
+        sql = "UPDATE tblbincenter SET binCenterName = '" + req.body.name + "', binCenterLocation = '" + req.body.location + "', areaID = '" + req.body.area + "', binCenterStatus = '" + req.body.status + "' WHERE binCenterID = '" + req.body.id + "'";
     
-    var sql = "UPDATE tblbincenter SET binCenterName = '" + req.body.name + "', binCenterLocation = '" + req.body.location + "', areaID = '" + req.body.area + "', binCenterStatus = '" + req.body.status + "' WHERE binCenterID = '" + req.body.id + "'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json({"status": "success", "message": "Successfully updated!"});
-    });
+    f.sendForAuthorization(dt, req.body.iam, "update", "Update bin center", req.body.id, "tblbincenter", "\"" + sql + "\"");
+    f.logTransaction(dt, req.body.iam, "update", "Request to update bin center", req.body.id, "tblbincenter");
+    f.log(dt, "Request to update bin center.", req.body.iam);
+    res.json({"status": "success", "message": "Request pending.."});
+    res.end();
+    
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            res.end();
+//            throw err;
+//        } else {
+//            f.logTransaction(dt, req.body.iam, "update", "Update Bin Center - " + req.body.name + "", '', req.body.id, "tblbincenter");
+//            res.json({"status": "success", "message": "Successfully updated!"});
+//            res.end();
+//        }
+//    });
 }); // Complete
 
 // Load all bin center in management

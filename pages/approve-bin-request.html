@@ -1,7 +1,7 @@
 <div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getPendingBinRequest()">
     <div class="row">
         <div class="col-md-12 table-responsive">
-            <h1>Pending Bin Requests</h1><br/><br/>
+            <h1>Bin Requests</h1><br/><br/>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -12,7 +12,8 @@
                         <th>Reason</th>
                         <th>Remarks</th>
                         <th>Request Date</th>
-                        <th colspan="2">Action</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,8 +25,22 @@
                         <td>{{pReq.reason}}</td>
                         <td>{{pReq.remarks}}</td>
                         <td>{{pReq.requestDate}}</td>
-                        <td><button class="btn btn-success" data-ng-click="updateBinRequest(pReq.reqID, 'Approved')">Approve</button></td>
-                        <td><button class="btn btn-danger" data-ng-click="updateBinRequest(pReq.reqID, 'Declined')">Decline</button></td>
+                        <td>
+                            <div editable>
+                                <select name="binReqStatus" data-ng-model="pReq.status" class="form-control" data-ng-show="!showBinRequest">
+                                    <option value="PENDING">Pending</option>
+                                    <option value="Settled">Settled</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="No Response">No Response</option>
+                                </select>
+                                <span data-ng-show="showBinRequest">{{pReq.status}}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" data-ng-show="showBinRequest && pReq.status != 'Settled' && pReq.status != 'Cancelled'" data-ng-click="editBinRequestStatus();"><i class="fa fa-pencil-alt"></i></button>
+                            <button class="btn btn-sm btn-warning" data-ng-show="!showBinRequest" data-ng-click="saveBinRequestStatus(pReq.status, pReq.reqID);"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-sm btn-default" data-ng-show="!showBinRequest" data-ng-click="cancelBinRequestStatus();"><i class="fa fa-times"></i></button>
+                        </td>
                     </tr>
                 </tbody>
             </table>

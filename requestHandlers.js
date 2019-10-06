@@ -176,9 +176,17 @@ app.get('/bin-collection-schedule', function (req, res) {
     'use strict';
     res.sendFile('pages/schedule.html', {root: __dirname});
 });
+app.get('/customer-feedback', function (req, res) {
+    'use strict';
+    res.sendFile('pages/customer-feedback.html', {root: __dirname});
+});
 app.get('/boundary/:areaID', function (req, res) {
     'use strict';
     res.sendFile('pages/boundary.html', {root: __dirname});
+});
+app.get('/history', function (req, res) {
+    'use strict';
+    res.sendFile('pages/history.html', {root: __dirname});
 });
 
 module.exports = app;

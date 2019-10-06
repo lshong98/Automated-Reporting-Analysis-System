@@ -3,21 +3,31 @@ var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
+var variable = require('../variable');
+var dateTime = variable.dateTime;
 
 // Create Truck
 app.post('/addTruck', function (req, res) {
     'use strict';
     f.makeID("truck", req.body.creationDate).then(function (ID) {
         var sql = "INSERT INTO tbltruck (truckID, transporter, truckTon, truckNum, truckExpiryStatus, creationDateTime, truckStatus) VALUE ('" + ID + "', '" + req.body.transporter + "', '" + req.body.ton + "', '" + req.body.no + "', '" + req.body.roadtax + "', '" + req.body.creationDate + "', 'A')";
-        database.query(sql, function (err, result) {
-            if (err) {
-                res.end();
-                throw err;
-            } else {
-                res.json({"status": "success", "message": "Truck added successfully!", "details": {"truckID": ID}});
-                res.end();
-            }
-        });
+        
+        f.sendForAuthorization(req.body.creationDate, req.body.iam, "add", "Create new truck", ID, "tbltruck", "\"" + sql + "\"");
+        f.logTransaction(req.body.creationDate, req.body.iam, "add", "Request to Create New truck", ID, "tbltruck");
+        f.log(req.body.creationDate, "Request to create new truck.", req.body.iam);
+        res.json({"status": "success", "message": "Request pending.."});
+        res.end();
+        
+//        database.query(sql, function (err, result) {
+//            if (err) {
+//                res.end();
+//                throw err;
+//            } else {
+//                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Truck", '', ID, "tbltruck");
+//                res.json({"status": "success", "message": "Truck added successfully!", "details": {"truckID": ID}});
+//                res.end();
+//            }
+//        });
     });
 }); // Complete
 
@@ -25,19 +35,28 @@ app.post('/addTruck', function (req, res) {
 app.post('/editTruck', function (req, res) {
     'use strict';
     
+    var dt = dateTime.create().format('Y-m-d H:M:S');
     req.body.status = req.body.status === "ACTIVE" ? 'A' : 'I';
     
     var sql = "UPDATE tbltruck SET transporter = '" + req.body.transporter + "', truckTon = '" + req.body.ton + "', truckNum = '" + req.body.no + "', truckExpiryStatus = '" + req.body.roadtax + "', truckStatus = '" + req.body.status + "' WHERE truckID = '" + req.body.id + "'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            res.json({"status": "error", "message": "Something wrong!"});
-            res.end();
-            throw err;
-        } else {
-            res.json({"status": "success", "message": "Truck edited!"});
-            res.end();
-        }
-    });
+    
+    f.sendForAuthorization(dt, req.body.iam, "update", "Update truck", req.body.id, "tbltruck", "\"" + sql + "\"");
+    f.logTransaction(dt, req.body.iam, "add", "Request to update truck", req.body.id, "tbltruck");
+    f.log(dt, "Request to update truck.", req.body.iam);
+    res.json({"status": "success", "message": "Request pending.."});
+    res.end();
+    
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            res.json({"status": "error", "message": "Something wrong!"});
+//            res.end();
+//            throw err;
+//        } else {
+//            f.logTransaction(dt, req.body.iam, "update", "Update Truck - " + req.body.id + "", '', req.body.id, "tbltruck");
+//            res.json({"status": "success", "message": "Truck edited!"});
+//            res.end();
+//        }
+//    });
 }); // Complete
 
 // Used in comboBox - Truck

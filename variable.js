@@ -1,31 +1,36 @@
 /*jslint node:true*/
+
 var express = require('express');
-var sanitizer = require('sanitizer');
 var app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
-var path = require('path'); 
-var mysql = require('mysql');
+
 var bcrypt = require('bcryptjs');
-var EventEmitter = require('events');
 var dateTime = require('node-datetime');
+var EventEmitter = require('events');
 var emitter = new EventEmitter();
-var nodemailer = require('nodemailer');
-var Joi = require('joi');
-var fs = require('fs');
-var upload = require('express-fileupload');
 var FCMAdmin = require("firebase-admin");
 var FCMServiceAccount = require("./trienekens-994df-d5d29b87e6a8.json");
+var fs = require('fs');
+var io = require('socket.io').listen(server);
+var mysql = require('mysql');
+var nodemailer = require('nodemailer');
+var path = require('path');
+var sanitizer = require('sanitizer');
+var upload = require('express-fileupload');
 
-var SVR_PORT = process.env.SERVER_PORT || 8080;
+var SVR_PORT = process.env.SERVER_PORT || 3000;
 
-exports.express = express;
 exports.app = app;
-exports.server = server;
-exports.io = io;
-exports.SVR_PORT = SVR_PORT;
+exports.bcrypt = bcrypt;
+exports.dateTime = dateTime;
+exports.express = express;
 exports.emitter = emitter;
 exports.fs = fs;
-exports.upload = upload;
 exports.FCMAdmin = FCMAdmin;
 exports.FCMServiceAccount = FCMServiceAccount;
+exports.io = io;
+exports.nodemailer = nodemailer;
+exports.path = path;
+exports.server = server;
+exports.SVR_PORT = SVR_PORT;
+exports.upload = upload;

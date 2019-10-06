@@ -417,6 +417,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
+    .when('/customer-feedback', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/customer-feedback');
+            }
+        },
+        templateUrl: '/customer-feedback',
+        controller: 'custServiceCtrl',
+        controllerAs:'custService'
+    })
     .when('/boundary/:areaID', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {
@@ -428,6 +438,17 @@ app.config(function($routeProvider, $locationProvider){
         },
         controller: 'boundaryController',
         controllerAs: 'boundary'
+    })
+    .when('/history', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/history');
+            }
+        },
+        templateUrl: function () {
+            return '/history'
+        },
+        controller : 'historyController'
     })
     .when('/logout', {
         resolve: {
