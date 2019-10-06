@@ -755,14 +755,14 @@ app.directive('editable', function($compile, $http, $filter, storeDataService) {
             angular.element('.selectpicker').selectpicker('render');
 
         };
-        scope.saveDatabaseBin = function(id, date, customerID, serialNo, acrfSerialNo, status, rcDwell, comment, itemType, path) {
+        scope.saveDatabaseBin = function(id, date, customerID, areaCode, serialNo, acrfSerialNo, status, rcDwell, comment, itemType, path) {
             scope.showDatabaseBin = !scope.showDatabaseBin;
 
-            scope.thisDatabaseBin = { "idNo": id, "date": date, "customerID": customerID, "serialNo": serialNo, "acrID": acrfSerialNo, "activeStatus": status, "rcDwell": rcDwell, "comment": comment, "itemType": itemType, "path": path };
+            scope.thisDatabaseBin = { "idNo": id, "date": date, "customerID": customerID, "areaCode": areaCode, "serialNo": serialNo, "acrID": acrfSerialNo, "activeStatus": status, "rcDwell": rcDwell, "comment": comment, "itemType": itemType, "path": path };
             console.log("The databasebin thing: ");
             console.log(scope.thisDatabaseBin);
 
-            $http.post('/editDatabaseBin', scope.thisDatabaseBin).then(function(response) {
+            $http.put('/editDatabaseBin', scope.thisDatabaseBin).then(function(response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
@@ -4106,7 +4106,8 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     var asc = true;
     $scope.areaList = [];
     $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemPerPage = 8; //Record number each page
+    $scope.itemPerPage = 8;
+     //Record number each page
     $scope.maxSize = 10;
 
 
@@ -4181,8 +4182,8 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     //Retrieve all taman entries and store them in tamanList
     $http.get('/getAllTaman').then(function(response) {
         $scope.tamanList = response.data;
-        console.log($scope.tamanList);
-        console.log("Hello from taman controller");
+        //console.log($scope.tamanList);
+        //console.log("Hello from taman controller");
     })
 
     //Retrieve all Area entries and store them in areaList
@@ -4195,28 +4196,28 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     //Retrieve all Customer entries and store them in customerList
     $http.get('/getAllCustomer').then(function(response) {
         $scope.customerList = response.data;
-        console.log($scope.customerList);
-        console.log("Hello from customer controller");
+        //console.log($scope.customerList);
+        //console.log("Hello from customer controller");
     })
 
     //Retrieve all Bin entries and store them in binList
     $http.get('/getAllBins').then(function(response) {
         $scope.binList = response.data;
-        console.log($scope.binList);
-        console.log("Hello from bin controller");
+        //console.log($scope.binList);
+        //console.log("Hello from bin controller");
     })
 
     //Retrieve all ACR entries and store them in binList
     $http.get('/getAllAcr').then(function(response) {
         $scope.acrList = response.data;
-        console.log($scope.acrList);
-        console.log("Hello from acr controller");
+        //console.log($scope.acrList);
+        //console.log("Hello from acr controller");
     })
 
     $http.get('/getAllDatabaseBin').then(function(response) {
 
         $scope.databaseBinList = response.data;
-        console.log($scope.databaseBinList);
+        //console.log($scope.databaseBinList);
         storeDataService.databaseBin = angular.copy($scope.databaseBinList);
     });
 
@@ -4234,12 +4235,14 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.addDatabaseBin = function() {
         // $scope.databaseBin.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         // console.log($scope.databaseBin);
+        //console.log($scope.customer);
 
 
         //$scope.databaseBinList.push({"date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.icNo, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnKpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": $scope.databaseBin.address, "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrfSerialNo, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
         //$scope.totalItems = $scope.filterDatabaseBinList.length;
-        console.log("Database Bin Created");
-        console.log($scope.databaseBinList);
+        //console.log("Database Bin Created");
+        //console.log($scope.databaseBinList);
+        //console.log($scope.customer);
 
 
         //var query = "INSERT INTO table tblWheelBinDatabase (idNo, date, customerId, areaId, serialNo, acrId, activeStatus) value (" + null + ", \"" + $scope.databaseBin.date + "\", \"" + customerId + "\", \"" + $scope.databaseBin.areaCode + "\", \"" + $scope.databaseBin.acrfSerialNo + "\", " + "\"A\")";
@@ -4255,7 +4258,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                     type: "success",
                     "message": "New Entry added successfully!"
                 });
-                console.log("Hello from addDatabaseBin serverside!");
+                //console.log("Hello from addDatabaseBin serverside!");
                 $scope.databaseBinList.push({ "date": $scope.databaseBin.date, "name": $scope.databaseBin.name, "icNo": $scope.databaseBin.ic, "serialNo": $scope.databaseBin.serialNo, "rcDwell": $scope.databaseBin.rcDwell, "houseNo": $scope.databaseBin.houseNo, "tmnKpg": $scope.databaseBin.tmnkpg, "areaCode": $scope.databaseBin.areaCode, "status": $scope.databaseBin.status, "comment": $scope.databaseBin.comment, "binSize": $scope.databaseBin.binSize, "address": concat($scope.databaseBin.houseNo, $scope.databaseBin.streetNo, $scope.databaseBin.tmgkpg), "companyName": $scope.databaseBin.companyName, "acrfSerialNo": $scope.databaseBin.acrID, "itemType": $scope.databaseBin.itemType, "path": $scope.databaseBin.path });
                 //storeDataService.databaseBin = angular.copy($scope.databaseBinList);
                 //$scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
@@ -4314,26 +4317,26 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
 
     // Adds new customer to the customer database
     $scope.addCustomer = function() {
-        console.log($scope.customer.tamanID);
-        console.log("Customer Created");
+        //console.log($scope.customer.tamanID);
+        //console.log("Customer Created");
         $scope.customer.creationDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
         //$scope.customer.customerID = f.makeID('customer',$filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss'));
         //console.log($scope.customer.customeriD);
-        console.log($scope.customer);
+        //console.log($scope.customer);
 
         $http.post('/addCustomer', $scope.customer).then(function(response) {
             //var returnedData = response.data;
             //var newBinID = returnedData.details.binID;
 
             $scope.notify(response.data.status, response.data.message);
-            console.log("Hello 1");
+            //console.log("Hello 1");
             if (response.data.status === 'success') {
                 angular.element('body').overhang({
                     type: "success",
                     "message": "New Customer added successfully!"
                 });
-                console.log("Hello from addCustomer serverside!");
+                //console.log("Hello from addCustomer serverside!");
                 $scope.customerList.push({ "name": $scope.customer.name, "ic": $scope.customer.ic, "companyName": $scope.customer.companyName });
                 //storeDataService.databaseBin = angular.copy($scope.databaseBinList);
                 //$scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
@@ -4348,8 +4351,8 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     //Adds new bin to the database
     $scope.addBin = function() {
         //console.log($scope.customer.tamanID);
-        console.log("Bin Created");
-        console.log($scope.customer);
+        //console.log("Bin Created");
+        //console.log($scope.customer);
 
         $http.post('/addBin', $scope.bin).then(function(response) {
             //var returnedData = response.data;
@@ -4361,7 +4364,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                     type: "success",
                     "message": "New Bin added successfully!"
                 });
-                console.log("Hello from addBin serverside!");
+                //console.log("Hello from addBin serverside!");
                 $scope.binList.push({ "serialNo": $scope.bin.serialNo });
                 //storeDataService.databaseBin = angular.copy($scope.databaseBinList);
                 //$scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
@@ -4376,8 +4379,8 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     //Adds new Taman to the database
     $scope.addTaman = function() {
         //console.log($scope.customer.tamanID);
-        console.log("Taman Created");
-        console.log($scope.taman);
+        //console.log("Taman Created");
+        //console.log($scope.taman);
 
         $http.post('/addTaman', $scope.taman).then(function(response) {
             //var returnedData = response.data;
@@ -4389,7 +4392,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                     type: "success",
                     "message": "New Taman added successfully!"
                 });
-                console.log("Hello from addTaman serverside!");
+                //console.log("Hello from addTaman serverside!");
                 $scope.tamanList.push({ "tamanName": $scope.taman.tamanName });
                 //storeDataService.databaseBin = angular.copy($scope.databaseBinList);
                 //$scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
@@ -4427,7 +4430,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
             putRange(start, end);
             $scope.date.from = start.format('YYYY-MM-DD');
             $scope.date.to = end.format('YYYY-MM-DD');
-            console.log($scope.date.from + ' ' + $scope.date.to);
+            //console.log($scope.date.from + ' ' + $scope.date.to);
 
         });
         putRange(start, end);

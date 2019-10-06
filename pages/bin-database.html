@@ -17,7 +17,7 @@
                 <div class="form-group">
                     <label for="txtCustomer form-label">Customer</label>
                     <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.customerID">
-                        <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.ic}} - {{c.name}} - {{c.companyName}}</option>
+                        <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.customerID}} - {{c.name}} - {{c.companyName}}</option>
                     </select>
                 </div>
 
@@ -333,7 +333,7 @@
                             <tr data-ng-repeat="b in databaseBinList |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />
+                                        <input type="date" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.date | date:'dd-MM-yyyy'"></span>
                                     </div>
                                 </td>
@@ -379,7 +379,9 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.areaCode" data-ng-show="!showDatabaseBin" />
+                                        <select type="text" class="form-control" data-ng-model="b.areaCode" data-ng-show="!showDatabaseBin">
+                                            <option data-ng-repeat="a in areaList" value={{a.id}}>{{a.id}}</option>
+                                        </select>
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.areaCode"></span>
                                     </div>
                                 </td>
@@ -434,7 +436,7 @@
                                 <td data-ng-show="show.edit == 'A'">
                                     <button class="btn btn-sm btn-primary" data-ng-show="showDatabaseBin" data-ng-click="editDatabaseBin();"><i class="fa fa-pencil-alt"></i></button>
                                     <button class="btn btn-sm btn-danger" data-ng-show="showDatabaseBin" data-ng-click="deleteDatabaseBin(b.serialNo)"><i class="fas fa-trash-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showDatabaseBin" data-ng-click="saveDatabaseBin(b.id, b.date, b.customerID, b.serialNo, b.acrfSerialNo, b.status, b.rcDwell, b.comment, b.itemType, b.path);"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showDatabaseBin" data-ng-click="saveDatabaseBin(b.id, b.date, b.customerID, b.areaCode, b.serialNo, b.acrfSerialNo, b.status, b.rcDwell, b.comment, b.itemType, b.path);"><i class="fa fa-save"></i></button>
                                     <button class="btn btn-sm btn-default" data-ng-show="!showDatabaseBin" data-ng-click="cancelDatabaseBin();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>

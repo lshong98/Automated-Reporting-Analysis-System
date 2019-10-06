@@ -38,7 +38,7 @@ app.post('/addDatabaseBin', function (req, res) {
 
     let current_datetime = req.body.date;
     let formatted_date = moment(current_datetime).format("YYYY-MM-DD hh:mm:ss");
-    console.log(formatted_date);
+    //console.log(formatted_date);
 
     var sql = `insert into tblwheelbindatabase values(NULL,'${formatted_date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}','${req.body.acrID}','${req.body.activeStatus}','${req.body.rcDwell}', '${req.body.comment}','${req.body.itemType}','${req.body.path}')`;
     database.query(sql, function (err, result) {
@@ -56,6 +56,24 @@ app.post('/editDatabaseBin', function (req, res) {
     'use strict';
 
     var sql = `update tblwheelbindatabase set date ='${req.body.date}', customerID = '${req.body.customerID}', areaID = 'a001', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}', itemType = '${req.body.itemType}', path = '${req.body.path}' where idNo = ${req.body.idNo}`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log("Update WBD entry success");
+        console.log(result);
+        res.json({"status": "success", "message": "WBD Entry updated successfully!"});
+        
+    });
+});
+
+app.put('/editDatabaseBin', function (req, res) {
+    'use strict';
+
+    console.log(`${req.body.customerID}`);
+    console.log(`${req}`);
+
+    var sql = `update tblwheelbindatabase set date ='${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaCode}', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}', itemType = '${req.body.itemType}', path = '${req.body.path}' where idNo = ${req.body.idNo}`;
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

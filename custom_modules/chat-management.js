@@ -18,7 +18,7 @@ app.post('/messageSend', function (req, res) {
     
     var dt = dateTime.create(),
         formatted = dt.format('Y-m-d H:M:S'),
-        sql = "SELECT customerID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1";
+        sql = "SELECT userID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

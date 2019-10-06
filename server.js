@@ -169,11 +169,13 @@ app.get('/getPendingBinRequest', function (req, res) {
     
     sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tbluser WHERE tblbinrequest.userID = tbluser.userID";
     database.query(sql, function (err, result) {
-        for (i = 0; i < result.length; i += 1) {
-            output.push(result[i]);
+        if(result!=undefined){
+            for (i = 0; i < result.length; i += 1) {
+                output.push(result[i]);
+            }
+            console.log(output);
+            res.json(output);
         }
-        console.log(output);
-        res.json(output);
     });
 });
 
