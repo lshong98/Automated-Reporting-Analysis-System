@@ -3518,16 +3518,13 @@ app.controller('acrController', function($scope, $http, $filter, storeDataServic
         });
 
         $http.post('/getAllDcs', $scope.currentStatus).then(function(response) {
-            $scope.searchAcrFilter = '';
             $scope.dcsList = response.data;
 
             console.log("DCS data received by controller");
-            console.log(response.data);
         });
 
         $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
             $scope.driverList = response.data;
-            console.log($scope.driverList);
         });
 
 
@@ -3814,11 +3811,6 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
 
-    //$scope.currentPage = 1; //Initial current page to 1
-    //$scope.itemPerPage = 5; //Record number each page
-    //$scope.maxSize = 10;
-
-    //$scope.showDcsDetails = true;
 
     $scope.dcsDetailsList = [];
     $scope.dcs = [];
@@ -3829,6 +3821,7 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
     $scope.dcsID.id = $routeParams.dcsID;
     $scope.dcsEntry = {};
     $scope.areaList = {};
+    
 
     $scope.test = {
         "id": "sdfs",
@@ -3850,32 +3843,10 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
             "fri": '',
             "sat": '',
             "remarks": ''
-        }
-        //}
+        }   
 
-    $http.post('/getDcsInfo', $scope.dcsID).then(function(response) {
-
-        $scope.dcs = response.data;
-        console.log($scope.dcs);
-        $scope.disableAddress();
-
-
-        if ($scope.dcs[0].status == 'G') {
-            $scope.status = 'APPROVED';
-        } else if ($scope.dcs[0].status == 'P') {
-            $scope.status = 'PENDING';
-        } else if ($scope.dcs[0].status == 'R') {
-            $scope.status = 'CORRECTION REQUIRED';
-        } else if ($scope.dcs[0].status == 'A') {
-            $scope.status = 'ACTIVE';
-        } else if ($scope.dcs[0].status == 'C') {
-            $scope.status = 'COMPLETE';
-            $scope.show.edit = 'I';
-        }
-    });
 
     $scope.editDcsEntry = function(acrID) {
-        $scope.enableAddress();
 
         var i = 0;
 
@@ -3958,7 +3929,6 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
     $scope.filterAddress = function() {
 
-        $scope.enableAddress();
         console.log($scope.dcsEntry);
         $http.post('/filterAddress', $scope.dcsEntry).then(function(response) {
 
@@ -3982,28 +3952,48 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
         
     }
 
-    $scope.disableAddress = function() {
-        document.getElementById("editAddress").disabled = true;
-        document.getElementById("txtAddress").disabled = true;
-    }
 
-    $scope.enableAddress = function() {
-        document.getElementById("editAddress").disabled = false;
-        document.getElementById("txtAddress").disabled = false;
-    }
+    $scope.period = {};
+    $scope.getDcsInfo = function() {
+        $http.post('/getDcsInfo', $scope.dcsID).then(function(response) {
+    
+            $scope.dcs = response.data;
+            console.log($scope.dcs); 
+    
+    
+            if ($scope.dcs[0].status == 'G') {
+                $scope.status = 'APPROVED';
+            } else if ($scope.dcs[0].status == 'P') {
+                $scope.status = 'PENDING';
+            } else if ($scope.dcs[0].status == 'R') {
+                $scope.status = 'CORRECTION REQUIRED';
+            } else if ($scope.dcs[0].status == 'A') {
+                $scope.status = 'ACTIVE';
+            } else if ($scope.dcs[0].status == 'C') {
+                $scope.status = 'COMPLETE';
+                $scope.show.edit = 'I';
+            }
 
+            $scope.period.periodFrom = $scope.dcs[0].periodFrom;
+            $scope.period.periodTo = $scope.dcs[0].periodTo;
+            
+        console.log($scope.period);
 
-    $scope.getDcsDetails = function() {
-        $http.post('/getDcsDetails', $scope.dcsID).then(function(response) {
-
+        $http.post('/getDcsDetails', $scope.period).then(function(response) {
+ 
             $scope.dcsDetailsList = response.data;
-            console.log("Hello dcsdetails");
+            console.log($scope.dcsDetailsList);
 
             $scope.totalItems = $scope.dcsDetailsList.length;
-
+        });
+            
         });
 
+        
+    }
 
+    $scope.getDcsDetails = function() {
+        $scope.getDcsInfo();
 
         $http.get('/getCustomerList', $scope.dcsID).then(function(response) {
             $scope.customerList = response.data;
@@ -4013,6 +4003,8 @@ app.controller('dcsDetailsController', function($scope, $http, $filter, storeDat
 
             $scope.areaList = response.data;
         });
+
+        
     }
  
     $scope.getDcsDetails();

@@ -63,9 +63,9 @@ app.post('/getAllAcr', function(req,res){
 app.post('/getDcsDetails', function(req,res){
     'use strict';
     console.log("HELLO FROM THE SERVER");
-    console.log(req.body);
-    var sql = "SELECT d.acrID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, d.areaID, d.beBins, d.acrBins, d.mon, d.tue, d.wed, d.thu, d.fri, d.sat, d.remarks from tblacr as d inner join tblcustomer as c on d.customerID = c.customerID where d.dcsID = '" + req.body.id + "'";
-    //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
+    console.log(req.body.periodFrom);
+    var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr as a inner join tblcustomer as c on a.customerID = c.customerID WHERE a.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR a.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
+    
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
@@ -73,9 +73,9 @@ app.post('/getDcsDetails', function(req,res){
         } 
          
         res.json(result); 
-        console.log(result); 
     });
 });  
+
 
 app.post('/addDcsEntry',function(req,res){ 
     'use strict';
@@ -89,7 +89,6 @@ app.post('/addDcsEntry',function(req,res){
                 throw err;
             }
 
-            console.log(result);
             var areaID = result[0].areaID;
             
 
@@ -152,7 +151,6 @@ app.post('/updateAcr', function(req,res){
         } 
          
         res.json(result);
-        console.log(result); 
     });
 }); 
 
@@ -168,7 +166,6 @@ app.post('/updateDcsEntry', function(req,res){
         } 
          
         res.json(result);
-        console.log(result); 
     });
 }); 
 
@@ -185,8 +182,7 @@ app.post('/deleteAcr', function(req,res){
          
         
         res.json({"status": "success", "message": "ACR created!", "details": {"acrID": req.body.acrID}});
-  
-        console.log(result); 
+
     });
 }); 
 
