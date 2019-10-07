@@ -378,7 +378,7 @@ app.post('/loadMenu', function (req, res) {
     
     database.query(sql, function (err, result) {
         result.forEach(function (key, value) {
-            if ((key.mgmtName).indexOf("view") !== -1 || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
+            if ((key.mgmtName).indexOf("view") !== -1 || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1 || (key.mgmtName).indexOf("lgview") !== -1 || (key.mgmtName).indexOf("bdview") !== -1) {
                 content += f.menuItem(key.mgmtName, key.status);
             }
         });

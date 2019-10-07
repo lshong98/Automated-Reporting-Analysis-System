@@ -167,12 +167,12 @@ function checkAuthority(keyword, whoIs) {
 
 function logTransaction(date, staffID, action, description, rowID, tblName) {
     var sql = "INSERT INTO tbllog (date, staffID, authorizedBy, action, description, rowID, tblName) VALUE ('" + date + "', '" + staffID + "', NULL, '" + action + "', '" + description + "', '" + rowID + "', '" + tblName + "')";
-    
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-    });
+//    
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            throw err;
+//        }
+//    });
 }
 
 function sendForAuthorization(date, staffId, action, description, rowID, tblName, query) {
@@ -237,7 +237,7 @@ function menuItem(keyword, status) {
             }
         case "view transactionLog":
             if (status == 'A') {
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/notification"><i class="fa fa-bell"></i> Transaction Log</a></li>';
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/history"><i class="fa fa-bell"></i> Transaction Log</a></li>';
             }
         case "view delivery":
             if (status == 'A') {

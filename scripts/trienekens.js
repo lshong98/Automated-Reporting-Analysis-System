@@ -290,6 +290,9 @@ app.service('storeDataService', function() {
                 "create": 'I',
                 "edit": 'I',
                 "view": 'I'
+            },
+            "banner": {
+                "upload": 'I'
             }
         },
         "pagination": {
@@ -2716,6 +2719,9 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "view": 'I',
             "edit": 'I',
             "create": 'I'
+        },
+        "banner": {
+            "upload": 'I'
         }
     };
 

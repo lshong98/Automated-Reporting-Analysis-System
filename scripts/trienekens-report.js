@@ -324,6 +324,11 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             $scope.notify("error", "Driver Cannot Be Blank");
             $scope.showSubmitBtn = true;
         }else {
+            //temp
+            if ($scope.report.ton == "" || $scope.report.ton == null) {
+                $scope.report.ton = 0;
+            }
+            
             $http.post('/addReport', $scope.report).then(function(response) {
                 var returnedData = response.data;
                 var newReportID = returnedData.details.reportID;
