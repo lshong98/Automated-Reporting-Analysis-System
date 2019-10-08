@@ -31,7 +31,7 @@ socket.on('connect', function() {
         $('.authorization').addClass("badge badge-danger").html(data.num);
     });
 
-    socket.on('receive authorize action', function(data) {
+    socket.on('new satisfaction', function(data) {
         if(data.unread != 0){
             $('.satisfaction').addClass("badge badge-danger").html(data.unread);
         }
@@ -297,8 +297,23 @@ app.service('storeDataService', function() {
                 "edit": 'I',
                 "view": 'I'
             },
+            // "custService": {
+            //     "upload": 'I',
+            //     "send": 'I',
+            //     "approve": 'I',
+            //     "view": 'I'
+            // }
             "banner": {
-                "upload": 'I'
+                "upload": 'A'
+            },
+            "notif": {
+                "send": 'A'
+            },
+            "binrequest": {
+                "approve": 'A'
+            },
+            "feedback": {
+                "view": 'A'
             }
         },
         "pagination": {
@@ -1200,6 +1215,7 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
         storeDataService.show = angular.copy($scope.show);
     });
     socket.emit('authorize request', { "action": "create user" });
+    socket.emit('satisfaction form');
 
     $http.post('/loadMenu', { "position": position }).then(function(response) {
         $('ul.menu__level').html(response.data.content);
@@ -2683,19 +2699,33 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "edit": 'I',
             "create": 'I'
         },
-        "custService": {
-            "upload": 'I',
-            "send": 'I',
-            "approve": 'I',
-            "view": 'I'
+        // "custService": {
+        //     "upload": 'I',
+        //     "send": 'I',
+        //     "approve": 'I',
+        //     "view": 'I'
+        // }
+        "banner": {
+            "upload": 'A'
+        },
+        "notif": {
+            "send": 'A'
+        },
+        "binrequest": {
+            "approve": 'A'
+        },
+        "feedback": {
+            "view": 'A'
         }
     };
 
     $http.post('/getAllAuth', $scope.role).then(function(response) {
+        //console.log(response.data);
         var splitName, flag = false,
             key;
 
         $.each(response.data, function(index, value) {
+            console.log(value);
             $.each(value, function(bigKey, bigValue) {
                 if (bigKey == 'name') {
                     splitName = bigValue.split(' ');
@@ -2710,7 +2740,8 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 }
                 if (bigKey == "status") { 
                     if (flag == false) {
-                        console.log($scope.auth[splitName[1]][splitName[0]]);
+                        console.log(splitName[1]);
+                        console.log(splitName[0]);
                         $scope.auth[splitName[1]][splitName[0]] = bigValue;
                     } else {
                         $scope.auth["area"]["collection"][key] = bigValue;
@@ -2730,8 +2761,11 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "access": value
         };
 
+        console.log($scope.thisAuth);
+
         $http.post('/setAuth', $scope.thisAuth).then(function(response) {
             var data = response.data;
+            console.log(data);
             $scope.notify(data.status, data.message);
             storeDataService.show = angular.copy($scope.auth);
         });
@@ -2860,10 +2894,22 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "edit": 'A',
                             "create": 'A'
                         },
-                        "custService": {
-                            "upload": 'A',
-                            "send": 'A',
-                            "approve": 'A',
+                        // "custService": {
+                        //     "upload": 'A',
+                        //     "send": 'A',
+                        //     "approve": 'A',
+                        //     "view": 'A'
+                        // }
+                        "banner": {
+                            "upload": 'A'
+                        },
+                        "notif": {
+                            "send": 'A'
+                        },
+                        "binrequest": {
+                            "approve": 'A'
+                        },
+                        "feedback": {
                             "view": 'A'
                         }
                     };
@@ -2959,11 +3005,23 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "edit": 'I',
                             "create": 'I'
                         },
-                        "custService": {
-                            "upload": 'I',
-                            "send": 'I',
-                            "approve": 'I',
-                            "view": 'I'
+                        // "custService": {
+                        //     "upload": 'I',
+                        //     "send": 'I',
+                        //     "approve": 'I',
+                        //     "view": 'I'
+                        // }
+                        "banner": {
+                            "upload": 'A'
+                        },
+                        "notif": {
+                            "send": 'A'
+                        },
+                        "binrequest": {
+                            "approve": 'A'
+                        },
+                        "feedback": {
+                            "view": 'A'
                         }
                     };
                 }

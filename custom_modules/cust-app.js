@@ -449,7 +449,8 @@ app.post('/satisfaction', function (req, resp) {
 
                 database.query(sql, function (err, res) {
                     if (!err) {
-                        emitter.emit('satisfaction form');
+                        //emitter.emit('satisfaction form');
+                        //socket.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
                     } else {
                         resp.send("Failed to Submit");
