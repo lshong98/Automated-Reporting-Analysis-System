@@ -8,7 +8,7 @@ var emitter = new EventEmitter();
 var DB_HOST = process.env.DATABASE_HOST || 'localhost';
 var DB_USER = process.env.DATABASE_USER || 'root';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || 'triepres4'; 
+var DB_NAME = process.env.DATABASE_NAME || 'trienekens2'; 
 
 var config = {
     user: DB_USER,
@@ -23,7 +23,7 @@ if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production
     config.socketPath = '/cloudsql/' + process.env.INSTANCE_CONNECTION_NAME;
 }
 
-// Create connection 
+// Create connection  
 function handleDisconnect() {
     'use strict';
     db = mysql.createConnection(config);
