@@ -31,6 +31,12 @@ socket.on('connect', function() {
         $('.authorization').addClass("badge badge-danger").html(data.num);
     });
 
+    socket.on('receive authorize action', function(data) {
+        if(data.unread != 0){
+            $('.satisfaction').addClass("badge badge-danger").html(data.unread);
+        }
+    });
+
     socket.on('receive report notification', function(data) {
         Lobibox.notify('info', {
             pauseDelayOnHover: true,
@@ -1141,54 +1147,11 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
                 lineCap:'circle'
             };
 
-            //console.log(value);
-            // if($scope.collPrompt < 2 && $scope.collPrompt >= 1.5){
-            //     $('#collPrompt').css('color', 'orange');
-            // }else if($scope.collPrompt >= 2){
-            //     $('#collPrompt').css('color', 'green');
-            // }else{
-            //     $('#collPrompt').css('color', 'red');
-            // }
-
-            // if($scope.compRate < 2 && $scope.compRate >= 1.5){
-            //     $('#compRate').css('color', 'orange');
-            // }else if($scope.compRate >= 2){
-            //     $('#compRate').css('color', 'green');
-            // }else{
-            //     $('#compRate').css('color', 'red');
-            // }
-
-            // if($scope.teamEff < 2 && $scope.teamEff >= 1.5){
-            //     $('#teamEff').css('color', 'orange');
-            // }else if($scope.teamEff >= 2){
-            //     $('#teamEff').css('color', 'green');
-            // }else{
-            //     $('#teamEff').css('color', 'red');
-            // }
-
-            // if($scope.binHand < 2 && $scope.binHand >= 1.5){
-            //     $('#binHand').css('color', 'orange');
-            // }else if($scope.binHand >= 2){
-            //     $('#binHand').css('color', 'green');
-            // }else{
-            //     $('#binHand').css('color', 'red');
-            // }
-
-            // if($scope.spillCtrl < 2 && $scope.spillCtrl >= 1.5){
-            //     $('#spillCtrl').css('color', 'orange');
-            // }else if($scope.spillCtrl >= 2){
-            //     $('#spillCtrl').css('color', 'green');
-            // }else{
-            //     $('#spillCtrl').css('color', 'red');
-            // }
-
-            // if($scope.qryResp < 2 && $scope.qryResp >= 1.5){
-            //     $('#qryResp').css('color', 'orange');
-            // }else if($scope.qryResp >= 2){
-            //     $('#qryResp').css('color', 'green');
-            // }else{
-            //     $('#qryResp').css('color', 'red');
-            // }
+            $http.get('/readSatisfaction').then(function(repsonse){
+                console.log(response.data);
+            }, function(err){
+                console.log(err);
+            });
         }, function(err){
             console.log(err);
         });
@@ -2720,8 +2683,11 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "edit": 'I',
             "create": 'I'
         },
-        "banner": {
-            "upload": 'I'
+        "custService": {
+            "upload": 'I',
+            "send": 'I',
+            "approve": 'I',
+            "view": 'I'
         }
     };
 
@@ -2744,6 +2710,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 }
                 if (bigKey == "status") { 
                     if (flag == false) {
+                        console.log($scope.auth[splitName[1]][splitName[0]]);
                         $scope.auth[splitName[1]][splitName[0]] = bigValue;
                     } else {
                         $scope.auth["area"]["collection"][key] = bigValue;
@@ -2892,6 +2859,12 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "view": 'A',
                             "edit": 'A',
                             "create": 'A'
+                        },
+                        "custService": {
+                            "upload": 'A',
+                            "send": 'A',
+                            "approve": 'A',
+                            "view": 'A'
                         }
                     };
                 }
@@ -2985,6 +2958,12 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "view": 'I',
                             "edit": 'I',
                             "create": 'I'
+                        },
+                        "custService": {
+                            "upload": 'I',
+                            "send": 'I',
+                            "approve": 'I',
+                            "view": 'I'
                         }
                     };
                 }

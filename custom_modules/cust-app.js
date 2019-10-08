@@ -10,8 +10,8 @@
 // var mysql = require('mysql');
 // var bcrypt = require('bcryptjs');
 // var dateTime = require('node-datetime');
-// var EventEmitter = require('events');
-// var emitter = new EventEmitter();
+var EventEmitter = require('events');
+var emitter = new EventEmitter();
 // var dateTime = require('node-datetime');
 var nodemailer = require('nodemailer');
 
@@ -442,13 +442,14 @@ app.post('/satisfaction', function (req, resp) {
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var sql = "INSERT INTO tblsatisfaction (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate) VALUES ('" +
+                var sql = "INSERT INTO tblsatisfaction (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
                     userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                     "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
-                    data.extraComment + "','" + date + "')";
+                    data.extraComment + "','" + date + "', 'u')";
 
                 database.query(sql, function (err, res) {
                     if (!err) {
+                        emitter.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
                     } else {
                         resp.send("Failed to Submit");

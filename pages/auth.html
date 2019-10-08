@@ -547,7 +547,28 @@ input:checked + .slider:before {
                     <li class="list-group-item">
                         Upload Banner
                         <label class="switch">
-                            <input type="checkbox" class="primary" data-ng-model="auth.banner.upload" data-ng-change="changeValue(auth.banner.upload, 'upload banner');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <input type="checkbox" class="primary" data-ng-model="auth.custService.upload" data-ng-change="changeValue(auth.custService.upload, 'upload banner');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Post Announcements
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.custService.send" data-ng-change="changeValue(auth.custService.send, 'send notif');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Manage Bin Request
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.custService.approve" data-ng-change="changeValue(auth.custService.approve, 'approve binrequest');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Customer Feedback
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.custService.view" data-ng-change="changeValue(auth.custService.view, 'view feedback');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                             <span class="slider"></span>
                         </label>
                     </li>

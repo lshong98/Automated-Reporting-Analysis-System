@@ -293,7 +293,7 @@ function menuItem(keyword, status) {
                     } 
                     case "view feedback":
                         if (status == 'A') {
-                            return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback</a></li>';
+                            return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback <span class="satisfaction"></span></a></li>';
                         } 
         
     }
