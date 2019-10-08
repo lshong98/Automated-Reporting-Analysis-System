@@ -41,7 +41,7 @@ app.post('/addUser', function (req, res) {
                 
                 // Authorize
                 f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", ID, "tblstaff", "\"" + sql + "\"");
-                f.logTransaction(req.body.creationDate, req.body.owner, "add", "Request to Create New Account", ID, "tblstaff");
+                //f.logTransaction(req.body.creationDate, req.body.owner, "add", "Request to Create New Account", ID, "tblstaff");
                 f.log(req.body.creationDate, "Request to create new account.", req.body.owner);
                 res.json({"status": "success", "message": "Request pending.."});
                 res.end();
@@ -66,7 +66,7 @@ app.post('/updatePassword', function (req, res) {
         sql = "UPDATE tblstaff SET password = '" + thePassword + "' WHERE staffID = '" + req.body.id + "'";
         
         f.sendForAuthorization(dt, req.body.iam, "update", "Update Account Password", '', req.body.id, "tblstaff", "\"" + sql + "\"");
-        f.logTransaction(dt, req.body.iam, "update", "Request to Update Account Password - " + req.body.id + " ", req.body.id, "tblstaff");
+        //f.logTransaction(dt, req.body.iam, "update", "Request to Update Account Password - " + req.body.id + " ", req.body.id, "tblstaff");
         f.log(dt, "Request to update password.", req.body.iam);
         res.json({"status": "success", "message": "Request pending.."});
         res.end();
@@ -109,7 +109,7 @@ app.post('/updateProfile', function (req, res) {
         var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', staffStatus = '" + req.body.status + "', staffPic = '" + req.body.avatar + "' WHERE staffID = '" + req.body.id + "'";
         
         f.sendForAuthorization(cdt, req.body.iam, "update", "Update Account Details", req.body.id, "tblstaff", "\"" + sql + "\"");
-        f.logTransaction(cdt, req.body.iam, "update", "Request Update Account - " + req.body.id + " ", req.body.id, "tblstaff");
+        //f.logTransaction(cdt, req.body.iam, "update", "Request Update Account - " + req.body.id + " ", req.body.id, "tblstaff");
         f.log(cdt, "Request to update account details.", req.body.iam);
         res.json({"status": "success", "message": "Request pending.."});
         res.end();
@@ -152,7 +152,7 @@ app.post('/loadSpecificAccount', function (req, res) {
             res.end();
             throw err;
         } else {
-            f.logTransaction(dt, req.body.iam, "view", "View Account - " + req.body.id + " ", 'NULL', req.body.id, "tblstaff");
+            //f.logTransaction(dt, req.body.iam, "view", "View Account - " + req.body.id + " ", 'NULL', req.body.id, "tblstaff");
             res.json(result);
             res.end();
         }

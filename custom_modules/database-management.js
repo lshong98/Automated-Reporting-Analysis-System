@@ -14,7 +14,7 @@ var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3306
+    port: 3307
 };
 
 var db;
@@ -123,16 +123,16 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblcomplaint ( complaintID varchar(15), userID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), complaintAddress varchar(300), complaintImg varchar(50), primary key (complaintID), foreign key (userID) references tbluser(userID), foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblformauthorization (formentryID int auto_increment, creationDateTime dateTime, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), status char(1), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
-        "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",
+        "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), readStat varchar(1) FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",
         "CREATE TABLE tblboundary (boundaryID VARCHAR(15), color CHAR(6), areaID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), PRIMARY KEY(boundaryID), foreign key(areaID) references tblarea(areaID))",
         "CREATE TABLE tblboundaryplot (boundaryID VARCHAR(15), lat DOUBLE(10, 7), lng DOUBLE(10, 7), ordering INT, status CHAR(1), PRIMARY KEY(boundaryID, lat, lng), FOREIGN KEY(boundaryID) REFERENCES tblboundary(boundaryID))",
         "CREATE TABLE tblannouncement(id int auto_increment, announcement varchar(400), announceDate date, PRIMARY KEY(id))",
         "CREATE TABLE tblcarouselimg(id int auto_increment, fileName varchar(255), PRIMARY KEY(id))",
         "CREATE TABLE tblnotif(notifID int auto_increment, userID varchar(15), notifDate date, notifText varchar(255), PRIMARY KEY(notifID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), reqImg varchar(30), status varchar(15), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
-        "CREATE TABLE tblsatisfaction(satisfactionID int auto_increment, userID varchar(15), companyRating varchar(7), teamEfficiency varchar(7), collectionPromptness varchar(7), binHandling varchar(7), spillageControl varchar(7), queryResponse varchar(7), extraComment varchar(7), submissionDate datetime, PRIMARY KEY (satisfactionID), FOREIGN KEY (userID) REFERENCES tbluser(userID))",
+        "CREATE TABLE tblsatisfaction(satisfactionID int auto_increment, userID varchar(15), companyRating varchar(7), teamEfficiency varchar(7), collectionPromptness varchar(7), binHandling varchar(7), spillageControl varchar(7), queryResponse varchar(7), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY (satisfactionID), FOREIGN KEY (userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblhistory (historyID VARCHAR(15), content MEDIUMTEXT, staffID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(staffID) REFERENCES tblstaff(staffID), PRIMARY KEY (historyID))",
-        "CREATE TABLE tblwaste (chartID int, userID varchar(15), monthYear varchar(11), waste int, PRIMARY KEY(chartID)"
+        "CREATE TABLE tblwaste (chartID int, userID varchar(15), monthYear varchar(11), waste int, PRIMARY KEY(chartID))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -144,7 +144,7 @@ emitter.on('createTable', function () {
 emitter.on('defaultUser', function () {
     'use strict';
     
-    var management_sql = "INSERT INTO tblmanagement (mgmtName) VALUES ('create account'), ('edit account'), ('view account'), ('view role'), ('create truck'), ('edit truck'), ('view truck'), ('create zone'), ('edit zone'), ('view zone'), ('create area'), ('edit area'), ('view area'), ('add collection'), ('edit collection'), ('create bin'), ('edit bin'), ('view bin'), ('create acr'), ('edit acr'), ('view acr'), ('create database'), ('edit database'), ('view database'), ('edit inventory'), ('view inventory'), ('view authorization'), ('view formAuthorization'), ('view complaintlist'), ('view transactionLog'), ('create reporting'), ('edit reporting'), ('view reporting'), ('export reporting'), ('create dcsDetails'), ('edit dcsDetails'), ('view dcsDetails'), ('create delivery'), ('edit delivery'), ('view delivery'), ('create bdafDetails'), ('edit bdafDetails'), ('view bdafDetails'), ('create damagedlost'), ('edit damagedlost'), ('view damagedlost'), ('create dbdDetails'), ('edit dbdDetails'), ('view dbdDetails'), ('create blostDetails'), ('edit blostDetails'), ('view blostDetails'), ('upload banner'), ('approve user'), ('send notif'), ('approve binrequest'), ('view feedback')",
+    var management_sql = "INSERT INTO tblmanagement (mgmtName) VALUES ('create account'), ('edit account'), ('view account'), ('view role'), ('create truck'), ('edit truck'), ('view truck'), ('create zone'), ('edit zone'), ('view zone'), ('create area'), ('edit area'), ('view area'), ('add collection'), ('edit collection'), ('create bin'), ('edit bin'), ('view bin'), ('create acr'), ('edit acr'), ('view acr'), ('create database'), ('edit database'), ('view database'), ('edit inventory'), ('view inventory'), ('view authorization'), ('view formAuthorization'), ('view complaintlist'), ('view transactionLog'), ('create reporting'), ('edit reporting'), ('view reporting'), ('export reporting'), ('create dcsDetails'), ('edit dcsDetails'), ('view dcsDetails'), ('create delivery'), ('edit delivery'), ('view delivery'), ('create bdafDetails'), ('edit bdafDetails'), ('view bdafDetails'), ('create damagedlost'), ('edit damagedlost'), ('view damagedlost'), ('create dbdDetails'), ('edit dbdDetails'), ('view dbdDetails'), ('create blostDetails'), ('edit blostDetails'), ('view blostDetails'), ('upload banner'), ('approve user'), ('send notif'), ('approve binrequest'), ('view feedback'), ('lgview acr'), ('bdview acr')",
         i,
         j,
         management_row = "EXPLAIN SELECT COUNT(*) FROM tblmanagement",

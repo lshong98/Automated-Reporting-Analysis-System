@@ -31,6 +31,12 @@ socket.on('connect', function() {
         $('.authorization').addClass("badge badge-danger").html(data.num);
     });
 
+    socket.on('new satisfaction', function(data) {
+        if(data.unread != 0){
+            $('.satisfaction').addClass("badge badge-danger").html(data.unread);
+        }
+    });
+
     socket.on('receive report notification', function(data) {
         Lobibox.notify('info', {
             pauseDelayOnHover: true,
@@ -290,6 +296,24 @@ app.service('storeDataService', function() {
                 "create": 'I',
                 "edit": 'I',
                 "view": 'I'
+            },
+            // "custService": {
+            //     "upload": 'I',
+            //     "send": 'I',
+            //     "approve": 'I',
+            //     "view": 'I'
+            // }
+            "banner": {
+                "upload": 'A'
+            },
+            "notif": {
+                "send": 'A'
+            },
+            "binrequest": {
+                "approve": 'A'
+            },
+            "feedback": {
+                "view": 'A'
             }
         },
         "pagination": {
@@ -1138,54 +1162,11 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
                 lineCap:'circle'
             };
 
-            //console.log(value);
-            // if($scope.collPrompt < 2 && $scope.collPrompt >= 1.5){
-            //     $('#collPrompt').css('color', 'orange');
-            // }else if($scope.collPrompt >= 2){
-            //     $('#collPrompt').css('color', 'green');
-            // }else{
-            //     $('#collPrompt').css('color', 'red');
-            // }
-
-            // if($scope.compRate < 2 && $scope.compRate >= 1.5){
-            //     $('#compRate').css('color', 'orange');
-            // }else if($scope.compRate >= 2){
-            //     $('#compRate').css('color', 'green');
-            // }else{
-            //     $('#compRate').css('color', 'red');
-            // }
-
-            // if($scope.teamEff < 2 && $scope.teamEff >= 1.5){
-            //     $('#teamEff').css('color', 'orange');
-            // }else if($scope.teamEff >= 2){
-            //     $('#teamEff').css('color', 'green');
-            // }else{
-            //     $('#teamEff').css('color', 'red');
-            // }
-
-            // if($scope.binHand < 2 && $scope.binHand >= 1.5){
-            //     $('#binHand').css('color', 'orange');
-            // }else if($scope.binHand >= 2){
-            //     $('#binHand').css('color', 'green');
-            // }else{
-            //     $('#binHand').css('color', 'red');
-            // }
-
-            // if($scope.spillCtrl < 2 && $scope.spillCtrl >= 1.5){
-            //     $('#spillCtrl').css('color', 'orange');
-            // }else if($scope.spillCtrl >= 2){
-            //     $('#spillCtrl').css('color', 'green');
-            // }else{
-            //     $('#spillCtrl').css('color', 'red');
-            // }
-
-            // if($scope.qryResp < 2 && $scope.qryResp >= 1.5){
-            //     $('#qryResp').css('color', 'orange');
-            // }else if($scope.qryResp >= 2){
-            //     $('#qryResp').css('color', 'green');
-            // }else{
-            //     $('#qryResp').css('color', 'red');
-            // }
+            $http.get('/readSatisfaction').then(function(repsonse){
+                console.log(response.data);
+            }, function(err){
+                console.log(err);
+            });
         }, function(err){
             console.log(err);
         });
@@ -1234,6 +1215,7 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
         storeDataService.show = angular.copy($scope.show);
     });
     socket.emit('authorize request', { "action": "create user" });
+    socket.emit('satisfaction form');
 
     $http.post('/loadMenu', { "position": position }).then(function(response) {
         $('ul.menu__level').html(response.data.content);
@@ -2716,14 +2698,34 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "view": 'I',
             "edit": 'I',
             "create": 'I'
+        },
+        // "custService": {
+        //     "upload": 'I',
+        //     "send": 'I',
+        //     "approve": 'I',
+        //     "view": 'I'
+        // }
+        "banner": {
+            "upload": 'A'
+        },
+        "notif": {
+            "send": 'A'
+        },
+        "binrequest": {
+            "approve": 'A'
+        },
+        "feedback": {
+            "view": 'A'
         }
     };
 
     $http.post('/getAllAuth', $scope.role).then(function(response) {
+        //console.log(response.data);
         var splitName, flag = false,
             key;
 
         $.each(response.data, function(index, value) {
+            console.log(value);
             $.each(value, function(bigKey, bigValue) {
                 if (bigKey == 'name') {
                     splitName = bigValue.split(' ');
@@ -2738,6 +2740,8 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 }
                 if (bigKey == "status") { 
                     if (flag == false) {
+                        console.log(splitName[1]);
+                        console.log(splitName[0]);
                         $scope.auth[splitName[1]][splitName[0]] = bigValue;
                     } else {
                         $scope.auth["area"]["collection"][key] = bigValue;
@@ -2757,8 +2761,11 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "access": value
         };
 
+        console.log($scope.thisAuth);
+
         $http.post('/setAuth', $scope.thisAuth).then(function(response) {
             var data = response.data;
+            console.log(data);
             $scope.notify(data.status, data.message);
             storeDataService.show = angular.copy($scope.auth);
         });
@@ -2886,6 +2893,24 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "view": 'A',
                             "edit": 'A',
                             "create": 'A'
+                        },
+                        // "custService": {
+                        //     "upload": 'A',
+                        //     "send": 'A',
+                        //     "approve": 'A',
+                        //     "view": 'A'
+                        // }
+                        "banner": {
+                            "upload": 'A'
+                        },
+                        "notif": {
+                            "send": 'A'
+                        },
+                        "binrequest": {
+                            "approve": 'A'
+                        },
+                        "feedback": {
+                            "view": 'A'
                         }
                     };
                 }
@@ -2979,6 +3004,24 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "view": 'I',
                             "edit": 'I',
                             "create": 'I'
+                        },
+                        // "custService": {
+                        //     "upload": 'I',
+                        //     "send": 'I',
+                        //     "approve": 'I',
+                        //     "view": 'I'
+                        // }
+                        "banner": {
+                            "upload": 'A'
+                        },
+                        "notif": {
+                            "send": 'A'
+                        },
+                        "binrequest": {
+                            "approve": 'A'
+                        },
+                        "feedback": {
+                            "view": 'A'
                         }
                     };
                 }

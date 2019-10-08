@@ -301,6 +301,14 @@ app.get('/customerFeedback', function(req, res){
     });
 });
 
+app.get('/readSatisfaction', function(req, res){
+    'use strict';
+    var sql = "UPDATE tblsatisfaction SET readStat = 'r'";
+    database.query(sql, function(err, result){
+        res.send("New Satisfaction Read");
+    });
+});
+
 app.post('/uploadCarouselImg', function (req, res) {
     'use strict';
     //console.log(req.files);
@@ -324,7 +332,7 @@ app.post('/uploadCarouselImg', function (req, res) {
                             }
                             //console.log("Image Uploaded");
                         });
-                        file[x].mv('./scripts/img/' + file[x].name, function (err) {
+                        file[x].mv('./images/img/' + file[x].name, function (err) {
                             if (err) {
                                 throw err;
                             }
@@ -348,7 +356,7 @@ app.post('/uploadCarouselImg', function (req, res) {
                             }
                             //console.log("Image Uploaded");
                         });
-                        file.mv('./scripts/img/'+file.name, function(err){
+                        file.mv('./images/img/'+file.name, function(err){
                             if(err){
                                 throw err;
                             }
@@ -378,7 +386,7 @@ app.post('/loadMenu', function (req, res) {
     
     database.query(sql, function (err, result) {
         result.forEach(function (key, value) {
-            if ((key.mgmtName).indexOf("view") !== -1 || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
+            if ((key.mgmtName).indexOf("view") !== -1 || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1 || (key.mgmtName).indexOf("lgview") !== -1 || (key.mgmtName).indexOf("bdview") !== -1) {
                 content += f.menuItem(key.mgmtName, key.status);
             }
         });
