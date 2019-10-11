@@ -9,12 +9,12 @@ var DB_HOST = process.env.DATABASE_HOST || 'localhost';
 var DB_USER = process.env.DATABASE_USER || 'root';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
 var DB_NAME = process.env.DATABASE_NAME || 'trienekens2'; 
-
+ 
 var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3307
+    port: 3306
 };
 
 var db;
@@ -107,7 +107,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblblost (  blostID varchar(15),  creationDateTime datetime, preparedBy varchar(15), authorizedBy varchar(15), authorizedDate dateTime,  status char(1),  formStatus char(1), PRIMARY KEY (blostID), foreign key (preparedBy) references tblstaff (staffID), foreign key (authorizedBy) references tblstaff (staffID))",
         "CREATE TABLE tblblostentry (  idNo int auto_increment,  creationDateTime datetime, blostID varchar(15),  customerID varchar(15), serialNo varchar(15),  sharedBin boolean,  dateOfLoss datetime,  reason longtext,  status char(1), PRIMARY KEY (idNo),  foreign KEY  (blostID) references tblblost(blostID),  foreign KEY  (serialNo) references tblbins(serialNo),  foreign KEY  (customerID) references tblcustomer(customerID))",
         "CREATE TABLE tbldcs (dcsID varchar(15),creationDateTime datetime,status char(1), formStatus char(1), periodFrom date,periodTo date,driverID varchar(15), areaID varchar(15), replacementDriverID varchar(15),replacementPeriodFrom date,replacementPeriodTo date, replacementAreaID varchar(15), authorizedBy varchar(15),authorizedDate datetime,preparedBy varchar(15),PRIMARY KEY (dcsID),foreign key (driverID) references tblstaff(staffID),foreign key (replacementDriverID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID),foreign key (preparedBy) references tblstaff(staffID))",
-        "CREATE TABLE tblacr (acrID varchar(15),creationDateTime datetime,dcsID varchar(15),areaID varchar(15),customerID VARCHAR(15),beBins int,acrBins int,mon boolean,tue boolean,wed boolean,thu boolean,fri boolean,sat boolean,remarks longtext,PRIMARY KEY (acrID),foreign key (dcsID) references tbldcs(dcsID),foreign key (customerID) references tblcustomer(customerID))",
+        "CREATE TABLE tblacr (acrID varchar(15), from date null, to date null, areaID varchar(15),customerID VARCHAR(15),beBins varchar(50),acrBins varchar(50),mon boolean,tue boolean,wed boolean,thu boolean,fri boolean,sat boolean,remarks longtext,PRIMARY KEY (acrID),foreign key (dcsID) references tbldcs(dcsID),foreign key (customerID) references tblcustomer(customerID))",
         "CREATE TABLE tblbdaf (  bdafID varchar(15),  creationDateTime datetime,  driverID varchar(15), staffID varchar(15), preparedBy varchar(15), authorizedBy varchar(15), authorizedDate dateTime, status char(1), formStatus char(1), PRIMARY KEY (bdafID), foreign key (driverID) references tblstaff(staffID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID), foreign key (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblbdafentry (  idNo int auto_increment,  bdafID varchar(15),  customerID VARCHAR(15),  acrID varchar(15), acrSticker varchar(20),  serialNo varchar(15),  binDelivered varchar(15),  binPulled varchar(15),  jobDesc longtext,  remarks longtext,  completed boolean,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (acrID) references tblacr(acrID),  foreign key (bdafID) references tblbdaf(bdafID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (binDelivered) references tblbins(serialNo),  foreign key (binPulled) references tblbins(serialNo))",
         "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID VARCHAR(15),  areaID varchar(15),  serialNo varchar(15),  acrID varchar(15),  activeStatus char(1), rcDwell varchar(20), comment mediumtext, itemType varchar(20), path varchar(20),PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
