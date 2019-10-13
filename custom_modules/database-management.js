@@ -126,7 +126,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), readStat varchar(1) FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",
         "CREATE TABLE tblboundary (boundaryID VARCHAR(15), color CHAR(6), areaID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), PRIMARY KEY(boundaryID), foreign key(areaID) references tblarea(areaID))",
         "CREATE TABLE tblboundaryplot (boundaryID VARCHAR(15), lat DOUBLE(10, 7), lng DOUBLE(10, 7), ordering INT, status CHAR(1), PRIMARY KEY(boundaryID, lat, lng), FOREIGN KEY(boundaryID) REFERENCES tblboundary(boundaryID))",
-        "CREATE TABLE tblannouncement(id int auto_increment, announcement varchar(400), announceDate date, PRIMARY KEY(id))",
+        "CREATE TABLE tblannouncement(id int auto_increment, announcement varchar(400), announceDate date, target varchar(30), PRIMARY KEY(id))",
         "CREATE TABLE tblcarouselimg(id int auto_increment, fileName varchar(255), PRIMARY KEY(id))",
         "CREATE TABLE tblnotif(notifID int auto_increment, userID varchar(15), notifDate date, notifText varchar(255), PRIMARY KEY(notifID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), reqImg varchar(30), status varchar(15), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",

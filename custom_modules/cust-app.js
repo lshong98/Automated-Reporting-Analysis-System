@@ -971,7 +971,7 @@ app.post('/getTaman', function (req, resp) {
     });
 
     req.addListener('end', function () {
-        var sql = "SELECT tamanName FROM tbltaman";
+        var sql = "SELECT tamanName FROM tbltaman ORDER BY tamanName ASC";
         database.query(sql, function (err, res) {
             for (var i = 0; i < res.length; i++) {
                 info.push(res[i]);

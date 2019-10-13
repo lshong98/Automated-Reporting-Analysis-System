@@ -65,6 +65,7 @@ app.post('/sendMessage', function (req, resp) {
     var currentTime = date.substr(11, 18);
     var startTime = "08:30:00";
     var endTime = "17:30:00";
+    var today = new Date();
     //var msgs = [];
 
     req.addListener('data', function (postDataChunk) {
@@ -90,7 +91,7 @@ app.post('/sendMessage', function (req, resp) {
                             throw err;
                         } else {
                             resp.send("Message Sent");
-                            if (currentTime <= startTime || currentTime >= endTime) {
+                            if (currentTime <= startTime || currentTime >= endTime || today.getDay() == 6 || today.getDay() == 0) {
                                 console.log("Enter Automated Function");
                                 var sql2 = "INSERT INTO tblchat (sender, recipient, content, complaintID, creationDateTime) VALUES ('" + staffID + "','" + userID + "','" + "Thank You for your message. However, we are currenty closed as our regular business hours are from 8:30 am to 5:30 pm, Monday through Friday. We will get back to you as soon as possible. Thank you and have a nice day." + "','" + data.id + "','" + date + "')";
                                 database.query(sql2, function (err, res) {
