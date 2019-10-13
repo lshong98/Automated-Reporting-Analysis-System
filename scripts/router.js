@@ -67,6 +67,15 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'accountController',
         controllerAs: 'account'
     })
+    .when('/wbd-history', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/wbd-history');
+            }
+        },
+        templateUrl: '/wbd-history',
+        controller: 'binDatabaseController'
+    })
     .when('/account/:userID', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {
