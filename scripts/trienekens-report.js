@@ -530,7 +530,6 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
                 // Creates a DOMString containing a URL representing the object given in the parameter
                 // namely the original Blob
                 img.src = URLObj.createObjectURL(imageBlob);
-                //console.log(imageBlob);
                 var reader = new FileReader();
                 reader.readAsDataURL(imageBlob);
                 reader.onloadend = function() {
@@ -590,7 +589,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
     });
     
     $http.post('/getPassReportingAreaList', $scope.getPassReport).then(function(response){
-        console.log(response.data)
         $.each(response.data, function(index, value) {
             var passAreaID = value.id.split(",");
             var passAreaName = value.name.split(",");
@@ -650,7 +648,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
     };
 
     $scope.thisArea = function(id, name, modalfrom) {
-        console.log(modalfrom);
         if(modalfrom == "today"){
             angular.element('#chooseArea').modal('toggle');
         }else if(modalfrom == "pass"){
@@ -820,21 +817,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         $http.post('/getReportingStaff', $scope.area).then(function(response) {
             $scope.thisReport.reportingStaff = response.data[0].staffName;
         });
-        $http.post('/getReportACR', $scope.thisReport).then(function(response) {
-            if (response.data.length != 0) {
-                $scope.thisReport.acr = response.data;
-            } else {
-                $scope.thisReport.acr = [];
-            }
-            $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-            $scope.acr = "";
-            $.each($scope.thisReport.acr, function(index, value) {
-                $scope.acr += value.name;
-                if ((index + 1) != $scope.acrRow) {
-                    $scope.acr += ', ';
-                }
-            });
-        });
+
 
         $http.post('/getReportCircle', $scope.report).then(function(response) {
             var data = response.data;
@@ -856,7 +839,6 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         //    $window.setTimeout(function() {
         //        var image = GMapCircle($scope.thisReport.lat, $scope.thisReport.lng, $scope.circles);
         //        $('.googleMap').attr("src", image);
-        //        console.log(image);
         //    }, 1000);
 
         $http.post('/getReportRect', $scope.report).then(function(response) {
@@ -877,6 +859,34 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
                 })
             }, 1000);
         });
+
+        $http.post('/getPeriodForReportACR', $scope.thisReport).then(function(response){
+            
+            $scope.infoForGetACR = {
+                "periodFrom" : response.data[0].periodFrom,
+                "periodTo" : response.data[0].periodTo,
+                "area" : $scope.thisReport.area,
+                "driverID" : $scope.thisReport.driverID
+            };
+            
+            $http.post('/getReportACR', $scope.infoForGetACR).then(function(response) {
+                if (response.data.length != 0) {
+                    $scope.thisReport.acr = response.data;
+                } else {
+                    $scope.thisReport.acr = [];
+                }
+                $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+                $scope.acr = "";
+                $.each($scope.thisReport.acr, function(index, value) {
+                    $scope.acr += value.name;
+                    if ((index + 1) != $scope.acrRow) {
+                        $scope.acr += ', ';
+                    }
+                });
+            });            
+        });
+        
+
 
         $scope.editReport = function() {
             window.location.href = '#/edit-report/' + $scope.thisReport.id;
@@ -1006,7 +1016,6 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                         google.maps.event.addListener(circle, "center_changed", function() {
                             $.each(centerArray, function(index, value) {
                                 if (circle.id == (index + 1)) {
-                                    console.log(index);
                                     centerArray[index].cLat = circle.getCenter().lat();
                                     centerArray[index].cLong = circle.getCenter().lng();
                                 }
@@ -1249,7 +1258,7 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                 // Creates a DOMString containing a URL representing the object given in the parameter
                 // namely the original Blob
                 img.src = URLObj.createObjectURL(imageBlob);
-                //console.log(imageBlob);
+                img.src = URLObj.createObjectURL(imageBlob);
                 var reader = new FileReader();
                 reader.readAsDataURL(imageBlob);
                 reader.onloadend = function() {
