@@ -1,5 +1,5 @@
 <!-- ACR Modal -->
-<div class="modal fade" id="createBDAF" tabindex="-1" role="dialog" aria-labelledby="createBDAF" aria-hidden="true">
+<!-- <div class="modal fade" id="createBDAF" tabindex="-1" role="dialog" aria-labelledby="createBDAF" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-      </div>
+</div> -->
       
       <div class="row">
           <div class="col-md-12">
@@ -46,14 +46,14 @@
       </div>
       
       <br />
-      <div class="row" data-ng-show="show.create == 'A'">
+      <!-- <div class="row" data-ng-show="show.create == 'A'">
           <div class="col-md-11">
               <button class="btn btn-success" data-toggle="modal" data-target="#createBDAF"><i class="fa fa-plus"></i> New</button>
           </div>
           <div class="col-md-1" style="padding-top: 10px">
               <label style="cursor: pointer;"><input type="checkbox" data-ng-model="statusList" data-ng-click="updateStatusList()"> Active</label>
           </div>
-      </div>
+      </div> -->
       <br />
       <div class="row">
         <div class="col-md-12">
@@ -61,7 +61,7 @@
                 <table class="table table-hover table-striped table-clickable">
                     <thead>
                         <tr>
-                            <th width="20%" data-ng-click="orderBy('bdafID');">BDAF ID <i class="fas fa-sort-down"></i></th>
+                            <!-- <th width="20%" data-ng-click="orderBy('bdafID');">BDAF ID <i class="fas fa-sort-down"></i></th> -->
                             <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
                             <th width="15%" data-ng-click="orderBy('driver');">Driver <i class="fas fa-sort-down"></i></th>
                             <th width="20%" data-ng-click="orderBy('generalWorker');">General Worker <i class="fas fa-sort-down"></i></th>
@@ -72,7 +72,7 @@
                     </thead>
                     <tbody>               
                         <tr data-ng-repeat="b in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewbdaf(b.id);">
-                            <td data-ng-bind="b.id"></td>
+                            <!-- <td data-ng-bind="b.id"></td> -->
                             <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
                             <td data-ng-bind="b.driver"></td>
                             <td data-ng-bind="b.generalWorker"></td>

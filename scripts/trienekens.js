@@ -5630,17 +5630,17 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
             console.log(response.data);
         });
 
-        $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.driverList = response.data;
+        // $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
+        //     $scope.searchAcrFilter = '';
+        //     $scope.driverList = response.data;
 
-        });
+        // });
 
-        $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.generalWorkerList = response.data;
+        // $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
+        //     $scope.searchAcrFilter = '';
+        //     $scope.generalWorkerList = response.data;
 
-        });
+        // });
 
 
     }
@@ -5725,6 +5725,10 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
     $scope.binList = [];
     $scope.bdafID = {};
     $scope.bdafID.id = $routeParams.bdafID;
+    $scope.driverList = [];
+    $scope.generalWorkerList = [];
+    $scope.driverButton;
+    $scope.generalWorkerButton;
 
 
     //$scope.initializeDcsDetails = function(){
@@ -5794,10 +5798,69 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
         $http.get('/getBinList', $scope.bdafID).then(function(response) {
             $scope.binList = response.data;
         });
+
+         $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.driverList = response.data;
+            console.log($scope.driverList);
+
+            $scope.driverButton = true;
+
+        });
+
+        getGeneralWorkers();
+        
     }
 
+    var getGeneralWorkers = function() {
+        $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.generalWorkerList = response.data;
+            console.log($scope.generalWorkerList);
+
+            $scope.generalWorkerButton = true;
+            $scope.bdaf.generalWorker = [];
+
+        });
+    }
     $scope.getBdafDetails();
 
+    $scope.assignDriver = function(driver) {
+        $scope.driverButton = false;
+
+        $scope.bdaf.driver = driver.staffName;
+    }
+
+    $scope.clearDriver = function() {
+        $scope.driverButton = true;
+
+        $scope.bdaf.driver = '';
+    }
+
+    $scope.generalWorkers = '';
+    $scope.assignGeneralWorker = function(generalWorker, index) {
+        $scope.generalWorkerButton = false;
+
+        $scope.bdaf.generalWorker.push(generalWorker.staffName);
+        $scope.generalWorkerList.splice(index,1);
+
+        if($scope.generalWorkers == ''){
+            $scope.generalWorkers = generalWorker.staffName;
+        } else {
+            $scope.generalWorkers = $scope.generalWorkers.concat(", ", generalWorker.staffName);
+        }
+        
+    }
+
+    $scope.clearGeneralWorker = function() {
+        $scope.generalWorkerButton = true;
+
+        $scope.bdaf.generalWorker = [];
+        $scope.generalWorkers = '';
+        
+        
+        getGeneralWorkers();
+    }
 
 
 
