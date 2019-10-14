@@ -314,6 +314,12 @@ app.service('storeDataService', function() {
             },
             "feedback": {
                 "view": 'A'
+            },
+            "role": {
+                "view": 'I'
+            },
+            "user": {
+                "approve": 'I'
             }
         },
         "pagination": {
@@ -2683,6 +2689,26 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         "transactionLog": {
             "view": 'I'
         },
+        "dcsDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
+        "bdafDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
+        "dbdDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
+        "blostDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
         "reporting": {
             "view": 'I',
             "edit": 'I',
@@ -2706,16 +2732,22 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         //     "view": 'I'
         // }
         "banner": {
-            "upload": 'A'
+            "upload": 'I'
         },
         "notif": {
-            "send": 'A'
+            "send": 'I'
         },
         "binrequest": {
-            "approve": 'A'
+            "approve": 'I'
         },
         "feedback": {
-            "view": 'A'
+            "view": 'I'
+        },
+        "role": {
+            "view": 'I'
+        },
+        "user": {
+            "approve": 'I'
         }
     };
 
@@ -2725,7 +2757,6 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             key;
 
         $.each(response.data, function(index, value) {
-            console.log(value);
             $.each(value, function(bigKey, bigValue) {
                 if (bigKey == 'name') {
                     splitName = bigValue.split(' ');
@@ -2740,8 +2771,6 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 }
                 if (bigKey == "status") { 
                     if (flag == false) {
-                        console.log(splitName[1]);
-                        console.log(splitName[0]);
                         $scope.auth[splitName[1]][splitName[0]] = bigValue;
                     } else {
                         $scope.auth["area"]["collection"][key] = bigValue;
@@ -2812,6 +2841,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 "name": $scope.role.oriname,
                 "value": $scope.checkall
             }
+            
             $http.post('/setAllAuth', $scope.allAuth).then(function(response) {
                 $scope.showCheckBtn = true;
                 if (response.data.status == "success") {
@@ -2878,6 +2908,26 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         "transactionLog": {
                             "view": 'A'
                         },
+                        "dcsDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
+                        "bdafDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
+                        "dbdDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
+                        "blostDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
                         "reporting": {
                             "view": 'A',
                             "edit": 'A',
@@ -2895,10 +2945,10 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "create": 'A'
                         },
                         // "custService": {
-                        //     "upload": 'A',
-                        //     "send": 'A',
-                        //     "approve": 'A',
-                        //     "view": 'A'
+                        //     "upload": 'I',
+                        //     "send": 'I',
+                        //     "approve": 'I',
+                        //     "view": 'I'
                         // }
                         "banner": {
                             "upload": 'A'
@@ -2911,10 +2961,17 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         },
                         "feedback": {
                             "view": 'A'
+                        },
+                        "role": {
+                            "view": 'I'
+                        },
+                        "user": {
+                            "approve": 'I'
                         }
                     };
                 }
             });
+        
         }
         else if ($scope.checkall == true) {
             $scope.showCheckBtn = false;
@@ -2989,6 +3046,26 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         "transactionLog": {
                             "view": 'I'
                         },
+                        "dcsDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
+                        "bdafDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
+                        "dbdDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
+                        "blostDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
                         "reporting": {
                             "view": 'I',
                             "edit": 'I',
@@ -3012,16 +3089,22 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         //     "view": 'I'
                         // }
                         "banner": {
-                            "upload": 'A'
+                            "upload": 'I'
                         },
                         "notif": {
-                            "send": 'A'
+                            "send": 'I'
                         },
                         "binrequest": {
-                            "approve": 'A'
+                            "approve": 'I'
                         },
                         "feedback": {
-                            "view": 'A'
+                            "view": 'I'
+                        },
+                        "role": {
+                            "view": 'I'
+                        },
+                        "user": {
+                            "approve": 'I'
                         }
                     };
                 }
