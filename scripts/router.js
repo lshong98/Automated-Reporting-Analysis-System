@@ -376,6 +376,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'damagedBinController',
         controllerAs:'damagedBin'
     })
+    .when('/lost-bin', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/lost-bin');
+            }
+        },
+        templateUrl: '/lost-bin',
+        controller: 'lostBinController',
+        controllerAs:'lostBin'
+    })
     .when('/post-announcement', {
         resolve: {
             "check": function (routingService, $window, $location) {

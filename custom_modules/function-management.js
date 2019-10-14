@@ -247,6 +247,10 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.damagedBin.view == \'A\'" role="menuitem"><a class="menu__link" href="#/damaged-bin"><i class="fas fa-dumpster-fire"></i> Damaged Bin Management</a></li>';
         }
+        case "view lostBin":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.lostBin.view == \'A\'" role="menuitem"><a class="menu__link" href="#/lost-bin"><i class="fas fa-truck-loading"></i> Lost Bin Management</a></li>';
+        }
         case "view role":
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/role-management"><i class="fa fa-lock"></i> Role Management</a></li>';
@@ -275,6 +279,10 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> Approve Bin Request</a></li>';
             }
+            case "view feedback":
+                        if (status == 'A') {
+                            return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback</a></li>';
+                        } 
             // case "view dcsDetails":
             //         if (status == 'A') {
             //             return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> DCS Details</a></li>';
@@ -291,10 +299,7 @@ function menuItem(keyword, status) {
             //         if (status == 'A') {
             //             return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BDAF Details</a></li>';
             //         } 
-                    case "view feedback":
-                        if (status == 'A') {
-                            return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback</a></li>';
-                        } 
+                    
         
     }
 }

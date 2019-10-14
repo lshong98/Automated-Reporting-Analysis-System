@@ -27,106 +27,86 @@
       </div>
 
       <div class="row">
-
-                    <div class="col-md-12">
-    
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                                <h5>Damaged Bin Report</h5>
-
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="row" data-ng-show="show.create == 'A'">
-                                                <div class="col-md-12">
-                                                    <button class="btn btn-success" data-toggle="modal" data-target="#createDbr"><i class="fa fa-plus"></i> New Damaged Bin Report</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="acrTab" role=tablist>
+                    <li class="nav-item">
+                        <a class="nav-link active" id="schedule-tab" data-toggle="tab" data-target="#acrSchedule" role="tab" aria-controls="acrSchedule" aria-selected="true">Damaged Bin Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#acrInformation" role="tab" aria-controls="acrInformation" aria-selected="false">Damaged Bin Data</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="acrSchedule" role="tabpanel" aria-labelledby="acrSchedule-tab">
+                            <div class="row" data-ng-show="show.create == 'A'">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-success" data-toggle="modal" data-target="#createDbr"><i class="fa fa-plus"></i> New Damaged Bin Report</button>
                                     </div>
-                                    <br/>
-                                        <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-hover table-striped table-clickable">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th width="20%" data-ng-click="orderBy('blostID');">DBR ID <i class="fas fa-sort-down"></i></th>
-                                                                    <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                                                                    <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
-                                                                    <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
-                                                                    <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i class="fas fa-sort-down"></i></th>
-                                                                    <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>               
-                                                                <tr data-ng-repeat="b in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewBlost(b.id);">
-                                                                    <td data-ng-bind="b.id"></td>
-                                                                    <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
-                                                                    <td data-ng-bind="b.preparedBy"></td>
-                                                                    <td data-ng-bind="b.authorizedBy"></td>
-                                                                    <td data-ng-bind="b.authorizedDate"></td>
-                                                                    <td data-ng-bind="b.status"></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                              </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <br/>
-                                    <div class="row">
+
+                                <div class="row">
                                         <div class="col-md-12">
-
-                                                <h5>Damaged Bin Data</h5>
-                                                
-                                        </div>
-                                    </div>
-                                            <br />
-                                            <div class="row">
-                                              <div class="col-md-12">
-                                                  <div class="table-responsive">
-                                                      <table class="table table-hover table-striped table-clickable">
-                                                          <thead>
-                                                              <tr>
-                                                                  <th width="20%" data-ng-click="orderBy('blostID');">BLOST ID <i class="fas fa-sort-down"></i></th>
-                                                                  <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                                                                  <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
-                                                                  <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
-                                                                  <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i class="fas fa-sort-down"></i></th>
-                                                                  <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                                                              </tr>
-                                                          </thead>
-                                                          <tbody>               
-                                                              <tr data-ng-repeat="b in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewBlost(b.id);">
-                                                                  <td data-ng-bind="b.id"></td>
-                                                                  <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
-                                                                  <td data-ng-bind="b.preparedBy"></td>
-                                                                  <td data-ng-bind="b.authorizedBy"></td>
-                                                                  <td data-ng-bind="b.authorizedDate"></td>
-                                                                  <td data-ng-bind="b.status"></td>
-                                                              </tr>
-                                                          </tbody>
-                                                      </table>
-                                                  </div>
-                                              </div>
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped table-clickable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="20%" data-ng-click="orderBy('blostID');">DBR ID <i class="fas fa-sort-down"></i></th>
+                                                            <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                                            <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
+                                                            <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
+                                                            <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i class="fas fa-sort-down"></i></th>
+                                                            <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>               
+                                                        <tr data-ng-repeat="b in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewBlost(b.id);">
+                                                            <td data-ng-bind="b.id"></td>
+                                                            <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
+                                                            <td data-ng-bind="b.preparedBy"></td>
+                                                            <td data-ng-bind="b.authorizedBy"></td>
+                                                            <td data-ng-bind="b.authorizedDate"></td>
+                                                            <td data-ng-bind="b.status"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
-
-                                </div>
-                                
-                            </div>
-                               
-                                
-                
+                                        </div>
+                                      </div>
+                  
                     </div>
-             
+                    <div class="tab-pane fade" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab" data-ng-show="show.view == 'A'">
+                            <div class="table-responsive">
+                                    <table class="table table-hover table-striped table-clickable">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%" data-ng-click="orderBy('blostID');">BLOST ID <i class="fas fa-sort-down"></i></th>
+                                                <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
+                                                <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
+                                                <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>               
+                                            <tr data-ng-repeat="b in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewBlost(b.id);">
+                                                <td data-ng-bind="b.id"></td>
+                                                <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
+                                                <td data-ng-bind="b.preparedBy"></td>
+                                                <td data-ng-bind="b.authorizedBy"></td>
+                                                <td data-ng-bind="b.authorizedDate"></td>
+                                                <td data-ng-bind="b.status"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                    </div>
+                </div>
         
             </div>
         </div>
+
+     
+                                            
       
 
       

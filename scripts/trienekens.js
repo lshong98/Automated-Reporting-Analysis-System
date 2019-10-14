@@ -5928,7 +5928,7 @@ app.controller('damagedBinController', function($scope, $http, $filter, storeDat
     'use strict';
 
     $scope.blostList = [];
-    console.log("DAMAGED & LOST BIN MANAGEMENT ACTIVATED!!");
+    console.log("DAMAGED BIN MANAGEMENT ACTIVATED!!");
 
 
     $scope.currentPage = 1; //Initial current page to 1
@@ -5940,22 +5940,11 @@ app.controller('damagedBinController', function($scope, $http, $filter, storeDat
         window.location.href = '#/dbd-details/' + dbdID;
     }
 
-    $scope.viewBlost = function(blostID) {
-        window.location.href = '#/blost-details/' + blostID;
+    $scope.viewDbr = function(dbrID) {
+        window.location.href = '#/dbr-details/' + dbrID;
     }
 
-    function initializeBdaf() {
-        $scope.bdaf = {
-            "id": '',
-            "creationDateTime": '',
-            "driver": '',
-            "periodFrom": '',
-            "periodTo": '',
-            "replacementDriver": '',
-            "replacementPeriodFrom": '',
-            "replacementPeriodTo": ''
-        };
-    }
+
 
     $scope.show = angular.copy(storeDataService.show.damagedBin);
 

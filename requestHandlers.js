@@ -152,9 +152,13 @@ app.get('/delivery-management', function (req, res) {
     'use strict';
     res.sendFile('pages/delivery-management.html', {root: __dirname});
 });
-app.get('/damaged-lost-bin', function (req, res) {
+app.get('/damaged-bin', function (req, res) {
     'use strict';
-    res.sendFile('pages/damaged-lost-bin.html', {root: __dirname});
+    res.sendFile('pages/damaged-bin.html', {root: __dirname});
+});
+app.get('/lost-bin', function (req, res) {
+    'use strict';
+    res.sendFile('pages/lost-bin.html', {root: __dirname});
 });
 app.get('/post-announcement', function (req, res) {
     'use strict';
