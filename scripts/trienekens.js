@@ -5910,7 +5910,7 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
 
 });
 
-app.controller('damagedLostController', function($scope, $http, $filter, storeDataService) {
+app.controller('damagedBinController', function($scope, $http, $filter, storeDataService) {
     'use strict';
 
     $scope.blostList = [];
@@ -5943,7 +5943,7 @@ app.controller('damagedLostController', function($scope, $http, $filter, storeDa
         };
     }
 
-    $scope.show = angular.copy(storeDataService.show.damagedlost);
+    $scope.show = angular.copy(storeDataService.show.damagedBin);
 
 
     $scope.currentStatus = {

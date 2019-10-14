@@ -357,15 +357,15 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'deliveryController',
         controllerAs:'delivery'
     })
-    .when('/damaged-lost-bin', {
+    .when('/damaged-bin', {
         resolve: {
             "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/damaged-lost-bin');
+                return routingService.auth($window, $location, '/damaged-bin');
             }
         },
-        templateUrl: '/damaged-lost-bin',
-        controller: 'damagedLostController',
-        controllerAs:'damagedLost'
+        templateUrl: '/damaged-bin',
+        controller: 'damagedBinController',
+        controllerAs:'damagedBin'
     })
     .when('/post-announcement', {
         resolve: {
