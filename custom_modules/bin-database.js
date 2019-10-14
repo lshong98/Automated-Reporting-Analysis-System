@@ -7,7 +7,7 @@ var moment = require('moment');
 
 app.get('/getAllDatabaseBin', function (req, res) {
     'use strict';
-    var sql = "select wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, wbd.rcDwell as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, wbd.comment as comment, bins.size as binSize, concat(customer.houseNo,' ',customer.streetNo,' ',taman.tamanName) as address, customer.name as companyName, acr.acrID as acrfSerialNo, wbd.itemType as itemType, wbd.path as path from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID where wbd.activeStatus = 'a'";
+    var sql = "select wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, wbd.rcDwell as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, wbd.comment as comment, bins.size as binSize, concat(customer.houseNo,' ',customer.streetNo,' ',taman.tamanName) as address, customer.name as companyName, acr.acrID as acrfSerialNo from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID where wbd.activeStatus = 'a'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -40,7 +40,7 @@ app.post('/addDatabaseBin', function (req, res) {
     let formatted_date = moment(current_datetime).format("YYYY-MM-DD hh:mm:ss");
     //console.log(formatted_date);
 
-    var sql = `insert into tblwheelbindatabase values(NULL,'${formatted_date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}','${req.body.acrID}','${req.body.activeStatus}','${req.body.rcDwell}', '${req.body.comment}','${req.body.itemType}','${req.body.path}')`;
+    var sql = `insert into tblwheelbindatabase values(NULL,'${formatted_date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}','${req.body.acrID}','${req.body.activeStatus}','${req.body.rcDwell}', '${req.body.comment}')`;
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -55,7 +55,7 @@ app.post('/addDatabaseBin', function (req, res) {
 app.post('/editDatabaseBin', function (req, res) {
     'use strict';
 
-    var sql = `update tblwheelbindatabase set date ='${req.body.date}', customerID = '${req.body.customerID}', areaID = 'a001', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}', itemType = '${req.body.itemType}', path = '${req.body.path}' where idNo = ${req.body.idNo}`;
+    var sql = `update tblwheelbindatabase set date ='${req.body.date}', customerID = '${req.body.customerID}', areaID = 'a001', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = ${req.body.idNo}`;
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -73,7 +73,7 @@ app.put('/editDatabaseBin', function (req, res) {
     console.log(`${req.body.customerID}`);
     console.log(`${req}`);
 
-    var sql = `update tblwheelbindatabase set date ='${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaCode}', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}', itemType = '${req.body.itemType}', path = '${req.body.path}' where idNo = ${req.body.idNo}`;
+    var sql = `update tblwheelbindatabase set date ='${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaCode}', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = ${req.body.idNo}`;
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -210,6 +210,20 @@ app.post('/addTaman', function (req, res) {
         
     });
 });
+
+app.get('/getBinHistory', function(req,res){
+    'use strict';
+
+    var sql = "select wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, wbd.rcDwell as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, wbd.comment as comment, bins.size as binSize, concat(customer.houseNo,' ',customer.streetNo,' ',taman.tamanName) as address, customer.name as companyName, acr.acrID as acrfSerialNo, wbd.itemType as itemType, wbd.path as path from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID";
+    database.query(sql, function(err,result){
+        if(err){
+            throw err;
+        }
+        console.log("Get bin history success");
+        console.log(result);
+        res.json(result);
+    })
+})
 
 
 module.exports = app;

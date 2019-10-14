@@ -4345,6 +4345,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.areaList = [];
     $scope.binList = [];
     $scope.acrList = [];
+    $scope.binHistoryList = [];
 
 
     //get bin size
@@ -4519,6 +4520,19 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                 $scope.initializeTaman();
             }
         });
+
+    }
+
+
+    //wbdHistory function
+    $scope.wbdHistory = function(serialNo){
+        console.log("This is from the wbdHistory function: ");
+        console.log(serialNo);
+
+        $http.get('/getBinHistory', serialNo).then(function(response){
+            $scope.binHistoryList = response.data;
+            console.log($scope.binHistoryList);
+        })
 
     }
 
@@ -5713,17 +5727,17 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
             console.log(response.data);
         });
 
-        $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.driverList = response.data;
+        // $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
+        //     $scope.searchAcrFilter = '';
+        //     $scope.driverList = response.data;
 
-        });
+        // });
 
-        $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.generalWorkerList = response.data;
+        // $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
+        //     $scope.searchAcrFilter = '';
+        //     $scope.generalWorkerList = response.data;
 
-        });
+        // });
 
 
     }
@@ -5808,6 +5822,10 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
     $scope.binList = [];
     $scope.bdafID = {};
     $scope.bdafID.id = $routeParams.bdafID;
+    $scope.driverList = [];
+    $scope.generalWorkerList = [];
+    $scope.driverButton;
+    $scope.generalWorkerButton;
 
 
     //$scope.initializeDcsDetails = function(){
@@ -5877,10 +5895,69 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
         $http.get('/getBinList', $scope.bdafID).then(function(response) {
             $scope.binList = response.data;
         });
+
+         $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.driverList = response.data;
+            console.log($scope.driverList);
+
+            $scope.driverButton = true;
+
+        });
+
+        getGeneralWorkers();
+        
     }
 
+    var getGeneralWorkers = function() {
+        $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.generalWorkerList = response.data;
+            console.log($scope.generalWorkerList);
+
+            $scope.generalWorkerButton = true;
+            $scope.bdaf.generalWorker = [];
+
+        });
+    }
     $scope.getBdafDetails();
 
+    $scope.assignDriver = function(driver) {
+        $scope.driverButton = false;
+
+        $scope.bdaf.driver = driver.staffName;
+    }
+
+    $scope.clearDriver = function() {
+        $scope.driverButton = true;
+
+        $scope.bdaf.driver = '';
+    }
+
+    $scope.generalWorkers = '';
+    $scope.assignGeneralWorker = function(generalWorker, index) {
+        $scope.generalWorkerButton = false;
+
+        $scope.bdaf.generalWorker.push(generalWorker.staffName);
+        $scope.generalWorkerList.splice(index,1);
+
+        if($scope.generalWorkers == ''){
+            $scope.generalWorkers = generalWorker.staffName;
+        } else {
+            $scope.generalWorkers = $scope.generalWorkers.concat(", ", generalWorker.staffName);
+        }
+        
+    }
+
+    $scope.clearGeneralWorker = function() {
+        $scope.generalWorkerButton = true;
+
+        $scope.bdaf.generalWorker = [];
+        $scope.generalWorkers = '';
+        
+        
+        getGeneralWorkers();
+    }
 
 
 
@@ -5930,7 +6007,7 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
 
 });
 
-app.controller('damagedLostController', function($scope, $http, $filter, storeDataService) {
+app.controller('damagedBinController', function($scope, $http, $filter, storeDataService) {
     'use strict';
 
     $scope.blostList = [];
@@ -5963,7 +6040,7 @@ app.controller('damagedLostController', function($scope, $http, $filter, storeDa
         };
     }
 
-    $scope.show = angular.copy(storeDataService.show.damagedlost);
+    $scope.show = angular.copy(storeDataService.show.damagedBin);
 
 
     $scope.currentStatus = {

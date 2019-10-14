@@ -15,6 +15,12 @@
                         <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
                 </select>
             </div>
+            <div class="form-group">
+                    <label for="txtCompany form-label">Council</label>
+                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="bdafEntry.customerID">
+                            <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+                    </select>
+                </div>
             <div class="form-group"> 
               <label for="txtAddress form-label">Contact Person</label>
               <select type="text" class="form-control" id="txtAddress" data-ng-model="bdafEntry.customerName">
@@ -66,10 +72,6 @@
                     <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="txtRemarks form-label">Completed</label>
-                <input type="text" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.Completed" />
-            </div>
 
      
             
@@ -94,10 +96,7 @@
             </button>
         </div>
         <div class="modal-body">
-            
-            
-            
-            
+               
             
         </div>
         <div class="modal-footer">
@@ -154,7 +153,7 @@
         <div class="col-md-12">
                 <div class="row">
                         <div class="col-md-6">
-                            <h5>Driver's Collection Schedule (for ACR Customers)</h5>
+                            <h5>Bin Delivery & Activity Form</h5>
                         </div>
                         <div class="col-md-6" style="background-color: darkgreen; text-align: center">
                                 <img src="/images/trienekenslogo_form.png" alt="Trienekens Logo" height= "50px">
@@ -163,58 +162,37 @@
                 
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                    <h6>Additional Collection Areas: </h6>
-                            </div>
-                        </div>
-                        <div class="row">
-                                <div class="col-md-12">
-                                        {{dcs[0].areas}}
-                                </div>
-                        </div>
+                        <!-- Assign Driver -->
+                        <span>Driver: {{bdaf.driver}}</span><span id="buttons">
+                            <button ng-show="!driverButton" class="btn btn-sm btn-danger" ng-click="clearDriver();"> <i class="fas fa-times"></i></button>
+                            <button ng-show="driverButton" class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-plus"></i>
+                            </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" data-ng-repeat="d in driverList" ng-click="assignDriver(d);">{{d.staffName}}</a>
+                                        </div>
+
                         
                     </div>
                     <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-3"><h6>Period: </h6></div>
-                            <div class="col-md-3"></div>
-                            <div class="col-md-3"><h6>To: </h6></div>
-                            <div class="col-md-3"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">{{dcs[0].periodFrom | date:"dd-MM-yyyy"}}</div>
-                            <div class="col-md-6">{{dcs[0].periodTo | date:"dd-MM-yyyy"}}</div>
-                        </div>
-                            
+                        <h6>Date: {{bdaf.date}}</h6>
                     </div>
+
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-6"><h6>Driver Name: </h6></div>
-                            <div class="col-md-6"><h6>Replacement Driver Name: </h6></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">{{dcs[0].driver}}</div>
-                            <div class="col-md-6">{{dcs[0].replacementDriver}}</div>
-                        </div>
-                            
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-3"><h6>Replacement Period: </h6></div>
-                            <div class="col-md-3"></div>
-                            <div class="col-md-3"><h6>To: </h6></div>
-                            <div class="col-md-3"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">{{dcs[0].replacementPeriodFrom | date:"dd-MM-yyyy"}}</div>
-                            <div class="col-md-6">{{dcs[0].replacementPeriodTo | date:"dd-MM-yyyy"}}</div>
-                        </div>
-                            
+                        <!-- Assign General Worker -->
+                        <span>General Worker: {{generalWorkers}}</span><span id="buttons">
+                                <button ng-show="!generalWorkerButton" class="btn btn-sm btn-danger" ng-click="clearGeneralWorker();"> <i class="fas fa-times"></i></button>
+                                <button class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-plus"></i>
+                                </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" data-ng-repeat="gw in generalWorkerList" ng-click="assignGeneralWorker(gw, $index);">{{gw.staffName}}</a>
+                                            </div>
                     </div>
                 </div>
+
 
         </div>
 

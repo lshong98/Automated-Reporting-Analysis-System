@@ -167,12 +167,12 @@ function checkAuthority(keyword, whoIs) {
 
 function logTransaction(date, staffID, action, description, rowID, tblName) {
     var sql = "INSERT INTO tbllog (date, staffID, authorizedBy, action, description, rowID, tblName) VALUE ('" + date + "', '" + staffID + "', NULL, '" + action + "', '" + description + "', '" + rowID + "', '" + tblName + "')";
-//    
-//    database.query(sql, function (err, result) {
-//        if (err) {
-//            throw err;
-//        }
-//    });
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+    });
 }
 
 function sendForAuthorization(date, staffId, action, description, rowID, tblName, query) {
@@ -231,21 +231,21 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.formAuthorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/form-authorization"><i class="fas fa-clipboard-check"></i> Form Authorization <span class="authorization"></span></a></li>';
             }
-        case "view complaintlist":
+        case "view complaintlist": 
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module</a></li>';
             }
         case "view transactionLog":
             if (status == 'A') {
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/history"><i class="fa fa-bell"></i> Transaction Log</a></li>';
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/notification"><i class="fa fa-bell"></i> Transaction Log</a></li>';
             }
         case "view delivery":
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.delivery.view == \'A\'" role="menuitem"><a class="menu__link" href="#/delivery-management"><i class="fas fa-truck-loading"></i> Delivery Management</a></li>';
         }
-        case "view damagedlost":
+        case "view damagedBin":
             if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.damagedlost.view == \'A\'" role="menuitem"><a class="menu__link" href="#/damaged-lost-bin"><i class="fas fa-dumpster-fire"></i> Damaged & Lost Bin Management</a></li>';
+                return '<li class="menu__item" data-ng-show="show.damagedBin.view == \'A\'" role="menuitem"><a class="menu__link" href="#/damaged-bin"><i class="fas fa-dumpster-fire"></i> Damaged Bin Management</a></li>';
         }
         case "view role":
             if (status == 'A') {
@@ -270,30 +270,30 @@ function menuItem(keyword, status) {
         case "send notif":
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/post-announcement"><i class="fa fa-file"></i> Post Announcements</a></li>';
-            }
+            }s
         case "approve binrequest":
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> Approve Bin Request</a></li>';
             }
-            case "view dcsDetails":
-                    if (status == 'A') {
-                        return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> DCS Details</a></li>';
-                    } 
-            case "view dbdDetails":
-                    if (status == 'A') {
-                        return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> DBD Details</a></li>';
-                    }   
-            case "view blostDetails":
-                    if (status == 'A') {
-                        return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BLOST Details</a></li>';
-                    } 
-            case "view bdafDetails":
-                    if (status == 'A') {
-                        return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BDAF Details</a></li>';
-                    } 
+            // case "view dcsDetails":
+            //         if (status == 'A') {
+            //             return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> DCS Details</a></li>';
+            //         } 
+            // case "view dbdDetails":
+            //         if (status == 'A') {
+            //             return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> DBD Details</a></li>';
+            //         }   
+            // case "view blostDetails":
+            //         if (status == 'A') {
+            //             return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BLOST Details</a></li>';
+            //         } 
+            // case "view bdafDetails":
+            //         if (status == 'A') {
+            //             return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/approve-bin-request"><i class="fa fa-file"></i> BDAF Details</a></li>';
+            //         } 
                     case "view feedback":
                         if (status == 'A') {
-                            return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback <span class="satisfaction"></span></a></li>';
+                            return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback</a></li>';
                         } 
         
     }
