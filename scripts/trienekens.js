@@ -4262,6 +4262,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.areaList = [];
     $scope.binList = [];
     $scope.acrList = [];
+    $scope.binHistoryList = [];
 
 
     //get bin size
@@ -4436,6 +4437,19 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                 $scope.initializeTaman();
             }
         });
+
+    }
+
+
+    //wbdHistory function
+    $scope.wbdHistory = function(serialNo){
+        console.log("This is from the wbdHistory function: ");
+        console.log(serialNo);
+
+        $http.get('/getBinHistory', serialNo).then(function(response){
+            $scope.binHistoryList = response.data;
+            console.log($scope.binHistoryList);
+        })
 
     }
 
