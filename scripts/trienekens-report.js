@@ -1189,6 +1189,10 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             $scope.notify("error","Status Cannot Be Blank.");
             $scope.showEditBtn = true;
         } else{
+            if ($scope.editField.ton == "" || $scope.editField.ton == null) {
+                $scope.editField.ton = 0;
+            }
+            
             $http.post('/editReport', $scope.editField).then(function(response) {
                 var returnedReportData = response.data;
 
