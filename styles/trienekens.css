@@ -341,3 +341,7 @@ td[colspan] {
   .orange{
       background-color: orange;
   }
+
+  .inline {
+      float: right;
+  }

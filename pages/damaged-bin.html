@@ -1,0 +1,120 @@
+<!-- ACR Modal -->
+<div class="modal fade" id="createBLOST" tabindex="-1" role="dialog" aria-labelledby="createBLOST" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Add BLOST</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <label for="txtBdafDate form-label">Date</label>
+                  <input type="date" class="form-control" id="txtBdafDate" data-ng-model="blost.date" />
+                </div>
+         
+                
+                
+                
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-ng-click="addBlost();">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="acrTab" role=tablist>
+                    <li class="nav-item">
+                        <a class="nav-link active" id="schedule-tab" data-toggle="tab" data-target="#acrSchedule" role="tab" aria-controls="acrSchedule" aria-selected="true">Damaged Bin Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#acrInformation" role="tab" aria-controls="acrInformation" aria-selected="false">Damaged Bin Data</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="acrSchedule" role="tabpanel" aria-labelledby="acrSchedule-tab">
+                            <div class="row" data-ng-show="show.create == 'A'">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-success" data-toggle="modal" data-target="#createDbr"><i class="fa fa-plus"></i> New Damaged Bin Report</button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped table-clickable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="20%" data-ng-click="orderBy('blostID');">DBR ID <i class="fas fa-sort-down"></i></th>
+                                                            <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                                            <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
+                                                            <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
+                                                            <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i class="fas fa-sort-down"></i></th>
+                                                            <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>               
+                                                        <tr data-ng-repeat="b in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewBlost(b.id);">
+                                                            <td data-ng-bind="b.id"></td>
+                                                            <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
+                                                            <td data-ng-bind="b.preparedBy"></td>
+                                                            <td data-ng-bind="b.authorizedBy"></td>
+                                                            <td data-ng-bind="b.authorizedDate"></td>
+                                                            <td data-ng-bind="b.status"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                      </div>
+                  
+                    </div>
+                    <div class="tab-pane fade" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab" data-ng-show="show.view == 'A'">
+                            <div class="table-responsive">
+                                    <table class="table table-hover table-striped table-clickable">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%" data-ng-click="orderBy('blostID');">BLOST ID <i class="fas fa-sort-down"></i></th>
+                                                <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
+                                                <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
+                                                <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>               
+                                            <tr data-ng-repeat="b in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewBlost(b.id);">
+                                                <td data-ng-bind="b.id"></td>
+                                                <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
+                                                <td data-ng-bind="b.preparedBy"></td>
+                                                <td data-ng-bind="b.authorizedBy"></td>
+                                                <td data-ng-bind="b.authorizedDate"></td>
+                                                <td data-ng-bind="b.status"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+
+     
+                                            
+      
+
+      
+      <!-- <script>
+      $(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+          window.location.href = $(this).data('href');
+      });
+          $(document).ready(function () {
+              $('.selectpicker').selectpicker();
+          });
+      </script> -->

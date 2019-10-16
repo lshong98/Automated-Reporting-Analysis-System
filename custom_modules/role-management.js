@@ -13,6 +13,18 @@ app.post('/addRole', function (req, res) {
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
+            }else{
+                f.waterfallQuery("SELECT COUNT(*) AS 'countmgmt' FROM tblmanagement").then(function(countmgmt){
+                    for(var i=1; i<=countmgmt.countmgmt; i++){
+                        var insertsql = "INSERT INTO tblaccess (positionID, mgmtID, status) VALUE ('" + ID + "', '" + i + "', 'I' )";
+
+                        database.query(insertsql, function (err, result) {
+                            if (err) {
+                                throw err;
+                            }
+                        });               
+                    }
+                });
             }
             res.json({"status": "success", "message": "Role created successfully!", "details": {"roleID": ID}});
         });
@@ -61,14 +73,13 @@ app.post('/setAllAuth',function (req, res){
     'use strict';
     
     var sqlgetposid = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.name + "' LIMIT 0, 1";
-    console.log(req.body);
     database.query(sqlgetposid, function(err, result){
         if(err){
             throw err;
         }else{
             
             if(req.body.value == true){
-                var sqlupdtacs = "UPDATE tblaccess SET status = 'A' WHERE positionID = '" + result[0].id + "'";
+                var sqlupdtacs = "UPDATE tblaccess SET status = 'A' WHERE positionID = '" + result[0].id + "' AND mgmtID != 4";
 
                  database.query(sqlupdtacs, function(err2, result2){
                      if(err2){

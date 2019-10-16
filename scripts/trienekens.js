@@ -314,6 +314,12 @@ app.service('storeDataService', function() {
             },
             "feedback": {
                 "view": 'A'
+            },
+            "role": {
+                "view": 'I'
+            },
+            "user": {
+                "approve": 'I'
             }
         },
         "pagination": {
@@ -2683,6 +2689,26 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         "transactionLog": {
             "view": 'I'
         },
+        "dcsDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
+        "bdafDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
+        "dbdDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
+        "blostDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        },
         "reporting": {
             "view": 'I',
             "edit": 'I',
@@ -2706,16 +2732,22 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
         //     "view": 'I'
         // }
         "banner": {
-            "upload": 'A'
+            "upload": 'I'
         },
         "notif": {
-            "send": 'A'
+            "send": 'I'
         },
         "binrequest": {
-            "approve": 'A'
+            "approve": 'I'
         },
         "feedback": {
-            "view": 'A'
+            "view": 'I'
+        },
+        "role": {
+            "view": 'I'
+        },
+        "user": {
+            "approve": 'I'
         }
     };
 
@@ -2725,7 +2757,6 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             key;
 
         $.each(response.data, function(index, value) {
-            console.log(value);
             $.each(value, function(bigKey, bigValue) {
                 if (bigKey == 'name') {
                     splitName = bigValue.split(' ');
@@ -2740,8 +2771,6 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 }
                 if (bigKey == "status") { 
                     if (flag == false) {
-                        console.log(splitName[1]);
-                        console.log(splitName[0]);
                         $scope.auth[splitName[1]][splitName[0]] = bigValue;
                     } else {
                         $scope.auth["area"]["collection"][key] = bigValue;
@@ -2812,6 +2841,7 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                 "name": $scope.role.oriname,
                 "value": $scope.checkall
             }
+            
             $http.post('/setAllAuth', $scope.allAuth).then(function(response) {
                 $scope.showCheckBtn = true;
                 if (response.data.status == "success") {
@@ -2878,6 +2908,26 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         "transactionLog": {
                             "view": 'A'
                         },
+                        "dcsDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
+                        "bdafDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
+                        "dbdDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
+                        "blostDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        },
                         "reporting": {
                             "view": 'A',
                             "edit": 'A',
@@ -2895,10 +2945,10 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "create": 'A'
                         },
                         // "custService": {
-                        //     "upload": 'A',
-                        //     "send": 'A',
-                        //     "approve": 'A',
-                        //     "view": 'A'
+                        //     "upload": 'I',
+                        //     "send": 'I',
+                        //     "approve": 'I',
+                        //     "view": 'I'
                         // }
                         "banner": {
                             "upload": 'A'
@@ -2911,10 +2961,17 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         },
                         "feedback": {
                             "view": 'A'
+                        },
+                        "role": {
+                            "view": 'I'
+                        },
+                        "user": {
+                            "approve": 'I'
                         }
                     };
                 }
             });
+        
         }
         else if ($scope.checkall == true) {
             $scope.showCheckBtn = false;
@@ -2989,6 +3046,26 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         "transactionLog": {
                             "view": 'I'
                         },
+                        "dcsDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
+                        "bdafDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
+                        "dbdDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
+                        "blostDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        },
                         "reporting": {
                             "view": 'I',
                             "edit": 'I',
@@ -3012,16 +3089,22 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                         //     "view": 'I'
                         // }
                         "banner": {
-                            "upload": 'A'
+                            "upload": 'I'
                         },
                         "notif": {
-                            "send": 'A'
+                            "send": 'I'
                         },
                         "binrequest": {
-                            "approve": 'A'
+                            "approve": 'I'
                         },
                         "feedback": {
-                            "view": 'A'
+                            "view": 'I'
+                        },
+                        "role": {
+                            "view": 'I'
+                        },
+                        "user": {
+                            "approve": 'I'
                         }
                     };
                 }
@@ -4262,6 +4345,7 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
     $scope.areaList = [];
     $scope.binList = [];
     $scope.acrList = [];
+    $scope.binHistoryList = [];
 
 
     //get bin size
@@ -4436,6 +4520,19 @@ app.controller('databaseBinController', function($scope, $http, $filter, storeDa
                 $scope.initializeTaman();
             }
         });
+
+    }
+
+
+    //wbdHistory function
+    $scope.wbdHistory = function(serialNo){
+        console.log("This is from the wbdHistory function: ");
+        console.log(serialNo);
+
+        $http.get('/getBinHistory', serialNo).then(function(response){
+            $scope.binHistoryList = response.data;
+            console.log($scope.binHistoryList);
+        })
 
     }
 
@@ -5337,8 +5434,7 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         $scope.report = {
             "reportID": reportCode
         };
-
-
+        var map;
 
         $http.post('/getReportForComplaint', $scope.report).then(function(response) {
             $('div.report_reference').html(response.data.content);
@@ -5348,7 +5444,7 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 "areaID": $scope.thisReport.area
             };
             $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
-                var $googleMap, map;
+                var $googleMap;
 
                 if (response.data.length != 0) {
                     var sumOfCoLat = 0;
@@ -5397,6 +5493,42 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 } else {
                     $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
                 }
+            });
+            
+            $http.post('/getReportCircle', $scope.report).then(function(response) {
+                var data = response.data;
+                $window.setTimeout(function() {
+                    $.each(data, function(index, value) {
+                        var circle = new google.maps.Circle({
+                            map: map,
+                            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+                            radius: parseFloat(data[index].radius),
+                            fillColor: 'transparent',
+                            strokeColor: 'red',
+                            editable: false,
+                            draggable: false
+                        });
+                    });
+                }, 1000);
+            });
+
+            $http.post('/getReportRect', $scope.report).then(function(response) {
+                var data = response.data;
+                $window.setTimeout(function() {
+                    $.each(data, function(index, value) {
+                        var rect = new google.maps.Rectangle({
+                            map: map,
+                            bounds: new google.maps.LatLngBounds(
+                                new google.maps.LatLng(data[index].swLat, data[index].swLng),
+                                new google.maps.LatLng(data[index].neLat, data[index].neLng),
+                            ),
+                            fillColor: 'transparent',
+                            strokeColor: 'red',
+                            editable: false,
+                            draggable: false
+                        });
+                    })
+                }, 1000);
             });
         });
     }
@@ -5630,17 +5762,17 @@ app.controller('deliveryController', function($scope, $http, $filter, storeDataS
             console.log(response.data);
         });
 
-        $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.driverList = response.data;
+        // $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
+        //     $scope.searchAcrFilter = '';
+        //     $scope.driverList = response.data;
 
-        });
+        // });
 
-        $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
-            $scope.searchAcrFilter = '';
-            $scope.generalWorkerList = response.data;
+        // $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
+        //     $scope.searchAcrFilter = '';
+        //     $scope.generalWorkerList = response.data;
 
-        });
+        // });
 
 
     }
@@ -5725,6 +5857,10 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
     $scope.binList = [];
     $scope.bdafID = {};
     $scope.bdafID.id = $routeParams.bdafID;
+    $scope.driverList = [];
+    $scope.generalWorkerList = [];
+    $scope.driverButton;
+    $scope.generalWorkerButton;
 
 
     //$scope.initializeDcsDetails = function(){
@@ -5794,10 +5930,69 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
         $http.get('/getBinList', $scope.bdafID).then(function(response) {
             $scope.binList = response.data;
         });
+
+         $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.driverList = response.data;
+            console.log($scope.driverList);
+
+            $scope.driverButton = true;
+
+        });
+
+        getGeneralWorkers();
+        
     }
 
+    var getGeneralWorkers = function() {
+        $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
+            $scope.searchAcrFilter = '';
+            $scope.generalWorkerList = response.data;
+            console.log($scope.generalWorkerList);
+
+            $scope.generalWorkerButton = true;
+            $scope.bdaf.generalWorker = [];
+
+        });
+    }
     $scope.getBdafDetails();
 
+    $scope.assignDriver = function(driver) {
+        $scope.driverButton = false;
+
+        $scope.bdaf.driver = driver.staffName;
+    }
+
+    $scope.clearDriver = function() {
+        $scope.driverButton = true;
+
+        $scope.bdaf.driver = '';
+    }
+
+    $scope.generalWorkers = '';
+    $scope.assignGeneralWorker = function(generalWorker, index) {
+        $scope.generalWorkerButton = false;
+
+        $scope.bdaf.generalWorker.push(generalWorker.staffName);
+        $scope.generalWorkerList.splice(index,1);
+
+        if($scope.generalWorkers == ''){
+            $scope.generalWorkers = generalWorker.staffName;
+        } else {
+            $scope.generalWorkers = $scope.generalWorkers.concat(", ", generalWorker.staffName);
+        }
+        
+    }
+
+    $scope.clearGeneralWorker = function() {
+        $scope.generalWorkerButton = true;
+
+        $scope.bdaf.generalWorker = [];
+        $scope.generalWorkers = '';
+        
+        
+        getGeneralWorkers();
+    }
 
 
 
@@ -5847,11 +6042,11 @@ app.controller('bdafDetailsController', function($scope, $http, $filter, storeDa
 
 });
 
-app.controller('damagedLostController', function($scope, $http, $filter, storeDataService) {
+app.controller('damagedBinController', function($scope, $http, $filter, storeDataService) {
     'use strict';
 
     $scope.blostList = [];
-    console.log("DAMAGED & LOST BIN MANAGEMENT ACTIVATED!!");
+    console.log("DAMAGED BIN MANAGEMENT ACTIVATED!!");
 
 
     $scope.currentPage = 1; //Initial current page to 1
@@ -5863,24 +6058,13 @@ app.controller('damagedLostController', function($scope, $http, $filter, storeDa
         window.location.href = '#/dbd-details/' + dbdID;
     }
 
-    $scope.viewBlost = function(blostID) {
-        window.location.href = '#/blost-details/' + blostID;
+    $scope.viewDbr = function(dbrID) {
+        window.location.href = '#/dbr-details/' + dbrID;
     }
 
-    function initializeBdaf() {
-        $scope.bdaf = {
-            "id": '',
-            "creationDateTime": '',
-            "driver": '',
-            "periodFrom": '',
-            "periodTo": '',
-            "replacementDriver": '',
-            "replacementPeriodFrom": '',
-            "replacementPeriodTo": ''
-        };
-    }
 
-    $scope.show = angular.copy(storeDataService.show.damagedlost);
+
+    $scope.show = angular.copy(storeDataService.show.damagedBin);
 
 
     $scope.currentStatus = {

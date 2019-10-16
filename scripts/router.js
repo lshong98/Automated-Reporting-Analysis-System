@@ -67,6 +67,15 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'accountController',
         controllerAs: 'account'
     })
+    .when('/wbd-history', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/wbd-history');
+            }
+        },
+        templateUrl: '/wbd-history',
+        controller: 'binDatabaseController'
+    })
     .when('/account/:userID', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {
@@ -357,15 +366,25 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'deliveryController',
         controllerAs:'delivery'
     })
-    .when('/damaged-lost-bin', {
+    .when('/damaged-bin', {
         resolve: {
             "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/damaged-lost-bin');
+                return routingService.auth($window, $location, '/damaged-bin');
             }
         },
-        templateUrl: '/damaged-lost-bin',
-        controller: 'damagedLostController',
-        controllerAs:'damagedLost'
+        templateUrl: '/damaged-bin',
+        controller: 'damagedBinController',
+        controllerAs:'damagedBin'
+    })
+    .when('/lost-bin', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/lost-bin');
+            }
+        },
+        templateUrl: '/lost-bin',
+        controller: 'lostBinController',
+        controllerAs:'lostBin'
     })
     .when('/post-announcement', {
         resolve: {
