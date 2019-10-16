@@ -861,29 +861,31 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         });
 
         $http.post('/getPeriodForReportACR', $scope.thisReport).then(function(response){
-            
-            $scope.infoForGetACR = {
-                "periodFrom" : response.data[0].periodFrom,
-                "periodTo" : response.data[0].periodTo,
-                "area" : $scope.thisReport.area,
-                "driverID" : $scope.thisReport.driverID
-            };
-            
-            $http.post('/getReportACR', $scope.infoForGetACR).then(function(response) {
-                if (response.data.length != 0) {
-                    $scope.thisReport.acr = response.data;
-                } else {
-                    $scope.thisReport.acr = [];
-                }
-                $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-                $scope.acr = "";
-                $.each($scope.thisReport.acr, function(index, value) {
-                    $scope.acr += value.name;
-                    if ((index + 1) != $scope.acrRow) {
-                        $scope.acr += ', ';
+            if($scope.infoForGetACR != null){
+                $scope.infoForGetACR = {
+                    "periodFrom" : response.data[0].periodFrom,
+                    "periodTo" : response.data[0].periodTo,
+                    "area" : $scope.thisReport.area,
+                    "driverID" : $scope.thisReport.driverID
+                };
+
+                $http.post('/getReportACR', $scope.infoForGetACR).then(function(response) {
+                    if (response.data.length != 0) {
+                        $scope.thisReport.acr = response.data;
+                    } else {
+                        $scope.thisReport.acr = [];
                     }
-                });
-            });            
+                    $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+                    $scope.acr = "";
+                    $.each($scope.thisReport.acr, function(index, value) {
+                        $scope.acr += value.name;
+                        if ((index + 1) != $scope.acrRow) {
+                            $scope.acr += ', ';
+                        }
+                    });
+                });     
+            }
+
         });
         
 
@@ -1187,6 +1189,10 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             $scope.notify("error","Status Cannot Be Blank.");
             $scope.showEditBtn = true;
         } else{
+            $scope.editField.date = $filter('date')($scope.editField.date, 'yyyy-MM-dd');
+            if ($scope.editField.ton == "" || $scope.editField.ton == null) {
+                $scope.editField.ton = 0;
+            }
             $http.post('/editReport', $scope.editField).then(function(response) {
                 var returnedReportData = response.data;
 

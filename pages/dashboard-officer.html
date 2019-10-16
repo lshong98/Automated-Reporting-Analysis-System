@@ -9,6 +9,36 @@
     </div>
 </div>
 <hr/>
+<div class="row">
+    <div class="col-md-6" style="overflow-y: scroll; height: 200px">
+        <table class="table table-bordered" >
+            <thead>
+                <tr>
+                    <th>Submitted Report</th>
+                </tr>
+            </thead>
+            <tbody data-ng-repeat = "u in getROSubmitted">
+                <tr >
+                    <td>{{u.area}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>    
+    <div class="col-md-6" style="overflow-y: scroll; height: 200px">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Unsubmitted Report</th>
+                </tr>
+            </thead>
+            <tbody data-ng-repeat = "s in getROUnsubmitted">
+                <tr>
+                    <td>{{s.area}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 <div class = "row">
     <div class="col-md-12">
         <h4> Select your reporting area in below: </h4>
