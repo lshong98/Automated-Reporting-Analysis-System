@@ -740,7 +740,7 @@ app.post('/NewRegister', function (req, resp) {
         transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'fravleinulan@gmail.com',
+                user: 'registercustomerapp@gmail.com',
                 pass: 'trienekens123'
             }
         });
@@ -750,7 +750,7 @@ app.post('/NewRegister', function (req, resp) {
         email = data.email;
         console.log("vCode: " + vCode);
         mailOptions = {
-            from: 'fravleinulan@gmail.com',
+            from: 'registercustomerapp@gmail.com',
             to: email,
             subject: subject,
             text: text
@@ -801,7 +801,7 @@ app.post('/registerAcc', function (req, resp) {
         transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'fravleinulan@gmail.com',
+                user: 'registercustomerapp@gmail.com',
                 pass: 'trienekens123'
             }
         });
@@ -811,7 +811,7 @@ app.post('/registerAcc', function (req, resp) {
         email = data.email;
         console.log("vCode: " + vCode);
         mailOptions = {
-            from: 'fravleinulan@gmail.com',
+            from: 'registercustomerapp@gmail.com',
             to: email,
             subject: subject,
             text: text
@@ -1334,7 +1334,7 @@ app.post('/resetPassword', function (req, resp) {
         transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'fravleinulan@gmail.com',
+                user: 'registercustomerapp@gmail.com',
                 pass: 'trienekens123'
             }
         });
@@ -1345,7 +1345,7 @@ app.post('/resetPassword', function (req, resp) {
         email = data.email;
 
         mailOptions = {
-            from: 'fravleinulan@gmail.com',
+            from: 'registercustomerapp@gmail.com',
             to: email,
             subject: subject,
             text: text
