@@ -5484,8 +5484,7 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
         $scope.report = {
             "reportID": reportCode
         };
-
-
+        var map;
 
         $http.post('/getReportForComplaint', $scope.report).then(function(response) {
             $('div.report_reference').html(response.data.content);
@@ -5495,7 +5494,7 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 "areaID": $scope.thisReport.area
             };
             $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
-                var $googleMap, map;
+                var $googleMap;
 
                 if (response.data.length != 0) {
                     var sumOfCoLat = 0;
@@ -5544,6 +5543,42 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 } else {
                     $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
                 }
+            });
+            
+            $http.post('/getReportCircle', $scope.report).then(function(response) {
+                var data = response.data;
+                $window.setTimeout(function() {
+                    $.each(data, function(index, value) {
+                        var circle = new google.maps.Circle({
+                            map: map,
+                            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+                            radius: parseFloat(data[index].radius),
+                            fillColor: 'transparent',
+                            strokeColor: 'red',
+                            editable: false,
+                            draggable: false
+                        });
+                    });
+                }, 1000);
+            });
+
+            $http.post('/getReportRect', $scope.report).then(function(response) {
+                var data = response.data;
+                $window.setTimeout(function() {
+                    $.each(data, function(index, value) {
+                        var rect = new google.maps.Rectangle({
+                            map: map,
+                            bounds: new google.maps.LatLngBounds(
+                                new google.maps.LatLng(data[index].swLat, data[index].swLng),
+                                new google.maps.LatLng(data[index].neLat, data[index].neLng),
+                            ),
+                            fillColor: 'transparent',
+                            strokeColor: 'red',
+                            editable: false,
+                            draggable: false
+                        });
+                    })
+                }, 1000);
             });
         });
     }

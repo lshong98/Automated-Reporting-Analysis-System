@@ -57,10 +57,9 @@ app.post('/chatList', function (req, res) {
 //Customer to staff
 app.post('/sendMessage', function (req, resp) {
     'use strict';
-
     var data;
     var userID, staffID;
-    process.env.TZ = 'Asia/Kuala_Lumpur';
+    process.env.TZ = 'Asia/Kuala_Lumpur'
     var date = dateTime.create().format('Y-m-d H:M:S');
     var currentTime = date.substr(11, 18);
     var startTime = "08:30:00";
@@ -83,7 +82,7 @@ app.post('/sendMessage', function (req, resp) {
                 userID = result[0].userID;
                 staffID = result[0].staffID;
                 f.makeID('chat', date).then(function (ID) {
-                    sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status) VALUE ('" + ID + "', '" + result[0].userID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', '" + date + "', 'A')";
+                    sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + result[0].userID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', '" + date + "', 'A','u')";
                     database.query(sql, function (err, result) {
                         if (err) {
                             resp.send("Error Sending Message");
@@ -93,7 +92,7 @@ app.post('/sendMessage', function (req, resp) {
                             resp.send("Message Sent");
                             if (currentTime <= startTime || currentTime >= endTime || today.getDay() == 6 || today.getDay() == 0) {
                                 console.log("Enter Automated Function");
-                                var sql2 = "INSERT INTO tblchat (sender, recipient, content, complaintID, creationDateTime) VALUES ('" + staffID + "','" + userID + "','" + "Thank You for your message. However, we are currenty closed as our regular business hours are from 8:30 am to 5:30 pm, Monday through Friday. We will get back to you as soon as possible. Thank you and have a nice day." + "','" + data.id + "','" + date + "')";
+                                var sql2 = "INSERT INTO tblchat (sender, recipient, content, complaintID, creationDateTime) VALUES ('" + staffID + "','" + userID + "','" + "Thank You for your message. However, we are currently closed as our regular business hours are from 8:30 am to 5:30 pm, Monday through Friday. We will get back to you as soon as possible. Thank you and have a nice day." + "','" + data.id + "','" + date + "')";
                                 database.query(sql2, function (err, res) {
                                     if (err) {
                                         throw err;
@@ -167,6 +166,7 @@ app.post('/getMessage', function (req, resp) {
                             resp.send("No Messages");
                         }
                         resp.json(msgs);
+                        resp.end();
                         // db.query(sql2, function(err, res){
                         //     for(var x = 0; x<res.length; x++){
                         //         msgs.push(res[x]);
@@ -177,6 +177,7 @@ app.post('/getMessage', function (req, resp) {
                 });
             } else {
                 resp.send("error getting user id");
+                resp.end();
             }
         });
     });
@@ -199,6 +200,7 @@ app.post('/getChats', function (req, resp) {
                 database.query(sql, function(err, res){
                     if(err){
                         resp.send("Error");
+                        resp.end();
                     }
                     for (i = 0; i < res.length; i += 1) {
                         info.push(res[i]);
@@ -206,11 +208,14 @@ app.post('/getChats', function (req, resp) {
                     //console.log(info);
                     if (info == null) {
                         resp.send("No Chats");
+                        resp.end();
                     }
                     resp.json(info);
+                    resp.end();
                 });
             } else {
                 resp.send("error getting user id");
+                resp.end();
             }
         });
     });
