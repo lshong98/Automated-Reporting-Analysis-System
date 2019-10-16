@@ -115,6 +115,7 @@ app.get('/fetchCarouselImg', function (req, res) {
         }
         console.log(output);
         res.json(output);
+        res.end();
     });
 });
 
@@ -130,6 +131,7 @@ app.get('/getAllSchedule', function (req, res) {
         }
         console.log(output);
         res.json(output);
+        res.end();
     });
 });
 
@@ -144,6 +146,7 @@ app.get('/getAreas', function(req, res){
         }
         console.log(output);
         res.json(output);
+        res.end();
     });
 });
 
@@ -159,6 +162,7 @@ app.get('/getPendingUser', function (req, res) {
         }
         console.log(output);
         res.json(output);
+        res.end();
     });
 });
 
@@ -175,6 +179,7 @@ app.get('/getPendingBinRequest', function (req, res) {
             }
             console.log(output);
             res.json(output);
+            res.end();
         }
     });
 });
@@ -222,12 +227,14 @@ app.post('/updatePendingUser', function (req, res) {
 
         transporter.sendMail(mailOptions, function(error, info){
             if(error){
-                resp.send("Mail Failed");
+                res.send("Mail Failed");
+                res.end();
                 console.log(error);
             }
             console.log("Email sent: "+info.response);
         });
         res.send("User Status Updated");
+        res.end()
     });
 });
 
@@ -240,6 +247,7 @@ app.post('/updateBinRequest', function (req, res) {
             throw err;
         }
         res.send("Bin Request Updated");
+        res.end()
     });
 });
 
@@ -261,6 +269,7 @@ app.post('/deleteCarouselImg', function (req, res) {
             }
             console.log("Image Deleted");
             res.send("Image Deleted");
+            res.end();
         });
     });
 });
@@ -298,6 +307,7 @@ app.get('/customerFeedback', function(req, res){
         }
         json = {"compRate":compRate/totalReview,"teamEff":teamEff/totalReview,"collPrompt":collPrompt/totalReview,"binHand":binHand/totalReview,"spillCtrl":spillCtrl/totalReview,"qryResp":qryResp/totalReview,"comments":comments};
         res.json(json);
+        res.end();
     });
 });
 
@@ -306,6 +316,7 @@ app.get('/readSatisfaction', function(req, res){
     var sql = "UPDATE tblsatisfaction SET readStat = 'r'";
     database.query(sql, function(err, result){
         res.send("New Satisfaction Read");
+        res.end();
     });
 });
 

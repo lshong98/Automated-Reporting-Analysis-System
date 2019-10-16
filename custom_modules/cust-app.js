@@ -445,12 +445,10 @@ app.post('/satisfaction', function (req, resp) {
                 var sql = "INSERT INTO tblsatisfaction (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
                     userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                     "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
-                    data.extraComment + "','" + date + "', 'u')";
+                    data.extraComment + "','" + date + "','u')";
 
                 database.query(sql, function (err, res) {
                     if (!err) {
-                        //emitter.emit('satisfaction form');
-                        //socket.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
                     } else {
                         resp.send("Failed to Submit");
@@ -461,7 +459,7 @@ app.post('/satisfaction', function (req, resp) {
             }
         });
     });
-});   
+});    
 
 // app.post('/sendMessage', function(req, resp){ 
 //     'use strict';
@@ -1322,44 +1320,75 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
     });
 });
 
-// app.post('/uploadRegNewImage', function(req, resp){
-//     'use strict';
-//     // var data;
+app.post('/resetPassword', function (req, resp) {
+    'use strict';
 
-//     // req.addListener('data', function(postDataChunk){
-//     //     data = JSON.parse(postDataChunk);
-//     // });
+    var data, transporter, subject, text, email, mailOptions, newPass;
 
-//     // req.addListener('end', function(){
+    req.addListener('data', function (postDataChunk) {
+        data = JSON.parse(postDataChunk);
+    });
 
-//     // });
+    req.addListener('end', function () {
 
-//     fs.readFile(req.files.image.path, function(err, data){
-//         var dirname = "../scripts/pendingImg/";
-//         var newpath = dirname + req.files.image.originalFilename;
-//         fs.writeFile(newpath, data, function(err){
-//             if(err){
-//                 resp.json({'response':"Error"});
-//             }else{
-//                 resp.json({'response':"Saved"});
-//             }
-//         })
-//     })
+        transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'fravleinulan@gmail.com',
+                pass: 'trienekens123'
+            }
+        });
 
-// });
+        newPass = Math.floor(Math.random() * 90000) + 10000;
+        subject = "Trienekens App Password Reset";
+        text = "Your new password is: " + newPass + ". Please change your password when you login.";
+        email = data.email;
 
-//app.use('/img', express.static(imgPath));
-// app.get('/img', function(req,res){
-//     res.sendFile(path.join(__dirname+'/img/image7.png'));
-//     //res.sendFile(path.join(__dirname+'/img/image8.png'));
-//     console.log('hello');
-// });
+        mailOptions = {
+            from: 'fravleinulan@gmail.com',
+            to: email,
+            subject: subject,
+            text: text
+        };
 
-// app.use('/img', express.static(__dirname+'/img'));
+        console.log("New Password: " + newPass);
 
-// server.listen(process.env.PORT || SVR_PORT, function () {
-//     'use strict';
-//     console.log("Server is running on port " + SVR_PORT + " ");
-// });
+        var sql = "SELECT userID from tbluser WHERE userEmail = '" + data.email + "'";
+        
+        database.query(sql, function (err, res) {
+            if (err) 
+            {
+                resp.send("Get userID Failed");
+                console.log(err);
+                throw err;
+            }
+            else 
+            {
+                var userID = res[0].userID;
+                var sql2 = "UPDATE tbluser SET password = '" + newPass + "' WHERE userID = '" + userID + "'";
+    
+                database.query(sql2, function (err, res) {
+                    if (err) 
+                    {
+                        resp.send("Update Password Failed");
+                        console.log(err);
+                        throw err;
+                    }
+                    else 
+                    {
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                resp.send("Mail Failed");
+                                console.log(error);
+                            } else {
+                                resp.send("Mail Sent");
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+});
 
 module.exports = app;
