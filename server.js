@@ -234,7 +234,7 @@ app.post('/updatePendingUser', function (req, res) {
             console.log("Email sent: "+info.response);
         });
         res.send("User Status Updated");
-        res.end()
+        res.end();
     });
 });
 
@@ -247,7 +247,7 @@ app.post('/updateBinRequest', function (req, res) {
             throw err;
         }
         res.send("Bin Request Updated");
-        res.end()
+        res.end();
     });
 });
 

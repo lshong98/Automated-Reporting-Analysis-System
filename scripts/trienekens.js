@@ -5422,6 +5422,7 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             $http.post('/messageSend', $scope.message).then(function(response) {
                 chatContent += '<div class="message right"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
                 angular.element('.chat-box').html(chatContent);
+                $('.chat-box').animate({ scrollTop: $('.chat-box')[0].scrollHeight}, 1000);
             });
         };
 
@@ -5435,6 +5436,8 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
                 chatContent += '<div class="message ' + position + '"><div class="message-text">' + value.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + value.date + '</small></div></div></div>';
             });
             angular.element('.chat-box').html(chatContent);
+            angular.element('.chat-box').html(chatContent);
+            $('.chat-box').animate({scrollTop: $('.chat-box')[0].scrollHeight}, 0);
         });
 
         socket.on('new message', function (data) {
@@ -5445,6 +5448,7 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
 
             chatContent += '<div class="message left"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
             angular.element('.chat-box').html(chatContent);
+            $('.chat-box').animate({ scrollTop: $('.chat-box')[0].scrollHeight}, 1000);
         });
 
 

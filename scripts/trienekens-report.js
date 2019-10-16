@@ -1189,6 +1189,7 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             $scope.notify("error","Status Cannot Be Blank.");
             $scope.showEditBtn = true;
         } else{
+            $scope.editField.date = $filter('date')($scope.editField.date, 'yyyy-MM-dd');
             $http.post('/editReport', $scope.editField).then(function(response) {
                 var returnedReportData = response.data;
 
