@@ -285,4 +285,31 @@ app.post('/getInitDriver',function(req,res){
     
 });
 
+app.post('/getReportOfficerTodayUnsubmitted',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area FROM tblarea JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND tblarea.staffID = '" + req.body.officerid + "'";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+    
+});
+
+app.post('/getReportOfficerTodaySubmitted',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area FROM tblarea JOIN tblzone on tblarea.zoneID = tblzone.zoneID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE() AND tblarea.staffID = '" + req.body.officerid + "'";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+    
+});
 module.exports = app;

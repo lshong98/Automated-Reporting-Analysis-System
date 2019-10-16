@@ -483,10 +483,10 @@ app.get('/getCount', function (req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS complaint FROM tblcomplaint WHERE status != 'c'");
     }).then(function (complaint) {
         results.complaint = complaint.complaint;
-        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'C' AND DATE(creationDateTime)= CURRENT_DATE");
+        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'N' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (completeReport) {
         results.completeReport = completeReport.completeReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'I'");
+        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A'");
     }).then(function (incompleteReport) {
         results.incompleteReport = incompleteReport.incompleteReport;
         res.json(results);
