@@ -70,7 +70,7 @@ app.filter('offset', function() {
         return input.slice(start);
     };
 });
-
+ 
 /*
     -Upload Image
 */
@@ -292,7 +292,12 @@ app.service('storeDataService', function() {
                 "edit": 'I',
                 "view": 'I'
             },
-            "damagedlost": {
+            "damagedBin": {
+                "create": 'I',
+                "edit": 'I',
+                "view": 'I'
+            },
+            "lostBin": {
                 "create": 'I',
                 "edit": 'I',
                 "view": 'I'
