@@ -257,7 +257,7 @@ app.post('/deleteCarouselImg', function (req, res) {
     
     var imgDir = "", sql = "";
     
-    imgDir = "scripts/img/" + req.body.name;
+    imgDir = "images/img/" + req.body.name;
     sql = "DELETE FROM tblcarouselimg WHERE id = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
