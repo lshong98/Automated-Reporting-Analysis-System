@@ -90,6 +90,7 @@ app.post('/sendMessage', function (req, resp) {
                             throw err;
                         } else {
                             resp.send("Message Sent");
+                            emitter.emit('customer to staff message', data.id);
                             if (currentTime <= startTime || currentTime >= endTime || today.getDay() == 6 || today.getDay() == 0) {
                                 console.log("Enter Automated Function");
                                 var sql2 = "INSERT INTO tblchat (sender, recipient, content, complaintID, creationDateTime) VALUES ('" + staffID + "','" + userID + "','" + "Thank You for your message. However, we are currently closed as our regular business hours are from 8:30 am to 5:30 pm, Monday through Friday. We will get back to you as soon as possible. Thank you and have a nice day." + "','" + data.id + "','" + date + "')";
@@ -101,7 +102,6 @@ app.post('/sendMessage', function (req, resp) {
                             } else {
                                 console.log("NO AUTOMATED MSG");
                             }
-                            emitter.emit('customer to staff message', data.id);
                             resp.end();
                         }
                     });
