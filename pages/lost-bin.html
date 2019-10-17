@@ -1,30 +1,35 @@
 <div class="row">
-        <div class="col-md-12">
-            <h5>Lost Bin Management</h5>
+    <div class="col-md-12">
+        <h5>Lost Bin Management</h5>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th width="20%" data-ick="orderBy('blostID');">BLOST ID <i class="fas fa-sort-down"></i></th>
+                        <th width="15%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                        <th width="10%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        data-ng-repeat="d in dcsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}"
+                            data-ng-bind="d.id"></td>
+                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}"
+                            data-ng-bind="d.date | date: dd/MM/yyyy"></td>
+                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}"
+                            data-ng-bind="d.status"></td>
+                        <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle"
+                                    data-ng-click="viewblost(d.id);"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-    
-    <div class="row">
-      <div class="col-md-12">
-          <div class="table-responsive">
-              <table class="table table-hover table-striped">
-                  <thead>
-                      <tr>
-                          <th width="20%" data-ick="orderBy('blostID');">BLOST ID <i class="fas fa-sort-down"></i></th>
-                          <th width="15%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                          <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                          <th width="10%"></th>
-                      </tr>
-                  </thead>
-                  <tbody>               
-                      <tr data-ng-repeat="d in dcsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
-                          <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.id"></td>
-                          <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.date | date: dd/MM/yyyy"></td>
-                          <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.status"></td>
-                          <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle" data-ng-click="viewblost(d.id);"></i></button></td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div> 
-      </div>
-    </div>
+</div>

@@ -239,7 +239,7 @@ app.post('/filterArea',function(req,res){
 app.post('/getAreaList',function(req,res){ 
     'use strict';
 
-    var sql = "SELECT * from tblarea";
+    var sql = "SELECT concat(z.zoneCode, a.areaCode) as areaCode from tblzone z inner join tblarea a on z.zoneID = a.zoneID";
     database.query(sql, function (err, result) {
         if (err) { 
             throw err;
