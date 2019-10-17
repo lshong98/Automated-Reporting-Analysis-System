@@ -153,14 +153,14 @@ io.sockets.on('connection', function (socket) {
             } else {
                 var resultObject = searchSocketID(result[0].recipient, connectedUserList);
                 // PM
-                if (typeof(resultObject) !== 'undefined') {
-                    io.to(resultObject.socketID).emit('new message', {
-                        "content": result[0].content,
-                        "sender": result[0].sender,
-                        "recipient": result[0].recipient,
-                        "date": result[0].date
-                    });
-                }
+//                if (typeof(resultObject) !== 'undefined') {
+//                    io.to(resultObject.socketID).emit('new message', {
+//                        "content": result[0].content,
+//                        "sender": result[0].sender,
+//                        "recipient": result[0].recipient,
+//                        "date": result[0].date
+//                    });
+//                }
 
                 // Manager Group
                 io.sockets.in(roomManager).emit('new message', {

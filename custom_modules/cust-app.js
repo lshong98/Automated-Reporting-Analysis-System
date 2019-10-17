@@ -397,11 +397,12 @@ app.post('/complaint', function (req, resp) {
                 //database.query(sql, function(err, res){
                 //if(!err){
                 database.query(sqlComplaintID, function (err, res) {
-                    if(res[0].max != 1){
+                    if(res[0].max == null){
                         complaintID = 1;
                     }else{
                         complaintID = res[0].max;
-                        complaintID = parseInt(complaintID) + 1;
+                        complaintID = parseInt(complaintID);
+                        complaintID += 1;
                     }
                     if (data.compRemarks == null || data.compRemarks == "") {
                         var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, complaintDate, complaintAddress) VALUES ('" + complaintID + "','" + userID + "','ACC201908080002','" + data.premise + "','" + data.complaint + "','" + date + "','" + data.compAdd + "')";
