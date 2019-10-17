@@ -6310,7 +6310,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         });
 
         $http.post('/getStaffList', {
-            "position": 'Driver'
+            "position": 'Driver' 
         }).then(function (response) {
             $scope.searchAcrFilter = '';
             $scope.driverList = response.data;
@@ -6318,7 +6318,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
             $scope.driverButton = true;
 
-        });
+        }); 
 
         getGeneralWorkers();
 
