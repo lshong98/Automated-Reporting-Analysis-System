@@ -6,7 +6,7 @@ var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize',
 
 var socket = io.connect();
 var flag = false;
-//var socket = io.connect('ws://trienekens-deploy.appspot.com:3000', {transports: ['websocket']});
+//var socket = io.connect('wss://trienekens.appspot.com:3000', {transports: ['websocket'], 'force new connection': true});
 socket.on('connect', function() {
     if (flag === true) {
         angular.element('body').overhang({
@@ -5416,6 +5416,18 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             $scope.reportList = response.data;
             $scope.showReference = ($scope.reportList.length == 0 ? false : true);
         });
+        
+        $http.post('/chatList', $scope.req).then(function(response) {
+            var data = response.data;
+            var position = '';
+
+            $.each(data, function(key, value) {
+                position = window.sessionStorage.getItem('owner') === value.sender ? "right" : "left";
+                chatContent += '<div class="message ' + position + '"><div class="message-text">' + value.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + value.date + '</small></div></div></div>';
+            });
+            angular.element('.chat-box').html(chatContent);
+            $('.chat-box').animate({scrollTop: $('.chat-box')[0].scrollHeight}, 0);
+        });
 
         $scope.sendMessage = function() {
             $scope.message.content = $scope.mymsg;
@@ -5426,31 +5438,16 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
             });
         };
 
-        $http.post('/chatList', $scope.req).then(function(response) {
-            var data = response.data;
-            var position = '';
-
-            $.each(data, function(key, value) {
-                position = window.sessionStorage.getItem('owner') === value.sender ? "right" : "left";
-
-                chatContent += '<div class="message ' + position + '"><div class="message-text">' + value.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + value.date + '</small></div></div></div>';
-            });
-            angular.element('.chat-box').html(chatContent);
-            angular.element('.chat-box').html(chatContent);
-            $('.chat-box').animate({scrollTop: $('.chat-box')[0].scrollHeight}, 0);
-        });
-
         socket.on('new message', function (data) {
             var content = data.content,
                 sender = data.sender,
                 recipient = data.recipient,
                 date = data.date;
 
-            chatContent += '<div class="message left"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
+            chatContent += '<div class="message left"><div class="message-text">' + content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
             angular.element('.chat-box').html(chatContent);
             $('.chat-box').animate({ scrollTop: $('.chat-box')[0].scrollHeight}, 1000);
         });
-
 
         //initialize email subject and text
         $scope.emailobj.id = $routeParams.complaintCode;
