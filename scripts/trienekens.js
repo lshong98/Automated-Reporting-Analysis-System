@@ -37,6 +37,12 @@ socket.on('connect', function() {
         }
     });
 
+    socket.on('new complaint', function (data) {
+        if (data.unread != 0) {
+            $('.complaint').addClass("badge badge-danger").html(data.unread);
+        }
+    });
+
     socket.on('receive report notification', function (data) {
         Lobibox.notify('info', {
             pauseDelayOnHover: true,
@@ -1368,6 +1374,8 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         "action": "create user"
     });
     socket.emit('satisfaction form');
+
+    socket.emit('complaint');
 
     $http.post('/loadMenu', {
         "position": position
