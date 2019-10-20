@@ -38,11 +38,18 @@ app.post('/updateComplaintStatus', function(req,res){
 app.get('/getComplaintList', function (req, res) {
     'use strict';
     var sql = "SELECT tblcomplaint.complaintDate AS 'date', tblcomplaint.complaint AS 'title', tbluser.name AS  'customer', tblcomplaint.premiseType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Confirmation' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'In progress' WHEN tblcomplaint.status ='d' THEN 'Done' END) AS status FROM tblcomplaint JOIN tbluser ON tbluser.userID = tblcomplaint.userID JOIN tbltaman ON tbltaman.tamanID = tbluser.tamanID JOIN tblarea ON tblarea.areaID = tbltaman.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID";
-    database.query(sql, function (err, result) {
+    var readComplaintSql = "UPDATE tblcomplaint SET readStat = 'r'";
+    database.query(readComplaintSql, function (err, result) {
         if (err) {
             throw err;
         }
-        res.json(result);
+        database.query(sql, function(err, result){
+            if(err){
+                throw errl
+            }
+            //res.send("New Complaint Read");
+            res.json(result);
+        });
     });
 });
 
