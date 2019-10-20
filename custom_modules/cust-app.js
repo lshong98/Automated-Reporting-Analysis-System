@@ -397,6 +397,7 @@ app.post('/complaint', function (req, resp) {
                 //database.query(sql, function(err, res){
                 //if(!err){
                 database.query(sqlComplaintID, function (err, res) {
+                    console.log("LATEST COMPLAINT ID: " + res[0].max);
                     if(res[0].max == null){
                         complaintID = 1;
                     }else{
@@ -766,7 +767,7 @@ app.post('/NewRegister', function (req, resp) {
             database.query(sql2, function (err, res) {
                 tamanID = res[0].tamanID;
 
-                var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, tamanID, houseNo, streetNo, postCode, city, State, vCode, creationDate) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + tamanID + "','" + data.hno + "','" + data.lrg + "','" + data.pcode + "','" + data.city + "','" + data.state + "','" + vCode + "','" + date + "')";
+                var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, tamanID, houseNo, streetNo, postCode, city, State, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + tamanID + "','" + data.hno + "','" + data.lrg + "','" + data.pcode + "','" + data.city + "','" + data.state + "','" + vCode + "','" + date + "')";
 
                 transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
