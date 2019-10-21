@@ -302,7 +302,21 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             map.setZoom(13);
         }, 1000);
         }else{
-            $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+            $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");     
+                var $googleMap = document.getElementById('googleMap');
+
+                var visualizeMap = {
+                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: false,
+                    panControl: false,
+                    zoomControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: true,
+                    editable: false,
+                    zoom: 13
+                };
+                map = new google.maps.Map($googleMap, visualizeMap);
         }         
     });
 
@@ -799,7 +813,21 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
                 }, 1000);
             
             }else{
-                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
+                var $googleMap = document.getElementById('googleMap');
+
+                var visualizeMap = {
+                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: false,
+                    panControl: false,
+                    zoomControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: true,
+                    editable: false,
+                    zoom: 13
+                };
+                map = new google.maps.Map($googleMap, visualizeMap);
             }               
         });
 
@@ -1132,7 +1160,21 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                     }, 1000);
                 });
             }else{
-                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+                $scope.notify("warn", "Certain area has no draw boundary yet!");      
+                var $googleMap = document.getElementById('googleMap');
+
+                var visualizeMap = {
+                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: false,
+                    panControl: false,
+                    zoomControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: true,
+                    editable: false,
+                    zoom: 13
+                };
+                map = new google.maps.Map($googleMap, visualizeMap);
             }  
         });
         var c = document.getElementById("mycanvas");
