@@ -1398,4 +1398,37 @@ app.post('/resetPassword', function (req, resp) {
     });
 });
 
+app.post('/getComplaintIDs', function(req, res){
+    'use strict';
+    var data,
+    IDs = {};
+    IDs["ids"] = [];
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        console.log(data.email);
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
+        database.query(sqlUser, function(err, result){
+            if(err){
+                throw err;
+            }
+            var userID = result[0].userID;
+            var sql = "SELECT complaintID FROM tblcomplaint WHERE userID = '"+userID+"'";
+            database.query(sql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                for(var i = 0; i<result.length; i++){
+                    IDs["ids"].push({
+                        "id":result[i].complaintID
+                    });
+                }
+                res.send(IDs);
+            });
+        });
+    });
+});
+
 module.exports = app;

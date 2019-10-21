@@ -9,6 +9,14 @@ var socket = require('./socket-management');
 var variable = require('../variable');
 var emitter = variable.emitter;
 var io = variable.io;
+var FCMAdmin = variable.FCMAdmin; 
+var FCMServiceAccount = variable.FCMServiceAccount;
+
+//FCM to send notification to user when staff sends new message
+// FCMAdmin.initializeApp({
+//     credential: FCMAdmin.credential.cert(FCMServiceAccount),
+//     databaseURL: "https://trienekens-994df.firebaseio.com"
+// });
 
 //SELECT customerID AS id FROM tblcustomer UNION SELECT staffID AS id FROM tblstaff
 
@@ -18,7 +26,18 @@ app.post('/messageSend', function (req, res) {
     
     var dt = dateTime.create(),
         formatted = dt.format('Y-m-d H:M:S'),
-        sql = "SELECT userID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1";
+        sql = "SELECT userID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1",
+        topic = "TriComplaintID"+req.body.id;
+
+    var payloadWithTopic = {
+        'notification':
+            {
+                'title': "New Message",
+                'body': req.body.content
+            },
+        topic: topic
+    };
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -26,13 +45,19 @@ app.post('/messageSend', function (req, res) {
             req.body.recipient = result[0].id;
             
             f.makeID("chat", formatted).then(function (ID) {
-                var sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status) VALUE ('" + ID + "', '" + req.body.sender + "', '" + req.body.recipient + "', '" + req.body.content + "', '" + req.body.id + "', '" + formatted + "', 'A')";
+                var sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + req.body.sender + "', '" + req.body.recipient + "', '" + req.body.content + "', '" + req.body.id + "', '" + formatted + "', 'A', 'u')";
                 database.query(sql, function (err, result) {
                     if (err) {
                         res.json({"status": "error", "message": "Something error!"});
                         res.end();
                         throw err;
                     } else {
+                        FCMAdmin.messaging().send(payloadWithTopic)
+                            .then(function (response) {
+                                console.log("Topic message sent successfully");
+                            }).catch(function (err) {
+                                console.log(err);
+                            });
                         res.end();
                     }
                 });
