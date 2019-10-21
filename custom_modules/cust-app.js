@@ -1083,13 +1083,19 @@ app.post('/updateAcc', function (req, resp) {
             // for(var i = 0;i<res.length;i++){
             //     taman.push(res[i]);
             // }
-
+            var getArea = "SELECT areaID FROM tbltaman WHERE tamanID = '"+res[0].tamanID+"'";
             var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "',houseNo='" + data.hno + "',streetNo='" + data.lrg + "',tamanID='" + res[0].tamanID + "',postcode='" + data.pcode + "',city='" + data.city + "',State='" + data.state + "' WHERE userEmail = '" + data.oriemail + "'";
-            database.query(sqlUpdate, function (err, res) {
+            database.query(getArea, function (err, res) {
                 if (err) {
                     throw err;
                 }
-                resp.send("Updated");
+                var newAreaID = res[0].areaID;
+                database.query(sqlUpdate, function(err, res){
+                    if(err){
+                        throw err;
+                    }
+                    resp.send("Updated "+newAreaID);
+                });
             });
         });
     });
