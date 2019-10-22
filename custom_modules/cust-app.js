@@ -1474,4 +1474,62 @@ app.post('/getComplaintIDs', function(req, res){
     });
 });
 
+app.post('/getUnreadMsg', function(req, res){
+    'use strict';
+    var data, results = {}, userID;
+    results["unread"] = [];
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
+        database.query(sqlUser, function(err, result){
+            if(err){
+                throw err;
+            }
+            userID = result[0].userID;
+            var sql = "SELECT complaintID, COUNT(readStat) as unread FROM tblchat WHERE readStat = 'u' AND recipient = '"+userID+"' GROUP BY complaintID ORDER BY complaintID ASC";
+            database.query(sql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                for(var i=0; i< result.length; i++){
+                    results["unread"].push({
+                        "id":result[i].complaintID,
+                        "value": result[i].unread
+                    });
+                }
+
+                res.json(results);
+            });
+        });
+    });
+});
+
+app.post('/updateReadStat', function(req, res){
+    'use strict';
+    var data, userID;
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
+        database.query(sqlUser, function(err, result){
+            if(err){
+                throw err;
+            }
+            userID = result[0].userID;
+            var sql = "UPDATE tblchat SET readStat = 'r' WHERE complaintID = '"+data.compID+"' AND recipient = '"+userID+"' AND readStat = 'u'";
+            database.query(sql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                res.send("Message read");
+            });
+        });
+    });
+});
+
 module.exports = app;
