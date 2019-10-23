@@ -413,7 +413,8 @@ app.post('/complaint', function (req, resp) {
                 //database.query(sql, function(err, res){
                 //if(!err){
                 database.query(sqlComplaintID, function (err, res) {
-                    if(res[0].max != 1){
+                    console.log("complaintID = " + res[0].max);
+                    if(res[0].max == undefined){
                         complaintID = 1;
                     }else{
                         complaintID = res[0].max;
@@ -1120,6 +1121,8 @@ app.post('/updateAcc', function (req, resp) {
             pass = data.oldp;
         }
         
+//        console.log("TAMAN VALUE: " + data.tmn);
+        
         if(data.tmn != "Choose Taman"){
             var sqlTaman = "SELECT tamanID from tbltaman WHERE tamanName ='" + data.tmn + "'";
             database.query(sqlTaman, function (err, res) {
@@ -1142,6 +1145,15 @@ app.post('/updateAcc', function (req, resp) {
                         resp.send("Updated "+newAreaID);
                     });
                 });
+            });
+        } else {
+//            console.log("ENETER NO TAMAN UPDATE");
+            var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "' WHERE userEmail = '" + data.oriemail + "'";
+            database.query(sqlUpdate, function(err, res){
+                if(err){
+                    throw err;
+                }
+                resp.send("Updated");
             });
         }
     });
