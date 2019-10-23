@@ -233,7 +233,7 @@ function menuItem(keyword, status) {
             }
         case "view complaintlist": 
             if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module</a></li>';
+                return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module <span class="complaint"></span></a></li>';
             }
         case "view transactionLog":
             if (status == 'A') {

@@ -14,7 +14,8 @@ var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3306
+    port: 3306,
+    timezone: 'utc'
 };
 
 var db;
@@ -119,8 +120,8 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbincenter (  binCenterID varchar(15),  areaID varchar(15),  binCenterName varchar(100),  binCenterLocation varchar(100),  binCenterStatus char(1),  creationDateTime datetime,  PRIMARY KEY (binCenterID),  foreign key (areaID) references tblarea(areaID))",
         "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID VARCHAR(15),  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
         "CREATE TABLE tbltag (date datetime,  serialNo VARCHAR(15),  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tbltruck(truckID))",
-        "CREATE TABLE tbluser (userID VARCHAR(15), tamanID int , userEmail varchar(30),  password varchar(30),  contactNumber varchar(15), tradingLicense varchar(20),  name varchar(50), companyName varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  State varchar(30), vCode varchar(5), status char(1), creationDateTime datetime, PRIMARY KEY (userID),foreign key (tamanID) references tbltaman(tamanID), UNIQUE KEY(userEmail))",
-        "CREATE TABLE tblcomplaint ( complaintID varchar(15), userID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), complaintAddress varchar(300), complaintImg varchar(50), primary key (complaintID), foreign key (userID) references tbluser(userID), foreign key (staffID) references tblstaff(staffID))",
+        "CREATE TABLE tbluser (userID VARCHAR(15), tamanID int , userEmail varchar(30),  password varchar(30),  contactNumber varchar(15), tradingLicense varchar(20),  name varchar(50), companyName varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  State varchar(30), vCode varchar(5), status char(1), creationDateTime datetime, PRIMARY KEY (userID), UNIQUE KEY(userEmail))",
+        "CREATE TABLE tblcomplaint ( complaintID varchar(15), userID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), complaintAddress varchar(300), complaintImg varchar(50), readStat varchar(1), primary key (complaintID), foreign key (userID) references tbluser(userID), foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblformauthorization (formentryID int auto_increment, creationDateTime dateTime, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), status char(1), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), readStat varchar(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",

@@ -199,7 +199,7 @@ app.post('/updatePendingUser', function (req, res) {
         transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'fravleinulan@gmail.com',
+                user: 'registercustomerapp@gmail.com',
                 pass: 'trienekens123'
             }
         });
@@ -219,7 +219,7 @@ app.post('/updatePendingUser', function (req, res) {
         subject = "Trienekens Account Status";
         email = req.body.email;
         mailOptions = {
-            from: 'fravleinulan@gmail.com',
+            from: 'registercustomerapp@gmail.com',
             to: email,
             subject: subject,
             text: text

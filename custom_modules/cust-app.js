@@ -101,13 +101,21 @@ app.post('/getAreaID', function (req, resp) {
     req.addListener('end', function () {
         var sql = "SELECT tamanID FROM tbluser WHERE userEmail = '" + data.email + "'";
         database.query(sql, function (err, res) {
-            tamanID = res[0].tamanID;
-            var getAreaSql = "SELECT areaID FROM tbltaman WHERE tamanID = " + tamanID;
-            database.query(getAreaSql, function (err, res) {
-                console.log(res[0]);
-                areaID = res[0].areaID;
-                resp.send(areaID);
-            });
+            console.log(res);
+            if(err){
+                console.log(err);
+            }
+            if (res[0].tamanID != null) {
+                tamanID = res[0].tamanID;
+                var getAreaSql = "SELECT areaID FROM tbltaman WHERE tamanID = " + tamanID;
+                database.query(getAreaSql, function (err, res) {
+                    console.log(res[0]);
+                    areaID = res[0].areaID;
+                    resp.send(areaID);
+                });
+            }else{
+                resp.send("");
+            }
         });
     });
 });
@@ -182,7 +190,6 @@ app.post('/getNotifs', function (req, resp) {
         console.log(data);
         var sql = "SELECT * FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
         var sql2 = "SELECT * FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
-        var sql3 = "SELECT * FROM tblannouncement WHERE target = '" + data.areaID + "'";
 
         database.query(sql, function (err, res) {
             if (!err) {
@@ -201,18 +208,23 @@ app.post('/getNotifs', function (req, resp) {
                                 "announceDate": res[i].announceDate
                             });
                         }
-                        database.query(sql3, function (err, res) {
-                            if (!err) {
-                                for (var i = 0; i < res.length; i++) {
-                                    results["announcements"].push({
-                                        "announce": res[i].announcement,
-                                        "announceDate": res[i].announceDate
-                                    });
+                        if(data.areaID != ""){
+                            var sql3 = "SELECT * FROM tblannouncement WHERE target = '" + data.areaID + "'";
+                            database.query(sql3, function (err, res) {
+                                if (!err) {
+                                    for (var i = 0; i < res.length; i++) {
+                                        results["announcements"].push({
+                                            "announce": res[i].announcement,
+                                            "announceDate": res[i].announceDate
+                                        });
+                                    }
+                                    console.log(results);
+                                    resp.json(results);
                                 }
-                                console.log(results);
-                                resp.json(results);
-                            }
-                        });
+                            });
+                        }else{
+                            resp.json(results);
+                        }
                     }
                 });
             }
@@ -333,43 +345,47 @@ app.post('/getSchedule', function (req, resp) {
         var sqlTaman = "SELECT tamanID FROM tbluser WHERE userEmail ='" + data.email + "'";
         database.query(sqlTaman, function (err, res) {
             if (res[0] != undefined) {
-                tamanID = res[0].tamanID;
-                var sqlarea = "SELECT areaID FROM tbltaman WHERE tamanID = '" + tamanID + "'";
-                database.query(sqlarea, function (err, res) {
-                    var areaID = res[0].areaID;
-                    var sqlSched = "SELECT collection_frequency FROM tblarea WHERE areaID = '" + areaID + "'";
-                    database.query(sqlSched, function (err, res) {
-                        if (!err) {
-                            results = res[0].collection_frequency.split(",");
-                            // for (var i = 0; i < res.length; i++) {
-                            //     if (res[i].mon == 1) {
-                            //         results.push("Monday");
-                            //     }
-                            //     if (res[i].tue == 1) {
-                            //         results.push("Tuesday");
-                            //     }
-                            //     if (res[i].wed == 1) {
-                            //         results.push("Wednesday");
-                            //     }
-                            //     if (res[i].thur == 1) {
-                            //         results.push("Thursday");
-                            //     }
-                            //     if (res[i].fri == 1) {
-                            //         results.push("Friday");
-                            //     }
-                            //     if (res[i].sat == 1) {
-                            //         results.push("Saturday");
-                            //     }
-                            // }
+                if (res[0].tamanID != null) {  
+                    tamanID = res[0].tamanID;                  
+                    var sqlarea = "SELECT areaID FROM tbltaman WHERE tamanID = '" + tamanID + "'";
+                    database.query(sqlarea, function (err, res) {
+                        var areaID = res[0].areaID;
+                        var sqlSched = "SELECT collection_frequency FROM tblarea WHERE areaID = '" + areaID + "'";
+                        database.query(sqlSched, function (err, res) {
+                            if (!err) {
+                                results = res[0].collection_frequency.split(",");
+                                // for (var i = 0; i < res.length; i++) {
+                                //     if (res[i].mon == 1) {
+                                //         results.push("Monday");
+                                //     }
+                                //     if (res[i].tue == 1) {
+                                //         results.push("Tuesday");
+                                //     }
+                                //     if (res[i].wed == 1) {
+                                //         results.push("Wednesday");
+                                //     }
+                                //     if (res[i].thur == 1) {
+                                //         results.push("Thursday");
+                                //     }
+                                //     if (res[i].fri == 1) {
+                                //         results.push("Friday");
+                                //     }
+                                //     if (res[i].sat == 1) {
+                                //         results.push("Saturday");
+                                //     }
+                                // }
 
-                            for (var i = 0; i < results.length; i++) {
-                                json[i] = results[i];
+                                for (var i = 0; i < results.length; i++) {
+                                    json[i] = results[i];
+                                }
+                                console.log(json);
+                                resp.json(json);
                             }
-                            console.log(json);
-                            resp.json(json);
-                        }
-                    });
-                });
+                        });
+                    });                    
+                }else{
+                    resp.send("");
+                }
             } else {
                 resp.send("error getting user id");
             }
@@ -397,17 +413,16 @@ app.post('/complaint', function (req, resp) {
                 //database.query(sql, function(err, res){
                 //if(!err){
                 database.query(sqlComplaintID, function (err, res) {
-                    if(res[0].max == null){
+                    if(res[0].max != 1){
                         complaintID = 1;
                     }else{
                         complaintID = res[0].max;
-                        complaintID = parseInt(complaintID);
-                        complaintID += 1;
+                        complaintID = parseInt(complaintID) + 1;
                     }
                     if (data.compRemarks == null || data.compRemarks == "") {
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, complaintDate, complaintAddress) VALUES ('" + complaintID + "','" + userID + "','ACC201908080002','" + data.premise + "','" + data.complaint + "','" + date + "','" + data.compAdd + "')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','ACC201908080002','" + data.premise + "','" + data.complaint + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, remarks, complaintDate, complaintAddress) VALUES ('" + complaintID + "','" + userID + "','ACC201908080002','" + data.premise + "','" + data.complaint + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','ACC201908080002','" + data.premise + "','" + data.complaint + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
                     database.query(sql, function (err, res) {
                         if (!err) {
@@ -762,11 +777,33 @@ app.post('/NewRegister', function (req, resp) {
             userID = res[0].max;
             userID = parseInt(userID) + 1;
 
-            var sql2 = "SELECT tamanID FROM tbltaman WHERE tamanName = '" + data.tmn + "'";
-            database.query(sql2, function (err, res) {
-                tamanID = res[0].tamanID;
+            if (data.tmn != "Choose Taman") {
+                
+                var sql2 = "SELECT tamanID FROM tbltaman WHERE tamanName = '" + data.tmn + "'";
+                database.query(sql2, function (err, res) {
+                    tamanID = res[0].tamanID;
 
-                var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, tamanID, houseNo, streetNo, postCode, city, State, vCode, creationDate) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + tamanID + "','" + data.hno + "','" + data.lrg + "','" + data.pcode + "','" + data.city + "','" + data.state + "','" + vCode + "','" + date + "')";
+                    var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, tamanID, houseNo, streetNo, postCode, city, State, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + tamanID + "','" + data.hno + "','" + data.lrg + "','" + data.pcode + "','" + data.city + "','" + data.state + "','" + vCode + "','" + date + "')";
+
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            console.log(error);
+                            resp.send("Mail Failed");
+                        }
+                        //console.log("Email sent: " + info.response);
+                        database.query(sql3, function (err, res) {
+                            if (err) {
+                                throw err;
+                            }else{
+                                //console.log("Registered");
+                                resp.send("Registered");
+                            }
+                        });
+                    });
+                });                
+            } else {
+
+                var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + vCode + "','" + date + "')";
 
                 transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
@@ -782,8 +819,8 @@ app.post('/NewRegister', function (req, resp) {
                             resp.send("Registered");
                         }
                     });
-                });
-            });
+                });                
+            }
         });
     });
 });
@@ -802,7 +839,7 @@ app.post('/registerAcc', function (req, resp) {
         transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'registercustomerapp@gmail.com',
+                user: 'fravleinulan@gmail.com',
                 pass: 'trienekens123'
             }
         });
@@ -812,7 +849,7 @@ app.post('/registerAcc', function (req, resp) {
         email = data.email;
         console.log("vCode: " + vCode);
         mailOptions = {
-            from: 'registercustomerapp@gmail.com',
+            from: 'fravleinulan@gmail.com',
             to: email,
             subject: subject,
             text: text
@@ -943,19 +980,25 @@ app.post('/getInfo', function (req, resp) {
 
     req.addListener('end', function () {
         var sql = "SELECT * FROM tbluser WHERE userEmail = '" + data.user + "'";
+        
         database.query(sql, function (err, res) {
-            info["pno"] = res[0].contactNumber;
-            info["hno"] = res[0].houseNo;
-            info["lrg"] = res[0].streetNo;
-            info["pcode"] = res[0].postCode;
-            info["city"] = res[0].city;
-            info["state"] = res[0].State;
-            var sql2 = "SELECT tamanName FROM tbltaman WHERE tamanID = " + res[0].tamanID;
-            database.query(sql2, function (err, res) {
-                info["tmn"] = res[0].tamanName;
-                console.log(info);
+            if (res[0].tamanID == null) {
+                info["pno"] = res[0].contactNumber;
                 resp.json(info);
-            });
+            } else {
+                info["pno"] = res[0].contactNumber;
+                info["hno"] = res[0].houseNo;
+                info["lrg"] = res[0].streetNo;
+                info["pcode"] = res[0].postCode;
+                info["city"] = res[0].city;
+                info["state"] = res[0].State;
+                var sql2 = "SELECT tamanName FROM tbltaman WHERE tamanID = " + res[0].tamanID;
+                database.query(sql2, function (err, res) {
+                    info["tmn"] = res[0].tamanName;
+                    console.log(info);
+                    resp.json(info);
+                });
+            }
         });
     });
 });
@@ -1073,25 +1116,31 @@ app.post('/updateAcc', function (req, resp) {
         } else {
             pass = data.oldp;
         }
-        var sqlTaman = "SELECT tamanID from tbltaman WHERE tamanName ='" + data.tmn + "'";
-        database.query(sqlTaman, function (err, res) {
-            if (err) {
-                resp.send("Taman Error");
-                throw err;
-            }
-
-            // for(var i = 0;i<res.length;i++){
-            //     taman.push(res[i]);
-            // }
-
-            var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "',houseNo='" + data.hno + "',streetNo='" + data.lrg + "',tamanID='" + res[0].tamanID + "',postcode='" + data.pcode + "',city='" + data.city + "',State='" + data.state + "' WHERE userEmail = '" + data.oriemail + "'";
-            database.query(sqlUpdate, function (err, res) {
+        
+        if(data.tmn != "Choose Taman"){
+            var sqlTaman = "SELECT tamanID from tbltaman WHERE tamanName ='" + data.tmn + "'";
+            database.query(sqlTaman, function (err, res) {
                 if (err) {
+                    resp.send("Taman Error");
                     throw err;
                 }
-                resp.send("Updated");
+
+                var getArea = "SELECT areaID FROM tbltaman WHERE tamanID = '"+res[0].tamanID+"'";
+                var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "',houseNo='" + data.hno + "',streetNo='" + data.lrg + "',tamanID='" + res[0].tamanID + "',postcode='" + data.pcode + "',city='" + data.city + "',State='" + data.state + "' WHERE userEmail = '" + data.oriemail + "'";
+                database.query(getArea, function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    var newAreaID = res[0].areaID;
+                    database.query(sqlUpdate, function(err, res){
+                        if(err){
+                            throw err;
+                        }
+                        resp.send("Updated "+newAreaID);
+                    });
+                });
             });
-        });
+        }
     });
 });
 
@@ -1388,6 +1437,97 @@ app.post('/resetPassword', function (req, resp) {
                     }
                 });
             }
+        });
+    });
+});
+
+app.post('/getComplaintIDs', function(req, res){
+    'use strict';
+    var data,
+    IDs = {};
+    IDs["ids"] = [];
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        console.log(data.email);
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
+        database.query(sqlUser, function(err, result){
+            if(err){
+                throw err;
+            }
+            var userID = result[0].userID;
+            var sql = "SELECT complaintID FROM tblcomplaint WHERE userID = '"+userID+"'";
+            database.query(sql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                for(var i = 0; i<result.length; i++){
+                    IDs["ids"].push({
+                        "id":result[i].complaintID
+                    });
+                }
+                res.send(IDs);
+            });
+        });
+    });
+});
+
+app.post('/getUnreadMsg', function(req, res){
+    'use strict';
+    var data, results = {}, userID;
+    results["unread"] = [];
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
+        database.query(sqlUser, function(err, result){
+            if(err){
+                throw err;
+            }
+            userID = result[0].userID;
+            var sql = "SELECT complaintID, COUNT(readStat) as unread FROM tblchat WHERE readStat = 'u' AND recipient = '"+userID+"' GROUP BY complaintID ORDER BY complaintID ASC";
+            database.query(sql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                for(var i=0; i< result.length; i++){
+                    results["unread"].push({
+                        "id":result[i].complaintID,
+                        "value": result[i].unread
+                    });
+                }
+
+                res.json(results);
+            });
+        });
+    });
+});
+
+app.post('/updateReadStat', function(req, res){
+    'use strict';
+    var data, userID;
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
+        database.query(sqlUser, function(err, result){
+            if(err){
+                throw err;
+            }
+            userID = result[0].userID;
+            var sql = "UPDATE tblchat SET readStat = 'r' WHERE complaintID = '"+data.compID+"' AND recipient = '"+userID+"' AND readStat = 'u'";
+            database.query(sql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                res.send("Message read");
+            });
         });
     });
 });
