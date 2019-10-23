@@ -4404,9 +4404,9 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
         });
 
         $http.post('/getAreaList').then(function (response) {
-
+//console.log(response.data);
             $scope.areaList = response.data;
-            console.log($scope.areaList);
+            //console.log($scope.areaList);
         });
 
         $http.post('/getStaffList', {
