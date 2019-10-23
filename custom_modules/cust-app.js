@@ -980,24 +980,27 @@ app.post('/getInfo', function (req, resp) {
 
     req.addListener('end', function () {
         var sql = "SELECT * FROM tbluser WHERE userEmail = '" + data.user + "'";
-        
+        console.log(data.user);
         database.query(sql, function (err, res) {
-            if (res[0].tamanID == null) {
-                info["pno"] = res[0].contactNumber;
-                resp.json(info);
-            } else {
-                info["pno"] = res[0].contactNumber;
-                info["hno"] = res[0].houseNo;
-                info["lrg"] = res[0].streetNo;
-                info["pcode"] = res[0].postCode;
-                info["city"] = res[0].city;
-                info["state"] = res[0].State;
-                var sql2 = "SELECT tamanName FROM tbltaman WHERE tamanID = " + res[0].tamanID;
-                database.query(sql2, function (err, res) {
-                    info["tmn"] = res[0].tamanName;
-                    console.log(info);
+            console.log(res);
+            if(res[0] != undefined){
+                if (res[0].tamanID == undefined) {
+                    info["pno"] = res[0].contactNumber;
                     resp.json(info);
-                });
+                } else {
+                    info["pno"] = res[0].contactNumber;
+                    info["hno"] = res[0].houseNo;
+                    info["lrg"] = res[0].streetNo;
+                    info["pcode"] = res[0].postCode;
+                    info["city"] = res[0].city;
+                    info["state"] = res[0].State;
+                    var sql2 = "SELECT tamanName FROM tbltaman WHERE tamanID = " + res[0].tamanID;
+                    database.query(sql2, function (err, res) {
+                        info["tmn"] = res[0].tamanName;
+                        console.log(info);
+                        resp.json(info);
+                    });
+                }
             }
         });
     });
