@@ -14,7 +14,7 @@ var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3307,
+    port: 3306,
     timezone: 'utc'
 };
 
@@ -133,7 +133,8 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), reqImg varchar(30), status varchar(15), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblsatisfaction(satisfactionID int auto_increment, userID varchar(15), companyRating varchar(7), teamEfficiency varchar(7), collectionPromptness varchar(7), binHandling varchar(7), spillageControl varchar(7), queryResponse varchar(7), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY (satisfactionID), FOREIGN KEY (userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblhistory (historyID VARCHAR(15), content MEDIUMTEXT, staffID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(staffID) REFERENCES tblstaff(staffID), PRIMARY KEY (historyID))",
-        "CREATE TABLE tblwaste (chartID int, userID varchar(15), monthYear varchar(11), waste int, PRIMARY KEY(chartID))"
+        "CREATE TABLE tblwaste (chartID int, userID varchar(15), monthYear varchar(11), waste int, PRIMARY KEY(chartID))",
+        "CREATE TABLE tblcomplaintofficer( coID varchar(15), complaintDate date,complaintTime time, sorce varchar(50), refNo varchar(100), name varchar(200), company varchar(200), telNo varchar(20), address varchar(300), under varchar(100), council varchar(100), type int(2), logisticsDate date, logisticsTime time, logisticsBy varchar(100), customerDate date, customerTime time, customerBy varchar(100), recordedDate date, recordedTime time, recordedBy varchar(100), forwardedDate date, forwardedTime time, forwardedBy varchar(100), status varchar(50), statusClosed char(1), statusDate date, statusTime time, statusBy varchar(100), remarks longtext, PRIMARY KEY (coID))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
