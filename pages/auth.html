@@ -604,7 +604,35 @@ input:checked + .slider:before {
                 </ul>
             </div> 
         </div>
-        
+        <div class="col-md-6">
+            <div class="card">
+                <!-- Default panel contents -->
+                <div class="card-header">Complaint Made by Officer</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Create Complaint
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.create" data-ng-change="changeValue(auth.complaintofficer.create, 'create complaintofficer');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        View Complaint
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.view" data-ng-change="changeValue(auth.complaintofficer.view, 'view complaintofficer');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Edit Complaint
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.edit" data-ng-change="changeValue(auth.complaintofficer.edit, 'edit complaintofficer');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                </ul>
+            </div> 
+        </div>        
 
     
 </div>

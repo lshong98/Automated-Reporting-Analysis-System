@@ -144,6 +144,22 @@ app.get('/complaint-module', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-module.html', {root: __dirname});
 });
+app.get('/complaint-officer', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer.html', {root: __dirname});
+});
+app.get('/complaint-officer-create', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-create.html', {root: __dirname});
+});
+app.get('/complaint-officer-detail', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-detail.html', {root: __dirname});
+});
+app.get('/complaint-officer-edit', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-edit.html', {root: __dirname});
+});
 app.get('/complaint-detail/:complaintCode', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-detail.html', {root: __dirname});

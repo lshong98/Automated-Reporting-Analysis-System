@@ -350,7 +350,12 @@ app.service('storeDataService', function () {
                 "view": 'I',
                 "edit": 'I',
                 "create": 'I'
-            }
+            },
+            "complaintofficer":{
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I'
+            } 
         },
         "pagination": {
             "currentPage": 1, //Initial current page to 1
@@ -2952,7 +2957,12 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "view": 'I',
             "edit": 'I',
             "create": 'I'
-        }
+        },
+        "complaintofficer":{
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I'
+        } 
     };
 
     $http.post('/getAllAuth', $scope.role).then(function (response) {
@@ -3180,7 +3190,12 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'A',
                             "edit": 'A',
                             "create": 'A'
-                        }
+                        },
+                        "complaintofficer":{
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A'
+                        } 
                     };
                 }
             });
@@ -3327,7 +3342,12 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'I',
                             "edit": 'I',
                             "create": 'I'
-                        }
+                        },
+                        "complaintofficer":{
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I'
+                        }                         
                     };
                 }
             });
@@ -6025,6 +6045,94 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     }
 });
 
+app.controller('complaintOfficerController', function ($scope, $http){
+    $scope.createComp = function(){
+        window.location.href = '#/complaint-officer-create';   
+    }
+    $scope.viewComp = function(){
+        window.location.href = '#/complaint-officer-detail';   
+    }
+    $scope.editComp = function(){
+        window.location.href = '#/complaint-officer-edit';   
+    }
+});
+app.controller('complaintOfficercreateController', function ($scope, $http){
+
+
+    $scope.comp = {
+        "compDate":'',
+        "compTime":'',
+        "compSource":'',
+        "compRefNo":'',
+        "compName":'',
+        "compCompany":'',
+        "compPhone":'',
+        "compAddress":'',
+        "compUnder":'',
+        "compCouncil":'',
+        "compType":'',
+        "compLogDate":'',
+        "compLogTime":'',
+        "compLogBy":'',
+        "compCIDate":'',
+        "compCITime":'',
+        "compCIBy":'',
+        "compRCDate":'',
+        "compRCTime":'',
+        "compRCBy":'',
+        "compSub":'',
+        "compSubDate":'',
+        "compSubTime":'',
+        "compSubBy":'',
+        "compStatus":'',
+        "compClosed":'',
+        "compSDate":'',
+        "compSTime":'',
+        "compSBy":'',
+        "compRemark":''
+    };
+    
+    $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+    $scope.compLogDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+    $scope.compCIDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+    $scope.compRCDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+    $scope.compSubDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+    $scope.compSDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+    
+    $scope.compTimeChange = function(time) {
+        $scope.comp.compTime = time == undefined ? "" : time;
+    };
+    $scope.logTimeChange = function(time) {
+        $scope.comp.compLogTime = time == undefined ? "" : time;
+    };
+    $scope.ciTimeChange = function(time) {
+        $scope.comp.compCITime = time == undefined ? "" : time;
+    };
+    $scope.rcTimeChange = function(time) {
+        $scope.comp.compRCTime = time == undefined ? "" : time;
+    };
+    $scope.subTimeChange = function(time) {
+        $scope.comp.compSubTime = time == undefined ? "" : time;
+    };
+    $scope.sTimeChange = function(time) {
+        $scope.comp.compSTime = time == undefined ? "" : time;
+    };    
+    
+    $scope.addComp = function(){
+        console.log($scope.comp.compTime);
+        console.log($scope.comp.compLogTime);
+        console.log($scope.comp.compCITime);
+        console.log($scope.comp.compRCTime);
+        console.log($scope.comp.compSubTime);
+        console.log($scope.comp.compSTime);
+    }
+});
+app.controller('complaintOfficerdetailController', function ($scope, $http){
+
+});
+app.controller('complaintOfficereditController', function ($scope, $http){
+
+});
 // //LOG TASk
 // var logTask = function(action, description, rowId) {
 
