@@ -364,23 +364,27 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintOfficercreateController',
         controllerAs:'complaintOfficercreate'
     })
-    .when('/complaint-officer-detail', {
+    .when('/complaint-officer-detail/:coID', {
         resolve: {
-            "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/complaint-officer-detail');
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/complaint-officer-detail/' + $route.current.params.coID);
             }
         },
-        templateUrl: '/complaint-officer-detail',
+        templateUrl: function(params){
+            return '/complaint-officer-detail/' + params.coID;
+        },
         controller: 'complaintOfficerdetailController',
         controllerAs:'complaintOfficerdetail'
     })
-    .when('/complaint-officer-edit', {
+    .when('/complaint-officer-edit/:coID', {
         resolve: {
-            "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/complaint-officer-edit');
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/complaint-officer-edit/' + $route.current.params.coID);
             }
         },
-        templateUrl: '/complaint-officer-edit',
+        templateUrl: function(params){
+            return '/complaint-officer-edit/' + params.coID;
+        },
         controller: 'complaintOfficereditController',
         controllerAs:'complaintOfficeredits'
     })      

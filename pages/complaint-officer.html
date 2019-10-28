@@ -8,14 +8,37 @@
         <button class="btn btn-success" data-ng-click="createComp()"><i class="fa fa-plus"></i> New</button>            
     </div>
 </div>
+
+<hr/>
+
 <div class="row">
     <div class="col-md-12">
-        <button class="btn btn-success" data-ng-click="viewComp()"><i class="fa fa-plus"></i> Detail</button>            
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th width="15%">Date</th>
+                        <th width="15%">Name</th>
+                        <th width="15%">Company Name</th>
+                        <th width="15%">Area</th>
+                    </tr>
+                </thead>
+                <tbody>               
+                    <tr data-ng-repeat="c in complaintOfficerList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewComp(c.coID)">
+                        <td data-ng-bind="c.complaintDate"></td>
+                        <td data-ng-bind="c.name"></td>
+                        <td data-ng-bind="c.company"></td>
+                        <td data-ng-bind="c.council"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-<div class="row">
+<div class="row"> <!--style="position: fixed;bottom: 0; margin-bottom: 56px;"-->
     <div class="col-md-12">
-        <button class="btn btn-success" data-ng-click="editComp()"><i class="fa fa-plus"></i> Edit</button>            
+        <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
     </div>
 </div>
+
      

@@ -34,6 +34,7 @@
             <option value="MPP">MPP</option>
             <option value="Others">Others</option>
         </select>
+        <input type="text" class="form-control mx-sm-3" placeholder="Specify others item" data-ng-model="sourceOthers" data-ng-show="comp.compSource == 'Others'"/>
     </div>
 </div>
 
@@ -83,6 +84,7 @@
             <option value="TS">TS</option>
             <option value="Subcontractors">Subcontractors</option>
         </select>
+        <input type="text" class="form-control mx-sm-3" placeholder="Specify other subcontractor" data-ng-model="underOthers" data-ng-show="comp.compUnder == 'Subcontractors'"/>
     </div>
 </div>
 
@@ -95,6 +97,7 @@
             <option value="MPP">MPP</option>
             <option value="Others">Others</option>
         </select>
+        <input type="text" class="form-control mx-sm-3" placeholder="Specify others Council" data-ng-model="councilOthers" data-ng-show="comp.compCouncil == 'Others'"/>
     </div>
 </div>
 
@@ -106,15 +109,16 @@
     <label for="inputType" class="col-xs-3 col-form-label form-label-width">Type of Complaint</label>
     <div class="col-md-9">
         <select class="form-control mx-sm-3" id="inputType" data-ng-model="comp.compType" data-live-search="true" data-width="100%">
-            <option value="1">Waste not collected</option>            
-            <option value="2">Bin not pushed back to its original location</option>
-            <option value="3">Spillage of waste</option>
-            <option value="4">Spillage of leachate water</option>
-            <option value="5">RoRo not send</option>
-            <option value="6">RoRo not exchanged</option>
-            <option value="7">RoRo not pulled</option>
-            <option value="8">RoRo not emptied</option>
+            <option value="Waste not collected">Waste not collected</option>            
+            <option value="Bin not pushed back to its original location">Bin not pushed back to its original location</option>
+            <option value="Spillage of waste">Spillage of waste</option>
+            <option value="Spillage of leachate water">Spillage of leachate water</option>
+            <option value="RoRo not send">RoRo not send</option>
+            <option value="RoRo not exchanged">RoRo not exchanged</option>
+            <option value="RoRo not pulled">RoRo not pulled</option>
+            <option value="RoRo not emptied">RoRo not emptied</option>
         </select>
+        <input type="text" class="form-control mx-sm-3" placeholder="Specify waste not collected for how many days" data-ng-model="type1days" data-ng-show="comp.compType == 'Waste not collected'"/>
     </div>
 </div>
 
@@ -273,6 +277,6 @@
 <div class="row">
     <div class="col-md-11"></div>
     <div class="col-md-1">
-        <button class="btn btn-primary success" data-ng-click="addComp()" >Submit</button>
+        <button class="btn btn-primary success" data-ng-show="showSubmitBtn == true" data-ng-click="addComp()" >Submit</button>
     </div>
 </div>

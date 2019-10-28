@@ -152,11 +152,11 @@ app.get('/complaint-officer-create', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-officer-create.html', {root: __dirname});
 });
-app.get('/complaint-officer-detail', function (req, res) {
+app.get('/complaint-officer-detail/:coID', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-officer-detail.html', {root: __dirname});
 });
-app.get('/complaint-officer-edit', function (req, res) {
+app.get('/complaint-officer-edit/:coID', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-officer-edit.html', {root: __dirname});
 });
