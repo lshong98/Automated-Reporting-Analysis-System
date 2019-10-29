@@ -91,6 +91,11 @@ function makeID(keyword, creationDate) {
         property = "historyID";
         header = "HIS";
         break;
+    case "complaint":
+        table = "tblcomplaintofficer";
+        property = "coID";
+        header = "CMP";
+        break;
     default:
         break;
     }
@@ -234,6 +239,10 @@ function menuItem(keyword, status) {
         case "view complaintlist": 
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module <span class="complaint"></span></a></li>';
+            }
+        case "view complaintofficer": 
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.complaintofficer.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-officer"><i class="fas fa-bullhorn"></i> Complaint Officer </a></li>';
             }
         case "view transactionLog":
             if (status == 'A') {
