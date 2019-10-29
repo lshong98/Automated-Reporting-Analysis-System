@@ -78,7 +78,7 @@
     // Variant
     // This one lets you improve the PDF sharpness by scaling up the HTML node tree to render as an image before getting pasted on the PDF.
     function exportPdf(quality = 10) {
-        var filename = 'ThisIsYourPDFFilename.pdf';
+        var filename = 'TrienekensReport.pdf';
         var transform = $("#googleMap .gm-style>div:first>div:first>div:last>div").css("transform");
         var comp = transform.split(",");
         var mapleft = parseFloat(comp[4]);
@@ -91,12 +91,13 @@
 
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
             useCORS: true,
+            imageTimeout: 30000,
             scale: quality,
             onrendered: function(canvas) {
                 $("#googleMap .gm-style>div:first>div:first>div:last>div").css({
-                    "transform": transform,
                     "left": 0,
-                    "top": 0
+                    "top": 0,
+                    "transform": transform
                 });
 
                 var img = canvas.toDataURL("image/png", 1.0);
