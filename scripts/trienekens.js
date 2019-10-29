@@ -1710,8 +1710,10 @@ app.controller('managerController', function ($scope, $http, $filter) {
         });
     }
 
+    
     var $googleMap, visualizeMap, map;
-
+    var src = '../testing.kml', kmlLayer;
+    
     $googleMap = document.getElementById('googleMap');
     visualizeMap = {
         center: new google.maps.LatLng(1.5503052, 110.3394602),
@@ -1724,7 +1726,19 @@ app.controller('managerController', function ($scope, $http, $filter) {
         editable: false,
         zoom: 13
     };
+    
     map = new google.maps.Map($googleMap, visualizeMap);
+    
+    var myParser = new geoXML3.parser({map: map});
+    myParser.parse(src);
+    
+//    kmlLayer = new google.maps.KmlLayer(src, {
+//          suppressInfoWindows: true,
+//          preserveViewport: false,
+//          map: map
+//        });
+//    kmlLayer.setMap(map);
+    
 
     //    $http.get('/getLngLat').then(function(response) {
     //        $scope.lnglatlist = response.data;
