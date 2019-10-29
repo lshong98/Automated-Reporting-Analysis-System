@@ -10,6 +10,7 @@ app.use(express.static(path.join(__dirname, 'pages')));
 app.use(express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'sounds')));
+app.use(express.static(path.join(__dirname, 'kml')));
 
 //app.route('/').get(function (req, res) {
 //    'use strict';
