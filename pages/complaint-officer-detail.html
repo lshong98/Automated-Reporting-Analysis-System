@@ -1,0 +1,189 @@
+<style>
+    .form-label-width {
+        width: 250px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-10">
+        <h2>Detals of Complaint</h2>        
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-danger" data-ng-click="backList()" >Back</button>
+        <button class="btn btn-success" data-ng-click="editComp(detailObj.coID)"><i class="fa fa-plus"></i> Edit</button>            
+    </div>
+</div>
+
+<br/>
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Date:</strong>
+    <p  class="mx-sm-3">{{detailObj.complaintDate}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Time:</strong>
+    <p  class="mx-sm-3">{{detailObj.complaintTime}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Source:</strong>
+    <p  class="mx-sm-3">{{detailObj.sorce}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Reference No:</strong>
+    <p  class="mx-sm-3">{{detailObj.refNo}}</p>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Name:</strong>
+    <p  class="mx-sm-3">{{detailObj.name}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Company:</strong>
+    <p  class="mx-sm-3">{{detailObj.company}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Tel No:</strong>
+    <p  class="mx-sm-3">{{detailObj.telNo}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Address:</strong>
+    <p  class="mx-sm-3">{{detailObj.address}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Area Under:</strong>
+    <p  class="mx-sm-3">{{detailObj.under}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Area by Council:</strong>
+    <p  class="mx-sm-3">{{detailObj.council}}</p>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Type of Complaint:</strong>
+    <p  class="mx-sm-3">{{detailObj.type}}</p>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Forwarded to Logistics Date:</strong>
+    <p  class="mx-sm-3">{{detailObj.logisticsDate}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Forwarded to Logistics Time:</strong>
+    <p  class="mx-sm-3">{{detailObj.logisticsTime}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Forwarded to Logistics By:</strong>
+    <p  class="mx-sm-3">{{detailObj.logisticsBy}}</p>
+</div>
+
+<br/>
+<hr/>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Customer Informed Date:</strong>
+    <p  class="mx-sm-3">{{detailObj.customerDate}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Customer Informed Time:</strong>
+    <p  class="mx-sm-3">{{detailObj.customerTime}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Customer Informed By:</strong>
+    <p  class="mx-sm-3">{{detailObj.customerBy}}</p>
+</div>
+
+<br/>
+<hr/>
+
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Recorded in Complaint Date:</strong>
+    <p  class="mx-sm-3">{{detailObj.recordedDate}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Recorded in Complaint Time:</strong>
+    <p  class="mx-sm-3">{{detailObj.recordedTime}}</p>
+</div>
+
+<div class="form-group row">
+   <strong class="col-xs-3 form-label-width">Recorded in Complaint By:</strong>
+    <p  class="mx-sm-3">{{detailObj.recordedBy}}</p>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<h4>Action Taken By Logistics</h4>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor:</strong>
+    <p  class="mx-sm-3">{{detailObj.forwardedSub}}</p>
+</div>
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Date:</strong>
+    <p  class="mx-sm-3">{{detailObj.forwardedDate}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Time:</strong>
+    <p  class="mx-sm-3">{{detailObj.forwardedTime}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor By:</strong>
+    <p  class="mx-sm-3">{{detailObj.forwardedBy}}</p>
+</div>
+<hr/>
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Status:</strong>
+    <p  class="mx-sm-3">{{detailObj.status}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Closed:</strong>
+    <p  class="mx-sm-3"><span data-ng-show="detailObj.statusClosed == 'T'">Closed</span><span data-ng-show="detailObj.statusClosed == 'F'">Not Closed</span></p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Date:</strong>
+    <p  class="mx-sm-3">{{detailObj.statusDate}}</p>
+</div>
+
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Time:</strong>
+    <p  class="mx-sm-3">{{detailObj.statusTime}}</p>
+</div>
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">By:</strong>
+    <p  class="mx-sm-3">{{detailObj.statusBy}}</p>
+</div>
+<hr/>
+<div class="form-group row">
+    <strong class="col-xs-3 form-label-width">Remark:</strong>
+    <p  class="mx-sm-3">{{detailObj.remarks}}</p>
+</div>

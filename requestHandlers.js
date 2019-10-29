@@ -10,6 +10,7 @@ app.use(express.static(path.join(__dirname, 'pages')));
 app.use(express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'sounds')));
+app.use(express.static(path.join(__dirname, 'kml')));
 
 //app.route('/').get(function (req, res) {
 //    'use strict';
@@ -143,6 +144,22 @@ app.get('/form-authorization', function (req, res) {
 app.get('/complaint-module', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-module.html', {root: __dirname});
+});
+app.get('/complaint-officer', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer.html', {root: __dirname});
+});
+app.get('/complaint-officer-create', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-create.html', {root: __dirname});
+});
+app.get('/complaint-officer-detail/:coID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-detail.html', {root: __dirname});
+});
+app.get('/complaint-officer-edit/:coID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-edit.html', {root: __dirname});
 });
 app.get('/complaint-detail/:complaintCode', function (req, res) {
     'use strict';

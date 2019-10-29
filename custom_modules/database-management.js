@@ -5,16 +5,16 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = process.env.DATABASE_HOST || 'localhost';
-var DB_USER = process.env.DATABASE_USER || 'root';
+var DB_HOST = process.env.DATABASE_HOST || '';
+var DB_USER = process.env.DATABASE_USER || '';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || 'trienekens';
+var DB_NAME = process.env.DATABASE_NAME || '';
  
 var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3307,
+    port: 3306,
     timezone: 'utc'
 };
 
@@ -133,7 +133,8 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), reqImg varchar(30), status varchar(15), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblsatisfaction(satisfactionID int auto_increment, userID varchar(15), companyRating varchar(7), teamEfficiency varchar(7), collectionPromptness varchar(7), binHandling varchar(7), spillageControl varchar(7), queryResponse varchar(7), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY (satisfactionID), FOREIGN KEY (userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblhistory (historyID VARCHAR(15), content MEDIUMTEXT, staffID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(staffID) REFERENCES tblstaff(staffID), PRIMARY KEY (historyID))",
-        "CREATE TABLE tblwaste (chartID int, userID varchar(15), monthYear varchar(11), waste int, PRIMARY KEY(chartID))"
+        "CREATE TABLE tblwaste (chartID int, userID varchar(15), monthYear varchar(11), waste int, PRIMARY KEY(chartID))",
+        "CREATE TABLE tblcomplaintofficer( coID varchar(15), complaintDate date,complaintTime time, sorce varchar(50), refNo varchar(100), name varchar(200), company varchar(200), telNo varchar(20), address varchar(300), under varchar(100), council varchar(100), type varchar(100), logisticsDate date, logisticsTime time, logisticsBy varchar(100), customerDate date, customerTime time, customerBy varchar(100), recordedDate date, recordedTime time, recordedBy varchar(100), forwardedSub varchar(100), forwardedDate date, forwardedTime time, forwardedBy varchar(100), status varchar(50), statusClosed char(1), statusDate date, statusTime time, statusBy varchar(100), remarks longtext, creationDateTime DATETIME, PRIMARY KEY (coID))"
     ];
     
     for (i = 0; i < sqls.length; i += 1) {
@@ -145,7 +146,7 @@ emitter.on('createTable', function () {
 emitter.on('defaultUser', function () {
     'use strict';
     
-    var management_sql = "INSERT INTO tblmanagement (mgmtName) VALUES ('create account'), ('edit account'), ('view account'), ('view role'), ('create truck'), ('edit truck'), ('view truck'), ('create zone'), ('edit zone'), ('view zone'), ('create area'), ('edit area'), ('view area'), ('add collection'), ('edit collection'), ('create bin'), ('edit bin'), ('view bin'), ('create acr'), ('edit acr'), ('view acr'), ('create database'), ('edit database'), ('view database'), ('edit inventory'), ('view inventory'), ('view authorization'), ('view formAuthorization'), ('view complaintlist'), ('view transactionLog'), ('create reporting'), ('edit reporting'), ('view reporting'), ('export reporting'), ('create dcsDetails'), ('edit dcsDetails'), ('view dcsDetails'), ('create delivery'), ('edit delivery'), ('view delivery'), ('create bdafDetails'), ('edit bdafDetails'), ('view bdafDetails'), ('create damagedlost'), ('edit damagedlost'), ('view damagedlost'), ('create dbdDetails'), ('edit dbdDetails'), ('view dbdDetails'), ('create blostDetails'), ('edit blostDetails'), ('view blostDetails'), ('upload banner'), ('approve user'), ('send notif'), ('approve binrequest'), ('view feedback'), ('lgview acr'), ('bdview acr'), ('view damagedBin'), ('view lostBin'), ('create damagedBin'), ('create lostBin'), ('edit damagedBin'), ('edit lostBin')",
+    var management_sql = "INSERT INTO tblmanagement (mgmtName) VALUES ('create account'), ('edit account'), ('view account'), ('view role'), ('create truck'), ('edit truck'), ('view truck'), ('create zone'), ('edit zone'), ('view zone'), ('create area'), ('edit area'), ('view area'), ('add collection'), ('edit collection'), ('create bin'), ('edit bin'), ('view bin'), ('create acr'), ('edit acr'), ('view acr'), ('create database'), ('edit database'), ('view database'), ('edit inventory'), ('view inventory'), ('view authorization'), ('view formAuthorization'), ('view complaintlist'), ('view transactionLog'), ('create reporting'), ('edit reporting'), ('view reporting'), ('export reporting'), ('create dcsDetails'), ('edit dcsDetails'), ('view dcsDetails'), ('create delivery'), ('edit delivery'), ('view delivery'), ('create bdafDetails'), ('edit bdafDetails'), ('view bdafDetails'), ('create damagedlost'), ('edit damagedlost'), ('view damagedlost'), ('create dbdDetails'), ('edit dbdDetails'), ('view dbdDetails'), ('create blostDetails'), ('edit blostDetails'), ('view blostDetails'), ('upload banner'), ('approve user'), ('send notif'), ('approve binrequest'), ('view feedback'), ('lgview acr'), ('bdview acr'), ('view damagedBin'), ('view lostBin'), ('create damagedBin'), ('create lostBin'), ('edit damagedBin'), ('edit lostBin'), ('create complaintofficer'), ('view complaintofficer'), ('edit complaintofficer')",
         i,
         j,
         management_row = "EXPLAIN SELECT COUNT(*) FROM tblmanagement",

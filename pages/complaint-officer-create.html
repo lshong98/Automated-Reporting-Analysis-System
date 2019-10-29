@@ -1,0 +1,282 @@
+<style>
+    .form-label-width {
+        width: 110px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <h5>Officer Made Complaint</h5>
+        <h4>Complaint Management Sheet</h4>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputDate" class="col-xs-3 col-form-label form-label-width">Date</label>
+    <div class="col-md-9">
+        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="compDate" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputStartTime" class="col-xs-3 col-form-label form-label-width">Time</label>
+    <div class="col-md-9">
+        <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="comp.compTime" data-ng-change="compTimeChange(comp.compTime)" str-to-time="" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputSource" class="col-xs-3 col-form-label form-label-width">Source</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3" id="inputSource" data-ng-model="comp.compSource" data-live-search="true" data-width="100%">
+            <option value="Telephone">Telephone</option>
+            <option value="MBKS">MBKS</option>
+            <option value="DBKU">DBKU</option>
+            <option value="MPP">MPP</option>
+            <option value="Others">Others</option>
+        </select>
+        <input type="text" class="form-control mx-sm-3" placeholder="Specify others item" data-ng-model="sourceOthers" data-ng-show="comp.compSource == 'Others'"/>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputRefNo" class="col-xs-3 col-form-label form-label-width">Reference No:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputRefNo" placeholder="If from Council" class="form-control mx-sm-3" data-ng-model="comp.compRefNo" />
+    </div>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<div class="form-group row">
+    <label for="inputName" class="col-xs-3 col-form-label form-label-width">Name:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputName" placeholder="Name" class="form-control mx-sm-3" data-ng-model="comp.compName" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputCompany" class="col-xs-3 col-form-label form-label-width">Company:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputCompany" placeholder="Company" class="form-control mx-sm-3" data-ng-model="comp.compCompany" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputPhone" class="col-xs-3 col-form-label form-label-width">Tel No:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputPhone" placeholder="Phone Number" class="form-control mx-sm-3" data-ng-model="comp.compPhone" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputAddress" class="col-xs-3 col-form-label form-label-width">Address:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputAddress" placeholder="Location/Address" class="form-control mx-sm-3" data-ng-model="comp.compAddress" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Under</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3" id="inputUnder" data-ng-model="comp.compUnder" data-live-search="true" data-width="100%">
+            <option value="TS">TS</option>
+            <option value="Subcontractors">Subcontractors</option>
+        </select>
+        <input type="text" class="form-control mx-sm-3" placeholder="Specify other subcontractor" data-ng-model="underOthers" data-ng-show="comp.compUnder == 'Subcontractors'"/>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputCouncil" class="col-xs-3 col-form-label form-label-width">Area by Council</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3" id="inputCouncil" data-ng-model="comp.compCouncil" data-live-search="true" data-width="100%">
+            <option value="DBKU">DBKU</option>            
+            <option value="MBKS">MBKS</option>
+            <option value="MPP">MPP</option>
+            <option value="Others">Others</option>
+        </select>
+        <input type="text" class="form-control mx-sm-3" placeholder="Specify others Council" data-ng-model="councilOthers" data-ng-show="comp.compCouncil == 'Others'"/>
+    </div>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<div class="form-group row">
+    <label for="inputType" class="col-xs-3 col-form-label form-label-width">Type of Complaint</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3" id="inputType" data-ng-model="comp.compType" data-live-search="true" data-width="100%">
+            <option value="Waste not collected">Waste not collected</option>            
+            <option value="Bin not pushed back to its original location">Bin not pushed back to its original location</option>
+            <option value="Spillage of waste">Spillage of waste</option>
+            <option value="Spillage of leachate water">Spillage of leachate water</option>
+            <option value="RoRo not send">RoRo not send</option>
+            <option value="RoRo not exchanged">RoRo not exchanged</option>
+            <option value="RoRo not pulled">RoRo not pulled</option>
+            <option value="RoRo not emptied">RoRo not emptied</option>
+        </select>
+        <input type="text" class="form-control mx-sm-3" placeholder="Specify waste not collected for how many days" data-ng-model="type1days" data-ng-show="comp.compType == 'Waste not collected'"/>
+    </div>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+
+<div class="form-group row">
+    <label for="inputLogisticsDate" class="col-xs-3 col-form-label form-label-width">Forwarded to Logistics Date</label>
+    <div class="col-md-9">
+        <input type="date" id="inputLogisticsDate" class="form-control mx-sm-3" data-ng-model="compLogDate" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputLogisticsTime" class="col-xs-3 col-form-label form-label-width">Forwarded to Logistics Time</label>
+    <div class="col-md-9">
+        <input type="time" id="inputLogisticsTime" class="form-control mx-sm-3" data-ng-model="comp.compLogTime" data-ng-change="logTimeChange(comp.compLogTime)" str-to-time="" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputLogisticsBy" class="col-xs-3 col-form-label form-label-width">Forwarded to Logistics By:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputLogisticsBy" placeholder="Forwarded to Logistics By" class="form-control mx-sm-3" data-ng-model="comp.compLogBy" />
+    </div>
+</div>
+
+<br/>
+<hr/>
+
+<div class="form-group row">
+    <label for="inputCIDate" class="col-xs-3 col-form-label form-label-width">Customer Informed Date</label>
+    <div class="col-md-9">
+        <input type="date" id="inputCIDate" class="form-control mx-sm-3" data-ng-model="compCIDate" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputCITime" class="col-xs-3 col-form-label form-label-width">Customer Informed Time</label>
+    <div class="col-md-9">
+        <input type="time" id="inputCITime" class="form-control mx-sm-3" data-ng-model="comp.compCITime" data-ng-change="ciTimeChange(comp.compCITime)" str-to-time="" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputCIBy" class="col-xs-3 col-form-label form-label-width">Customer Informed By:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputCIBy" placeholder="Customer Informed By" class="form-control mx-sm-3" data-ng-model="comp.compCIBy" />
+    </div>
+</div>
+
+<br/>
+<hr/>
+
+
+<div class="form-group row">
+    <label for="inputRCDate" class="col-xs-3 col-form-label form-label-width">Recorded in Complaint Date</label>
+    <div class="col-md-9">
+        <input type="date" id="inputRCDate" class="form-control mx-sm-3" data-ng-model="compRCDate" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputRCTime" class="col-xs-3 col-form-label form-label-width">Recorded in Complaint Time</label>
+    <div class="col-md-9">
+        <input type="time" id="inputRCTime" class="form-control mx-sm-3" data-ng-model="comp.compRCTime" data-ng-change="rcTimeChange(comp.compRCTime)" str-to-time="" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputRCBy" class="col-xs-3 col-form-label form-label-width">Recorded in Complaint By:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputRCBy" placeholder="Recorded By" class="form-control mx-sm-3" data-ng-model="comp.compRCBy" />
+    </div>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<h4>Action Taken By Logistics</h4>
+
+<div class="form-group row">
+    <label for="inputSub" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputSub" placeholder="Sub-Contractor" class="form-control mx-sm-3" data-ng-model="comp.compSub" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputSubDate" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Date</label>
+    <div class="col-md-9">
+        <input type="date" id="inputSubDate" class="form-control mx-sm-3" data-ng-model="compSubDate" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputSubTime" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Time</label>
+    <div class="col-md-9">
+        <input type="time" id="inputSubTime" class="form-control mx-sm-3" data-ng-model="comp.compSubTime" data-ng-change="subTimeChange(comp.compSubTime)" str-to-time="" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputSubBy" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor By:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputSubBy" placeholder="Recorded By" class="form-control mx-sm-3" data-ng-model="comp.compSubBy" />
+    </div>
+</div>
+<hr/>
+<div class="form-group row">
+    <label for="inputStatus" class="col-xs-3 col-form-label form-label-width">Status:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputStatus" placeholder="Status" class="form-control mx-sm-3" data-ng-model="comp.compStatus" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputClosed" class="col-xs-3 col-form-label form-label-width">Closed</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3" id="inputClosed" data-ng-model="comp.compClosed" data-live-search="true" data-width="100%">
+            <option value="T">Closed</option>
+            <option value="F">Not Closed</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputSDate" class="col-xs-3 col-form-label form-label-width">Date</label>
+    <div class="col-md-9">
+        <input type="date" id="inputSDate" class="form-control mx-sm-3" data-ng-model="compSDate" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputSTime" class="col-xs-3 col-form-label form-label-width">Time</label>
+    <div class="col-md-9">
+        <input type="time" id="inputSTime" class="form-control mx-sm-3" data-ng-model="comp.compSTime" data-ng-change="sTimeChange(comp.compSTime)" str-to-time="" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputSBy" class="col-xs-3 col-form-label form-label-width">By:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputSBy" class="form-control mx-sm-3" data-ng-model="comp.compSBy" />
+    </div>
+</div>
+<hr/>
+<div class="form-group row">
+    <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
+    <div class="col-md-9">
+        <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="comp.compRemark"></textarea>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-11"></div>
+    <div class="col-md-1">
+        <button class="btn btn-primary success" data-ng-show="showSubmitBtn == true" data-ng-click="addComp()" >Submit</button>
+    </div>
+</div>
