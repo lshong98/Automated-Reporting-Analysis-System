@@ -28,7 +28,9 @@ socket.on('connect', function() {
     }
 
     socket.on('receive authorize action', function (data) {
-        $('.authorization').addClass("badge badge-danger").html(data.num);
+        if (data.num > 0) {
+            $('.authorization').addClass("badge badge-danger").html(data.num);
+        }
     });
 
     socket.on('new satisfaction', function (data) {
