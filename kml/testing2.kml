@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Cradle of Quarterbacks</name>
+    <description>6 Hall of Fame Quarterbacks from Pittsburgh area (out of 23 not counting Bradshaw)</description>
+    <Style id="icon-1365-normal">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>football.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-1365-highlight">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>football.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-1365">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-1365-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-1365-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-960-DB4436-normal">
+      <IconStyle>
+        <color>ff3644db</color>
+        <scale>1.1</scale>
+        <Icon>
+          <href>star.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-960-DB4436-highlight">
+      <IconStyle>
+        <color>ff3644db</color>
+        <scale>1.1</scale>
+        <Icon>
+          <href>star.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-960-DB4436">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-960-DB4436-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-960-DB4436-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="icon-962-A7B5D7-normal">
+      <IconStyle>
+        <color>ffd7b5a7</color>
+        <scale>1.1</scale>
+        <Icon>
+          <href>diamond.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+    </Style>
+    <Style id="icon-962-A7B5D7-highlight">
+      <IconStyle>
+        <color>ffd7b5a7</color>
+        <scale>1.1</scale>
+        <Icon>
+          <href>diamond.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <scale>1.1</scale>
+      </LabelStyle>
+    </Style>
+    <StyleMap id="icon-962-A7B5D7">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#icon-962-A7B5D7-normal</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#icon-962-A7B5D7-highlight</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>Western PA</name>
+      <Placemark>
+        <name>Joe Montana</name>
+        <description>Jun 11, 1956 New Eagle, PA</description>
+        <styleUrl>#icon-960-DB4436</styleUrl>
+        <Point>
+          <coordinates>
+            -79.953003,40.20405,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Joe Namath</name>
+        <description>May 31, 1943 Beaver Falls,PA</description>
+        <styleUrl>#icon-960-DB4436</styleUrl>
+        <Point>
+          <coordinates>
+            -80.319163,40.764071,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>George Blanda</name>
+        <description>Sept 17, 1927 Youngwood,PA</description>
+        <styleUrl>#icon-960-DB4436</styleUrl>
+        <Point>
+          <coordinates>
+            -79.576743,40.241547,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Johnny Unitas</name>
+        <description>May 7, 1933 Pittsburgh,PA</description>
+        <styleUrl>#icon-960-DB4436</styleUrl>
+        <Point>
+          <coordinates>
+            -80.017719,40.425846,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Jim Kelly</name>
+        <description>Feb 14, 1960 East Brady,PA</description>
+        <styleUrl>#icon-960-DB4436</styleUrl>
+        <Point>
+          <coordinates>
+            -79.612747,40.985377,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dan Marino</name>
+        <description>Sept 15, 1961 Pittsburgh,PA</description>
+        <styleUrl>#icon-960-DB4436</styleUrl>
+        <Point>
+          <coordinates>
+            -79.951973,40.430028,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Other</name>
+      <Placemark>
+        <name>Steve Young</name>
+        <description>October 11, 1961 Salt Lake City, UT</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -111.8910474,40.7607793,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bob Waterfield</name>
+        <description>July 26, 1920 Elmira, NY</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -76.8077338,42.0897965,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kurt Warner</name>
+        <description>June 22, 1971 Burlington, IA</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -91.1128901,40.8076529,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Norm Van Brocklin</name>
+        <description>Mar 15, 1926 Parade, SD </description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -101.1045932,45.02387,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Y.A. Tittle</name>
+        <description>Oct 24, 1926 Marshall, TX</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -94.3674184,32.5448714,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Fran Tarkenton</name>
+        <description>Feb 3, 1940 Richmond, VA</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -77.4360481,37.5407246,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Roger Staubach</name>
+        <description>Feb 5 1942 Cincinnati, OH</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -84.5120196,39.1031182,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bart Starr</name>
+        <description>Jan 9, 1934 Montgomery, AL</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -86.3077368,32.3792233,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ken Stabler</name>
+        <description>Dec 25, 1945 Foley, AL</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -87.6835974,30.4065868,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Warren Moon</name>
+        <description>Nov 18, 1956 Los Angeles, CA</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -118.2436849,34.0522342,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bobby Layne</name>
+        <description>Dec 19, 1926 Santa Anna, TX</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -99.3217254,31.7420932,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Sonny Jurgensen</name>
+        <description>Aug 23, 1934 Wilmington, NC</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -77.8868117,34.2103894,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bob Griese</name>
+        <description>Feb 3, 1945 Evansville, IN</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -89.9384406,38.0903289,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Otto Graham</name>
+        <description>Dec 6, 1921 Waukegan, IL</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -87.8447938,42.3636331,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dan Fouts</name>
+        <description>June 10, 1951 San Francisco, CA</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -122.4194155,37.7749295,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Brett Favre</name>
+        <description>Oct 10, 1969 Gulport, MS</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -89.0928155,30.3674198,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>John Elway</name>
+        <description>June 28, 1960 Port Angeles, WA</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -123.4307413,48.118146,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Len Dawson</name>
+        <description>June 20, 1935 Alliance, OH</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -81.1059309,40.9153362,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Terry Bradshaw</name>
+        <description>Sept 2, 1948 Shreveport, LA</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -93.7501789,32.5251516,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Troy Aikman</name>
+        <description>Nov 21, 1966 Flint, MI</description>
+        <styleUrl>#icon-1365</styleUrl>
+        <Point>
+          <coordinates>
+            -83.6874562,43.0125274,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Future</name>
+      <Placemark>
+        <name>Tom Brady</name>
+        <description>Aug 3, 1977 San Mateo, CA</description>
+        <styleUrl>#icon-962-A7B5D7</styleUrl>
+        <Point>
+          <coordinates>
+            -122.3255254,37.5629917,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Drew Brees</name>
+        <description>Jan 15 1979 Austin, TX</description>
+        <styleUrl>#icon-962-A7B5D7</styleUrl>
+        <Point>
+          <coordinates>
+            -97.7430608,30.267153,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Aaron Rodgers</name>
+        <description>Dec 2, 1983 Chico, CA</description>
+        <styleUrl>#icon-962-A7B5D7</styleUrl>
+        <Point>
+          <coordinates>
+            -121.8374777,39.7284944,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Peyton Manning</name>
+        <description>Mar 24, 1976 New Orleans, LA</description>
+        <styleUrl>#icon-962-A7B5D7</styleUrl>
+        <Point>
+          <coordinates>
+            -90.0715323,29.9510658,0
+          </coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ben Roethlisberger</name>
+        <description>Mar 2, 1982 Lima, OH</description>
+        <styleUrl>#icon-962-A7B5D7</styleUrl>
+        <Point>
+          <coordinates>
+            -84.1052256,40.742551,0
+          </coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+  </Document>
+</kml>

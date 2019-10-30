@@ -9,7 +9,7 @@ app.factory("routingService", function($q) {
             } else {
                 window.location.href = '../';
             }
-        },
+        }, 
         "clear": function ($window, $location, direct, $sessionStorage) {
             $window.sessionStorage.clear();
             window.location.href = '../';
