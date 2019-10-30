@@ -112,23 +112,23 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
-    socket.on('satisfaction form', function(){
-        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction WHERE readStat = 'u'";
-        database.query(sql, function(err, result){
-            io.sockets.in(roomManager).emit('new satisfaction', {
-                unread: result[0].unread
-            });
-        });
-    });
+    // socket.on('satisfaction form', function(){
+    //     var sql = "SELECT count(readStat) as unread FROM tblsatisfaction WHERE readStat = 'u'";
+    //     database.query(sql, function(err, result){
+    //         io.sockets.in(roomManager).emit('new satisfaction', {
+    //             unread: result[0].unread
+    //         });
+    //     }); 
+    // });
 
-    socket.on('complaint', function(){
-        var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
-        database.query(sql, function(err, result){
-            io.sockets.in(roomManager).emit('new complaint', {
-                unread: result[0].unread
-            });
-        });
-    });
+    // socket.on('complaint', function(){
+    //     var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
+    //     database.query(sql, function(err, result){
+    //         io.sockets.in(roomManager).emit('new complaint', {
+    //             unread: result[0].unread
+    //         });
+    //     });
+    // });
     
     emitter.on('live map', function () {
         var sql = "SELECT serialNo FROM tbltag WHERE date >= CURRENT_DATE ORDER BY date DESC LIMIT 0, 1";
