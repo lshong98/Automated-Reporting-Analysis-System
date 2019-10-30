@@ -183,6 +183,103 @@
     </div>
 </div>
 
+<div class="modal fade" id="createDcs" tabindex="-1" role="dialog" aria-labelledby="createDcs" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">New DCS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          
+          <div class="form-group">
+              <label for="txtBeBins form-label">DCS ID</label> 
+              <input type="text" class="form-control" id="txtDcsId" data-ng-model="dcs.dcsID" />
+            </div>
+            
+            <div class="form-group">
+              <label for="txtCompany form-label">Driver</label>
+              <select type="text" class="form-control" id="txtCompany" data-ng-model="dcs.driver">
+                      <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}}</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="txtCompany form-label">Replacement Driver</label>
+            <select type="text" class="form-control" id="txtCompany" data-ng-model="dcs.replacementDriver">
+                    <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}}</option>
+            </select>
+        </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                  <div class="form-group">
+                      <label for="txtDcsPeriodFrom form-label">Period From</label>
+                      <input type="date" class="form-control" id="txtFrom" data-ng-model="dcs.periodFrom" />
+                  </div>
+              </div>
+              <div class="col-sm-6">
+                  <div class="form-group">
+                      <label for="txtDcsPeriodTo form-label">Period To</label>
+                      <input type="date" class="form-control" id="txtTo" data-ng-model="dcs.periodTo" />
+                  </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtDcsPeriodFrom form-label">Replacement Period From</label>
+                        <input type="date" class="form-control" id="txtFrom" data-ng-model="dcs.replacementPeriodFrom" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtDcsPeriodTo form-label">Replacement Period To</label>
+                        <input type="date" class="form-control" id="txtTo" data-ng-model="dcs.replacementPeriodTo" />
+                    </div>
+                </div>
+                
+              
+            </div>
+            <div class="form-group">
+                <label for="txtCompany form-label">Company Name</label>
+                <select type="text" class="form-control" id="txtCompany" data-ng-model="acr.companyName" data-ng-change="filterAddress();">
+                        <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
+                </select>
+            </div>
+          <div class="form-group"> 
+            <label for="txtAddress form-label">Address</label>
+            <select type="text" class="form-control" id="txtAddress" data-ng-model="acr.customerID">
+                  <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="txtBeBins form-label">BE Bins/Units</label> 
+            <input type="text" class="form-control" id="txtBeBins" data-ng-model="acr.beBins" />
+          </div>
+      
+          <div class="form-group">
+              <label for="txtAcrBins form-label">ACR Bins/Units</label>
+              <input type="text" class="form-control" id="txtAcrBins" data-ng-model="acr.acrBins" />
+          </div>
+          <div class="form-group">
+                  <label for="txtRemarks form-label">Remarks</label>
+                  <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="acr.remarks" />
+                </div>
+   
+          
+          
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-ng-click="addDcs();">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="lg-view" data-ng-show="show.lgview == 'A'">
   <h1>LOGISTICS VIEW</h1>
   <!-- <div class="modal fade" id="createDCS" tabindex="-1" role="dialog" aria-labelledby="createDCS" aria-hidden="true">

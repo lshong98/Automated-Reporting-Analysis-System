@@ -888,34 +888,74 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             }, 1000);
         });
 
-        $http.post('/getPeriodForReportACR', $scope.thisReport).then(function(response){
-            if($scope.infoForGetACR != null){
-                $scope.infoForGetACR = {
-                    "periodFrom" : response.data[0].periodFrom,
-                    "periodTo" : response.data[0].periodTo,
-                    "area" : $scope.thisReport.area,
-                    "driverID" : $scope.thisReport.driverID
-                };
-
-                $http.post('/getReportACR', $scope.infoForGetACR).then(function(response) {
-                    if (response.data.length != 0) {
-                        $scope.thisReport.acr = response.data;
-                    } else {
-                        $scope.thisReport.acr = [];
-                    }
-                    $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-                    $scope.acr = "";
-                    $.each($scope.thisReport.acr, function(index, value) {
-                        $scope.acr += value.name;
-                        if ((index + 1) != $scope.acrRow) {
-                            $scope.acr += ', ';
-                        }
-                    });
-                });     
-            }
-
-        });
+//        $http.post('/getPeriodForReportACR', $scope.thisReport).then(function(response){
+//            if(response.data != null){
+//                $scope.infoForGetACR = {
+//                    "periodFrom" : response.data[0].periodFrom,
+//                    "periodTo" : response.data[0].periodTo,
+//                    "area" : $scope.thisReport.area,
+//                    "driverID" : $scope.thisReport.driverID
+//                };
+//                
+//
+//                $http.post('/getReportACR', $scope.infoForGetACR).then(function(response) {
+//                    if (response.data.length != 0) {
+//                        $scope.thisReport.acr = response.data;
+//                    } else {
+//                        $scope.thisReport.acr = [];
+//                    }
+//                    $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+//                    $scope.acr = "";
+//                    $.each($scope.thisReport.acr, function(index, value) {
+//                        $scope.acr += value.name;
+//                        if ((index + 1) != $scope.acrRow) {
+//                            $scope.acr += ', ';
+//                        }
+//                    });
+//                });     
+//            }
+//
+//        });
         
+        $scope.forGetAcrInfo = $scope.thisReport;
+        $scope.forGetAcrInfo.todayday = "";
+        var d = new Date($scope.thisReport.date);
+        var n = d.getDay();
+        if(n == 1){
+            $scope.forGetAcrInfo.todayday = "mon";
+        }
+        else if(n == 2){
+            $scope.forGetAcrInfo.todayday = "tue";
+        }
+        else if(n == 3){
+            $scope.forGetAcrInfo.todayday = "wed";
+        }
+        else if(n == 4){
+            $scope.forGetAcrInfo.todayday = "thu";
+        }
+        else if(n == 5){
+            $scope.forGetAcrInfo.todayday = "fri";
+        }
+        else if(n == 6){
+            $scope.forGetAcrInfo.todayday = "sat";
+        }else if(n == 0){
+            $scope.forGetAcrInfo.todayday = "sun";
+        }
+        $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(response){
+            if (response.data.length != 0) {
+                $scope.thisReport.acr = response.data;
+            } else {
+                $scope.thisReport.acr = [];
+            }
+            $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+            $scope.acr = "";
+            $.each($scope.thisReport.acr, function(index, value) {
+                $scope.acr += value.name;
+                if ((index + 1) != $scope.acrRow) {
+                    $scope.acr += ', ';
+                }
+            });            
+        });
 
 
         $scope.editReport = function() {
