@@ -157,31 +157,58 @@ app.post('/getReportingStaff',function(req,res){
     });
 });
 
-app.post('/getPeriodForReportACR',function (req, res){
-    'use strict';
-    
-    var sql = "SELECT tbldcs.periodFrom as 'periodFrom', tbldcs.periodTo as 'periodTo' FROM tbldcs WHERE tbldcs.areaID  = '" + req.body.area + "' AND tbldcs.driverID = '" + req.body.driverID + "' AND CURDATE() BETWEEN tbldcs.periodFrom AND tbldcs.periodTo";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.post('/getReportACR', function (req, res) {
+//app.post('/getPeriodForReportACR',function (req, res){
+//    'use strict';
+//    
+//    var sql = "SELECT tbldcs.periodFrom as 'periodFrom', tbldcs.periodTo as 'periodTo' FROM tbldcs WHERE tbldcs.areaID  = '" + req.body.area + "' AND tbldcs.driverID = '" + req.body.driverID + "' AND CURDATE() BETWEEN tbldcs.periodFrom AND tbldcs.periodTo";
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            throw err;
+//        }
+//        res.json(result);
+//    });
+//});
+//app.post('/getReportACR', function (req, res) {
+//
+//    'use strict';
+//    
+////    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
+////    var sql = "SELECT tblcustomer.name FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID JOIN tbldcs ON tblacr.dcsID = tbldcs.dcsID WHERE tbldcs.areaID = '" + req.body.area + "' AND ('" + req.body.date + "' BETWEEN tbldcs.periodFrom AND tbldcs.periodTo) AND tbldcs.driverID = '" + req.body.driverID + "'";
+////    var sql = "SELECT tblcustomer.name as 'name' FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID WHERE tblacr.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR tblacr.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
+//    
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            throw err;
+//        }
+//        res.json(result);
+//    });
+//});
 
+app.post('/getReportACR', function(req, res){
     'use strict';
-    
-//    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
-//    var sql = "SELECT tblcustomer.name FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID JOIN tbldcs ON tblacr.dcsID = tbldcs.dcsID WHERE tbldcs.areaID = '" + req.body.area + "' AND ('" + req.body.date + "' BETWEEN tbldcs.periodFrom AND tbldcs.periodTo) AND tbldcs.driverID = '" + req.body.driverID + "'";
-    var sql = "SELECT tblcustomer.name as 'name' FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID WHERE tblacr.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR tblacr.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
-    
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
+    f.waterfallQuery("SELECT tbldcs.dcsID FROM tbldcs WHERE tbldcs.areaID LIKE '%" + req.body.area +"%' AND CURDATE() BETWEEN tbldcs.periodFrom and tbldcs.periodTo").then(function(dcs){
+        if(dcs == null){
+            res.json(null);
+        }else{
+            if(req.body.todayday == "sun"){
+                res.json(null);
+            }else{
+                var sql = "SELECT tblcustomer.name, tblacr.mon, tblacr.tue, tblacr.wed, tblacr.thu, tblacr.fri, tblacr.sat FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID WHERE tblacr.dcsID LIKE '%" + dcs.dcsID + "%' AND tblacr."+ req.body.todayday + " = 1";
+
+                database.query(sql, function(err, result){
+                    if(err){
+                        throw err;
+                    }
+                    else{
+                        res.json(result);
+                        res.end();
+                    }
+                });
+            }
         }
-        res.json(result);
     });
+
+
 });
 
 app.post('/getReportCircle', function(req,res){
