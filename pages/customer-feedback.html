@@ -1,5 +1,5 @@
 <style>
-    div.chart{
+    div.chart {
         position: relative;
         width: 110px;
         height: 110px;
@@ -9,115 +9,328 @@
         font-size: 1.5em;
         line-height: 110px;
     }
-    canvas{
+
+    canvas {
         position: absolute;
         top: 0;
         left: 0;
     }
-    .overall{
+
+    .overall {
         float: right;
         margin-top: -24%;
         margin-right: 20%;
     }
+
+    .tab-content>.tab-pane {
+        color: black;
+        background-color: transparent;
+    }
+
+    div.tab-content {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
 </style>
-<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getCustFeedback()">
+<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getMunicipalFeedback()">
     <div class="row">
         <div class="col-md-12">
             <h1>Customer Feedback</h1><br /><br />
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <div class="card" style="width: 20rem">
-                <div class="card-body">
-                    <h5>Company Rating</h5><br/>
-                    <div easypiechart options="options" percent="compRate" class="chart">
-                        {{reviews.compRate | number:1}}
-                    </div>
-                    <span class="overall">Out of 3</span>
-                    <br/>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card" style="width: 20rem">
-                <div class="card-body">
-                    <h5>Team Efficiency</h5><br/>
-                    <div easypiechart options="options" percent="teamEff" class="chart">
-                            {{reviews.teamEff | number:1}}
-                        </div>
-                        <span class="overall">Out of 3</span>
-                        <br/>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card" style="width: 20rem">
-                <div class="card-body">
-                    <h5>Collection Promptness</h5><br/>
-                    <div easypiechart options="options" percent="collPrompt" class="chart">
-                            {{reviews.collPrompt | number:1}}
-                        </div>
-                        <span class="overall">Out of 3</span>
-                        <br/>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card" style="width: 20rem">
-                <div class="card-body">
-                    <h5>Bin Handling</h5><br/>
-                    <div easypiechart options="options" percent="binHand" class="chart">
-                            {{reviews.binHand | number:1}}
-                        </div>
-                        <span class="overall">Out of 3</span>
-                        <br/>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card" style="width: 20rem">
-                <div class="card-body">
-                    <h5>Spillage Control</h5><br/>
-                    <div easypiechart options="options" percent="spillCtrl" class="chart">
-                            {{reviews.spillCtrl | number:1}}
-                        </div>
-                        <span class="overall">Out of 3</span>
-                        <br/>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card" style="width: 20rem">
-                <div class="card-body">
-                    <h5>Query Response</h5><br/>
-                    <div easypiechart options="options" percent="qryResp" class="chart">
-                            {{reviews.qryResp | number:1}}
-                        </div>
-                        <span class="overall">Out of 3</span>
-                        <br/>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br /><br/>
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Comments</h4><br/>
-            <div class="card" data-ng-repeat="comment in reviews.comments track by $index" style="margin-bottom: 3%">
-                <div class="card-body">
-                    <span>{{comment}}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
         <div class="col-md-12">
-            <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item"><a class="nav-link active" role="tab" href="#customer-feedback" data-target="#municipalFeedback" data-toggle="tab" data-ng-click="getMunicipalFeedback()">Municipal Services ({{unreadMunicipal}})</a></li>
+                <li class="nav-item"><a class="nav-link" role="tab" href="#customer-feedback" data-target="#commercialFeedback" data-toggle="tab" data-ng-click="getCommercialFeedback()">Commercial Services (RoRo) ({{unreadCommercial}})</a></li>
+                <li class="nav-item"><a class="nav-link" role="tab" href="#customer-feedback" data-target="#scheduledFeedback" data-toggle="tab" data-ng-click="getScheduledFeedback()">Scheduled & Hazardous Waste ({{unreadScheduled}})</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <!--Municipal Feedback-->
+                <div role="tabpanel" class="tab-pane fade show active" id="municipalFeedback"><br /><br />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Company Rating</h5><br />
+                                    <div easypiechart options="options" percent="compRate" class="chart">
+                                        {{reviews.compRate | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Team Efficiency</h5><br />
+                                    <div easypiechart options="options" percent="teamEff" class="chart">
+                                        {{reviews.teamEff | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Collection Promptness</h5><br />
+                                    <div easypiechart options="options" percent="collPrompt" class="chart">
+                                        {{reviews.collPrompt | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Bin Handling</h5><br />
+                                    <div easypiechart options="options" percent="binHand" class="chart">
+                                        {{reviews.binHand | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Spillage Control</h5><br />
+                                    <div easypiechart options="options" percent="spillCtrl" class="chart">
+                                        {{reviews.spillCtrl | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Query Response</h5><br />
+                                    <div easypiechart options="options" percent="qryResp" class="chart">
+                                        {{reviews.qryResp | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Comments</h4><br />
+                            <div class="card" data-ng-repeat="comment in reviews.comments track by $index" style="margin-bottom: 3%">
+                                <div class="card-body">
+                                    <span>{{comment}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                        <div class="col-md-12">
+                            <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+
+                <!--Commercial Feedback-->
+                <div role="tabpanel" class="tab-pane fade" id="commercialFeedback"><br /><br />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Company Rating</h5><br />
+                                    <div easypiechart options="options" percent="compRateCommercial" class="chart">
+                                        {{reviewsCommercial.compRate | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Team Efficiency</h5><br />
+                                    <div easypiechart options="options" percent="teamEffCommercial" class="chart">
+                                        {{reviewsCommercial.teamEff | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Collection Promptness</h5><br />
+                                    <div easypiechart options="options" percent="collPromptCommercial" class="chart">
+                                        {{reviewsCommercial.collPrompt | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Cleanliness</h5><br />
+                                    <div easypiechart options="options" percent="cleanliness" class="chart">
+                                        {{reviewsCommercial.cleanliness | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Physical Condition</h5><br />
+                                    <div easypiechart options="options" percent="physicalCond" class="chart">
+                                        {{reviewsCommercial.physicalCond | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 20rem">
+                                <div class="card-body">
+                                    <h5>Query Response</h5><br />
+                                    <div easypiechart options="options" percent="qryRespCommercial" class="chart">
+                                        {{reviewsCommercial.qryResp | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Comments</h4><br />
+                            <div class="card" data-ng-repeat="comment in reviewsCommercial.comments track by $index" style="margin-bottom: 3%">
+                                <div class="card-body">
+                                    <span>{{comment}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                        <div class="col-md-12">
+                            <ul uib-pagination boundary-links="true" total-items="totalItemsCommercial" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+
+                <!--Scheduled Feedback-->
+                <div role="tabpanel" class="tab-pane fade" id="scheduledFeedback"><br /><br />
+                    <div class="row">
+                            <div class="col-md-4">
+                                <div class="card" style="width: 20rem">
+                                    <div class="card-body">
+                                        <h5>Company Rating</h5><br />
+                                        <div easypiechart options="options" percent="compRateScheduled" class="chart">
+                                            {{reviewsScheduled.compRate | number:1}}
+                                        </div>
+                                        <span class="overall">Out of 3</span>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card" style="width: 20rem">
+                                    <div class="card-body">
+                                        <h5>Team Efficiency</h5><br />
+                                        <div easypiechart options="options" percent="teamEffScheduled" class="chart">
+                                            {{reviewsScheduled.teamEff | number:1}}
+                                        </div>
+                                        <span class="overall">Out of 3</span>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card" style="width: 20rem">
+                                    <div class="card-body">
+                                        <h5>Health Adherence</h5><br />
+                                        <div easypiechart options="options" percent="healthAdh" class="chart">
+                                            {{reviewsScheduled.healthAdh | number:1}}
+                                        </div>
+                                        <span class="overall">Out of 3</span>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card" style="width: 20rem">
+                                    <div class="card-body">
+                                        <h5>Regulations Adherence</h5><br />
+                                        <div easypiechart options="options" percent="regAdh" class="chart">
+                                            {{reviewsScheduled.regAdh | number:1}}
+                                        </div>
+                                        <span class="overall">Out of 3</span>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card" style="width: 20rem">
+                                    <div class="card-body">
+                                        <h5>Query Response</h5><br />
+                                        <div easypiechart options="options" percent="qryRespScheduled" class="chart">
+                                            {{reviewsScheduled.qryResp | number:1}}
+                                        </div>
+                                        <span class="overall">Out of 3</span>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br /><br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Comments</h4><br />
+                                <div class="card" data-ng-repeat="comment in reviewsScheduled.comments track by $index" style="margin-bottom: 3%">
+                                    <div class="card-body">
+                                        <span>{{comment}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                            <div class="col-md-12">
+                                <ul uib-pagination boundary-links="true" total-items="totalItemsScheduled" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                            </div>
+                        </div>
+                        <br /><br />
+                </div>
+            </div>
         </div>
     </div>
-    <br/><br/>
 </div>

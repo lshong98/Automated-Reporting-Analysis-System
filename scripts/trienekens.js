@@ -32,8 +32,34 @@ socket.on('connect', function() {
     });
 
     socket.on('new satisfaction', function (data) {
-        if (data.unread != 0) {
+        if (data.unread > 0) {
             $('.satisfaction').addClass("badge badge-danger").html(data.unread);
+        }
+    });
+
+    socket.on('read municipal', function (data) {
+        if (data.unread != 0) {
+            var unread = $('.satisfaction').html();
+            console.log(unread);
+            var remaining = parseInt(unread) - parseInt(data.unread);
+            console.log(remaining);
+            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+        }
+    });
+
+    socket.on('read commercial', function (data) {
+        if (data.unread > 0) {
+            var unread = $('.satisfaction').html();
+            var remaining = parseInt(unread) - parseInt(data.unread);
+            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+        }
+    });
+
+    socket.on('read scheduled', function (data) {
+        if (data.unread > 0) {
+            var unread = $('.satisfaction').html();
+            var remaining = parseInt(unread) - parseInt(data.unread);
+            $('.satisfaction').addClass("badge badge-danger").html(remaining);
         }
     });
 
@@ -1300,8 +1326,9 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         });
     };
 
-    $scope.getCustFeedback = function () {
-        $http.get('/customerFeedback').then(function (response) {
+    $scope.getMunicipalFeedback = function () {
+        socket.emit('municipal satisfaction');
+        $http.get('/customerFeedbackMunicipal').then(function (response) {
             console.log(response.data);
             $scope.reviews = response.data;
             $scope.totalItems = response.data.length;
@@ -1323,7 +1350,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 lineCap: 'circle'
             };
 
-            $http.get('/readSatisfaction').then(function (repsonse) {
+            $http.get('/readSatisfactionMunicipal').then(function (repsonse) {
                 console.log(response.data);
             }, function (err) {
                 console.log(err);
@@ -1331,9 +1358,92 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         }, function (err) {
             console.log(err);
         });
+
+        $http.get('/unreadSatisfaction').then(function(response){
+            $scope.unreadMunicipal = response.data.municipal;
+            $scope.unreadCommercial = response.data.commercial;
+            $scope.unreadScheduled = response.data.scheduled;
+        });
     };
 
+    $scope.getCommercialFeedback = function () {
+        socket.emit('commercial satisfaction');
+        $http.get('/customerFeedbackCommercial').then(function (response) {
+            console.log(response.data);
+            $scope.reviewsCommercial = response.data;
+            $scope.totalItemsCommercial = response.data.length;
+            $scope.collPromptCommercial = (response.data.collPrompt / 3) * 100;
+            $scope.compRateCommercial = (response.data.compRate / 3) * 100;
+            $scope.teamEffCommercial = (response.data.teamEff / 3) * 100;
+            $scope.cleanliness = (response.data.cleanliness / 3) * 100;
+            $scope.physicalCond = (response.data.physicalCond / 3) * 100;
+            $scope.qryRespCommercial = (response.data.qryResp / 3) * 100;
 
+            $scope.options = {
+                animate: {
+                    duration: 0,
+                    enabled: false
+                },
+                barColor: '#2C3E50',
+                scaleColor: false,
+                lineWidth: 20,
+                lineCap: 'circle'
+            };
+
+            $http.get('/readSatisfactionCommercial').then(function (repsonse) {
+                console.log(response.data);
+            }, function (err) {
+                console.log(err);
+            });
+        }, function (err) {
+            console.log(err);
+        });
+
+        $http.get('/unreadSatisfaction').then(function(response){
+            $scope.unreadMunicipal = response.data.municipal;
+            $scope.unreadCommercial = response.data.commercial;
+            $scope.unreadScheduled = response.data.scheduled;
+        });
+    };
+
+    $scope.getScheduledFeedback = function () {
+        socket.emit('scheduled satisfaction');
+        $http.get('/customerFeedbackScheduled').then(function (response) {
+            console.log(response.data);
+            $scope.reviewsScheduled = response.data;
+            $scope.totalItemsScheduled = response.data.length;
+            $scope.compRateScheduled = (response.data.compRate / 3) * 100;
+            $scope.teamEffScheduled = (response.data.teamEff / 3) * 100;
+            $scope.healthAdh = (response.data.healthAdh / 3) * 100;
+            $scope.regAdh = (response.data.regAdh / 3) * 100;
+            $scope.qryRespScheduled = (response.data.qryResp / 3) * 100;
+
+            $scope.options = {
+                animate: {
+                    duration: 0,
+                    enabled: false
+                },
+                barColor: '#2C3E50',
+                scaleColor: false,
+                lineWidth: 20,
+                lineCap: 'circle'
+            };
+
+            $http.get('/readSatisfactionScheduled').then(function (repsonse) {
+                console.log(response.data);
+            }, function (err) {
+                console.log(err);
+            });
+        }, function (err) {
+            console.log(err);
+        });
+
+        $http.get('/unreadSatisfaction').then(function(response){
+            $scope.unreadMunicipal = response.data.municipal;
+            $scope.unreadCommercial = response.data.commercial;
+            $scope.unreadScheduled = response.data.scheduled;
+        });
+    };
 });
 
 app.controller('navigationController', function ($scope, $http, $window, storeDataService) {

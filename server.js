@@ -286,9 +286,9 @@ app.post('/editCollectionSchedule', function (req, res) {
     });
 });
 
-app.get('/customerFeedback', function(req, res){
+app.get('/customerFeedbackMunicipal', function(req, res){
     'use strict';
-    var sql = "SELECT * FROM tblsatisfaction";
+    var sql = "SELECT * FROM tblsatisfaction_municipal";
     var compRate = 0, teamEff = 0, collPrompt = 0, binHand = 0, spillCtrl = 0, qryResp = 0, comments = [];
     var json = {};
     database.query(sql, function(err,result){
@@ -311,9 +311,98 @@ app.get('/customerFeedback', function(req, res){
     });
 });
 
-app.get('/readSatisfaction', function(req, res){
+app.get('/customerFeedbackCommercial', function(req, res){
     'use strict';
-    var sql = "UPDATE tblsatisfaction SET readStat = 'r'";
+    var sql = "SELECT * FROM tblsatisfaction_commercial";
+    var compRate = 0, teamEff = 0, collPrompt = 0, cleanliness = 0, physicalCond = 0, qryResp = 0, comments = [];
+    var json = {};
+    database.query(sql, function(err,result){
+        console.log(result);
+        var totalReview = result.length;
+        for(var i = 0; i<totalReview; i++){
+            compRate += parseInt(result[i].companyRating);
+            teamEff += parseInt(result[i].teamEfficiency);
+            collPrompt += parseInt(result[i].collectionPromptness);
+            cleanliness += parseInt(result[i].cleanliness);
+            physicalCond += parseInt(result[i].physicalCondition);
+            qryResp += parseInt(result[i].queryResponse);
+            if(result[i].extraComment != "" && result[i].extraComment != null){
+                comments.push(result[i].extraComment);
+            }
+        }
+        json = {"compRate":compRate/totalReview,"teamEff":teamEff/totalReview,"collPrompt":collPrompt/totalReview,"cleanliness":cleanliness/totalReview,"physicalCond":physicalCond/totalReview,"qryResp":qryResp/totalReview,"comments":comments};
+        res.json(json);
+        res.end();
+    });
+});
+
+app.get('/customerFeedbackScheduled', function(req, res){
+    'use strict';
+    var sql = "SELECT * FROM tblsatisfaction_scheduled";
+    var compRate = 0, teamEff = 0, healthAdh = 0, regAdh = 0, qryResp = 0, comments = [];
+    var json = {};
+    database.query(sql, function(err,result){
+        console.log(result);
+        var totalReview = result.length;
+        for(var i = 0; i<totalReview; i++){
+            compRate += parseInt(result[i].companyRating);
+            teamEff += parseInt(result[i].teamEfficiency);
+            healthAdh += parseInt(result[i].healthAdherence);
+            regAdh += parseInt(result[i].regulationsAdherence);
+            qryResp += parseInt(result[i].queryResponse);
+            if(result[i].extraComment != "" && result[i].extraComment != null){
+                comments.push(result[i].extraComment);
+            }
+        }
+        json = {"compRate":compRate/totalReview,"teamEff":teamEff/totalReview,"healthAdh":healthAdh/totalReview,"regAdh":regAdh/totalReview,"qryResp":qryResp/totalReview,"comments":comments};
+        res.json(json);
+        res.end();
+    });
+});
+
+app.get('/unreadSatisfaction', function(req, res){
+    'use strict';
+    var municipal = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+    var commercial = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+    var scheduled = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
+    var unreadMunicipal, unreadCommercial, unreadScheduled, json = {};
+
+    database.query(municipal, function(err, result){
+        unreadMunicipal = result[0].unread;
+        database.query(commercial, function(err, result){
+            unreadCommercial = result[0].unread;
+            database.query(scheduled, function(err, result){
+                unreadScheduled = result[0].unread;
+                json = {"municipal":unreadMunicipal,"commercial":unreadCommercial,"scheduled":unreadScheduled};
+                res.json(json);
+                res.end();
+            });
+        });
+    });
+});
+
+
+app.get('/readSatisfactionMunicipal', function(req, res){
+    'use strict';
+    var sql = "UPDATE tblsatisfaction_municipal SET readStat = 'r'";
+    database.query(sql, function(err, result){
+        res.send("New Satisfaction Read");
+        res.end();
+    });
+});
+
+app.get('/readSatisfactionCommercial', function(req, res){
+    'use strict';
+    var sql = "UPDATE tblsatisfaction_commercial SET readStat = 'r'";
+    database.query(sql, function(err, result){
+        res.send("New Satisfaction Read");
+        res.end();
+    });
+});
+
+app.get('/readSatisfactionScheduled', function(req, res){
+    'use strict';
+    var sql = "UPDATE tblsatisfaction_scheduled SET readStat = 'r'";
     database.query(sql, function(err, result){
         res.send("New Satisfaction Read");
         res.end();
