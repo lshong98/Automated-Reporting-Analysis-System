@@ -444,7 +444,7 @@ app.post('/complaint', function (req, resp) {
     });
 });
 
-app.post('/satisfaction', function (req, resp) {
+app.post('/satisfactionMunicipal', function (req, resp) {
     'use strict';
     var data;
     var userID;
@@ -459,10 +459,10 @@ app.post('/satisfaction', function (req, resp) {
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var sql = "INSERT INTO tblsatisfaction (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
+                var sql = "INSERT INTO tblsatisfaction_municipal (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate) VALUES ('" +
                     userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                     "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
-                    data.extraComment + "','" + date + "','u')";
+                    data.extraComment + "','" + date + "')";
 
                 database.query(sql, function (err, res) {
                     if (!err) {
@@ -476,7 +476,74 @@ app.post('/satisfaction', function (req, resp) {
             }
         });
     });
-});    
+}); 
+
+app.post('/satisfactionCommercial', function (req, resp) {
+    'use strict';
+    var data;
+    var userID;
+    var date = dateTime.create().format('Y-m-d H:M:S');
+
+    req.addListener('data', function (postDataChunk) {
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function () {
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
+                userID = res[0].userID;
+                var sql = "INSERT INTO tblsatisfaction_commercial (userID, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate) VALUES ('" +
+                    userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                    "','" + parseInt(data.cleanliness) + "','" + parseInt(data.physicalCondition) + "','" + parseInt(data.queryResponse) + "','" +
+                    data.extraComment + "','" + date + "')";
+
+                database.query(sql, function (err, res) {
+                    if (!err) {
+                        resp.send("Satisfaction Survey Submitted");
+                    } else {
+                        resp.send("Failed to Submit");
+                    }
+                });
+            } else {
+                resp.send("error getting user id");
+            }
+        });
+    });
+}); 
+
+app.post('/satisfactionScheduled', function (req, resp) {
+    'use strict';
+    var data;
+    var userID;
+    var date = dateTime.create().format('Y-m-d H:M:S');
+
+    req.addListener('data', function (postDataChunk) {
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function () {
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
+                userID = res[0].userID;
+                var sql = "INSERT INTO tblsatisfaction_scheduled (userID, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, submissionDate) VALUES ('" +
+                    userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.healthAdherence) + "','" + parseInt(data.regulationsAdherence) + "','" + parseInt(data.queryResponse) + "','" +
+                    data.extraComment + "','" + date + "')";
+
+                database.query(sql, function (err, res) {
+                    if (!err) {
+                        resp.send("Satisfaction Survey Submitted");
+                    } else {
+                        resp.send("Failed to Submit");
+                    }
+                });
+            } else {
+                resp.send("error getting user id");
+            }
+        });
+    });
+});     
 
 // app.post('/sendMessage', function(req, resp){ 
 //     'use strict';

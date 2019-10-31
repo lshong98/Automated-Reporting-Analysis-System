@@ -112,23 +112,61 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
-//    socket.on('satisfaction form', function(){
-//        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction WHERE readStat = 'u'";
-//        database.query(sql, function(err, result){
-//            io.sockets.in(roomManager).emit('new satisfaction', {
-//                unread: result[0].unread
-//            });
-//        });
-//    });
+    socket.on('satisfaction form', function(){
+        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+        var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+        var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
+        var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
+        database.query(sql, function(err, result){
+            municipalUnread = result[0].unread;
+            database.query(sql2, function(err, result){
+                commercialUnread = result[0].unread;
+                database.query(sql3, function(err, result){
+                    scheduledUnread = result[0].unread;
+                    totalUnread = parseInt(municipalUnread) + parseInt(commercialUnread) + parseInt(scheduledUnread);
+                    io.sockets.in(roomManager).emit('new satisfaction', {
+                        unread: totalUnread
+                    });
+                });
+            });
+        });
+    });
 
-    // socket.on('complaint', function(){
-    //     var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
-    //     database.query(sql, function(err, result){
-    //         io.sockets.in(roomManager).emit('new complaint', {
-    //             unread: result[0].unread
-    //         });
-    //     });
-    // });
+    socket.on('municipal satisfaction', function(){
+        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+        database.query(sql, function(err, result){
+            io.sockets.in(roomManager).emit('read municipal', {
+                unread: result[0].unread
+            });
+        });
+    });
+
+    socket.on('commercial satisfaction', function(){
+        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+        database.query(sql, function(err, result){
+            io.sockets.in(roomManager).emit('read commercial', {
+                unread: result[0].unread
+            });
+        });
+    });
+
+    socket.on('scheduled satisfaction', function(){
+        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
+        database.query(sql, function(err, result){
+            io.sockets.in(roomManager).emit('read scheduled', {
+                unread: result[0].unread
+            });
+        });
+    });
+
+    socket.on('complaint', function(){
+        var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
+        database.query(sql, function(err, result){
+            io.sockets.in(roomManager).emit('new complaint', {
+                unread: result[0].unread
+            });
+        });
+    });
     
     emitter.on('live map', function () {
         var sql = "SELECT serialNo FROM tbltag WHERE date >= CURRENT_DATE ORDER BY date DESC LIMIT 0, 1";
