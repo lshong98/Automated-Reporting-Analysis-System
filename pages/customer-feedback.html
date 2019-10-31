@@ -52,38 +52,57 @@
                 <!--Municipal Feedback-->
                 <div role="tabpanel" class="tab-pane fade show active" id="municipalFeedback"><br /><br />
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Company Rating</h5><br />
-                                    <div easypiechart options="options" percent="compRate" class="chart">
+                                    <!-- <div easypiechart options="options" percent="compRate" class="chart">
                                         {{reviews.compRate | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="municipal-comp-rate" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Team Efficiency</h5><br />
-                                    <div easypiechart options="options" percent="teamEff" class="chart">
+                                    <!-- <div easypiechart options="options" percent="teamEff" class="chart">
                                         {{reviews.teamEff | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="municipal-team-eff" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                    </div> 
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Collection Promptness</h5><br />
-                                    <div easypiechart options="options" percent="collPrompt" class="chart">
+                                    <!-- <div easypiechart options="options" percent="collPrompt" class="chart">
                                         {{reviews.collPrompt | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="municipal-coll-prompt" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Bin Handling</h5><br />
+                                    <!-- <div easypiechart options="options" percent="binHand" class="chart">
+                                        {{reviews.binHand | number:1}}
+                                    </div>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="municipal-bin-hand" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
@@ -91,38 +110,28 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
-                                <div class="card-body">
-                                    <h5>Bin Handling</h5><br />
-                                    <div easypiechart options="options" percent="binHand" class="chart">
-                                        {{reviews.binHand | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span>
-                                    <br />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Spillage Control</h5><br />
-                                    <div easypiechart options="options" percent="spillCtrl" class="chart">
+                                    <!-- <div easypiechart options="options" percent="spillCtrl" class="chart">
                                         {{reviews.spillCtrl | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="municipal-spill-ctrl" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Query Response</h5><br />
-                                    <div easypiechart options="options" percent="qryResp" class="chart">
+                                    <!-- <div easypiechart options="options" percent="qryResp" class="chart">
                                         {{reviews.qryResp | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="municipal-qry-resp" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
@@ -150,38 +159,28 @@
                 <!--Commercial Feedback-->
                 <div role="tabpanel" class="tab-pane fade" id="commercialFeedback"><br /><br />
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Company Rating</h5><br />
-                                    <div easypiechart options="options" percent="compRateCommercial" class="chart">
+                                    <!-- <div easypiechart options="options" percent="compRateCommercial" class="chart">
                                         {{reviewsCommercial.compRate | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="commercial-comp-rate" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Team Efficiency</h5><br />
-                                    <div easypiechart options="options" percent="teamEffCommercial" class="chart">
+                                    <!-- <div easypiechart options="options" percent="teamEffCommercial" class="chart">
                                         {{reviewsCommercial.teamEff | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
-                                    <br />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
-                                <div class="card-body">
-                                    <h5>Collection Promptness</h5><br />
-                                    <div easypiechart options="options" percent="collPromptCommercial" class="chart">
-                                        {{reviewsCommercial.collPrompt | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="commercial-team-eff" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
@@ -189,38 +188,57 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
-                                <div class="card-body">
-                                    <h5>Cleanliness</h5><br />
-                                    <div easypiechart options="options" percent="cleanliness" class="chart">
-                                        {{reviewsCommercial.cleanliness | number:1}}
+                            <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5>Collection Promptness</h5><br />
+                                            <!-- <div easypiechart options="options" percent="collPromptCommercial" class="chart">
+                                                {{reviewsCommercial.collPrompt | number:1}}
+                                            </div>
+                                            <span class="overall">Out of 3</span> -->
+                                            <div id="commercial-coll-prompt" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                            <br />
+                                        </div>
                                     </div>
-                                    <span class="overall">Out of 3</span>
-                                    <br />
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                                <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5>Cleanliness</h5><br />
+                                                <!-- <div easypiechart options="options" percent="cleanliness" class="chart">
+                                                    {{reviewsCommercial.cleanliness | number:1}}
+                                                </div>
+                                                <span class="overall">Out of 3</span> -->
+                                                <div id="commercial-cleanliness" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Physical Condition</h5><br />
-                                    <div easypiechart options="options" percent="physicalCond" class="chart">
+                                    <!-- <div easypiechart options="options" percent="physicalCond" class="chart">
                                         {{reviewsCommercial.physicalCond | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="commercial-physical-cond" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card" style="width: 20rem">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Query Response</h5><br />
-                                    <div easypiechart options="options" percent="qryRespCommercial" class="chart">
+                                    <!-- <div easypiechart options="options" percent="qryRespCommercial" class="chart">
                                         {{reviewsCommercial.qryResp | number:1}}
                                     </div>
-                                    <span class="overall">Out of 3</span>
+                                    <span class="overall">Out of 3</span> -->
+                                    <div id="commercial-qry-resp" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
@@ -248,38 +266,28 @@
                 <!--Scheduled Feedback-->
                 <div role="tabpanel" class="tab-pane fade" id="scheduledFeedback"><br /><br />
                     <div class="row">
-                            <div class="col-md-4">
-                                <div class="card" style="width: 20rem">
+                            <div class="col-md-6">
+                                <div class="card">
                                     <div class="card-body">
                                         <h5>Company Rating</h5><br />
-                                        <div easypiechart options="options" percent="compRateScheduled" class="chart">
+                                        <!-- <div easypiechart options="options" percent="compRateScheduled" class="chart">
                                             {{reviewsScheduled.compRate | number:1}}
                                         </div>
-                                        <span class="overall">Out of 3</span>
+                                        <span class="overall">Out of 3</span> -->
+                                        <div id="scheduled-comp-rate" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                         <br />
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="card" style="width: 20rem">
+                            <div class="col-md-6">
+                                <div class="card">
                                     <div class="card-body">
                                         <h5>Team Efficiency</h5><br />
-                                        <div easypiechart options="options" percent="teamEffScheduled" class="chart">
+                                        <!-- <div easypiechart options="options" percent="teamEffScheduled" class="chart">
                                             {{reviewsScheduled.teamEff | number:1}}
                                         </div>
-                                        <span class="overall">Out of 3</span>
-                                        <br />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card" style="width: 20rem">
-                                    <div class="card-body">
-                                        <h5>Health Adherence</h5><br />
-                                        <div easypiechart options="options" percent="healthAdh" class="chart">
-                                            {{reviewsScheduled.healthAdh | number:1}}
-                                        </div>
-                                        <span class="overall">Out of 3</span>
+                                        <span class="overall">Out of 3</span> -->
+                                        <div id="scheduled-team-eff" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                         <br />
                                     </div>
                                 </div>
@@ -287,30 +295,48 @@
                         </div>
                         <br />
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="card" style="width: 20rem">
+                            <div class="col-md-6">
+                                <div class="card">
                                     <div class="card-body">
                                         <h5>Regulations Adherence</h5><br />
-                                        <div easypiechart options="options" percent="regAdh" class="chart">
+                                        <!-- <div easypiechart options="options" percent="regAdh" class="chart">
                                             {{reviewsScheduled.regAdh | number:1}}
                                         </div>
-                                        <span class="overall">Out of 3</span>
+                                        <span class="overall">Out of 3</span> -->
+                                        <div id="scheduled-reg-adh" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                         <br />
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="card" style="width: 20rem">
-                                    <div class="card-body">
-                                        <h5>Query Response</h5><br />
-                                        <div easypiechart options="options" percent="qryRespScheduled" class="chart">
-                                            {{reviewsScheduled.qryResp | number:1}}
+                            <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5>Health Adherence</h5><br />
+                                            <!-- <div easypiechart options="options" percent="healthAdh" class="chart">
+                                                {{reviewsScheduled.healthAdh | number:1}}
+                                            </div>
+                                            <span class="overall">Out of 3</span> -->
+                                            <div id="scheduled-health-adh" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                            <br />
                                         </div>
-                                        <span class="overall">Out of 3</span>
-                                        <br />
                                     </div>
                                 </div>
-                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                                <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5>Query Response</h5><br />
+                                                <!-- <div easypiechart options="options" percent="qryRespScheduled" class="chart">
+                                                    {{reviewsScheduled.qryResp | number:1}}
+                                                </div>
+                                                <span class="overall">Out of 3</span> -->
+                                                <div id="scheduled-qry-resp" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
                         </div>
                         <br /><br />
                         <div class="row">
