@@ -225,6 +225,7 @@
                       <input type="date" class="form-control" id="txtTo" data-ng-model="dcs.periodTo" />
                   </div>
               </div>
+            </div>
 
               <div class="row">
                 <div class="col-sm-6">
@@ -243,31 +244,15 @@
               
             </div>
             <div class="form-group">
-                <label for="txtCompany form-label">Company Name</label>
-                <select type="text" class="form-control" id="txtCompany" data-ng-model="acr.companyName" data-ng-change="filterAddress();">
-                        <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
+                <label for="txtCompany form-label">Area ID</label>
+                <select class="selectpicker" multiple>
+                  <option>Mustard</option>
+                  <option>Ketchup</option>
+                  <option>Relish</option>
                 </select>
+                
             </div>
-          <div class="form-group"> 
-            <label for="txtAddress form-label">Address</label>
-            <select type="text" class="form-control" id="txtAddress" data-ng-model="acr.customerID">
-                  <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
-              </select>
-          </div>
-          <div class="form-group">
-            <label for="txtBeBins form-label">BE Bins/Units</label> 
-            <input type="text" class="form-control" id="txtBeBins" data-ng-model="acr.beBins" />
-          </div>
-      
-          <div class="form-group">
-              <label for="txtAcrBins form-label">ACR Bins/Units</label>
-              <input type="text" class="form-control" id="txtAcrBins" data-ng-model="acr.acrBins" />
-          </div>
-          <div class="form-group">
-                  <label for="txtRemarks form-label">Remarks</label>
-                  <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="acr.remarks" />
-                </div>
-   
+          
           
           
           
@@ -278,11 +263,19 @@
       </div>
     </div>
   </div>
+  </div>
 </div>
 
 <div class="lg-view" data-ng-show="show.lgview == 'A'">
   <h1>LOGISTICS VIEW</h1>
-  <!-- <div class="modal fade" id="createDCS" tabindex="-1" role="dialog" aria-labelledby="createDCS" aria-hidden="true">
+  
+  <div class="row" id="createButton" data-ng-show="show.create == 'A'">
+    <div class="col-md-6">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createDcs" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
+        
+    </div>
+</div>
+ <!-- <div class="modal fade" id="createDCS" tabindex="-1" role="dialog" aria-labelledby="createDCS" aria-hidden="true"> 
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -339,7 +332,7 @@
         </div>
       </div>
     </div>
-  </div> -->
+  </div>  -->
   
   <div class="row">
       <div class="col-md-12">
@@ -375,7 +368,7 @@
         </div> 
     </div>
   </div>
-  <div class="row" style="" id="pagination">
+  <div class="row" id="pagination">
       <div class="col-md-12">
           <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
       </div>
@@ -384,7 +377,7 @@
 </div>
 
 <div class="bd-view" data-ng-show="show.bdview == 'A'">
-  <h1>BUSINESS DEVEOPMENT VIEW</h1>
+  <h1>BUSINESS DEVELOPMENT VIEW</h1>
 
 
 <div class="row" id="createButton" data-ng-show="show.create == 'A'">
