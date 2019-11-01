@@ -7,23 +7,35 @@
 
 // var database = require('./custom_modules/database-management');
 
+var variable = require('../variable');
+var emitter = variable.emitter;
+var express = variable.express;
+var app = express();
+var dateTime = variable.dateTime;
+var f = require('./function-management');
+var database = require('./database-management');
+var socket = require('./socket-management');
+var upload = variable.upload;
+var nodemailer = variable.nodemailer;
+var path = variable.path;
+var fs = variable.fs;
+var io = variable.io;
+
 // var mysql = require('mysql');
 // var bcrypt = require('bcryptjs');
 // var dateTime = require('node-datetime');
-var EventEmitter = require('events');
-var emitter = new EventEmitter();
-// var dateTime = require('node-datetime');
-var nodemailer = require('nodemailer');
 
-var express = require('express');
-var app = express();
-var dateTime = require('node-datetime');
-var f = require('./function-management');
-var database = require('./database-management');
-var upload = require('express-fileupload');
-var nodemailer = require('nodemailer');
-var path = require('path');
-var fs = require('fs');
+//var EventEmitter = require('events');
+//var emitter = new EventEmitter();
+//var express = require('express');
+//var app = express();
+//var dateTime = require('node-datetime');
+//var f = require('./function-management');
+//var database = require('./database-management');
+//var upload = require('express-fileupload');
+//var nodemailer = require('nodemailer');
+//var path = require('path');
+//var fs = require('fs');
 
 app.use(upload());
 app.use('/img', express.static(__dirname+'/img'));
@@ -427,6 +439,7 @@ app.post('/complaint', function (req, resp) {
                     }
                     database.query(sql, function (err, res) {
                         if (!err) {
+                            emitter.emit('new complaint from mobile');
                             resp.send("Complaint Submitted for Complaint ID " + complaintID);
                         } else {
                             resp.send("Failed to Submit");

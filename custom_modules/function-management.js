@@ -234,7 +234,7 @@ function menuItem(keyword, status) {
             }
         case "view formAuthorization":
             if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.formAuthorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/form-authorization"><i class="fas fa-clipboard-check"></i> Form Authorization <span class="authorization"></span></a></li>';
+                return '<li class="menu__item" data-ng-show="show.formAuthorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/form-authorization"><i class="fas fa-clipboard-check"></i> Form Authorization <span class="form-authorization"></span></a></li>';
             }
         case "view complaintlist": 
             if (status == 'A') {
