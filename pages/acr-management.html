@@ -183,9 +183,99 @@
     </div>
 </div>
 
+<div class="modal fade" id="createDcs" tabindex="-1" role="dialog" aria-labelledby="createDcs" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">New DCS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          
+          <div class="form-group">
+              <label for="txtBeBins form-label">DCS ID</label> 
+              <input type="text" class="form-control" id="txtDcsId" data-ng-model="dcs.dcsID" />
+            </div>
+            
+            <div class="form-group">
+              <label for="txtCompany form-label">Driver</label>
+              <select type="text" class="form-control" id="txtCompany" data-ng-model="dcs.driver">
+                      <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}}</option>
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="txtCompany form-label">Replacement Driver</label>
+            <select type="text" class="form-control" id="txtCompany" data-ng-model="dcs.replacementDriver">
+                    <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}}</option>
+            </select>
+        </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                  <div class="form-group">
+                      <label for="txtDcsPeriodFrom form-label">Period From</label>
+                      <input type="date" class="form-control" id="txtFrom" data-ng-model="dcs.periodFrom" />
+                  </div>
+              </div>
+              <div class="col-sm-6">
+                  <div class="form-group">
+                      <label for="txtDcsPeriodTo form-label">Period To</label>
+                      <input type="date" class="form-control" id="txtTo" data-ng-model="dcs.periodTo" />
+                  </div>
+              </div>
+            </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtDcsPeriodFrom form-label">Replacement Period From</label>
+                        <input type="date" class="form-control" id="txtFrom" data-ng-model="dcs.replacementPeriodFrom" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="txtDcsPeriodTo form-label">Replacement Period To</label>
+                        <input type="date" class="form-control" id="txtTo" data-ng-model="dcs.replacementPeriodTo" />
+                    </div>
+                </div>
+                
+              
+            </div>
+            <div class="form-group">
+                <label for="txtCompany form-label">Area ID</label>
+                <select class="selectpicker" multiple>
+                  <option>Mustard</option>
+                  <option>Ketchup</option>
+                  <option>Relish</option>
+                </select>
+                
+            </div>
+          
+          
+          
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-ng-click="addDcs();">Create</button>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
 <div class="lg-view" data-ng-show="show.lgview == 'A'">
   <h1>LOGISTICS VIEW</h1>
-  <!-- <div class="modal fade" id="createDCS" tabindex="-1" role="dialog" aria-labelledby="createDCS" aria-hidden="true">
+  
+  <div class="row" id="createButton" data-ng-show="show.create == 'A'">
+    <div class="col-md-6">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createDcs" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
+        
+    </div>
+</div>
+ <!-- <div class="modal fade" id="createDCS" tabindex="-1" role="dialog" aria-labelledby="createDCS" aria-hidden="true"> 
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -242,7 +332,7 @@
         </div>
       </div>
     </div>
-  </div> -->
+  </div>  -->
   
   <div class="row">
       <div class="col-md-12">
@@ -278,7 +368,7 @@
         </div> 
     </div>
   </div>
-  <div class="row" style="" id="pagination">
+  <div class="row" id="pagination">
       <div class="col-md-12">
           <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
       </div>
@@ -287,7 +377,7 @@
 </div>
 
 <div class="bd-view" data-ng-show="show.bdview == 'A'">
-  <h1>BUSINESS DEVEOPMENT VIEW</h1>
+  <h1>BUSINESS DEVELOPMENT VIEW</h1>
 
 
 <div class="row" id="createButton" data-ng-show="show.create == 'A'">

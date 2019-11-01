@@ -63,6 +63,32 @@ socket.on('new satisfaction', function (data) {
     }
 });
 
+    socket.on('read municipal', function (data) {
+        if (data.unread != 0) {
+            var unread = $('.satisfaction').html();
+            console.log(unread);
+            var remaining = parseInt(unread) - parseInt(data.unread);
+            console.log(remaining);
+            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+        }
+    });
+
+    socket.on('read commercial', function (data) {
+        if (data.unread > 0) {
+            var unread = $('.satisfaction').html();
+            var remaining = parseInt(unread) - parseInt(data.unread);
+            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+        }
+    });
+
+    socket.on('read scheduled', function (data) {
+        if (data.unread > 0) {
+            var unread = $('.satisfaction').html();
+            var remaining = parseInt(unread) - parseInt(data.unread);
+            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+        }
+    });
+
 socket.on('new complaint', function (data) {
     if (data.unread != 0) {
         $('.complaint').addClass("badge badge-danger").html(data.unread);
@@ -1325,30 +1351,197 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         });
     };
 
-    $scope.getCustFeedback = function () {
-        $http.get('/customerFeedback').then(function (response) {
+    // $scope.getMunicipalFeedback = function () {
+    //     socket.emit('municipal satisfaction');
+    //     $http.get('/customerFeedbackMunicipal').then(function (response) {
+    //         console.log(response.data);
+    //         $scope.reviews = response.data;
+    //         $scope.totalItems = response.data.length;
+    //         $scope.collPrompt = (response.data.collPrompt / 3) * 100;
+    //         $scope.compRate = (response.data.compRate / 3) * 100;
+    //         $scope.teamEff = (response.data.teamEff / 3) * 100;
+    //         $scope.binHand = (response.data.binHand / 3) * 100;
+    //         $scope.spillCtrl = (response.data.spillCtrl / 3) * 100;
+    //         $scope.qryResp = (response.data.qryResp / 3) * 100;
+
+    //         $scope.options = {
+    //             animate: {
+    //                 duration: 0,
+    //                 enabled: false
+    //             },
+    //             barColor: '#2C3E50',
+    //             scaleColor: false,
+    //             lineWidth: 20,
+    //             lineCap: 'circle'
+    //         };
+
+    //         $http.get('/readSatisfactionMunicipal').then(function (repsonse) {
+    //             console.log(response.data);
+    //         }, function (err) {
+    //             console.log(err);
+    //         });
+    //     }, function (err) {
+    //         console.log(err);
+    //     });
+
+    //     $http.get('/unreadSatisfaction').then(function(response){
+    //         $scope.unreadMunicipal = response.data.municipal;
+    //         $scope.unreadCommercial = response.data.commercial;
+    //         $scope.unreadScheduled = response.data.scheduled;
+    //     });
+    // };
+
+    $scope.getMunicipalFeedback = function () {
+        socket.emit('municipal satisfaction');
+        $http.get('/customerFeedbackMunicipal').then(function (response) {
             console.log(response.data);
             $scope.reviews = response.data;
             $scope.totalItems = response.data.length;
-            $scope.collPrompt = (response.data.collPrompt / 3) * 100;
-            $scope.compRate = (response.data.compRate / 3) * 100;
-            $scope.teamEff = (response.data.teamEff / 3) * 100;
-            $scope.binHand = (response.data.binHand / 3) * 100;
-            $scope.spillCtrl = (response.data.spillCtrl / 3) * 100;
-            $scope.qryResp = (response.data.qryResp / 3) * 100;
+            var collPromptUS = parseInt(response.data.collPromptUS);
+            var collPromptAvg = parseInt(response.data.collPromptAvg);
+            var collPromptS = parseInt(response.data.collPromptS);
 
-            $scope.options = {
-                animate: {
-                    duration: 0,
-                    enabled: false
+            var teamEffUS = parseInt(response.data.teamEffUS);
+            var teamEffAvg = parseInt(response.data.teamEffAvg);
+            var teamEffS = parseInt(response.data.teamEffS);
+
+            var compRateUS = parseInt(response.data.compRateUS);
+            var compRateAvg = parseInt(response.data.compRateAvg);
+            var compRateS = parseInt(response.data.compRateS);
+
+            var binHandUS = parseInt(response.data.binHandUS);
+            var binHandAvg = parseInt(response.data.binHandAvg);
+            var binHandS = parseInt(response.data.binHandS);
+
+            var spillCtrlUS = parseInt(response.data.spillCtrlUS);
+            var spillCtrlAvg = parseInt(response.data.spillCtrlAvg);
+            var spillCtrlS = parseInt(response.data.spillCtrlS);
+
+            var qryRespUS = parseInt(response.data.qryRespUS);
+            var qryRespAvg = parseInt(response.data.qryRespAvg);
+            var qryRespS = parseInt(response.data.qryRespS);
+
+            Highcharts.chart('municipal-coll-prompt', {
+                chart: {
+                    type: 'column'
                 },
-                barColor: '#2C3E50',
-                scaleColor: false,
-                lineWidth: 20,
-                lineCap: 'circle'
-            };
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [collPromptUS, collPromptAvg, collPromptS]
+                }]
+            });
 
-            $http.get('/readSatisfaction').then(function (repsonse) {
+            Highcharts.chart('municipal-comp-rate', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [compRateUS, compRateAvg, compRateS]
+                }]
+            });
+
+            Highcharts.chart('municipal-team-eff', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [teamEffUS, teamEffAvg, teamEffS]
+                }]
+            });
+
+            Highcharts.chart('municipal-bin-hand', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [binHandUS, binHandAvg, binHandS]
+                }]
+            });
+
+            Highcharts.chart('municipal-spill-ctrl', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [spillCtrlUS, spillCtrlAvg, spillCtrlS]
+                }]
+            });
+
+            Highcharts.chart('municipal-qry-resp', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [qryRespUS, qryRespAvg, qryRespS]
+                }]
+            });
+            
+            $http.get('/readSatisfactionMunicipal').then(function (repsonse) {
                 console.log(response.data);
             }, function (err) {
                 console.log(err);
@@ -1356,9 +1549,400 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         }, function (err) {
             console.log(err);
         });
+
+        $http.get('/unreadSatisfaction').then(function(response){
+            $scope.unreadMunicipal = response.data.municipal;
+            $scope.unreadCommercial = response.data.commercial;
+            $scope.unreadScheduled = response.data.scheduled;
+        });
     };
 
+    // $scope.getCommercialFeedback = function () {
+    //     socket.emit('commercial satisfaction');
+    //     $http.get('/customerFeedbackCommercial').then(function (response) {
+    //         console.log(response.data);
+    //         $scope.reviewsCommercial = response.data;
+    //         $scope.totalItemsCommercial = response.data.length;
+    //         $scope.collPromptCommercial = (response.data.collPrompt / 3) * 100;
+    //         $scope.compRateCommercial = (response.data.compRate / 3) * 100;
+    //         $scope.teamEffCommercial = (response.data.teamEff / 3) * 100;
+    //         $scope.cleanliness = (response.data.cleanliness / 3) * 100;
+    //         $scope.physicalCond = (response.data.physicalCond / 3) * 100;
+    //         $scope.qryRespCommercial = (response.data.qryResp / 3) * 100;
 
+    //         $scope.options = {
+    //             animate: {
+    //                 duration: 0,
+    //                 enabled: false
+    //             },
+    //             barColor: '#2C3E50',
+    //             scaleColor: false,
+    //             lineWidth: 20,
+    //             lineCap: 'circle'
+    //         };
+
+    //         $http.get('/readSatisfactionCommercial').then(function (repsonse) {
+    //             console.log(response.data);
+    //         }, function (err) {
+    //             console.log(err);
+    //         });
+    //     }, function (err) {
+    //         console.log(err);
+    //     });
+
+    //     $http.get('/unreadSatisfaction').then(function(response){
+    //         $scope.unreadMunicipal = response.data.municipal;
+    //         $scope.unreadCommercial = response.data.commercial;
+    //         $scope.unreadScheduled = response.data.scheduled;
+    //     });
+    // };
+
+    $scope.getCommercialFeedback = function () {
+        socket.emit('commercial satisfaction');
+        $http.get('/customerFeedbackCommercial').then(function (response) {
+            console.log(response.data);
+            $scope.reviewsCommercial = response.data;
+            $scope.totalItemsCommercial = response.data.length;
+            var collPromptUS = parseInt(response.data.collPromptUS);
+            var collPromptAvg = parseInt(response.data.collPromptAvg);
+            var collPromptS = parseInt(response.data.collPromptS);
+
+            var teamEffUS = parseInt(response.data.teamEffUS);
+            var teamEffAvg = parseInt(response.data.teamEffAvg);
+            var teamEffS = parseInt(response.data.teamEffS);
+
+            var compRateUS = parseInt(response.data.compRateUS);
+            var compRateAvg = parseInt(response.data.compRateAvg);
+            var compRateS = parseInt(response.data.compRateS);
+
+            var cleanlinessUS = parseInt(response.data.cleanlinessUS);
+            var cleanlinessAvg = parseInt(response.data.cleanlinessAvg);
+            var cleanlinessS = parseInt(response.data.cleanlinessS);
+
+            var physicalCondUS = parseInt(response.data.physicalCondUS);
+            var physicalCondAvg = parseInt(response.data.physicalCondAvg);
+            var physicalCondS = parseInt(response.data.physicalCondS);
+
+            var qryRespUS = parseInt(response.data.qryRespUS);
+            var qryRespAvg = parseInt(response.data.qryRespAvg);
+            var qryRespS = parseInt(response.data.qryRespS);
+
+            Highcharts.chart('commercial-coll-prompt', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [collPromptUS, collPromptAvg, collPromptS]
+                }]
+            });
+
+            Highcharts.chart('commercial-comp-rate', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [compRateUS, compRateAvg, compRateS]
+                }]
+            });
+
+            Highcharts.chart('commercial-team-eff', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [teamEffUS, teamEffAvg, teamEffS]
+                }]
+            });
+
+            Highcharts.chart('commercial-cleanliness', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [cleanlinessUS, cleanlinessAvg, cleanlinessS]
+                }]
+            });
+
+            Highcharts.chart('commercial-physical-cond', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [physicalCondUS, physicalCondAvg, physicalCondS]
+                }]
+            });
+
+            Highcharts.chart('commercial-qry-resp', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [qryRespUS, qryRespAvg, qryRespS]
+                }]
+            });
+            
+            $http.get('/readSatisfactionCommercial').then(function (repsonse) {
+                console.log(response.data);
+            }, function (err) {
+                console.log(err);
+            });
+        }, function (err) {
+            console.log(err);
+        });
+
+        $http.get('/unreadSatisfaction').then(function(response){
+            $scope.unreadMunicipal = response.data.municipal;
+            $scope.unreadCommercial = response.data.commercial;
+            $scope.unreadScheduled = response.data.scheduled;
+        });
+    };
+
+    // $scope.getScheduledFeedback = function () {
+    //     socket.emit('scheduled satisfaction');
+    //     $http.get('/customerFeedbackScheduled').then(function (response) {
+    //         console.log(response.data);
+    //         $scope.reviewsScheduled = response.data;
+    //         $scope.totalItemsScheduled = response.data.length;
+    //         $scope.compRateScheduled = (response.data.compRate / 3) * 100;
+    //         $scope.teamEffScheduled = (response.data.teamEff / 3) * 100;
+    //         $scope.healthAdh = (response.data.healthAdh / 3) * 100;
+    //         $scope.regAdh = (response.data.regAdh / 3) * 100;
+    //         $scope.qryRespScheduled = (response.data.qryResp / 3) * 100;
+
+    //         $scope.options = {
+    //             animate: {
+    //                 duration: 0,
+    //                 enabled: false
+    //             },
+    //             barColor: '#2C3E50',
+    //             scaleColor: false,
+    //             lineWidth: 20,
+    //             lineCap: 'circle'
+    //         };
+
+    //         $http.get('/readSatisfactionScheduled').then(function (repsonse) {
+    //             console.log(response.data);
+    //         }, function (err) {
+    //             console.log(err);
+    //         });
+    //     }, function (err) {
+    //         console.log(err);
+    //     });
+
+    //     $http.get('/unreadSatisfaction').then(function(response){
+    //         $scope.unreadMunicipal = response.data.municipal;
+    //         $scope.unreadCommercial = response.data.commercial;
+    //         $scope.unreadScheduled = response.data.scheduled;
+    //     });
+    // };
+
+    $scope.getScheduledFeedback = function () {
+        socket.emit('scheduled satisfaction');
+        $http.get('/customerFeedbackScheduled').then(function (response) {
+            console.log(response.data);
+            $scope.reviewsScheduled = response.data;
+            $scope.totalItemsScheduled = response.data.length;
+            var compRateUS = parseInt(response.data.compRateUS);
+            var compRateAvg = parseInt(response.data.compRateAvg);
+            var compRateS = parseInt(response.data.compRateS);
+
+            var teamEffUS = parseInt(response.data.teamEffUS);
+            var teamEffAvg = parseInt(response.data.teamEffAvg);
+            var teamEffS = parseInt(response.data.teamEffS);
+
+            var healthAdhUS = parseInt(response.data.healthAdhUS);
+            var healthAdhAvg = parseInt(response.data.healthAdhAvg);
+            var healthAdhS = parseInt(response.data.healthAdhS);
+
+            var regAdhUS = parseInt(response.data.regAdhUS);
+            var regAdhAvg = parseInt(response.data.regAdhAvg);
+            var regAdhS = parseInt(response.data.regAdhS);
+
+            var qryRespUS = parseInt(response.data.qryRespUS);
+            var qryRespAvg = parseInt(response.data.qryRespAvg);
+            var qryRespS = parseInt(response.data.qryRespS);
+
+            Highcharts.chart('scheduled-comp-rate', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [compRateUS, compRateAvg, compRateS]
+                }]
+            });
+
+            Highcharts.chart('scheduled-team-eff', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [teamEffUS, teamEffAvg, teamEffS]
+                }]
+            });
+
+            Highcharts.chart('scheduled-health-adh', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [healthAdhUS, healthAdhAvg, healthAdhS]
+                }]
+            });
+
+            Highcharts.chart('scheduled-reg-adh', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [regAdhUS, regAdhAvg, regAdhS]
+                }]
+            });
+
+            Highcharts.chart('scheduled-qry-resp', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: [
+                        'Not Satisfied',
+                        'Neutral',
+                        'Satisfied'
+                    ]
+                },
+                series: [{
+                    name: 'Customer Satisfaction',
+                    data: [qryRespUS, qryRespAvg, qryRespS]
+                }]
+            });
+            
+            $http.get('/readSatisfactionScheduled').then(function (repsonse) {
+                console.log(response.data);
+            }, function (err) {
+                console.log(err);
+            });
+        }, function (err) {
+            console.log(err);
+        });
+
+        $http.get('/unreadSatisfaction').then(function(response){
+            $scope.unreadMunicipal = response.data.municipal;
+            $scope.unreadCommercial = response.data.commercial;
+            $scope.unreadScheduled = response.data.scheduled;
+        });
+    };
 });
 
 app.controller('navigationController', function ($scope, $http, $window, storeDataService) {

@@ -467,29 +467,55 @@ app.post('/satisfaction', function (req, resp) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function () {
+    req.addListener('end', function () 
+	{
+		var satisfactionType = data.satisfactionType;
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
-        database.query(sqlUser, function (err, res) {
-            if (!err) {
+		
+        database.query(sqlUser, function (err, res) 
+		{
+            if (!err) 
+			{
                 userID = res[0].userID;
-                var sql = "INSERT INTO tblsatisfaction (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
+				var sql;
+				
+				if(satisfactionType == "municipal") 
+				{
+					sql = "INSERT INTO tblsatisfaction_municipal (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
+						userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+						"','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
+						data.extraComment + "','" + date + "','" + "u')";
+				} 
+				else if(satisfactionType == "commercial") 
+				{
+					sql = "INSERT INTO tblsatisfaction_commercial (userID, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
                     userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
-                    "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
-                    data.extraComment + "','" + date + "','u')";
+                    "','" + parseInt(data.cleanliness) + "','" + parseInt(data.physicalCondition) + "','" + parseInt(data.queryResponse) + "','" +
+                    data.extraComment + "','" + date + "','" + "u')";
+				} 
+				else if(satisfactionType == "scheduled") 
+				{
+					sql = "INSERT INTO tblsatisfaction_scheduled (userID, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
+                    userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.healthAdherence) + "','" + parseInt(data.regulationsAdherence) + "','" + parseInt(data.queryResponse) + "','" +
+                    data.extraComment + "','" + date + "','" + "u')";
+				}
 
-                database.query(sql, function (err, res) {
+                database.query(sql, function (err, res) 
+				{
                     if (!err) {
                         resp.send("Satisfaction Survey Submitted");
                     } else {
                         resp.send("Failed to Submit");
                     }
                 });
-            } else {
+            } 
+			else 
+			{
                 resp.send("error getting user id");
             }
         });
     });
-});    
+});     
 
 // app.post('/sendMessage', function(req, resp){ 
 //     'use strict';
