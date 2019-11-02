@@ -1,67 +1,67 @@
-app.directive('appFilereader', function($q) {
-    'use strict';
-    var slice = Array.prototype.slice;
-
-    return {
-        restrict: 'A',
-        require: '?ngModel',
-        link: function(scope, element, attrs, ngModel) {
-                if (!ngModel) { return; }
-
-                ngModel.$render = function() {};
-
-                element.bind('change', function(e) {
-                    var element;
-                    element = e.target;
-
-                    function readFile(file) {
-                        var deferred = $q.defer(),
-                            reader = new FileReader();
-
-                        reader.onload = function(e) {
-                            deferred.resolve(e.target.result);
-                        };
-                        reader.onerror = function(e) {
-                            deferred.reject(e);
-                        };
-                        reader.readAsDataURL(file);
-
-                        return deferred.promise;
-                    }
-
-                    $q.all(slice.call(element.files, 0).map(readFile))
-                        .then(function(values) {
-                            if (element.multiple) { ngModel.$setViewValue(values); } else { ngModel.$setViewValue(values.length ? values[0] : null); }
-                        });
-
-                }); //change
-
-            } //link
-    }; //return
-});
-app.directive("strToTime", function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, ngModelController) {
-            ngModelController.$parsers.push(function(data) {
-                if (!data)
-                    return "";
-                return ("0" + data.getHours().toString()).slice(-2) + ":" + ("0" + data.getMinutes().toString()).slice(-2);
-            });
-
-            ngModelController.$formatters.push(function(data) {
-                if (!data) {
-                    return null;
-                }
-                var d = new Date(1970, 1, 1);
-                var splitted = data.split(":");
-                d.setHours(splitted[0]);
-                d.setMinutes(splitted[1]);
-                return d;
-            });
-        }
-    };
-});
+//app.directive('appFilereader', function($q) {
+//    'use strict';
+//    var slice = Array.prototype.slice;
+//
+//    return {
+//        restrict: 'A',
+//        require: '?ngModel',
+//        link: function(scope, element, attrs, ngModel) {
+//                if (!ngModel) { return; }
+//
+//                ngModel.$render = function() {};
+//
+//                element.bind('change', function(e) {
+//                    var element;
+//                    element = e.target;
+//
+//                    function readFile(file) {
+//                        var deferred = $q.defer(),
+//                            reader = new FileReader();
+//
+//                        reader.onload = function(e) {
+//                            deferred.resolve(e.target.result);
+//                        };
+//                        reader.onerror = function(e) {
+//                            deferred.reject(e);
+//                        };
+//                        reader.readAsDataURL(file);
+//
+//                        return deferred.promise;
+//                    }
+//
+//                    $q.all(slice.call(element.files, 0).map(readFile))
+//                        .then(function(values) {
+//                            if (element.multiple) { ngModel.$setViewValue(values); } else { ngModel.$setViewValue(values.length ? values[0] : null); }
+//                        });
+//
+//                }); //change
+//
+//            } //link
+//    }; //return
+//});
+//app.directive("strToTime", function() {
+//    return {
+//        require: 'ngModel',
+//        link: function(scope, element, attrs, ngModelController) {
+//            ngModelController.$parsers.push(function(data) {
+//                if (!data)
+//                    return "";
+//                return ("0" + data.getHours().toString()).slice(-2) + ":" + ("0" + data.getMinutes().toString()).slice(-2);
+//            });
+//
+//            ngModelController.$formatters.push(function(data) {
+//                if (!data) {
+//                    return null;
+//                }
+//                var d = new Date(1970, 1, 1);
+//                var splitted = data.split(":");
+//                d.setHours(splitted[0]);
+//                d.setMinutes(splitted[1]);
+//                return d;
+//            });
+//        }
+//    };
+//});
 app.controller('dailyController', function($scope, $window, $routeParams, $http, $filter) {
     $scope.showSubmitBtn = true;
     'use strict';
@@ -241,8 +241,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
                 google.maps.event.addListener(circle, "center_changed", function() {
                     $.each(centerArray, function(index, value) {
                         if (circle.id == (index + 1)) {
-                            centerArray[index].lat = circle.getCenter().lat();
-                            centerArray[index].lng = circle.getCenter().lng();
+                            centerArray[index].cLat = circle.getCenter().lat();
+                            centerArray[index].cLong = circle.getCenter().lng();
+                            console.log(centerArray);
                         }
                     });
                 });
@@ -942,19 +943,21 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             $scope.forGetAcrInfo.todayday = "sun";
         }
         $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(response){
-            if (response.data.length != 0) {
-                $scope.thisReport.acr = response.data;
-            } else {
-                $scope.thisReport.acr = [];
-            }
-            $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-            $scope.acr = "";
-            $.each($scope.thisReport.acr, function(index, value) {
-                $scope.acr += value.name;
-                if ((index + 1) != $scope.acrRow) {
-                    $scope.acr += ', ';
+            if (response.data !== null) {
+                if (response.data.length > 0) {
+                    $scope.thisReport.acr = response.data;
+                } else {
+                    $scope.thisReport.acr = [];
                 }
-            });            
+                $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+                $scope.acr = "";
+                $.each($scope.thisReport.acr, function(index, value) {
+                    $scope.acr += value.name;
+                    if ((index + 1) != $scope.acrRow) {
+                        $scope.acr += ', ';
+                    }
+                });
+            }
         });
 
 
@@ -1152,8 +1155,8 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                             google.maps.event.addListener(circle, "center_changed", function() {
                                 $.each(centerArray, function(index, value) {
                                     if (circle.id == (index + 1)) {
-                                        centerArray[index].lat = circle.getCenter().lat();
-                                        centerArray[index].lng = circle.getCenter().lng();
+                                        centerArray[index].cLat = circle.getCenter().lat();
+                                        centerArray[index].cLong = circle.getCenter().lng();
                                     }
                                 });
                             });

@@ -2344,8 +2344,8 @@ app.controller('managerController', function ($scope, $http, $filter) {
     
     map = new google.maps.Map($googleMap, visualizeMap);
     
-    var myParser = new geoXML3.parser({map: map});
-    myParser.parse(src);
+//    var myParser = new geoXML3.parser({map: map});
+//    myParser.parse(src);
     
 
     //    $http.get('/getLngLat').then(function(response) {
