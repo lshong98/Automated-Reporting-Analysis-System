@@ -1,9 +1,9 @@
 <!-- ACR Modal -->
-<div class="modal fade" id="createBLOST" tabindex="-1" role="dialog" aria-labelledby="createBLOST" aria-hidden="true">
+<div class="modal fade" id="createDbr" tabindex="-1" role="dialog" aria-labelledby="createDbr" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Add BLOST</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">Add DBR</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="form-group">
                   <label for="txtBdafDate form-label">Date</label>
-                  <input type="date" class="form-control" id="txtBdafDate" data-ng-model="blost.date" />
+                  <input type="date" class="form-control" id="txtBdafDate" data-ng-model="dbr.creationDate" />
                 </div>
          
                 
@@ -20,11 +20,11 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="addBlost();">Create</button>
+              <button type="button" class="btn btn-primary" data-ng-click="addDbr();">Create</button>
             </div>
           </div>
         </div>
-      </div>
+</div>
 
       <div class="row">
             <div class="col-md-12">
@@ -50,7 +50,7 @@
                                                 <table class="table table-hover table-striped table-clickable">
                                                     <thead>
                                                         <tr>
-                                                            <th width="20%" data-ng-click="orderBy('blostID');">DBR ID <i class="fas fa-sort-down"></i></th>
+                                                            <th width="20%" data-ng-click="orderBy('dbrID');">DBR ID <i class="fas fa-sort-down"></i></th>
                                                             <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
                                                             <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
                                                             <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
@@ -59,13 +59,15 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>               
-                                                        <tr data-ng-repeat="b in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewBlost(b.id);">
-                                                            <td data-ng-bind="b.id"></td>
-                                                            <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
-                                                            <td data-ng-bind="b.preparedBy"></td>
-                                                            <td data-ng-bind="b.authorizedBy"></td>
-                                                            <td data-ng-bind="b.authorizedDate"></td>
-                                                            <td data-ng-bind="b.status"></td>
+                                                        <tr data-ng-repeat="d in dbrList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                                            <td data-ng-bind="d.id"></td>
+                                                            <td data-ng-bind="d.date | date: 'dd-MM-yyyy'"></td>
+                                                            <td data-ng-bind="d.preparedBy"></td>
+                                                            <td data-ng-bind="d.authorizedBy"></td>
+                                                            <td data-ng-bind="d.authorizedDate"></td>
+                                                            <td data-ng-bind="d.status"></td>
+                                                            <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle"
+                                                                data-ng-click="viewDbr(d.id);"></i></button></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

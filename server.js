@@ -32,10 +32,12 @@ var binInventoryManagement = require('./custom_modules/bin-inventory');
 var chatManagement = require('./custom_modules/chat-management');
 var deliveryManagement = require('./custom_modules/delivery-management');
 var damagedBin = require('./custom_modules/damaged-bin');
+var lostBin = require('./custom_modules/lost-bin');
 var boundaryManagement = require('./custom_modules/boundary-management');
 var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
 var custApp = require('./custom_modules/cust-app');
+
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json({limit: '50mb'}));
@@ -1022,3 +1024,4 @@ app.use('/', boundaryManagement);
 app.use('/', socketManagement);
 app.use('/', complaintManagement);
 app.use('/', custApp);
+app.use('/', lostBin);

@@ -117,6 +117,10 @@ app.get('/dbd-details/:dbdID', function (req, res) {
     'use strict'; 
     res.sendFile('pages/dbd-details.html', {root: __dirname});
 });
+app.get('/dbr-details/:dbrID', function (req, res) {
+    'use strict'; 
+    res.sendFile('pages/dbr-details.html', {root: __dirname});
+});
 app.get('/blost-details/:blostID', function (req, res) {
     'use strict';
     res.sendFile('pages/blost-details.html', {root: __dirname});

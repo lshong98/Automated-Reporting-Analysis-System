@@ -147,34 +147,34 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
-    socket.on('satisfaction form', function(){
-        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
-        var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
-        var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
-        var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
-        database.query(sql, function(err, result){
-            municipalUnread = result[0].unread;
-            database.query(sql2, function(err, result){
-                commercialUnread = result[0].unread;
-                database.query(sql3, function(err, result){
-                    scheduledUnread = result[0].unread;
-                    totalUnread = parseInt(municipalUnread) + parseInt(commercialUnread) + parseInt(scheduledUnread);
-                    io.sockets.in(roomManager).emit('new satisfaction', {
-                        unread: totalUnread
-                    });
-                });
-            });
-        });
-    });
+    // socket.on('satisfaction form', function(){
+    //     var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+    //     var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+    //     var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
+    //     var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
+    //     database.query(sql, function(err, result){
+    //         municipalUnread = result[0].unread;
+    //         database.query(sql2, function(err, result){
+    //             commercialUnread = result[0].unread;
+    //             database.query(sql3, function(err, result){
+    //                 scheduledUnread = result[0].unread;
+    //                 totalUnread = parseInt(municipalUnread) + parseInt(commercialUnread) + parseInt(scheduledUnread);
+    //                 io.sockets.in(roomManager).emit('new satisfaction', {
+    //                     unread: totalUnread
+    //                 });
+    //             });
+    //         });
+    //     });
+    // });
 
-    socket.on('municipal satisfaction', function(){
-        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
-        database.query(sql, function(err, result){
-            io.sockets.in(roomManager).emit('read municipal', {
-                unread: result[0].unread
-            });
-        });
-    });
+    // socket.on('municipal satisfaction', function(){
+    //     var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+    //     database.query(sql, function(err, result){
+    //         io.sockets.in(roomManager).emit('read municipal', {
+    //             unread: result[0].unread
+    //         });
+    //     });
+    // });
 
     socket.on('commercial satisfaction', function(){
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
@@ -303,14 +303,14 @@ io.sockets.on('connection', function (socket) {
     }
     
     //---
-    socket.on('complaint', function(){
-        var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
-        database.query(sql, function(err, result){
-            io.sockets.in(roomManager).emit('new complaint', {
-                unread: result[0].unread
-            });
-        });
-    });
+    // socket.on('complaint', function(){
+    //     var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
+    //     database.query(sql, function(err, result){
+    //         io.sockets.in(roomManager).emit('new complaint', {
+    //             unread: result[0].unread
+    //         });
+    //     });
+    // });
     
     emitter.on('customer to staff message', function (complaintID) {
         var sql = "SELECT content AS content, sender AS sender, recipient AS recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date FROM tblchat WHERE complaintID = '" + complaintID + "' ORDER BY creationDateTime DESC LIMIT 0, 1";

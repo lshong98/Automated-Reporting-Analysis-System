@@ -277,10 +277,22 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: function (params) {
-            return '/bdaf-details/' + params.dbdID;
+            return '/dbd-details/' + params.dbdID;
         },
         controller:'dbdDetailsController',
         controllerAs:'dbd'
+    })
+    .when('/dbr-details/:dbrID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/dbr-details/' + $route.current.params.dbrID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/dbr-details/' + params.dbrID;
+        },
+        controller:'dbrDetailsController',
+        controllerAs:'dbr'
     })
     .when('/blost-details/:blostID', {
         resolve: {
