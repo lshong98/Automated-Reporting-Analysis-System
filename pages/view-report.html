@@ -1,13 +1,15 @@
-<div class="row">
+<div class="row noprint">
     <div class="col-md-10"></div>
     <div class="col=md-1" data-ng-show="show.edit == 'A'">
         <button class="btn btn-md btn-success" data-ng-click="editReport()">Edit</button>
     </div>
     <div class="col-md-1" data-ng-show="show.export == 'A'">
-        <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
+<!--        <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>-->
+        <a href="javascript:window.print();$('#responsiveMenuContent').removeClass('col-md-9').addClass('col-md-12');" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
     </div>
 </div>
-<div id="nodeToRenderAsPDF" style="padding: 20px;">
+<!---->
+<div id="nodeToRenderAsPDF" style="padding-top: 20px;">
     <div class="row">
         <div class="col-md-12">
             <!--            <table class="table table-bordered">-->
