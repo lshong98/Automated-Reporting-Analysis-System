@@ -6,6 +6,21 @@ var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize',
 
 var socket = io.connect();
 var flag = false;
+
+function lobi_notify(type, title, content, avatar) {
+    var icon = false;
+    icon = avatar !== '' ? true : false;
+    
+    Lobibox.notify(type, {
+        pauseDelayOnHover: true,
+        continueDelayOnInactiveTab: false,
+        title: title,
+        msg: content,
+        img: avatar,
+        icon: icon
+    });
+}
+
 //var socket = io.connect('wss://trienekens.appspot.com:3000', {transports: ['websocket'], 'force new connection': true});
 socket.on('connect', function() {
     if (flag === true) {
@@ -22,22 +37,31 @@ socket.on('connect', function() {
         "user": window.sessionStorage.getItem('owner'),
         "position": window.sessionStorage.getItem('position')
     });
+    
+//    socket.emit('room', window.sessionStorage.getItem('owner'));
 
     if (window.sessionStorage.getItem('position') == "Manager" || window.sessionStorage.getItem('position') == "Administrator") {
         socket.emit('room', "manager");
     }
+});
 
-    socket.on('receive authorize action', function (data) {
-        if (data.num > 0) {
-            $('.authorization').addClass("badge badge-danger").html(data.num);
-        }
-    });
+socket.on('receive authorize action', function (data) {
+    if (data.num > 0) {
+        $('.authorization').addClass("badge badge-danger").html(data.num);
+    }
+});
 
-    socket.on('new satisfaction', function (data) {
-        if (data.unread > 0) {
-            $('.satisfaction').addClass("badge badge-danger").html(data.unread);
-        }
-    });
+socket.on('receive form authorize action', function (data) {
+    if (data.num > 0) {
+        $('.form-authorization').addClass("badge badge-danger").html(data.num);
+    }
+});
+
+socket.on('new satisfaction', function (data) {
+    if (data.unread != 0) {
+        $('.satisfaction').addClass("badge badge-danger").html(data.unread);
+    }
+});
 
     socket.on('read municipal', function (data) {
         if (data.unread != 0) {
@@ -65,21 +89,20 @@ socket.on('connect', function() {
         }
     });
 
-    socket.on('new complaint', function (data) {
-        if (data.unread != 0) {
-            $('.complaint').addClass("badge badge-danger").html(data.unread);
-        }
-    });
+socket.on('new complaint', function (data) {
+    if (data.unread != 0) {
+        $('.complaint').addClass("badge badge-danger").html(data.unread);
+    }
+});
 
-    socket.on('receive report notification', function (data) {
-        Lobibox.notify('info', {
-            pauseDelayOnHover: true,
-            continueDelayOnInactiveTab: false,
-            title: 'Daily Report',
-            msg: data.name + ' have submitted a new report ' + data.id,
-            img: data.avatar
-        });
-    });
+socket.on('receive report notification', function (data) {
+    var content = data.name + ' have submitted a new report ' + data.id;
+    lobi_notify('info', 'Daily Report', content, data.avatar);
+});
+
+socket.on('new complaint to web', function (data) {
+    var content = data.premise;
+    lobi_notify('info', 'New Complaint', content, '');
 });
 
 socket.on('disconnect', function () {
@@ -1979,6 +2002,12 @@ app.controller('managerController', function ($scope, $http, $filter) {
     'use strict';
 
     $scope.markerList = [];
+    var daily_time = [24, 0, 0];
+    var cur_time = $filter('date')(new Date(), 'HH:mm:ss');
+    var cur_time_in_arr = cur_time.split(':');
+    var diff_hour, diff_min, diff_sec;
+    var flag_hour, flag_min, flag_sec;
+    var seconds, mili_sec;
 
     //date configuration
     var currentDate = new Date();
@@ -2318,13 +2347,6 @@ app.controller('managerController', function ($scope, $http, $filter) {
     var myParser = new geoXML3.parser({map: map});
     myParser.parse(src);
     
-//    kmlLayer = new google.maps.KmlLayer(src, {
-//          suppressInfoWindows: true,
-//          preserveViewport: false,
-//          map: map
-//        });
-//    kmlLayer.setMap(map);
-    
 
     //    $http.get('/getLngLat').then(function(response) {
     //        $scope.lnglatlist = response.data;
@@ -2387,6 +2409,36 @@ app.controller('managerController', function ($scope, $http, $filter) {
             marker.setMap(map);
             $scope.markerList.push(marker);
         });
+        
+        diff_hour = (daily_time[0] - parseInt(cur_time_in_arr[0], 10));
+        diff_min = (daily_time[1] - parseInt(cur_time_in_arr[1], 10));
+        diff_sec = (daily_time[2] - parseInt(cur_time_in_arr[2], 10));
+
+        seconds = (+diff_hour) * 60 * 60 + (+diff_min) * 60 + (+diff_sec);
+        mili_sec = (seconds * 1000);
+        
+        var noti_mili_sec = (mili_sec - 30000);
+        
+        setTimeout(function () {
+            lobi_notify('info', 'Reset Live Map', 'Live Map Indicator is going to reset after 30 seconds.', '');
+        }, noti_mili_sec);
+
+        setTimeout(function () {
+            $.each(data, function (key, value) {
+                coordinate.lat = value.latitude;
+                coordinate.lng = value.longitude;
+                dot.url = '../styles/mapmarkers/rd.png';
+
+                marker = new google.maps.Marker({
+                    id: value.serialNo,
+                    position: coordinate,
+                    icon: dot
+                });
+                marker.setMap(map);
+                $scope.markerList.push(marker);
+            });
+        }, mili_sec);
+        
     });
 
     socket.on('synchronize map', function (data) {
@@ -6439,6 +6491,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             $('.chat-box').animate({
                 scrollTop: $('.chat-box')[0].scrollHeight
             }, 1000);
+            lobi_notify('info', 'You received a new message.', 'from complaint', '');
         });
 
         //initialize email subject and text
