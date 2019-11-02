@@ -4516,6 +4516,18 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
         "date": formatDateDash(today)
     }
 
+    var getAreaList = function () {
+        $http.post('/getAreaList').then(function (response) {
+            $scope.areaList = response.data;
+            console.log($scope.areaList);
+
+            $scope.areaButton = true;
+            $scope.dcs.areaCode = [];
+            window.alert("called")
+
+        });
+    }
+    
     function getAllDcs() {
         $http.post('/completeDcs', $scope.currentStatus).then(function (response) {
 
@@ -4545,9 +4557,37 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
             $scope.driverList = response.data;
         });
 
+        getAreaList();
 
     }
     getAllDcs(); //call
+
+    
+
+    $scope.area = '';
+    $scope.assignArea = function (areaCode, index) {
+        $scope.areaButton = false;
+
+        $scope.dcs.areaCode.push(areaCode.areaCode);
+        $scope.areaList.splice(index, 1);
+
+        if ($scope.area == '') {
+            $scope.area = areaCode.areaCode;
+        } else {
+            $scope.area = $scope.generalWorkers.concat(", ", areaCode.areaCode);
+        }
+
+    }
+
+    $scope.clearArea = function () {
+        $scope.generalWorkerButton = true;
+
+        $scope.dcs.areaList = [];
+        $scope.area = '';
+
+
+        getAreaList();
+    }
 
     $scope.filterArea = function () {
 
@@ -4855,6 +4895,7 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
     $scope.dcs = {};
 
 
+
     $scope.test = {
         "id": "sdfs",
         "info": "info"
@@ -5032,9 +5073,7 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
         });
 
         $http.post('/getAreaList').then(function (response) {
-//console.log(response.data);
             $scope.areaList = response.data;
-            //console.log($scope.areaList);
         });
 
         $http.post('/getStaffList', {
@@ -5045,10 +5084,16 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
 
         $scope.driverButton = true;
         $scope.replacementDriverButton = true;
-    }
 
+        
+        window.alert("called")
+    }
     
     $scope.getDcsDetails();
+
+    
+
+    
 
     $scope.assignDriver = function (d) {
         $scope.driverButton = false;

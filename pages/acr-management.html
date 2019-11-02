@@ -225,7 +225,7 @@
                       <input type="date" class="form-control" id="txtTo" data-ng-model="dcs.periodTo" />
                   </div>
               </div>
-            </div>
+            </div> 
 
               <div class="row">
                 <div class="col-sm-6">
@@ -244,13 +244,15 @@
               
             </div>
             <div class="form-group">
-                <label for="txtCompany form-label">Area ID</label>
-                <select class="selectpicker" multiple>
-                  <option>Mustard</option>
-                  <option>Ketchup</option>
-                  <option>Relish</option>
-                </select>
-                
+              <label>Area Code</label>
+            </br>
+              <span>{{dcs.areaCode}}</span><span id="buttons">
+                <button ng-show="!areaButton" class="btn btn-sm btn-danger" ng-click="clearAreaButton();"> <i class="fas fa-times"></i></button>
+                <button class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i></button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" data-ng-repeat="a in areaList"
+                        ng-click="assignArea(a);">{{a.areaCode}}</a>
+                </div>
             </div>
           
           
