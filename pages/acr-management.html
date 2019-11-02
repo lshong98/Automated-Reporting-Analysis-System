@@ -201,13 +201,13 @@
             
             <div class="form-group">
               <label for="txtCompany form-label">Driver</label>
-              <select type="text" class="form-control" id="txtCompany" data-ng-model="dcs.driver">
+              <select type="text" class="form-control" id="txtCompany" data-ng-model="dcs.driverID">
                       <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}}</option>
               </select>
           </div>
           <div class="form-group">
             <label for="txtCompany form-label">Replacement Driver</label>
-            <select type="text" class="form-control" id="txtCompany" data-ng-model="dcs.replacementDriver">
+            <select type="text" class="form-control" id="txtCompany" data-ng-model="dcs.replacementDriverID">
                     <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}}</option>
             </select>
         </div>
