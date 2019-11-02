@@ -57,7 +57,7 @@ app.post('/getBlostDetails', function(req,res){
     console.log(req.body);
 
     
-    var sql = "SELECT b.blostID, c.name as contactPerson, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, c.contactNumber as contactNo, a.areaID, db.size, db.serialNo, b.sharedBin, b.dateOfLoss, b.reasonForLoss from tblcustomer as c inner join tblwheelbindatabase as wbd on c.customerID = wbd.customerID innerjoin tblbins as db on wbd.serialNo = db.serialNo inner join tblblostentry as b on b.serialNo = db.serialNo inner join tblarea as a on db.areaID = a.areaID where b.blostID = '" + req.body.id + "'";
+    var sql = "SELECT b.blostID, c.name as contactPerson, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, c.contactNumber as contactNo, wbd.areaID, db.size, db.serialNo, b.sharedBin, b.dateOfLoss, b.reason from tblcustomer as c inner join tblwheelbindatabase as wbd on c.customerID = wbd.customerID inner join tblbins as db on wbd.serialNo = db.serialNo inner join tblblostentry as b on b.serialNo = db.serialNo where b.blostID = '" + req.body.id + "'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     console.log(sql);
     database.query(sql, function (err, result) {
@@ -72,14 +72,7 @@ app.post('/getBlostDetails', function(req,res){
 
 app.post('/addBlostEntry',function(req,res){ 
     'use strict';
-    //console.log("DCS ID: " + req.body.dcsID);
-    if(req.body.binDelivered == ''){
-        req.body.binDelivered = null; 
-    }
 
-    if(req.body.binPulled == ''){
-        req.body.binPulled = null;
-    }
     var sql = "INSERT INTO tblblostentry (idNo, blostID, customerID, serialNo, sharedBin, dateOfLoss, reasonForLoss, status) VALUE ('" + null + "', '" + req.body.blostID + "' , '"  + req.body.customerID + "', '"  + req.body.serialNo + "', '" + req.body.sharedBin + "', '" + req.body.dateOfLoss + "', '" + req.body.reasonForLoss + "', '" + req.body.status + "')";
     database.query(sql, function (err, result) {
         if (err) {

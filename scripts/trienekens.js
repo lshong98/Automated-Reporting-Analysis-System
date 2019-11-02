@@ -4575,7 +4575,6 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
 
             $scope.areaButton = true;
             $scope.dcs.areaCode = [];
-            window.alert("called")
 
         });
     }
@@ -7639,6 +7638,87 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
     }
 
 
+});
+
+app.controller('lostBinController', function ($scope, $http, $filter, storeDataService) {
+    'use strict';
+
+    $scope.blostList = [];
+    console.log("LOST BIN MANAGEMENT ACTIVATED!!");
+
+    $scope.viewblost = function(blostID) {
+        window.location.href = '#/blost-details/' + blostID;
+    }
+
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+
+
+
+    $scope.show = angular.copy(storeDataService.show.lostBin);
+
+
+    $scope.currentStatus = {
+        "status": true
+    }
+
+
+    function getAllBlost() {
+        $http.post('/getAllBlost', $scope.currentStatus).then(function (response) {
+            $scope.searchAcrFilter = '';
+            $scope.blostList = response.data;
+
+            console.log("BLOST data received by controller");
+            console.log(response.data);
+        });
+    }
+    
+    getAllBlost();
+
+    $scope.statusList = true;
+    $scope.updateStatusList = function () {
+        if ($scope.statusList) {
+            $scope.currentStatus.status = true;
+        } else {
+            $scope.currentStatus.status = false;
+        }
+        getAllDcs(); //call
+    }
+
+    $scope.addBlost = function () {
+        var position = window.sessionStorage.getItem('owner');
+        console.log(position);
+        $scope.blost.preparedBy = position;
+        $scope.blost.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addBlost', $scope.blost).then(function (response) {
+            var returnedData = response.data;
+            var newBlostID = returnedData.details.blostID;
+            var today = new Date();
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "BLOST added successfully!"
+                });
+
+                //     var area = $('.selectpicker option:selected').text();
+                //    var areastr = area.split(" ")[2];
+                //                console.log(areastr);
+                $scope.blostList.push({
+                    "id": newBlostID,
+                    "creationDateTime": today,
+                    "preparedBy": $scope.blost.preparedBy,
+                    "authorizedBy": $scope.blost.authorizedBy,
+                    "authorizedDate": $scope.blost.authorizedDate,
+                    "status": 'ACTIVE'
+                });
+                // $scope.filterAcrList = angular.copy($scope.acrList);
+                angular.element('#createBLOST').modal('toggle');
+                // $scope.totalItems = $scope.filterAcrList.length;
+            }
+        });
+    }
 });
 
 app.controller('blostDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {

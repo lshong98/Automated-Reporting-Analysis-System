@@ -3,8 +3,8 @@ var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 
-// ACR Management
-app.post('/addBlost',function(req,res){
+// ADD
+app.post('/addDbr',function(req,res){
     'use strict';
     console.log("HELLO FROM THE SERVER");
     f.makeID("blost", req.body.creationDate).then(function (ID) {
@@ -19,7 +19,26 @@ app.post('/addBlost',function(req,res){
         });
     });
 }); // Complete
-app.post('/getAllBlost', function(req,res){
+
+app.post('/addDbd',function(req,res){
+    'use strict';
+    console.log("HELLO FROM THE SERVER");
+    f.makeID("blost", req.body.creationDate).then(function (ID) {
+        
+        var sql = "INSERT INTO tblblost (blostID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.preparedBy +  "', 'A')";
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+
+            res.json({"status": "success", "message": "BLOST created!", "details": {"blostID": ID}});
+        });
+    });
+}); // Complete
+
+
+// GET ALL
+app.post('/getAllDbr', function(req,res){
     'use strict';
     var sql = "SELECT blostID, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, status from tblblost";
         
@@ -38,7 +57,29 @@ app.post('/getAllBlost', function(req,res){
     });  
 });
 
-app.post('/getBdafDetails', function(req,res){
+app.post('/getAllDbd', function(req,res){
+    'use strict';
+    var sql = "SELECT blostID, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, status from tblblost";
+        
+    if(req.body.status){
+        sql += " WHERE status = 'A'";
+    }else{
+        sql += " WHERE status = 'I'";
+    }
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+        res.json(result);
+        console.log("GET ALL BLOST: " + result);
+    });  
+});
+
+
+
+
+app.post('/getDbrDetails    ', function(req,res){
     'use strict';
     console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
     console.log(req.body);
