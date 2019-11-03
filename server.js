@@ -173,7 +173,7 @@ app.get('/getPendingBinRequest', function (req, res) {
 
     var sql = "", output = [], i = 0;
     
-    sql = "SELECT reqID, requestDate, binType, reason, remarks, tblbinrequest.status, CONCAT(houseNo, ' ', streetNo, ', ', postCode, ' ', city, ', ', State) AS address, contactNumber FROM tblbinrequest JOIN tbluser WHERE tblbinrequest.userID = tbluser.userID";
+    sql = "SELECT * FROM tblbinrequest";
     database.query(sql, function (err, result) {
         if(result!=undefined){
             for (i = 0; i < result.length; i += 1) {
@@ -183,6 +183,18 @@ app.get('/getPendingBinRequest', function (req, res) {
             res.json(output);
             res.end();
         }
+    });
+});
+
+app.post('/getBinReqDetail', function (req, res) {
+    'use strict';
+    var sql = "SELECT * FROM tblbinrequest WHERE reqID = '" + req.body.id + "'";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
     });
 });
 
