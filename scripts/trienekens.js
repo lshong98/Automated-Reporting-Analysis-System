@@ -6322,7 +6322,7 @@ app.controller('taskAuthorizationController', function ($scope, $window, $http, 
             var data = response.data;
             angular.element('body').overhang({
                 type: data.status,
-                "message": data.message
+                "message": data.message 
             });
             $scope.notify(data.status, data.message);
 
@@ -7758,8 +7758,8 @@ app.controller('lostBinController', function ($scope, $http, $filter, storeDataS
 
     $scope.statusList = true;
     $scope.updateStatusList = function () {
-        if ($scope.statusList) {
-            $scope.currentStatus.status = true;
+        if ($scope.statusList) { 
+            $scope.currentStatus.status = true;  
         } else {
             $scope.currentStatus.status = false;
         }

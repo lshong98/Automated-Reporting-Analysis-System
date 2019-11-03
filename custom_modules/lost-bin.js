@@ -9,10 +9,10 @@ app.post('/addBlost',function(req,res){
     console.log("HELLO FROM THE SERVER");
     f.makeID("blost", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tblblost (blostID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.preparedBy +  "', 'A')";
+        var sql = "INSERT INTO tblblost (blostID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.preparedBy +  "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
-                throw err;
+                throw err; 
             }
 
             res.json({"status": "success", "message": "BLOST created!", "details": {"blostID": ID}});
