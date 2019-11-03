@@ -74,7 +74,7 @@ function makeID(keyword, creationDate) {
     case "blost":
         table = "tblblost";
         property = "blostID";
-        header = "BLOST";
+        header = "BST";
         break;
     case "customer":
         table = "tblcustomer";
