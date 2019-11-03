@@ -328,7 +328,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
     
     'use strict';
     var data, sql;
-    var date = dateTime.create().format('Y-m-d H:M:S');
+    var date = dateTime.create().format('Y-m-d H-M-S');
 
     data = JSON.parse(req.rawBody);
     sql = "UPDATE tblbinrequest SET reqImg ='BinReqImg/BinRequest_" + data.cID + "_" + date.toString() +".jpg' WHERE reqID =" + data.cID + "";
@@ -1413,7 +1413,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
 
     'use strict';
     var data, sql;
-    var date = dateTime.create().format('Y-m-d H:M:S');
+    var date = dateTime.create().format('Y-m-d H-M-S');
 
     data = JSON.parse(req.rawBody);
     sql = "UPDATE tblcomplaint SET complaintImg ='complaintImg/ComplaintCase_" + data.cID + "_" + date.toString() + ".jpg' WHERE complaintID =" + data.cID + "";

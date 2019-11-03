@@ -1206,7 +1206,8 @@ app.run(function ($rootScope) {
 app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http, $window) {
     $scope.loggedUser = localStorage.getItem('user');
     $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 5; //Record number each page
+    $scope.itemsPerPage = 3; //Record number each page
+    $scope.itemsPerPageBinReq = 10;
     $scope.maxSize = 8; //Show the number in page
 
     $scope.sendNotifToDevice = function () {
@@ -1323,6 +1324,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         $http.get('/getPendingBinRequest').then(function (response) {
             console.log(response.data);
             $scope.pendingBinRequests = response.data;
+            $scope.totalItemsBinReq = response.data.length;
+            $scope.searchRequestFilter = '';
         }, function (error) {
             console.log(error);
         });
@@ -1401,7 +1404,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         $http.get('/customerFeedbackMunicipal').then(function (response) {
             console.log(response.data);
             $scope.reviews = response.data;
-            $scope.totalItems = response.data.length;
+            $scope.totalItems = response.data.comments.length;
+            console.log($scope.totalItems);
             var collPromptUS = parseInt(response.data.collPromptUS);
             var collPromptAvg = parseInt(response.data.collPromptAvg);
             var collPromptS = parseInt(response.data.collPromptS);
@@ -1607,7 +1611,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         $http.get('/customerFeedbackCommercial').then(function (response) {
             console.log(response.data);
             $scope.reviewsCommercial = response.data;
-            $scope.totalItemsCommercial = response.data.length;
+            $scope.totalItemsCommercial = response.data.comments.length;
             var collPromptUS = parseInt(response.data.collPromptUS);
             var collPromptAvg = parseInt(response.data.collPromptAvg);
             var collPromptS = parseInt(response.data.collPromptS);
@@ -1812,7 +1816,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         $http.get('/customerFeedbackScheduled').then(function (response) {
             console.log(response.data);
             $scope.reviewsScheduled = response.data;
-            $scope.totalItemsScheduled = response.data.length;
+            $scope.totalItemsScheduled = response.data.comments.length;
             var compRateUS = parseInt(response.data.compRateUS);
             var compRateAvg = parseInt(response.data.compRateAvg);
             var compRateS = parseInt(response.data.compRateS);
