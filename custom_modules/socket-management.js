@@ -1,7 +1,7 @@
-var express = require('express');
-var app = express();
 var variable = require('../variable');
 var database = require('./database-management');
+var express = variable.express;
+var app = express();
 var emitter = variable.emitter;
 var io = variable.io;
 
@@ -41,12 +41,20 @@ Array.prototype.pushIfNotExist = function (element, comparer) {
     }
 };
 
-function searchSocketID(userKey, myArray){
-    for (var i=0; i < myArray.length; i++) {
+function searchSocketID(userKey, myArray) {
+    'use strict';
+    var i = 0;
+    
+    for (i = 0; i < myArray.length; i += 1) {
         if (myArray[i].user === userKey) {
             return myArray[i];
         }
     }
+}
+
+function updateUsernames() {
+    'use strict';
+    io.sockets.emit('get users', users);
 }
 //------------------------------------------------------------------------------------------
 
@@ -147,7 +155,7 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
-    socket.on('satisfaction form', function(){
+    socket.on('satisfaction form', function () {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
         var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
         var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
@@ -187,7 +195,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('scheduled satisfaction', function(){
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
-        database.query(sql, function(err, result){
+        database.query(sql, function(err, result) {
             io.sockets.in(roomManager).emit('read scheduled', {
                 unread: result[0].unread
             });
@@ -297,10 +305,6 @@ io.sockets.on('connection', function (socket) {
         users.push(socket.username);
         updateUsernames();
     });
-    
-    function updateUsernames() {
-        io.sockets.emit('get users', users);
-    }
     
     //---
     // socket.on('complaint', function(){
