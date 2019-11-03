@@ -67,6 +67,7 @@ app.post('/editZone', function (req, res) {
     'use strict';
     
     var dt = dateTime.create().format('Y-m-d H:M:S');
+    req.body.status = req.body.status === 'ACTIVE' ? 'A' : 'I';
     var sql = "UPDATE tblzone SET zoneCode = '" + req.body.code + "', zoneName = '" + req.body.name + "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '" + req.body.id + "'";
     
     f.sendForAuthorization(dt, req.body.iam, "update", "Update zone", req.body.id, "tblzone", "\"" + sql + "\"");

@@ -77,6 +77,8 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "collectionDate": '',
         "startTime": '',
         "endTime": '',
+        "format_startTime": '',
+        "format_endTime": '',
         "truck": '',
         "driver": '',
         "ton": '',
@@ -325,8 +327,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         $scope.showSubmitBtn = false;
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.report.collectionDate = $filter('date')($scope.colDate, 'yyyy-MM-dd');
-        $scope.report.startTime = $filter('date')($scope.report.startTime, 'HH:mm:ss');
-        $scope.report.endTime = $filter('date')($scope.report.endTime, 'HH:mm:ss');
+        $scope.report.format_startTime = $filter('date')($scope.report.startTime, 'HH:mm:ss');
+        $scope.report.format_endTime = $filter('date')($scope.report.endTime, 'HH:mm:ss');
+        
 
         if ($scope.report.collectionDate == "" || $scope.report.collectionDate == null) {
             $scope.notify("error", "Collection Date Cannot Be Blank");
@@ -1295,8 +1298,8 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             $scope.showEditBtn = true;
         } else{
             $scope.editField.date = $filter('date')($scope.editField.date, 'yyyy-MM-dd');
-            $scope.editField.startTime = $filter('date')($scope.editField.startTime, 'HH:mm:ss');
-            $scope.editField.endTime = $filter('date')($scope.editField.endTime, 'HH:mm:ss');
+            $scope.editField.format_startTime = $filter('date')($scope.editField.startTime, 'HH:mm:ss');
+            $scope.editField.format_endTime = $filter('date')($scope.editField.endTime, 'HH:mm:ss');
             if ($scope.editField.ton == "" || $scope.editField.ton == null) {
                 $scope.editField.ton = 0;
             }
