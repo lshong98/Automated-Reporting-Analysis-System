@@ -3,18 +3,18 @@ var mysql = require('mysql');
 var bcrypt = require('bcryptjs');
 var dateTime = require('node-datetime');
 var EventEmitter = require('events');
-var emitter = new EventEmitter();
+var emitter = new EventEmitter(); 
 
-var DB_HOST = process.env.DATABASE_HOST || '192.168.64.2';
-var DB_USER = process.env.DATABASE_USER || 'username';
-var DB_PASS = process.env.DATABASE_PASSWORD || 'password';
-var DB_NAME = process.env.DATABASE_NAME || 'dbtrienekens';
+var DB_HOST = process.env.DATABASE_HOST || 'localhost';
+var DB_USER = process.env.DATABASE_USER || 'root';
+var DB_PASS = process.env.DATABASE_PASSWORD || '';
+var DB_NAME = process.env.DATABASE_NAME || 'trienekens';
  
 var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3307,
+    port: 3306,
     timezone: 'utc'
 };
 

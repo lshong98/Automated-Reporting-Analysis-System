@@ -5787,6 +5787,7 @@ app.controller('inventoryBinController', function ($scope, $http, $filter, store
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
+    $scope.dateList = [];
 
     var today = formatDate(new Date());
 
@@ -6110,7 +6111,60 @@ app.controller('inventoryBinController', function ($scope, $http, $filter, store
         $scope.yearMonth = startMonth;
     });
 
+    function getDates(mySQLDate, endDate) {
 
+        var dateParts = mySQLDate.split("-");
+        var startDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2].substr(0,2));
+   
+        startDate.setDate(startDate.getDate()+2)
+        endDate.setDate(endDate.getDate()+1);
+
+      
+        var dates = [],
+            currentDate = startDate,
+            addDays = function(days) {
+              var date = new Date(this.valueOf());
+              date.setDate(date.getDate() + days);
+              return date;
+            };
+        while (currentDate <= endDate) {
+          dates.push(currentDate); 
+          currentDate = addDays.call(currentDate, 1);
+        }
+        
+        var i = 0;
+        var date = '';
+        
+        console.log(dates);
+        for(i = 0; i <= dates.length; i++){
+
+            $scope.date = {};
+            date = dates[i].toISOString().slice(0, 19).replace('T', ' ');
+            $scope.date.date = date;
+            console.log($scope.date.date);
+
+    
+            $http.post('/insertDate', $scope.date).then(function (response) {
+                
+           
+            });
+            
+            
+        }
+      };
+ 
+
+    $http.get('/getAllDates').then(function (response) {
+        $scope.dateList = response.data;
+        console.log($scope.dateList)
+        
+       
+        var today = new Date();
+        getDates($scope.dateList[$scope.dateList.length - 1].date, today);
+
+    });
+
+    
 
 
     var headers = {
