@@ -280,32 +280,41 @@ app.post('/insertNotif', function (req, resp) {
 app.post('/binRequest', function (req, resp) {
     'use strict';
     var data;
-    var userID;
+    var userID, name, contactNumber, companyName;
     var date = dateTime.create().format('Y-m-d');
-
+	var reqID = 0;
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
     req.addListener('end', function () {
-        console.log(data);
-        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
+        var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
+                name = res[0].name;
+                contactNumber = res[0].contactNumber;
+                if(res[0].companyName != null || res[0].companyName != undefined || res[0].companyName != ""){
+                    companyName = res[0].companyName;
+                }else{
+                    companyName = "";
+                }
                 console.log("user id: " + userID);
-                var insertSql = "INSERT INTO tblbinrequest(userID,requestDate,binType,reason,remarks,status) VALUES('" + userID + "','" + date + "','" + data.binType + "','" + data.reason + "','" + data.remarks + "','" + data.status + "')";
+                if(data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != ""){
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status) VALUES('" + userID + "','" + date + "','" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "')";
+                }else{
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status) VALUES('" + userID + "','" + date + "','" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "')";
+                }
+                
                 database.query(insertSql, function (err, res) {
                     if (!err) {
                         var sqlRequestID = "SELECT MAX(reqID) AS max FROM tblbinrequest";
                         database.query(sqlRequestID, function (err, res) {
-                            var reqID = res[0].max;
+                            reqID = res[0].max;
                             resp.send("Submit Request Successfully " + reqID);
                         });
-						
                     } else {
-                        resp.send("Failed to Submit Request");
-                        console.log(err);
+                        resp.send("Failed to Submit Request"+err);
                     }
                 });
             } else {
@@ -319,13 +328,14 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
     
     'use strict';
     var data, sql;
+    var date = dateTime.create().format('Y-m-d H:M:S');
 
     data = JSON.parse(req.rawBody);
-    sql = "UPDATE tblbinrequest SET reqImg ='BinReqImg/BinRequest_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+    sql = "UPDATE tblbinrequest SET reqImg ='BinReqImg/BinRequest_" + data.cID + "_" + date.toString() +".jpg' WHERE reqID =" + data.cID + "";
     console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
-    fs.writeFile(__dirname + '/../images/BinReqImg/BinRequest_' + data.cID + '.jpg', Buffer.from(data.BinReqImage, 'base64'), function (err) {
+    fs.writeFile(__dirname + '/../images/BinReqImg/BinRequest_' + data.cID + '_' + date.toString() +'.jpg', Buffer.from(data.BinReqImage, 'base64'), function (err) {
         if (err) {
             console.log(err);
         } else {
@@ -340,6 +350,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
         }
     });
 });
+
 app.post('/getSchedule', function (req, resp) {
     'use strict';
 
@@ -1402,13 +1413,14 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
 
     'use strict';
     var data, sql;
+    var date = dateTime.create().format('Y-m-d H:M:S');
 
     data = JSON.parse(req.rawBody);
-    sql = "UPDATE tblcomplaint SET complaintImg ='complaintImg/ComplaintCase_" + data.cID + ".jpg' WHERE complaintID =" + data.cID + "";
+    sql = "UPDATE tblcomplaint SET complaintImg ='complaintImg/ComplaintCase_" + data.cID + "_" + date.toString() + ".jpg' WHERE complaintID =" + data.cID + "";
     console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
-    fs.writeFile(__dirname + '/../images/complaintImg/ComplaintCase_' + data.cID + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
+    fs.writeFile(__dirname + '/../images/complaintImg/ComplaintCase_' + data.cID + '_' + date.toString() + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
         if (err) {
             console.log(err);
         } else {

@@ -189,13 +189,13 @@ app.get('/upload-image-carousel', function (req, res) {
     'use strict';
     res.sendFile('pages/upload_img.html', {root: __dirname});
 });
-app.get('/approve-app-user', function (req, res) {
-    'use strict';
-    res.sendFile('pages/approveUser.html', {root: __dirname});
-});
-app.get('/approve-bin-request', function (req, res) {
+app.get('/manage-bin-request', function (req, res) {
     'use strict';
     res.sendFile('pages/approve-bin-request.html', {root: __dirname});
+});
+app.get('/bin-request-detail/:reqID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bin-request-detail.html', {root: __dirname});
 });
 app.get('/bin-collection-schedule', function (req, res) {
     'use strict';

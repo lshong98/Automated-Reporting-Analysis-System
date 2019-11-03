@@ -904,21 +904,21 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             angular.element('.selectpicker').selectpicker('render');
         };
 
-        scope.saveBinRequestStatus = function (status, id) {
-            scope.showBinRequest = !scope.showBinRequest;
+        // scope.saveBinRequestStatus = function (status, id) {
+        //     scope.showBinRequest = !scope.showBinRequest;
 
-            scope.thisBinRequest = {
-                "status": status,
-                "id": id
-            };
+        //     scope.thisBinRequest = {
+        //         "status": status,
+        //         "id": id
+        //     };
 
-            $http.post('/updateBinRequest', scope.thisBinRequest).then(function (response) {
-                var data = response.data;
-                console.log(data);
-            }, function (error) {
-                console.log(error);
-            });
-        };
+        //     $http.post('/updateBinRequest', scope.thisBinRequest).then(function (response) {
+        //         var data = response.data;
+        //         console.log(data);
+        //     }, function (error) {
+        //         console.log(error);
+        //     });
+        // };
 
         scope.cancelBinRequestStatus = function () {
             scope.showBinRequest = !scope.showBinRequest;
@@ -1340,6 +1340,11 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         }, function (error) {
             console.log(error);
         });
+    };
+
+    $scope.binReqDetail = function (reqID) {
+        window.location.href = '#/bin-request-detail/' + reqID;
+
     };
 
     $scope.getAreas = function () {
@@ -1941,6 +1946,48 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             $scope.unreadMunicipal = response.data.municipal;
             $scope.unreadCommercial = response.data.commercial;
             $scope.unreadScheduled = response.data.scheduled;
+        });
+    };
+});
+
+app.controller('binReqDetailCtrl', function($scope, $http, $routeParams){
+    'use strict';
+    $scope.req = {
+        'id': $routeParams.reqID
+    };
+
+    $http.post('/getBinReqDetail', $scope.req).then(function(response){
+        var request = response.data;
+        $scope.reqDetail = {
+            'name':request[0].name,
+            'companyName':request[0].companyName,
+            'address':request[0].requestAddress,
+            'companyAddress':request[0].companyAddress,
+            'reason':request[0].reason,
+            'remarks':request[0].remarks,
+            'type':request[0].type,
+            'contactNumber':request[0].contactNumber,
+            'status':request[0].status,
+            'img':request[0].reqImg,
+            'reqDate':request[0].requestDate,
+            'reqID':request[0].reqID
+        };
+    });
+
+    $scope.saveBinRequestStatus = function (status, id) {
+        //scope.showBinRequest = !scope.showBinRequest;
+
+        $scope.thisBinRequest = {
+            "status": status,
+            "id": id
+        };
+
+        $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
+            var data = response.data;
+            alert('Status Updated');
+            console.log(data);
+        }, function (error) {
+            console.log(error);
         });
     };
 });
@@ -4574,8 +4621,7 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
             console.log($scope.areaList);
 
             $scope.areaButton = true;
-            $scope.dcs.areaCode = [];
-
+            $scope.dcsList.areaCode = [];
         });
     }
     
@@ -4619,13 +4665,13 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
     $scope.assignArea = function (areaCode, index) {
         $scope.areaButton = false;
 
-        $scope.dcs.areaCode.push(areaCode.areaCode);
+        $scope.dcsList.areaCode.push(areaCode.areaCode);
         $scope.areaList.splice(index, 1);
 
         if ($scope.area == '') {
             $scope.area = areaCode.areaCode;
         } else {
-            $scope.area = $scope.generalWorkers.concat(", ", areaCode.areaCode);
+            $scope.area = $scope.area.concat(", ", areaCode.areaCode);
         }
 
     }
@@ -4633,7 +4679,7 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
     $scope.clearArea = function () {
         $scope.generalWorkerButton = true;
 
-        $scope.dcs.areaList = [];
+        $scope.dcsList.areaList = [];
         $scope.area = '';
 
 

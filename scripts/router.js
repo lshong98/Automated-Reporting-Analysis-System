@@ -462,16 +462,6 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
-    .when('/approve-app-user', {
-        resolve: {
-            "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/approve-app-user');
-            }
-        },
-        templateUrl: '/approve-app-user',
-        controller: 'custServiceCtrl',
-        controllerAs:'custService'
-    })
     .when('/bin-collection-schedule', {
         resolve: {
             "check": function (routingService, $window, $location) {
@@ -482,15 +472,27 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
-    .when('/approve-bin-request', {
+    .when('/manage-bin-request', {
         resolve: {
             "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/approve-bin-request');
+                return routingService.auth($window, $location, '/manage-bin-request');
             }
         },
-        templateUrl: '/approve-bin-request',
+        templateUrl: '/manage-bin-request',
         controller: 'custServiceCtrl',
         controllerAs:'custService'
+    })
+    .when('/bin-request-detail/:reqID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/bin-request-detail/' + $route.current.params.reqID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/bin-request-detail/' + params.reqID;
+        },
+        controller: 'binReqDetailCtrl',
+        controllerAs: 'binReqDetail'
     })
     .when('/customer-feedback', {
         resolve: {

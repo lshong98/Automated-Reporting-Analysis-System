@@ -245,9 +245,9 @@
             </div>
             <div class="form-group">
               <label>Area Code</label>
-            </br>
-              <span>{{dcs.areaCode}}</span><span id="buttons">
-                <button ng-show="!areaButton" class="btn btn-sm btn-danger" ng-click="clearAreaButton();"> <i class="fas fa-times"></i></button>
+            <br />
+                <span>{{area}}</span><span id="buttons"></span>
+                <button ng-show="!areaButton" class="btn btn-sm btn-danger" ng-click="clearArea();"> <i class="fas fa-times"></i></button>
                 <button class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i></button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" data-ng-repeat="a in areaList"
@@ -403,11 +403,11 @@
                         <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
                         <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
                         <th width="5%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('Mon');">Mon</i></th>
-                        <th width="5%" data-ng-click="orderBy('Tue');">Tue</i></th>
-                        <th width="5%" data-ng-click="orderBy('Wed');">Wed</i></th>
-                        <th width="5%" data-ng-click="orderBy('Thu');">Thu</i></th>
-                        <th width="5%" data-ng-click="orderBy('Fri');">Fri</i></th>
+                        <th width="5%" data-ng-click="orderBy('Mon');">Mon</th>
+                        <th width="5%" data-ng-click="orderBy('Tue');">Tue</th>
+                        <th width="5%" data-ng-click="orderBy('Wed');">Wed</th>
+                        <th width="5%" data-ng-click="orderBy('Thu');">Thu</th>
+                        <th width="5%" data-ng-click="orderBy('Fri');">Fri</th>
                         <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
                         <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
                         <th width="7%" id="editButtons" data-ng-show="show.edit == 'A'"></th>
