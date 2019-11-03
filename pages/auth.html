@@ -512,32 +512,61 @@ input:checked + .slider:before {
         <div class="col-md-6">
             <div class="card">
                 <!-- Default panel contents -->
-                <div class="card-header">Damaged & Lost Bin Management</div>
+                <div class="card-header">Damaged Bin Management</div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         Create Forms
                         <label class="switch">
-                            <input type="checkbox" class="primary" data-ng-model="auth.damagedlost.create" data-ng-change="changeValue(auth.damagedlost.create, 'create damagedlost');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <input type="checkbox" class="primary" data-ng-model="auth.damagedBin.create" data-ng-change="changeValue(auth.damagedBin.create, 'create damagedBin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                             <span class="slider"></span>
                         </label>
                     </li>
                     <li class="list-group-item">
                         Edit Forms
                         <label class="switch">
-                            <input type="checkbox" class="primary" data-ng-model="auth.damagedlost.edit" data-ng-change="changeValue(auth.damagedlost.edit, 'edit damagedlost');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <input type="checkbox" class="primary" data-ng-model="auth.damagedBin.edit" data-ng-change="changeValue(auth.damagedBin.edit, 'edit damagedBin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                             <span class="slider"></span>
                         </label>
                     </li>
                     <li class="list-group-item">
                         View Forms
                         <label class="switch">
-                            <input type="checkbox" class="primary" data-ng-model="auth.damagedlost.view" data-ng-change="changeValue(auth.damagedlost.view, 'view damagedlost');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <input type="checkbox" class="primary" data-ng-model="auth.damagedBin.view" data-ng-change="changeValue(auth.damagedBin.view, 'view damagedBin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                             <span class="slider"></span>
                         </label>
                     </li>
                 </ul>
             </div> 
         </div>
+        <div class="col-md-6">
+                <div class="card">
+                    <!-- Default panel contents -->
+                    <div class="card-header">Lost Bin Management</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Create Forms
+                            <label class="switch">
+                                <input type="checkbox" class="primary" data-ng-model="auth.lostBin.create" data-ng-change="changeValue(auth.lostBin.create, 'create lostBin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                                <span class="slider"></span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            Edit Forms
+                            <label class="switch">
+                                <input type="checkbox" class="primary" data-ng-model="auth.lostBin.edit" data-ng-change="changeValue(auth.lostBin.edit, 'edit lostBin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                                <span class="slider"></span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            View Forms
+                            <label class="switch">
+                                <input type="checkbox" class="primary" data-ng-model="auth.lostBin.view" data-ng-change="changeValue(auth.lostBin.view, 'view lostBin');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                                <span class="slider"></span>
+                            </label>
+                        </li>
+                    </ul>
+                </div> 
+            </div>
 
         <div class="col-md-6">
             <div class="card">
@@ -575,7 +604,35 @@ input:checked + .slider:before {
                 </ul>
             </div> 
         </div>
-        
+        <div class="col-md-6">
+            <div class="card">
+                <!-- Default panel contents -->
+                <div class="card-header">Complaint Made by Officer</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Create Complaint
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.create" data-ng-change="changeValue(auth.complaintofficer.create, 'create complaintofficer');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        View Complaint
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.view" data-ng-change="changeValue(auth.complaintofficer.view, 'view complaintofficer');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Edit Complaint
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.edit" data-ng-change="changeValue(auth.complaintofficer.edit, 'edit complaintofficer');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
+                </ul>
+            </div> 
+        </div>        
 
     
 </div>

@@ -31,22 +31,22 @@
                 <div class="form-group">
                     <label for="txtAcrBins form-label">Collection Area</label>
                     <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.areaID">
-                        <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaID}}</option>
+                        <option data-ng-repeat="a in areaList" value={{a.areaCode}}>{{a.areaCode}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                   <label for="txtAreaCode form-label">Serial No.</label>
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.acrID">
+                  <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.serialNo">
                         <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label">Date of Loss</label>
-                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="blostEntry.dateOfLoss" />
+                    <input type="date" class="form-control" id="txtRemarks" data-ng-model="blostEntry.dateOfLoss" />
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label">Reason of Loss</label>
-                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="blostEntry.reasonForLoss" />
+                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="blostEntry.reason" />
                 </div>
     
          
@@ -56,7 +56,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="addblostEntry();">Create</button>
+              <button type="button" class="btn btn-primary" data-ng-click="addBlostEntry();">Create</button>
             </div>
           </div>
         </div>
@@ -125,71 +125,41 @@
                                     <th width="5%" data-ng-click="orderBy('serialNo');">Serial No. <i class="fas fa-sort-down"></i></th>
                                     <th width="5%" data-ng-click="orderBy('sharedBin');">Shared Bin <i class="fas fa-sort-down"></i></th>
                                     <th width="10%" data-ng-click="orderBy('dateOfLoss');">Date of Loss <i class="fas fa-sort-down"></i></th>
-                                    <th width="10%" data-ng-click="orderBy('reasonForLoss');">Reason for Loss <i class="fas fa-sort-down"></i></th>
+                                    <th width="10%" data-ng-click="orderBy('reason');">Reason for Loss <i class="fas fa-sort-down"></i></th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>               
                                     <tr data-ng-repeat="b in blostDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.customerName" data-ng-show="!showBlostDetails" /> 
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.customerName"></span>
-                                                </div>
+                                            <span data-ng-bind="b.contactPerson"></span>
                                         </td>
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.company" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.company"></span>
-                                                    </div>
+                                            <span data-ng-bind="b.companyName"></span>
                                         </td>
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.address" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.address"></span>
-                                                    </div>
+                                            <span data-ng-bind="b.address"></span>
                                         </td>
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.phoneNo" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.phoneNo"></span>
-                                                    </div>
+                                            <span data-ng-bind="b.contactNo"></span>
                                         </td>
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.collectionArea" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.collectionArea"></span>
-                                                    </div>
+                                            <span data-ng-bind="b.areaCode"></span>
                                         </td>
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.binSize"></span>
-                                                    </div>
+                                            <span data-ng-bind="b.size"></span>
                                         </td>   
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.serialNo" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.serialNo"></span>
-                                                    </div>
+                                            <span data-ng-bind="b.serialNo"></span>
                                         </td>       
-                                        <td>    
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.sharedBin" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.sharedBin"></span>
-                                                    </div>
+                                        <td>   
+                                            <span data-ng-bind="b.sharedBin"></span>
                                         </td>
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.dateOfLoss" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.dateOfLoss"></span>
-                                                    </div>
+                                            <span data-ng-bind="b.dateOfLoss | date: 'dd-MM-yyyy'"></span>
                                         </td>
                                         <td>
-                                                <div editable>
-                                                        <input type="text" class="form-control" data-ng-model="b.reasonForLoss" data-ng-show="!showBlostDetails" />
-                                                        <span data-ng-show="showBlostDetails" data-ng-bind="b.reasonForLoss"></span>
-                                                    </div>
+                                            <span data-ng-bind="b.reason"></span>
                                         </td>
                                         
                                     </tr>

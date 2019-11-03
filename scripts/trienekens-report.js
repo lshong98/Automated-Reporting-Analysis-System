@@ -1,67 +1,67 @@
-app.directive('appFilereader', function($q) {
-    'use strict';
-    var slice = Array.prototype.slice;
-
-    return {
-        restrict: 'A',
-        require: '?ngModel',
-        link: function(scope, element, attrs, ngModel) {
-                if (!ngModel) { return; }
-
-                ngModel.$render = function() {};
-
-                element.bind('change', function(e) {
-                    var element;
-                    element = e.target;
-
-                    function readFile(file) {
-                        var deferred = $q.defer(),
-                            reader = new FileReader();
-
-                        reader.onload = function(e) {
-                            deferred.resolve(e.target.result);
-                        };
-                        reader.onerror = function(e) {
-                            deferred.reject(e);
-                        };
-                        reader.readAsDataURL(file);
-
-                        return deferred.promise;
-                    }
-
-                    $q.all(slice.call(element.files, 0).map(readFile))
-                        .then(function(values) {
-                            if (element.multiple) { ngModel.$setViewValue(values); } else { ngModel.$setViewValue(values.length ? values[0] : null); }
-                        });
-
-                }); //change
-
-            } //link
-    }; //return
-});
-app.directive("strToTime", function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attrs, ngModelController) {
-            ngModelController.$parsers.push(function(data) {
-                if (!data)
-                    return "";
-                return ("0" + data.getHours().toString()).slice(-2) + ":" + ("0" + data.getMinutes().toString()).slice(-2);
-            });
-
-            ngModelController.$formatters.push(function(data) {
-                if (!data) {
-                    return null;
-                }
-                var d = new Date(1970, 1, 1);
-                var splitted = data.split(":");
-                d.setHours(splitted[0]);
-                d.setMinutes(splitted[1]);
-                return d;
-            });
-        }
-    };
-});
+//app.directive('appFilereader', function($q) {
+//    'use strict';
+//    var slice = Array.prototype.slice;
+//
+//    return {
+//        restrict: 'A',
+//        require: '?ngModel',
+//        link: function(scope, element, attrs, ngModel) {
+//                if (!ngModel) { return; }
+//
+//                ngModel.$render = function() {};
+//
+//                element.bind('change', function(e) {
+//                    var element;
+//                    element = e.target;
+//
+//                    function readFile(file) {
+//                        var deferred = $q.defer(),
+//                            reader = new FileReader();
+//
+//                        reader.onload = function(e) {
+//                            deferred.resolve(e.target.result);
+//                        };
+//                        reader.onerror = function(e) {
+//                            deferred.reject(e);
+//                        };
+//                        reader.readAsDataURL(file);
+//
+//                        return deferred.promise;
+//                    }
+//
+//                    $q.all(slice.call(element.files, 0).map(readFile))
+//                        .then(function(values) {
+//                            if (element.multiple) { ngModel.$setViewValue(values); } else { ngModel.$setViewValue(values.length ? values[0] : null); }
+//                        });
+//
+//                }); //change
+//
+//            } //link
+//    }; //return
+//});
+//app.directive("strToTime", function() {
+//    return {
+//        require: 'ngModel',
+//        link: function(scope, element, attrs, ngModelController) {
+//            ngModelController.$parsers.push(function(data) {
+//                if (!data)
+//                    return "";
+//                return ("0" + data.getHours().toString()).slice(-2) + ":" + ("0" + data.getMinutes().toString()).slice(-2);
+//            });
+//
+//            ngModelController.$formatters.push(function(data) {
+//                if (!data) {
+//                    return null;
+//                }
+//                var d = new Date(1970, 1, 1);
+//                var splitted = data.split(":");
+//                d.setHours(splitted[0]);
+//                d.setMinutes(splitted[1]);
+//                return d;
+//            });
+//        }
+//    };
+//});
 app.controller('dailyController', function($scope, $window, $routeParams, $http, $filter) {
     $scope.showSubmitBtn = true;
     'use strict';
@@ -77,6 +77,8 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "collectionDate": '',
         "startTime": '',
         "endTime": '',
+        "format_startTime": '',
+        "format_endTime": '',
         "truck": '',
         "driver": '',
         "ton": '',
@@ -241,8 +243,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
                 google.maps.event.addListener(circle, "center_changed", function() {
                     $.each(centerArray, function(index, value) {
                         if (circle.id == (index + 1)) {
-                            centerArray[index].lat = circle.getCenter().lat();
-                            centerArray[index].lng = circle.getCenter().lng();
+                            centerArray[index].cLat = circle.getCenter().lat();
+                            centerArray[index].cLong = circle.getCenter().lng();
+                            console.log(centerArray);
                         }
                     });
                 });
@@ -302,7 +305,21 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             map.setZoom(13);
         }, 1000);
         }else{
-            $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+            $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");     
+                var $googleMap = document.getElementById('googleMap');
+
+                var visualizeMap = {
+                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: false,
+                    panControl: false,
+                    zoomControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: true,
+                    editable: false,
+                    zoom: 13
+                };
+                map = new google.maps.Map($googleMap, visualizeMap);
         }         
     });
 
@@ -310,6 +327,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         $scope.showSubmitBtn = false;
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.report.collectionDate = $filter('date')($scope.colDate, 'yyyy-MM-dd');
+        $scope.report.format_startTime = $filter('date')($scope.report.startTime, 'HH:mm:ss');
+        $scope.report.format_endTime = $filter('date')($scope.report.endTime, 'HH:mm:ss');
+        
 
         if ($scope.report.collectionDate == "" || $scope.report.collectionDate == null) {
             $scope.notify("error", "Collection Date Cannot Be Blank");
@@ -799,7 +819,21 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
                 }, 1000);
             
             }else{
-                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
+                var $googleMap = document.getElementById('googleMap');
+
+                var visualizeMap = {
+                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: false,
+                    panControl: false,
+                    zoomControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: true,
+                    editable: false,
+                    zoom: 13
+                };
+                map = new google.maps.Map($googleMap, visualizeMap);
             }               
         });
 
@@ -860,17 +894,62 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             }, 1000);
         });
 
-        $http.post('/getPeriodForReportACR', $scope.thisReport).then(function(response){
-            
-            $scope.infoForGetACR = {
-                "periodFrom" : response.data[0].periodFrom,
-                "periodTo" : response.data[0].periodTo,
-                "area" : $scope.thisReport.area,
-                "driverID" : $scope.thisReport.driverID
-            };
-            
-            $http.post('/getReportACR', $scope.infoForGetACR).then(function(response) {
-                if (response.data.length != 0) {
+//        $http.post('/getPeriodForReportACR', $scope.thisReport).then(function(response){
+//            if(response.data != null){
+//                $scope.infoForGetACR = {
+//                    "periodFrom" : response.data[0].periodFrom,
+//                    "periodTo" : response.data[0].periodTo,
+//                    "area" : $scope.thisReport.area,
+//                    "driverID" : $scope.thisReport.driverID
+//                };
+//                
+//
+//                $http.post('/getReportACR', $scope.infoForGetACR).then(function(response) {
+//                    if (response.data.length != 0) {
+//                        $scope.thisReport.acr = response.data;
+//                    } else {
+//                        $scope.thisReport.acr = [];
+//                    }
+//                    $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+//                    $scope.acr = "";
+//                    $.each($scope.thisReport.acr, function(index, value) {
+//                        $scope.acr += value.name;
+//                        if ((index + 1) != $scope.acrRow) {
+//                            $scope.acr += ', ';
+//                        }
+//                    });
+//                });     
+//            }
+//
+//        });
+        
+        $scope.forGetAcrInfo = $scope.thisReport;
+        $scope.forGetAcrInfo.todayday = "";
+        var d = new Date($scope.thisReport.date);
+        var n = d.getDay();
+        if(n == 1){
+            $scope.forGetAcrInfo.todayday = "mon";
+        }
+        else if(n == 2){
+            $scope.forGetAcrInfo.todayday = "tue";
+        }
+        else if(n == 3){
+            $scope.forGetAcrInfo.todayday = "wed";
+        }
+        else if(n == 4){
+            $scope.forGetAcrInfo.todayday = "thu";
+        }
+        else if(n == 5){
+            $scope.forGetAcrInfo.todayday = "fri";
+        }
+        else if(n == 6){
+            $scope.forGetAcrInfo.todayday = "sat";
+        }else if(n == 0){
+            $scope.forGetAcrInfo.todayday = "sun";
+        }
+        $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(response){
+            if (response.data !== null) {
+                if (response.data.length > 0) {
                     $scope.thisReport.acr = response.data;
                 } else {
                     $scope.thisReport.acr = [];
@@ -883,9 +962,8 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
                         $scope.acr += ', ';
                     }
                 });
-            });            
+            }
         });
-        
 
 
         $scope.editReport = function() {
@@ -934,6 +1012,24 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         $scope.area = {
             "areaID": response.data[0].area
         };
+        $scope.startFormat = new Date();
+        $scope.startSplit = $scope.editField.startTime.split(":");
+        $scope.startFormat.setHours($scope.editField.startTime.split(":")[0]);
+        $scope.startFormat.setMinutes($scope.editField.startTime.split(":")[1]);
+        $scope.startFormat.setSeconds(0);
+        $scope.startFormat.setMilliseconds(0);
+        
+        $scope.endFormat = new Date();
+        $scope.endSplit = $scope.editField.endTime.split(":");
+        $scope.endFormat.setHours($scope.editField.endTime.split(":")[0]);
+        $scope.endFormat.setMinutes($scope.editField.endTime.split(":")[1]);
+        $scope.endFormat.setSeconds(0);
+        $scope.endFormat.setMilliseconds(0);
+        
+        $scope.editField.startTime = $scope.startFormat;
+        $scope.editField.endTime = $scope.endFormat;
+        
+        
 
         $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
             if(response.data.length != 0){
@@ -1082,8 +1178,8 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                             google.maps.event.addListener(circle, "center_changed", function() {
                                 $.each(centerArray, function(index, value) {
                                     if (circle.id == (index + 1)) {
-                                        centerArray[index].lat = circle.getCenter().lat();
-                                        centerArray[index].lng = circle.getCenter().lng();
+                                        centerArray[index].cLat = circle.getCenter().lat();
+                                        centerArray[index].cLong = circle.getCenter().lng();
                                     }
                                 });
                             });
@@ -1130,7 +1226,21 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                     }, 1000);
                 });
             }else{
-                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");              
+                $scope.notify("warn", "Certain area has no draw boundary yet!");      
+                var $googleMap = document.getElementById('googleMap');
+
+                var visualizeMap = {
+                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: false,
+                    panControl: false,
+                    zoomControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: true,
+                    editable: false,
+                    zoom: 13
+                };
+                map = new google.maps.Map($googleMap, visualizeMap);
             }  
         });
         var c = document.getElementById("mycanvas");
@@ -1187,6 +1297,12 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             $scope.notify("error","Status Cannot Be Blank.");
             $scope.showEditBtn = true;
         } else{
+            $scope.editField.date = $filter('date')($scope.editField.date, 'yyyy-MM-dd');
+            $scope.editField.format_startTime = $filter('date')($scope.editField.startTime, 'HH:mm:ss');
+            $scope.editField.format_endTime = $filter('date')($scope.editField.endTime, 'HH:mm:ss');
+            if ($scope.editField.ton == "" || $scope.editField.ton == null) {
+                $scope.editField.ton = 0;
+            }
             $http.post('/editReport', $scope.editField).then(function(response) {
                 var returnedReportData = response.data;
 

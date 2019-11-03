@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
 var database = require('./database-management');
-var f = require('./function-management');
-
+var f = require('./function-management'); 
+ 
 // ACR Management
 app.post('/addDcs',function(req,res){
     'use strict';
@@ -10,9 +10,9 @@ app.post('/addDcs',function(req,res){
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
          
         var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" +  req.body.areaID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
-        
+        console.log(sql); 
         database.query(sql, function (err, result) {
-            if (err) {
+            if (err) { 
                 throw err;
             }
             // for (i = 0; i < days.length; i += 1) {
@@ -63,7 +63,9 @@ app.post('/getAllAcr', function(req,res){
 
 app.post('/getDcsDetails', function(req,res){
     'use strict';
-    var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr as a inner join tblcustomer as c on a.customerID = c.customerID WHERE a.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR a.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
+    //var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr as a inner join tblcustomer as c on a.customerID = c.customerID WHERE a.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR a.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
+    
+    var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr a inner join tblcustomer c on a.customerID = c.customerID WHERE a.dcsID = '" + req.body.dcsID + "'";
     
 console.log(sql);
     database.query(sql, function (err, result) {
@@ -78,26 +80,25 @@ console.log(sql);
 
 app.post('/addDcsEntry',function(req,res){ 
     'use strict';
-
+console.log("TEST")
     f.makeID("acr", req.body.creationDate).then(function (ID) {
 
         var sql = "SELECT areaID FROM tbltaman t inner join tblcustomer c on c.tamanID = t.tamanID WHERE customerID = '" + req.body.customerID + "'";
 
-        database.query(sql, function (err, result) {
+        database.query(sql, function (err, result) { 
             if (err) {
+                console.log("err1")
                 throw err;
             }
 
             var areaID = result[0].areaID;
             
 
-            var sql1 = "SELECT concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address FROM tblcustomer c where customerID = '" + req.body.customerID + "'";
-            
-
             sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, areaID, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + areaID + "', '"+ req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '"+ req.body.sat + "', '" + req.body.remarks + "')";
-            
+             
             database.query(sql, function (err, result) {
             if (err) {
+                console.log("err2")
                 throw err;
 
             }
@@ -109,7 +110,7 @@ app.post('/addDcsEntry',function(req,res){
 
             
            });
-
+ 
         });
 
         
@@ -238,8 +239,8 @@ app.post('/filterArea',function(req,res){
 
 app.post('/getAreaList',function(req,res){ 
     'use strict';
-
-    var sql = "SELECT * from tblarea";
+    console.log("GETTING AREA LIST")
+    var sql = "SELECT concat(z.zoneCode, a.areaCode) as areaCode from tblzone z inner join tblarea a on z.zoneID = a.zoneID";
     database.query(sql, function (err, result) {
         if (err) { 
             throw err;
@@ -262,8 +263,6 @@ app.post('/getStaffList', function(req,res){
         if (err) {
             throw err; 
         }
-
-        positionID = result[0].positionID;
 
         var newsql = "SELECT * from tblstaff where positionID = '" + result[0].positionID + "'";
 

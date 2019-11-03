@@ -1,3 +1,9 @@
+@media print
+{
+    .noprint {
+        display:none;
+    }
+}
 /* Login Page*/
 .login-box .col-md-3 {
     line-height: 38px;

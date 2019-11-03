@@ -1,0 +1,68 @@
+<div class="modal fade" id="createBlost" tabindex="-1" role="dialog" aria-labelledby="createBlost" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Add BLOST</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <label for="txtBlostDate form-label">Date</label>
+                  <input type="date" class="form-control" id="txtBlostDate" data-ng-model="blost.date" />
+                </div>
+         
+                
+                
+                
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-ng-click="addBlost();">Create</button>
+            </div>
+          </div>
+        </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Lost Bin Management</h5>
+    </div>
+</div>
+
+<div class="row" data-ng-show="show.create == 'A'">
+        <div class="col-md-12">
+            <button class="btn btn-success" data-toggle="modal" data-target="#createBlost"><i class="fa fa-plus"></i> New BLOST</button>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th width="20%" data-ick="orderBy('blostID');">BLOST ID <i class="fas fa-sort-down"></i></th>
+                        <th width="15%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                        <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                        <th width="10%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        data-ng-repeat="b in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}"
+                            data-ng-bind="b.id"></td>
+                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}"
+                            data-ng-bind="b.date | date: dd/MM/yyyy"></td>
+                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}"
+                            data-ng-bind="b.status"></td>
+                        <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle"
+                                    data-ng-click="viewblost(b.id);"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

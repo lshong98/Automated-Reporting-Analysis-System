@@ -7,7 +7,7 @@ var f = require('./function-management');
 app.post('/addReport',function(req,res){
     'use strict';
     f.makeID('report',req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, readStatus, completionStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.startTime + "', '" + req.body.endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', 'I', '" + req.body.status+ "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
+        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, readStatus, completionStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.format_startTime + "', '" + req.body.format_endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', 'I', '" + req.body.status+ "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')";
         var i = 0, j = 0;
         var reportID = ID;
         
@@ -44,7 +44,7 @@ app.post('/addReport',function(req,res){
 app.post('/editReport',function(req,res){
     'use strict';
     
-    var sql = "UPDATE tblreport SET reportCollectionDate = '" + req.body.date + "', operationTimeStart = '" + req.body.startTime + "', operationTimeEnd = '" + req.body.endTime + "', garbageAmount = '" + req.body.ton + "', iFleetMap = '"+ req.body.ifleet + "', completionStatus = '" + req.body.status + "', truckID = '" + req.body.truckID + "', driverID = '" + req.body.driverID + "', remark = '" + req.body.remark + "' WHERE reportID = '" + req.body.id + "'";
+    var sql = "UPDATE tblreport SET reportCollectionDate = '" + req.body.date + "', operationTimeStart = '" + req.body.format_startTime + "', operationTimeEnd = '" + req.body.format_endTime + "', garbageAmount = '" + req.body.ton + "', iFleetMap = '"+ req.body.ifleet + "', completionStatus = '" + req.body.status + "', truckID = '" + req.body.truckID + "', driverID = '" + req.body.driverID + "', remark = '" + req.body.remark + "' WHERE reportID = '" + req.body.id + "'";
     var i = 0, j = 0;
     
     database.query(sql, function (err, result) {
@@ -157,31 +157,58 @@ app.post('/getReportingStaff',function(req,res){
     });
 });
 
-app.post('/getPeriodForReportACR',function (req, res){
-    'use strict';
-    
-    var sql = "SELECT tbldcs.periodFrom as 'periodFrom', tbldcs.periodTo as 'periodTo' FROM tbldcs WHERE tbldcs.areaID  = '" + req.body.area + "' AND tbldcs.driverID = '" + req.body.driverID + "' AND CURDATE() BETWEEN tbldcs.periodFrom AND tbldcs.periodTo";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-    });
-});
-app.post('/getReportACR', function (req, res) {
+//app.post('/getPeriodForReportACR',function (req, res){
+//    'use strict';
+//    
+//    var sql = "SELECT tbldcs.periodFrom as 'periodFrom', tbldcs.periodTo as 'periodTo' FROM tbldcs WHERE tbldcs.areaID  = '" + req.body.area + "' AND tbldcs.driverID = '" + req.body.driverID + "' AND CURDATE() BETWEEN tbldcs.periodFrom AND tbldcs.periodTo";
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            throw err;
+//        }
+//        res.json(result);
+//    });
+//});
+//app.post('/getReportACR', function (req, res) {
+//
+//    'use strict';
+//    
+////    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
+////    var sql = "SELECT tblcustomer.name FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID JOIN tbldcs ON tblacr.dcsID = tbldcs.dcsID WHERE tbldcs.areaID = '" + req.body.area + "' AND ('" + req.body.date + "' BETWEEN tbldcs.periodFrom AND tbldcs.periodTo) AND tbldcs.driverID = '" + req.body.driverID + "'";
+////    var sql = "SELECT tblcustomer.name as 'name' FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID WHERE tblacr.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR tblacr.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
+//    
+//    database.query(sql, function (err, result) {
+//        if (err) {
+//            throw err;
+//        }
+//        res.json(result);
+//    });
+//});
 
+app.post('/getReportACR', function(req, res){
     'use strict';
-    
-//    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
-//    var sql = "SELECT tblcustomer.name FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID JOIN tbldcs ON tblacr.dcsID = tbldcs.dcsID WHERE tbldcs.areaID = '" + req.body.area + "' AND ('" + req.body.date + "' BETWEEN tbldcs.periodFrom AND tbldcs.periodTo) AND tbldcs.driverID = '" + req.body.driverID + "'";
-    var sql = "SELECT tblcustomer.name as 'name' FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID WHERE tblacr.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR tblacr.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
-    
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
+    f.waterfallQuery("SELECT tbldcs.dcsID FROM tbldcs WHERE tbldcs.areaID LIKE '%" + req.body.area +"%' AND CURDATE() BETWEEN tbldcs.periodFrom and tbldcs.periodTo").then(function(dcs){
+        if(dcs == null){
+            res.json(null);
+        }else{
+            if(req.body.todayday == "sun"){
+                res.json(null);
+            }else{
+                var sql = "SELECT tblcustomer.name, tblacr.mon, tblacr.tue, tblacr.wed, tblacr.thu, tblacr.fri, tblacr.sat FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID WHERE tblacr.dcsID LIKE '%" + dcs.dcsID + "%' AND tblacr."+ req.body.todayday + " = 1";
+
+                database.query(sql, function(err, result){
+                    if(err){
+                        throw err;
+                    }
+                    else{
+                        res.json(result);
+                        res.end();
+                    }
+                });
+            }
         }
-        res.json(result);
     });
+
+
 });
 
 app.post('/getReportCircle', function(req,res){
@@ -209,7 +236,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function(req, res){
     'use strict';
     
-    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark FROM tblreport JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.reportCollectionDate DESC";
+    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark FROM tblreport JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -285,4 +312,31 @@ app.post('/getInitDriver',function(req,res){
     
 });
 
+app.post('/getReportOfficerTodayUnsubmitted',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area FROM tblarea JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND tblarea.staffID = '" + req.body.officerid + "'";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+    
+});
+
+app.post('/getReportOfficerTodaySubmitted',function(req,res){
+    'use strict';
+    
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area FROM tblarea JOIN tblzone on tblarea.zoneID = tblzone.zoneID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE() AND tblarea.staffID = '" + req.body.officerid + "'";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });    
+    
+});
 module.exports = app;

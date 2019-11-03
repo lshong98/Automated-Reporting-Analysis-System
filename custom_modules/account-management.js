@@ -155,7 +155,7 @@ app.post('/loadSpecificAccount', function (req, res) {
             //f.logTransaction(dt, req.body.iam, "view", "View Account - " + req.body.id + " ", 'NULL', req.body.id, "tblstaff");
             res.json(result);
             res.end();
-        }
+        } 
     });
 }); // Complete
 

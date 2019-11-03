@@ -17,6 +17,34 @@ app.get('/getAllInventoryRecords', function (req, res) {
     });
 });
 
+app.get('/getAllDates', function (req, res) {
+    'use strict';
+    var sql = "SELECT date FROM tblbininventory;";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+        console.log("script success");
+        console.log(result);
+    });
+});
+
+app.post('/insertDate', function(req,res){
+    'use strict';
+    console.log(req.body);
+    var sql = "INSERT INTO tblbininventory (date) VALUES ('" + req.body.date + "')";
+    console.log(sql); 
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success"});
+        console.log("script success");
+        console.log(result);
+    });
+});
+
 app.post('/editNewMgbStock', function(req,res){
     'use strict';
     console.log(req.body);

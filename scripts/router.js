@@ -9,7 +9,7 @@ app.factory("routingService", function($q) {
             } else {
                 window.location.href = '../';
             }
-        },
+        }, 
         "clear": function ($window, $location, direct, $sessionStorage) {
             $window.sessionStorage.clear();
             window.location.href = '../';
@@ -289,10 +289,22 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: function (params) {
-            return '/bdaf-details/' + params.dbdID;
+            return '/dbd-details/' + params.dbdID;
         },
         controller:'dbdDetailsController',
         controllerAs:'dbd'
+    })
+    .when('/dbr-details/:dbrID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/dbr-details/' + $route.current.params.dbrID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/dbr-details/' + params.dbrID;
+        },
+        controller:'dbrDetailsController',
+        controllerAs:'dbr'
     })
     .when('/blost-details/:blostID', {
         resolve: {
@@ -356,6 +368,50 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintController',
         controllerAs:'complaint'
     })
+    .when('/complaint-officer', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/complaint-officer');
+            }
+        },
+        templateUrl: '/complaint-officer',
+        controller: 'complaintOfficerController',
+        controllerAs:'complaintOfficer'
+    })
+    .when('/complaint-officer-create', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/complaint-officer-create');
+            }
+        },
+        templateUrl: '/complaint-officer-create',
+        controller: 'complaintOfficercreateController',
+        controllerAs:'complaintOfficercreate'
+    })
+    .when('/complaint-officer-detail/:coID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/complaint-officer-detail/' + $route.current.params.coID);
+            }
+        },
+        templateUrl: function(params){
+            return '/complaint-officer-detail/' + params.coID;
+        },
+        controller: 'complaintOfficerdetailController',
+        controllerAs:'complaintOfficerdetail'
+    })
+    .when('/complaint-officer-edit/:coID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/complaint-officer-edit/' + $route.current.params.coID);
+            }
+        },
+        templateUrl: function(params){
+            return '/complaint-officer-edit/' + params.coID;
+        },
+        controller: 'complaintOfficereditController',
+        controllerAs:'complaintOfficeredits'
+    })      
     .when('/complaint-detail/:complaintCode', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {
@@ -378,15 +434,25 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'deliveryController',
         controllerAs:'delivery'
     })
-    .when('/damaged-lost-bin', {
+    .when('/damaged-bin', {
         resolve: {
             "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/damaged-lost-bin');
+                return routingService.auth($window, $location, '/damaged-bin');
             }
         },
-        templateUrl: '/damaged-lost-bin',
-        controller: 'damagedLostController',
-        controllerAs:'damagedLost'
+        templateUrl: '/damaged-bin',
+        controller: 'damagedBinController',
+        controllerAs:'damagedBin'
+    })
+    .when('/lost-bin', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/lost-bin');
+            }
+        },
+        templateUrl: '/lost-bin',
+        controller: 'lostBinController',
+        controllerAs:'lostBin'
     })
     .when('/post-announcement', {
         resolve: {
@@ -408,16 +474,6 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
-    .when('/approve-app-user', {
-        resolve: {
-            "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/approve-app-user');
-            }
-        },
-        templateUrl: '/approve-app-user',
-        controller: 'custServiceCtrl',
-        controllerAs:'custService'
-    })
     .when('/bin-collection-schedule', {
         resolve: {
             "check": function (routingService, $window, $location) {
@@ -428,15 +484,27 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
-    .when('/approve-bin-request', {
+    .when('/manage-bin-request', {
         resolve: {
             "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/approve-bin-request');
+                return routingService.auth($window, $location, '/manage-bin-request');
             }
         },
-        templateUrl: '/approve-bin-request',
+        templateUrl: '/manage-bin-request',
         controller: 'custServiceCtrl',
         controllerAs:'custService'
+    })
+    .when('/bin-request-detail/:reqID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/bin-request-detail/' + $route.current.params.reqID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/bin-request-detail/' + params.reqID;
+        },
+        controller: 'binReqDetailCtrl',
+        controllerAs: 'binReqDetail'
     })
     .when('/customer-feedback', {
         resolve: {

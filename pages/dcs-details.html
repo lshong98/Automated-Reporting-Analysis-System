@@ -1,4 +1,4 @@
-<!-- <div class="modal fade" id="createDcsEntry" tabindex="-1" role="dialog" aria-labelledby="createDcsEntry" aria-hidden="true">
+<div class="modal fade" id="createDcsEntry" tabindex="-1" role="dialog" aria-labelledby="createDcsEntry" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -66,422 +66,452 @@
             </div>
           </div>
         </div>
-</div> -->
+</div> 
 <div class="modal fade" id="editDcsEntry" tabindex="-1" role="dialog" aria-labelledby="editDcsEntry" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Edit DCS</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit DCS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <label>DCS ID: {{acrID}}</label>
                 <div class="form-group">
                     <label for="txtCompany form-label">Company Name</label>
-                    <select type="text" class="form-control" id="editCompany" data-ng-model="dcsEntry.companyName" data-ng-change = "filterAddress();">
-                            <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
-                    </select>
-                </div>
-                <div class="form-group"> 
-                  <label for="txtAddress form-label">Address</label>
-                  <select type="text" class="form-control" id="editAddress" data-ng-model="dcsEntry.customerID">
-                        <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+                    <select type="text" class="form-control" id="editCompany" data-ng-model="dcsEntry.companyName"
+                        data-ng-change="filterAddress();">
+                        <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                  <label for="txtBeBins form-label">BE Bins/Units</label> 
-                  <input type="text" class="form-control" id="editBeBins" data-ng-model="dcsEntry.beBins" />
+                    <label for="txtAddress form-label">Address</label>
+                    <select type="text" class="form-control" id="editAddress" data-ng-model="dcsEntry.customerID">
+                        <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}},
+                            {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+                    </select>
                 </div>
-            
+                <div class="form-group">
+                    <label for="txtBeBins form-label">BE Bins/Units</label>
+                    <input type="text" class="form-control" id="editBeBins" data-ng-model="dcsEntry.beBins" />
+                </div>
+
                 <div class="form-group">
                     <label for="txtAcrBins form-label">ACR Bins/Units</label>
                     <input type="text" class="form-control" id="editAcrBins" data-ng-model="dcsEntry.acrBins" />
                 </div>
                 <div class="form-group">
                     <label>Collection Days</label>
-                        <div class="checkbox">
-                            <label><input id="mon" type="checkbox" data-ng-model="dcsEntry.mon" value="true"> Mon</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input id="tue" type="checkbox" data-ng-model="dcsEntry.tue" value="true"> Tue</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input id="wed" type="checkbox" data-ng-model="dcsEntry.wed" value="true"> Wed</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input id="thu" type="checkbox" data-ng-model="dcsEntry.thu" value="true"> Thu</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input id="fri" type="checkbox" data-ng-model="dcsEntry.fri" value="true"> Fri</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input id="sat" type="checkbox" data-ng-model="dcsEntry.sat" value="true"> Sat</label>
-                        </div>
+                    <div class="checkbox">
+                        <label><input id="mon" type="checkbox" data-ng-model="dcsEntry.mon" value="true"> Mon</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input id="tue" type="checkbox" data-ng-model="dcsEntry.tue" value="true"> Tue</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input id="wed" type="checkbox" data-ng-model="dcsEntry.wed" value="true"> Wed</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input id="thu" type="checkbox" data-ng-model="dcsEntry.thu" value="true"> Thu</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input id="fri" type="checkbox" data-ng-model="dcsEntry.fri" value="true"> Fri</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input id="sat" type="checkbox" data-ng-model="dcsEntry.sat" value="true"> Sat</label>
+                    </div>
                 </div>
                 <div class="form-group">
-                        <label for="txtRemarks form-label">Remarks</label>
-                        <input type="textArea" class="form-control" id="editRemarks" data-ng-model="dcsEntry.remarks" />
-                      </div>
-         
-                
-                
-                
+                    <label for="txtRemarks form-label">Remarks</label>
+                    <input type="textArea" class="form-control" id="editRemarks" data-ng-model="dcsEntry.remarks" />
+                </div>
+
+
+
+
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="saveDcsEntry();">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="saveDcsEntry();">Save</button>
             </div>
-          </div>
-        </div>
-</div>
-
-<div class="modal fade" id="approveConfirmation" tabindex="-1" role="dialog" aria-labelledby="approveConfirmation" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            
-            
-            
-            
-            
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" data-ng-click="confirm('approve');">Confirm</button>
-        </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="rejectConfirmation" tabindex="-1" role="dialog" aria-labelledby="rejectConfirmation" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
+<div class="modal fade" id="approveConfirmation" tabindex="-1" role="dialog" aria-labelledby="approveConfirmation"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                
-                    <p>Feedback:</p>
-                    <input type="textArea" data-ng-model="dcs.feedback">
-                
-                
-                
+
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="confirm('approve');">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rejectConfirmation" tabindex="-1" role="dialog" aria-labelledby="rejectConfirmation"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <p>Feedback:</p>
+                <input type="textArea" data-ng-model="dcs.feedback">
+
+
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" data-ng-click="confirm('reject');">Confirm</button>
             </div>
-            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
+    <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
+        <span style="text-align:left"><strong>Form Status: {{status}}</strong></span>
+        <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dcs.feedback}}</p>
+    </div>
+    <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
+
+        <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();"
+            ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
+        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
+            data-toggle="modal" data-target="#approveConfirmation">Approve</button>
+        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal"
+            data-target="#rejectConfirmation">Reject</button>
+
+    </div>
+</div>
+
+<div id="nodeToRenderAsPDF">
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Driver's Collection Schedule (for ACR Customers)</h5>
+        </div>
+        <div class="col-md-6" style="background-color: darkgreen; text-align: center">
+            <img src="/images/trienekenslogo_form.png" alt="Trienekens Logo" height="50px">
         </div>
     </div>
 
-      
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <h6>Additional Collection Areas: </h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{dcs[0].areas}}
+                </div>
+            </div>
 
-      <div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
-          <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
-                <span style="text-align:left"><strong>Form Status: {{status}}</strong></span>
-                <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dcs.feedback}}</p>
-          </div>
-          <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
-                
-                <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();" ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
-                <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveConfirmation">Approve</button>
-                <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectConfirmation">Reject</button>
-            
-          </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>Period: </h6>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <h6>To: </h6>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">{{dcs[0].periodFrom | date:"dd-MM-yyyy"}}</div>
+                <div class="col-md-6">{{dcs[0].periodTo | date:"dd-MM-yyyy"}}</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Driver: </h6>
+                </div>
+                <div class="col-md-6">
+                    <h6>Replacement Driver: </h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">{{dcs[0].driver}}</div>
+                <div class="col-md-6">{{dcs[0].replacementDriver}}</div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>Replacement Period: </h6>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <h6>To: </h6>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">{{dcs[0].replacementPeriodFrom}}</div>
+                <div class="col-md-6">{{dcs[0].replacementPeriodTo}}</div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="row" id="createButton" data-ng-show="show.create == 'A'">
+        <div class="col-md-6">
+            <button data-ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'" class="btn btn-success"
+                data-toggle="modal" data-target="#createDcsEntry" ng-click="resetForm();"><i class="fa fa-plus"></i>
+                New</button>
+
+        </div>
+        <div class="col-md-6" style="text-align: right">
+
+            <a href="javascript:exportPdf()" class="btn btn-danger clearfix"><span class="fa fa-file-pdf-o"></span>
+                Export to PDF</a>
+        </div>
+    </div>
+
+    </br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive" style="height:650px;">
+                <table id="table" class="table table-hover table-striped table-clickable">
+                    <thead>
+                        <tr>
+                            <th width="10%" data-ng-click="orderBy('acrID');">ACRF Number <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="10%" data-ng-click="orderBy('companyName');">Company Name <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="10%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="5%" data-ng-click="orderBy('Mon');">Mon</i></th>
+                            <th width="5%" data-ng-click="orderBy('Tue');">Tue</i></th>
+                            <th width="5%" data-ng-click="orderBy('Wed');">Wed</i></th>
+                            <th width="5%" data-ng-click="orderBy('Thu');">Thu</i></th>
+                            <th width="5%" data-ng-click="orderBy('Fri');">Fri</i></th>
+                            <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
+                            <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="7%" id="editButtons" ></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            data-ng-repeat="d in dcsDetailsList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
+                            <td>
+                                <span data-ng-bind="d.acrID"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="d.companyName"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="d.address"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="d.beBins"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="d.acrBins"></span>
+                            </td>
+                            <td>
+                                <div editable>
+                                    <select type="text" class="form-control" data-ng-model="d.areaCode"
+                                        data-ng-show="!showAcr">
+                                        <option data-ng-repeat="a in areaList" value={{a.areaCode}}>{{a.areaCode}}</option>
+                                    </select>
+                                    <span data-ng-show="showAcr" data-ng-bind="d.areaCode"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <span data-ng-show="d.mon">&#10004;</span>
+                            </td>
+                            <td>
+                                <span data-ng-show="d.tue">&#10004;</span>
+                            </td>
+                            <td>
+                                <span data-ng-show="d.wed">&#10004;</span>
+                            </td>
+                            <td>
+                                <span data-ng-show="d.thu">&#10004;</span>
+                            </td>
+                            <td>
+                                <span data-ng-show="d.fri">&#10004;</span>
+                            </td>
+                            <td>
+                                <span data-ng-show="d.sat">&#10004;</span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="d.remarks"></span>
+                            </td>
+                            <td>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showAcr" data-ng-click="editAcr();"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showAcr" data-ng-click="saveAcr(d.acrID, d.areaCode);"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showAcr" data-ng-click="cancelAcr();"><i class="fa fa-times"></i></button>
+                                </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="" id="pagination">
+        <div class="col-md-12">
+            <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage"
+                data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;"
+                next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Prepared by:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name: {{dcs[0].preparedBy}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date: {{dcs[0].creationDateTime | date: dd/MM/yyyy}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Checked by:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name: {{dcs[0].authorizedBy}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date: {{dcs[0].authorizedDate | date: dd/MM/yyyy}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Verified by:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name: {{dcs[0].authorizedBy}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date: {{dcs[0].authorizedDate | date: dd/MM/yyyy}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Job completed:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
         </div>
 
-<div id="nodeToRenderAsPDF">
-        <div class="row">
-                <div class="col-md-6">
-                    <h5>Driver's Collection Schedule (for ACR Customers)</h5>
-                </div>
-                <div class="col-md-6" style="background-color: darkgreen; text-align: center">
-                        <img src="/images/trienekenslogo_form.png" alt="Trienekens Logo" height= "50px">
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12">
-                                <h6>Additional Collection Areas: </h6>
-                        </div>
-                    </div>
-                    <div class="row"> 
-                            <div class="col-md-12">
-                                    {{dcs[0].areas}}
-                            </div>
-                    </div>
-                    
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-3"><h6>Period: </h6></div>
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3"><h6>To: </h6></div>
-                        <div class="col-md-3"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">{{dcs[0].periodFrom | date:"dd-MM-yyyy"}}</div>
-                        <div class="col-md-6">{{dcs[0].periodTo | date:"dd-MM-yyyy"}}</div>
-                    </div>
-                        
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-6"><h6>Driver: </h6></div>
-                        <div class="col-md-6"><h6>Replacement Driver: </h6></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">{{dcs[0].driverID}}</div>
-                        <div class="col-md-6">{{dcs[0].replacementDriverID}}</div>
-                    </div>
-                        
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-3"><h6>Replacement Period: </h6></div>
-                        <div class="col-md-3"></div>
-                        <div class="col-md-3"><h6>To: </h6></div>
-                        <div class="col-md-3"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">{{dcs[0].replacementPeriodFrom | date:"dd-MM-yyyy"}}</div>
-                        <div class="col-md-6">{{dcs[0].replacementPeriodTo | date:"dd-MM-yyyy"}}</div>
-                    </div>
-                        
-                </div>
-            </div>
-               
-            
-            <div class="row" id="createButton" data-ng-show="show.create == 'A'">
-                    <div class="col-md-6">
-                        <button  data-ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'" class="btn btn-success" data-toggle="modal" data-target="#createDcsEntry" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
-                        
-                    </div>
-                    <div class="col-md-6" style="text-align: right">
-                            
-                         <a href="javascript:exportPdf()"  class="btn btn-danger clearfix"><span class="fa fa-file-pdf-o" ></span> Export to PDF</a>
-                    </div>
-                </div>
-            
-            </br>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive" style="height:650px;">
-                        <table id="table" class="table table-hover table-striped table-clickable">
-                            <thead>
-                                <tr>
-                                    <th width="10%" data-ng-click="orderBy('acrID');">ACRF Number <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
-                        <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('from');">From <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('to');">To <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('Mon');">Mon</i></th>
-                        <th width="5%" data-ng-click="orderBy('Tue');">Tue</i></th>
-                        <th width="5%" data-ng-click="orderBy('Wed');">Wed</i></th>
-                        <th width="5%" data-ng-click="orderBy('Thu');">Thu</i></th>
-                        <th width="5%" data-ng-click="orderBy('Fri');">Fri</i></th>
-                        <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
-                        <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
-                        <th width="7%" id="editButtons" data-ng-show="show.edit == 'A'"></th>
-                                </tr>
-                            </thead>
-                            <tbody>               
-                                    <tr data-ng-repeat="d in dcsDetailsList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
-                                            <td>
-                                                    <span data-ng-bind="d.acrID"></span>
-                                    </td>
-                                    <td>
-                                                    <span data-ng-bind="d.companyName"></span>
-                                    </td>
-                                    <td>
-                                                    <span data-ng-bind="d.address"></span>
-                                    </td>
-                                    <td>
-                                                    <span data-ng-bind="d.from"></span>
-                                    </td>
-                                    <td>
-                                                    <span data-ng-bind="d.to"></span>
-                                    </td>
-                                    <td>
-                                                    <span data-ng-bind="d.beBins"></span>
-                                    </td>
-                                    <td>
-                                                    <span data-ng-bind="d.acrBins"></span>
-                                    </td>
-                                    <td>
-                                                    <span data-ng-bind="d.areaID"></span>
-                                    </td>
-                                    <td>
-                                                <span data-ng-show="d.mon">&#10004;</span>
-                                    </td>       
-                                    <td>    
-                                                <span data-ng-show="d.tue">&#10004;</span>
-                                    </td>
-                                    <td>
-                                                <span data-ng-show="d.wed">&#10004;</span>
-                                    </td>
-                                    <td>
-                                                <span data-ng-show="d.thu">&#10004;</span>
-                                    </td>
-                                    <td>
-                                                <span data-ng-show="d.fri">&#10004;</span>
-                                    </td>
-                                    <td>
-                                                <span data-ng-show="d.sat">&#10004;</span>
-                                    </td>
-                                    <td>
-                                                <span data-ng-bind="d.remarks"></span>
-                                    </td>
-                                        <td data-ng-show="show.edit == 'A' && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">
-                                            <button class="btn btn-sm btn-primary" data-ng-show="showDcsDetails" data-toggle="modal" data-target="#editDcsEntry" data-ng-click="editDcsEntry(d.acrID);"><i class="fa fa-pencil-alt"></i></button>
-                                            <button class="btn btn-sm btn-danger" data-ng-show="showDcsDetails" data-ng-click="deleteDcsEntry(d,$index);"><i class="fa fa-times"></i></button>
-                                        </td>
-                                    </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="row" style="" id="pagination">
-                <div class="col-md-12">
-                    <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            Prepared by:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            Name: {{dcs[0].preparedBy}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            Date: {{dcs[0].creationDateTime | date: dd/MM/yyyy}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            Checked by:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Name: {{dcs[0].authorizedBy}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Date: {{dcs[0].authorizedDate | date: dd/MM/yyyy}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            Verified by:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Name: {{dcs[0].authorizedBy}}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Date: {{dcs[0].authorizedDate | date: dd/MM/yyyy}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            Job completed:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Name:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            Date:
-                        </div>
-                    </div>
-                </div>
-            
-            </div>
-    
+    </div>
+
 </div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 <script src="/scripts/html2canvas.min.js"></script>
 <script>
-
     // This one lets you improve the PDF sharpness by scaling up the HTML node tree to render as an image before getting pasted on the PDF.
     function exportPdf(quality = 50) {
         var filename = 'dcs.pdf';
-        
-        document.getElementById("createButton").style.visibility = "hidden"; 
+
+        document.getElementById("createButton").style.visibility = "hidden";
         document.getElementById("pagination").style.visibility = "hidden";
         $('#table th:last-child, #table td:last-child').hide();
 
         var rows = document.getElementById('table').getElementsByTagName("tr").length;
-        var pages = Math.ceil(rows/11);
-        
+        var pages = Math.ceil(rows / 11);
+
 
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
             useCORS: true,
             scale: quality,
-            onrendered: function(canvas) {
-                
+            onrendered: function (canvas) {
+
                 var img = canvas.toDataURL("image/png", 1.0);
 
                 var width = img.width;
@@ -490,21 +520,20 @@
                 document.getElementById("createButton").style.visibility = "visible";
                 document.getElementById("pagination").style.visibility = "visible";
                 $('#table th:last-child, #table td:last-child').show();
-             
+
 
                 var pdf = new jsPDF('l', 'mm', 'a3');
-                if(pages > 1){
-                    for(var i = 1; i < pages; i++){
+                if (pages > 1) {
+                    for (var i = 1; i < pages; i++) {
                         pdf.addPage();
-                    }   
+                    }
                 }
-                
+
                 pdf.addImage(img, 'PNG', 25, 20, width, height);
                 pdf.save(filename);
             }
         });
 
-        
-    }
 
+    }
 </script>

@@ -10,6 +10,7 @@ app.use(express.static(path.join(__dirname, 'pages')));
 app.use(express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'sounds')));
+app.use(express.static(path.join(__dirname, 'kml')));
 
 //app.route('/').get(function (req, res) {
 //    'use strict';
@@ -116,6 +117,10 @@ app.get('/dbd-details/:dbdID', function (req, res) {
     'use strict'; 
     res.sendFile('pages/dbd-details.html', {root: __dirname});
 });
+app.get('/dbr-details/:dbrID', function (req, res) {
+    'use strict'; 
+    res.sendFile('pages/dbr-details.html', {root: __dirname});
+});
 app.get('/blost-details/:blostID', function (req, res) {
     'use strict';
     res.sendFile('pages/blost-details.html', {root: __dirname});
@@ -144,6 +149,22 @@ app.get('/complaint-module', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-module.html', {root: __dirname});
 });
+app.get('/complaint-officer', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer.html', {root: __dirname});
+});
+app.get('/complaint-officer-create', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-create.html', {root: __dirname});
+});
+app.get('/complaint-officer-detail/:coID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-detail.html', {root: __dirname});
+});
+app.get('/complaint-officer-edit/:coID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-officer-edit.html', {root: __dirname});
+});
 app.get('/complaint-detail/:complaintCode', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-detail.html', {root: __dirname});
@@ -152,9 +173,13 @@ app.get('/delivery-management', function (req, res) {
     'use strict';
     res.sendFile('pages/delivery-management.html', {root: __dirname});
 });
-app.get('/damaged-lost-bin', function (req, res) {
+app.get('/damaged-bin', function (req, res) {
     'use strict';
-    res.sendFile('pages/damaged-lost-bin.html', {root: __dirname});
+    res.sendFile('pages/damaged-bin.html', {root: __dirname});
+});
+app.get('/lost-bin', function (req, res) {
+    'use strict';
+    res.sendFile('pages/lost-bin.html', {root: __dirname});
 });
 app.get('/post-announcement', function (req, res) {
     'use strict';
@@ -164,13 +189,13 @@ app.get('/upload-image-carousel', function (req, res) {
     'use strict';
     res.sendFile('pages/upload_img.html', {root: __dirname});
 });
-app.get('/approve-app-user', function (req, res) {
-    'use strict';
-    res.sendFile('pages/approveUser.html', {root: __dirname});
-});
-app.get('/approve-bin-request', function (req, res) {
+app.get('/manage-bin-request', function (req, res) {
     'use strict';
     res.sendFile('pages/approve-bin-request.html', {root: __dirname});
+});
+app.get('/bin-request-detail/:reqID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bin-request-detail.html', {root: __dirname});
 });
 app.get('/bin-collection-schedule', function (req, res) {
     'use strict';
