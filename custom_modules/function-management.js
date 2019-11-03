@@ -98,11 +98,11 @@ function makeID(keyword, creationDate) {
         break;
     case "complaint":
         table = "tblcomplaintofficer";
-        property = "coID";
+        property = "coID"; 
         header = "CMP";
         break;
     default:
-        break;
+        break; 
     }
     
     var sql = "SELECT " + property + " FROM " + table + " WHERE creationDateTime LIKE '%" + getDate[0] + "%'";

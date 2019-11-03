@@ -7,7 +7,7 @@ var io = variable.io;
 
 var users = [];
 var connections = [];
-var connectedUserList = [];
+var connectedUserList = []; 
 
 //------------------------------------------------------------------------------------------
 // check if an element exists in array using a comparer function
