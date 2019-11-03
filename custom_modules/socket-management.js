@@ -306,15 +306,15 @@ io.sockets.on('connection', function (socket) {
         updateUsernames();
     });
     
-    //---
-    // socket.on('complaint', function(){
-    //     var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
-    //     database.query(sql, function(err, result){
-    //         io.sockets.in(roomManager).emit('new complaint', {
-    //             unread: result[0].unread
-    //         });
-    //     });
-    // });
+    //get number of new complaints
+    socket.on('complaint', function(){
+        var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
+        database.query(sql, function(err, result){
+            io.sockets.in(roomManager).emit('new complaint', {
+                unread: result[0].unread
+            });
+        });
+    });
     
     emitter.on('customer to staff message', function (complaintID) {
         var sql = "SELECT content AS content, sender AS sender, recipient AS recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date FROM tblchat WHERE complaintID = '" + complaintID + "' ORDER BY creationDateTime DESC LIMIT 0, 1";
