@@ -16,8 +16,7 @@
                 <tbody>
                     <tr data-ng-repeat="pReq in pendingBinRequests | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index" data-ng-click="binReqDetail(pReq.reqID)">
                         <td>{{$index+1}}</td>
-                        <td data-ng-show="pReq.type != 'Commercial'">{{pReq.name}}</td>
-                        <td data-ng-show="pReq.type == 'Commercial'">{{pReq.companyName}}</td>
+                        <td>{{pReq.name}}</td>
                         <td>{{pReq.contactNumber}}</td>
                         <td>{{pReq.type}}</td>
                         <td>{{pReq.requestDate}}</td>

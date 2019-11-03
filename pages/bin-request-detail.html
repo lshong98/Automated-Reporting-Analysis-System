@@ -18,10 +18,8 @@
                 <button class="btn btn-sm btn-primary" data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID)">Update</button>
             </p>
             <p><strong>Request Date: </strong>{{reqDetail.reqDate}}</p>
-            <p><strong>Requested By: </strong>
-                <span data-ng-show="reqDetail.type != 'Commercial'">{{reqDetail.name}}</span>
-                <span data-ng-show="reqDetail.type == 'Commercial'">{{reqDetail.companyName}}</span>
-            </p>
+            <p><strong>Requested By: </strong>{{reqDetail.name}}</p>
+            <p><strong>Company Name (if any): </strong>{{reqDetail.companyName}}</p>
             <p><strong>Contact Number: </strong>{{reqDetail.contactNumber}}</p>
             <p><strong>Address: </strong>
                 <span data-ng-show="reqDetail.type != 'Commercial'">{{reqDetail.address}}</span>
