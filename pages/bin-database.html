@@ -36,7 +36,10 @@
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinRcDwell form-label">RC Dwell</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinRcDwell" data-ng-model="databaseBin.rcDwell" />
+                    <select type="text" class="form-control" id="txtDatabaseBinRcDwell" data-ng-model="databaseBin.rcDwell">
+                        <option value="residential">Residential</option>
+                        <option value="commercial">Commercial</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinStatus form-label">Active Status</label>
@@ -278,20 +281,25 @@
             </div>
 </div>
 
+<!--
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createCustomer"><i class="fa fa-plus"></i> New Customer</button>
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createTaman"><i class="fa fa-plus"></i> New Taman</button>
+    </div>
+-->
+
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-3">
         <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Entry</button>
     </div>
-    <div class="col-md-3">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createCustomer"><i class="fa fa-plus"></i> New Customer</button>
-    </div>
+    
     <div class="col-md-3">
         <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New Bin</button>
     </div>
-    <div class="col-md-3">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createTaman"><i class="fa fa-plus"></i> New Taman</button>
-    </div>
+    
 </div>
 <br />
 <div class="row" data-ng-show="show.view == 'A'">
@@ -378,7 +386,7 @@
                                 <td>
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.activeStatus"></span>
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.status"></span>
                                     </div>
                                 </td>
                                 <td>

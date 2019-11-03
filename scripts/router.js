@@ -67,14 +67,26 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'accountController',
         controllerAs: 'account'
     })
-    .when('/wbd-history', {
+    .when('/wbd-history/:serialNo', { 
         resolve: {
             "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/wbd-history');
+                return routingService.auth($window, $location, '/wbd-history/', $route.current.params.serialNo);
             }
         },
-        templateUrl: '/wbd-history',
-        controller: 'binDatabaseController'
+        templateUrl: function(params) {
+            return '/wbd-history/' + params.serialNo;
+        },
+        controller: 'binHistoryController'
+    })
+    .when('/new-business', { 
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/new-business');
+            }
+        },
+        templateUrl: '/new-business',
+        controller: 'newBusinessController',
+        controllerAs: 'newBusiness'
     })
     .when('/account/:userID', {
         resolve: {

@@ -38,18 +38,40 @@ app.post('/addDatabaseBin', function (req, res) {
 
     let current_datetime = req.body.date;
     let formatted_date = moment(current_datetime).format("YYYY-MM-DD hh:mm:ss");
-    //console.log(formatted_date);
 
-    var sql = `insert into tblwheelbindatabase values(NULL,'${formatted_date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}','${req.body.acrID}','${req.body.activeStatus}','${req.body.rcDwell}', '${req.body.comment}')`;
-    database.query(sql, function (err, result) {
-        if (err) {
+    var test_sql = `select * from tblwheelbindatabase where serialNo = '${req.body.serialNo}' and activeStatus = 'a'`;
+    database.query(test_sql, function(err, result){
+        if(err){
             throw err;
         }
-        console.log("Add WBD entry success");
-        console.log(result);
-        res.json({"status": "success", "message": "WBD Entry created successfully!"});
-        
-    });
+        if(result.json !== null){
+            var inactive_sql = `update tblwheelbindatabase set activeStatus = 'i' where serialNo = '${req.body.serialNo}'`;
+            database.query(inactive_sql, function(err, result){
+                console.log(result);
+                console.log("Old bins deactivated");
+            })
+        }
+    })
+
+    function addBin(){
+        if(req.body.acrID == 'null') {
+            var sql = `insert into tblwheelbindatabase values(NULL,'${formatted_date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}',null,'a','${req.body.rcDwell}', '${req.body.comment}')`;
+        }else{
+            var sql = `insert into tblwheelbindatabase values(NULL,'${formatted_date}','${req.body.customerID}','${req.body.areaID}','${req.body.serialNo}','${req.body.acrID}','a','${req.body.rcDwell}', '${req.body.comment}')`;
+        }
+    
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            console.log("Add WBD entry success");
+            console.log(result);
+            res.json({"status": "success", "message": "WBD Entry created successfully!"});
+            
+        });
+    }
+
+    setTimeout(addBin, 100);
 });
 
 app.post('/editDatabaseBin', function (req, res) {
@@ -98,7 +120,7 @@ app.post('/addCustomer', function (req, res) {
 
     req.body.customerID = f.makeID('customer',req.body.creationDateTime).then(function(ID){
         //console.log(`${ID}`);
-        var sql = "insert into tblcustomer values('"+ ID +"', '"+ req.body.tamanID +"','" + req.body.username +"','" + req.body.password +"','" + req.body.contactNumber +"','" + req.body.ic +"','" + req.body.tradingLicense +"','" + req.body.name +"', '" + req.body.companyName +"','" + req.body.houseNo +"','" + req.body.streetNo +"','" + req.body.postCode +"','" + req.body.city +"','" + req.body.status +"',current_timestamp())";
+        var sql = "insert into tblcustomer values('"+ ID +"', '"+ req.body.tamanID +"','" + req.body.username +"','" + req.body.password +"','" + req.body.contactNumber +"','" + req.body.ic +"','" + req.body.tradingLicense +"','" + req.body.name +"', '" + req.body.companyName +"','" + req.body.houseNo +"','" + req.body.streetNo +"','" + req.body.postCode +"','" + req.body.city +"','" + req.body.state +"','" + req.body.status +"','" + req.body.imgPath +"',current_timestamp())";
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
@@ -119,6 +141,20 @@ app.get('/getAllTaman', function (req, res) {
             throw err;
         }
         //console.log("Taman query success");
+       // console.log(result);
+        res.json(result);
+        
+    });
+});
+
+app.get('/getAllCustomers', function (req, res) {
+    'use strict';
+    var sql = `select * from tblcustomer`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        //console.log("Customer query success");
        // console.log(result);
         res.json(result);
         
@@ -214,7 +250,7 @@ app.post('/addTaman', function (req, res) {
 app.get('/getBinHistory', function(req,res){
     'use strict';
 
-    var sql = "select wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, wbd.rcDwell as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, wbd.comment as comment, bins.size as binSize, concat(customer.houseNo,' ',customer.streetNo,' ',taman.tamanName) as address, customer.name as companyName, acr.acrID as acrfSerialNo, wbd.itemType as itemType, wbd.path as path from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID";
+    var sql = "select wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, wbd.rcDwell as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, wbd.comment as comment, bins.size as binSize, concat(customer.houseNo,' ',customer.streetNo,' ',taman.tamanName) as address, customer.name as companyName, acr.acrID as acrfSerialNo from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID";
     database.query(sql, function(err,result){
         if(err){
             throw err;
@@ -224,6 +260,39 @@ app.get('/getBinHistory', function(req,res){
         res.json(result);
     })
 })
+
+// New Business Modules
+app.put('/editCustomer', function (req, res) {
+    'use strict';
+
+    console.log(`${req.body.customerID}`);
+    //console.log(`${req}`);
+
+    var sql = `update tblcustomer set creationDateTime = '${req.body.creationDateTime}', name = '${req.body.name}', ic = '${req.body.ic}', contactNumber = '${req.body.contactNumber}', tradingLicense = '${req.body.tradingLicense}', city = '${req.body.city}', imgPath = '${req.body.imgPath}', status = '${req.body.status}', houseNo = '${req.body.houseNo}', streetNo = '${req.body.streetNo}', companyName = '${req.body.companyName}' where customerID = '${req.body.customerID}';`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        console.log("Update Customer success");
+        console.log(result);
+        res.json({"status": "success", "message": "Customer updated successfully!"});
+        
+    });
+});
+
+app.post('/deleteCustomer', function (req, res) {
+    'use strict';
+    var sql = `delete from tblcustomer where customerID='${req.body.customerID}'`;
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        //console.log("delete script success");
+        console.log(result);
+        res.json(result);
+        
+    });
+});
 
 
 module.exports = app;
