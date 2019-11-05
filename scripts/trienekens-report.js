@@ -77,6 +77,8 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "collectionDate": '',
         "startTime": '',
         "endTime": '',
+        "format_startTime": '',
+        "format_endTime": '',
         "truck": '',
         "driver": '',
         "ton": '',
@@ -325,6 +327,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         $scope.showSubmitBtn = false;
         $scope.report.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.report.collectionDate = $filter('date')($scope.colDate, 'yyyy-MM-dd');
+        $scope.report.format_startTime = $filter('date')($scope.report.startTime, 'HH:mm:ss');
+        $scope.report.format_endTime = $filter('date')($scope.report.endTime, 'HH:mm:ss');
+        
 
         if ($scope.report.collectionDate == "" || $scope.report.collectionDate == null) {
             $scope.notify("error", "Collection Date Cannot Be Blank");
@@ -1007,6 +1012,24 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         $scope.area = {
             "areaID": response.data[0].area
         };
+        $scope.startFormat = new Date();
+        $scope.startSplit = $scope.editField.startTime.split(":");
+        $scope.startFormat.setHours($scope.editField.startTime.split(":")[0]);
+        $scope.startFormat.setMinutes($scope.editField.startTime.split(":")[1]);
+        $scope.startFormat.setSeconds(0);
+        $scope.startFormat.setMilliseconds(0);
+        
+        $scope.endFormat = new Date();
+        $scope.endSplit = $scope.editField.endTime.split(":");
+        $scope.endFormat.setHours($scope.editField.endTime.split(":")[0]);
+        $scope.endFormat.setMinutes($scope.editField.endTime.split(":")[1]);
+        $scope.endFormat.setSeconds(0);
+        $scope.endFormat.setMilliseconds(0);
+        
+        $scope.editField.startTime = $scope.startFormat;
+        $scope.editField.endTime = $scope.endFormat;
+        
+        
 
         $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
             if(response.data.length != 0){
@@ -1275,6 +1298,8 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             $scope.showEditBtn = true;
         } else{
             $scope.editField.date = $filter('date')($scope.editField.date, 'yyyy-MM-dd');
+            $scope.editField.format_startTime = $filter('date')($scope.editField.startTime, 'HH:mm:ss');
+            $scope.editField.format_endTime = $filter('date')($scope.editField.endTime, 'HH:mm:ss');
             if ($scope.editField.ton == "" || $scope.editField.ton == null) {
                 $scope.editField.ton = 0;
             }

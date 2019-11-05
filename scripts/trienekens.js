@@ -386,6 +386,11 @@ app.service('storeDataService', function () {
             "feedback": {
                 "view": 'A'
             },
+            "newBusiness": {
+                "view": 'I',
+                "create":'I',
+                "edit":'I'
+            },
             "role": {
                 "view": 'I'
             },
@@ -433,6 +438,9 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.showBinRequest = true;
         scope.deleteCollection = true;
         scope.showDatabaseBin = true;
+        scope.showCustomer = true;
+        scope.showTaman = true;
+        scope.showBinHistory = true;
         scope.showNewMgb = true;
         scope.showReusableMgb = true;
         scope.showDcsDetails = true;
@@ -927,6 +935,118 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 if (storeDataService.binRequest[index].id == scope.thisBinRequest.id) {
                     scope.x = angular.copy(storeDataService.binRequest[index]);
                 }
+            });
+        };
+
+        //TAMAN MODULE EDITABLE TABLES
+        scope.editTaman = function() {
+            scope.showTaman = !scope.showTaman;
+
+
+            console.log("hello from editTaman");
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+
+        };
+        scope.saveTaman = function() {
+            scope.showTaman = !scope.showTaman;
+
+            scope.thisDatabaseBin = { "idNo": id, "date": date, "customerID": customerID, "areaCode": areaCode, "serialNo": serialNo, "acrID": acrfSerialNo, "activeStatus": status, "rcDwell": rcDwell, "comment": comment, "itemType": itemType, "path": path };
+            console.log("The databasebin thing: ");
+            console.log(scope.thisDatabaseBin);
+
+            $http.put('/editTaman', scope.thisDatabaseBin).then(function(response) {
+                var data = response.data;
+
+                scope.notify(data.status, data.message);
+
+                $.each(storeDataService.databaseBin, function(index, value) {
+                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
+                    //     if (data.status == "success") {
+                    //         storeDataService.bin[index] = angular.copy(scope.b);
+                    //     } else {
+                    //         scope.z = angular.copy(storeDataService.bin[index]);
+                    //     }
+                    //     return false;
+                    // }
+                });
+            });
+        };
+        scope.cancelTaman = function() {
+            scope.showTaman = !scope.showTaman;
+
+            $.each(storeDataService.bin, function(index, value) {
+                if (storeDataService.databaseBin[index].id == scope.thisDatabaseBin.id) {
+                    scope.b = angular.copy(storeDataService.databaseBin[index]);
+                    return false;
+                }
+            });
+
+        };
+        scope.deleteTaman = function() {
+            $http.post('/deleteTaman', scope.b).then(function(response) {
+                var data = response.data;
+
+                scope.notify(data.status, data.message);
+
+            });
+        };
+
+        //CUSTOMER MODULE EDITABLE TABLES
+        scope.editCustomer = function() {
+            scope.showCustomer = !scope.showCustomer;
+
+            console.log("hello from editCustomer");
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+
+        };
+        scope.saveCustomer = function(customerID, creationDateTime, name, ic, contactNumber, tradingLicense, city, imgPath, status, houseNo, streetNo, companyName) {
+            scope.showCustomer = !scope.showCustomer;
+
+            scope.thisCustomer = {"customerID":customerID,"creationDateTime":creationDateTime, "name":name, "ic":ic, "contactNumber":contactNumber, "tradingLicense":tradingLicense, "city":city, "imgPath":imgPath, "status":status, "houseNo":houseNo, "streetNo":streetNo, "companyName":companyName};
+
+            console.log(scope.thisCustomer);
+
+            $http.put('/editCustomer', scope.thisCustomer).then(function(response) {
+                var data = response.data;
+
+                console.log("hello from editCustomer");
+                console.log(response.data);
+
+                scope.notify(data.status, data.message);
+
+                $.each(storeDataService.databaseBin, function(index, value) {
+                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
+                    //     if (data.status == "success") {
+                    //         storeDataService.bin[index] = angular.copy(scope.b);
+                    //     } else {
+                    //         scope.z = angular.copy(storeDataService.bin[index]);
+                    //     }
+                    //     return false;
+                    // }
+                });
+            });
+        };
+        scope.cancelCustomer = function() {
+            scope.showCustomer = !scope.showCustomer;
+
+            $.each(storeDataService.bin, function(index, value) {
+                if (storeDataService.customer[index].id == scope.thisCustomer.id) {
+                    scope.b = angular.copy(storeDataService.customer[index]);
+                    return false;
+                }
+            });
+
+        };
+        scope.deleteCustomer = function(customerID) {
+            //scope.customerIDTemp = customerID;
+
+            $http.post('/deleteCustomer', customerID).then(function(response) {
+                var data = response.data;
+
+                scope.notify(data.status, data.message);
+
             });
         };
 
@@ -5342,7 +5462,122 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
 
 });
 
-app.controller('databaseBinController', function ($scope, $http, $filter, storeDataService) {
+app.controller('newBusinessController', function($scope, $http, $filter){
+    'use strict';
+    $scope.customerList = [];
+    $scope.tamanList = [];
+    $scope.areaList = [];
+    //$scope.currentPage = 1; //Initial current page to 1
+    //$scope.itemsPerPage = 20; //Record number each page
+    //$scope.maxSize = 8; //Show the number in page
+
+    //Customer Details
+    $scope.initializeCustomer = function() {
+        $scope.customer = {
+            "customerID": '',
+            "username": '',
+            "password": '',
+            "contactNumber": '',
+            "ic": '',
+            "tradingLicense": '',
+            "name": '',
+            "companyName": '',
+            "houseNo": '',
+            "streetNo": '',
+            "tamanID": '',
+            "postCode": '',
+            "city": '',
+            "status": '',
+            "creationDateTime": ''
+        };
+    }
+
+    //Taman details
+    $scope.initializeTaman = function() {
+        $scope.taman = {
+            "tamanID": "",
+            "areaID": "",
+            "tamanName": "",
+            "longitude": "",
+            "latitude": "",
+            "areaCollStatus": ""
+        }
+    }
+
+    $http.get('/getAllCustomers').then(function(response){
+        $scope.customerList = response.data;
+        console.log($scope.customerList);
+        
+    })
+
+    $http.get('/getAllTaman').then(function(response){
+        $scope.tamanList = response.data;
+        console.log($scope.tamanList);
+        
+    })
+
+    $http.get('/getAllArea').then(function(response){
+        $scope.areaList = response.data;
+        console.log($scope.areaList);
+        
+    })
+
+    $scope.addCustomer = function() {
+        $scope.customer.creationDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+        //$scope.customer.customerID = f.makeID('customer',$filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+        //console.log($scope.customer.customeriD);
+        //console.log($scope.customer);
+
+        $http.post('/addCustomer', $scope.customer).then(function(response) {
+
+            $scope.notify(response.data.status, response.data.message);
+            if (response.data.status === 'success') {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "New Customer added successfully!"
+                });
+                $scope.customerList.push({ "name": $scope.customer.name, "ic": $scope.customer.ic, "companyName": $scope.customer.companyName });
+                angular.element('#createCustomer').modal('toggle');
+                $scope.initializeCustomer();
+            }
+        });
+
+    }
+})
+
+app.controller('binHistoryController', function($scope, $http, $filter, storeDataService, $routeParams){
+    'use strict';
+    $scope.binHistoryList = [];
+
+    $scope.serialNo = $routeParams.serialNo;
+
+    console.log("This is from the wbdHistory function in the binHistoryController: ");
+    console.log($scope.serialNo);
+    //window.location.href = '#/wbd-history/' + $scope.serialNo;
+
+    $http.get('/getBinHistory', $scope.serialNo).then(function(response){
+        $scope.binHistoryList = response.data;
+        console.log($scope.binHistoryList);
+        
+    })
+
+    //wbdHistory function
+    $scope.wbdHistory = function(serialNo){
+        console.log("This is from the wbdHistory function in the binHistoryController: ");
+        console.log(serialNo);
+        window.location.href = '#/wbd-history/' + serialNo;
+
+        $http.get('/getBinHistory', serialNo).then(function(response){
+            $scope.binHistoryList = response.data;
+            console.log($scope.binHistoryList);
+            
+        })
+
+    }
+})
+
+app.controller('databaseBinController', function($scope, $http, $filter, storeDataService) {
     'use strict';
     var asc = true;
     $scope.areaList = [];
@@ -5430,8 +5665,8 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
     //Retrieve all Area entries and store them in areaList
     $http.get('/getAllArea').then(function (response) {
         $scope.areaList = response.data;
-        console.log($scope.areaList);
-        console.log("Hello from area controller");
+        //console.log($scope.areaList);
+        //console.log("Hello from area controller");
     })
 
     //Retrieve all Customer entries and store them in customerList
@@ -5468,7 +5703,6 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
     $scope.areaList = [];
     $scope.binList = [];
     $scope.acrList = [];
-    $scope.binHistoryList = [];
 
 
     //get bin size
@@ -5669,22 +5903,18 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
             }
         });
 
+        
+
     }
 
-
-    //wbdHistory function
-    $scope.wbdHistory = function (serialNo) {
-        console.log("This is from the wbdHistory function: ");
+    $scope.wbdHistory = function(serialNo){
+        console.log("This is from the wbdHistory function in the wbd controller: ");
         console.log(serialNo);
-
-        $http.get('/getBinHistory', serialNo).then(function (response) {
-            $scope.binHistoryList = response.data;
-            console.log($scope.binHistoryList);
-        })
-
+        window.location.href = '#/wbd-history/' + serialNo;
     }
 
-    $scope.orderBy = function (property) {
+
+    $scope.orderBy = function(property) {
         $scope.databaseBinList = $filter('orderBy')($scope.databaseBinList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };

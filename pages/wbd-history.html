@@ -3,48 +3,11 @@
         <h5>Bin History</h5>
     </div>
 </div>
-<div class="row filter-div">
-    <div class="col-md-3">
-        <h6>Serial No :</h6>
-        <input class="form-control" type="text" id="serialNum" ng-model="wbdFilter.serialNo">
-
-    </div>
-    
-    
-    <div class="col-md-3">
-        <h6>ACRF Serial No :</h6>
-        <input class="form-control" type="text" id="acrfNo" ng-model="wbdFilter.acrfSerialNo">
-    </div>
-    <div class="col-md-2">
-            <h6>Area Code :</h6>
-            <input class="form-control" type="text" id="areaCode" ng-model="wbdFilter.areaCode">
-        </div>
-        <div class="col-md-4">
-                <h6>Date Filter: </h6>
-                <div id="databaserange" style="background: #F8F8F8; cursor: pointer; margin-top: 7px; padding: 8px 10px; border-radius: 3px; width: 100%" >
-                    <i class="fa fa-calendar"></i>&nbsp;
-                    <span></span> <i class="fa fa-caret-down" style="float: right; padding: 5px;"></i>
-                </div>
-            </div>
-</div>
 
 <br />
-<div class="row" data-ng-show="show.create == 'A'">
-    <div class="col-md-3">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Entry</button>
-    </div>
-    <div class="col-md-3">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createCustomer"><i class="fa fa-plus"></i> New Customer</button>
-    </div>
-    <div class="col-md-3">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New Bin</button>
-    </div>
-    <div class="col-md-3">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createTaman"><i class="fa fa-plus"></i> New Taman</button>
-    </div>
-</div>
 <br />
-<div class="row" data-ng-show="show.view == 'A'">
+
+<div class="row" ><!--data-ng-show="show.view == 'A'"-->
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
@@ -66,120 +29,99 @@
                                 <th width="35%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
                                 <th width="20%" data-ng-click="orderBy('acrfSerialNo');">ACRF Serial No. <i class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('itemType');">Item Type <i class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('path');">Path <i class="fas fa-sort-down"></i></th>
-                                <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
                             </tr>
                         </thead>
                         <tbody> <!--dateFilter:date.from:date.to |filter: wbdFilter |-->
                             <tr data-ng-repeat="b in binHistoryList |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                 <td>
                                     <div editable>
-                                        <input type="date" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.date | date:'dd-MM-yyyy'"></span>
+                                        <input type="date" class="form-control" data-ng-model="b.date" data-ng-show="!showBinHistory" />
+                                        <span data-ng-show="showBinHistory" data-ng-bind="b.date | date:'dd-MM-yyyy'"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <select type="text" class="form-control" data-ng-model="b.customerID" data-ng-show="!showDatabaseBin">
+                                        <select type="text" class="form-control" data-ng-model="b.customerID" data-ng-show="!showBinHistory">
                                                 <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.ic}} - {{c.name}}</option>
                                         </select>
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.name"></span>
+                                        <span data-ng-show="showBinHistory" data-ng-bind="b.customerID"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.icNo" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.icNo"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.icNo"  />
+                                        <span  data-ng-bind="b.icNo"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <select type="text" class="form-control" data-ng-model="b.serialNo" data-ng-show="!showDatabaseBin">
+                                        <select type="text" class="form-control" data-ng-model="b.serialNo" >
                                             <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
                                         </select>
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.serialNo"></span>
+                                        <span  data-ng-bind="b.serialNo"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.rcDwell" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.rcDwell"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.rcDwell"  />
+                                        <span  data-ng-bind="b.rcDwell"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.houseNo" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.houseNo"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.houseNo"  />
+                                        <span  data-ng-bind="b.houseNo"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.tmnKpg" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.tmnKpg"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.tmnKpg"  />
+                                        <span  data-ng-bind="b.tmnKpg"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <select type="text" class="form-control" data-ng-model="b.areaCode" data-ng-show="!showDatabaseBin">
+                                        <select type="text" class="form-control" data-ng-model="b.areaCode" >
                                             <option data-ng-repeat="a in areaList" value={{a.id}}>{{a.id}}</option>
                                         </select>
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.areaCode"></span>
+                                        <span  data-ng-bind="b.areaCode"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.activeStatus"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.status"  />
+                                        <span  data-ng-bind="b.status"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.comment" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.comment"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.comment"  />
+                                        <span  data-ng-bind="b.comment"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.binSize"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.binSize"  />
+                                        <span  data-ng-bind="b.binSize"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.address" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.address"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.address"  />
+                                        <span  data-ng-bind="b.address"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.companyName" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.companyName"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.companyName"  />
+                                        <span  data-ng-bind="b.companyName"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.acrfSerialNo" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.acrfSerialNo"></span>
+                                        <input type="text" class="form-control" data-ng-model="b.acrfSerialNo"  />
+                                        <span  data-ng-bind="b.acrfSerialNo"></span>
                                     </div>
-                                </td>
-                                <td>
-                                    <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.itemType" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.itemType"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.path" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.path"></span>
-                                    </div>
-                                </td>
-                                <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showDatabaseBin" data-ng-click="editDatabaseBin();"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-danger" data-ng-show="showDatabaseBin" data-ng-click="deleteDatabaseBin(b.serialNo)"><i class="fas fa-trash-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showDatabaseBin" data-ng-click="saveDatabaseBin(b.id, b.date, b.customerID, b.areaCode, b.serialNo, b.acrfSerialNo, b.status, b.rcDwell, b.comment, b.itemType, b.path);"><i class="fa fa-save"></i></button>
-                                    <button class="btn btn-sm btn-default" data-ng-show="!showDatabaseBin" data-ng-click="cancelDatabaseBin();"><i class="fa fa-times"></i></button>
                                 </td>
                             </tr>
                         </tbody>
