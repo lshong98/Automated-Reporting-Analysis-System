@@ -200,34 +200,38 @@ app.post('/getNotifs', function (req, resp) {
 
     req.addListener('end', function () {
         console.log(data);
-        var sql = "SELECT * FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
-        var sql2 = "SELECT * FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
+        var sql = "SELECT *, (SELECT COUNT(readStat) FROM tblnotif WHERE readStat = 'u') as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '"+data.email+"' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
+        var sql2 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
 
         database.query(sql, function (err, res) {
             if (!err) {
                 for (var i = 0; i < res.length; i++) {
                     results["response"].push({
                         "notif": res[i].notifText,
-                        "notifDate": res[i].notifDate
+                        "notifDate": res[i].notifDate,
+                        "unread": res[i].unread
                     });
                 }
+                console.log(res[0].unread);
 
                 database.query(sql2, function (err, res) {
                     if (!err) {
                         for (var i = 0; i < res.length; i++) {
                             results["announcements"].push({
                                 "announce": res[i].announcement,
-                                "announceDate": res[i].announceDate
+                                "announceDate": res[i].announceDate,
+                                "unread": res[i].unread
                             });
                         }
                         if(data.areaID != ""){
-                            var sql3 = "SELECT * FROM tblannouncement WHERE target = '" + data.areaID + "'";
+                            var sql3 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = '" + data.areaID + "' ORDER BY announceDate DESC";
                             database.query(sql3, function (err, res) {
                                 if (!err) {
                                     for (var i = 0; i < res.length; i++) {
                                         results["announcements"].push({
                                             "announce": res[i].announcement,
-                                            "announceDate": res[i].announceDate
+                                            "announceDate": res[i].announceDate,
+                                            "unread": res[i].unread
                                         });
                                     }
                                     console.log(results);
@@ -235,6 +239,7 @@ app.post('/getNotifs', function (req, resp) {
                                 }
                             });
                         }else{
+                            console.log(results);
                             resp.json(results);
                         }
                     }
@@ -242,6 +247,35 @@ app.post('/getNotifs', function (req, resp) {
             }
         });
     });
+});
+
+app.post('/updateNotifStat', function(req, resp){
+    'use strict';
+
+    var data, userID;
+
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.email + "'";
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
+                userID = res[0].userID;
+                var readStat = "UPDATE tblnotif SET readStat = 'r' WHERE userID = '"+userID+"'";
+                var readStatAnnounce = "UPDATE tblannouncement SET readStat = 'r' WHERE userID = '"+userID+"'";
+                database.query(readStat, function(err, res){
+                    if(!err){
+                        resp.send("Notif read");
+                    }
+                });
+            } else {
+                resp.send("error getting user id");
+            }
+        });
+    })
+
 });
 
 app.post('/insertNotif', function (req, resp) {
