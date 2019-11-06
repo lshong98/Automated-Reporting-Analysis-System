@@ -16,7 +16,7 @@ var config = {
     host: DB_HOST,
     port: 3306,
     timezone: 'utc'
-};
+}; 
 
 var db;
  
