@@ -104,7 +104,20 @@ app.post('/getReport', function(req, res){
         if (err) {
             throw err;
         }
-        res.json(result);
+        if(req.body.position == "Manager"){
+            var updateRead = "UPDATE tblreport SET readStatus = 'C' WHERE reportID = '" + req.body.reportID + "'";
+
+            database.query(updateRead, function(err2, result2){
+                if(err2){
+                    throw err2;
+                }
+
+                res.json(result);
+            });
+        }else{
+            res.json(result);
+        }
+        
     });
 }); // Wait for area_collection
 app.post('/getReportingAreaList', function (req, res) {
@@ -236,7 +249,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function(req, res){
     'use strict';
     
-    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark FROM tblreport JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
+    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark , tblreport.readStatus AS readStatus FROM tblreport JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
     
     database.query(sql, function (err, result) {
         if (err) {

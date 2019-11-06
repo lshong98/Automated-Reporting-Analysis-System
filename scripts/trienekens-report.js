@@ -688,6 +688,7 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
 });
 
 app.controller('viewReportController', function($scope, $http, $routeParams, $window, $filter, storeDataService) {
+    var position = $window.sessionStorage.getItem('position');
     $scope.show = angular.copy(storeDataService.show.reporting);
 
     $scope.bin = "";
@@ -727,7 +728,8 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     }
 
     $scope.report = {
-        "reportID": $routeParams.reportCode
+        "reportID": $routeParams.reportCode,
+        "position" : position
     };
     $scope.reportID = $routeParams.reportCode;
 
