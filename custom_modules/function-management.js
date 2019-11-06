@@ -91,7 +91,7 @@ function makeID(keyword, creationDate) {
         property = "boundaryID";
         header = "BND";
         break;
-    case "history":
+    case "history": 
         table = "tblhistory";
         property = "historyID";
         header = "HIS";
