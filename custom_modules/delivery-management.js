@@ -116,7 +116,7 @@ app.post('/getBdafInfo',function(req,res){
         if (err) { 
             throw err;
         }
-
+ 
         res.json(result);
     });
 }); // Complete

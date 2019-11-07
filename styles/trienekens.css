@@ -351,3 +351,14 @@ td[colspan] {
   .inline {
       float: right;
   }
+
+  .bootstrap-select ul.dropdown-menu li:first-child {
+    display: none;
+}
+
+
+.checkbox-big {
+    width: 20px;
+    height: 20px;
+    margin-top:5px;
+}

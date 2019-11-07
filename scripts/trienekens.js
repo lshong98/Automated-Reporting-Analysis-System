@@ -7549,126 +7549,33 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
 });
 
 app.controller('bdafDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
-
-    $scope.status = '';
-
-    $scope.requestAuthorization = function () {
-        sendFormForAuthorization($routeParams.dcsID, "bdaf");
-        $scope.status = 'PENDING';
-    };
-
-    $scope.confirm = function (request) {
-        if (request == 'approve') {
-            $scope.approveForm();
-        } else if (request == 'reject') {
-            $scope.rejectForm();
-        }
-    };
-
-    $scope.approveForm = function () {
-        $scope.status = 'APPROVED';
-        approveForm($routeParams.dcsID, "bdaf");
-
-        angular.element('#approveConfirmation').modal('toggle');
-    }
-
-    $scope.rejectForm = function () {
-        $scope.status = 'CORRECTION REQUIRED';
-        rejectForm($routeParams.dcsID, "bdaf");
-
-
-        angular.element('#rejectConfirmation').modal('toggle');
-    }
-
-    $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
-    $scope.show = angular.copy(storeDataService.show.bdafDetails);
+    
+    
+    // VARIABLES
+    $scope.authorize = angular.copy(storeDataService.show.formAuthorization); //To reveal authorization controls
+    $scope.show = angular.copy(storeDataService.show.bdafDetails);//To reveal other controls
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
-    $scope.maxSize = 10;
-
-    //$scope.showDcsDetails = true;
-
+    $scope.maxSize = 10; //Max number of pages
     $scope.bdafDetailsList = [];
-    $scope.bdaf = [];
-    $scope.customerList = [];
-    $scope.acrList = [];
-    $scope.binList = [];
-    $scope.bdafID = {};
+    $scope.bdaf = []; //TO STORE BDAF INFO
+    $scope.bdafID = {}; //TO SEND TO SQL
     $scope.bdafID.id = $routeParams.bdafID;
     $scope.driverList = [];
     $scope.generalWorkerList = [];
-    $scope.driverButton;
-    $scope.generalWorkerButton;
+    $scope.status = ''; //FOR AUTHORIZATION
+    $scope.generalWorkers = ''; //Store assigned general worker list
+    $scope.driverButton; //reveal driver buttons
+    $scope.generalWorkerButton; //reveal general worker buttons
+    $scope.newBinDelivered = ''; //Store bin delivered input
+    $scope.newBinPulled = ''; //Store bin pulled input
+    $scope.binDelivered = ''; //Store bin delivered list
+    $scope.binPulled = ''; //Store bin pulled list
+    $scope.newBinDeliveredButton = false; //reveal bin delivered buttons
+    $scope.newBinPulledButton = false; //reveal bin pulled buttons
 
-
-    //$scope.initializeDcsDetails = function(){
-    $scope.bdafDetails = {
-        "dcsID": '',
-        "acrID": '',
-        "areaID": '',
-        "customerID": '',
-        "beBins": '',
-        "acrBins": '',
-        "mon": '',
-        "tue": '',
-        "wed": '',
-        "thu": '',
-        "fri": '',
-        "sat": '',
-        "remarks": ''
-    }
-    //}
-
-
-    $http.post('/getBdafInfo', $scope.bdafID).then(function (response) {
-
-        $scope.bdaf = response.data;
-        console.log($scope.bdaf);
-
-        if ($scope.bdaf[0].status == 'G') {
-            $scope.status = 'APPROVED';
-        } else if ($scope.bdaf[0].status == 'P') {
-            $scope.status = 'PENDING';
-        } else if ($scope.bdaf[0].status == 'R') {
-            $scope.status = 'CORRECTION REQUIRED';
-        } else if ($scope.bdaf[0].status == 'A') {
-            $scope.status = 'ACTIVE';
-        } else if ($scope.bdaf[0].status == 'C') {
-            $scope.status = 'COMPLETE';
-            $scope.show.edit = 'I';
-        }
-    });
-
-    $scope.saveDcsEntry = function () {
-
-        $http.post('/updateBdafEntry', $scope.bdafEntry).then(function (response) {
-
-            $scope.getBdafDetails();
-        });
-
-        angular.element('#editDcsEntry').modal('toggle');
-    }
-
-
-    $scope.getBdafDetails = function () {
-        $http.post('/getBdafDetails', $scope.bdafID).then(function (response) {
-
-            $scope.bdafDetailsList = response.data;
-            console.log($scope.bdafDetailsList);
-        });
-
-        $http.get('/getCustomerList', $scope.bdafID).then(function (response) {
-            $scope.customerList = response.data;
-        });
-
-        $http.get('/getAcrList', $scope.bdafID).then(function (response) {
-            $scope.acrList = response.data;
-        });
-
-        $http.get('/getBinList', $scope.bdafID).then(function (response) {
-            $scope.binList = response.data;
-        });
-
+    //ASSIGN DRIVER AND GENERAL WORKERS
+    var getDrivers = function() {
         $http.post('/getStaffList', {
             "position": 'Driver' 
         }).then(function (response) {
@@ -7678,12 +7585,18 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
             $scope.driverButton = true;
 
-        }); 
-
-        getGeneralWorkers();
-
+        });
     }
+    $scope.assignDriver = function (driver) {
+        $scope.driverButton = false;
 
+        $scope.bdaf.driver = driver.staffName;
+    }
+    $scope.clearDriver = function () {
+        $scope.driverButton = true;
+
+        $scope.bdaf.driver = '';
+    }
     var getGeneralWorkers = function () {
         $http.post('/getStaffList', {
             "position": 'General Worker'
@@ -7697,21 +7610,6 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         });
     }
-    $scope.getBdafDetails();
-
-    $scope.assignDriver = function (driver) {
-        $scope.driverButton = false;
-
-        $scope.bdaf.driver = driver.staffName;
-    }
-
-    $scope.clearDriver = function () {
-        $scope.driverButton = true;
-
-        $scope.bdaf.driver = '';
-    }
-
-    $scope.generalWorkers = '';
     $scope.assignGeneralWorker = function (generalWorker, index) {
         $scope.generalWorkerButton = false;
 
@@ -7725,7 +7623,6 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         }
 
     }
-
     $scope.clearGeneralWorker = function () {
         $scope.generalWorkerButton = true;
 
@@ -7736,8 +7633,63 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         getGeneralWorkers();
     }
 
+    //FORM AUTHORIZATION
+    $scope.requestAuthorization = function () {
+        sendFormForAuthorization($routeParams.dcsID, "bdaf");
+        $scope.status = 'PENDING';
+    };
+    $scope.confirm = function (request) {
+        if (request == 'approve') {
+            $scope.approveForm();
+        } else if (request == 'reject') {
+            $scope.rejectForm();
+        }
+    };
+    $scope.approveForm = function () {
+        $scope.status = 'APPROVED';
+        approveForm($routeParams.dcsID, "bdaf");
+
+        angular.element('#approveConfirmation').modal('toggle');
+    }
+    $scope.rejectForm = function () {
+        $scope.status = 'CORRECTION REQUIRED';
+        rejectForm($routeParams.dcsID, "bdaf");
 
 
+        angular.element('#rejectConfirmation').modal('toggle');
+    }
+
+
+    $scope.getBdafInfo = function() {
+        $http.post('/getBdafInfo', $scope.bdafID).then(function (response) {
+
+            $scope.bdaf = response.data;
+            console.log($scope.bdaf);
+    
+            if ($scope.bdaf[0].status == 'G') {
+                $scope.status = 'APPROVED';
+            } else if ($scope.bdaf[0].status == 'P') {
+                $scope.status = 'PENDING';
+            } else if ($scope.bdaf[0].status == 'R') {
+                $scope.status = 'CORRECTION REQUIRED';
+            } else if ($scope.bdaf[0].status == 'A') {
+                $scope.status = 'ACTIVE';
+            } else if ($scope.bdaf[0].status == 'C') {
+                $scope.status = 'COMPLETE';
+                $scope.show.edit = 'I';
+            }
+        });
+    }
+    $scope.getBdafDetails = function () {
+        $http.post('/getBdafDetails', $scope.bdafID).then(function (response) {
+
+            $scope.bdafDetailsList = response.data;
+            console.log($scope.bdafDetailsList);
+        });
+
+        
+    }
+    
     $scope.addBdafEntry = function () {
         $scope.bdafEntry.bdafID = $routeParams.bdafID;
 
@@ -7793,7 +7745,84 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             }
         });
     }
+    $scope.saveDcsEntry = function () {
 
+        $http.post('/updateBdafEntry', $scope.bdafEntry).then(function (response) {
+
+            $scope.getBdafDetails();
+        });
+
+        angular.element('#editDcsEntry').modal('toggle');
+    }
+
+
+
+
+    
+    // ASSIGN BIN DELIVERED AND BIN PULLED
+    $scope.assignBinDelivered = function (binDelivered) {
+
+        if ($scope.binDelivered == '') {
+            $scope.binDelivered = binDelivered;
+        } else {
+            $scope.binDelivered = $scope.binDelivered.concat(", ", binDelivered);
+        }
+
+        $scope.newBinDelivered = '';
+        $scope.newBinDeliveredButton = false;
+
+    }
+    $scope.assignBinPulled = function (binPulled) {
+
+        if ($scope.binPulled == '') {
+            $scope.binPulled = binPulled;
+        } else {
+            $scope.binPulled = $scope.binPulled.concat(", ", binPulled);
+        }
+
+        $scope.newBinPulled = '';
+        $scope.newBinPulledButton = false;
+
+    }
+    $scope.clearBinDelivered = function () {
+
+        $scope.binDelivered = '';
+
+    }
+    $scope.clearBinPulled = function () {
+
+        $scope.binPulled = '';
+
+    }
+    $scope.cancelBinDelivered = function () {
+        $scope.newBinDeliveredButton = false;
+        $scope.newBinDelivered = '';
+    }
+    $scope.cancelBinPulled = function () {
+        $scope.newBinPulledButton = false;
+        $scope.newBinPulled = '';
+    }
+    $scope.revealBinDelivered = function(){
+        $scope.newBinDeliveredButton = true;
+    }
+    $scope.revealBinPulled = function(){
+        $scope.newBinPulledButton = true;
+    }
+
+    
+    
+
+    //INTIALIZE PAGE
+    $scope.getBdafInfo();
+    $scope.getBdafDetails();
+    getDrivers();
+    getGeneralWorkers();
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+
+    });
+    
+    
 
 });
 
