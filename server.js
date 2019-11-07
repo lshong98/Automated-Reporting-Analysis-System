@@ -256,12 +256,42 @@ app.post('/updateBinRequest', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.id + "'";
+    var msg = "The status of your bin request with the ID "+req.body.id+" has been updated to "+req.body.status;
+    var getUserID = "SELECT userID FROM tblbinrequest WHERE reqID = '"+req.body.id+"'";
+    var userID, date = dateTime.create().format('Y-m-d H:M:S');
+    var topic = "TriBinReq"+req.body.id;
+    var payloadWithTopic = {
+        'notification':
+            {
+                'title': "Bin Request Update",
+                'body': msg
+            },
+        topic: topic
+    };
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
-        res.send("Bin Request Updated");
-        res.end();
+        database.query(getUserID, function(err, result){
+            if(err){
+                throw err;
+            }
+            userID = result[0].userID;
+            var insertNotif = "INSERT INTO tblnotif(userID, notifText, notifDate, readStat) VALUES('"+userID+"','"+msg+"','"+date+"','u')";
+            FCMAdmin.messaging().send(payloadWithTopic)
+                .then(function (response) {
+                    database.query(insertNotif, function(err, result){
+                        if(err){
+                            throw err;
+                        }
+                    });
+                    console.log("Topic message sent successfully");
+                }).catch(function (err) {
+                    console.log(err);
+                });
+            res.send("Bin Request Updated");
+            res.end();
+        });
     });
 });
 

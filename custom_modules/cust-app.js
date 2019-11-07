@@ -562,6 +562,48 @@ app.post('/satisfaction', function (req, resp) {
     });
 });     
 
+app.post('/enquiry', function (req, resp) {
+    'use strict';
+    var data;
+    var userID;
+    var date = dateTime.create().format('Y-m-d H:M:S');
+
+    req.addListener('data', function (postDataChunk) {
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function () 
+	{
+		var satisfactionType = data.satisfactionType;
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
+		
+        database.query(sqlUser, function (err, res) 
+		{
+            if (!err) 
+			{
+                userID = res[0].userID;
+				var sql;
+				
+				sql = "INSERT INTO tblenquiry (userID, enquiry, submissionDate) VALUES ('" +
+						userID + "','" + data.enquiry + "','" + date + "')";
+
+                database.query(sql, function (err, res) 
+				{
+                    if (!err) {
+                        resp.send("Enquiry Submitted");
+                    } else {
+                        resp.send("Failed to Submit");
+                    }
+                });
+            } 
+			else 
+			{
+                resp.send("error getting user id");
+            }
+        });
+    });
+});
+
 // app.post('/sendMessage', function(req, resp){ 
 //     'use strict';
 
@@ -1568,6 +1610,40 @@ app.post('/getComplaintIDs', function(req, res){
                         "id":result[i].complaintID
                     });
                 }
+                res.send(IDs);
+            });
+        });
+    });
+});
+
+app.post('/getBinReqIDs', function(req, res){
+    'use strict';
+    var data,
+    IDs = {};
+    IDs["ids"] = [];
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        console.log(data.email);
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
+        database.query(sqlUser, function(err, result){
+            if(err){
+                throw err;
+            }
+            var userID = result[0].userID;
+            var sql = "SELECT reqID FROM tblbinrequest WHERE userID = '"+userID+"'";
+            database.query(sql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                for(var i = 0; i<result.length; i++){
+                    IDs["ids"].push({
+                        "id":result[i].reqID
+                    });
+                }
+                console.log(IDs);
                 res.send(IDs);
             });
         });
