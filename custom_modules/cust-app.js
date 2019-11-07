@@ -200,34 +200,38 @@ app.post('/getNotifs', function (req, resp) {
 
     req.addListener('end', function () {
         console.log(data);
-        var sql = "SELECT * FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
-        var sql2 = "SELECT * FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
+        var sql = "SELECT *, (SELECT COUNT(readStat) FROM tblnotif WHERE readStat = 'u') as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '"+data.email+"' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
+        var sql2 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
 
         database.query(sql, function (err, res) {
             if (!err) {
                 for (var i = 0; i < res.length; i++) {
                     results["response"].push({
                         "notif": res[i].notifText,
-                        "notifDate": res[i].notifDate
+                        "notifDate": res[i].notifDate,
+                        "unread": res[i].unread
                     });
                 }
+                console.log(res[0].unread);
 
                 database.query(sql2, function (err, res) {
                     if (!err) {
                         for (var i = 0; i < res.length; i++) {
                             results["announcements"].push({
                                 "announce": res[i].announcement,
-                                "announceDate": res[i].announceDate
+                                "announceDate": res[i].announceDate,
+                                "unread": res[i].unread
                             });
                         }
                         if(data.areaID != ""){
-                            var sql3 = "SELECT * FROM tblannouncement WHERE target = '" + data.areaID + "'";
+                            var sql3 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = '" + data.areaID + "' ORDER BY announceDate DESC";
                             database.query(sql3, function (err, res) {
                                 if (!err) {
                                     for (var i = 0; i < res.length; i++) {
                                         results["announcements"].push({
                                             "announce": res[i].announcement,
-                                            "announceDate": res[i].announceDate
+                                            "announceDate": res[i].announceDate,
+                                            "unread": res[i].unread
                                         });
                                     }
                                     console.log(results);
@@ -235,6 +239,7 @@ app.post('/getNotifs', function (req, resp) {
                                 }
                             });
                         }else{
+                            console.log(results);
                             resp.json(results);
                         }
                     }
@@ -242,6 +247,35 @@ app.post('/getNotifs', function (req, resp) {
             }
         });
     });
+});
+
+app.post('/updateNotifStat', function(req, resp){
+    'use strict';
+
+    var data, userID;
+
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.email + "'";
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
+                userID = res[0].userID;
+                var readStat = "UPDATE tblnotif SET readStat = 'r' WHERE userID = '"+userID+"'";
+                var readStatAnnounce = "UPDATE tblannouncement SET readStat = 'r' WHERE userID = '"+userID+"'";
+                database.query(readStat, function(err, res){
+                    if(!err){
+                        resp.send("Notif read");
+                    }
+                });
+            } else {
+                resp.send("error getting user id");
+            }
+        });
+    })
+
 });
 
 app.post('/insertNotif', function (req, resp) {
@@ -527,6 +561,48 @@ app.post('/satisfaction', function (req, resp) {
         });
     });
 });     
+
+app.post('/enquiry', function (req, resp) {
+    'use strict';
+    var data;
+    var userID;
+    var date = dateTime.create().format('Y-m-d H:M:S');
+
+    req.addListener('data', function (postDataChunk) {
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function () 
+	{
+		var satisfactionType = data.satisfactionType;
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
+		
+        database.query(sqlUser, function (err, res) 
+		{
+            if (!err) 
+			{
+                userID = res[0].userID;
+				var sql;
+				
+				sql = "INSERT INTO tblenquiry (userID, enquiry, submissionDate) VALUES ('" +
+						userID + "','" + data.enquiry + "','" + date + "')";
+
+                database.query(sql, function (err, res) 
+				{
+                    if (!err) {
+                        resp.send("Enquiry Submitted");
+                    } else {
+                        resp.send("Failed to Submit");
+                    }
+                });
+            } 
+			else 
+			{
+                resp.send("error getting user id");
+            }
+        });
+    });
+});
 
 // app.post('/sendMessage', function(req, resp){ 
 //     'use strict';
@@ -1534,6 +1610,40 @@ app.post('/getComplaintIDs', function(req, res){
                         "id":result[i].complaintID
                     });
                 }
+                res.send(IDs);
+            });
+        });
+    });
+});
+
+app.post('/getBinReqIDs', function(req, res){
+    'use strict';
+    var data,
+    IDs = {};
+    IDs["ids"] = [];
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        console.log(data.email);
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
+        database.query(sqlUser, function(err, result){
+            if(err){
+                throw err;
+            }
+            var userID = result[0].userID;
+            var sql = "SELECT reqID FROM tblbinrequest WHERE userID = '"+userID+"'";
+            database.query(sql, function(err, result){
+                if(err){
+                    throw err;
+                }
+                for(var i = 0; i<result.length; i++){
+                    IDs["ids"].push({
+                        "id":result[i].reqID
+                    });
+                }
+                console.log(IDs);
                 res.send(IDs);
             });
         });

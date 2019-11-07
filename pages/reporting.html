@@ -121,7 +121,9 @@
                                 <th width="15%" data-ng-click="orderBy('area');">Area Code<i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
                                 <th width="20%" data-ng-click="orderBy('truck');">Truck <i class="fas fa-sort-down"></i></th>
+                                <th width="10%">Read</th>
                                 <th width="*" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
+                                
                             </tr>
                         </thead>
                         <tbody>               
@@ -129,6 +131,7 @@
                                 <td data-ng-bind="d.area"></td>
                                 <td data-ng-bind="d.date"></td>
                                 <td data-ng-bind="d.truck"></td>
+                                <td><i data-ng-if="d.readStatus == 'C'" class="fas fa-check"></i><i data-ng-if="d.readStatus == 'I'" class="fas fa-times"></i></td>
                                 <td data-ng-bind="d.remark"></td>
                             </tr>
                         </tbody>

@@ -128,6 +128,17 @@ app.filter('offset', function () {
     };
 });
 
+// WBD Filters
+app.filter('serialNoFilter', function(){
+    'use strict';
+    return function(serialNo, input){
+        if(input == serialNo){
+            return serialNo;
+        }
+        return serialNo;
+    }
+})
+
 /*
     -Upload Image
 */

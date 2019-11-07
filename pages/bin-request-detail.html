@@ -10,6 +10,7 @@
             <p><strong>Status of Request: </strong>
                 <select name="binReqStatus" data-ng-model="reqDetail.status" class="form-control" style="width: 150px;">
                     <option value="PENDING">Pending</option>
+                    <option value="Approved">Approved</option>
                     <option value="Settled">Settled</option>
                     <option value="In Progress">In Progress</option>
                     <option value="No Response">No Response</option>
@@ -31,8 +32,8 @@
         </div>
         <div class="col-md-6">
             <h3>Photo attached</h3>
-            <img ng-src=../images/{{reqDetail.img}} data-ng-show="reqDetail.img != ''">
-            <p data-ng-show="reqDetail.img == ''">No image attached</p>
+            <img ng-src=../images/{{reqDetail.img}} data-ng-show="reqDetail.img != null">
+            <p data-ng-show="reqDetail.img == '' || reqDetail.img == null">No image attached</p>
         </div>
     </div>
 </div>
