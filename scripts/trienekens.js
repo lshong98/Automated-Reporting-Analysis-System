@@ -58,34 +58,42 @@ socket.on('receive form authorize action', function (data) {
 });
 
 socket.on('new satisfaction', function (data) {
-    if (data.unread != 0) {
+    if (data.unread > 0) {
         $('.satisfaction').addClass("badge badge-danger").html(data.unread);
     }
 });
 
     socket.on('read municipal', function (data) {
-        if (data.unread != 0) {
+        if (data.unread > 0) {
             var unread = $('.satisfaction').html();
             console.log(unread);
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            console.log(remaining);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            if(unread >0){
+                var remaining = parseInt(unread) - parseInt(data.unread);
+                console.log(remaining);
+                $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            }
         }
     });
 
     socket.on('read commercial', function (data) {
         if (data.unread > 0) {
             var unread = $('.satisfaction').html();
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            if(unread >0){
+                var remaining = parseInt(unread) - parseInt(data.unread);
+                console.log(remaining);
+                $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            }
         }
     });
 
     socket.on('read scheduled', function (data) {
         if (data.unread > 0) {
             var unread = $('.satisfaction').html();
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            if(unread >0){
+                var remaining = parseInt(unread) - parseInt(data.unread);
+                console.log(remaining);
+                $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            }
         }
     });
 
