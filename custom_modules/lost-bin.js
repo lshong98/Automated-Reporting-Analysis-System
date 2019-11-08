@@ -1,10 +1,11 @@
+/*jslint node:true*/
 var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 
 // ACR Management
-app.post('/addBlost',function(req,res){
+app.post('/addBlost', function (req, res) {
     'use strict';
     console.log("HELLO FROM THE SERVER");
     f.makeID("blost", req.body.creationDate).then(function (ID) {
@@ -12,38 +13,38 @@ app.post('/addBlost',function(req,res){
         var sql = "INSERT INTO tblblost (blostID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.preparedBy +  "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
-                throw err; 
+                throw err;
             }
 
             res.json({"status": "success", "message": "BLOST created!", "details": {"blostID": ID}});
         });
     });
 }); // Complete
-app.post('/getAllBlost', function(req,res){
+app.post('/getAllBlost', function (req, res) {
     'use strict';
     var sql = "SELECT blostID as id, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, status from tblblost";
         
-    if(req.body.status){
+    if (req.body.status) {
         sql += " WHERE status = 'A'";
-    }else{
+    } else {
         sql += " WHERE status = 'I'";
     }
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log("GET ALL BLOST: " + result);
-    });  
+    });
 });
 
-app.post('/getBlostInfo',function(req,res){ 
+app.post('/getBlostInfo', function (req, res) {
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "SELECT * from tblblost where blostID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
-        if (err) { 
+        if (err) {
             throw err;
         }
 
@@ -51,7 +52,7 @@ app.post('/getBlostInfo',function(req,res){
     });
 }); // Complete
 
-app.post('/getBlostDetails', function(req,res){
+app.post('/getBlostDetails', function (req, res) {
     'use strict';
     console.log("GET BLOST DETAILS: HELLO FROM THE SERVER");
     console.log(req.body);
@@ -63,19 +64,19 @@ app.post('/getBlostDetails', function(req,res){
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
-        } 
+            throw err;
+        }
          
-        res.json(result);  
-        console.log(result); 
-    }); 
-}); 
+        res.json(result);
+        console.log(result);
+    });
+});
  
-app.post('/addBlostEntry',function(req,res){ 
+app.post('/addBlostEntry', function (req, res) {
     'use strict';
 
     var sql = "INSERT INTO tblblostentry (idNo, areaCode, blostID, customerID, serialNo, sharedBin, dateOfLoss, reason, status) VALUE ('" + null + "', '" + req.body.areaID + "', '"  + req.body.blostID + "', '" + req.body.customerID + "', '"  + req.body.serialNo + "', '" + req.body.sharedBin + "', '" + req.body.dateOfLoss + "', '" + req.body.reason + "', '" + req.body.status + "')";
-    console.log(sql)
+    console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -86,40 +87,40 @@ app.post('/addBlostEntry',function(req,res){
 }); // Complete
 
 
-app.get('/getCustomerList', function(req,res){
+app.get('/getCustomerList', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "SELECT * from tblcustomer";
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log(result);
-    }); 
-}); 
+    });
+});
 
-app.get('/getAcrList', function(req,res){
+app.get('/getAcrList', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "SELECT * from tblacr";
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log(result);
-    }); 
+    });
 });
 
-app.post('/getBlostInfo',function(req,res){ 
+app.post('/getBlostInfo', function (req, res) {
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "SELECT * from tblblost where blostID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
-        if (err) { 
+        if (err) {
             throw err;
         }
 
@@ -127,40 +128,40 @@ app.post('/getBlostInfo',function(req,res){
     });
 }); // Complete
 
-app.post('/getStaffList', function(req,res){
+app.post('/getStaffList', function (req, res) {
     'use strict';
     console.log("GET STAFF LIST: " + req.body);
     var sql = "SELECT * from tblstaff where positionID = '" + req.body.positionID + "'";
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
-        res.json(result); 
-        console.log(result); 
-    }); 
+        res.json(result);
+        console.log(result);
+    });
 });
 
-app.get('/getBinList', function(req,res){
+app.get('/getBinList', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "SELECT DISTINCT * from tblwheelbindatabase where activeStatus = 'a' and customerID is not null";
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log(result);
-    }); 
+    });
 });
 
-app.post('/getAreaList',function(req,res){ 
+app.post('/getAreaList', function (req, res) {
     'use strict';
-    console.log("GETTING AREA LIST")
+    console.log("GETTING AREA LIST");
     var sql = "SELECT concat(z.zoneCode, a.areaCode) as areaCode from tblzone z inner join tblarea a on z.zoneID = a.zoneID";
     database.query(sql, function (err, result) {
-        if (err) { 
+        if (err) {
             throw err;
         }
 
@@ -170,4 +171,4 @@ app.post('/getAreaList',function(req,res){
 }); // Complete
 
 
-module.exports = app; 
+module.exports = app;

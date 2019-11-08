@@ -1,3 +1,4 @@
+/*jslint node:true*/
 var express = require('express');
 var app = express();
 var database = require('./database-management');
@@ -8,7 +9,8 @@ function makeID(keyword, creationDate) {
     'use strict';
     var table, property, header, ID,
         getDateArr, row, stringRow, prefix, i, generatedID,
-        getDate = creationDate.split(' ');
+        getDate = creationDate.split(' '),
+        sql = "";
     
     switch (keyword) {
     case "account":
@@ -98,14 +100,14 @@ function makeID(keyword, creationDate) {
         break;
     case "complaint":
         table = "tblcomplaintofficer";
-        property = "coID"; 
+        property = "coID";
         header = "CMP";
         break;
     default:
-        break; 
+        break;
     }
     
-    var sql = "SELECT " + property + " FROM " + table + " WHERE creationDateTime LIKE '%" + getDate[0] + "%'";
+    sql = "SELECT " + property + " FROM " + table + " WHERE creationDateTime LIKE '%" + getDate[0] + "%'";
     return new Promise(function (resolve, reject) {
         database.query(sql, function (err, result) {
             if (err) {
@@ -292,7 +294,7 @@ function menuItem(keyword, status) {
         case "view feedback":
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback <span class="satisfaction"></a></li>';
-            } 
+            }
     }
 }
 

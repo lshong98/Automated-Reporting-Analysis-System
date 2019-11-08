@@ -48,7 +48,7 @@ app.post('/createBoundary', function (req, res) {
                 prefix = '';
             }
             plotSQL = plotSQL.trim();
-            plotSQL = plotSQL.replace(/.$/, '');
+            plotSQL = plotSQL.replace(/[.]$/, '');
 
             database.query(boundarySQL, function (err, result) {
                 if (err) {
@@ -124,10 +124,10 @@ app.post('/updateBoundary', function (req, res) {
             }
         }
         plotSQL = plotSQL.trim();
-        plotSQL = plotSQL.replace(/.$/, '');
+        plotSQL = plotSQL.replace(/[.]$/, '');
         deletePlotSQL = deletePlotSQL.trim();
-        deletePlotSQL = deletePlotSQL.replace(/.$/, '');
-        deletePlotSQL = deletePlotSQL.replace(/.$/, '');
+        deletePlotSQL = deletePlotSQL.replace(/[.]$/, '');
+        deletePlotSQL = deletePlotSQL.replace(/[.]$/, '');
         deletePlotSQL = deletePlotSQL.trim();
 
         database.query(deletePlotSQL, function (err, result) {

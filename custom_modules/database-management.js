@@ -3,7 +3,7 @@ var mysql = require('mysql');
 var bcrypt = require('bcryptjs');
 var dateTime = require('node-datetime');
 var EventEmitter = require('events');
-var emitter = new EventEmitter(); 
+var emitter = new EventEmitter();
 
 var DB_HOST = process.env.DATABASE_HOST || '';
 var DB_USER = process.env.DATABASE_USER || '';
@@ -13,9 +13,7 @@ var DB_NAME = process.env.DATABASE_NAME || '';
 var config = {
     user: DB_USER,
     password: DB_PASS,
-    host: DB_HOST,
-    port: 3306,
-    timezone: 'utc'
+    host: DB_HOST
 };
 
 var db;

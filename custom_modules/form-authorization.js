@@ -1,3 +1,4 @@
+/*jslint node:true*/
 var express = require('express');
 var app = express();
 var database = require('./database-management');
@@ -8,24 +9,21 @@ app.get('/getAllForms', function (req, res) {
     'use strict';
     
     var sql = "SELECT creationDateTime as date, dcsID as formID, preparedBy, authorizedBy, status from tbldcs WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, bdafID as formID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, blostID as formID, preparedBy, authorizedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
-    database.query(sql, function (err, result) { 
+    database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
-        console.log("ALL FORMS COLLECTED"); 
+        console.log("ALL FORMS COLLECTED");
     });
 }); // Complete
  
 app.post('/approveForm', function (req, res) {
     'use strict';
-    var dt = dateTime.create();
-    var formatted = dt.format('Y-m-d H:M:S');
-    
-    console.log(req);
-    var sql = "UPDATE tblformauthorization SET status = 'G' WHERE formID = '"+ req.body.formID + "'";
-    var formsql = "UPDATE tbl" + req.body.formType + " set status = 'G', authorizedBy = '" + req.body.authorizedBy + "' where " + req.body.formType + "ID = '"+ req.body.formID + "'";
-    
+    var dt = dateTime.create(),
+        formatted = dt.format('Y-m-d H:M:S'),
+        sql = "UPDATE tblformauthorization SET status = 'G' WHERE formID = '" + req.body.formID + "'",
+        formsql = "UPDATE tbl" + req.body.formType + " set status = 'G', authorizedBy = '" + req.body.authorizedBy + "' where " + req.body.formType + "ID = '" + req.body.formID + "'";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -43,11 +41,11 @@ app.post('/approveForm', function (req, res) {
 
 app.post('/rejectForm', function (req, res) {
     'use strict';
-    var sql = "UPDATE tblformauthorization SET status = 'R' WHERE formID = '"+ req.body.formID + "'";
-    var formsql = "UPDATE tbl" + req.body.formType + " set status = 'R', authorizedBy = '" + req.body.authorizedBy + "' where " + req.body.formType + "ID = '"+ req.body.formID + "'";
+    var sql = "UPDATE tblformauthorization SET status = 'R' WHERE formID = '" + req.body.formID + "'",
+        formsql = "UPDATE tbl" + req.body.formType + " set status = 'R', authorizedBy = '" + req.body.authorizedBy + "' where " + req.body.formType + "ID = '" + req.body.formID + "'";
     
     console.log(sql);
-    console.log(formsql); 
+    console.log(formsql);
     console.log(req.body.formID);
     database.query(sql, function (err, result) {
         if (err) {

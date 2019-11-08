@@ -7,7 +7,7 @@ var SVR_PORT = variable.SVR_PORT;
 var emitter = variable.emitter;
 var fs = variable.fs;
 var upload = variable.upload;
-var FCMAdmin = variable.FCMAdmin; 
+var FCMAdmin = variable.FCMAdmin;
 var FCMServiceAccount = variable.FCMServiceAccount;
 var dateTime = require('node-datetime');
 var nodemailer = require('nodemailer');
@@ -92,14 +92,14 @@ app.post('/sendNotifToDevice', function (req, res) {
     //}
 });
 
-app.post('/insertAnnouncement', function(req, res){
+app.post('/insertAnnouncement', function (req, res) {
     'use strict';
     var target = req.body.target;
     var message = req.body.message;
     var date = dateTime.create().format('Y-m-d');
-    var sql = "INSERT INTO tblannouncement(announcement, announceDate, target) VALUES('"+message+"','"+date+"','"+target+"')";
-    database.query(sql, function(err, result){
-        if(!err){
+    var sql = "INSERT INTO tblannouncement(announcement, announceDate, target) VALUES('" + message + "','" + date + "','" + target + "')";
+    database.query(sql, function (err, result) {
+        if (!err) {
             console.log("announcement inserted");
         }
     });
@@ -137,12 +137,12 @@ app.get('/getAllSchedule', function (req, res) {
     });
 });
 
-app.get('/getAreas', function(req, res){
+app.get('/getAreas', function (req, res) {
     'use strict';
 
     var sql = "SELECT * FROM tblarea";
     var output = [];
-    database.query(sql, function(err, result){
+    database.query(sql, function (err, result) {
         for (var i=0; i<result.length; i++){
             output.push(result[i]);
         }
@@ -334,6 +334,7 @@ app.get('/customerFeedbackMunicipal', function(req, res){
     var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
     var json = {};
     database.query(sql, function(err,result){
+        console.log(result);
         for(var i = 0; i<result.length; i++){
             if(result[i].source == "companyRating" && result[i].category == "1"){
                 compRateUS = result[i].value;
@@ -695,8 +696,9 @@ app.post('/uploadCarouselImg', function (req, res) {
 
 app.post('/loadMenu', function (req, res) {
     'use strict';
-    var content = '', sql;
-    console.log("position: "+req.body.position);
+    var content = '',
+        sql = "",
+        first_text = "";
     
     if (req.body.position === "Manager") {
         content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
@@ -708,7 +710,10 @@ app.post('/loadMenu', function (req, res) {
     
     database.query(sql, function (err, result) {
         result.forEach(function (key, value) {
-            if ((key.mgmtName).indexOf("view") !== -1 || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1 || (key.mgmtName).indexOf("lgview") !== -1 || (key.mgmtName).indexOf("bdview") !== -1) {
+            first_text = (key.mgmtName).split(" ")[0];
+            
+            if (first_text === "view" || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
+                // || (key.mgmtName).indexOf("lgview") !== -1 || (key.mgmtName).indexOf("bdview") !== -1
                 content += f.menuItem(key.mgmtName, key.status);
             }
         });

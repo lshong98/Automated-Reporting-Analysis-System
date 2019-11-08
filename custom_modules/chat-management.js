@@ -1,3 +1,4 @@
+/*jslint node:true */
 var express = require('express');
 var app = express();
 var EventEmitter = require('events');
@@ -9,7 +10,7 @@ var socket = require('./socket-management');
 var variable = require('../variable');
 var emitter = variable.emitter;
 var io = variable.io;
-var FCMAdmin = variable.FCMAdmin; 
+var FCMAdmin = variable.FCMAdmin;
 var FCMServiceAccount = variable.FCMServiceAccount;
 
 //FCM to send notification to user when staff sends new message
@@ -27,7 +28,7 @@ app.post('/messageSend', function (req, res) {
     var dt = dateTime.create(),
         formatted = dt.format('Y-m-d H:M:S'),
         sql = "SELECT userID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1",
-        topic = "TriComplaintID"+req.body.id;
+        topic = "TriComplaintID" + req.body.id;
 
     var payloadWithTopic = {
         'notification':
@@ -84,7 +85,7 @@ app.post('/sendMessage', function (req, resp) {
     'use strict';
     var data;
     var userID, staffID;
-    process.env.TZ = 'Asia/Kuala_Lumpur'
+    process.env.TZ = 'Asia/Kuala_Lumpur';
     var date = dateTime.create().format('Y-m-d H:M:S');
     var currentTime = date.substr(11, 18);
     var startTime = "08:30:00";
@@ -126,7 +127,7 @@ app.post('/sendMessage', function (req, resp) {
                                             throw err;
                                         }
                                     });
-                                });                                
+                                });
                             } else {
                                 console.log("NO AUTOMATED MSG");
                             }
@@ -219,14 +220,14 @@ app.post('/getChats', function (req, resp) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
+    req.addListener('end', function () {
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
-        database.query(sqlUser, function(err, res){
-            if(!err){
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
                 userID = res[0].userID;
-                var sql = "SELECT * FROM tblcomplaint WHERE userID = '"+userID+"'";
-                database.query(sql, function(err, res){
-                    if(err){
+                var sql = "SELECT * FROM tblcomplaint WHERE userID = '" + userID + "'";
+                database.query(sql, function (err, res) {
+                    if (err) {
                         resp.send("Error");
                         resp.end();
                     }

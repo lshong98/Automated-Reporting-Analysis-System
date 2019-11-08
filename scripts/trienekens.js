@@ -2378,7 +2378,8 @@ app.controller('managerController', function ($scope, $http, $filter) {
 
     
     var $googleMap, visualizeMap, map;
-    var src = '../testing.kml', kmlLayer;
+    var src = '../KUCHING_COLLECTION_ZONE DIGITAL_MAP.kml', kmlLayer;
+//    var src = '../split.kml', kmlLayer;
     
     $googleMap = document.getElementById('googleMap');
     visualizeMap = {
@@ -2395,46 +2396,57 @@ app.controller('managerController', function ($scope, $http, $filter) {
     
     map = new google.maps.Map($googleMap, visualizeMap);
     
-//    var myParser = new geoXML3.parser({map: map});
-//    myParser.parse(src);
+    var myParser = new geoXML3.parser({map: map});
+    myParser.parse(src);
     
-
-    //    $http.get('/getLngLat').then(function(response) {
-    //        $scope.lnglatlist = response.data;
-    //
-    //        var rd = {
-    //            url: '../styles/mapmarkers/rd.png'
-    //        };
-    //
-    //        for (var i = 0; i < $scope.lnglatlist.length; i++) {
-    //            var myLatLng = { lat: $scope.lnglatlist[i].latitude, lng: $scope.lnglatlist[i].longitude };
-    //
-    //            var marker = new google.maps.Marker({
-    //                position: myLatLng,
-    //                icon: rd
-    //            });
-    //            marker.setMap(map);
-    //        }
-    //    });
-    //
-    //    $http.get('/getCollectedLngLat').then(function(response) {
-    //        $scope.collectedlnglatlist = response.data;
-    //        console.log($scope.lnglatlist);
-    //        var gd = {
-    //            url: '../styles/mapmarkers/gd.png'
-    //
-    //        };
-    //        for (var i = 0; i < $scope.collectedlnglatlist.length; i++) {
-    //
-    //            var myLatLng = { lat: $scope.collectedlnglatlist[i].latitude, lng: $scope.collectedlnglatlist[i].longitude };
-    //
-    //            var marker = new google.maps.Marker({
-    //                position: myLatLng,
-    //                icon: gd
-    //            });
-    //            marker.setMap(map);
-    //        }
-    //    });
+//    fetch(src)
+//    .then(function (resp) {
+//        return resp.text();
+//    })
+//    .then(function (data) {
+//        var parser = new DOMParser(),
+//            xmlDoc = parser.parseFromString(data, 'text/xml'),
+//            read_placemark = xmlDoc.getElementsByTagName("Placemark"),
+//            read_name = xmlDoc.getElementsByTagName("name"),
+//            read_color = xmlDoc.getElementsByTagName("styleUrl"),
+//            read_coordinates = xmlDoc.getElementsByTagName("coordinates"),
+//            boundary = [],
+//            coordinateSpliter,
+//            thisColor,
+//            thisName,
+//            thisCoordinate = [],
+//            formattedBoundary = [],
+//            _prev,
+//            _this;
+//        
+//        for (var i = 0; i < read_placemark.length; i++) {
+//            thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
+//            thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
+//            coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
+//            boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
+//        }
+//        
+//        for (var i = 0; i < boundary.length; i++) {
+//            for (var j = 0; j < boundary[i].coordinates.length; j++) {
+//                _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
+//                _this = _this.replace(/^0+/, "");
+//                _this = parseFloat(_this).toFixed(7);
+//                if (j !== 0) {
+//                    _prev = (boundary[i].coordinates[j - 1]).replace(/ +/g, "");
+//                    _prev = _prev.replace(/^0+/, "");
+//                    _prev = parseFloat(_prev).toFixed(7);
+//                }
+//                if (_this !== "NaN") {
+//                    if (j % 2 !== 0) {
+//                        thisCoordinate.push({"lng": _prev, "lat": _this});
+//                    }
+//                }
+//            }
+//            formattedBoundary.push({"name": boundary[i].name, "color": boundary[i].color, "coordinates": thisCoordinate});
+//            thisCoordinate = [];
+//        }
+//        console.log(formattedBoundary);
+//    });
 
     $http.get('/livemap').then(function (response) {
         var data = response.data,

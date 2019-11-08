@@ -1,10 +1,11 @@
+/*jslint node:true*/
 var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 
 // ADD
-app.post('/addDbr',function(req,res){
+app.post('/addDbr', function (req, res) {
     'use strict';
     console.log("HELLO FROM THE SERVER");
     f.makeID("dbr", req.body.creationDate).then(function (ID) {
@@ -12,7 +13,7 @@ app.post('/addDbr',function(req,res){
         var sql = "INSERT INTO tbldbr (dbrID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.preparedBy +  "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
-                throw err; 
+                throw err;
             }
 
             res.json({"status": "success", "message": "DBR created!", "details": {"dbrID": ID}});
@@ -20,7 +21,7 @@ app.post('/addDbr',function(req,res){
     });
 }); // Complete
 
-app.post('/addDbd',function(req,res){
+app.post('/addDbd', function (req, res) {
     'use strict';
     console.log("HELLO FROM THE SERVER");
     f.makeID("blost", req.body.creationDate).then(function (ID) {
@@ -38,48 +39,48 @@ app.post('/addDbd',function(req,res){
 
 
 // GET ALL
-app.post('/getAllDbr', function(req,res){
+app.post('/getAllDbr', function (req, res) {
     'use strict';
     var sql = "SELECT dbrID as id, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, verifiedBy, verifiedDate, status from tbldbr";
         
-    if(req.body.status){
+    if (req.body.status) {
         sql += " WHERE status = 'A'";
-    }else{
+    } else {
         sql += " WHERE status = 'I'";
     }
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log("GET ALL DBR: " + result);
-    });  
+    });
 });
 
-app.post('/getAllDbd', function(req,res){
+app.post('/getAllDbd', function (req, res) {
     'use strict';
     var sql = "SELECT blostID, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, status from tblblost";
         
-    if(req.body.status){
+    if (req.body.status) {
         sql += " WHERE status = 'A'";
-    }else{
+    } else {
         sql += " WHERE status = 'I'";
     }
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log("GET ALL BLOST: " + result);
-    });  
+    });
 });
 
 
 
 
-app.post('/getDbrDetails', function(req,res){
+app.post('/getDbrDetails', function (req, res) {
     'use strict';
     console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
     console.log(req.body);
@@ -90,25 +91,25 @@ app.post('/getDbrDetails', function(req,res){
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
-        } 
+            throw err;
+        }
          
-        res.json(result);  
-        console.log(result); 
+        res.json(result);
+        console.log(result);
     });
-}); 
+});
 
-app.post('/addBdafEntry',function(req,res){ 
+app.post('/addBdafEntry', function (req, res) {
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
-    if(req.body.binDelivered == ''){
-        req.body.binDelivered = null; 
+    if (req.body.binDelivered == '') {
+        req.body.binDelivered = null;
     }
 
-    if(req.body.binPulled == ''){
+    if (req.body.binPulled == '') {
         req.body.binPulled = null;
     }
-    var sql = "INSERT INTO tblbdafentry (idNo, bdafID, customerID, acrID, acrSticker, serialNo, binDelivered, binPulled, jobDesc, remarks, completed) VALUE ('" + null + "', '" + req.body.bdafID + "' , '"  + req.body.customerID + "', '"  + req.body.acrID + "', '" + req.body.acrSticker + "', '" + req.body.serialNo + "', '" + req.body.binDelivered + "', '" + req.body.binPulled + "', '" + req.body.jobDesc + "', '" + req.body.remarks + "', '"+ req.body.completed + "')";
+    var sql = "INSERT INTO tblbdafentry (idNo, bdafID, customerID, acrID, acrSticker, serialNo, binDelivered, binPulled, jobDesc, remarks, completed) VALUE ('" + null + "', '" + req.body.bdafID + "' , '"  + req.body.customerID + "', '"  + req.body.acrID + "', '" + req.body.acrSticker + "', '" + req.body.serialNo + "', '" + req.body.binDelivered + "', '" + req.body.binPulled + "', '" + req.body.jobDesc + "', '" + req.body.remarks + "', '" + req.body.completed + "')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -119,40 +120,40 @@ app.post('/addBdafEntry',function(req,res){
 }); // Complete
 
 
-app.get('/getCustomerList', function(req,res){
+app.get('/getCustomerList', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "SELECT * from tblcustomer";
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log(result);
-    }); 
-}); 
+    });
+});
 
-app.get('/getAcrList', function(req,res){
+app.get('/getAcrList', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "SELECT * from tblacr";
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log(result);
-    }); 
+    });
 });
 
-app.post('/getBdafInfo',function(req,res){ 
+app.post('/getBdafInfo', function (req, res) {
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "SELECT * from tblbdaf where bdafID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
-        if (err) { 
+        if (err) {
             throw err;
         }
 
@@ -160,32 +161,32 @@ app.post('/getBdafInfo',function(req,res){
     });
 }); // Complete
 
-app.post('/getStaffList', function(req,res){
+app.post('/getStaffList', function (req, res) {
     'use strict';
     console.log("GET STAFF LIST: " + req.body);
     var sql = "SELECT * from tblstaff where positionID = '" + req.body.positionID + "'";
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
-        res.json(result); 
-        console.log(result); 
-    }); 
+        res.json(result);
+        console.log(result);
+    });
 });
 
-app.get('/getBinList', function(req,res){
+app.get('/getBinList', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "SELECT DISTINCT * from tblwheelbindatabase where activeStatus = 'a' and customerID is not null";
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log(result);
-    }); 
+    });
 });
 
-module.exports = app; 
+module.exports = app;
