@@ -1689,7 +1689,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 }]
             });
             
-            $http.get('/readSatisfactionMunicipal').then(function (repsonse) {
+            $http.get('/readSatisfactionMunicipal').then(function (response) {
                 console.log(response.data);
             }, function (err) {
                 console.log(err);
@@ -1896,7 +1896,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 }]
             });
             
-            $http.get('/readSatisfactionCommercial').then(function (repsonse) {
+            $http.get('/readSatisfactionCommercial').then(function (response) {
                 console.log(response.data);
             }, function (err) {
                 console.log(err);
@@ -2077,7 +2077,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 }]
             });
             
-            $http.get('/readSatisfactionScheduled').then(function (repsonse) {
+            $http.get('/readSatisfactionScheduled').then(function (response) {
                 console.log(response.data);
             }, function (err) {
                 console.log(err);
