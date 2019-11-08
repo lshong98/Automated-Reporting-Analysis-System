@@ -97,7 +97,7 @@ app.post('/insertAnnouncement', function(req, res){
     var target = req.body.target;
     var message = req.body.message;
     var date = dateTime.create().format('Y-m-d');
-    var sql = "INSERT INTO tblannouncement(announcement, announceDate, target) VALUES('"+message+"','"+date+"','"+target+"')";
+    var sql = "INSERT INTO tblannouncement(announcement, announceDate, target, readStat) VALUES('"+message+"','"+date+"','"+target+"', 'u')";
     database.query(sql, function(err, result){
         if(!err){
             console.log("announcement inserted");
@@ -358,11 +358,13 @@ app.post('/editCollectionSchedule', function (req, res) {
 app.get('/customerFeedbackMunicipal', function(req, res){
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_municipal GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_municipal GROUP BY teamEfficiency UNION SELECT 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_municipal GROUP BY collectionPromptness UNION SELECT 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_municipal GROUP BY binHandling UNION SELECT 'spillageControl' as source, teamEfficiency AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_municipal GROUP BY spillageControl UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_municipal GROUP BY queryResponse";
-    var sqlComments = "SELECT extraComment FROM tblsatisfaction_municipal";
-    var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS, comments = [];
+    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_municipal JOIN tbluser WHERE tblsatisfaction_municipal.userID = tbluser.userID";
+    var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, binHandS, spillCtrlS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
     var json = {};
+    var data = {};
+    data["data"] = [];
     database.query(sql, function(err,result){
         for(var i = 0; i<result.length; i++){
             if(result[i].source == "companyRating" && result[i].category == "1"){
@@ -417,10 +419,10 @@ app.get('/customerFeedbackMunicipal', function(req, res){
         database.query(sqlComments, function(err, result){
             for(var i = 0; i<result.length; i++){
                 if(result[i].extraComment != "" && result[i].extraComment != null){
-                    comments.push(result[i].extraComment);
+                    data["data"].push({"comments":result[i].extraComment,"user":result[i].name});
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"binHandUS":binHandUS,"binHandAvg":binHandAvg,"binHandS":binHandS,"spillCtrlUS":spillCtrlUS,"spillCtrlAvg":spillCtrlAvg,"spillCtrlS":spillCtrlS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":comments};
+            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"binHandUS":binHandUS,"binHandAvg":binHandAvg,"binHandS":binHandS,"spillCtrlUS":spillCtrlUS,"spillCtrlAvg":spillCtrlAvg,"spillCtrlS":spillCtrlS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data["data"]};
             res.json(json);
             res.end();
         });
@@ -455,11 +457,13 @@ app.get('/customerFeedbackMunicipal', function(req, res){
 app.get('/customerFeedbackCommercial', function(req, res){
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_commercial GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_commercial GROUP BY teamEfficiency UNION SELECT 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_commercial GROUP BY collectionPromptness UNION SELECT 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_commercial GROUP BY cleanliness UNION SELECT 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_commercial GROUP BY physicalCondition UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_commercial GROUP BY queryResponse";
-    var sqlComments = "SELECT extraComment FROM tblsatisfaction_commercial";
-    var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS, comments = [];
+    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_commercial JOIN tbluser WHERE tblsatisfaction_commercial.userID = tbluser.userID";
+    var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
     var json = {};
+    var data = {};
+    data["data"] = [];
     database.query(sql, function(err,result){
         for(var i = 0; i<result.length; i++){
             if(result[i].source == "companyRating" && result[i].category == "1"){
@@ -514,10 +518,10 @@ app.get('/customerFeedbackCommercial', function(req, res){
         database.query(sqlComments, function(err, result){
             for(var i = 0; i<result.length; i++){
                 if(result[i].extraComment != "" && result[i].extraComment != null){
-                    comments.push(result[i].extraComment);
+                    data["data"].push({"comments":result[i].extraComment,"user":result[i].name});
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"cleanlinessUS":cleanlinessUS,"cleanlinessAvg":cleanlinessAvg,"cleanlinessS":cleanlinessS,"physicalCondUS":physicalCondUS,"physicalCondAvg":physicalCondAvg,"physicalCondS":physicalCondS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":comments};
+            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"cleanlinessUS":cleanlinessUS,"cleanlinessAvg":cleanlinessAvg,"cleanlinessS":cleanlinessS,"physicalCondUS":physicalCondUS,"physicalCondAvg":physicalCondAvg,"physicalCondS":physicalCondS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data["data"]};
             res.json(json);
             res.end();
         });
@@ -551,11 +555,14 @@ app.get('/customerFeedbackCommercial', function(req, res){
 app.get('/customerFeedbackScheduled', function(req, res){
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency UNION SELECT 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence UNION SELECT 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse";
-    var sqlComments = "SELECT extraComment FROM tblsatisfaction_scheduled";
-    var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS, comments = [];
+    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_scheduled JOIN tbluser WHERE tblsatisfaction_scheduled.userID = tbluser.userID";
+    var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS;
     var compRateS, teamEffS, healthAdhS, regAdhS, qryRespS;
     var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
     var json = {};
+    var data = {};
+    data["data"] = [];
+
     database.query(sql, function(err,result){
         for(var i = 0; i<result.length; i++){
             if(result[i].source == "companyRating" && result[i].category == "1"){
@@ -602,10 +609,10 @@ app.get('/customerFeedbackScheduled', function(req, res){
         database.query(sqlComments, function(err, result){
             for(var i = 0; i<result.length; i++){
                 if(result[i].extraComment != "" && result[i].extraComment != null){
-                    comments.push(result[i].extraComment);
+                    data["data"].push({"comments":result[i].extraComment,"user":result[i].name});
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"healthAdhUS":healthAdhUS,"healthAdhAvg":healthAdhAvg,"healthAdhS":healthAdhS,"regAdhUS":regAdhUS,"regAdhAvg":regAdhAvg,"regAdhS":regAdhS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":comments};
+            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"healthAdhUS":healthAdhUS,"healthAdhAvg":healthAdhAvg,"healthAdhS":healthAdhS,"regAdhUS":regAdhUS,"regAdhAvg":regAdhAvg,"regAdhS":regAdhS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data["data"]};
             res.json(json);
             res.end();
         });

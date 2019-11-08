@@ -1691,6 +1691,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         });
 
         $http.get('/unreadSatisfaction').then(function(response){
+            console.log(response.data);
             $scope.unreadMunicipal = response.data.municipal;
             $scope.unreadCommercial = response.data.commercial;
             $scope.unreadScheduled = response.data.scheduled;

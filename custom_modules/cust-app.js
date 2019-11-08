@@ -212,7 +212,7 @@ app.post('/getNotifs', function (req, resp) {
                         "unread": res[i].unread
                     });
                 }
-                console.log(res[0].unread);
+                //console.log(res[0].unread);
 
                 database.query(sql2, function (err, res) {
                     if (!err) {
@@ -260,6 +260,7 @@ app.post('/updateNotifStat', function(req, resp){
 
     req.addListener('end', function(){
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.email + "'";
+        console.log(data.email);
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
@@ -296,7 +297,7 @@ app.post('/insertNotif', function (req, resp) {
             if (!err) {
                 userID = res[0].userID;
                 console.log("user id: " + userID);
-                var insertSql = "INSERT INTO tblnotif(userID, notifDate, notifText) VALUES('" + userID + "','" + date + "','" + data.text + "')";
+                var insertSql = "INSERT INTO tblnotif(userID, notifDate, notifText, readStat) VALUES('" + userID + "','" + date + "','" + data.text + "', 'u')";
                 database.query(insertSql, function (err, res) {
                     if (!err) {
                         resp.send("Notif Inserted");
