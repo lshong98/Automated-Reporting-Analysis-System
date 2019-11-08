@@ -36,7 +36,10 @@
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinRcDwell form-label">RC Dwell</label>
-                    <input type="text" class="form-control" id="txtDatabaseBinRcDwell" data-ng-model="databaseBin.rcDwell" />
+                    <select type="text" class="form-control" id="txtDatabaseBinRcDwell" data-ng-model="databaseBin.rcDwell">
+                        <option value="residential">Residential</option>
+                        <option value="commercial">Commercial</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="txtDatabaseBinStatus form-label">Active Status</label>
@@ -256,7 +259,7 @@
 <div class="row filter-div">
     <div class="col-md-3">
         <h6>Serial No :</h6>
-        <input class="form-control" type="text" id="serialNum" ng-model="wbdFilter.serialNo">
+        <input class="form-control" type="text" id="serialNum" ng-model="serialNoFilter.serialNo">
 
     </div>
     
@@ -278,20 +281,25 @@
             </div>
 </div>
 
+<!--
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createCustomer"><i class="fa fa-plus"></i> New Customer</button>
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createTaman"><i class="fa fa-plus"></i> New Taman</button>
+    </div>
+-->
+
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-3">
         <button class="btn btn-success" data-toggle="modal" data-target="#createDatabaseBin"><i class="fa fa-plus"></i> New Entry</button>
     </div>
-    <div class="col-md-3">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createCustomer"><i class="fa fa-plus"></i> New Customer</button>
-    </div>
+    
     <div class="col-md-3">
         <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New Bin</button>
     </div>
-    <div class="col-md-3">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createTaman"><i class="fa fa-plus"></i> New Taman</button>
-    </div>
+    
 </div>
 <br />
 <div class="row" data-ng-show="show.view == 'A'">
@@ -337,7 +345,7 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.icNo" data-ng-show="!showDatabaseBin" />
+                                        <!--<input type="text" class="form-control" data-ng-model="b.icNo" data-ng-show="!showDatabaseBin" />-->
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.icNo"></span>
                                     </div>
                                 </td>
@@ -351,12 +359,16 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.rcDwell" data-ng-show="!showDatabaseBin" />
+                                        <!--<input type="text" class="form-control" data-ng-model="b.rcDwell" data-ng-show="!showDatabaseBin" />-->
+                                        <select type="text" class="form-control" data-ng-model="b.rcDwell" data-ng-show="!showDatabaseBin">
+                                            <option value="residential">Residential</option>
+                                            <option value="commercial">Commercial</option>
+                                        </select>
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.rcDwell"></span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div editable>
+                                    <div editable> <!--Each customer can have multiple addresses, so where should addresses be stored?-->
                                         <input type="text" class="form-control" data-ng-model="b.houseNo" data-ng-show="!showDatabaseBin" />
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.houseNo"></span>
                                     </div>
@@ -368,7 +380,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div editable>
+                                    <div editable> <!--Should be automatic based on address-->
                                         <select type="text" class="form-control" data-ng-model="b.areaCode" data-ng-show="!showDatabaseBin">
                                             <option data-ng-repeat="a in areaList" value={{a.id}}>{{a.id}}</option>
                                         </select>
@@ -377,8 +389,12 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showDatabaseBin" />
-                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.activeStatus"></span>
+                                        <!--<input type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showDatabaseBin" />-->
+                                        <select type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showDatabaseBin">
+                                            <option value='a'>Active</option>
+                                            <option value='i'>In-Active</option>
+                                        </select>
+                                        <span data-ng-show="showDatabaseBin" data-ng-bind="b.status"></span>
                                     </div>
                                 </td>
                                 <td>
@@ -389,7 +405,13 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showDatabaseBin" />
+                                        <!--<input type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showDatabaseBin" />-->
+                                        <select type="text" class="form-control" data-ng-model="b.binSize" data-ng-show="!showDatabaseBin">
+                                                <option value='120'>120 L</option>
+                                                <option value='240'>240 L</option>
+                                                <option value='660'>660 L</option>
+                                                <option value='1000'>1000 L</option>
+                                            </select>
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.binSize"></span>
                                     </div>
                                 </td>

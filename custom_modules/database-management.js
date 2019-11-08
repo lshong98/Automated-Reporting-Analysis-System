@@ -5,15 +5,17 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = process.env.DATABASE_HOST || '';
-var DB_USER = process.env.DATABASE_USER || '';
+var DB_HOST = process.env.DATABASE_HOST || 'localhost';
+var DB_USER = process.env.DATABASE_USER || 'root';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || '';
+var DB_NAME = process.env.DATABASE_NAME || 'trienekens';
  
 var config = {
     user: DB_USER,
     password: DB_PASS,
-    host: DB_HOST
+    host: DB_HOST,
+    port: 3307,
+    timezone: 'utc'
 };
 
 var db;

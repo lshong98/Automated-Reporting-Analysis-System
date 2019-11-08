@@ -35,7 +35,7 @@ app.get('/dashboard-officer', function (req, res) {
 });
 app.get('/account-management', function (req, res) {
     'use strict';
-    res.sendFile('pages/account-management.html', {root: __dirname});
+    res.sendFile('pages/account-management.html', {root: __dirname});   
 });
 app.get('/account/:account', function (req, res) {
     'use strict';
@@ -212,6 +212,14 @@ app.get('/boundary/:areaID', function (req, res) {
 app.get('/history', function (req, res) {
     'use strict';
     res.sendFile('pages/history.html', {root: __dirname});
+});
+app.get('/wbd-history/:serialNo', function (req, res) {
+    'use strict';
+    res.sendFile('pages/wbd-history.html', {root: __dirname});
+});
+app.get('/new-business', function (req, res) {
+    'use strict';
+    res.sendFile('pages/new-business.html', {root: __dirname});
 });
 
 module.exports = app;

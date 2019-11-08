@@ -1,0 +1,376 @@
+<!-- Modal For new customer -->
+<div class="modal fade" id="createCustomer" tabindex="-1" role="dialog" aria-labelledby="createCustomer" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add New Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtCustomerUsername form-label">Username</label>
+                    <input type="text" class="form-control" id="txtCustomerUsername" data-ng-model="customer.username" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtCustomerPassword form-label">Password</label>
+                    <input type="text" class="form-control" id="txtCustomerPassword" data-ng-model="customer.password" />
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtCustomerContact form-label">Contact Number</label>
+                    <input type="text" class="form-control" id="txtCustomerContact" data-ng-model="customer.contactNumber" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtCustomerIcNo form-label">IC Number</label>
+                    <input type="text" class="form-control" id="txtCustomerIcNo" data-ng-model="customer.ic" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtCustomerTradingLicense form-label">Trading License</label>
+                    <input type="text" class="form-control" id="txtCustomerTradingLicense" data-ng-model="customer.tradingLicense" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerName form-label">Full Name</label>
+                    <input type="text" class="form-control" id="txtCustomerName" data-ng-model="customer.name" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCompanyName form-label">Company Name</label>
+                    <input type="text" class="form-control" id="txtCompanyName" data-ng-model="customer.companyName" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerHouse form-label">House No.</label>
+                    <input type="text" class="form-control" id="txtCustomerHouse" data-ng-model="customer.houseNo" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerStreet form-label">Street No.</label>
+                    <input type="text" class="form-control" id="txtCustomerStreet" data-ng-model="customer.streetNo" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerPostCode form-label">Post Code</label>
+                    <input type="text" class="form-control" id="txtCustomerPostCode" data-ng-model="customer.postCode" />
+                </div>
+                <div class="form-group">
+                    <label for="txtTaman form-label">Taman / Kpg</label>
+                    <select class="form-control" id="txtTaman" data-ng-model="customer.tamanID">
+                        <option data-ng-repeat="t in tamanList" value={{t.tamanID}}>{{t.tamanName}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerCity form-label">City</label>
+                    <input type="text" class="form-control" id="txtCustomerCity" data-ng-model="customer.city" />
+                </div>
+                <div class="form-group">
+                        <label for="txtCustomerState form-label">State</label>
+                        <input type="text" class="form-control" id="txtCustomerState" data-ng-model="customer.state" />
+                </div>
+                <div class="form-group">
+                        <label for="txtCustomerImage form-label">Image Path</label>
+                        <input type="text" class="form-control" id="txtCustomerImage" data-ng-model="customer.imgPath" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCustomerStatus form-label">Status</label>
+                    <select class="form-control" id="txtCustomerStatus" data-ng-model="customer.status">
+                        <option value="a">Active</option>
+                        <option value="i">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addCustomer();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal For new Taman -->
+<div class="modal fade" id="createTaman" tabindex="-1" role="dialog" aria-labelledby="createTaman" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add New Taman</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="txtTamanArea form-label">Area ID</label>
+                        <select type="text" class="form-control" id="txtTamanArea" data-ng-model="taman.areaID">
+                            <option data-ng-repeat="a in areaList" value={{a.id}}>{{a.id}} - {{a.name}}</option>
+                        </select>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="txtTamanName form-label">Taman Name</label>
+                        <input type="text" class="form-control" id="txtTamanName" data-ng-model="taman.tamanName"/>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="txtTamanLongitude form-label">Longitude</label>
+                        <input type="text" class="form-control" id="txtTamanLongitude" data-ng-model="taman.longitude"/>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="txtTamanLatitude form-label">Latitude</label>
+                        <input type="text" class="form-control" id="txtTamanLatitude" data-ng-model="taman.latitude" />
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="txtTamanStatus form-label">Area Collection Status</label>
+                        <select type="text" class="form-control" id="txtTamanStatus" data-ng-model="taman.areaCollStatus">
+                                <option value="a">Active</option>
+                                <option value="i">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-ng-click="addTaman();">Create</button>
+                </div>
+            </div>
+        </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>New Business</h5>
+    </div>
+</div>
+<div class="row filter-div">
+    <div class="col-md-3">
+        <h6>Customer ID :</h6>
+        <input class="form-control" type="text" id="serialNum" ng-model="wbdFilter.serialNo">
+
+    </div>
+</div>
+
+<br />
+
+<div class="row" ><!--data-ng-show="show.create == 'A'"-->
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createCustomer"><i class="fa fa-plus"></i> New Customer</button>
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createTaman"><i class="fa fa-plus"></i> New Taman</button>
+    </div>
+</div>
+
+<br />
+
+<!--Beginning of tab code-->
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="customerTab" role=tablist>
+            <li class="nav-item">
+                <a class="nav-link active" id="customer-tab" data-toggle="tab" data-target="#customerTab" role="tab" aria-controls="customerTab" aria-selected="true">Customer List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="taman-tab" data-toggle="tab" data-target="#tamanTab" role="tab" aria-controls="tamanTab" aria-selected="false">Taman List</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="customerTab" role="tabpanel" aria-labelledby="customer-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-clickable">
+                        <thead>
+                            <tr>
+                                <th width="20%" data-ng-click="orderBy('customerID');">Customer ID <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('name');">Full Name <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('icNo');">IC No. <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('serialNo');">User Email <i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('rcDwell');">Contact Number <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('houseNo');">Trading License <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('tmnKpg');">City <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('areaCode');">Image <i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('address');">House No <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('address');">Street No <i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
+                                <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="b in customerList |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="wbdHistory(b.serialNo)">
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.customerID" data-ng-show="!showCustomer" />
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.customerID"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="date" class="form-control" data-ng-model="b.creationDateTime" data-ng-show="!showCustomer" />
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.creationDateTime | date:'dd-MM-yyyy'"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <!--<select type="text" class="form-control" data-ng-model="b.name" data-ng-show="!showCustomer">
+                                                <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.ic}} - {{c.name}}</option>
+                                        </select>-->
+                                        <input type="text" class="form-control" data-ng-model="b.name" data-ng-show="!showCustomer">
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.name"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.ic" data-ng-show="!showCustomer" />
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.ic"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <!--<select type="text" class="form-control" data-ng-model="b.userEmail" data-ng-show="!showCustomer">
+                                            <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
+                                        </select>-->
+                                        <input type="text" class="form-control" data-ng-model="b.userEmail" data-ng-show="!showCustomer">
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.userEmail"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.contactNumber" data-ng-show="!showCustomer" />
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.contactNumber"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.tradingLicense" data-ng-show="!showCustomer" />
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.tradingLicense"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.city" data-ng-show="!showCustomer" />
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.city"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <select type="text" class="form-control" data-ng-model="b.imgPath" data-ng-show="!showCustomer">
+                                            <option data-ng-repeat="a in areaList" value={{a.id}}>{{a.id}}</option>
+                                        </select>
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.imgPath"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <!--<input type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showCustomer" />-->
+                                        <select type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showCustomer">
+                                            <option value="a">A</option>
+                                            <option value="i">I</option>
+                                        </select>
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.status"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable> <!--Requires breaking up-->
+                                        <input type="text" class="form-control" data-ng-model="b.houseNo" data-ng-show="!showCustomer" />
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.houseNo"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                        <div editable> <!--Requires breaking up-->
+                                            <input type="text" class="form-control" data-ng-model="b.streetNo" data-ng-show="!showCustomer" />
+                                            <span data-ng-show="showCustomer" data-ng-bind="b.streetNo"></span>
+                                        </div>
+                                    </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.companyName" data-ng-show="!showCustomer" />
+                                        <span data-ng-show="showCustomer" data-ng-bind="b.companyName"></span>
+                                    </div>
+                                </td>
+                                <td ><!--data-ng-show="show.edit == 'A'"-->
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showCustomer" data-ng-click="editCustomer();"><i class="fa fa-pencil-alt"></i></button>
+                                    <!--<button class="btn btn-sm btn-danger" data-ng-show="showCustomer" data-ng-click="deleteCustomer(b.customerID)"><i class="fas fa-trash-alt"></i></button>-->
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showCustomer" data-ng-click="saveCustomer(b.customerID, b.creationDateTime, b.name, b.ic, b.contactNumber, b.tradingLicense, b.city, b.imgPath,b.status, b.houseNo, b.streetNo, b.companyName);"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showCustomer" data-ng-click="cancelCustomer();"><i class="fa fa-times"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--<div class="tab-pane fade" id="tamanTab" role="tabpanel" aria-labelledby="taman-tab">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-clickable">
+                        <thead>
+                            <tr>
+                                <th width="20%" data-ng-click="orderBy('date');">Taman ID <i class="fas fa-sort-down"></i></th>
+                                <th width="35%" data-ng-click="orderBy('name');">Area ID<i class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('icNo');">Taman Name<i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('serialNo');">Longitude<i class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('rcDwell');">Latitude<i class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('houseNo');">Area Collection Status<i class="fas fa-sort-down"></i></th>
+                                <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="b in tamanList |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.tamanID" data-ng-show="!showTaman" />
+                                        <span data-ng-show="showTaman" data-ng-bind="b.tamanID"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <select type="text" class="form-control" data-ng-model="b.areaID" data-ng-show="!showTaman">
+                                                <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaID}} - {{a.name}}</option>
+                                        </select>
+                                        <span data-ng-show="showTaman" data-ng-bind="b.areaID"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.tamanName" data-ng-show="!showTaman" />
+                                        <span data-ng-show="showTaman" data-ng-bind="b.tamanName"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.longitude" data-ng-show="!showTaman">
+                                        <span data-ng-show="showTaman" data-ng-bind="b.longitude"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <input type="text" class="form-control" data-ng-model="b.latitude" data-ng-show="!showTaman" />
+                                        <span data-ng-show="showTaman" data-ng-bind="b.latitude"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <select type="text" class="form-control" data-ng-model="b.areaCollStatus" data-ng-show="!showTaman">
+                                            <option value="a">A</option>
+                                            <option value="i">I</option>
+                                        </select>
+                                        <span data-ng-show="showTaman" data-ng-bind="b.areaCollStatus"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showDatabaseBin" data-ng-click="editDatabaseBin();"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-danger" data-ng-show="showDatabaseBin" data-ng-click="deleteDatabaseBin(b.serialNo)"><i class="fas fa-trash-alt"></i></button>
+                                    <button class="btn btn-sm btn-warning" data-ng-show="!showDatabaseBin" data-ng-click="saveDatabaseBin(b.id, b.date, b.customerID, b.areaCode, b.serialNo, b.acrfSerialNo, b.status, b.rcDwell, b.comment, b.itemType, b.path);"><i class="fa fa-save"></i></button>
+                                    <button class="btn btn-sm btn-default" data-ng-show="!showDatabaseBin" data-ng-click="cancelDatabaseBin();"><i class="fa fa-times"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
+        </div>
+
+    </div>
+</div>
+
+<!--End of tab code-->

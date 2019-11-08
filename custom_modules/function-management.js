@@ -93,7 +93,7 @@ function makeID(keyword, creationDate) {
         property = "boundaryID";
         header = "BND";
         break;
-    case "history":
+    case "history": 
         table = "tblhistory";
         property = "historyID";
         header = "HIS";
@@ -234,6 +234,10 @@ function menuItem(keyword, status) {
         case "view inventory":
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.inventory.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-inventory"><i class="fas fa-dumpster"></i> Wheel Bin Inventory</a></li>';
+            }
+        case "view newBusiness":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.newBusiness.view == \'A\'" role="menuitem"><a class="menu__link" href="#/new-business"><i class="fas fa-dumpster"></i> New Business</a></li>';
             }
         case "view authorization":
             if (status == 'A') {

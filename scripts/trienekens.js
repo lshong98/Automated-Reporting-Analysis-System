@@ -58,34 +58,42 @@ socket.on('receive form authorize action', function (data) {
 });
 
 socket.on('new satisfaction', function (data) {
-    if (data.unread != 0) {
+    if (data.unread > 0) {
         $('.satisfaction').addClass("badge badge-danger").html(data.unread);
     }
 });
 
     socket.on('read municipal', function (data) {
-        if (data.unread != 0) {
+        if (data.unread > 0) {
             var unread = $('.satisfaction').html();
             console.log(unread);
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            console.log(remaining);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            if(unread >0){
+                var remaining = parseInt(unread) - parseInt(data.unread);
+                console.log(remaining);
+                $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            }
         }
     });
 
     socket.on('read commercial', function (data) {
         if (data.unread > 0) {
             var unread = $('.satisfaction').html();
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            if(unread >0){
+                var remaining = parseInt(unread) - parseInt(data.unread);
+                console.log(remaining);
+                $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            }
         }
     });
 
     socket.on('read scheduled', function (data) {
         if (data.unread > 0) {
             var unread = $('.satisfaction').html();
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            if(unread >0){
+                var remaining = parseInt(unread) - parseInt(data.unread);
+                console.log(remaining);
+                $('.satisfaction').addClass("badge badge-danger").html(remaining);
+            }
         }
     });
 
@@ -127,6 +135,17 @@ app.filter('offset', function () {
         return input.slice(start);
     };
 });
+
+// WBD Filters
+app.filter('serialNoFilter', function(){
+    'use strict';
+    return function(serialNo, input){
+        if(input == serialNo){
+            return serialNo;
+        }
+        return serialNo;
+    }
+})
 
 /*
     -Upload Image
@@ -386,6 +405,11 @@ app.service('storeDataService', function () {
             "feedback": {
                 "view": 'A'
             },
+            "newBusiness": {
+                "view": 'I',
+                "create":'I',
+                "edit":'I'
+            },
             "role": {
                 "view": 'I'
             },
@@ -433,6 +457,9 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.showBinRequest = true;
         scope.deleteCollection = true;
         scope.showDatabaseBin = true;
+        scope.showCustomer = true;
+        scope.showTaman = true;
+        scope.showBinHistory = true;
         scope.showNewMgb = true;
         scope.showReusableMgb = true;
         scope.showDcsDetails = true;
@@ -927,6 +954,118 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 if (storeDataService.binRequest[index].id == scope.thisBinRequest.id) {
                     scope.x = angular.copy(storeDataService.binRequest[index]);
                 }
+            });
+        };
+
+        //TAMAN MODULE EDITABLE TABLES
+        scope.editTaman = function() {
+            scope.showTaman = !scope.showTaman;
+
+
+            console.log("hello from editTaman");
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+
+        };
+        scope.saveTaman = function() {
+            scope.showTaman = !scope.showTaman;
+
+            scope.thisDatabaseBin = { "idNo": id, "date": date, "customerID": customerID, "areaCode": areaCode, "serialNo": serialNo, "acrID": acrfSerialNo, "activeStatus": status, "rcDwell": rcDwell, "comment": comment, "itemType": itemType, "path": path };
+            console.log("The databasebin thing: ");
+            console.log(scope.thisDatabaseBin);
+
+            $http.put('/editTaman', scope.thisDatabaseBin).then(function(response) {
+                var data = response.data;
+
+                scope.notify(data.status, data.message);
+
+                $.each(storeDataService.databaseBin, function(index, value) {
+                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
+                    //     if (data.status == "success") {
+                    //         storeDataService.bin[index] = angular.copy(scope.b);
+                    //     } else {
+                    //         scope.z = angular.copy(storeDataService.bin[index]);
+                    //     }
+                    //     return false;
+                    // }
+                });
+            });
+        };
+        scope.cancelTaman = function() {
+            scope.showTaman = !scope.showTaman;
+
+            $.each(storeDataService.bin, function(index, value) {
+                if (storeDataService.databaseBin[index].id == scope.thisDatabaseBin.id) {
+                    scope.b = angular.copy(storeDataService.databaseBin[index]);
+                    return false;
+                }
+            });
+
+        };
+        scope.deleteTaman = function() {
+            $http.post('/deleteTaman', scope.b).then(function(response) {
+                var data = response.data;
+
+                scope.notify(data.status, data.message);
+
+            });
+        };
+
+        //CUSTOMER MODULE EDITABLE TABLES
+        scope.editCustomer = function() {
+            scope.showCustomer = !scope.showCustomer;
+
+            console.log("hello from editCustomer");
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+
+        };
+        scope.saveCustomer = function(customerID, creationDateTime, name, ic, contactNumber, tradingLicense, city, imgPath, status, houseNo, streetNo, companyName) {
+            scope.showCustomer = !scope.showCustomer;
+
+            scope.thisCustomer = {"customerID":customerID,"creationDateTime":creationDateTime, "name":name, "ic":ic, "contactNumber":contactNumber, "tradingLicense":tradingLicense, "city":city, "imgPath":imgPath, "status":status, "houseNo":houseNo, "streetNo":streetNo, "companyName":companyName};
+
+            console.log(scope.thisCustomer);
+
+            $http.put('/editCustomer', scope.thisCustomer).then(function(response) {
+                var data = response.data;
+
+                console.log("hello from editCustomer");
+                console.log(response.data);
+
+                scope.notify(data.status, data.message);
+
+                $.each(storeDataService.databaseBin, function(index, value) {
+                    // if (storeDataService.databaseBin[index].serialNo == scope.thisDatabaseBin.serialNo) {
+                    //     if (data.status == "success") {
+                    //         storeDataService.bin[index] = angular.copy(scope.b);
+                    //     } else {
+                    //         scope.z = angular.copy(storeDataService.bin[index]);
+                    //     }
+                    //     return false;
+                    // }
+                });
+            });
+        };
+        scope.cancelCustomer = function() {
+            scope.showCustomer = !scope.showCustomer;
+
+            $.each(storeDataService.bin, function(index, value) {
+                if (storeDataService.customer[index].id == scope.thisCustomer.id) {
+                    scope.b = angular.copy(storeDataService.customer[index]);
+                    return false;
+                }
+            });
+
+        };
+        scope.deleteCustomer = function(customerID) {
+            //scope.customerIDTemp = customerID;
+
+            $http.post('/deleteCustomer', customerID).then(function(response) {
+                var data = response.data;
+
+                scope.notify(data.status, data.message);
+
             });
         };
 
@@ -1550,7 +1689,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 }]
             });
             
-            $http.get('/readSatisfactionMunicipal').then(function (repsonse) {
+            $http.get('/readSatisfactionMunicipal').then(function (response) {
                 console.log(response.data);
             }, function (err) {
                 console.log(err);
@@ -1560,6 +1699,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         });
 
         $http.get('/unreadSatisfaction').then(function(response){
+            console.log(response.data);
             $scope.unreadMunicipal = response.data.municipal;
             $scope.unreadCommercial = response.data.commercial;
             $scope.unreadScheduled = response.data.scheduled;
@@ -1756,7 +1896,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 }]
             });
             
-            $http.get('/readSatisfactionCommercial').then(function (repsonse) {
+            $http.get('/readSatisfactionCommercial').then(function (response) {
                 console.log(response.data);
             }, function (err) {
                 console.log(err);
@@ -1937,7 +2077,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 }]
             });
             
-            $http.get('/readSatisfactionScheduled').then(function (repsonse) {
+            $http.get('/readSatisfactionScheduled').then(function (response) {
                 console.log(response.data);
             }, function (err) {
                 console.log(err);
@@ -5354,7 +5494,122 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
 
 });
 
-app.controller('databaseBinController', function ($scope, $http, $filter, storeDataService) {
+app.controller('newBusinessController', function($scope, $http, $filter){
+    'use strict';
+    $scope.customerList = [];
+    $scope.tamanList = [];
+    $scope.areaList = [];
+    //$scope.currentPage = 1; //Initial current page to 1
+    //$scope.itemsPerPage = 20; //Record number each page
+    //$scope.maxSize = 8; //Show the number in page
+
+    //Customer Details
+    $scope.initializeCustomer = function() {
+        $scope.customer = {
+            "customerID": '',
+            "username": '',
+            "password": '',
+            "contactNumber": '',
+            "ic": '',
+            "tradingLicense": '',
+            "name": '',
+            "companyName": '',
+            "houseNo": '',
+            "streetNo": '',
+            "tamanID": '',
+            "postCode": '',
+            "city": '',
+            "status": '',
+            "creationDateTime": ''
+        };
+    }
+
+    //Taman details
+    $scope.initializeTaman = function() {
+        $scope.taman = {
+            "tamanID": "",
+            "areaID": "",
+            "tamanName": "",
+            "longitude": "",
+            "latitude": "",
+            "areaCollStatus": ""
+        }
+    }
+
+    $http.get('/getAllCustomers').then(function(response){
+        $scope.customerList = response.data;
+        console.log($scope.customerList);
+        
+    })
+
+    $http.get('/getAllTaman').then(function(response){
+        $scope.tamanList = response.data;
+        console.log($scope.tamanList);
+        
+    })
+
+    $http.get('/getAllArea').then(function(response){
+        $scope.areaList = response.data;
+        console.log($scope.areaList);
+        
+    })
+
+    $scope.addCustomer = function() {
+        $scope.customer.creationDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+        //$scope.customer.customerID = f.makeID('customer',$filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+        //console.log($scope.customer.customeriD);
+        //console.log($scope.customer);
+
+        $http.post('/addCustomer', $scope.customer).then(function(response) {
+
+            $scope.notify(response.data.status, response.data.message);
+            if (response.data.status === 'success') {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "New Customer added successfully!"
+                });
+                $scope.customerList.push({ "name": $scope.customer.name, "ic": $scope.customer.ic, "companyName": $scope.customer.companyName });
+                angular.element('#createCustomer').modal('toggle');
+                $scope.initializeCustomer();
+            }
+        });
+
+    }
+})
+
+app.controller('binHistoryController', function($scope, $http, $filter, storeDataService, $routeParams){
+    'use strict';
+    $scope.binHistoryList = [];
+
+    $scope.serialNo = $routeParams.serialNo;
+
+    console.log("This is from the wbdHistory function in the binHistoryController: ");
+    console.log($scope.serialNo);
+    //window.location.href = '#/wbd-history/' + $scope.serialNo;
+
+    $http.get('/getBinHistory', $scope.serialNo).then(function(response){
+        $scope.binHistoryList = response.data;
+        console.log($scope.binHistoryList);
+        
+    })
+
+    //wbdHistory function
+    $scope.wbdHistory = function(serialNo){
+        console.log("This is from the wbdHistory function in the binHistoryController: ");
+        console.log(serialNo);
+        window.location.href = '#/wbd-history/' + serialNo;
+
+        $http.get('/getBinHistory', serialNo).then(function(response){
+            $scope.binHistoryList = response.data;
+            console.log($scope.binHistoryList);
+            
+        })
+
+    }
+})
+
+app.controller('databaseBinController', function($scope, $http, $filter, storeDataService) {
     'use strict';
     var asc = true;
     $scope.areaList = [];
@@ -5442,8 +5697,8 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
     //Retrieve all Area entries and store them in areaList
     $http.get('/getAllArea').then(function (response) {
         $scope.areaList = response.data;
-        console.log($scope.areaList);
-        console.log("Hello from area controller");
+        //console.log($scope.areaList);
+        //console.log("Hello from area controller");
     })
 
     //Retrieve all Customer entries and store them in customerList
@@ -5480,7 +5735,6 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
     $scope.areaList = [];
     $scope.binList = [];
     $scope.acrList = [];
-    $scope.binHistoryList = [];
 
 
     //get bin size
@@ -5681,22 +5935,18 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
             }
         });
 
+        
+
     }
 
-
-    //wbdHistory function
-    $scope.wbdHistory = function (serialNo) {
-        console.log("This is from the wbdHistory function: ");
+    $scope.wbdHistory = function(serialNo){
+        console.log("This is from the wbdHistory function in the wbd controller: ");
         console.log(serialNo);
-
-        $http.get('/getBinHistory', serialNo).then(function (response) {
-            $scope.binHistoryList = response.data;
-            console.log($scope.binHistoryList);
-        })
-
+        window.location.href = '#/wbd-history/' + serialNo;
     }
 
-    $scope.orderBy = function (property) {
+
+    $scope.orderBy = function(property) {
         $scope.databaseBinList = $filter('orderBy')($scope.databaseBinList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
@@ -7331,126 +7581,33 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
 });
 
 app.controller('bdafDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
-
-    $scope.status = '';
-
-    $scope.requestAuthorization = function () {
-        sendFormForAuthorization($routeParams.dcsID, "bdaf");
-        $scope.status = 'PENDING';
-    };
-
-    $scope.confirm = function (request) {
-        if (request == 'approve') {
-            $scope.approveForm();
-        } else if (request == 'reject') {
-            $scope.rejectForm();
-        }
-    };
-
-    $scope.approveForm = function () {
-        $scope.status = 'APPROVED';
-        approveForm($routeParams.dcsID, "bdaf");
-
-        angular.element('#approveConfirmation').modal('toggle');
-    }
-
-    $scope.rejectForm = function () {
-        $scope.status = 'CORRECTION REQUIRED';
-        rejectForm($routeParams.dcsID, "bdaf");
-
-
-        angular.element('#rejectConfirmation').modal('toggle');
-    }
-
-    $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
-    $scope.show = angular.copy(storeDataService.show.bdafDetails);
+    
+    
+    // VARIABLES
+    $scope.authorize = angular.copy(storeDataService.show.formAuthorization); //To reveal authorization controls
+    $scope.show = angular.copy(storeDataService.show.bdafDetails);//To reveal other controls
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
-    $scope.maxSize = 10;
-
-    //$scope.showDcsDetails = true;
-
+    $scope.maxSize = 10; //Max number of pages
     $scope.bdafDetailsList = [];
-    $scope.bdaf = [];
-    $scope.customerList = [];
-    $scope.acrList = [];
-    $scope.binList = [];
-    $scope.bdafID = {};
+    $scope.bdaf = []; //TO STORE BDAF INFO
+    $scope.bdafID = {}; //TO SEND TO SQL
     $scope.bdafID.id = $routeParams.bdafID;
     $scope.driverList = [];
     $scope.generalWorkerList = [];
-    $scope.driverButton;
-    $scope.generalWorkerButton;
+    $scope.status = ''; //FOR AUTHORIZATION
+    $scope.generalWorkers = ''; //Store assigned general worker list
+    $scope.driverButton; //reveal driver buttons
+    $scope.generalWorkerButton; //reveal general worker buttons
+    $scope.newBinDelivered = ''; //Store bin delivered input
+    $scope.newBinPulled = ''; //Store bin pulled input
+    $scope.binDelivered = ''; //Store bin delivered list
+    $scope.binPulled = ''; //Store bin pulled list
+    $scope.newBinDeliveredButton = false; //reveal bin delivered buttons
+    $scope.newBinPulledButton = false; //reveal bin pulled buttons
 
-
-    //$scope.initializeDcsDetails = function(){
-    $scope.bdafDetails = {
-        "dcsID": '',
-        "acrID": '',
-        "areaID": '',
-        "customerID": '',
-        "beBins": '',
-        "acrBins": '',
-        "mon": '',
-        "tue": '',
-        "wed": '',
-        "thu": '',
-        "fri": '',
-        "sat": '',
-        "remarks": ''
-    }
-    //}
-
-
-    $http.post('/getBdafInfo', $scope.bdafID).then(function (response) {
-
-        $scope.bdaf = response.data;
-        console.log($scope.bdaf);
-
-        if ($scope.bdaf[0].status == 'G') {
-            $scope.status = 'APPROVED';
-        } else if ($scope.bdaf[0].status == 'P') {
-            $scope.status = 'PENDING';
-        } else if ($scope.bdaf[0].status == 'R') {
-            $scope.status = 'CORRECTION REQUIRED';
-        } else if ($scope.bdaf[0].status == 'A') {
-            $scope.status = 'ACTIVE';
-        } else if ($scope.bdaf[0].status == 'C') {
-            $scope.status = 'COMPLETE';
-            $scope.show.edit = 'I';
-        }
-    });
-
-    $scope.saveDcsEntry = function () {
-
-        $http.post('/updateBdafEntry', $scope.bdafEntry).then(function (response) {
-
-            $scope.getBdafDetails();
-        });
-
-        angular.element('#editDcsEntry').modal('toggle');
-    }
-
-
-    $scope.getBdafDetails = function () {
-        $http.post('/getBdafDetails', $scope.bdafID).then(function (response) {
-
-            $scope.bdafDetailsList = response.data;
-            console.log($scope.bdafDetailsList);
-        });
-
-        $http.get('/getCustomerList', $scope.bdafID).then(function (response) {
-            $scope.customerList = response.data;
-        });
-
-        $http.get('/getAcrList', $scope.bdafID).then(function (response) {
-            $scope.acrList = response.data;
-        });
-
-        $http.get('/getBinList', $scope.bdafID).then(function (response) {
-            $scope.binList = response.data;
-        });
-
+    //ASSIGN DRIVER AND GENERAL WORKERS
+    var getDrivers = function() {
         $http.post('/getStaffList', {
             "position": 'Driver' 
         }).then(function (response) {
@@ -7460,12 +7617,18 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
             $scope.driverButton = true;
 
-        }); 
-
-        getGeneralWorkers();
-
+        });
     }
+    $scope.assignDriver = function (driver) {
+        $scope.driverButton = false;
 
+        $scope.bdaf.driver = driver.staffName;
+    }
+    $scope.clearDriver = function () {
+        $scope.driverButton = true;
+
+        $scope.bdaf.driver = '';
+    }
     var getGeneralWorkers = function () {
         $http.post('/getStaffList', {
             "position": 'General Worker'
@@ -7479,21 +7642,6 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         });
     }
-    $scope.getBdafDetails();
-
-    $scope.assignDriver = function (driver) {
-        $scope.driverButton = false;
-
-        $scope.bdaf.driver = driver.staffName;
-    }
-
-    $scope.clearDriver = function () {
-        $scope.driverButton = true;
-
-        $scope.bdaf.driver = '';
-    }
-
-    $scope.generalWorkers = '';
     $scope.assignGeneralWorker = function (generalWorker, index) {
         $scope.generalWorkerButton = false;
 
@@ -7507,7 +7655,6 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         }
 
     }
-
     $scope.clearGeneralWorker = function () {
         $scope.generalWorkerButton = true;
 
@@ -7518,8 +7665,63 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         getGeneralWorkers();
     }
 
+    //FORM AUTHORIZATION
+    $scope.requestAuthorization = function () {
+        sendFormForAuthorization($routeParams.dcsID, "bdaf");
+        $scope.status = 'PENDING';
+    };
+    $scope.confirm = function (request) {
+        if (request == 'approve') {
+            $scope.approveForm();
+        } else if (request == 'reject') {
+            $scope.rejectForm();
+        }
+    };
+    $scope.approveForm = function () {
+        $scope.status = 'APPROVED';
+        approveForm($routeParams.dcsID, "bdaf");
+
+        angular.element('#approveConfirmation').modal('toggle');
+    }
+    $scope.rejectForm = function () {
+        $scope.status = 'CORRECTION REQUIRED';
+        rejectForm($routeParams.dcsID, "bdaf");
 
 
+        angular.element('#rejectConfirmation').modal('toggle');
+    }
+
+
+    $scope.getBdafInfo = function() {
+        $http.post('/getBdafInfo', $scope.bdafID).then(function (response) {
+
+            $scope.bdaf = response.data;
+            console.log($scope.bdaf);
+    
+            if ($scope.bdaf[0].status == 'G') {
+                $scope.status = 'APPROVED';
+            } else if ($scope.bdaf[0].status == 'P') {
+                $scope.status = 'PENDING';
+            } else if ($scope.bdaf[0].status == 'R') {
+                $scope.status = 'CORRECTION REQUIRED';
+            } else if ($scope.bdaf[0].status == 'A') {
+                $scope.status = 'ACTIVE';
+            } else if ($scope.bdaf[0].status == 'C') {
+                $scope.status = 'COMPLETE';
+                $scope.show.edit = 'I';
+            }
+        });
+    }
+    $scope.getBdafDetails = function () {
+        $http.post('/getBdafDetails', $scope.bdafID).then(function (response) {
+
+            $scope.bdafDetailsList = response.data;
+            console.log($scope.bdafDetailsList);
+        });
+
+        
+    }
+    
     $scope.addBdafEntry = function () {
         $scope.bdafEntry.bdafID = $routeParams.bdafID;
 
@@ -7575,7 +7777,84 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             }
         });
     }
+    $scope.saveDcsEntry = function () {
 
+        $http.post('/updateBdafEntry', $scope.bdafEntry).then(function (response) {
+
+            $scope.getBdafDetails();
+        });
+
+        angular.element('#editDcsEntry').modal('toggle');
+    }
+
+
+
+
+    
+    // ASSIGN BIN DELIVERED AND BIN PULLED
+    $scope.assignBinDelivered = function (binDelivered) {
+
+        if ($scope.binDelivered == '') {
+            $scope.binDelivered = binDelivered;
+        } else {
+            $scope.binDelivered = $scope.binDelivered.concat(", ", binDelivered);
+        }
+
+        $scope.newBinDelivered = '';
+        $scope.newBinDeliveredButton = false;
+
+    }
+    $scope.assignBinPulled = function (binPulled) {
+
+        if ($scope.binPulled == '') {
+            $scope.binPulled = binPulled;
+        } else {
+            $scope.binPulled = $scope.binPulled.concat(", ", binPulled);
+        }
+
+        $scope.newBinPulled = '';
+        $scope.newBinPulledButton = false;
+
+    }
+    $scope.clearBinDelivered = function () {
+
+        $scope.binDelivered = '';
+
+    }
+    $scope.clearBinPulled = function () {
+
+        $scope.binPulled = '';
+
+    }
+    $scope.cancelBinDelivered = function () {
+        $scope.newBinDeliveredButton = false;
+        $scope.newBinDelivered = '';
+    }
+    $scope.cancelBinPulled = function () {
+        $scope.newBinPulledButton = false;
+        $scope.newBinPulled = '';
+    }
+    $scope.revealBinDelivered = function(){
+        $scope.newBinDeliveredButton = true;
+    }
+    $scope.revealBinPulled = function(){
+        $scope.newBinPulledButton = true;
+    }
+
+    
+    
+
+    //INTIALIZE PAGE
+    $scope.getBdafInfo();
+    $scope.getBdafDetails();
+    getDrivers();
+    getGeneralWorkers();
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+
+    });
+    
+    
 
 });
 
