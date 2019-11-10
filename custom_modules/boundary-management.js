@@ -16,7 +16,6 @@ app.post('/createBoundary', function (req, res) {
         i,
         j,
         k;
-    
     if (polygons.length === 0) {
         res.json({"status": "success"});
         res.end();
@@ -48,13 +47,15 @@ app.post('/createBoundary', function (req, res) {
                 prefix = '';
             }
             plotSQL = plotSQL.trim();
+            plotSQL = plotSQL.substring(0,plotSQL.length - 1);
             plotSQL = plotSQL.replace(/[.]$/, '');
-
             database.query(boundarySQL, function (err, result) {
+                
                 if (err) {
                     res.end();
                     throw err;
                 } else {
+                    
                     database.query(plotSQL, function (err, result) {
                         if (err) {
                             res.end();
@@ -125,7 +126,9 @@ app.post('/updateBoundary', function (req, res) {
         }
         plotSQL = plotSQL.trim();
         plotSQL = plotSQL.replace(/[.]$/, '');
+        plotSQL = plotSQL.substring(0,plotSQL.length-1);
         deletePlotSQL = deletePlotSQL.trim();
+        deletePlotSQL = deletePlotSQL.substring(0,deletePlotSQL.length - 2);
         deletePlotSQL = deletePlotSQL.replace(/[.]$/, '');
         deletePlotSQL = deletePlotSQL.replace(/[.]$/, '');
         deletePlotSQL = deletePlotSQL.trim();
