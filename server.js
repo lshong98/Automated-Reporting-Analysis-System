@@ -37,6 +37,7 @@ var boundaryManagement = require('./custom_modules/boundary-management');
 var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
 var custApp = require('./custom_modules/cust-app');
+var general = require('./custom_modules/general');
 
 
 // Parse JSON bodies (as sent by API clients)
@@ -1079,3 +1080,4 @@ app.use('/', socketManagement);
 app.use('/', complaintManagement);
 app.use('/', custApp);
 app.use('/', lostBin);
+app.use('/', general);

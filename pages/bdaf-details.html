@@ -11,8 +11,12 @@
             <div class="modal-body">
 
                 <div class="form-group">
-                    <label for="txtCompany form-label">Location</label>
-                    <textarea class="form-control" rows="4" data-ng-model="bdafEntry.location"></textarea>
+                    <label for="txtCompany form-label">Company</label>
+                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.company" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCompany form-label">Address</label>
+                    <textarea class="form-control" rows="4" data-ng-model="bdafEntry.address"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="txtCompany form-label">Council</label>
@@ -23,19 +27,17 @@
                     <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.contactPerson" />
 
                 </div>
-
                 <div class="form-group">
                     <label for="txtBeBins form-label">Contact No</label>
                     <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.contactNumber" />
                 </div>
-
                 <div class="form-group">
                     <label for="txtAcrBins form-label">ACR Sticker</label>
-                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.acrSticker" />
+                    <input type="text" class="form-control" id="txtAcrSticker" data-ng-model="bdafEntry.acrSticker" />
                 </div>
                 <div class="form-group">
                     <label for="txtAreaCode form-label">ACRF No.</label>
-                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.acrID" />
+                    <input type="text" class="form-control" id="txtAcrfNo" data-ng-model="bdafEntry.acrID" />
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label">Job Description</label>
@@ -198,7 +200,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <!-- Assign Driver -->
-                    <span>Driver: {{bdaf.driver}}</span><span id="buttons">
+                    <span><b>Driver:</b> {{bdaf.driver}}</span><span id="buttons">
                         <button ng-show="!driverButton" class="btn btn-sm btn-danger" ng-click="clearDriver();"> <i
                                 class="fas fa-times"></i></button>
                         <button ng-show="driverButton" class="btn btn-sm btn-success dropdown-toggle" type="button"
@@ -207,18 +209,19 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <input type=text class="form-control" placeholder="Search.." ng-model="driverFilter">
-                            <a class="dropdown-item" data-ng-repeat="d in driverList | filter:driverFilter" ng-click="assignDriver(d);">{{d.staffName}}</a>
+                            <a class="dropdown-item" data-ng-repeat="d in driverList | filter:driverFilter"
+                                ng-click="assignDriver(d);">{{d.staffName}}</a>
                         </div>
                 </div>
                 <div class="col-md-6">
-                    <h6>Date: {{bdaf.date}}</h6>
+                    <h6>Date: {{bdaf[0].creationDateTime | date: "dd-MM-yyyy"}}</h6>
                 </div>
 
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <!-- Assign General Worker -->
-                    <span>General Worker: {{generalWorkers}}</span><span id="buttons">
+                    <span><b>General Worker:</b> {{generalWorkers}}</span><span id="buttons">
                         <button ng-show="!generalWorkerButton" class="btn btn-sm btn-danger"
                             ng-click="clearGeneralWorker();"> <i class="fas fa-times"></i></button>
                         <button class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -226,8 +229,10 @@
                             <i class="fas fa-plus"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <input type=text class="form-control" placeholder="Search.." ng-model="generalWorkerFilter">
-                            <a class="dropdown-item" data-ng-repeat="gw in generalWorkerList | filter:generalWorkerFilter" ng-click="assignGeneralWorker(gw, $index);">{{gw.staffName}}</a>
+                            <input type=text class="form-control" placeholder="Search.." ng-model="generalWorkerFilter">
+                            <a class="dropdown-item"
+                                data-ng-repeat="gw in generalWorkerList | filter:generalWorkerFilter"
+                                ng-click="assignGeneralWorker(gw, $index);">{{gw.staffName}}</a>
                         </div>
                 </div>
             </div>
