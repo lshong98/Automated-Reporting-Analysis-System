@@ -7584,6 +7584,16 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.binPulled = ''; //Store bin pulled list
     $scope.newBinDeliveredButton = false; //reveal bin delivered buttons
     $scope.newBinPulledButton = false; //reveal bin pulled buttons
+    $scope.binSizeList = [] //To store bin sizes
+
+
+    //GET BIN SIZE LIST
+    var getBinSize = function() {
+        $http.get('/getBinSize').then(function (response) {
+            $scope.searchAcrFilter = '';
+            $scope.binSizeList = response.data;
+        });
+    };
 
     //ASSIGN DRIVER AND GENERAL WORKERS
     var getDrivers = function() {
@@ -7828,8 +7838,11 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.getBdafDetails();
     getDrivers();
     getGeneralWorkers();
+    getBinSize();
     $(document).ready(function () {
         $('.selectpicker').selectpicker();
+        document.getElementById('txtAcrSticker').value = 'NA';
+        document.getElementById('txtAcrfNo').value = 'NA';
 
     });
     
