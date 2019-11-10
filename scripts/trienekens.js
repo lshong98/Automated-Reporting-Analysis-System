@@ -1348,6 +1348,9 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     $scope.itemsPerPage = 3; //Record number each page
     $scope.itemsPerPageBinReq = 10;
     $scope.maxSize = 8; //Show the number in page
+    $scope.m = {};
+    $scope.c = {};
+    $scope.s = {};
 
     $scope.sendNotifToDevice = function () {
         $scope.data = {
@@ -1375,16 +1378,6 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             fd.append('file[]', file);
         });
 
-        // console.log(fd);
-        // $http.post("upload.php", fd, {
-        //     transformRequest: angular.identity,
-        //     headers:{'Content-Type': undefined}
-        // }).then(function(response){
-        //     alert(response.data);
-        //     $scope.displayImg();
-        // }, function(error){
-        //     console.log(error);
-        // });
         console.log($scope.files);
         $http.post('/uploadCarouselImg').then(function (response) {
             console.log(response.data);
@@ -1420,40 +1413,6 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         $http.get('/getAllSchedule').then(function (response) {
             console.log(response.data);
             $scope.schedule = response.data;
-        }, function (error) {
-            console.log(error);
-        });
-    };
-
-    $scope.getPendingUser = function () {
-        $http.get('/getPendingUser').then(function (response) {
-            console.log(response.data);
-            $scope.pendingUsers = response.data;
-        }, function (error) {
-            console.log(error);
-        });
-    };
-
-    // $scope.updatePendingUser = function(id, status){
-    //     $http.put('updatePendingUser.php?id='+id+"&status="+status).then(function(response){
-    //         alert(response.data);
-    //         $scope.getPendingUser();
-    //     }, function(error){
-    //         console.log(error);
-    //     });
-    // };
-
-    $scope.updatePendingUser = function (id, status, email, pass) {
-        $scope.pUsers = {
-            "pendingID": id,
-            "status": status,
-            "email": email,
-            "pass": pass
-        };
-
-        $http.post('/updatePendingUser', $scope.pUsers).then(function (response) {
-            alert(response.data);
-            $scope.getPendingUser();
         }, function (error) {
             console.log(error);
         });
@@ -1579,8 +1538,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1599,8 +1558,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1619,8 +1578,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1639,8 +1598,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1659,8 +1618,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1679,8 +1638,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1786,8 +1745,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1806,8 +1765,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1826,8 +1785,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1846,8 +1805,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1866,8 +1825,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1886,8 +1845,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -1987,8 +1946,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -2007,8 +1966,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -2027,8 +1986,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -2047,8 +2006,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -2067,8 +2026,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
                 xAxis: {
                     categories: [
                         'Not Satisfied',
-                        'Neutral',
-                        'Satisfied'
+                        'Satisfied',
+                        'Very Satisfied'
                     ]
                 },
                 series: [{
@@ -2091,6 +2050,97 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             $scope.unreadCommercial = response.data.commercial;
             $scope.unreadScheduled = response.data.scheduled;
         });
+    };
+
+    $scope.resetFormM = function () {
+        $scope.m.name = '';
+        $scope.m.company = '';
+        $scope.m.address = '';
+        $scope.m.number = '';
+        $scope.m.compRate = '';
+        $scope.m.teamEff = '';
+        $scope.m.collPrompt = '';
+        $scope.m.binHand = '';
+        $scope.m.spillCtrl = '';
+        $scope.m.qryResp = '';
+        $scope.m.extraComment = '';
+    }
+
+    $scope.resetFormC = function () {
+        $scope.c.name = '';
+        $scope.c.company = '';
+        $scope.c.address = '';
+        $scope.c.number = '';
+        $scope.c.compRate = '';
+        $scope.c.teamEff = '';
+        $scope.c.collPrompt = '';
+        $scope.c.cleanliness = '';
+        $scope.c.physicalCond = '';
+        $scope.c.qryResp = '';
+        $scope.c.extraComment = '';
+    }
+
+    $scope.resetFormS = function () {
+        $scope.s.name = '';
+        $scope.s.company = '';
+        $scope.s.address = '';
+        $scope.s.number = '';
+        $scope.s.compRate = '';
+        $scope.s.teamEff = '';
+        $scope.s.healthAdh = '';
+        $scope.s.regAdh = '';
+        $scope.s.qryResp = '';
+        $scope.s.extraComment = '';
+    }
+
+    $scope.addFeedback = function(type){
+        console.log(type);
+        if(type == "municipal"){
+            $http.post('/addMunicipal', $scope.m).then(function(response){
+                var returnedData = response.data;
+
+                if (returnedData === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        "message": "Feedback added successfully!"
+                    });
+
+                    $scope.getMunicipalFeedback(); //REFRESH DETAILS
+
+                    angular.element('#municipal-form').modal('toggle');
+                }
+            });
+        }else if(type == "commercial"){
+            $http.post('/addCommercial', $scope.c).then(function(response){
+                var returnedData = response.data;
+
+                if (returnedData === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        "message": "Feedback added successfully!"
+                    });
+
+                    $scope.getCommercialFeedback(); //REFRESH DETAILS
+
+                    angular.element('#commercial-form').modal('toggle');
+                }
+            });
+        }else{
+            $http.post('/addScheduled', $scope.s).then(function(response){
+                var returnedData = response.data;
+
+                if (returnedData === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        "message": "Feedback added successfully!"
+                    });
+
+                    $scope.getScheduledFeedback(); //REFRESH DETAILS
+
+                    angular.element('#scheduled-form').modal('toggle');
+                }
+            });
+        }
     };
 });
 

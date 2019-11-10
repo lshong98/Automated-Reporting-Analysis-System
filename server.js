@@ -358,7 +358,7 @@ app.post('/editCollectionSchedule', function (req, res) {
 app.get('/customerFeedbackMunicipal', function(req, res){
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_municipal GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_municipal GROUP BY teamEfficiency UNION SELECT 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_municipal GROUP BY collectionPromptness UNION SELECT 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_municipal GROUP BY binHandling UNION SELECT 'spillageControl' as source, teamEfficiency AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_municipal GROUP BY spillageControl UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_municipal GROUP BY queryResponse";
-    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_municipal JOIN tbluser WHERE tblsatisfaction_municipal.userID = tbluser.userID";
+    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined'";
     var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, binHandS, spillCtrlS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
@@ -458,7 +458,7 @@ app.get('/customerFeedbackMunicipal', function(req, res){
 app.get('/customerFeedbackCommercial', function(req, res){
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_commercial GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_commercial GROUP BY teamEfficiency UNION SELECT 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_commercial GROUP BY collectionPromptness UNION SELECT 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_commercial GROUP BY cleanliness UNION SELECT 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_commercial GROUP BY physicalCondition UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_commercial GROUP BY queryResponse";
-    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_commercial JOIN tbluser WHERE tblsatisfaction_commercial.userID = tbluser.userID";
+    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined'";
     var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
@@ -556,7 +556,7 @@ app.get('/customerFeedbackCommercial', function(req, res){
 app.get('/customerFeedbackScheduled', function(req, res){
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency UNION SELECT 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence UNION SELECT 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse";
-    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_scheduled JOIN tbluser WHERE tblsatisfaction_scheduled.userID = tbluser.userID";
+    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined'";
     var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS;
     var compRateS, teamEffS, healthAdhS, regAdhS, qryRespS;
     var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
@@ -667,6 +667,48 @@ app.get('/readSatisfactionScheduled', function(req, res){
         res.send("New Satisfaction Read");
         res.end();
     });
+});
+
+app.post('/addMunicipal', function (req, res) {
+    'use strict';
+    console.log(req.body);
+    var sql = "INSERT INTO tblsatisfaction_municipal(name, company, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('"+req.body.name+"','"+req.body.company+"','"+req.body.address+"','"+req.body.number+"','"+req.body.compRate+"','"+req.body.teamEff+"','"+req.body.collPrompt+"','"+req.body.binHand+"','"+req.body.spillCtrl+"','"+req.body.qryResp+"','"+req.body.extraComment+"','r')";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.send("success");
+    });
+
+});
+
+app.post('/addCommercial', function (req, res) {
+    'use strict';
+    console.log(req.body);
+    var sql = "INSERT INTO tblsatisfaction_commercial(name, company, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('"+req.body.name+"','"+req.body.company+"','"+req.body.address+"','"+req.body.number+"','"+req.body.compRate+"','"+req.body.teamEff+"','"+req.body.collPrompt+"','"+req.body.cleanliness+"','"+req.body.physicalCond+"','"+req.body.qryResp+"','"+req.body.extraComment+"','r')";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.send("success");
+    });
+
+});
+
+app.post('/addScheduled', function (req, res) {
+    'use strict';
+    console.log(req.body);
+    var sql = "INSERT INTO tblsatisfaction_scheduled(name, company, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('"+req.body.name+"','"+req.body.company+"','"+req.body.address+"','"+req.body.number+"','"+req.body.compRate+"','"+req.body.teamEff+"','"+req.body.healthAdh+"','"+req.body.regAdh+"','"+req.body.qryResp+"','"+req.body.extraComment+"','r')";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.send("success");
+    });
+
 });
 
 app.post('/uploadCarouselImg', function (req, res) {
