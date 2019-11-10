@@ -37,6 +37,7 @@ var boundaryManagement = require('./custom_modules/boundary-management');
 var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
 var custApp = require('./custom_modules/cust-app');
+var general = require('./custom_modules/general');
 
 
 // Parse JSON bodies (as sent by API clients)
@@ -364,7 +365,7 @@ app.get('/customerFeedbackMunicipal', function(req, res){
     var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
     var json = {};
     var data = {};
-    data["data"] = [];
+    data.data = [];
     database.query(sql, function(err,result){
         console.log(result);
         for(var i = 0; i<result.length; i++){
@@ -420,10 +421,10 @@ app.get('/customerFeedbackMunicipal', function(req, res){
         database.query(sqlComments, function(err, result){
             for(var i = 0; i<result.length; i++){
                 if(result[i].extraComment != "" && result[i].extraComment != null){
-                    data["data"].push({"comments":result[i].extraComment,"user":result[i].name});
+                    data.data.push({"comments":result[i].extraComment,"user":result[i].name});
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"binHandUS":binHandUS,"binHandAvg":binHandAvg,"binHandS":binHandS,"spillCtrlUS":spillCtrlUS,"spillCtrlAvg":spillCtrlAvg,"spillCtrlS":spillCtrlS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data["data"]};
+            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"binHandUS":binHandUS,"binHandAvg":binHandAvg,"binHandS":binHandS,"spillCtrlUS":spillCtrlUS,"spillCtrlAvg":spillCtrlAvg,"spillCtrlS":spillCtrlS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data.data};
             res.json(json);
             res.end();
         });
@@ -464,7 +465,7 @@ app.get('/customerFeedbackCommercial', function(req, res){
     var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
     var json = {};
     var data = {};
-    data["data"] = [];
+    data.data = [];
     database.query(sql, function(err,result){
         for(var i = 0; i<result.length; i++){
             if(result[i].source == "companyRating" && result[i].category == "1"){
@@ -519,10 +520,10 @@ app.get('/customerFeedbackCommercial', function(req, res){
         database.query(sqlComments, function(err, result){
             for(var i = 0; i<result.length; i++){
                 if(result[i].extraComment != "" && result[i].extraComment != null){
-                    data["data"].push({"comments":result[i].extraComment,"user":result[i].name});
+                    data.data.push({"comments":result[i].extraComment,"user":result[i].name});
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"cleanlinessUS":cleanlinessUS,"cleanlinessAvg":cleanlinessAvg,"cleanlinessS":cleanlinessS,"physicalCondUS":physicalCondUS,"physicalCondAvg":physicalCondAvg,"physicalCondS":physicalCondS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data["data"]};
+            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"cleanlinessUS":cleanlinessUS,"cleanlinessAvg":cleanlinessAvg,"cleanlinessS":cleanlinessS,"physicalCondUS":physicalCondUS,"physicalCondAvg":physicalCondAvg,"physicalCondS":physicalCondS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data.data};
             res.json(json);
             res.end();
         });
@@ -562,7 +563,7 @@ app.get('/customerFeedbackScheduled', function(req, res){
     var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
     var json = {};
     var data = {};
-    data["data"] = [];
+    data.data = [];
 
     database.query(sql, function(err,result){
         for(var i = 0; i<result.length; i++){
@@ -610,10 +611,10 @@ app.get('/customerFeedbackScheduled', function(req, res){
         database.query(sqlComments, function(err, result){
             for(var i = 0; i<result.length; i++){
                 if(result[i].extraComment != "" && result[i].extraComment != null){
-                    data["data"].push({"comments":result[i].extraComment,"user":result[i].name});
+                    data.data.push({"comments":result[i].extraComment,"user":result[i].name});
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"healthAdhUS":healthAdhUS,"healthAdhAvg":healthAdhAvg,"healthAdhS":healthAdhS,"regAdhUS":regAdhUS,"regAdhAvg":regAdhAvg,"regAdhS":regAdhS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data["data"]};
+            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"healthAdhUS":healthAdhUS,"healthAdhAvg":healthAdhAvg,"healthAdhS":healthAdhS,"regAdhUS":regAdhUS,"regAdhAvg":regAdhAvg,"regAdhS":regAdhS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data.data};
             res.json(json);
             res.end();
         });
@@ -1121,3 +1122,4 @@ app.use('/', socketManagement);
 app.use('/', complaintManagement);
 app.use('/', custApp);
 app.use('/', lostBin);
+app.use('/', general);
