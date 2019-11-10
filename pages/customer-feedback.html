@@ -143,7 +143,8 @@
                             <h4>Comments</h4><br />
                             <div class="card" data-ng-repeat="comment in reviews.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
                                 <div class="card-body">
-                                    <span>{{comment}}</span>
+                                    <h6>{{comment.user}}</h6>
+                                    <span>{{comment.comments}}</span>
                                 </div>
                             </div>
                         </div>
@@ -250,7 +251,8 @@
                             <h4>Comments</h4><br />
                             <div class="card" data-ng-repeat="comment in reviewsCommercial.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
                                 <div class="card-body">
-                                    <span>{{comment}}</span>
+                                    <h6>{{comment.user}}</h6>
+                                    <span>{{comment.comments}}</span>
                                 </div>
                             </div>
                         </div>
@@ -344,7 +346,8 @@
                                 <h4>Comments</h4><br />
                                 <div class="card" data-ng-repeat="comment in reviewsScheduled.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
                                     <div class="card-body">
-                                        <span>{{comment}}</span>
+                                        <h6>{{comment.user}}</h6>
+                                        <span>{{comment.comments}}</span>
                                     </div>
                                 </div>
                             </div>

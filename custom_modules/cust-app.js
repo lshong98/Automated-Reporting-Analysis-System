@@ -1,3 +1,4 @@
+/*jslint node:true*/
 // var express = require('express');
 // var app = express();
 // var server = require('http').createServer(app);
@@ -38,7 +39,7 @@ var io = variable.io;
 //var fs = require('fs');
 
 app.use(upload());
-app.use('/img', express.static(__dirname+'/img'));
+app.use('/img', express.static(__dirname + '/img'));
 //app.use(express.static(__dirname + '/pendingImg'));
 
 
@@ -62,7 +63,7 @@ app.use('/img', express.static(__dirname+'/img'));
 //     port: 3307
 // });
 
-var imgPath = path.join(__dirname+'/img');
+var imgPath = path.join(__dirname + '/img');
 
 app.post('/loginCustServiceApp', function (req, resp) {
     'use strict';
@@ -85,7 +86,7 @@ app.post('/loginCustServiceApp', function (req, resp) {
                     if (result[0].status == 1) {
                         resp.send("Login Success");
                     } else {
-                        resp.send("Activate Acc "+data.email);
+                        resp.send("Activate Acc " + data.email);
                     }
                 } else {
                     console.log("login failed");
@@ -114,7 +115,7 @@ app.post('/getAreaID', function (req, resp) {
         var sql = "SELECT tamanID FROM tbluser WHERE userEmail = '" + data.email + "'";
         database.query(sql, function (err, res) {
             console.log(res);
-            if(err){
+            if (err) {
                 console.log(err);
             }
             if (res[0].tamanID != null) {
@@ -125,7 +126,7 @@ app.post('/getAreaID', function (req, resp) {
                     areaID = res[0].areaID;
                     resp.send(areaID);
                 });
-            }else{
+            } else {
                 resp.send("");
             }
         });
@@ -171,13 +172,15 @@ app.post('/getAreaID', function (req, resp) {
 app.get('/getImages', function (req, resp) {
     'use strict';
 
-    var results = {};
-    results["output"] = [];
-    var sql = "SELECT * FROM tblcarouselimg";
+    var results = {
+        output: []
+    },
+        sql = "SELECT * FROM tblcarouselimg",
+        i = 0;
 
     database.query(sql, function (err, res) {
-        for (var i = 0; i < res.length; i++) {
-            results["output"].push({
+        for (i = 0; i < res.length; i += 1) {
+            results.output.push({
                 "imageName": res[i].fileName,
                 "id": res[i].id
             });
@@ -190,34 +193,38 @@ app.get('/getImages', function (req, resp) {
 app.post('/getNotifs', function (req, resp) {
     'use strict';
 
-    var data;
-    var results = {};
-    results["response"] = [];
-    results["announcements"] = [];
+    var data,
+        results = {
+            response: [],
+            announcements: []
+        };
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
     req.addListener('end', function () {
-        console.log(data);
-        var sql = "SELECT *, (SELECT COUNT(readStat) FROM tblnotif WHERE readStat = 'u') as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '"+data.email+"' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
-        var sql2 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
+        var sql = "",
+            sql2 = "",
+            i = 0;
+        
+        sql = "SELECT *, (SELECT COUNT(readStat) FROM tblnotif WHERE readStat = 'u') as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
+        sql2 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
 
         database.query(sql, function (err, res) {
             if (!err) {
-                for (var i = 0; i < res.length; i++) {
-                    results["response"].push({
+                for (i = 0; i < res.length; i += 1) {
+                    results.response.push({
                         "notif": res[i].notifText,
                         "notifDate": res[i].notifDate,
                         "unread": res[i].unread
                     });
                 }
-                console.log(res[0].unread);
+                //console.log(res[0].unread);
 
                 database.query(sql2, function (err, res) {
                     if (!err) {
-                        for (var i = 0; i < res.length; i++) {
-                            results["announcements"].push({
+                        for (i = 0; i < res.length; i += 1) {
+                            results.announcements.push({
                                 "announce": res[i].announcement,
                                 "announceDate": res[i].announceDate,
                                 "unread": res[i].unread
@@ -227,8 +234,8 @@ app.post('/getNotifs', function (req, resp) {
                             var sql3 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = '" + data.areaID + "' ORDER BY announceDate DESC";
                             database.query(sql3, function (err, res) {
                                 if (!err) {
-                                    for (var i = 0; i < res.length; i++) {
-                                        results["announcements"].push({
+                                    for (i = 0; i < res.length; i += 1) {
+                                        results.announcements.push({
                                             "announce": res[i].announcement,
                                             "announceDate": res[i].announceDate,
                                             "unread": res[i].unread
@@ -238,7 +245,7 @@ app.post('/getNotifs', function (req, resp) {
                                     resp.json(results);
                                 }
                             });
-                        }else{
+                        } else {
                             console.log(results);
                             resp.json(results);
                         }
@@ -260,6 +267,7 @@ app.post('/updateNotifStat', function(req, resp){
 
     req.addListener('end', function(){
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.email + "'";
+        console.log(data.email);
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
@@ -281,9 +289,9 @@ app.post('/updateNotifStat', function(req, resp){
 app.post('/insertNotif', function (req, resp) {
     'use strict';
 
-    var data;
-    var userID;
-    var date = dateTime.create().format('Y-m-d');
+    var data,
+        userID,
+        date = dateTime.create().format('Y-m-d');
 
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
@@ -296,7 +304,7 @@ app.post('/insertNotif', function (req, resp) {
             if (!err) {
                 userID = res[0].userID;
                 console.log("user id: " + userID);
-                var insertSql = "INSERT INTO tblnotif(userID, notifDate, notifText) VALUES('" + userID + "','" + date + "','" + data.text + "')";
+                var insertSql = "INSERT INTO tblnotif(userID, notifDate, notifText, readStat) VALUES('" + userID + "','" + date + "','" + data.text + "', 'u')";
                 database.query(insertSql, function (err, res) {
                     if (!err) {
                         resp.send("Notif Inserted");
@@ -313,10 +321,13 @@ app.post('/insertNotif', function (req, resp) {
 
 app.post('/binRequest', function (req, resp) {
     'use strict';
-    var data;
-    var userID, name, contactNumber, companyName;
-    var date = dateTime.create().format('Y-m-d');
-	var reqID = 0;
+    var data,
+        userID,
+        name,
+        contactNumber,
+        companyName,
+        date = dateTime.create().format('Y-m-d'),
+        reqID = 0;
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
@@ -328,15 +339,15 @@ app.post('/binRequest', function (req, resp) {
                 userID = res[0].userID;
                 name = res[0].name;
                 contactNumber = res[0].contactNumber;
-                if(res[0].companyName != null || res[0].companyName != undefined || res[0].companyName != ""){
+                if (res[0].companyName != null || res[0].companyName != undefined || res[0].companyName != "") {
                     companyName = res[0].companyName;
-                }else{
+                } else {
                     companyName = "";
                 }
                 console.log("user id: " + userID);
-                if(data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != ""){
+                if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != "") {
                     var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status) VALUES('" + userID + "','" + date + "','" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "')";
-                }else{
+                } else {
                     var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status) VALUES('" + userID + "','" + date + "','" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "')";
                 }
                 
@@ -369,7 +380,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
     console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
-    fs.writeFile(__dirname + '/../images/BinReqImg/BinRequest_' + data.cID + '_' + date.toString() +'.jpg', Buffer.from(data.BinReqImage, 'base64'), function (err) {
+    fs.writeFile(__dirname + '/../images/BinReqImg/BinRequest_' + data.cID + '_' + date.toString() + '.jpg', Buffer.from(data.BinReqImage, 'base64'), function (err) {
         if (err) {
             console.log(err);
         } else {
@@ -402,8 +413,8 @@ app.post('/getSchedule', function (req, resp) {
         var sqlTaman = "SELECT tamanID FROM tbluser WHERE userEmail ='" + data.email + "'";
         database.query(sqlTaman, function (err, res) {
             if (res[0] != undefined) {
-                if (res[0].tamanID != null) {  
-                    tamanID = res[0].tamanID;                  
+                if (res[0].tamanID != null) {
+                    tamanID = res[0].tamanID;
                     var sqlarea = "SELECT areaID FROM tbltaman WHERE tamanID = '" + tamanID + "'";
                     database.query(sqlarea, function (err, res) {
                         var areaID = res[0].areaID;

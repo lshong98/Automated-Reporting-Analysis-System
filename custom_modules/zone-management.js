@@ -66,9 +66,12 @@ app.get('/getAllZone', function (req, res) {
 app.post('/editZone', function (req, res) {
     'use strict';
     
-    var dt = dateTime.create().format('Y-m-d H:M:S');
+    var dt = dateTime.create().format('Y-m-d H:M:S'),
+        sql = "";
+    
     req.body.status = req.body.status === 'ACTIVE' ? 'A' : 'I';
-    var sql = "UPDATE tblzone SET zoneCode = '" + req.body.code + "', zoneName = '" + req.body.name + "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '" + req.body.id + "'";
+    
+    sql = "UPDATE tblzone SET zoneCode = '" + req.body.code + "', zoneName = '" + req.body.name + "', zoneStatus = '" + req.body.status + "' WHERE zoneID = '" + req.body.id + "'";
     
     f.sendForAuthorization(dt, req.body.iam, "update", "Update zone", req.body.id, "tblzone", "\"" + sql + "\"");
     f.logTransaction(dt, req.body.iam, "update", "Request to update zone", req.body.id, "tblzone");

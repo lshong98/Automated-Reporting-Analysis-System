@@ -35,10 +35,11 @@ app.post('/addTruck', function (req, res) {
 app.post('/editTruck', function (req, res) {
     'use strict';
     
-    var dt = dateTime.create().format('Y-m-d H:M:S');
+    var dt = dateTime.create().format('Y-m-d H:M:S'),
+        sql = "";
     req.body.status = req.body.status === "ACTIVE" ? 'A' : 'I';
     
-    var sql = "UPDATE tbltruck SET transporter = '" + req.body.transporter + "', truckTon = '" + req.body.ton + "', truckNum = '" + req.body.no + "', truckExpiryStatus = '" + req.body.roadtax + "', truckStatus = '" + req.body.status + "' WHERE truckID = '" + req.body.id + "'";
+    sql = "UPDATE tbltruck SET transporter = '" + req.body.transporter + "', truckTon = '" + req.body.ton + "', truckNum = '" + req.body.no + "', truckExpiryStatus = '" + req.body.roadtax + "', truckStatus = '" + req.body.status + "' WHERE truckID = '" + req.body.id + "'";
     
     f.sendForAuthorization(dt, req.body.iam, "update", "Update truck", req.body.id, "tbltruck", "\"" + sql + "\"");
     f.logTransaction(dt, req.body.iam, "add", "Request to update truck", req.body.id, "tbltruck");

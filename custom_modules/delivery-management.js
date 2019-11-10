@@ -1,10 +1,11 @@
+/*jslint node:true*/
 var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 
 // ACR Management
-app.post('/addBdaf',function(req,res){
+app.post('/addBdaf', function (req, res) {
     'use strict';
 
     f.makeID("bdaf", req.body.creationDate).then(function (ID) {
@@ -19,28 +20,26 @@ app.post('/addBdaf',function(req,res){
         });
     });
 }); // Complete
-app.post('/getAllBdaf', function(req,res){
+app.post('/getAllBdaf', function (req, res) {
     'use strict';
     var sql = "SELECT b.bdafID AS id, b.creationDateTime as date, b.driverID as driver, b.staffID as generalWorker, b.authorizedBy, b.authorizedDate, b.status from tblbdaf as b";
         
-    if(req.body.status){
+    if (req.body.status) {
         sql += " WHERE status = 'A'";
-    }else{
+    } else {
         sql += " WHERE status = 'I'";
     }
     
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log("GET ALL BDAF: " + result);
-    }); 
-
-    
+    });
 });
 
-app.post('/getBdafDetails', function(req,res){
+app.post('/getBdafDetails', function (req, res) {
     'use strict';
     console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
     console.log(req.body);
@@ -51,25 +50,25 @@ app.post('/getBdafDetails', function(req,res){
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
-        } 
+            throw err;
+        }
          
-        res.json(result);  
-        console.log(result); 
+        res.json(result);
+        console.log(result);
     });
-}); 
+});
 
-app.post('/addBdafEntry',function(req,res){ 
+app.post('/addBdafEntry', function (req, res) {
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
-    if(req.body.binDelivered == ''){
-        req.body.binDelivered = null; 
-    } 
+    if (req.body.binDelivered == '') {
+        req.body.binDelivered = null;
+    }
 
-    if(req.body.binPulled == ''){
+    if (req.body.binPulled == '') {
         req.body.binPulled = null;
     }
-    var sql = "INSERT INTO tblbdafentry (idNo, bdafID, customerID, acrID, acrSticker, serialNo, binDelivered, binPulled, jobDesc, remarks, completed) VALUE ('" + null + "', '" + req.body.bdafID + "' , '"  + req.body.customerID + "', '"  + req.body.acrID + "', '" + req.body.acrSticker + "', '" + req.body.serialNo + "', '" + req.body.binDelivered + "', '" + req.body.binPulled + "', '" + req.body.jobDesc + "', '" + req.body.remarks + "', '"+ req.body.completed + "')";
+    var sql = "INSERT INTO tblbdafentry (idNo, bdafID, customerID, acrID, acrSticker, serialNo, binDelivered, binPulled, jobDesc, remarks, completed) VALUE ('" + null + "', '" + req.body.bdafID + "' , '"  + req.body.customerID + "', '"  + req.body.acrID + "', '" + req.body.acrSticker + "', '" + req.body.serialNo + "', '" + req.body.binDelivered + "', '" + req.body.binPulled + "', '" + req.body.jobDesc + "', '" + req.body.remarks + "', '" + req.body.completed + "')";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -81,13 +80,12 @@ app.post('/addBdafEntry',function(req,res){
 
 
 
-
-app.post('/getBdafInfo',function(req,res){ 
+app.post('/getBdafInfo', function (req, res) {
     'use strict';
     //console.log("DCS ID: " + req.body.dcsID);
     var sql = "SELECT * from tblbdaf where bdafID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
-        if (err) { 
+        if (err) {
             throw err;
         }
  
@@ -98,5 +96,4 @@ app.post('/getBdafInfo',function(req,res){
 
 
 
-
-module.exports = app; 
+module.exports = app;
