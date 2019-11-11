@@ -31,11 +31,52 @@
             <p><strong>Remarks: </strong>{{reqDetail.remarks}}</p>
         </div>
         <div class="col-md-6">
-            <h3>Photo attached</h3>
-            <a href=../images/{{reqDetail.img}} data-fancybox data-width="2048">
-                <img ng-src=../images/{{reqDetail.img}} data-ng-show="reqDetail.img != null">
-            </a>
-            <p data-ng-show="reqDetail.img == '' || reqDetail.img == null">No image attached</p>
+            <h3>Photo(s) attached</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>IC</h6>
+                    <a href=../images/{{reqDetail.icImg}} data-fancybox data-width="2048">
+                        <img ng-src=../images/{{reqDetail.icImg}} data-ng-show="reqDetail.icImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.icImg == '' || reqDetail.icImg == null">No image attached</p>
+                </div>
+
+                <div class="col-md-6">
+                    <h6>Bin Image</h6>
+                    <a href=../images/{{reqDetail.binImg}} data-fancybox data-width="2048">
+                        <img ng-src=../images/{{reqDetail.binImg}} data-ng-show="reqDetail.binImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.binImg == '' || reqDetail.binImg == null">No image attached</p>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Utility Bill</h6>
+                    <a href=../images/{{reqDetail.utilityImg}} data-fancybox data-width="2048">
+                        <img ng-src=../images/{{reqDetail.utilityImg}} data-ng-show="reqDetail.utilityImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.utilityImg == '' || reqDetail.utilityImg == null">No image attached</p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Assessment Bill</h6>
+                    <a href=../images/{{reqDetail.assessmentImg}} data-fancybox data-width="2048">
+                        <img ng-src=../images/{{reqDetail.assessmentImg}} data-ng-show="reqDetail.assessmentImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.assessmentImg == '' || reqDetail.assessmentImg == null">No image attached</p>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Trading License</h6>
+                    <a href=../images/{{reqDetail.tradingImg}} data-fancybox data-width="2048">
+                        <img ng-src=../images/{{reqDetail.tradingImg}} data-ng-show="reqDetail.tradingImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.tradingImg == '' || reqDetail.tradingImg == null">No image attached</p>
+                </div>
+            </div>
+            <br/><br/>
         </div>
     </div>
 </div>

@@ -34,6 +34,348 @@
     }
 
 </style>
+
+<!--Municipal form modal-->
+<div class="modal fade" id="municipal-form" tabindex="-1" role="dialog" aria-labelledby="municipal-form" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">New Municipal Feedback</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="name form-label">Name</label>
+                <input type="text" class="form-control" id="name" data-ng-model="m.name">
+            </div>
+            <div class="form-group">
+                <label for="company form-label">Company</label>
+                <input type="text" class="form-control" id="company" data-ng-model="m.company">
+            </div>
+            <div class="form-group">
+                <label for="address form-label">Address</label>
+                <input type="text" class="form-control" id="address" data-ng-model="m.address">
+            </div>
+            <div class="form-group">
+                <label for="number form-label">Phone Number</label>
+                <input type="text" class="form-control" id="number" data-ng-model="m.number">
+            </div>
+            <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="m.compRate"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="m.compRate"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="m.compRate"> Very Satisfied
+                </label>
+            </div>
+
+            <label for="form-label"><b>2. Quality of Services</b></label>
+            <div class="form-group">
+                <label for="form-label"><b>Efficiency of our service team</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="m.teamEff"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="m.teamEff"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="m.teamEff"> Very Satisfied
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="form-label"><b>Promptness of collection according to schedule</b></label>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="m.collPrompt"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="m.collPrompt"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="m.collPrompt"> Very Satisfied
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="form-label"><b>Bin handling</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2c" data-ng-value="1" data-ng-model="m.binHand"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2c" data-ng-value="2" data-ng-model="m.binHand"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2c" data-ng-value="3" data-ng-model="m.binHand"> Very Satisfied
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="form-label"><b>Spillage control</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2d" data-ng-value="1" data-ng-model="m.spillCtrl"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2d" data-ng-value="2" data-ng-model="m.spillCtrl"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2d" data-ng-value="3" data-ng-model="m.spillCtrl"> Very Satisfied
+                </label>
+            </div>
+
+            <label for="form-label"><b>3. Our response/feedback to your queries</b></label>
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied3" data-ng-value="1" data-ng-model="m.qryResp"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied3" data-ng-value="2" data-ng-model="m.qryResp"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied3" data-ng-value="3" data-ng-model="m.qryResp"> Very Satisfied
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="extraComment form-label"><b>4. How can we serve you better?</b></label>
+                <textarea id="extraComment" class="form-control" data-ng-model="m.extraComment"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-ng-click="addFeedback('municipal')">Add</button>
+        </div>
+      </div>
+    </div>
+</div>
+<!--form end-->
+
+<!--Commercial form modal-->
+<div class="modal fade" id="commercial-form" tabindex="-1" role="dialog" aria-labelledby="commercial-form" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">New Commercial Feedback</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="name form-label">Name</label>
+                <input type="text" class="form-control" id="name" data-ng-model="c.name">
+            </div>
+            <div class="form-group">
+                <label for="company form-label">Company</label>
+                <input type="text" class="form-control" id="company" data-ng-model="c.company">
+            </div>
+            <div class="form-group">
+                <label for="address form-label">Address</label>
+                <input type="text" class="form-control" id="address" data-ng-model="c.address">
+            </div>
+            <div class="form-group">
+                <label for="number form-label">Phone Number</label>
+                <input type="text" class="form-control" id="number" data-ng-model="c.number">
+            </div>
+            <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="c.compRate"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="c.compRate"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="c.compRate"> Very Satisfied
+                </label>
+            </div>
+
+            <label for="form-label"><b>2. Quality of Services</b></label>
+            <div class="form-group">
+                <label for="form-label"><b>Efficiency of our service team</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="c.teamEff"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="c.teamEff"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="c.teamEff"> Very Satisfied
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="form-label"><b>Promptness of collection according to schedule</b></label>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="c.collPrompt"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="c.collPrompt"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="c.collPrompt"> Very Satisfied
+                </label>
+            </div>
+
+            <label for="form-label"><b>3. Condition of container</b></label>
+            <div class="form-group">
+                <label for="form-label"><b>Cleanliness</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied3a" data-ng-value="1" data-ng-model="c.cleanliness"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied3a" data-ng-value="2" data-ng-model="c.cleanliness"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied3a" data-ngvalue="3" data-ng-model="c.cleanliness"> Very Satisfied
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="form-label"><b>Physical working condition</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied3b" data-ng-value="1" data-ng-model="c.physicalCond"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied3b" data-ng-value="2" data-ng-model="c.physicalCond"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied3b" data-ng-value="3" data-ng-model="c.physicalCond"> Very Satisfied
+                </label>
+            </div>
+
+            <label for="form-label"><b>4. Our response/feedback to your queries</b></label>
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied4" data-ng-value="1" data-ng-model="c.qryResp"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied4" data-ng-value="2" data-ng-model="c.qryResp"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied4" data-ng-value="3" data-ng-model="c.qryResp"> Very Satisfied
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="extraComment form-label"><b>5. How can we serve you better?</b></label>
+                <textarea id="extraComment" class="form-control" data-ng-model="c.extraComment"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-ng-click="addFeedback('commercial')">Add</button>
+        </div>
+      </div>
+    </div>
+</div>
+<!--form end-->
+
+<!--Scheduled form modal-->
+<div class="modal fade" id="scheduled-form" tabindex="-1" role="dialog" aria-labelledby="scheduled-form" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">New Scheduled Feedback</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="name form-label">Name</label>
+                <input type="text" class="form-control" id="name" data-ng-model="s.name">
+            </div>
+            <div class="form-group">
+                <label for="company form-label">Company</label>
+                <input type="text" class="form-control" id="company" data-ng-model="s.company">
+            </div>
+            <div class="form-group">
+                <label for="address form-label">Address</label>
+                <input type="text" class="form-control" id="address" data-ng-model="s.address">
+            </div>
+            <div class="form-group">
+                <label for="number form-label">Phone Number</label>
+                <input type="text" class="form-control" id="number" data-ng-model="s.number">
+            </div>
+            <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="s.compRate"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="s.compRate"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="s.compRate"> Very Satisfied
+                </label>
+            </div>
+
+            <label for="form-label"><b>2. Quality of Services</b></label>
+            <div class="form-group">
+                <label for="form-label"><b>Efficiency of our service team</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="s.teamEff"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="s.teamEff"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="s.teamEff"> Very Satisfied
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="form-label"><b>Adherence to health, safety, security and environmental standards</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="s.healthAdh"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="s.healthAdh"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="s.healthAdh"> Very Satisfied
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="form-label"><b>Adherence to regulations</b></label><br/>
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied2c" data-ng-value="1" data-ng-model="s.regAdh"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied2c" data-ng-value="2" data-ng-model="s.regAdh"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied2c" data-ng-value="3" data-ng-model="s.regAdh"> Very Satisfied
+                </label>
+            </div>
+
+            <label for="form-label"><b>3. Our response/feedback to your queries</b></label>
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="notSatisfied3" data-ng-value="1" data-ng-model="s.qryResp"> Not Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="satisfied3" data-ng-value="2" data-ng-model="s.qryResp"> Satisfied
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="verySatisfied3" data-ng-value="3" data-ng-model="s.qryResp"> Very Satisfied
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="extraComment form-label"><b>4. How can we serve you better?</b></label>
+                <textarea id="extraComment" class="form-control" data-ng-model="s.extraComment"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-ng-click="addFeedback('scheduled')">Add</button>
+        </div>
+      </div>
+    </div>
+</div>
+<!--form end-->
+
 <div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getMunicipalFeedback()">
     <div class="row">
         <div class="col-md-12">
@@ -50,7 +392,13 @@
 
             <div class="tab-content">
                 <!--Municipal Feedback-->
-                <div role="tabpanel" class="tab-pane fade show active" id="municipalFeedback"><br /><br />
+                <div role="tabpanel" class="tab-pane fade show active" id="municipalFeedback"><br />
+                    <div class="row" id="createButton">
+                        <div class="col-md-6">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#municipal-form" ng-click="resetFormM();"><i class="fa fa-plus"></i> New Municipal Feedback</button>
+                        </div>
+                    </div><br />
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
@@ -158,7 +506,12 @@
                 </div>
 
                 <!--Commercial Feedback-->
-                <div role="tabpanel" class="tab-pane fade" id="commercialFeedback"><br /><br />
+                <div role="tabpanel" class="tab-pane fade" id="commercialFeedback"><br />
+                    <div class="row" id="createButton">
+                        <div class="col-md-6">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#commercial-form" ng-click="resetFormC();"><i class="fa fa-plus"></i> New Commercial Feedback</button>
+                        </div>
+                    </div><br />
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
@@ -266,7 +619,12 @@
                 </div>
 
                 <!--Scheduled Feedback-->
-                <div role="tabpanel" class="tab-pane fade" id="scheduledFeedback"><br /><br />
+                <div role="tabpanel" class="tab-pane fade" id="scheduledFeedback"><br />
+                    <div class="row" id="createButton">
+                        <div class="col-md-6">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#scheduled-form" ng-click="resetFormS();"><i class="fa fa-plus"></i> New Scheduled Feedback</button>
+                        </div>
+                    </div><br />
                     <div class="row">
                             <div class="col-md-6">
                                 <div class="card">
