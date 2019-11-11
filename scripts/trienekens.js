@@ -7486,29 +7486,18 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
     var driverPosition = angular.copy(storeDataService.positionID.driverPosition);
     var generalWorkerPosition = angular.copy(storeDataService.positionID.generalWorkerPosition);
 
-    console.log("DELIVERY MANAGEMENT ACTIVATED!!");
-
-
+ 
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
 
+    $scope.show = angular.copy(storeDataService.show.delivery);
 
     $scope.viewbdaf = function (bdafID) {
         window.location.href = '#/bdaf-details/' + bdafID;
     }
 
-    function initializeBdaf() {
-        $scope.bdaf = {
-            "id": '',
-            "date": '',
-            "driver": '',
-            "generalWorker": '',
-            "status": ''
-        };
-    }
 
-    $scope.show = angular.copy(storeDataService.show.delivery);
 
 
     $scope.currentStatus = {
@@ -7523,20 +7512,6 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
             console.log("BDAF data received by controller");
             console.log(response.data);
         });
-
-        // $http.post('/getStaffList', { "position": 'Driver' }).then(function(response) {
-        //     $scope.searchAcrFilter = '';
-        //     $scope.driverList = response.data;
-
-        // });
-
-        // $http.post('/getStaffList', { "position": 'General Worker' }).then(function(response) {
-        //     $scope.searchAcrFilter = '';
-        //     $scope.generalWorkerList = response.data;
-
-        // });
-
-
     }
     getAllBdaf(); //call
 
@@ -7547,7 +7522,6 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
         } else {
             $scope.currentStatus.status = false;
         }
-        getAllDcs(); //call
     }
 
     $scope.addBdaf = function () {
@@ -7701,106 +7675,6 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         angular.element('#rejectConfirmation').modal('toggle');
     }
 
-
-    $scope.getBdafInfo = function() {
-        $http.post('/getBdafInfo', $scope.bdafID).then(function (response) {
-
-            $scope.bdaf = response.data;
-            console.log($scope.bdaf);
-    
-            if ($scope.bdaf[0].status == 'G') {
-                $scope.status = 'APPROVED';
-            } else if ($scope.bdaf[0].status == 'P') {
-                $scope.status = 'PENDING';
-            } else if ($scope.bdaf[0].status == 'R') {
-                $scope.status = 'CORRECTION REQUIRED';
-            } else if ($scope.bdaf[0].status == 'A') {
-                $scope.status = 'ACTIVE';
-            } else if ($scope.bdaf[0].status == 'C') {
-                $scope.status = 'COMPLETE';
-                $scope.show.edit = 'I';
-            }
-        });
-    }
-    $scope.getBdafDetails = function () {
-        $http.post('/getBdafDetails', $scope.bdafID).then(function (response) {
-
-            $scope.bdafDetailsList = response.data;
-            console.log($scope.bdafDetailsList);
-        });
-
-        
-    }
-    
-    $scope.addBdafEntry = function () {
-        $scope.bdafEntry.bdafID = $routeParams.bdafID;
-
-        console.log($scope.bdafEntry.binDelivered);
-        console.log($scope.bdafEntry.binPulled);
-        console.log($scope.bdafEntry.serialNo);
-
-        if ($scope.bdafEntry.binPulled != '') {
-            $scope.bdafEntry.serialNo = $scope.bdafEntry.binPulled;
-
-            if ($scope.bdafEntry.binDelivered != '') {
-                $scope.bdafEntry.serialNo = $scope.bdafEntry.binDelivered;
-            } else {
-                $scope.bdafEntry.binDelivered = 'null';
-            };
-
-        } else {
-            $scope.bdafEntry.serialNo = $scope.bdafEntry.binDelivered;
-            $scope.bdafEntry.binPulled = 'null';
-        };
-
-        console.log($scope.bdafEntry.binDelivered);
-        console.log($scope.bdafEntry.binPulled);
-        console.log($scope.bdafEntry.serialNo);
-
-        $http.post('/addBdafEntry', $scope.bdafEntry).then(function (response) {
-
-            var returnedData = response.data;
-
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "BDAF Entry added successfully!"
-                });
-
-
-                $scope.bdafDetailsList.push({
-                    "location": $scope.bdafEntry.location,
-                    "contactPerson": $scope.bdafEntry.contactPerson,
-                    "contactNo": $scope.bdafEntry.contactNo,
-                    "acrSticker": $scope.bdafEntry.acrSticker,
-                    "acrfNo": $scope.bdafEntry.acrfNo,
-                    "jobDesc": $scope.bdafEntry.jobDesc,
-                    "binSize": $scope.bdafEntry.binSize,
-                    "unit": $scope.bdafEntry.unit,
-                    "remarks": $scope.bdafEntry.remarks,
-                    "binDelivered": $scope.bdafEntry.binDelivered,
-                    "binPulled": $scope.bdafEntry.binPulled,
-                    "completed": $scope.bdafEntry.completed
-                });
-
-                angular.element('#createBdafEntry').modal('toggle');
-            }
-        });
-    }
-    $scope.saveDcsEntry = function () {
-
-        $http.post('/updateBdafEntry', $scope.bdafEntry).then(function (response) {
-
-            $scope.getBdafDetails();
-        });
-
-        angular.element('#editDcsEntry').modal('toggle');
-    }
-
-
-
-
-    
     // ASSIGN BIN DELIVERED AND BIN PULLED
     $scope.assignBinDelivered = function (binDelivered) {
 
@@ -7851,6 +7725,100 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         $scope.newBinPulledButton = true;
     }
 
+    //BDAF ENTRY MAIN FUNCTIONS
+    $scope.getBdafInfo = function() {
+        $http.post('/getBdafInfo', $scope.bdafID).then(function (response) {
+
+            $scope.bdaf = response.data;
+            console.log($scope.bdaf);
+    
+            if ($scope.bdaf[0].status == 'G') {
+                $scope.status = 'APPROVED';
+            } else if ($scope.bdaf[0].status == 'P') {
+                $scope.status = 'PENDING';
+            } else if ($scope.bdaf[0].status == 'R') {
+                $scope.status = 'CORRECTION REQUIRED';
+            } else if ($scope.bdaf[0].status == 'A') {
+                $scope.status = 'ACTIVE';
+            } else if ($scope.bdaf[0].status == 'C') {
+                $scope.status = 'COMPLETE';
+                $scope.show.edit = 'I';
+            }
+        });
+    }
+    $scope.getBdafDetails = function () {
+        $http.post('/getBdafDetails', $scope.bdafID).then(function (response) {
+
+            $scope.bdafDetailsList = response.data;
+            console.log($scope.bdafDetailsList);
+        });
+
+        
+    }   
+    $scope.addBdafEntry = function () {
+        $scope.bdafEntry.bdafID = $routeParams.bdafID;
+
+        console.log($scope.bdafEntry.binDelivered);
+        console.log($scope.bdafEntry.binPulled);
+        console.log($scope.bdafEntry.serialNo);
+
+        if ($scope.bdafEntry.binPulled != '') {
+            $scope.bdafEntry.serialNo = $scope.bdafEntry.binPulled;
+
+            if ($scope.bdafEntry.binDelivered != '') {
+                $scope.bdafEntry.serialNo = $scope.bdafEntry.binDelivered;
+            } else {
+                $scope.bdafEntry.binDelivered = 'null';
+            };
+
+        } else {
+            $scope.bdafEntry.serialNo = $scope.bdafEntry.binDelivered;
+            $scope.bdafEntry.binPulled = 'null';
+        };
+
+        console.log($scope.bdafEntry.binDelivered);
+        console.log($scope.bdafEntry.binPulled);
+        console.log($scope.bdafEntry.serialNo);
+
+        $http.post('/addBdafEntry', $scope.bdafEntry).then(function (response) {
+
+            var returnedData = response.data;
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "BDAF Entry added successfully!"
+                });
+
+
+                $scope.bdafDetailsList.push({ 
+                    "location": $scope.bdafEntry.location,
+                    "contactPerson": $scope.bdafEntry.contactPerson,
+                    "contactNo": $scope.bdafEntry.contactNo,
+                    "acrSticker": $scope.bdafEntry.acrSticker,
+                    "acrfNo": $scope.bdafEntry.acrfNo,
+                    "jobDesc": $scope.bdafEntry.jobDesc,
+                    "binSize": $scope.bdafEntry.binSize,
+                    "unit": $scope.bdafEntry.unit,
+                    "remarks": $scope.bdafEntry.remarks,
+                    "binDelivered": $scope.bdafEntry.binDelivered,
+                    "binPulled": $scope.bdafEntry.binPulled,
+                    "completed": $scope.bdafEntry.completed
+                });
+
+                angular.element('#createBdafEntry').modal('toggle');
+            }
+        });
+    }
+    $scope.saveDcsEntry = function () {
+
+        $http.post('/updateBdafEntry', $scope.bdafEntry).then(function (response) {
+
+            $scope.getBdafDetails();
+        });
+
+        angular.element('#editDcsEntry').modal('toggle');
+    }
     
     
 

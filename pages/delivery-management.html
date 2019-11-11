@@ -1,94 +1,197 @@
 <!-- BDAF Modal -->
 <div class="modal fade" id="createBDAF" tabindex="-1" role="dialog" aria-labelledby="createBDAF" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Add BDAF</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <h5 class="modal-title" id="exampleModalLongTitle">Add BDAF</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="txtBdafDriver form-label">Driver</label>
                     <select type="text" class="form-control" id="txtDriver" data-ng-model="bdaf.driverID">
-                        <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}} - {{d.staffIC}}</option>
-                     </select>
+                        <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffName}} - {{d.staffIC}}
+                        </option>
+                    </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="txtBdafGeneralWorker form-label">General Worker</label>
                     <select type="text" class="form-control" id="txtGeneralWorker" data-ng-model="bdaf.staffID">
-                        <option data-ng-repeat="d in generalWorkerList" value={{d.staffID}}>{{d.staffName}} - {{d.staffIC}}</option>
+                        <option data-ng-repeat="d in generalWorkerList" value={{d.staffID}}>{{d.staffName}} -
+                            {{d.staffIC}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                  <label for="txtBdafDate form-label">Date</label>
-                  <input type="date" class="form-control" id="txtBdafDate" data-ng-model="bdaf.date" />
+                    <label for="txtBdafDate form-label">Date</label>
+                    <input type="date" class="form-control" id="txtBdafDate" data-ng-model="bdaf.date" />
                 </div>
-         
-                
-                
-                
+
+
+
+
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="addBdaf();">Create</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addBdaf();">Create</button>
             </div>
-          </div>
         </div>
+    </div>
 </div>
-      
-      <div class="row">
-          <div class="col-md-12">
-              <h5>Delivery Management</h5>
-              
-          </div>
-      </div>
-      
-      <br />
-      <div class="row" data-ng-show="show.create == 'A'">
-          <div class="col-md-11">
-              <button class="btn btn-success" data-toggle="modal" data-target="#createBDAF"><i class="fa fa-plus"></i> New</button>
-          </div>
-          <div class="col-md-1" style="padding-top: 10px">
-              <label style="cursor: pointer;"><input type="checkbox" data-ng-model="statusList" data-ng-click="updateStatusList()"> Active</label>
-          </div>
-      </div>
-      <br />
-      <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-hover table-striped table-clickable">
-                    <thead>
-                        <tr>
-                            <!-- <th width="20%" data-ng-click="orderBy('bdafID');">BDAF ID <i class="fas fa-sort-down"></i></th> -->
-                            <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                            <th width="15%" data-ng-click="orderBy('driver');">Driver <i class="fas fa-sort-down"></i></th>
-                            <th width="20%" data-ng-click="orderBy('generalWorker');">General Worker <i class="fas fa-sort-down"></i></th>
-                            <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i class="fas fa-sort-down"></i></th>
-                            <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i class="fas fa-sort-down"></i></th>
-                            <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody>               
-                        <tr data-ng-repeat="b in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewbdaf(b.id);">
-                            <!-- <td data-ng-bind="b.id"></td> -->
-                            <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
-                            <td data-ng-bind="b.driver"></td>
-                            <td data-ng-bind="b.generalWorker"></td>
-                            <td data-ng-bind="b.authorizedBy"></td>
-                            <td data-ng-bind="b.authorizedDate"></td>
-                            <td data-ng-bind="b.status"></td>
-                            
-                        </tr>
-                    </tbody>
-                </table>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Delivery Management</h5>
+
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="acrTab" role=tablist>
+            <li class="nav-item">
+                <a class="nav-link active" id="schedule-tab" data-toggle="tab" data-target="#bdaf" role="tab"
+                    aria-controls="bdaf" aria-selected="true">Bin Delivery & Activity Form</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#binRequests" role="tab"
+                    aria-controls="binRequests" aria-selected="false">Bin Requests</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="bdaf" role="tabpanel" aria-labelledby="bdaf-tab">
+                </br>
+                <div class="row" data-ng-show="show.create == 'A'">
+                    <div class="col-md-9">
+                        <button class="btn btn-success" data-toggle="modal" data-target="#createBDAF"><i
+                                class="fa fa-plus"></i> New</button>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="btn-group">
+                            <button class="btn btn-info" style="display: inline-block;"><i class="fas fa-print"></i>
+                                Print Selected</button>
+                            <button class="btn btn-primary" style="display: inline-block;"><i class="fas fa-print"></i>
+                                Print All</button>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-clickable">
+                        <thead>
+                            <tr>
+                                <!-- <th width="20%" data-ng-click="orderBy('bdafID');">BDAF ID <i class="fas fa-sort-down"></i></th> -->
+                                <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i>
+                                </th>
+                                <th width="15%" data-ng-click="orderBy('driver');">Driver <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('generalWorker');">General Worker <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('authorizedBy');">Authorized By <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('authorizedDate');">Authorized Date <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('status');">Status <i
+                                        class="fas fa-sort-down"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="b in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                                class="clickable-row" data-ng-click="viewbdaf(b.id);">
+                                <!-- <td data-ng-bind="b.id"></td> -->
+                                <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
+                                <td data-ng-bind="b.driver"></td>
+                                <td data-ng-bind="b.generalWorker"></td>
+                                <td data-ng-bind="b.authorizedBy"></td>
+                                <td data-ng-bind="b.authorizedDate"></td>
+                                <td data-ng-bind="b.status"></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="binRequests" role="tabpanel" aria-labelledby="binRequests-tab">
+                </br>
+                <div class="row" data-ng-show="show.create == 'A'">
+                    <div class="col-md-9">
+                        <div class="btn-group">
+                            <select ng-reapeat="b in bdafList" class="form-control">
+                                <option>{{b.bdafID}}</option>
+                            </select>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#createBDAF"><i
+                                    class="fa fa-plus"></i> Assign</button>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="btn-group">
+                            <button class="btn btn-info" style="display: inline-block;"><i class="fas fa-print"></i>
+                                Print Selected</button>
+                            <button class="btn btn-primary" style="display: inline-block;"><i class="fas fa-print"></i>
+                                Print All</button>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+
+                                <th width="10%" data-ng-click="orderBy('status');">Select <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i>
+                                </th>
+                                <th width="15%" data-ng-click="orderBy('driver');">Address <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="15%" data-ng-click="orderBy('driver');">Company <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('generalWorker');">Contact Person <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('authorizedBy');">Contact No. <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="20%" data-ng-click="orderBy('authorizedDate');">Job Description <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('status');">Bin Size <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('status');">Units <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('status');">Remarks <i
+                                        class="fas fa-sort-down"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="b in binRequestList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                                class="clickable-row">
+                                <td><input type="checkbox" class="form-control checkbox-big" /></td>
+                                <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
+                                <td data-ng-bind="b.location"></td>
+                                <td data-ng-bind="b.company"></td>
+                                <td data-ng-bind="b.contactPerson"></td>
+                                <td data-ng-bind="b.contactNo"></td>
+                                <td data-ng-bind="b.jobDesc"></td>
+                                <td data-ng-bind="b.binSize"></td>
+                                <td data-ng-bind="b.units"></td>
+                                <td data-ng-bind="b.remarks"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
-      </div>
-      
-      <!-- <script>
+
+    </div>
+</div>
+
+
+<!-- <script>
       $(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
           window.location.href = $(this).data('href');
       });
