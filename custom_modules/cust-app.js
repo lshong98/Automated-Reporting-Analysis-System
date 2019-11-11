@@ -61,11 +61,49 @@ app.post('/loginCustServiceApp', function (req, resp) {
             if (result[0] == undefined) {
                 resp.send("User undefined");
             } else {
+                var transporter, subject, text, email, mailOptions, vCode;
                 if (result[0].userEmail == data.email && result[0].password == data.pass) {
                     if (result[0].status == 1) {
                         resp.send("Login Success");
                     } else {
-                        resp.send("Activate Acc "+data.email);
+
+                        transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: 'registercustomerapp@gmail.com',
+                                pass: 'trienekens123'
+                            }
+                        });
+                        vCode = Math.floor(Math.random() * 90000) + 10000;
+                        subject = "Trienekens App Verification Code";
+                        text = "Your Verification Code is: " + vCode;
+                        email = data.email;
+                        console.log("vCode: " + vCode);
+                        mailOptions = {
+                            from: 'registercustomerapp@gmail.com',
+                            to: email,
+                            subject: subject,
+                            text: text
+                        };
+
+
+                        var updateCode = "UPDATE tbluser SET vCode ='" + vCode + "' WHERE userEmail ='" + data.email + "'";
+
+                        transporter.sendMail(mailOptions, function (error, info) {
+                            if (error) {
+                                console.log(error);
+                                resp.send("Mail Failed");
+                            }
+                            //console.log("Email sent: " + info.response);
+                            database.query(updateCode, function (err, res) {
+                                if (err) {
+                                    throw err;
+                                } else {
+                                    //console.log("Registered");
+                                    resp.send("Activate Acc " + data.email);
+                                }
+                            });
+                        });
                     }
                 } else {
                     console.log("login failed");
@@ -73,11 +111,6 @@ app.post('/loginCustServiceApp', function (req, resp) {
                 }
             }
             console.log(result[0]);
-            //resp.json(result);
-
-            //console.log(result);
-            //console.log("userEmail: " + result[0].userEmail);
-            //console.log("postDataEmail: "+data.email);
         });
     });
 });
@@ -339,30 +372,115 @@ app.post('/binRequest', function (req, resp) {
 });
 
 app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
-    
-    'use strict';
-    var data, sql;
-    var date = dateTime.create().format('Y-m-d H-M-S');
 
-    data = JSON.parse(req.rawBody);
-    sql = "UPDATE tblbinrequest SET reqImg ='BinReqImg/BinRequest_" + data.cID + "_" + date.toString() +".jpg' WHERE reqID =" + data.cID + "";
-    console.log(sql);
-    console.log(req.rawBody);
-    //console.log(data);
-    fs.writeFile(__dirname + '/BinReqImg/BinRequest_' + data.cID + '_' + date.toString() +'.jpg', Buffer.from(data.BinReqImage, 'base64'), function (err) {
-        if (err) {
-            console.log(err);
-        } else {
-            database.query(sql, function (err, res) {
-                if (!err) {
-                    resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-                } else {
-                    resp.send("Please Try Again");
-                }
-            });
-            console.log("success");
-        }
-    });
+	'use strict';
+	var data, sql, userID;
+
+	data = JSON.parse(req.rawBody);
+	//console.log(data.BinRequestICLost);
+
+	if (typeof data.BinRequestICLost !== 'undefined') {
+		sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestICLost_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+		console.log(sql);
+		console.log(req.rawBody);
+		//console.log(data);
+		fs.writeFile(__dirname + '/../images/BinReqImg/BinRequestICLost_' + data.cID + '.jpg', Buffer.from(data.BinRequestICLost, 'base64'), function (err) {
+			if (err) {
+				console.log(err);
+			} else {
+				database.query(sql, function (err, res) {
+					if (!err) {
+						resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+					} else {
+						resp.send("Please Try Again");
+					}
+				});
+				console.log("success");
+			}
+		});
+	} else if (typeof data.BinRequestBin !== 'undefined') {
+		sql = "UPDATE tblbinrequest SET binImg ='BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+		console.log(sql);
+		console.log(req.rawBody);
+		//console.log(data);
+		fs.writeFile(__dirname + '/../images/BinReqImg/BinRequestBin_' + data.cID + '.jpg', Buffer.from(data.BinRequestBin, 'base64'), function (err) {
+			if (err) {
+				console.log(err);
+			} else {
+				database.query(sql, function (err, res) {
+					if (!err) {
+						resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+					} else {
+						resp.send("Please Try Again");
+					}
+				});
+				console.log("success");
+			}
+		});
+	} else {
+		//console.log(sql);
+		console.log(req.rawBody);
+
+		var async = require('async');
+		if (data.BinRequestTrading != "") {
+            sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
+			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
+
+				fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log(file + '.json was updated.');
+					}
+
+					callback();
+				});
+
+			}, function (err) {
+				if (err) {
+					console.log(err);
+				} else {
+					database.query(sql, function (err, res) {
+						if (!err) {
+							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+						} else {
+							resp.send("Please Try Again");
+						}
+					});
+					console.log("success");
+				}
+			});
+		} else {
+            sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
+
+				fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log(file + '.json was updated.');
+					}
+
+					callback();
+				});
+
+			}, function (err) {
+				if (err) {
+					console.log(err);
+				} else {
+					database.query(sql, function (err, res) {
+						if (!err) {
+							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+						} else {
+							resp.send("Please Try Again");
+						}
+					});
+					console.log("success");
+				}
+			});
+		}
+
+	}
 });
 
 app.post('/getSchedule', function (req, resp) {
@@ -1419,7 +1537,7 @@ app.post('/uploadRegNewImage', rawBody, function (req, resp) {
     console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
-    fs.writeFile(__dirname + '/../scripts/pendingImg/' + data.ic + '.jpg', Buffer.from(data.image, 'base64'), function (err) {
+    fs.writeFile(__dirname + '/../images/pendingImg/' + data.ic + '.jpg', Buffer.from(data.image, 'base64'), function (err) {
         if (err) {
             console.log(err);
         } else {
@@ -1460,7 +1578,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
     console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
-    fs.writeFile(__dirname + '/complaintImg/ComplaintCase_' + data.cID + '_' + date.toString() + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
+    fs.writeFile(__dirname + '/../images/complaintImg/ComplaintCase_' + data.cID + '_' + date.toString() + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
         if (err) {
             console.log(err);
         } else {

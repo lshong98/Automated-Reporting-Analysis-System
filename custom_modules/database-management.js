@@ -8,13 +8,13 @@ var emitter = new EventEmitter();
 var DB_HOST = process.env.DATABASE_HOST || 'localhost';
 var DB_USER = process.env.DATABASE_USER || 'root';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || 'dbtrienekens';
+var DB_NAME = process.env.DATABASE_NAME || 'trienekens';
  
 var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3306,
+    port: 3307,
     timezone: 'utc'
 };
 
@@ -121,7 +121,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID VARCHAR(15),  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
         "CREATE TABLE tbltag (date datetime,  serialNo VARCHAR(15),  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tbltruck(truckID))",
         "CREATE TABLE tbluser (userID VARCHAR(15), tamanID int , userEmail varchar(30),  password varchar(30),  contactNumber varchar(15), tradingLicense varchar(20),  name varchar(50), address varchar(200), companyName varchar(50), vCode varchar(5), status char(1), creationDateTime datetime, PRIMARY KEY (userID), UNIQUE KEY(userEmail))",
-        "CREATE TABLE tblcomplaint ( complaintID varchar(15), userID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), complaintAddress varchar(300), complaintImg varchar(100), readStat varchar(1), primary key (complaintID), foreign key (userID) references tbluser(userID), foreign key (staffID) references tblstaff(staffID))",
+        "CREATE TABLE tblcomplaint ( complaintID varchar(15), userID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), complaintAddress varchar(300), complaintImg varchar(150), readStat varchar(1), primary key (complaintID), foreign key (userID) references tbluser(userID), foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblformauthorization (formentryID int auto_increment, creationDateTime dateTime, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), status char(1), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), readStat varchar(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",
@@ -130,7 +130,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblannouncement(id int auto_increment, announcement varchar(400), announceDate date, target varchar(30), PRIMARY KEY(id))",
         "CREATE TABLE tblcarouselimg(id int auto_increment, fileName varchar(255), PRIMARY KEY(id))",
         "CREATE TABLE tblnotif(notifID int auto_increment, userID varchar(15), notifDate date, notifText varchar(255), readStat varchar(1), PRIMARY KEY(notifID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
-        "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), dateRequest varchar(15), name varchar(15), companyName varchar(30), companyAddress varchar(100), contactNumber varchar(15), reason varchar(20), type varchar(20), requestAddress varchar(100), remarks varchar(300), reqImg varchar(100), status varchar(20), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
+        "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), dateRequest varchar(15), name varchar(15), companyName varchar(30), companyAddress varchar(100), contactNumber varchar(15), reason varchar(20), type varchar(20), requestAddress varchar(100), remarks varchar(300), icImg varchar(150), utilityImg varchar(150), assessmentImg varchar(150), tradingImg varchar(150), binImg varchar(150), status varchar(20), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblsatisfaction_municipal (satisfactionMunicipalID int(11) auto_increment, userID varchar(15), name varchar(100), company varchar(200), address mediumtext, number varhcar(13), companyRating char(1), teamEfficiency char(1), collectionPromptness char(1), binHandling char(1), spillageControl char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY(satisfactionMunicipalID))",
         "CREATE TABLE tblsatisfaction_commercial (satisfactionCommercialID int(11) auto_increment, userID varchar(15), name varchar(100), company varchar(200), address mediumtext, number varhcar(13), companyRating char(1), teamEfficiency char(1), collectionPromptness char(1), cleanliness char(1), physicalCondition char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY(satisfactionCommercialID))",
         "CREATE TABLE tblsatisfaction_scheduled ( satisfactionScheduledID int(11) auto_increment, userID varchar(15), name varchar(100), company varchar(200), address mediumtext, number varhcar(13), companyRating char(1), teamEfficiency char(1), healthAdherence char(1), regulationsAdherence char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY(satisfactionScheduledID))",

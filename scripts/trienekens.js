@@ -2162,8 +2162,12 @@ app.controller('binReqDetailCtrl', function($scope, $http, $routeParams){
             'type':request[0].type,
             'contactNumber':request[0].contactNumber,
             'status':request[0].status,
-            'img':request[0].reqImg,
-            'reqDate':request[0].requestDate,
+            'icImg':request[0].icImg,
+            'binImg':request[0].binImg,
+            'utilityImg':request[0].utilityImg,
+            'assessmentImg':request[0].assessmentImg,
+            'tradingImg':request[0].tradingImg,
+            'reqDate':request[0].dateRequest,
             'reqID':request[0].reqID
         };
     });
