@@ -1744,21 +1744,23 @@ app.post('/getUnreadMsg', function(req, res){
             if(err){
                 throw err;
             }
-            userID = result[0].userID;
-            var sql = "SELECT complaintID, COUNT(readStat) as unread FROM tblchat WHERE readStat = 'u' AND recipient = '"+userID+"' GROUP BY complaintID ORDER BY complaintID ASC";
-            database.query(sql, function(err, result){
-                if(err){
-                    throw err;
-                }
-                for(var i=0; i< result.length; i++){
-                    results["unread"].push({
-                        "id":result[i].complaintID,
-                        "value": result[i].unread
-                    });
-                }
-
-                res.json(results);
-            });
+            if(result[0]!=undefined){
+                userID = result[0].userID;
+                var sql = "SELECT complaintID, COUNT(readStat) as unread FROM tblchat WHERE readStat = 'u' AND recipient = '"+userID+"' GROUP BY complaintID ORDER BY complaintID ASC";
+                database.query(sql, function(err, result){
+                    if(err){
+                        throw err;
+                    }
+                    for(var i=0; i< result.length; i++){
+                        results["unread"].push({
+                            "id":result[i].complaintID,
+                            "value": result[i].unread
+                        });
+                    }
+    
+                    res.json(results);
+                });
+            }
         });
     });
 });

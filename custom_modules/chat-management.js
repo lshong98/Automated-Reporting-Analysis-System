@@ -98,7 +98,7 @@ app.post('/sendMessage', function (req, resp) {
     });
     
     req.addListener('end', function () {
-        var sql = "SELECT tbluser.userID, tblcomplaint.staffID FROM tbluser, tblcomplaint WHERE tbluser.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' LIMIT 0, 1";
+        var sql = "SELECT tbluser.userID, tblcomplaint.staffID FROM tbluser, tblcomplaint WHERE tbluser.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' AND tbluser.userID = tblcomplaint.userID LIMIT 0, 1";
         database.query(sql, function (err, result) {
             if (err) {
                 resp.send("error getting user id");
