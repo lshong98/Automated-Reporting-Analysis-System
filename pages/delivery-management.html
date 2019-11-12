@@ -121,8 +121,8 @@
                 <div class="row" data-ng-show="show.create == 'A'">
                     <div class="col-md-9">
                         <div class="btn-group">
-                            <select ng-reapeat="b in bdafList" class="form-control">
-                                <option>{{b.bdafID}}</option>
+                            <select class="form-control">
+                                <option ng-repeat="b in bdafList">{{b.id}}</option>
                             </select>
                             <button class="btn btn-success" data-toggle="modal" data-target="#createBDAF"><i
                                     class="fa fa-plus"></i> Assign</button>

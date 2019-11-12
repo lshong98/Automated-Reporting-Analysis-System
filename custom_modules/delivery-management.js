@@ -15,7 +15,7 @@ app.post('/addBdaf', function (req, res) {
             if (err) {
                 throw err;
             }
-
+ 
             res.json({"status": "success", "message": "BDAF created!", "details": {"bdafID": ID}});
         });
     });

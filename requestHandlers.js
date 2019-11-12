@@ -94,7 +94,7 @@ app.get('/bin-management', function(req, res) {
     res.sendFile('pages/bin-management.html', {root: __dirname});
 });
 app.get('/reporting', function (req, res) {
-    'use strict';
+    'use strict'; 
     res.sendFile('pages/reporting.html', {root: __dirname});
 });
 app.get('/view-report/:reportCode', function (req, res) {

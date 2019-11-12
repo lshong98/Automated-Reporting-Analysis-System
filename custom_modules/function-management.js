@@ -61,7 +61,7 @@ function makeID(keyword, creationDate) {
     case "bdaf":
         table = "tblbdaf";
         property = "bdafID";
-        header = "BDAF";
+        header = "BDF";
         break;
     case "dbd":
         table = "tbldbd";

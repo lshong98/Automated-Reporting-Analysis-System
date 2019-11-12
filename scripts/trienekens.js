@@ -7537,6 +7537,7 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
     $scope.bdafList = [];
     $scope.driverList = [];
     $scope.generalWorkerList = [];
+    $scope.binRequestList = [];
     var driverPosition = angular.copy(storeDataService.positionID.driverPosition);
     var generalWorkerPosition = angular.copy(storeDataService.positionID.generalWorkerPosition);
 
@@ -7559,7 +7560,7 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
     }
 
     function getAllBdaf() {
-        $http.post('/getAllBdaf', $scope.currentStatus).then(function (response) {
+        $http.post('/getAllBdaf').then(function (response) {
 
             $scope.bdafList = response.data;
 
@@ -7567,17 +7568,6 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
             console.log(response.data);
         });
     }
-    getAllBdaf(); //call
-
-    $scope.statusList = true;
-    $scope.updateStatusList = function () {
-        if ($scope.statusList) {
-            $scope.currentStatus.status = true;
-        } else {
-            $scope.currentStatus.status = false;
-        }
-    }
-
     $scope.addBdaf = function () {
         $scope.bdaf.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
@@ -7606,6 +7596,13 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
             }
         });
     }
+    function getUnassignedBinRequests(){
+        $http.post('/getUnassignedBinRequests').then(function (response) {d
+            $scope.binRequestList = response.data;
+        });
+    }
+
+    getAllBdaf(); //call
 });
 
 app.controller('bdafDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
