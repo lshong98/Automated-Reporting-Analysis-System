@@ -39,12 +39,33 @@ app.post('/approveTask', function (req, res) {
                 throw err;
             }
             
+            var table = result[0].tblName;
+            var action = result[0].action;
+            var key = "", prefix = "";
+            
             content = result[0].description + " approved.";
             
-            if (result[0].action === "add" && result[0].tblName === "tblstaff") {
-                f.makeID("account", formatted).then(function (ID) {
+            if (action === "add") {
+                if (table === "tblstaff") {
+                    key = "account";
+                    prefix = "ACC";
+                } else if (table === "tbltruck") {
+                    key = "truck";
+                    prefix = "TRK";
+                } else if (table === "tblzone") {
+                    key = "zone";
+                    prefix = "ZON";
+                } else if (table === "tblarea") {
+                    key = "area";
+                    prefix = "ARE";
+                } else if (table === "tblbincenter") {
+                    key = "bincenter";
+                    prefix = "BIN";
+                }
+                
+                f.makeID(key, formatted).then(function (ID) {
                     var firstPosition, lastPosition, oldID;
-                    firstPosition = (result[0].query).indexOf('ACC');
+                    firstPosition = (result[0].query).indexOf(prefix);
                     lastPosition = firstPosition + 15;
                     oldID = (result[0].query).substring(firstPosition, lastPosition);
                     result[0].query = (result[0].query).replace(oldID, ID);

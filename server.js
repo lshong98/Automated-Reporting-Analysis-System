@@ -257,7 +257,7 @@ app.post('/updateBinRequest', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.id + "'";
-    var msg = "The status of your bin request with the ID "+req.body.id+" has been updated to "+req.body.status;
+    var msg = "The status of your bin request with the ID "+req.body.id+" has been updated to "+req.body.status+". Please go to the View My Requests tab for information on any necessary actions.";
     var getUserID = "SELECT userID FROM tblbinrequest WHERE reqID = '"+req.body.id+"'";
     var userID, date = dateTime.create().format('Y-m-d H:M:S');
     var topic = "TriBinReq"+req.body.id;
@@ -368,53 +368,55 @@ app.get('/customerFeedbackMunicipal', function(req, res){
     data.data = [];
     database.query(sql, function(err,result){
         console.log(result);
-        for(var i = 0; i<result.length; i++){
-            if(result[i].source == "companyRating" && result[i].category == "1"){
-                compRateUS = result[i].value;
-            }else if(result[i].source == "companyRating" && result[i].category == "2"){
-                compRateAvg = result[i].value;
-            }else if(result[i].source == "companyRating" && result[i].category == "3"){
-                compRateS = result[i].value;
-            }
-
-            if(result[i].source == "teamEfficiency" && result[i].category == "1"){
-                teamEffUS = result[i].value;
-            }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
-                teamEffAvg = result[i].value;
-            }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
-                teamEffS = result[i].value;
-            }
-
-            if(result[i].source == "collectionPromptness" && result[i].category == "1"){
-                collPromptUS = result[i].value;
-            }else if(result[i].source == "collectionPromptness" && result[i].category == "2"){
-                collPromptAvg = result[i].value;
-            }else if(result[i].source == "collectionPromptness" && result[i].category == "3"){
-                collPromptS = result[i].value;
-            }
-
-            if(result[i].source == "binHandling" && result[i].category == "1"){
-                binHandUS = result[i].value;
-            }else if(result[i].source == "binHandling" && result[i].category == "2"){
-                binHandAvg = result[i].value;
-            }else if(result[i].source == "binHandling" && result[i].category == "3"){
-                binHandS = result[i].value;
-            }
-
-            if(result[i].source == "spillageControl" && result[i].category == "1"){
-                spillCtrlUS = result[i].value;
-            }else if(result[i].source == "spillageControl" && result[i].category == "2"){
-                spillCtrlAvg = result[i].value;
-            }else if(result[i].source == "spillageControl" && result[i].category == "3"){
-                spillCtrlS = result[i].value;
-            }
-
-            if(result[i].source == "queryResponse" && result[i].category == "1"){
-                qryRespUS = result[i].value;
-            }else if(result[i].source == "queryResponse" && result[i].category == "2"){
-                qryRespAvg = result[i].value;
-            }else if(result[i].source == "queryResponse" && result[i].category == "3"){
-                qryRespS = result[i].value;
+        if(result != undefined){
+            for(var i = 0; i<result.length; i++){
+                if(result[i].source == "companyRating" && result[i].category == "1"){
+                    compRateUS = result[i].value;
+                }else if(result[i].source == "companyRating" && result[i].category == "2"){
+                    compRateAvg = result[i].value;
+                }else if(result[i].source == "companyRating" && result[i].category == "3"){
+                    compRateS = result[i].value;
+                }
+    
+                if(result[i].source == "teamEfficiency" && result[i].category == "1"){
+                    teamEffUS = result[i].value;
+                }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
+                    teamEffAvg = result[i].value;
+                }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
+                    teamEffS = result[i].value;
+                }
+    
+                if(result[i].source == "collectionPromptness" && result[i].category == "1"){
+                    collPromptUS = result[i].value;
+                }else if(result[i].source == "collectionPromptness" && result[i].category == "2"){
+                    collPromptAvg = result[i].value;
+                }else if(result[i].source == "collectionPromptness" && result[i].category == "3"){
+                    collPromptS = result[i].value;
+                }
+    
+                if(result[i].source == "binHandling" && result[i].category == "1"){
+                    binHandUS = result[i].value;
+                }else if(result[i].source == "binHandling" && result[i].category == "2"){
+                    binHandAvg = result[i].value;
+                }else if(result[i].source == "binHandling" && result[i].category == "3"){
+                    binHandS = result[i].value;
+                }
+    
+                if(result[i].source == "spillageControl" && result[i].category == "1"){
+                    spillCtrlUS = result[i].value;
+                }else if(result[i].source == "spillageControl" && result[i].category == "2"){
+                    spillCtrlAvg = result[i].value;
+                }else if(result[i].source == "spillageControl" && result[i].category == "3"){
+                    spillCtrlS = result[i].value;
+                }
+    
+                if(result[i].source == "queryResponse" && result[i].category == "1"){
+                    qryRespUS = result[i].value;
+                }else if(result[i].source == "queryResponse" && result[i].category == "2"){
+                    qryRespAvg = result[i].value;
+                }else if(result[i].source == "queryResponse" && result[i].category == "3"){
+                    qryRespS = result[i].value;
+                }
             }
         }
 
@@ -467,53 +469,55 @@ app.get('/customerFeedbackCommercial', function(req, res){
     var data = {};
     data.data = [];
     database.query(sql, function(err,result){
-        for(var i = 0; i<result.length; i++){
-            if(result[i].source == "companyRating" && result[i].category == "1"){
-                compRateUS = result[i].value;
-            }else if(result[i].source == "companyRating" && result[i].category == "2"){
-                compRateAvg = result[i].value;
-            }else if(result[i].source == "companyRating" && result[i].category == "3"){
-                compRateS = result[i].value;
-            }
-
-            if(result[i].source == "teamEfficiency" && result[i].category == "1"){
-                teamEffUS = result[i].value;
-            }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
-                teamEffAvg = result[i].value;
-            }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
-                teamEffS = result[i].value;
-            }
-
-            if(result[i].source == "collectionPromptness" && result[i].category == "1"){
-                collPromptUS = result[i].value;
-            }else if(result[i].source == "collectionPromptness" && result[i].category == "2"){
-                collPromptAvg = result[i].value;
-            }else if(result[i].source == "collectionPromptness" && result[i].category == "3"){
-                collPromptS = result[i].value;
-            }
-
-            if(result[i].source == "cleanliness" && result[i].category == "1"){
-                cleanlinessUS = result[i].value;
-            }else if(result[i].source == "cleanliness" && result[i].category == "2"){
-                cleanlinessAvg = result[i].value;
-            }else if(result[i].source == "cleanliness" && result[i].category == "3"){
-                cleanlinessS = result[i].value;
-            }
-
-            if(result[i].source == "physicalCondition" && result[i].category == "1"){
-                physicalCondUS = result[i].value;
-            }else if(result[i].source == "physicalCondition" && result[i].category == "2"){
-                physicalCondAvg = result[i].value;
-            }else if(result[i].source == "physicalCondition" && result[i].category == "3"){
-                physicalCondS = result[i].value;
-            }
-
-            if(result[i].source == "queryResponse" && result[i].category == "1"){
-                qryRespUS = result[i].value;
-            }else if(result[i].source == "queryResponse" && result[i].category == "2"){
-                qryRespAvg = result[i].value;
-            }else if(result[i].source == "queryResponse" && result[i].category == "3"){
-                qryRespS = result[i].value;
+        if(result != undefined){
+            for(var i = 0; i<result.length; i++){
+                if(result[i].source == "companyRating" && result[i].category == "1"){
+                    compRateUS = result[i].value;
+                }else if(result[i].source == "companyRating" && result[i].category == "2"){
+                    compRateAvg = result[i].value;
+                }else if(result[i].source == "companyRating" && result[i].category == "3"){
+                    compRateS = result[i].value;
+                }
+    
+                if(result[i].source == "teamEfficiency" && result[i].category == "1"){
+                    teamEffUS = result[i].value;
+                }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
+                    teamEffAvg = result[i].value;
+                }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
+                    teamEffS = result[i].value;
+                }
+    
+                if(result[i].source == "collectionPromptness" && result[i].category == "1"){
+                    collPromptUS = result[i].value;
+                }else if(result[i].source == "collectionPromptness" && result[i].category == "2"){
+                    collPromptAvg = result[i].value;
+                }else if(result[i].source == "collectionPromptness" && result[i].category == "3"){
+                    collPromptS = result[i].value;
+                }
+    
+                if(result[i].source == "cleanliness" && result[i].category == "1"){
+                    cleanlinessUS = result[i].value;
+                }else if(result[i].source == "cleanliness" && result[i].category == "2"){
+                    cleanlinessAvg = result[i].value;
+                }else if(result[i].source == "cleanliness" && result[i].category == "3"){
+                    cleanlinessS = result[i].value;
+                }
+    
+                if(result[i].source == "physicalCondition" && result[i].category == "1"){
+                    physicalCondUS = result[i].value;
+                }else if(result[i].source == "physicalCondition" && result[i].category == "2"){
+                    physicalCondAvg = result[i].value;
+                }else if(result[i].source == "physicalCondition" && result[i].category == "3"){
+                    physicalCondS = result[i].value;
+                }
+    
+                if(result[i].source == "queryResponse" && result[i].category == "1"){
+                    qryRespUS = result[i].value;
+                }else if(result[i].source == "queryResponse" && result[i].category == "2"){
+                    qryRespAvg = result[i].value;
+                }else if(result[i].source == "queryResponse" && result[i].category == "3"){
+                    qryRespS = result[i].value;
+                }
             }
         }
 
@@ -566,45 +570,47 @@ app.get('/customerFeedbackScheduled', function(req, res){
     data.data = [];
 
     database.query(sql, function(err,result){
-        for(var i = 0; i<result.length; i++){
-            if(result[i].source == "companyRating" && result[i].category == "1"){
-                compRateUS = result[i].value;
-            }else if(result[i].source == "companyRating" && result[i].category == "2"){
-                compRateAvg = result[i].value;
-            }else if(result[i].source == "companyRating" && result[i].category == "3"){
-                compRateS = result[i].value;
-            }
-
-            if(result[i].source == "teamEfficiency" && result[i].category == "1"){
-                teamEffUS = result[i].value;
-            }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
-                teamEffAvg = result[i].value;
-            }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
-                teamEffS = result[i].value;
-            }
-
-            if(result[i].source == "healthAdherence" && result[i].category == "1"){
-                healthAdhUS = result[i].value;
-            }else if(result[i].source == "healthAdherence" && result[i].category == "2"){
-                healthAdhAvg = result[i].value;
-            }else if(result[i].source == "healthAdherence" && result[i].category == "3"){
-                healthAdhS = result[i].value;
-            }
-
-            if(result[i].source == "regulationsAdherence" && result[i].category == "1"){
-                regAdhUS = result[i].value;
-            }else if(result[i].source == "regulationsAdherence" && result[i].category == "2"){
-                regAdhAvg = result[i].value;
-            }else if(result[i].source == "regulationsAdherence" && result[i].category == "3"){
-                regAdhS = result[i].value;
-            }
-
-            if(result[i].source == "queryResponse" && result[i].category == "1"){
-                qryRespUS = result[i].value;
-            }else if(result[i].source == "queryResponse" && result[i].category == "2"){
-                qryRespAvg = result[i].value;
-            }else if(result[i].source == "queryResponse" && result[i].category == "3"){
-                qryRespS = result[i].value;
+        if(result != undefined){
+            for(var i = 0; i<result.length; i++){
+                if(result[i].source == "companyRating" && result[i].category == "1"){
+                    compRateUS = result[i].value;
+                }else if(result[i].source == "companyRating" && result[i].category == "2"){
+                    compRateAvg = result[i].value;
+                }else if(result[i].source == "companyRating" && result[i].category == "3"){
+                    compRateS = result[i].value;
+                }
+    
+                if(result[i].source == "teamEfficiency" && result[i].category == "1"){
+                    teamEffUS = result[i].value;
+                }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
+                    teamEffAvg = result[i].value;
+                }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
+                    teamEffS = result[i].value;
+                }
+    
+                if(result[i].source == "healthAdherence" && result[i].category == "1"){
+                    healthAdhUS = result[i].value;
+                }else if(result[i].source == "healthAdherence" && result[i].category == "2"){
+                    healthAdhAvg = result[i].value;
+                }else if(result[i].source == "healthAdherence" && result[i].category == "3"){
+                    healthAdhS = result[i].value;
+                }
+    
+                if(result[i].source == "regulationsAdherence" && result[i].category == "1"){
+                    regAdhUS = result[i].value;
+                }else if(result[i].source == "regulationsAdherence" && result[i].category == "2"){
+                    regAdhAvg = result[i].value;
+                }else if(result[i].source == "regulationsAdherence" && result[i].category == "3"){
+                    regAdhS = result[i].value;
+                }
+    
+                if(result[i].source == "queryResponse" && result[i].category == "1"){
+                    qryRespUS = result[i].value;
+                }else if(result[i].source == "queryResponse" && result[i].category == "2"){
+                    qryRespAvg = result[i].value;
+                }else if(result[i].source == "queryResponse" && result[i].category == "3"){
+                    qryRespS = result[i].value;
+                }
             }
         }
 
@@ -623,22 +629,31 @@ app.get('/customerFeedbackScheduled', function(req, res){
 
 app.get('/unreadSatisfaction', function(req, res){
     'use strict';
-    var municipal = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
-    var commercial = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
-    var scheduled = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
+    var unread = "SELECT COUNT(readStat) as unreadMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE readStat = 'u') as unreadScheduled, (SELECT COUNT(readStat) from tblsatisfaction_commercial WHERE readStat = 'u') as unreadCommercial FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+    //var commercial = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+    //var scheduled = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
     var unreadMunicipal, unreadCommercial, unreadScheduled, json = {};
 
-    database.query(municipal, function(err, result){
-        unreadMunicipal = result[0].unread;
-        database.query(commercial, function(err, result){
-            unreadCommercial = result[0].unread;
-            database.query(scheduled, function(err, result){
-                unreadScheduled = result[0].unread;
-                json = {"municipal":unreadMunicipal,"commercial":unreadCommercial,"scheduled":unreadScheduled};
-                res.json(json);
-                res.end();
-            });
-        });
+    database.query(unread, function(err, result){
+        if(result != undefined){
+            unreadMunicipal = result[0].unreadMunicipal;
+            unreadCommercial = result[0].unreadCommercial;
+            unreadScheduled = result[0].unreadScheduled;
+
+            json = {"municipal":unreadMunicipal,"commercial":unreadCommercial,"scheduled":unreadScheduled};
+            res.json(json);
+            res.end();
+        }
+        // unreadMunicipal = result[0].unread;
+        // database.query(commercial, function(err, result){
+        //     unreadCommercial = result[0].unread;
+        //     database.query(scheduled, function(err, result){
+        //         unreadScheduled = result[0].unread;
+        //         json = {"municipal":unreadMunicipal,"commercial":unreadCommercial,"scheduled":unreadScheduled};
+        //         res.json(json);
+        //         res.end();
+        //     });
+        // });
     });
 });
 
