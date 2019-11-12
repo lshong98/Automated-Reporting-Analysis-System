@@ -7276,6 +7276,12 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         $scope.comp.compRCDate = $filter('date')($scope.compRCDate, 'yyyy-MM-dd');
         $scope.comp.compSubDate = $filter('date')($scope.compSubDate, 'yyyy-MM-dd');
         $scope.comp.compSDate = $filter('date')($scope.compSDate, 'yyyy-MM-dd');
+        $scope.comp.compTime = $filter('date')($scope.comp.compTime, 'HH:mm:ss');
+        $scope.comp.compLogTime = $filter('date')($scope.comp.compLogTime, 'HH:mm:ss');
+        $scope.comp.compCITime = $filter('date')($scope.comp.compCITime, 'HH:mm:ss');
+        $scope.comp.compRCTime = $filter('date')($scope.comp.compRCTime, 'HH:mm:ss');
+        $scope.comp.compSubTime = $filter('date')($scope.comp.compSubTime, 'HH:mm:ss');
+        $scope.comp.compSTime = $filter('date')($scope.comp.compSTime, 'HH:mm:ss');
         if($scope.comp.compSource == "Others"){
             $scope.comp.compSource = "Others: " + $scope.sourceOthers;
         }
@@ -7391,6 +7397,49 @@ app.controller('complaintOfficereditController', function ($scope, $http, $route
             $scope.editObj.type = "Waste not collected";
             $scope.type1days = $scope.splitEditObjType[1];
         }
+        
+        $scope.compTimeFormat = new Date();
+        $scope.compTimeSplit = $scope.editObj.complaintTime.split(":");
+        $scope.compTimeFormat.setHours($scope.editObj.complaintTime.split(":")[0]);
+        $scope.compTimeFormat.setMinutes($scope.editObj.complaintTime.split(":")[1]);
+        $scope.compTimeFormat.setSeconds(0);
+        $scope.compTimeFormat.setMilliseconds(0);
+        
+        $scope.logTimeFormat = new Date();
+        $scope.logTimeSplit = $scope.editObj.logisticsTime.split(":");
+        $scope.logTimeFormat.setHours($scope.editObj.logisticsTime.split(":")[0]);
+        $scope.logTimeFormat.setMinutes($scope.editObj.logisticsTime.split(":")[1]);
+        $scope.logTimeFormat.setSeconds(0);
+        $scope.logTimeFormat.setMilliseconds(0);
+        
+        $scope.ciTimeFormat = new Date();
+        $scope.ciTimeSplit = $scope.editObj.customerTime.split(":");
+        $scope.ciTimeFormat.setHours($scope.editObj.customerTime.split(":")[0]);
+        $scope.ciTimeFormat.setMinutes($scope.editObj.customerTime.split(":")[1]);
+        $scope.ciTimeFormat.setSeconds(0);
+        $scope.ciTimeFormat.setMilliseconds(0);
+        
+        $scope.rcTimeFormat = new Date();
+        $scope.rcTimeSplit = $scope.editObj.recordedTime.split(":");
+        $scope.rcTimeFormat.setHours($scope.editObj.recordedTime.split(":")[0]);
+        $scope.rcTimeFormat.setMinutes($scope.editObj.recordedTime.split(":")[1]);
+        $scope.rcTimeFormat.setSeconds(0);
+        $scope.rcTimeFormat.setMilliseconds(0);
+        
+        $scope.subTimeFormat = new Date();
+        $scope.subTimeSplit = $scope.editObj.forwardedTime.split(":");
+        $scope.subTimeFormat.setHours($scope.editObj.forwardedTime.split(":")[0]);
+        $scope.subTimeFormat.setMinutes($scope.editObj.forwardedTime.split(":")[1]);
+        $scope.subTimeFormat.setSeconds(0);
+        $scope.subTimeFormat.setMilliseconds(0);
+        
+        $scope.sTimeFormat = new Date();
+        $scope.sTimeSplit = $scope.editObj.statusTime.split(":");
+        $scope.sTimeFormat.setHours($scope.editObj.statusTime.split(":")[0]);
+        $scope.sTimeFormat.setMinutes($scope.editObj.statusTime.split(":")[1]);
+        $scope.sTimeFormat.setSeconds(0);
+        $scope.sTimeFormat.setMilliseconds(0);
+        
       
     });
     
@@ -7411,7 +7460,9 @@ app.controller('complaintOfficereditController', function ($scope, $http, $route
     };
     $scope.sTimeChange = function(time) {
         $scope.editObj.statusTime = time == undefined ? "" : time;
-    };       
+    };
+    
+   
         
     $scope.editComp = function(){
         $scope.showEditBtn = false;
@@ -7427,6 +7478,13 @@ app.controller('complaintOfficereditController', function ($scope, $http, $route
         $scope.editObj.forwardedDate = $filter('date')($scope.editObj.forwardedDate, 'yyyy-MM-dd');
         
         $scope.editObj.statusDate = $filter('date')($scope.editObj.statusDate, 'yyyy-MM-dd'); 
+        
+        $scope.editObj.complaintTime = $filter('date')($scope.compTimeFormat, 'HH:mm:ss');
+        $scope.editObj.logisticsTime = $filter('date')($scope.logTimeFormat, 'HH:mm:ss');
+        $scope.editObj.customerTime = $filter('date')($scope.ciTimeFormat, 'HH:mm:ss');
+        $scope.editObj.recordedTime = $filter('date')($scope.rcTimeFormat, 'HH:mm:ss');
+        $scope.editObj.forwardedTime = $filter('date')($scope.subTimeFormat, 'HH:mm:ss');
+        $scope.editObj.statusTime = $filter('date')($scope.sTimeFormat, 'HH:mm:ss');        
         
         if($scope.editObj.sorce == "Others"){
             $scope.editObj.sorce = "Others: " + $scope.sourceOthers;

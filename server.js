@@ -629,7 +629,7 @@ app.get('/customerFeedbackScheduled', function(req, res){
 
 app.get('/unreadSatisfaction', function(req, res){
     'use strict';
-    var unread = "SELECT count(tblsatisfaction_scheduled.readStat) as unreadScheduled, count(tblsatisfaction_municipal.readStat) as unreadMunicipal, count(tblsatisfaction_commercial.readStat) as unreadCommercial FROM tblsatisfaction_municipal JOIN tblsatisfaction_scheduled JOIN tblsatisfaction_commercial WHERE tblsatisfaction_scheduled.readStat = 'u' AND tblsatisfaction_municipal.readStat = 'u' AND tblsatisfaction_commercial.readStat = 'u'";
+    var unread = "SELECT COUNT(readStat) as unreadMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE readStat = 'u') as unreadScheduled, (SELECT COUNT(readStat) from tblsatisfaction_commercial WHERE readStat = 'u') as unreadCommercial FROM tblsatisfaction_municipal WHERE readStat = 'u'";
     //var commercial = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
     //var scheduled = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
     var unreadMunicipal, unreadCommercial, unreadScheduled, json = {};
