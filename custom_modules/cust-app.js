@@ -66,7 +66,6 @@ app.post('/loginCustServiceApp', function (req, resp) {
                     if (result[0].status == 1) {
                         resp.send("Login Success");
                     } else {
-
                         transporter = nodemailer.createTransport({
                             service: 'gmail',
                             auth: {
