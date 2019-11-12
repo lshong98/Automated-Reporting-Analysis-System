@@ -257,7 +257,7 @@ app.post('/updateBinRequest', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.id + "'";
-    var msg = "The status of your bin request with the ID "+req.body.id+" has been updated to "+req.body.status;
+    var msg = "The status of your bin request with the ID "+req.body.id+" has been updated to "+req.body.status+". Please go to the View My Requests tab for information on any necessary actions.";
     var getUserID = "SELECT userID FROM tblbinrequest WHERE reqID = '"+req.body.id+"'";
     var userID, date = dateTime.create().format('Y-m-d H:M:S');
     var topic = "TriBinReq"+req.body.id;
