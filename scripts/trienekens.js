@@ -2621,54 +2621,54 @@ app.controller('managerController', function ($scope, $http, $filter) {
     });
     myParser.parse(src);
 
-    //    fetch(src)
-    //    .then(function (resp) {
-    //        return resp.text();
-    //    })
-    //    .then(function (data) {
-    //        var parser = new DOMParser(),
-    //            xmlDoc = parser.parseFromString(data, 'text/xml'),
-    //            read_placemark = xmlDoc.getElementsByTagName("Placemark"),
-    //            read_name = xmlDoc.getElementsByTagName("name"),
-    //            read_color = xmlDoc.getElementsByTagName("styleUrl"),
-    //            read_coordinates = xmlDoc.getElementsByTagName("coordinates"),
-    //            boundary = [],
-    //            coordinateSpliter,
-    //            thisColor,
-    //            thisName,
-    //            thisCoordinate = [],
-    //            formattedBoundary = [],
-    //            _prev,
-    //            _this;
-    //        
-    //        for (var i = 0; i < read_placemark.length; i++) {
-    //            thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
-    //            thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
-    //            coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
-    //            boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
-    //        }
-    //        
-    //        for (var i = 0; i < boundary.length; i++) {
-    //            for (var j = 0; j < boundary[i].coordinates.length; j++) {
-    //                _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
-    //                _this = _this.replace(/^0+/, "");
-    //                _this = parseFloat(_this).toFixed(7);
-    //                if (j !== 0) {
-    //                    _prev = (boundary[i].coordinates[j - 1]).replace(/ +/g, "");
-    //                    _prev = _prev.replace(/^0+/, "");
-    //                    _prev = parseFloat(_prev).toFixed(7);
-    //                }
-    //                if (_this !== "NaN") {
-    //                    if (j % 2 !== 0) {
-    //                        thisCoordinate.push({"lng": _prev, "lat": _this});
-    //                    }
-    //                }
-    //            }
-    //            formattedBoundary.push({"name": boundary[i].name, "color": boundary[i].color, "coordinates": thisCoordinate});
-    //            thisCoordinate = [];
-    //        }
-    //        console.log(formattedBoundary);
-    //    });
+//        fetch(src)
+//        .then(function (resp) {
+//            return resp.text();
+//        })
+//        .then(function (data) {
+//            var parser = new DOMParser(),
+//                xmlDoc = parser.parseFromString(data, 'text/xml'),
+//                read_placemark = xmlDoc.getElementsByTagName("Placemark"),
+//                read_name = xmlDoc.getElementsByTagName("name"),
+//                read_color = xmlDoc.getElementsByTagName("styleUrl"),
+//                read_coordinates = xmlDoc.getElementsByTagName("coordinates"),
+//                boundary = [],
+//                coordinateSpliter,
+//                thisColor,
+//                thisName,
+//                thisCoordinate = [],
+//                formattedBoundary = [],
+//                _prev,
+//                _this;
+//            
+//            for (var i = 0; i < read_placemark.length; i++) {
+//                thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
+//                thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
+//                coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
+//                boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
+//            }
+//            
+//            for (var i = 0; i < boundary.length; i++) {
+//                for (var j = 0; j < boundary[i].coordinates.length; j++) {
+//                    _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
+//                    _this = _this.replace(/^0+/, "");
+//                    _this = parseFloat(_this).toFixed(7);
+//                    if (j !== 0) {
+//                        _prev = (boundary[i].coordinates[j - 1]).replace(/ +/g, "");
+//                        _prev = _prev.replace(/^0+/, "");
+//                        _prev = parseFloat(_prev).toFixed(7);
+//                    }
+//                    if (_this !== "NaN") {
+//                        if (j % 2 !== 0) {
+//                            thisCoordinate.push({"lng": _prev, "lat": _this});
+//                        }
+//                    }
+//                }
+//                formattedBoundary.push({"name": boundary[i].name, "color": boundary[i].color, "coordinates": thisCoordinate});
+//                thisCoordinate = [];
+//            }
+//            console.log(formattedBoundary);
+//        });
 
     $http.get('/livemap').then(function (response) {
         var data = response.data,
@@ -6898,6 +6898,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response) {
         var complaint = response.data;
+        
         $scope.comDetail = {
             'ctype': complaint[0].premiseType,
             'title': complaint[0].complaint,
@@ -6909,7 +6910,9 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'area': complaint[0].areaName,
             'status': complaint[0].status,
             'code': complaint[0].code,
-            'id': complaint[0].complaintID
+            'id': complaint[0].complaintID,
+            'img' : complaint[0].complaintImg,
+            'staffID' : complaint[0].staffID
         };
 
         //get report dates for certain area id
@@ -6988,6 +6991,32 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                     $scope.showUpdateBtn = true;
                 }
             });
+        }
+        
+        if($scope.comDetail.staffID != window.sessionStorage.getItem('owner')){
+            $scope.showInchargeBtn = false;
+        }else{
+            $scope.showInchargeBtn = true;
+        }
+        
+        
+        $scope.inchargeChat = function(){
+            var staffID = {"staffID" : window.sessionStorage.getItem('owner')};
+            $http.post('/setIncharge', staffID).then(function (response){
+                if (response.data.status = "success") {
+                    $scope.notify("success", "Updated Incharged Staff");
+                    $scope.showInchargeBtn = true;
+                } else {
+                    $scope.notify("error", "Update Status Error");
+                    $scope.showInchargeBtn = true;
+                }
+            });
+        }
+        
+        if($scope.comDetail.staffID == window.sessionStorage.getItem('owner') || window.sessionStorage.getItem('position') == "Manager"){
+            $scope.allowChat = true;
+        }else{
+            $scope.allowChat = false;
         }
 
     });
