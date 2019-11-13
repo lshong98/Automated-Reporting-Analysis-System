@@ -23,12 +23,6 @@ app.post('/addBdaf', function (req, res) {
 app.post('/getAllBdaf', function (req, res) {
     'use strict';
     var sql = "SELECT b.bdafID AS id, b.creationDateTime as date, b.driverID as driver, b.staffID as generalWorker, b.authorizedBy, b.authorizedDate, b.status from tblbdaf as b";
-        
-    if (req.body.status) {
-        sql += " WHERE status = 'A'";
-    } else {
-        sql += " WHERE status = 'I'";
-    }
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -115,7 +109,18 @@ app.post('/getBdafInfo', function (req, res) {
     });
 }); // Complete
 
-
+app.post('/assignRequest', function (req, res) {
+    'use strict';
+    //console.log("DCS ID: " + req.body.dcsID);
+    var sql = "SELECT * from tblbdaf where bdafID = '" + req.body.reqID + "'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+ 
+        res.json(result);
+    });
+}); // Complete
 
 
 module.exports = app;

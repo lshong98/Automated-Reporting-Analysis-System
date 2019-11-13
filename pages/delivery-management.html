@@ -124,17 +124,14 @@
                             <select class="form-control">
                                 <option ng-repeat="b in bdafList">{{b.id}}</option>
                             </select>
-                            <button class="btn btn-success" data-toggle="modal" data-target="#createBDAF"><i
-                                    class="fa fa-plus"></i> Assign</button>
+                            <button class="btn btn-success" data-ng-click="assignRequests()"><i class="fa fa-plus"></i>
+                                Assign</button>
                         </div>
 
                     </div>
                     <div class="col-md-3">
                         <div class="btn-group">
-                            <button class="btn btn-info" style="display: inline-block;"><i class="fas fa-print"></i>
-                                Print Selected</button>
-                            <button class="btn btn-primary" style="display: inline-block;"><i class="fas fa-print"></i>
-                                Print All</button>
+
                         </div>
                     </div>
                 </div>
@@ -144,37 +141,46 @@
                         <thead>
                             <tr>
 
-                                <th width="10%" data-ng-click="orderBy('status');">Select <i
+                                <th width="10%">Select <i
                                         class="fas fa-sort-down"></i></th>
                                 <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i>
                                 </th>
-                                <th width="15%" data-ng-click="orderBy('driver');">Address <i
+                                <th width="15%" data-ng-click="orderBy('location');">Location <i
                                         class="fas fa-sort-down"></i></th>
-                                <th width="15%" data-ng-click="orderBy('driver');">Company <i
+                                <th width="20%" data-ng-click="orderBy('contactName');">Contact Person <i
                                         class="fas fa-sort-down"></i></th>
-                                <th width="20%" data-ng-click="orderBy('generalWorker');">Contact Person <i
+                                <th width="20%" data-ng-click="orderBy('contactNo');">Contact No. <i
                                         class="fas fa-sort-down"></i></th>
-                                <th width="20%" data-ng-click="orderBy('authorizedBy');">Contact No. <i
+                                <th width="20%" data-ng-click="orderBy('type');">Type <i
                                         class="fas fa-sort-down"></i></th>
-                                <th width="20%" data-ng-click="orderBy('authorizedDate');">Job Description <i
+                                <th width="20%" data-ng-click="orderBy('requestDate');">requestDate <i
                                         class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('status');">Bin Size <i
+                                <th width="20%" data-ng-click="orderBy('status');">Status <i
                                         class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('status');">Units <i
+                                <th width="20%" data-ng-click="orderBy('reason');">reason <i
                                         class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('status');">Remarks <i
+                                <th width="20%" data-ng-click="orderBy('jobDesc');">Job Description <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('binSize');">Bin Size <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('units');">Units <i
+                                        class="fas fa-sort-down"></i></th>
+                                <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i
                                         class="fas fa-sort-down"></i></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr data-ng-repeat="b in binRequestList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
                                 class="clickable-row">
-                                <td><input type="checkbox" class="form-control checkbox-big" /></td>
-                                <td data-ng-bind="b.date | date: 'dd-MM-yyyy'"></td>
+                                <td><input type="checkbox" data-ng-model="b.selected" class="form-control checkbox-big" data-ng-change="selectRequest(b)"/></td>
+                                <td data-ng-bind="b.dateRequest | date: 'dd-MM-yyyy'"></td>
                                 <td data-ng-bind="b.location"></td>
-                                <td data-ng-bind="b.company"></td>
-                                <td data-ng-bind="b.contactPerson"></td>
+                                <td data-ng-bind="b.contactName"></td>
                                 <td data-ng-bind="b.contactNo"></td>
+                                <td data-ng-bind="b.type"></td>
+                                <td data-ng-bind="b.requestDate | date: 'dd-MM-yyyy'"></td>
+                                <td data-ng-bind="b.status"></td>
+                                <td data-ng-bind="b.reason"></td>
                                 <td data-ng-bind="b.jobDesc"></td>
                                 <td data-ng-bind="b.binSize"></td>
                                 <td data-ng-bind="b.units"></td>

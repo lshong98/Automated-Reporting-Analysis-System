@@ -82,13 +82,13 @@ app.get('/getAcrList', function (req, res) {
             throw err;
         }
         res.json(result);
-        console.log(result);
+        console.log(result); 
     });
 });
 
 app.post('/getUnassignedBinRequests', function (req, res) {
     'use strict';
-    var sql = "SELECT * FROM tblbinrequest WHERE status = 'approved'";
+    var sql = "SELECT reqID, if(TYPE = 'Residential',requestAddress, concat(companyName, ', ', companyAddress)) as location, name as contactName, contactNumber as contactNo, type, dateRequest, requestDate, reason, remarks, status FROM tblbinrequest WHERE status = 'approved'";
 
 
     database.query(sql, function (err, result) {

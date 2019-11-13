@@ -18,11 +18,11 @@ var config = {
     timezone: 'utc'
 };
 
-var db;
+var db; 
  
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
     config.socketPath = '/cloudsql/' + process.env.INSTANCE_CONNECTION_NAME;
-}
+} 
 
 // Create connection 
 function handleDisconnect() {
