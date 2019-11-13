@@ -7657,6 +7657,7 @@ app.controller('transactionLogController', function ($scope, $http, $filter, sto
 app.controller('deliveryController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
 
+    $scope.bdafID = '';
     $scope.bdafList = [];
     $scope.driverList = [];
     $scope.generalWorkerList = [];
@@ -7755,10 +7756,28 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
         var x = 0;
         for (x = 0; x < $scope.selectedRequests.length; x++) {
             var request = {};
-            request = $scope.selectedRequests[0];
-            $http.post('/assignRequest', request).then(function (response) {});
+            $scope.selectedRequests[x].bdafID = $scope.bdafID
+            request = $scope.selectedRequests[x];
+            console.log(request);
+
+                $http.post('/assignRequest', request).then(function (response) {
+
+                });
+            
+            
+            getUnassignedBinRequests();
         }
+
     }
+    $scope.selectBdafID = function(bdafID){
+        console.log(bdafID)
+    }
+    $scope.confirmAssign = function(){
+        $scope.assignRequests();
+        angular.element('#confirmation').modal('toggle');
+
+    }
+
 
     getAllBdaf(); //call
     getBdafDetails();
@@ -8030,7 +8049,16 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         angular.element('#editDcsEntry').modal('toggle');
     }
-
+    $scope.confirmCompletion = function() {
+        window.alert("Task completed");
+        $scope.bdafDetailsList.completed = true;
+        angular.element('#completeConfirmation').modal('toggle');
+    }
+    $scope.confirmUncompletion = function() {
+        window.alert("Task uncompleted");
+        $scope.bdafDetailsList.completed = false;
+        angular.element('#completeConfirmation').modal('toggle');
+    }
 
 
     //INTIALIZE PAGE

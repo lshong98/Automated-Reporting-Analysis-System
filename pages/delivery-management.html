@@ -40,7 +40,25 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="confirmation" tabindex="-1" role="dialog" aria-labelledby="confirmation" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Click 'Yes' to proceed. Click 'No' to cancel.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" ng-model="value" data-ng-click="confirmAssign()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <h5>Delivery Management</h5>
@@ -121,10 +139,10 @@
                 <div class="row" data-ng-show="show.create == 'A'">
                     <div class="col-md-9">
                         <div class="btn-group">
-                            <select class="form-control">
+                            <select class="form-control" ng-model="bdafID">
                                 <option ng-repeat="b in bdafList">{{b.id}}</option>
                             </select>
-                            <button class="btn btn-success" data-ng-click="assignRequests()"><i class="fa fa-plus"></i>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#confirmation"><i class="fa fa-plus"></i>
                                 Assign</button>
                         </div>
 
@@ -138,6 +156,7 @@
                 </br>
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
+                        
                         <thead>
                             <tr>
 
@@ -169,13 +188,15 @@
                                         class="fas fa-sort-down"></i></th>
                             </tr>
                         </thead>
+                       
                         <tbody>
+                            
                             <tr data-ng-repeat="b in binRequestList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
                                 class="clickable-row">
                                 <td><input type="checkbox" data-ng-model="b.selected" class="form-control checkbox-big" data-ng-change="selectRequest(b)"/></td>
                                 <td data-ng-bind="b.dateRequest | date: 'dd-MM-yyyy'"></td>
                                 <td data-ng-bind="b.location"></td>
-                                <td data-ng-bind="b.contactName"></td>
+                                <td data-ng-bind="b.contactPerson"></td>
                                 <td data-ng-bind="b.contactNo"></td>
                                 <td data-ng-bind="b.type"></td>
                                 <td data-ng-bind="b.requestDate | date: 'dd-MM-yyyy'"></td>
@@ -188,6 +209,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <p style="text-align: center; padding-top: 10px;" ng-show="binRequestList.length == 0"><i>No bin requests remaining..</i></p>
                 </div>
 
             </div>
