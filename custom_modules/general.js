@@ -88,7 +88,7 @@ app.get('/getAcrList', function (req, res) {
 
 app.post('/getUnassignedBinRequests', function (req, res) {
     'use strict';
-    var sql = "SELECT reqID, if(TYPE = 'Residential',requestAddress, concat(companyName, ', ', companyAddress)) as location, name as contactName, contactNumber as contactNo, type, dateRequest, requestDate, reason, remarks, status FROM tblbinrequest WHERE status = 'approved'";
+    var sql = "SELECT reqID, if(TYPE = 'Residential',requestAddress, concat(companyName, ', ', companyAddress)) as location, name as contactPerson, contactNumber as contactNo, type, dateRequest, requestDate, reason, remarks, status FROM tblbinrequest WHERE status = 'approved'";
 
 
     database.query(sql, function (err, result) {

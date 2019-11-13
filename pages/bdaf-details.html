@@ -108,6 +108,95 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="editBdafEntry" tabindex="-1" role="dialog" aria-labelledby="editBdafEntry"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add a BDAF</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtCompany form-label">Council</label>
+                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.council" />
+                </div>
+                <div class="form-group">
+                    <label for="txtAcrBins form-label">ACR Sticker</label>
+                    <input type="text" class="form-control" id="txtAcrSticker" data-ng-model="bdafEntry.acrSticker" />
+                </div>
+                <div class="form-group">
+                    <label for="txtAreaCode form-label">ACRF No.</label>
+                    <input type="text" class="form-control" id="txtAcrfNo" data-ng-model="bdafEntry.acrID" />
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Job Description</label>
+                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.jobDesc" />
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Remarks</label>
+                    <textarea class="form-control" rows="4" data-ng-model="bdafEntry.remarks"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label"><b>Bin Delivered No.</b></label>
+                    <input data-ng-show="newBinDeliveredButton" type="text" data-ng-model="newBinDelivered" />
+                    <button ng-show="newBinDeliveredButton" class="btn btn-sm btn-success" type="button"><i
+                            class="fas fa-check" ng-click="assignBinDelivered(newBinDelivered);"></i></i></button>
+                    <button ng-show="newBinDeliveredButton" class="btn btn-sm btn-danger"
+                        ng-click="cancelBinDelivered();"> <i class="fas fa-times"></i></button>
+                    <button ng-show="!newBinDeliveredButton" class="btn btn-sm btn-success" type="button"><i
+                            class="fas fa-plus" ng-click="revealBinDelivered();"></i></button></br>
+
+                    <span>{{binDelivered}}</span><span id="buttons"></span>
+                    <button ng-show="binDelivered != ''" class="btn btn-sm btn-danger" ng-click="clearBinDelivered();">
+                        Clear</i></button>
+                </div>
+                </br>
+                <div class="form-group">
+                    <label for="txtRemarks form-label"><b>Bin Pulled No.</b></label>
+                    <input data-ng-show="newBinPulledButton" type="text" data-ng-model="newBinPulled" />
+                    <button ng-show="newBinPulledButton" class="btn btn-sm btn-success" type="button"><i
+                            class="fas fa-check" ng-click="assignBinPulled(newBinPulled);"></i></i></button>
+                    <button ng-show="newBinPulledButton" class="btn btn-sm btn-danger" ng-click="cancelBinPulled();"> <i
+                            class="fas fa-times"></i></button>
+                    <button ng-show="!newBinPulledButton" class="btn btn-sm btn-success" type="button"><i
+                            class="fas fa-plus" ng-click="revealBinPulled();"></i></button></br>
+
+                    <span>{{binPulled}}</span><span id="buttons"></span>
+                    <button ng-show="binPulled != ''" class="btn btn-sm btn-danger" ng-click="clearBinPulled();">
+                        Clear</i></button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="saveBdafEntry();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="completeConfirmation" tabindex="-1" role="dialog" aria-labelledby="completeConfirmation"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Is the Job complete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Click 'Yes' to proceed. Click 'No' to cancel.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" ng-model="value"
+                    data-ng-click="confirmCompletion()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="approveConfirmation" tabindex="-1" role="dialog" aria-labelledby="approveConfirmation"
     aria-hidden="true">
@@ -257,6 +346,7 @@
                 <table class="table table-hover table-striped table-clickable">
                     <thead>
                         <tr>
+                            <th>No.</th>
                             <th width="15%" data-ng-click="orderBy('location');">Location <i
                                     class="fas fa-sort-down"></i></th>
                             <th width="15%" data-ng-click="orderBy('council');">council <i class="fas fa-sort-down"></i>
@@ -287,6 +377,9 @@
                     <tbody>
                         <tr data-ng-repeat="b in bdafDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
                             class="clickable-row">
+                            <td>
+                                {{$index + 1}}
+                            </td>
                             <td>
                                 <span data-ng-bind="b.location"></span>
                             </td>
@@ -324,7 +417,15 @@
                                 <span data-ng-bind="b.binPulled"></span>
                             </td>
                             <td>
-                                <input type="checkbox" class="form-control checkbox-big">
+                                <button class="btn btn-sm btn-success" data-toggle="modal"
+                                    ng-show="!b.completed" data-target="#completeConfirmation"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-sm btn-danger" data-toggle="modal"
+                                    ng-show="b.completed" data-target="#uncompleteConfirmation"><i class="fa fa-times"></i></button>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" data-toggle="modal"
+                                    data-target="#editBdafEntry"><i class="fa fa-pencil-alt"></i></button>
+
                             </td>
 
                         </tr>
