@@ -51,7 +51,7 @@
                                                 <tbody>
                                                     <!-- data-ng-show="f.status == 'P'" -->
                                                     <tr data-ng-repeat="f in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
-                                                        data-ng-click="getForm(f.formID, f.formType);" ng-show="f.status == 'C'">
+                                                        data-ng-click="getForm(f.formID, f.formType);" ng-show="f.status == 'P'">
                                                         <td
                                                             ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
                                                             <span data-ng-bind="f.date"></span>
