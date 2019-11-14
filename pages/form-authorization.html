@@ -1,58 +1,172 @@
 <div class="row">
-        <div class="col-md-12">
-            <h5>Form Authorization</h5>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-            <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
-        </div>
-      </div>
-      <br />
-      </div>
-      <br />
-      <div class="row" data-ng-show="show.view == 'A'">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped table-clickable">
-                            <thead>
-                                <tr>
-                                    <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                                    <th width="25%" data-ng-click="orderBy('formType');">Form Type <i class="fas fa-sort-down"></i></th>
-                                    <th width="25%" data-ng-click="orderBy('formID');">Form ID <i class="fas fa-sort-down"></i></th>
-                                    <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i class="fas fa-sort-down"></i></th>
-                                    <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i class="fas fa-sort-down"></i></th>
-                                </tr>
-                            </thead>
-                            <tbody><!-- data-ng-show="f.status == 'P'" -->
-                                <tr data-ng-repeat="f in formList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-click="getForm(f.formID, f.formType);">
-                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                        <span data-ng-bind="f.date"></span>
-                                    </td>
-                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                        <span data-ng-bind="f.formType"></span>
-                                    </td>
-                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                          <span data-ng-bind="f.formID"></span>
-                                    </td>
-                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                          <span data-ng-bind="f.preparedBy"></span>
-                                    </td>
-                                    <td ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                            <span data-ng-bind="f.status"></span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <div class="col-md-12">
+        <h5>Form Authorization</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..."
+            data-ng-model="searchZoneFilter" />
+    </div>
+</div>
+<br />
+</div>
+<br />
+
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="acrTab" role=tablist>
+            <li class="nav-item">
+                <a class="nav-link active" id="schedule-tab" data-toggle="tab" data-target="#bdaf" role="tab"
+                    aria-controls="bdaf" aria-selected="true">BDAF</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#dcs" role="tab"
+                    aria-controls="dcs" aria-selected="false">DCS</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="bdaf" role="tabpanel" aria-labelledby="bdaf-tab">
+                    <div class="row" data-ng-show="show.view == 'A'">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped table-clickable">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i>
+                                                        </th>
+                                                        <th width="25%" data-ng-click="orderBy('formID');">Form ID <i
+                                                                class="fas fa-sort-down"></i></th>
+                                                        <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i
+                                                                class="fas fa-sort-down"></i></th>
+                                                        <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i
+                                                                class="fas fa-sort-down"></i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- data-ng-show="f.status == 'P'" -->
+                                                    <tr data-ng-repeat="f in formList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                                                        data-ng-click="getForm(f.formID, f.formType);">
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.date"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.formType"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.formID"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.preparedBy"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.status"></span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                                    <div class="col-md-12">
+                                        <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage"
+                                            data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;"
+                                            first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" data-ng-show="show.view == 'A'">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped table-clickable">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i>
+                                                        </th>
+                                                        <th width="25%" data-ng-click="orderBy('formID');">Form ID <i
+                                                                class="fas fa-sort-down"></i></th>
+                                                        <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i
+                                                                class="fas fa-sort-down"></i></th>
+                                                        <th width="15%" data-ng-click="orderBy('checkedBy')">Checked By <i
+                                                                class="fas fa-sort-down"></i></th>
+                                                        <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i
+                                                                class="fas fa-sort-down"></i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- data-ng-show="f.status == 'P'" -->
+                                                    <tr data-ng-repeat="f in checkedformList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                                                        data-ng-click="getForm(f.formID, f.formType);">
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.date"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.formType"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.formID"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.preparedBy"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.checkedBy"></span>
+                                                        </td>
+                                                        <td
+                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                            <span data-ng-bind="f.status"></span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                                    <div class="col-md-12">
+                                        <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage"
+                                            data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;"
+                                            first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
             </div>
-            <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-                <div class="col-md-12">
-                    <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-                </div>
+            <div class="tab-pane fade" id="dcs" role="tabpanel" aria-labelledby="dcs-tab">
+
+
+            </div>
+            <div class="tab-pane fade" id="binRequests" role="tabpanel" aria-labelledby="binRequests-tab">
+
+
+            </div>
+            <div class="tab-pane fade" id="binRequests" role="tabpanel" aria-labelledby="binRequests-tab">
+
+
+            </div>
+            <div class="tab-pane fade" id="binRequests" role="tabpanel" aria-labelledby="binRequests-tab">
+
+
             </div>
         </div>
-      </div>
+
+    </div>
+</div>

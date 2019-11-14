@@ -7850,31 +7850,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         getGeneralWorkers();
     }
 
-    //FORM AUTHORIZATION
-    $scope.requestAuthorization = function () {
-        sendFormForAuthorization($routeParams.dcsID, "bdaf");
-        $scope.status = 'PENDING';
-    };
-    $scope.confirm = function (request) {
-        if (request == 'approve') {
-            $scope.approveForm();
-        } else if (request == 'reject') {
-            $scope.rejectForm();
-        }
-    };
-    $scope.approveForm = function () {
-        $scope.status = 'APPROVED';
-        approveForm($routeParams.dcsID, "bdaf");
-
-        angular.element('#approveConfirmation').modal('toggle');
-    }
-    $scope.rejectForm = function () {
-        $scope.status = 'CORRECTION REQUIRED';
-        rejectForm($routeParams.dcsID, "bdaf");
-
-
-        angular.element('#rejectConfirmation').modal('toggle');
-    }
+    
 
     // ASSIGN BIN DELIVERED AND BIN PULLED
     $scope.assignBinDelivered = function (binDelivered) {
@@ -8020,16 +7996,57 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         angular.element('#editDcsEntry').modal('toggle');
     }
-    $scope.confirmCompletion = function() {
-        window.alert("Task completed");
-        $scope.bdafDetailsList.completed = true;
+
+    $scope.completed = false;
+    $scope.confirmCompletion = function(request) {
         angular.element('#completeConfirmation').modal('toggle');
+        $scope.bdafDetailsList[$scope.bdafDetailsList.indexOf(request)].completed = true;
+    }
+    $scope.completionConfirmed = function(index) {
+        $scope.completed = true;
+        window.alert(index)
     }
     $scope.confirmUncompletion = function() {
-        window.alert("Task uncompleted");
-        $scope.bdafDetailsList.completed = false;
-        angular.element('#completeConfirmation').modal('toggle');
+        angular.element('#uncompleteConfirmation').modal('toggle');
+        $scope.bdafDetailsList[$scope.bdafDetailsList.indexOf(request)].completed = false;
     }
+    $scope.uncompletionConfirmed = function() {
+
+    }
+
+
+    //AUTHORIZATION MODULE
+    //CHECKED BY
+    $scope.requestAuthorization = function () {
+        sendFormForAuthorization($routeParams.dcsID, "bdaf");
+        $scope.status = 'PENDING';
+    };
+    $scope.confirm = function (request) {
+        if (request == 'approve') {
+            $scope.approveForm();
+        } else if (request == 'reject') {
+            $scope.rejectForm();
+        }
+    };
+    $scope.approveForm = function () {
+        $scope.status = 'APPROVED';
+        approveForm($routeParams.dcsID, "bdaf");
+
+        angular.element('#approveConfirmation').modal('toggle');
+    }
+    $scope.rejectForm = function () {
+        $scope.status = 'CORRECTION REQUIRED';
+        rejectForm($routeParams.dcsID, "bdaf");
+
+
+        angular.element('#rejectConfirmation').modal('toggle');
+    }
+
+    //VERIFIED BY
+    $scope.verifyForm = function() {
+        //UPDATE WBSI AND WBD IF CONDITIONS ARE MET
+    }
+
 
 
     //INTIALIZE PAGE
