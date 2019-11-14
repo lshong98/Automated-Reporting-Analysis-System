@@ -405,13 +405,32 @@ input:checked + .slider:before {
                 <div class="card-header">Form Authorization</div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        Authorize Forms
+                        View Page
                         <label class="switch">
                             <input type="checkbox" class="primary" data-ng-model="auth.formAuthorization.view" data-ng-change="changeValue(auth.formAuthorization.view, 'view formAuthorization');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                             <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Check Forms
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.formAuthorization.checkView" data-ng-change="changeValue(auth.formAuthorization.checkView, 'checkView formAuthorization');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                           <span class="slider"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Verify Forms
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.formAuthorization.verifyView" data-ng-change="changeValue(auth.formAuthorization.verifyView, 'verifyView formAuthorization');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
                             <span class="slider"></span>
                         </label>
                     </li>
                 </ul>
+
+
+                
+                
+                
             </div> 
         </div>   
     <div class="col-md-6">

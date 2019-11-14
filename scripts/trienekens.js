@@ -338,7 +338,9 @@ app.service('storeDataService', function () {
                 "view": 'I'
             },
             "formAuthorization": {
-                "view": 'I'
+                "view": 'I',
+                "checkView": 'I',
+                "verifyView": 'I'
             },
             "complaintlist": {
                 "view": 'I'
@@ -1357,7 +1359,7 @@ app.run(function ($rootScope) {
         }
         window.location.href = to + value;
     };
-    $rootScope.renderSltPicker = function() {
+    $rootScope.renderSltPicker = function () {
         angular.element('.selectpicker').selectpicker('refresh');
         angular.element('.selectpicker').selectpicker('render');
     };
@@ -2624,80 +2626,80 @@ app.controller('managerController', function ($scope, $http, $filter) {
         map: map
     });
     myParser.parse(src);
-    
+
     //--------------------------------------------------------
-//    fetch(src)
-//    .then(function (resp) {
-//        return resp.text();
-//    })
-//    .then(function (data) {
-//        var parser = new DOMParser(),
-//            xmlDoc = parser.parseFromString(data, 'text/xml'),
-//            read_placemark = xmlDoc.getElementsByTagName("Placemark"),
-//            read_name = xmlDoc.getElementsByTagName("name"),
-//            read_color = xmlDoc.getElementsByTagName("styleUrl"),
-//            read_coordinates = xmlDoc.getElementsByTagName("coordinates"),
-//            boundary = [],
-//            coordinateSpliter,
-//            thisColor,
-//            thisName,
-//            thisCoordinate = [],
-//            formattedBoundary = [],
-//            _prev,
-//            _this;
-//        
-//        for (var i = 0; i < read_placemark.length; i++) {
-//            thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
-//            thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
-//            coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
-//            boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
-//        }
-//        
-//        for (var i = 0; i < boundary.length; i++) {
-//            for (var j = 0; j < boundary[i].coordinates.length; j++) {
-//                _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
-//                _this = _this.replace(/^0+/, "");
-//                _this = parseFloat(_this).toFixed(7);
-//                if (j !== 0) {
-//                    _prev = (boundary[i].coordinates[j - 1]).replace(/ +/g, "");
-//                    _prev = _prev.replace(/^0+/, "");
-//                    _prev = parseFloat(_prev).toFixed(7);
-//                }
-//                if (_this !== "NaN") {
-//                    if (j % 2 !== 0) {
-//                        thisCoordinate.push({"lng": _prev, "lat": _this});
-//                    }
-//                }
-//            }
-//            formattedBoundary.push({"id": (i + 1), "area": boundary[i].name, "areaID": '', "color": boundary[i].color, "latLngs": thisCoordinate});
-//            thisCoordinate = [];
-//        }
-//        
-//        $http.get('/bounArea').then(function (response) {
-//            var bounArea = response.data;
-//            
-//            for (var i = 0; i < formattedBoundary.length; i++) {
-//                for (var j = 0; j < bounArea.length; j++) {
-//                    if (formattedBoundary[i].area === bounArea[j].area) {
-//                        formattedBoundary[i].areaID = bounArea[j].areaID;
-//                    }
-//                }
-//            }
-//        }).then(function () {
-//            for (var i = 0; i < formattedBoundary.length; i++) {
-//                if (formattedBoundary[i].areaID === '') {
-//                    formattedBoundary[i].areaID = 'ARE201911100003';
-//                }
-//            }
-//            //cc();
-//        });
-//        
-//        function cc() {
-//            $http.post('/createBoundary', {polygons: formattedBoundary}).then(function (response) {
-//                console.log('ok');
-//            });
-//        }
-//    });
+    //    fetch(src)
+    //    .then(function (resp) {
+    //        return resp.text();
+    //    })
+    //    .then(function (data) {
+    //        var parser = new DOMParser(),
+    //            xmlDoc = parser.parseFromString(data, 'text/xml'),
+    //            read_placemark = xmlDoc.getElementsByTagName("Placemark"),
+    //            read_name = xmlDoc.getElementsByTagName("name"),
+    //            read_color = xmlDoc.getElementsByTagName("styleUrl"),
+    //            read_coordinates = xmlDoc.getElementsByTagName("coordinates"),
+    //            boundary = [],
+    //            coordinateSpliter,
+    //            thisColor,
+    //            thisName,
+    //            thisCoordinate = [],
+    //            formattedBoundary = [],
+    //            _prev,
+    //            _this;
+    //        
+    //        for (var i = 0; i < read_placemark.length; i++) {
+    //            thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
+    //            thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
+    //            coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
+    //            boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
+    //        }
+    //        
+    //        for (var i = 0; i < boundary.length; i++) {
+    //            for (var j = 0; j < boundary[i].coordinates.length; j++) {
+    //                _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
+    //                _this = _this.replace(/^0+/, "");
+    //                _this = parseFloat(_this).toFixed(7);
+    //                if (j !== 0) {
+    //                    _prev = (boundary[i].coordinates[j - 1]).replace(/ +/g, "");
+    //                    _prev = _prev.replace(/^0+/, "");
+    //                    _prev = parseFloat(_prev).toFixed(7);
+    //                }
+    //                if (_this !== "NaN") {
+    //                    if (j % 2 !== 0) {
+    //                        thisCoordinate.push({"lng": _prev, "lat": _this});
+    //                    }
+    //                }
+    //            }
+    //            formattedBoundary.push({"id": (i + 1), "area": boundary[i].name, "areaID": '', "color": boundary[i].color, "latLngs": thisCoordinate});
+    //            thisCoordinate = [];
+    //        }
+    //        
+    //        $http.get('/bounArea').then(function (response) {
+    //            var bounArea = response.data;
+    //            
+    //            for (var i = 0; i < formattedBoundary.length; i++) {
+    //                for (var j = 0; j < bounArea.length; j++) {
+    //                    if (formattedBoundary[i].area === bounArea[j].area) {
+    //                        formattedBoundary[i].areaID = bounArea[j].areaID;
+    //                    }
+    //                }
+    //            }
+    //        }).then(function () {
+    //            for (var i = 0; i < formattedBoundary.length; i++) {
+    //                if (formattedBoundary[i].areaID === '') {
+    //                    formattedBoundary[i].areaID = 'ARE201911100003';
+    //                }
+    //            }
+    //            //cc();
+    //        });
+    //        
+    //        function cc() {
+    //            $http.post('/createBoundary', {polygons: formattedBoundary}).then(function (response) {
+    //                console.log('ok');
+    //            });
+    //        }
+    //    });
     //--------------------------------------------------------
 
     $http.get('/livemap').then(function (response) {
@@ -3841,7 +3843,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "view": 'I'
         },
         "formAuthorization": {
-            "view": 'I'
+            "view": 'I',
+            "checkView": 'I',
+            "verifyView": 'I'
         },
         "complaintlist": {
             "view": 'I'
@@ -4074,7 +4078,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'A'
                         },
                         "formAuthorization": {
-                            "view": 'A'
+                            "view": 'A',
+                            "checkView": 'A',
+                            "verifyView": 'A'
                         },
                         "complaintlist": {
                             "view": 'A'
@@ -4226,7 +4232,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'I'
                         },
                         "formAuthorization": {
-                            "view": 'I'
+                            "view": 'I',
+                            "checkView": 'I',
+                            "verifyView": 'I'
                         },
                         "complaintlist": {
                             "view": 'I'
@@ -4320,7 +4328,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
 
 app.controller('binController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
-    
+
     var asc = true;
     $scope.areaList = [];
     $scope.showCreateBtn = true;
@@ -4338,13 +4346,13 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
 
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.bin);
-    
+
     $scope.updateStatusList = function () {
         $scope.binList = $scope.statusList == true ? angular.copy($scope.binListActive) : angular.copy($scope.binListInactive);
         $scope.totalItems = $scope.binList.length;
 
-//        //$scope.filterAreaList = angular.copy($scope.binList);
-//        //$scope.totalItems = $scope.filterAreaList.length;
+        //        //$scope.filterAreaList = angular.copy($scope.binList);
+        //        //$scope.totalItems = $scope.filterAreaList.length;
     }
 
     $http.get('/getAllBinCenter', $scope.currentStatus).then(function (response) {
@@ -4363,7 +4371,7 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
         $scope.searchBin = function (bin) {
             return (bin.id + bin.name + bin.location + bin.areaCode + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
         };
-        
+
         for (var i = 0; i < $scope.binList.length; i++) {
             if ($scope.binList[i].status == 'ACTIVE') {
                 $scope.binListActive.push($scope.binList[i]);
@@ -6725,6 +6733,22 @@ app.controller('taskAuthorizationController', function ($scope, $window, $http, 
 
 app.controller('formAuthorizationController', function ($scope, $window, $http, $filter, storeDataService) {
     'use strict';
+    var asc = true;
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 8; //Record number each page
+    $scope.maxSize = 10; //Show the number in page
+    $scope.show = angular.copy(storeDataService.show.formAuthorization);
+    $scope.bdafList = [];
+    $scope.dcsList = [];
+    $scope.dbrList = [];
+
+
+
+
+    $scope.orderBy = function (property) {
+        $scope.taskList = $filter('orderBy')($scope.taskList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
 
     $scope.getForm = function (formID, formType) {
 
@@ -6735,32 +6759,23 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
         }
     }
 
-    $http.get('/getAllForms').then(function (response) {
-        // storeDataService.task = angular.copy(response.data);
-        $scope.formList = response.data;
+    function getAllForms() {
+        $http.post('/getAllBdaf').then(function (response) {
+            // storeDataService.task = angular.copy(response.data);
+            $scope.bdafList = response.data;
 
-        console.log($scope.formList);
+            console.log($scope.bdafList);
 
-        for (var i = 0; i < $scope.formList.length; i++) {
-            $scope.formList[i].formType = $scope.formList[i].formID.match(/[a-zA-Z]+/g)[0].toLowerCase();
-        }
-    });
-
-
-    var asc = true;
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
+            // for (var i = 0; i < $scope.formList.length; i++) {
+            //     $scope.formList[i].formType = $scope.formList[i].formID.match(/[a-zA-Z]+/g)[0].toLowerCase();
+            // }
+        });
+    }
 
 
-    $scope.show = angular.copy(storeDataService.show.formAuthorization);
+    getAllForms();
 
 
-
-    $scope.orderBy = function (property) {
-        $scope.taskList = $filter('orderBy')($scope.taskList, ['' + property + ''], asc);
-        asc == true ? asc = false : asc = true;
-    };
 });
 
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {
@@ -6907,7 +6922,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response) {
         var complaint = response.data;
-        
+
         $scope.comDetail = {
             'ctype': complaint[0].premiseType,
             'title': complaint[0].complaint,
@@ -6920,8 +6935,8 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'status': complaint[0].status,
             'code': complaint[0].code,
             'id': complaint[0].complaintID,
-            'img' : complaint[0].complaintImg,
-            'staffID' : complaint[0].staffID
+            'img': complaint[0].complaintImg,
+            'staffID': complaint[0].staffID
         };
 
         //get report dates for certain area id
@@ -7001,17 +7016,19 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                 }
             });
         }
-        
-        if($scope.comDetail.staffID != window.sessionStorage.getItem('owner')){
+
+        if ($scope.comDetail.staffID != window.sessionStorage.getItem('owner')) {
             $scope.showInchargeBtn = false;
-        }else{
+        } else {
             $scope.showInchargeBtn = true;
         }
-        
-        
-        $scope.inchargeChat = function(){
-            var staffID = {"staffID" : window.sessionStorage.getItem('owner')};
-            $http.post('/setIncharge', staffID).then(function (response){
+
+
+        $scope.inchargeChat = function () {
+            var staffID = {
+                "staffID": window.sessionStorage.getItem('owner')
+            };
+            $http.post('/setIncharge', staffID).then(function (response) {
                 if (response.data.status = "success") {
                     $scope.notify("success", "Updated Incharged Staff");
                     $scope.showInchargeBtn = true;
@@ -7021,10 +7038,10 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                 }
             });
         }
-        
-        if($scope.comDetail.staffID == window.sessionStorage.getItem('owner') || window.sessionStorage.getItem('position') == "Manager"){
+
+        if ($scope.comDetail.staffID == window.sessionStorage.getItem('owner') || window.sessionStorage.getItem('position') == "Manager") {
             $scope.allowChat = true;
-        }else{
+        } else {
             $scope.allowChat = false;
         }
 
@@ -7711,6 +7728,7 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
     }
     $scope.addBdaf = function () {
         $scope.bdaf.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.bdaf.preparedBy = window.sessionStorage.getItem('owner');
 
         $http.post('/addBdaf', $scope.bdaf).then(function (response) {
             var returnedData = response.data;
@@ -7769,19 +7787,19 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
             request = $scope.selectedRequests[x];
             console.log(request);
 
-                $http.post('/assignRequest', request).then(function (response) {
+            $http.post('/assignRequest', request).then(function (response) {
 
-                });
-            
-            
+            });
+
+
             getUnassignedBinRequests();
         }
 
     }
-    $scope.selectBdafID = function(bdafID){
+    $scope.selectBdafID = function (bdafID) {
         console.log(bdafID)
     }
-    $scope.confirmAssign = function(){
+    $scope.confirmAssign = function () {
         $scope.assignRequests();
         angular.element('#confirmation').modal('toggle');
 
@@ -7888,7 +7906,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         getGeneralWorkers();
     }
 
-    
+
 
     // ASSIGN BIN DELIVERED AND BIN PULLED
     $scope.assignBinDelivered = function (binDelivered) {
@@ -8036,19 +8054,19 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     }
 
     $scope.completed = false;
-    $scope.confirmCompletion = function(request) {
+    $scope.confirmCompletion = function (request) {
         angular.element('#completeConfirmation').modal('toggle');
         $scope.bdafDetailsList[$scope.bdafDetailsList.indexOf(request)].completed = true;
     }
-    $scope.completionConfirmed = function(index) {
+    $scope.completionConfirmed = function (index) {
         $scope.completed = true;
         window.alert(index)
     }
-    $scope.confirmUncompletion = function() {
+    $scope.confirmUncompletion = function () {
         angular.element('#uncompleteConfirmation').modal('toggle');
         $scope.bdafDetailsList[$scope.bdafDetailsList.indexOf(request)].completed = false;
     }
-    $scope.uncompletionConfirmed = function() {
+    $scope.uncompletionConfirmed = function () {
 
     }
 
@@ -8081,7 +8099,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     }
 
     //VERIFIED BY
-    $scope.verifyForm = function() {
+    $scope.verifyForm = function () {
         //UPDATE WBSI AND WBD IF CONDITIONS ARE MET
     }
 
@@ -8483,19 +8501,17 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
     }
 });
 
-function approveForm(formID, formType) {
+function checkForm(formID) {
     $http = angular.injector(["ng"]).get("$http");
 
+    var formType = formID.substring(0, 3)
     var formDetails = {
         "formID": formID,
         "formType": formType,
         "authorizedBy": window.sessionStorage.getItem('owner')
     }
 
-    console.log("authorizedBy:" + formDetails.authorizedBy);
-
-
-    $http.post('/approveForm', formDetails).then(function (response) {
+    $http.post('/checkForm', formDetails).then(function (response) {
 
         returnedData = response.data;
 
@@ -8508,9 +8524,33 @@ function approveForm(formID, formType) {
     });
 }
 
-function rejectForm(formID, formType) {
+function verifyForm(formID) {
     $http = angular.injector(["ng"]).get("$http");
 
+    var formType = formID.substring(0, 3)
+    var formDetails = {
+        "formID": formID,
+        "formType": formType,
+        "authorizedBy": window.sessionStorage.getItem('owner')
+    }
+
+    $http.post('/verifyForm', formDetails).then(function (response) {
+
+        returnedData = response.data;
+
+        if (returnedData.status === "success") {
+            angular.element('body').overhang({
+                type: "success",
+                "message": "Form approved!"
+            });
+        }
+    });
+}
+
+function rejectForm(formID) {
+    $http = angular.injector(["ng"]).get("$http");
+
+    var formType = formID.substring(0, 3)
     var formDetails = {
         "formID": formID,
         "formType": formType,
