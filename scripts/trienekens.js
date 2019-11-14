@@ -1357,6 +1357,10 @@ app.run(function ($rootScope) {
         }
         window.location.href = to + value;
     };
+    $rootScope.renderSltPicker = function() {
+        angular.element('.selectpicker').selectpicker('refresh');
+        angular.element('.selectpicker').selectpicker('render');
+    };
     $rootScope.geocodeLink = function (place) {
         var area = place.area.replace(" ", "+");
         var zone = place.zone.replace(" ", "+");
@@ -2621,54 +2625,129 @@ app.controller('managerController', function ($scope, $http, $filter) {
     });
     myParser.parse(src);
 
-    //    fetch(src)
-    //    .then(function (resp) {
-    //        return resp.text();
-    //    })
-    //    .then(function (data) {
-    //        var parser = new DOMParser(),
-    //            xmlDoc = parser.parseFromString(data, 'text/xml'),
-    //            read_placemark = xmlDoc.getElementsByTagName("Placemark"),
-    //            read_name = xmlDoc.getElementsByTagName("name"),
-    //            read_color = xmlDoc.getElementsByTagName("styleUrl"),
-    //            read_coordinates = xmlDoc.getElementsByTagName("coordinates"),
-    //            boundary = [],
-    //            coordinateSpliter,
-    //            thisColor,
-    //            thisName,
-    //            thisCoordinate = [],
-    //            formattedBoundary = [],
-    //            _prev,
-    //            _this;
-    //        
-    //        for (var i = 0; i < read_placemark.length; i++) {
-    //            thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
-    //            thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
-    //            coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
-    //            boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
-    //        }
-    //        
-    //        for (var i = 0; i < boundary.length; i++) {
-    //            for (var j = 0; j < boundary[i].coordinates.length; j++) {
-    //                _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
-    //                _this = _this.replace(/^0+/, "");
-    //                _this = parseFloat(_this).toFixed(7);
-    //                if (j !== 0) {
-    //                    _prev = (boundary[i].coordinates[j - 1]).replace(/ +/g, "");
-    //                    _prev = _prev.replace(/^0+/, "");
-    //                    _prev = parseFloat(_prev).toFixed(7);
-    //                }
-    //                if (_this !== "NaN") {
-    //                    if (j % 2 !== 0) {
-    //                        thisCoordinate.push({"lng": _prev, "lat": _this});
-    //                    }
-    //                }
-    //            }
-    //            formattedBoundary.push({"name": boundary[i].name, "color": boundary[i].color, "coordinates": thisCoordinate});
-    //            thisCoordinate = [];
-    //        }
-    //        console.log(formattedBoundary);
-    //    });
+//        fetch(src)
+//        .then(function (resp) {
+//            return resp.text();
+//        })
+//        .then(function (data) {
+//            var parser = new DOMParser(),
+//                xmlDoc = parser.parseFromString(data, 'text/xml'),
+//                read_placemark = xmlDoc.getElementsByTagName("Placemark"),
+//                read_name = xmlDoc.getElementsByTagName("name"),
+//                read_color = xmlDoc.getElementsByTagName("styleUrl"),
+//                read_coordinates = xmlDoc.getElementsByTagName("coordinates"),
+//                boundary = [],
+//                coordinateSpliter,
+//                thisColor,
+//                thisName,
+//                thisCoordinate = [],
+//                formattedBoundary = [],
+//                _prev,
+//                _this;
+//            
+//            for (var i = 0; i < read_placemark.length; i++) {
+//                thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
+//                thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
+//                coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
+//                boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
+//            }
+//            
+//            for (var i = 0; i < boundary.length; i++) {
+//                for (var j = 0; j < boundary[i].coordinates.length; j++) {
+//                    _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
+//                    _this = _this.replace(/^0+/, "");
+//                    _this = parseFloat(_this).toFixed(7);
+//                    if (j !== 0) {
+//                        _prev = (boundary[i].coordinates[j - 1]).replace(/ +/g, "");
+//                        _prev = _prev.replace(/^0+/, "");
+//                        _prev = parseFloat(_prev).toFixed(7);
+//                    }
+//                    if (_this !== "NaN") {
+//                        if (j % 2 !== 0) {
+//                            thisCoordinate.push({"lng": _prev, "lat": _this});
+//                        }
+//                    }
+//                }
+//                formattedBoundary.push({"name": boundary[i].name, "color": boundary[i].color, "coordinates": thisCoordinate});
+//                thisCoordinate = [];
+//            }
+//            console.log(formattedBoundary);
+//        });
+    
+    //--------------------------------------------------------
+//    fetch(src)
+//    .then(function (resp) {
+//        return resp.text();
+//    })
+//    .then(function (data) {
+//        var parser = new DOMParser(),
+//            xmlDoc = parser.parseFromString(data, 'text/xml'),
+//            read_placemark = xmlDoc.getElementsByTagName("Placemark"),
+//            read_name = xmlDoc.getElementsByTagName("name"),
+//            read_color = xmlDoc.getElementsByTagName("styleUrl"),
+//            read_coordinates = xmlDoc.getElementsByTagName("coordinates"),
+//            boundary = [],
+//            coordinateSpliter,
+//            thisColor,
+//            thisName,
+//            thisCoordinate = [],
+//            formattedBoundary = [],
+//            _prev,
+//            _this;
+//        
+//        for (var i = 0; i < read_placemark.length; i++) {
+//            thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
+//            thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
+//            coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
+//            boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
+//        }
+//        
+//        for (var i = 0; i < boundary.length; i++) {
+//            for (var j = 0; j < boundary[i].coordinates.length; j++) {
+//                _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
+//                _this = _this.replace(/^0+/, "");
+//                _this = parseFloat(_this).toFixed(7);
+//                if (j !== 0) {
+//                    _prev = (boundary[i].coordinates[j - 1]).replace(/ +/g, "");
+//                    _prev = _prev.replace(/^0+/, "");
+//                    _prev = parseFloat(_prev).toFixed(7);
+//                }
+//                if (_this !== "NaN") {
+//                    if (j % 2 !== 0) {
+//                        thisCoordinate.push({"lng": _prev, "lat": _this});
+//                    }
+//                }
+//            }
+//            formattedBoundary.push({"id": (i + 1), "area": boundary[i].name, "areaID": '', "color": boundary[i].color, "latLngs": thisCoordinate});
+//            thisCoordinate = [];
+//        }
+//        
+//        $http.get('/bounArea').then(function (response) {
+//            var bounArea = response.data;
+//            
+//            for (var i = 0; i < formattedBoundary.length; i++) {
+//                for (var j = 0; j < bounArea.length; j++) {
+//                    if (formattedBoundary[i].area === bounArea[j].area) {
+//                        formattedBoundary[i].areaID = bounArea[j].areaID;
+//                    }
+//                }
+//            }
+//        }).then(function () {
+//            for (var i = 0; i < formattedBoundary.length; i++) {
+//                if (formattedBoundary[i].areaID === '') {
+//                    formattedBoundary[i].areaID = 'ARE201911100003';
+//                }
+//            }
+//            //cc();
+//        });
+//        
+//        function cc() {
+//            $http.post('/createBoundary', {polygons: formattedBoundary}).then(function (response) {
+//                console.log('ok');
+//            });
+//        }
+//    });
+    //--------------------------------------------------------
 
     $http.get('/livemap').then(function (response) {
         var data = response.data,
@@ -3489,18 +3568,12 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
         }, true);
     });
 
-
-    function renderSltPicker() {
-        angular.element('.selectpicker').selectpicker('refresh');
-        angular.element('.selectpicker').selectpicker('render');
-    }
-
     $http.get('/getDriverList').then(function (response) {
         $scope.driverList = response.data;
         $scope.truck.driver = $scope.driverList[0];
     });
     $http.get('/getAreaList').then(function (response) {
-        renderSltPicker();
+        $scope.renderSltPicker();
         $.each(response.data, function (index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
@@ -3520,7 +3593,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             });
         });
         $('.selectpicker').on('change', function () {
-            renderSltPicker();
+            $scope.renderSltPicker();
         });
     });
 
@@ -4296,9 +4369,11 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
 
 app.controller('binController', function ($scope, $http, $filter, storeDataService) {
     'use strict';
+    
     var asc = true;
-    $scope.showCreateBtn = true;
     $scope.areaList = [];
+    $scope.showCreateBtn = true;
+    $scope.statusList = true;
 
     $scope.bin = {
         "id": '',
@@ -4312,36 +4387,32 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
 
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.bin);
-
-    $scope.statusList = true;
+    
     $scope.updateStatusList = function () {
-        if ($scope.statusList) {
-            $scope.binList = angular.copy($scope.binListActive);
-        } else {
-            $scope.binList = angular.copy($scope.binListInactive);
-        }
+        $scope.binList = $scope.statusList == true ? angular.copy($scope.binListActive) : angular.copy($scope.binListInactive);
+        $scope.totalItems = $scope.binList.length;
 
-        $scope.filterAreaList = angular.copy($scope.binList);
-        $scope.totalItems = $scope.filterAreaList.length;
+//        //$scope.filterAreaList = angular.copy($scope.binList);
+//        //$scope.totalItems = $scope.filterAreaList.length;
     }
 
     $http.get('/getAllBinCenter', $scope.currentStatus).then(function (response) {
         $scope.searchBinFilter = '';
         $scope.binList = response.data;
+        $scope.filterBinList = [];
+        $scope.binListActive = [];
+        $scope.binListInactive = [];
 
         $.each($scope.binList, function (index, value) {
             $scope.binList[index].areacode = $scope.binList[index].area + ',' + $scope.binList[index].areaCode;
         });
 
         storeDataService.bin = angular.copy($scope.binList);
-        $scope.filterBinList = [];
 
         $scope.searchBin = function (bin) {
             return (bin.id + bin.name + bin.location + bin.areaCode + bin.status).toUpperCase().indexOf($scope.searchBinFilter.toUpperCase()) >= 0;
         };
-
-        $scope.binListActive = [];
-        $scope.binListInactive = [];
+        
         for (var i = 0; i < $scope.binList.length; i++) {
             if ($scope.binList[i].status == 'ACTIVE') {
                 $scope.binListActive.push($scope.binList[i]);
@@ -4370,7 +4441,7 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
     });
 
     $http.get('/getAreaList').then(function (response) {
-        renderSltPicker();
+        $scope.renderSltPicker();
         $.each(response.data, function (index, value) {
             var areaID = value.id.split(",");
             var areaName = value.name.split(",");
@@ -4392,15 +4463,9 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
             });
         });
         $('.selectpicker').on('change', function () {
-            renderSltPicker();
+            $scope.renderSltPicker();
         });
     });
-
-
-    function renderSltPicker() {
-        angular.element('.selectpicker').selectpicker('refresh');
-        angular.element('.selectpicker').selectpicker('render');
-    }
 
     $scope.addBin = function () {
         $scope.showCreateBtn = false;
@@ -4415,7 +4480,6 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
             var acode = area.split(",")[1];
             $scope.bin.area = aid;
             $scope.bin.areaCode = acode;
-            console.log($scope.bin);
             $http.post('/addBinCenter', $scope.bin).then(function (response) {
                 var data = response.data;
                 //var newBinID = data.details.binID;
@@ -4726,7 +4790,6 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
             }
 
             for (var j = 0; j < data.length; j++) {
-
                 for (var k = 0; k < boundaries.length; k++) {
                     if (data[j].id === boundaries[k].id) {
                         boundaries[k].coordinate.push(new google.maps.LatLng(data[j].lat, data[j].lng));
@@ -4738,7 +4801,7 @@ app.controller('boundaryController', function ($scope, $http, $filter, $routePar
                 }
             }
 
-            console.log(boundaries);
+            //console.log(boundaries);
             $.each(boundaries, function (index, value) {
                 var sumOfCoLat = 0;
                 var sumOfCoLng = 0;
@@ -4840,11 +4903,6 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
 
     $scope.show = angular.copy(storeDataService.show.acr);
     var driverPosition = angular.copy(storeDataService.positionID.driverPosition);
-
-    function renderSltPicker() {
-        angular.element('.selectpicker').selectpicker('refresh');
-        angular.element('.selectpicker').selectpicker('render');
-    }
 
     var today = new Date();
 

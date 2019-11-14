@@ -4,6 +4,9 @@ var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 var dateTime = require('node-datetime');
+var variable = require('../variable');
+var emitter = variable.emitter;
+//var io = variable.io;
 
 app.get('/getAllTasks', function (req, res) {
     'use strict';
@@ -24,7 +27,8 @@ app.post('/approveTask', function (req, res) {
         formatted = dt.format('Y-m-d H:M:S'),
         content = "",
         sql = "",
-        findSQL = "";
+        findSQL = "",
+        emit_key = "";
     
     sql = "UPDATE tblauthorization SET authorize = 'Y', authorizedBy = '" + req.body.approvedBy + "' WHERE taskID = '" + req.body.id + "'";
     findSQL = "SELECT action, description, authorize, query, tblName FROM tblauthorization WHERE taskID = '" + req.body.id + "' LIMIT 0, 1";
@@ -49,6 +53,7 @@ app.post('/approveTask', function (req, res) {
                 if (table === "tblstaff") {
                     key = "account";
                     prefix = "ACC";
+                    emit_key = "create new user";
                 } else if (table === "tbltruck") {
                     key = "truck";
                     prefix = "TRK";
@@ -71,6 +76,7 @@ app.post('/approveTask', function (req, res) {
                     result[0].query = (result[0].query).replace(oldID, ID);
                     f.insertNewData(result[0].query, req, res);
                     f.log(formatted, content, req.body.approvedBy);
+                    emitter.emit(emit_key);
                 });
             } else {
                 f.log(formatted, content, req.body.approvedBy);

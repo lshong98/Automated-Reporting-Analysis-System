@@ -48,13 +48,12 @@ app.post('/createBoundary', function (req, res) {
             }
             plotSQL = plotSQL.trim();
             plotSQL = plotSQL.replace(/.$/, '');
+            
             database.query(boundarySQL, function (err, result) {
-                
                 if (err) {
                     res.end();
                     throw err;
                 } else {
-                    
                     database.query(plotSQL, function (err, result) {
                         if (err) {
                             res.end();
@@ -180,6 +179,21 @@ app.post('/removeBoundary', function (req, res) {
                     res.end();
                 }
             });
+        }
+    });
+});
+
+app.get('/bounArea', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT tblarea.areaID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area FROM tblzone JOIN tblarea ON tblarea.zoneID = tblzone.zoneID";
+    database.query(sql, function (err, result) {
+        if (err) {
+            res.end();
+            throw err;
+        } else {
+            res.json(result);
+            res.end();
         }
     });
 });
