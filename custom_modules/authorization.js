@@ -1,8 +1,12 @@
+/*jslint node:true*/
 var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 var dateTime = require('node-datetime');
+var variable = require('../variable');
+var emitter = variable.emitter;
+//var io = variable.io;
 
 app.get('/getAllTasks', function (req, res) {
     'use strict';
@@ -10,7 +14,7 @@ app.get('/getAllTasks', function (req, res) {
     var sql = "SELECT taskId, date, staffID, action, description, rowID, query, authorize, tblName from tblauthorization WHERE authorize = 'M'";
     database.query(sql, function (err, result) {
         if (err) {
-            throw err; 
+            throw err;
         }
         res.json(result);
         console.log("ALL TASKS COLLECTED");
@@ -21,10 +25,13 @@ app.post('/approveTask', function (req, res) {
     'use strict';
     var dt = dateTime.create(),
         formatted = dt.format('Y-m-d H:M:S'),
-        content = "";
+        content = "",
+        sql = "",
+        findSQL = "",
+        emit_key = "";
     
-    var sql = "UPDATE tblauthorization SET authorize = 'Y', authorizedBy = '" + req.body.approvedBy + "' WHERE taskID = '"+ req.body.id + "'";
-    var findSQL = "SELECT action, description, authorize, query, tblName FROM tblauthorization WHERE taskID = '" + req.body.id + "' LIMIT 0, 1";
+    sql = "UPDATE tblauthorization SET authorize = 'Y', authorizedBy = '" + req.body.approvedBy + "' WHERE taskID = '" + req.body.id + "'";
+    findSQL = "SELECT action, description, authorize, query, tblName FROM tblauthorization WHERE taskID = '" + req.body.id + "' LIMIT 0, 1";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -36,16 +43,40 @@ app.post('/approveTask', function (req, res) {
                 throw err;
             }
             
+            var table = result[0].tblName;
+            var action = result[0].action;
+            var key = "", prefix = "";
+            
             content = result[0].description + " approved.";
             
-            if (result[0].action == "add" && result[0].tblName == "tblstaff") {
-                f.makeID("account", formatted).then(function (ID) {
-                    var firstPosition = (result[0].query).indexOf('ACC');
-                    var lastPosition = firstPosition + 15;
-                    var oldID = (result[0].query).substring(firstPosition, lastPosition);
+            if (action === "add") {
+                if (table === "tblstaff") {
+                    key = "account";
+                    prefix = "ACC";
+                    emit_key = "create new user";
+                } else if (table === "tbltruck") {
+                    key = "truck";
+                    prefix = "TRK";
+                } else if (table === "tblzone") {
+                    key = "zone";
+                    prefix = "ZON";
+                } else if (table === "tblarea") {
+                    key = "area";
+                    prefix = "ARE";
+                } else if (table === "tblbincenter") {
+                    key = "bincenter";
+                    prefix = "BIN";
+                }
+                
+                f.makeID(key, formatted).then(function (ID) {
+                    var firstPosition, lastPosition, oldID;
+                    firstPosition = (result[0].query).indexOf(prefix);
+                    lastPosition = firstPosition + 15;
+                    oldID = (result[0].query).substring(firstPosition, lastPosition);
                     result[0].query = (result[0].query).replace(oldID, ID);
                     f.insertNewData(result[0].query, req, res);
                     f.log(formatted, content, req.body.approvedBy);
+                    emitter.emit(emit_key);
                 });
             } else {
                 f.log(formatted, content, req.body.approvedBy);
@@ -57,7 +88,7 @@ app.post('/approveTask', function (req, res) {
 
 app.post('/rejectTask', function (req, res) {
     'use strict';
-    var sql = "UPDATE tblauthorization SET authorize = 'N', authorizedBy = '" + req.body.rejectedBy + "' WHERE taskID = '"+ req.body.id + "'";
+    var sql = "UPDATE tblauthorization SET authorize = 'N', authorizedBy = '" + req.body.rejectedBy + "' WHERE taskID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

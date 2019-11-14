@@ -1,3 +1,4 @@
+/*jslint node:true*/
 var variable = require('../variable');
 var database = require('./database-management');
 var express = variable.express;
@@ -7,7 +8,7 @@ var io = variable.io;
 
 var users = [];
 var connections = [];
-var connectedUserList = []; 
+var connectedUserList = [];
 
 //------------------------------------------------------------------------------------------
 // check if an element exists in array using a comparer function
@@ -88,6 +89,7 @@ io.sockets.on('connection', function (socket) {
         emitter.removeAllListeners('customer to staff message', this);
         emitter.removeAllListeners('live map', this);
         emitter.removeAllListeners('new complaint from mobile', this);
+        emitter.removeAllListeners('create new user', this);
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
         connections.splice(connections.indexOf(socket), 1);
@@ -160,13 +162,13 @@ io.sockets.on('connection', function (socket) {
         var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
         var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
         var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
-        database.query(sql, function(err, result){
+        database.query(sql, function (err, result) {
             municipalUnread = result[0].unread;
-            database.query(sql2, function(err, result){
+            database.query(sql2, function (err, result) {
                 commercialUnread = result[0].unread;
-                database.query(sql3, function(err, result){
+                database.query(sql3, function (err, result) {
                     scheduledUnread = result[0].unread;
-                    totalUnread = parseInt(municipalUnread) + parseInt(commercialUnread) + parseInt(scheduledUnread);
+                    totalUnread = parseInt(municipalUnread, 10) + parseInt(commercialUnread, 10) + parseInt(scheduledUnread, 10);
                     io.sockets.in(roomManager).emit('new satisfaction', {
                         unread: totalUnread
                     });
@@ -175,27 +177,27 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
-    socket.on('municipal satisfaction', function(){
+    socket.on('municipal satisfaction', function () {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
-        database.query(sql, function(err, result){
+        database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read municipal', {
                 unread: result[0].unread
             });
         });
     });
 
-    socket.on('commercial satisfaction', function(){
+    socket.on('commercial satisfaction', function () {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
-        database.query(sql, function(err, result){
+        database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read commercial', {
                 unread: result[0].unread
             });
         });
     });
 
-    socket.on('scheduled satisfaction', function(){
+    socket.on('scheduled satisfaction', function () {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
-        database.query(sql, function(err, result) {
+        database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read scheduled', {
                 unread: result[0].unread
             });
@@ -241,7 +243,7 @@ io.sockets.on('connection', function (socket) {
     });
     
     //Create New User
-    socket.on('create new user', function () {
+    emitter.on('create new user', function () {
         var latestData = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, tblposition.positionName AS position, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblstaff INNER JOIN tblposition ON tblposition.positionID = tblstaff.positionID ORDER BY tblstaff.creationDateTime DESC LIMIT 0, 1";
         
         database.query(latestData, function (err, result) {
@@ -299,17 +301,17 @@ io.sockets.on('connection', function (socket) {
     });
     
     // New User
-    socket.on('new user', function (data, callback) {
-        callback(true);
-        socket.username = data;
-        users.push(socket.username);
-        updateUsernames();
-    });
+//    socket.on('new user', function (data, callback) {
+//        callback(true);
+//        socket.username = data;
+//        users.push(socket.username);
+//        updateUsernames();
+//    });
     
     //get number of new complaints
-    socket.on('complaint', function(){
+    socket.on('complaint', function () {
         var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
-        database.query(sql, function(err, result){
+        database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('new complaint', {
                 unread: result[0].unread
             });
@@ -324,9 +326,10 @@ io.sockets.on('connection', function (socket) {
                 throw err;
             } else {
                 var resultObject = searchSocketID(result[0].recipient, connectedUserList);
-                var flag = false;
+                var flag = false,
+                    i = 0;
                 
-                for (var i = 0; i < connectedUserList.length; i++) {
+                for (i = 0; i < connectedUserList.length; i += 1) {
                     if (connectedUserList[i].socketID === socket.id) {
                         if (connectedUserList[i].position == "Manager") {
                             flag = true;
@@ -345,7 +348,7 @@ io.sockets.on('connection', function (socket) {
                     flag = false;
                 } else {
                     // PM
-                    if (typeof(resultObject) !== 'undefined') {
+                    if (typeof (resultObject) !== 'undefined') {
                         io.to(resultObject.socketID).emit('new message', {
                             "content": result[0].content,
                             "sender": result[0].sender,
@@ -359,8 +362,6 @@ io.sockets.on('connection', function (socket) {
     });
     
     emitter.on('new complaint from mobile', function () {
-        'use strict';
-        
         var sql = "SELECT premiseType AS type FROM tblcomplaint ORDER BY complaintDate DESC LIMIT 0, 1";
         
         database.query(sql, function (err, result) {

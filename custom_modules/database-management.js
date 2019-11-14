@@ -3,7 +3,7 @@ var mysql = require('mysql');
 var bcrypt = require('bcryptjs');
 var dateTime = require('node-datetime');
 var EventEmitter = require('events');
-var emitter = new EventEmitter(); 
+var emitter = new EventEmitter();
 
 var DB_HOST = process.env.DATABASE_HOST || '';
 var DB_USER = process.env.DATABASE_USER || '';
@@ -16,13 +16,13 @@ var config = {
     host: DB_HOST,
     port: 3306,
     timezone: 'utc'
-}; 
+};
 
-var db;
+var db; 
  
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
     config.socketPath = '/cloudsql/' + process.env.INSTANCE_CONNECTION_NAME;
-}
+} 
 
 // Create connection 
 function handleDisconnect() {
@@ -90,7 +90,7 @@ handleDisconnect();
 // Create Database Tables
 emitter.on('createTable', function () {
     'use strict';
-    var sqls, i;
+    var sqls, i; 
       
     sqls = [
         "CREATE TABLE tblposition (positionID varchar(15),  positionName varchar(30),  positionStatus char(1),  creationDateTime datetime,  primary key (positionID))",
@@ -109,7 +109,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblblostentry (  idNo int auto_increment,  creationDateTime datetime, blostID varchar(15),  customerID varchar(15), serialNo varchar(15),  sharedBin boolean,  dateOfLoss datetime,  reason longtext,  status char(1), PRIMARY KEY (idNo),  foreign KEY  (blostID) references tblblost(blostID),  foreign KEY  (serialNo) references tblbins(serialNo),  foreign KEY  (customerID) references tblcustomer(customerID))",
         "CREATE TABLE tbldcs (dcsID varchar(15),creationDateTime datetime,status char(1), formStatus char(1), periodFrom date,periodTo date,driverID varchar(15), areaID mediumtext, replacementDriverID varchar(15),replacementPeriodFrom date,replacementPeriodTo date, replacementAreaID varchar(15), authorizedBy varchar(15),authorizedDate datetime,preparedBy varchar(15),PRIMARY KEY (dcsID),foreign key (driverID) references tblstaff(staffID),foreign key (replacementDriverID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID),foreign key (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblacr (acrID varchar(15), `from` date null, `to` date null, areaID varchar(15),customerID VARCHAR(15),beBins varchar(50),acrBins varchar(50),mon boolean,tue boolean,wed boolean,thu boolean,fri boolean,sat boolean,remarks longtext,dcsID mediumtext,PRIMARY KEY (acrID),foreign key (customerID) references tblcustomer(customerID))",
-        "CREATE TABLE tblbdaf (  bdafID varchar(15),  creationDateTime datetime,  driverID varchar(15), staffID varchar(15), preparedBy varchar(15), authorizedBy varchar(15), authorizedDate dateTime, status char(1), formStatus char(1), PRIMARY KEY (bdafID), foreign key (driverID) references tblstaff(staffID), foreign key (staffID) references tblstaff(staffID), foreign key (authorizedBy) references tblstaff(staffID), foreign key (preparedBy) references tblstaff(staffID))",
+        "CREATE TABLE tblbdaf (  bdafID varchar(15),  creationDateTime datetime,  driverID varchar(15), staffID mediumText, preparedBy varchar(15), authorizedBy varchar(15), authorizedDate dateTime, verifiedBy varchar(15), verifiedDate dateTime, status char(1), formStatus char(1), PRIMARY KEY (bdafID), foreign key (authorizedBy) references tblstaff(staffID), foreign key (verifiedBy) references tblstaff(staffID), foreign key (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblbdafentry (  idNo int auto_increment,  bdafID varchar(15),  customerID VARCHAR(15),  acrID varchar(15), acrSticker varchar(20),  serialNo varchar(15),  binDelivered varchar(15),  binPulled varchar(15),  jobDesc longtext,  remarks longtext,  completed boolean,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (acrID) references tblacr(acrID),  foreign key (bdafID) references tblbdaf(bdafID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (binDelivered) references tblbins(serialNo),  foreign key (binPulled) references tblbins(serialNo))",
         "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID VARCHAR(15),  areaID varchar(15),  serialNo varchar(15),  acrID varchar(15),  activeStatus char(1), rcDwell varchar(20), comment mediumtext, itemType varchar(20), path varchar(20),PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
         "CREATE TABLE tbluseractions (  date datetime,  staffID varchar(15),  action varchar(20),  onObject varchar(20),  PRIMARY KEY (date, staffID),  foreign key (staffID) references tblstaff(staffID))",
@@ -120,22 +120,23 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblbincenter (  binCenterID varchar(15),  areaID varchar(15),  binCenterName varchar(100),  binCenterLocation varchar(100),  binCenterStatus char(1),  creationDateTime datetime,  PRIMARY KEY (binCenterID),  foreign key (areaID) references tblarea(areaID))",
         "CREATE TABLE tbllostbinrecord (  idNo int auto_increment,  customerID VARCHAR(15),  serialNo varchar(15),  noOfBins int,  sharedBin boolean,  areaID varchar(15),  lossDate datetime,  reasons longtext,  PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo))",
         "CREATE TABLE tbltag (date datetime,  serialNo VARCHAR(15),  truckID varchar(15),  longitude double(10,7),  latitude double(10,7),  PRIMARY KEY (date, serialNo),  foreign key (truckID) references tbltruck(truckID))",
-        "CREATE TABLE tbluser (userID VARCHAR(15), tamanID int , userEmail varchar(30),  password varchar(30),  contactNumber varchar(15), tradingLicense varchar(20),  name varchar(50), companyName varchar(50),  houseNo varchar(5),  streetNo varchar(20),  postCode int,  city varchar(20),  State varchar(30), vCode varchar(5), status char(1), creationDateTime datetime, PRIMARY KEY (userID), UNIQUE KEY(userEmail))",
-        "CREATE TABLE tblcomplaint ( complaintID varchar(15), userID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), complaintAddress varchar(300), complaintImg varchar(50), readStat varchar(1), primary key (complaintID), foreign key (userID) references tbluser(userID), foreign key (staffID) references tblstaff(staffID))",
+        "CREATE TABLE tbluser (userID VARCHAR(15), tamanID int , userEmail varchar(30),  password varchar(30),  contactNumber varchar(15), tradingLicense varchar(20),  name varchar(50), address varchar(200), companyName varchar(50), vCode varchar(5), status char(1), creationDateTime datetime, PRIMARY KEY (userID), UNIQUE KEY(userEmail))",
+        "CREATE TABLE tblcomplaint ( complaintID varchar(15), userID VARCHAR(15), staffID varchar(15), complaintDate datetime, premiseType varchar(30), complaint mediumtext, remarks longtext, status char(1), complaintAddress varchar(300), complaintImg varchar(150), readStat varchar(1), primary key (complaintID), foreign key (userID) references tbluser(userID), foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblauthorization (taskID int auto_increment, date datetime, staffID varchar(15),action varchar(20),description mediumtext, rowID varchar(15),query mediumtext,authorize varchar(1),authorizedBy varchar(15), tblName varchar(50), PRIMARY KEY (taskID),foreign KEY (staffID) references tblstaff(staffID),foreign key (authorizedBy) references tblstaff(staffID))",
         "CREATE TABLE tblformauthorization (formentryID int auto_increment, creationDateTime dateTime, formID varchar(15), formType varchar(15), tblname varchar(50), preparedBy varchar(15), status char(1), PRIMARY KEY (formentryID), foreign KEY (preparedBy) references tblstaff(staffID))",
         "CREATE TABLE tblchat (chatID VARCHAR(15) PRIMARY KEY, sender VARCHAR(15), recipient VARCHAR(15), content MEDIUMTEXT, complaintID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), readStat varchar(1), FOREIGN KEY(complaintID) REFERENCES tblcomplaint(complaintID))",
         "CREATE TABLE tblboundary (boundaryID VARCHAR(15), color CHAR(6), areaID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), PRIMARY KEY(boundaryID), foreign key(areaID) references tblarea(areaID))",
-        "CREATE TABLE tblboundaryplot (boundaryID VARCHAR(15), lat DOUBLE(10, 7), lng DOUBLE(10, 7), ordering INT, status CHAR(1), PRIMARY KEY(boundaryID, lat, lng), FOREIGN KEY(boundaryID) REFERENCES tblboundary(boundaryID))",
+        "CREATE TABLE tblboundaryplot (id INT NOT NULL AUTO_INCREMENT, boundaryID VARCHAR(15), lat DOUBLE(10, 7), lng DOUBLE(10, 7), ordering INT, status CHAR(1))",
         "CREATE TABLE tblannouncement(id int auto_increment, announcement varchar(400), announceDate date, target varchar(30), PRIMARY KEY(id))",
         "CREATE TABLE tblcarouselimg(id int auto_increment, fileName varchar(255), PRIMARY KEY(id))",
-        "CREATE TABLE tblnotif(notifID int auto_increment, userID varchar(15), notifDate date, notifText varchar(255), PRIMARY KEY(notifID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
-        "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), requestDate date, binType varchar(20), reason varchar(20), remarks varchar(100), reqImg varchar(30), status varchar(15), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
-        "CREATE TABLE `tblsatisfaction_municipal` (satisfactionMunicipalID int(11),userID varchar(15), companyRating char(1), teamEfficiency char(1), collectionPromptness char(1), binHandling char(1), spillageControl char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1))",
-        "CREATE TABLE tblsatisfaction_commercial (satisfactionCommercialID int(11), userID varchar(15), companyRating char(1), teamEfficiency char(1), collectionPromptness char(1), cleanliness char(1), physicalCondition char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1))",
-        "CREATE TABLE tblsatisfaction_scheduled ( satisfactionScheduledID int(11), userID varchar(15), companyRating char(1), teamEfficiency char(1), healthAdherence char(1), regulationsAdherence char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1))",
+        "CREATE TABLE tblnotif(notifID int auto_increment, userID varchar(15), notifDate date, notifText varchar(255), readStat varchar(1), PRIMARY KEY(notifID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
+        "CREATE TABLE tblbinrequest(reqID int auto_increment, userID varchar(15), dateRequest varchar(15), name varchar(15), companyName varchar(30), companyAddress varchar(100), contactNumber varchar(15), reason varchar(20), type varchar(20), requestAddress varchar(100), remarks varchar(300), icImg varchar(150), utilityImg varchar(150), assessmentImg varchar(150), tradingImg varchar(150), binImg varchar(150), status varchar(20), PRIMARY KEY(reqID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
+        "CREATE TABLE tblsatisfaction_municipal (satisfactionMunicipalID int(11) auto_increment, userID varchar(15), name varchar(100), company varchar(200), address mediumtext, number varhcar(13), companyRating char(1), teamEfficiency char(1), collectionPromptness char(1), binHandling char(1), spillageControl char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY(satisfactionMunicipalID))",
+        "CREATE TABLE tblsatisfaction_commercial (satisfactionCommercialID int(11) auto_increment, userID varchar(15), name varchar(100), company varchar(200), address mediumtext, number varhcar(13), companyRating char(1), teamEfficiency char(1), collectionPromptness char(1), cleanliness char(1), physicalCondition char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY(satisfactionCommercialID))",
+        "CREATE TABLE tblsatisfaction_scheduled ( satisfactionScheduledID int(11) auto_increment, userID varchar(15), name varchar(100), company varchar(200), address mediumtext, number varhcar(13), companyRating char(1), teamEfficiency char(1), healthAdherence char(1), regulationsAdherence char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY(satisfactionScheduledID))",
         "CREATE TABLE tblhistory (historyID VARCHAR(15), content MEDIUMTEXT, staffID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(staffID) REFERENCES tblstaff(staffID), PRIMARY KEY (historyID))",
         "CREATE TABLE tblwaste (chartID int, userID varchar(15), monthYear varchar(11), waste int, PRIMARY KEY(chartID))",
+        "CREATE TABLE tblenquiry (enquiryID int, userID varchar(15), enquiry varchar(300), submissionDate datetime, PRIMARY KEY(enquiryID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblcomplaintofficer( coID varchar(15), complaintDate date,complaintTime time, sorce varchar(50), refNo varchar(100), name varchar(200), company varchar(200), telNo varchar(20), address varchar(300), under varchar(100), council varchar(100), type varchar(100), logisticsDate date, logisticsTime time, logisticsBy varchar(100), customerDate date, customerTime time, customerBy varchar(100), recordedDate date, recordedTime time, recordedBy varchar(100), forwardedSub varchar(100), forwardedDate date, forwardedTime time, forwardedBy varchar(100), status varchar(50), statusClosed char(1), statusDate date, statusTime time, statusBy varchar(100), remarks longtext, creationDateTime DATETIME, PRIMARY KEY (coID))"
     ];
     
