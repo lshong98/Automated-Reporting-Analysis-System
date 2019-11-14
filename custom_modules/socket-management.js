@@ -89,6 +89,7 @@ io.sockets.on('connection', function (socket) {
         emitter.removeAllListeners('customer to staff message', this);
         emitter.removeAllListeners('live map', this);
         emitter.removeAllListeners('new complaint from mobile', this);
+        emitter.removeAllListeners('create new user', this);
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
         connections.splice(connections.indexOf(socket), 1);
@@ -242,7 +243,7 @@ io.sockets.on('connection', function (socket) {
     });
     
     //Create New User
-    socket.on('create new user', function () {
+    emitter.on('create new user', function () {
         var latestData = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, tblposition.positionName AS position, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblstaff INNER JOIN tblposition ON tblposition.positionID = tblstaff.positionID ORDER BY tblstaff.creationDateTime DESC LIMIT 0, 1";
         
         database.query(latestData, function (err, result) {
@@ -300,12 +301,12 @@ io.sockets.on('connection', function (socket) {
     });
     
     // New User
-    socket.on('new user', function (data, callback) {
-        callback(true);
-        socket.username = data;
-        users.push(socket.username);
-        updateUsernames();
-    });
+//    socket.on('new user', function (data, callback) {
+//        callback(true);
+//        socket.username = data;
+//        users.push(socket.username);
+//        updateUsernames();
+//    });
     
     //get number of new complaints
     socket.on('complaint', function () {
