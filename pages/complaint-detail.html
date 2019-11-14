@@ -168,6 +168,11 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-md-1">
+    <button class="btn btn-sm btn-danger" data-ng-show="showInchargeBtn" data-ng-click="inchargeChat()">Incharge</button>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-6 detailBox">
         <p><strong>Premise Type: </strong>{{comDetail.ctype}}</p>
         <p><strong>Complaint Title: </strong> {{comDetail.title}}</p>
@@ -179,6 +184,8 @@
         <p>{{comDetail.address}}</p>
         <p><strong>Content: </strong></p>
         <p class="contentBox">{{comDetail.content}}</p>
+        <p><strong>Complaint image:</strong></p>
+        <p><img ng-src=../images/{{comDetail.img}} class="thumbnail"></p>
     </div>
 <!--
     <div class="col-md-6">
@@ -345,7 +352,7 @@
 -->
             
 <!--        <div class="row ">-->
-            <div class="chat-input">
+            <div data-ng-show="allowChat" class="chat-input">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" data-ng-model="mymsg" placeholder="Enter your message" aria-label="Enter your message">
                     <div class="input-group-append">
