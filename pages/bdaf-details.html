@@ -192,7 +192,28 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                 <button type="button" class="btn btn-primary" ng-model="value"
-                    data-ng-click="confirmCompletion()">Yes</button>
+                    data-ng-click="completionConfirmed(b)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="uncompleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="uncompleteConfirmation"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Is the Job Incomplete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Click 'Yes' to proceed. Click 'No' to cancel.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" ng-model="value"
+                    data-ng-click="uncompletionConfirmed()">Yes</button>
             </div>
         </div>
     </div>
@@ -417,10 +438,10 @@
                                 <span data-ng-bind="b.binPulled"></span>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-success" data-toggle="modal"
-                                    ng-show="!b.completed" data-target="#completeConfirmation"><i class="fa fa-check"></i></button>
-                                <button class="btn btn-sm btn-danger" data-toggle="modal"
-                                    ng-show="b.completed" data-target="#uncompleteConfirmation"><i class="fa fa-times"></i></button>
+                                <button class="btn btn-sm btn-success"
+                                    ng-show="!completed" data-ng-click="confirmCompletion(b)"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-sm btn-danger"
+                                    ng-show="completed" data-ng-click="confirmUncompletion(b)"><i class="fa fa-times"></i></button>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-primary" data-toggle="modal"

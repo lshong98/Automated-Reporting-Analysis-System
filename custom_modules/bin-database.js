@@ -215,7 +215,7 @@ app.get('/getAllAcr', function (req, res) {
 app.post('/addBin', function (req, res) {
     'use strict';
 
-    var sql = "INSERT INTO tblbins VALUES ('" + req.body.serialNo + "', '" + req.body.size + "', '" + req.body.status + "', '" + req.body.longitude + "', '" + req.body.latitude + "')";
+    var sql = `insert into tblbins values('${req.body.serialNo}','${req.body.size}','${req.body.status}','14.740889','14.740889')`;
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

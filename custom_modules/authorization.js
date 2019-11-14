@@ -21,6 +21,19 @@ app.get('/getAllTasks', function (req, res) {
     });
 }); // Complete
 
+app.get('/getAllCheckedTasks', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT taskId, date, staffID, action, description, rowID, query, authorize, tblName from tblauthorization WHERE authorize = 'M'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+        console.log("ALL TASKS COLLECTED");
+    });
+}); // Complete
+
 app.post('/approveTask', function (req, res) {
     'use strict';
     var dt = dateTime.create(),
