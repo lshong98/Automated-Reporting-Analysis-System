@@ -6750,12 +6750,14 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
         asc == true ? asc = false : asc = true;
     };
 
-    $scope.getForm = function (formID, formType) {
+    $scope.getForm = function (formID) {
 
-        if (formType == 'dcs') {
+        var formType = formID.substring(0,3);
+
+        if (formType == 'DCS') {
             window.location.href = '#/dcs-details/' + formID;
-        } else {
-            window.location.href = '#/' + formType + '-details/' + formID;
+        } else if (formType == 'BDF') {
+            window.location.href = '#/bdaf-details/' + formID;
         }
     }
 
@@ -7965,14 +7967,16 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             $scope.bdaf = response.data;
             console.log($scope.bdaf);
 
-            if ($scope.bdaf[0].status == 'G') {
-                $scope.status = 'APPROVED';
-            } else if ($scope.bdaf[0].status == 'P') {
-                $scope.status = 'PENDING';
+            if ($scope.bdaf[0].status == 'A') {
+                $scope.status = 'ACTIVE';
+            } else if ($scope.bdaf[0].status == 'I') {
+                $scope.status = 'INACTIVE';
             } else if ($scope.bdaf[0].status == 'R') {
                 $scope.status = 'CORRECTION REQUIRED';
-            } else if ($scope.bdaf[0].status == 'A') {
-                $scope.status = 'ACTIVE';
+            } else if ($scope.bdaf[0].status == 'P') {
+                $scope.status = 'PENDING';
+            } else if ($scope.bdaf[0].status == 'K') {
+                $scope.status = 'CHECKED';
             } else if ($scope.bdaf[0].status == 'C') {
                 $scope.status = 'COMPLETE';
                 $scope.show.edit = 'I';
@@ -8052,6 +8056,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         angular.element('#editDcsEntry').modal('toggle');
     }
+
     function completeForm() {
         //set requests that are checked to complete
     }
@@ -8060,29 +8065,22 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     //AUTHORIZATION MODULE
     //CHECKED BY
     $scope.requestAuthorization = function () {
-        sendFormForAuthorization($routeParams.dcsID, "bdaf");
+        sendFormForAuthorization($routeParams.bdafID, "bdaf");
         angular.element('#checkConfirmation').modal('toggle');
         $scope.status = 'PENDING';
     };
-    $scope.confirm = function (request) {
-        if (request == 'approve') {
-            $scope.approveForm();
-        } else if (request == 'reject') {
-            $scope.rejectForm();
-        }
-    };
-    $scope.approveForm = function () {
-        $scope.status = 'APPROVED'; 
-        approveForm($routeParams.dcsID, "bdaf");
+    $scope.checkForm = function () {
+        $scope.status = 'CHECKED';
+        checkForm($routeParams.bdafID, "bdaf");
 
         angular.element('#approveCheck').modal('toggle');
     }
     $scope.rejectForm = function () {
         $scope.status = 'CORRECTION REQUIRED';
-        rejectForm($routeParams.dcsID, "bdaf");
+        rejectForm($routeParams.bdafID, "bdaf", $scope.bdaf[0].feedback);
 
 
-        angular.element('#rejectCheck').modal('toggle');
+        angular.element('#rejectForm').modal('toggle');
     }
 
     //VERIFIED BY
@@ -8093,8 +8091,11 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     };
 
     //
-    $scope.verifyForm = function() {
+    $scope.verifyForm = function () {
+        $scope.status = 'COMPLETE';
+        verifyForm($routeParams.bdafID, "bdaf");
 
+        angular.element('#approveVerification').modal('toggle');
     }
 
 
@@ -8494,10 +8495,9 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
     }
 });
 
-function checkForm(formID) {
+function checkForm(formID, formType) {
     $http = angular.injector(["ng"]).get("$http");
 
-    var formType = formID.substring(0, 3)
     var formDetails = {
         "formID": formID,
         "formType": formType,
@@ -8517,14 +8517,13 @@ function checkForm(formID) {
     });
 }
 
-function verifyForm(formID) {
+function verifyForm(formID, formType) {
     $http = angular.injector(["ng"]).get("$http");
 
-    var formType = formID.substring(0, 3)
     var formDetails = {
         "formID": formID,
         "formType": formType,
-        "authorizedBy": window.sessionStorage.getItem('owner')
+        "verifiedBy": window.sessionStorage.getItem('owner')
     }
 
     $http.post('/verifyForm', formDetails).then(function (response) {
@@ -8534,20 +8533,19 @@ function verifyForm(formID) {
         if (returnedData.status === "success") {
             angular.element('body').overhang({
                 type: "success",
-                "message": "Form approved!"
+                "message": "Form verified!"
             });
         }
-    });
+    }); 
 }
 
-function rejectForm(formID) {
+function rejectForm(formID, formType, feedback) {
     $http = angular.injector(["ng"]).get("$http");
 
-    var formType = formID.substring(0, 3)
     var formDetails = {
         "formID": formID,
         "formType": formType,
-        "authorizedBy": window.sessionStorage.getItem('owner')
+        "feedback": feedback
     }
 
     $http.post('/rejectForm', formDetails).then(function (response) {
@@ -8573,44 +8571,20 @@ function sendFormForAuthorization(formID, formType) {
         "date": today
     }
 
-    // var status = '';
+    $http.post('/sendFormForAuthorization', formDetails).then(function (response) {
 
-    // $http.post('/getFormStatus', formDetails).then(function (response) {
+        var returnedData = response.data;
 
-    //     status = response.data[0].status;
-    //     console.log("STATUS: " + status);
-
-    //     if (status == 'P') {
-
-    //         window.alert("Form is already pending authorization");
-    //     } else {
-            $http.post('/getFormDetails', formDetails).then(function (response) {
-
-                var preparedBy = response.data;
-                formDetails.preparedBy = preparedBy[0].preparedBy;
-                formDetails.date = preparedBy[0].creationDateTime;
-                console.log(formDetails);
-
-                $http.post('/sendFormForAuthorization', formDetails).then(function (response) {
-
-                    var returnedData = response.data;
-
-                    if (returnedData.status === "success") {
-                        angular.element('body').overhang({
-                            type: "success",
-                            "message": "Form sent for authorization!"
-                        });
-                    }
-                });
+        if (returnedData.status === "success") {
+            angular.element('body').overhang({
+                type: "success",
+                "message": "Form sent for authorization!"
             });
-    //     }
-
-
-
-    // });
+        }
+    });
 }
 
-function sendFormForVerification(formID, formType){
+function sendFormForVerification(formID, formType) {
     var today = new Date();
     $http = angular.injector(["ng"]).get("$http");
     var formDetails = {
