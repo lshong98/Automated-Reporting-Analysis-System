@@ -45,7 +45,7 @@ app.post('/getBdafDetails', function (req, res) {
     console.log(req.body);
 
 
-    var sql = "SELECT if(TYPE = 'Residential',requestAddress, concat(companyName, ', ', companyAddress)) as location, council, name as contactPerson, contactNumber as contactNo, acrSticker, acrfNumber, jobDesc, binSize, unit, remarks, binDelivered, binPulled FROM tblbinrequest where bdafID = '" + req.body.id + "'";
+    var sql = "SELECT reqID, if(TYPE = 'Residential',requestAddress, concat(companyName, ', ', companyAddress)) as location, council, name as contactPerson, contactNumber as contactNo, acrSticker, acrfNumber, jobDesc, binSize, unit, remarks, binDelivered, binPulled, status FROM tblbinrequest where bdafID = '" + req.body.id + "'";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
@@ -133,5 +133,30 @@ app.post('/assignRequest', function (req, res) {
     });
 }); // Complete
 
+app.post('/completeBinRequest', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblbinrequest SET status = 'complete' WHERE reqID = '" + req.body.reqID + "'";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
+
+app.post('/uncompleteBinRequest', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblbinrequest SET status = 'in progress' WHERE reqID = '" + req.body.reqID + "'";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
 
 module.exports = app;

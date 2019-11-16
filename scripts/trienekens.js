@@ -6752,7 +6752,7 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
 
     $scope.getForm = function (formID) {
 
-        var formType = formID.substring(0,3);
+        var formType = formID.substring(0, 3);
 
         if (formType == 'DCS') {
             window.location.href = '#/dcs-details/' + formID;
@@ -7988,9 +7988,16 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
             $scope.bdafDetailsList = response.data;
             console.log($scope.bdafDetailsList);
+
+            var x = 0;
+            for (x = 0; x < $scope.bdafDetailsList.length; x++) {
+                console.log($scope.bdafDetailsList[x].status);
+                if ($scope.bdafDetailsList[x].status == 'completed') {
+                    $scope.bdafDetailsList[x].completed = true;
+                    document.getElementById("completed").checked = true;
+                }
+            }
         });
-
-
     }
     $scope.addBdafEntry = function () {
         $scope.bdafEntry.bdafID = $routeParams.bdafID;
@@ -8059,6 +8066,20 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
     function completeForm() {
         //set requests that are checked to complete
+        var x = 0;
+        for (x = 0; x < $scope.bdafDetailsList.length; x++) {
+            console.log($scope.bdafDetailsList[x].completed)
+            if ($scope.bdafDetailsList[x].completed) {
+                var binRequest = $scope.bdafDetailsList[x]
+                $http.post('/completeBinRequest', binRequest).then(function (response) {
+                    console.log("Bin Request Completed!")
+                });
+            }else{
+                $http.post('/uncompleteBinRequest', binRequest).then(function (response) {
+                    console.log("Bin Request Uncompleted!")
+                });
+            }
+        }
     }
 
 
@@ -8068,6 +8089,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         sendFormForAuthorization($routeParams.bdafID, "bdaf");
         angular.element('#checkConfirmation').modal('toggle');
         $scope.status = 'PENDING';
+        completeForm();
     };
     $scope.checkForm = function () {
         $scope.status = 'CHECKED';
@@ -8536,7 +8558,7 @@ function verifyForm(formID, formType) {
                 "message": "Form verified!"
             });
         }
-    }); 
+    });
 }
 
 function rejectForm(formID, formType, feedback) {
