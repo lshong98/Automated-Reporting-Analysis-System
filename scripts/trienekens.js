@@ -8052,22 +8052,8 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         angular.element('#editDcsEntry').modal('toggle');
     }
-
-    $scope.completed = false;
-    $scope.confirmCompletion = function (request) {
-        angular.element('#completeConfirmation').modal('toggle');
-        $scope.bdafDetailsList[$scope.bdafDetailsList.indexOf(request)].completed = true;
-    }
-    $scope.completionConfirmed = function (index) {
-        $scope.completed = true;
-        window.alert(index)
-    }
-    $scope.confirmUncompletion = function () {
-        angular.element('#uncompleteConfirmation').modal('toggle');
-        $scope.bdafDetailsList[$scope.bdafDetailsList.indexOf(request)].completed = false;
-    }
-    $scope.uncompletionConfirmed = function () {
-
+    function completeForm() {
+        //set requests that are checked to complete
     }
 
 
@@ -8075,6 +8061,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     //CHECKED BY
     $scope.requestAuthorization = function () {
         sendFormForAuthorization($routeParams.dcsID, "bdaf");
+        angular.element('#checkConfirmation').modal('toggle');
         $scope.status = 'PENDING';
     };
     $scope.confirm = function (request) {
@@ -8085,24 +8072,30 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         }
     };
     $scope.approveForm = function () {
-        $scope.status = 'APPROVED';
+        $scope.status = 'APPROVED'; 
         approveForm($routeParams.dcsID, "bdaf");
 
-        angular.element('#approveConfirmation').modal('toggle');
+        angular.element('#approveCheck').modal('toggle');
     }
     $scope.rejectForm = function () {
         $scope.status = 'CORRECTION REQUIRED';
         rejectForm($routeParams.dcsID, "bdaf");
 
 
-        angular.element('#rejectConfirmation').modal('toggle');
+        angular.element('#rejectCheck').modal('toggle');
     }
 
     //VERIFIED BY
-    $scope.verifyForm = function () {
-        //UPDATE WBSI AND WBD IF CONDITIONS ARE MET
-    }
+    $scope.requestVerification = function () {
+        sendFormForVerification($routeParams.dcsID, "bdaf");
+        angular.element('#completeConfirmation').modal('toggle');
+        $scope.status = 'PENDING';
+    };
 
+    //
+    $scope.verifyForm = function() {
+
+    }
 
 
     //INTIALIZE PAGE
@@ -8580,17 +8573,17 @@ function sendFormForAuthorization(formID, formType) {
         "date": today
     }
 
-    var status = '';
+    // var status = '';
 
-    $http.post('/getFormStatus', formDetails).then(function (response) {
+    // $http.post('/getFormStatus', formDetails).then(function (response) {
 
-        status = response.data[0].status;
-        console.log("STATUS: " + status);
+    //     status = response.data[0].status;
+    //     console.log("STATUS: " + status);
 
-        if (status == 'P') {
+    //     if (status == 'P') {
 
-            window.alert("Form is already pending authorization");
-        } else {
+    //         window.alert("Form is already pending authorization");
+    //     } else {
             $http.post('/getFormDetails', formDetails).then(function (response) {
 
                 var preparedBy = response.data;
@@ -8610,20 +8603,21 @@ function sendFormForAuthorization(formID, formType) {
                     }
                 });
             });
-        }
+    //     }
 
 
 
-    });
+    // });
+}
 
-
-
-
-
-
-
-
-
-
+function sendFormForVerification(formID, formType){
+    var today = new Date();
+    $http = angular.injector(["ng"]).get("$http");
+    var formDetails = {
+        "formID": formID,
+        "formType": formType,
+        "preparedBy": window.sessionStorage.getItem('owner'),
+        "date": today
+    }
 
 }

@@ -131,9 +131,9 @@ app.post('/sendFormForAuthorization', function (req, res) {
     //     res.json({"status": "success", "message": "Task sent for Authorization!", "details": {"formID": req.body.formID}});
     // });
 
-    var updatesql = "update tbl" + req.body.formType + " set status = 'P' where " + req.body.formType + "ID = '" + req.body.formID + "'";
+    var sql = "update tbl" + req.body.formType + " set status = 'P' where " + req.body.formType + "ID = '" + req.body.formID + "'";
 
-    database.query(updatesql, function (err, result) {
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
@@ -147,5 +147,27 @@ app.post('/sendFormForAuthorization', function (req, res) {
         });
     });
 });
+
+app.post('/sendFormForVerification', function (req, res) {
+    'use strict';
+
+    var sql = "update tbl" + req.body.formType + " set status = 'K' where " + req.body.formType + "ID = '" + req.body.formID + "'";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json({
+            "status": "success",
+            "message": "Task sent for Verfication!",
+            "details": {
+                "formID": req.body.formID
+            }
+        });
+    });
+});
+
+
 
 module.exports = app;
