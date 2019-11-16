@@ -212,7 +212,7 @@ app.post('/getNotifs', function (req, resp) {
 
     req.addListener('end', function () {
         console.log(data);
-        var sql = "SELECT *, (SELECT COUNT(readStat) FROM tblnotif WHERE readStat = 'u') as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '"+data.email+"' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
+        var sql = "SELECT *, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '"+data.email+"' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '"+data.email+"' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
         var sql2 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
 
         database.query(sql, function (err, res) {
@@ -276,7 +276,6 @@ app.post('/updateNotifStat', function(req, resp){
             if (!err) {
                 userID = res[0].userID;
                 var readStat = "UPDATE tblnotif SET readStat = 'r' WHERE userID = '"+userID+"'";
-                var readStatAnnounce = "UPDATE tblannouncement SET readStat = 'r' WHERE userID = '"+userID+"'";
                 database.query(readStat, function(err, res){
                     if(!err){
                         resp.send("Notif read");
@@ -1787,6 +1786,32 @@ app.post('/updateReadStat', function(req, res){
                 res.send("Message read");
             });
         });
+    });
+});
+
+app.get('/getBoundaryIDs', function(req, res){
+    'use strict';
+    var sql = "SELECT * FROM tblboundary";
+    database.query(sql, function(error, result){
+        if(error){
+            res.end();
+            throw error;
+        }
+        res.json(result);
+        res.end();
+    });
+});
+
+app.get('/getBoundaryLatLng', function(req, res){
+    'use strict';
+    var sql = "SELECT tblboundaryplot.boundaryID AS id, tblboundary.color, tblboundaryplot.lat, tblboundaryplot.lng, tblarea.areaCode AS area, tblzone.zoneCode AS zone, tblboundary.areaID, tblarea.collection_frequency FROM tblboundaryplot JOIN tblboundary ON tblboundaryplot.boundaryID = tblboundary.boundaryID JOIN tblarea ON tblarea.areaID = tblboundary.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID WHERE tblboundary.status = 'A' ORDER BY tblboundaryplot.boundaryID ASC, tblboundaryplot.ordering ASC";
+    database.query(sql, function(error, result){
+        if(error){
+            res.end();
+            throw error;
+        }
+        res.json(result);
+        res.end();
     });
 });
 
