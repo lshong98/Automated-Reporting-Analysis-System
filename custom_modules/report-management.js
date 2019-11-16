@@ -251,7 +251,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark , tblreport.readStatus AS readStatus FROM tblreport JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
+    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, staffName AS staffName, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark , tblreport.readStatus AS readStatus FROM tblreport JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblstaff ON tblstaff.staffID = tblarea.staffID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
     
     database.query(sql, function (err, result) {
         if (err) {

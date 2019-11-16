@@ -176,7 +176,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="completeConfirmation" tabindex="-1" role="dialog" aria-labelledby="completeConfirmation"
+<div class="modal fade" id="checkConfirmation" tabindex="-1" role="dialog" aria-labelledby="checkConfirmation"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -192,17 +192,17 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                 <button type="button" class="btn btn-primary" ng-model="value"
-                    data-ng-click="completionConfirmed(b)">Yes</button>
+                    data-ng-click="requestAuthorization()">Yes</button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="uncompleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="uncompleteConfirmation"
+<div class="modal fade" id="verifyConfirmation" tabindex="-1" role="dialog" aria-labelledby="verifyConfirmation"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Is the Job Incomplete?</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Mark form as Verified?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -213,13 +213,59 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                 <button type="button" class="btn btn-primary" ng-model="value"
-                    data-ng-click="uncompletionConfirmed()">Yes</button>
+                    data-ng-click="verifyForm()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="approveCheck" tabindex="-1" role="dialog" aria-labelledby="approveCheck"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Is the form Complete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="confirm('approve');">Confirm</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="approveConfirmation" tabindex="-1" role="dialog" aria-labelledby="approveConfirmation"
+<div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="reject"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <p>Feedback:</p>
+                <textarea class="form-control" rows="4" data-ng-model="dcs.feedback"></textarea>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="confirm('reject');">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="approveVerification" tabindex="-1" role="dialog" aria-labelledby="approveVerification"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -241,32 +287,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="rejectConfirmation" tabindex="-1" role="dialog" aria-labelledby="rejectConfirmation"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <p>Feedback:</p>
-                <input type="textArea" data-ng-model="dcs.feedback">
-
-
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-ng-click="confirm('reject');">Confirm</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
     <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
@@ -275,12 +295,14 @@
     </div>
     <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
 
-        <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();"
-            ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
-        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
-            data-toggle="modal" data-target="#approveConfirmation">Approve</button>
-        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal"
-            data-target="#rejectConfirmation">Reject</button>
+        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#checkConfirmation"
+            ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Send for Checking</button> <!--Mark form as 'Pending' and request for checking-->
+        <button ng-show="authorize.verifyView == 'A' && status == 'CHECKED'" class="btn btn-sm btn-success"
+            data-toggle="modal" data-target="#verifyConfirmation">Verify</button> <!--Mark form as 'Verified' and execute inventory functions-->
+        <button ng-show="authorize.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
+            data-toggle="modal" data-target="#approveCheck">Approve</button> <!--Mark form as 'Checked' and request verification-->
+        <button ng-show="authorize.view == 'A' && status == 'PENDING' || status == 'CHECKED'"
+            class="btn btn-sm btn-danger" data-toggle="modal" data-target="#reject">Reject</button> <!--Reset form to 'Active'-->
 
     </div>
 </div>
@@ -438,10 +460,10 @@
                                 <span data-ng-bind="b.binPulled"></span>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-success"
-                                    ng-show="!completed" data-ng-click="confirmCompletion(b)"><i class="fa fa-check"></i></button>
-                                <button class="btn btn-sm btn-danger"
-                                    ng-show="completed" data-ng-click="confirmUncompletion(b)"><i class="fa fa-times"></i></button>
+                                <button class="btn btn-sm btn-success" ng-show="!completed"
+                                    data-ng-click="confirmCompletion(b)"><i class="fa fa-check"></i></button>
+                                <button class="btn btn-sm btn-danger" ng-show="completed"
+                                    data-ng-click="confirmUncompletion(b)"><i class="fa fa-times"></i></button>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-primary" data-toggle="modal"

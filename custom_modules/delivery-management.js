@@ -10,7 +10,7 @@ app.post('/addBdaf', function (req, res) {
 
     f.makeID("bdaf", req.body.creationDate).then(function (ID) {
 
-        var sql = "INSERT INTO tblbdaf (bdafID, creationDateTime, driverID, staffID, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.driverID + "', '" + req.body.staffID + "', 'A')";
+        var sql = "INSERT INTO tblbdaf (bdafID, creationDateTime, driverID, staffID, preparedBy, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.driverID + "' , '" + req.body.staffID + "', '" + req.body.preparedBy + "', 'A')";
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
@@ -28,7 +28,7 @@ app.post('/addBdaf', function (req, res) {
 }); // Complete
 app.post('/getAllBdaf', function (req, res) {
     'use strict';
-    var sql = "SELECT b.bdafID AS id, b.creationDateTime as date, b.driverID as driver, b.staffID as generalWorker, b.authorizedBy, b.authorizedDate, b.status from tblbdaf as b";
+    var sql = "SELECT b.bdafID AS id, b.creationDateTime as date, b.driverID as driver, b.staffID as generalWorker, b.preparedBy, b.authorizedBy, b.authorizedDate, b.verifiedBy, b.verifiedDate, b.status from tblbdaf as b";
 
     database.query(sql, function (err, result) {
         if (err) {
