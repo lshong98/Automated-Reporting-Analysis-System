@@ -1,0 +1,51 @@
+<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getEnquiry()">
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <h1>Customer General Enquiry</h1><br/><br/>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Date</th>
+                        <th>Enquired By</th>
+                        <th>Contact Number</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="e in enquiry | offset: (currentPage - 1) * itemsPerPageEnquiry | limitTo: itemsPerPageEnquiry track by $index">
+                        <td>{{$index+1}}</td>
+                        <td>{{e.submissionDate}}</td>
+                        <td>{{e.name}}</td>
+                        <td>{{e.contactNumber}}</td>
+                        <td>{{e.userEmail}}</td>
+                        <td>
+                            <div editable>
+                                <select name="enquiryStatus" data-ng-model="e.enqStatus" class="form-control" data-ng-show="!showEnquiry">
+                                    <option value="New">New</option>
+                                    <option value="Customer contacted">Customer contacted</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="No Response">No Response</option>
+                                    <option value="Settled">Settled</option>
+                                </select>
+                                <span data-ng-show="showEnquiry">{{e.enqStatus}}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" data-ng-show="showEnquiry" data-ng-click="editEnquiryStatus();"><i class="fa fa-pencil-alt"></i></button>
+                            <button class="btn btn-sm btn-warning" data-ng-show="!showEnquiry" data-ng-click="saveEnquiryStatus(e.enqStatus, e.enquiryID);"><i class="fa fa-save"></i></button>
+                            <button class="btn btn-sm btn-default" data-ng-show="!showEnquiry" data-ng-click="cancelEnquiryStatus();"><i class="fa fa-times"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+        <div class="col-md-12">
+            <ul uib-pagination boundary-links="true" total-items="totalItemsEnquiry" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPageEnquiry" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+        </div>
+    </div>
+</div>

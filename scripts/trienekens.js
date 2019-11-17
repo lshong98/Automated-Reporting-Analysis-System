@@ -63,6 +63,12 @@ socket.on('new satisfaction', function (data) {
     }
 });
 
+socket.on('new enquiry', function (data) {
+    if (data.unread > 0) {
+        $('.enquiry').addClass("badge badge-danger").html(data.unread);
+    }
+});
+
 socket.on('read municipal', function (data) {
     if (data.unread > 0) {
         var unread = $('.satisfaction').html();
@@ -95,6 +101,10 @@ socket.on('read scheduled', function (data) {
             $('.satisfaction').addClass("badge badge-danger").html(remaining);
         }
     }
+});
+
+socket.on('read enquiry', function (data) {
+    $('.enquiry').addClass("badge badge-danger").html(data.unread);
 });
 
 socket.on('new complaint', function (data) {
@@ -248,6 +258,10 @@ app.service('storeDataService', function () {
             "sat": ''
         },
         "binRequest": {
+            "id": '',
+            "status": ''
+        },
+        "enquiry": {
             "id": '',
             "status": ''
         },
@@ -407,6 +421,9 @@ app.service('storeDataService', function () {
             "feedback": {
                 "view": 'A'
             },
+            "enquiry": {
+                "view": 'A'
+            },
             "newBusiness": {
                 "view": 'I',
                 "create": 'I',
@@ -470,6 +487,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.showDbdDetails = true;
         scope.showBlostDetails = true;
         scope.showCollectionSchedule = true;
+        scope.showEnquiry = true;
         scope.thisAcr = {
             "areaCode": ''
         };
@@ -513,6 +531,11 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         };
 
         scope.thisBinRequest = {
+            "id": '',
+            "status": ''
+        };
+
+        scope.thisEnquiry = {
             "id": '',
             "status": ''
         };
@@ -926,12 +949,12 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
         };
 
-        scope.editBinRequestStatus = function () {
-            scope.showBinRequest = !scope.showBinRequest;
+        // scope.editBinRequestStatus = function () {
+        //     scope.showBinRequest = !scope.showBinRequest;
 
-            angular.element('.selectpicker').selectpicker('refresh');
-            angular.element('.selectpicker').selectpicker('render');
-        };
+        //     angular.element('.selectpicker').selectpicker('refresh');
+        //     angular.element('.selectpicker').selectpicker('render');
+        // };
 
         // scope.saveBinRequestStatus = function (status, id) {
         //     scope.showBinRequest = !scope.showBinRequest;
@@ -955,6 +978,42 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             $.each(storeDataService.binRequest, function (index, value) {
                 if (storeDataService.binRequest[index].id == scope.thisBinRequest.id) {
                     scope.x = angular.copy(storeDataService.binRequest[index]);
+                }
+            });
+        };
+
+        scope.editEnquiryStatus = function () {
+            scope.showEnquiry = !scope.showEnquiry;
+
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+        };
+
+        scope.saveEnquiryStatus = function (status, id) {
+            scope.showEnquiry = !scope.showEnquiry;
+
+            scope.thisEnquiry = {
+                "status": status,
+                "id": id
+            };
+
+            $http.post('/updateEnquiry', scope.thisEnquiry).then(function (response) {
+                var data = response.data;
+                if(data == "Enquiry Updated"){
+                    alert(data);
+                }
+                console.log(data);
+            }, function (error) {
+                console.log(error);
+            });
+        };
+
+        scope.cancelEnquiryStatus = function () {
+            scope.showEnquiry = !scope.showEnquiry;
+
+            $.each(storeDataService.enquiry, function (index, value) {
+                if (storeDataService.enquiry[index].id == scope.thisEnquiry.id) {
+                    scope.x = angular.copy(storeDataService.enquiry[index]);
                 }
             });
         };
@@ -1378,6 +1437,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 3; //Record number each page
     $scope.itemsPerPageBinReq = 10;
+    $scope.itemsPerPageEnquiry = 10;
     $scope.maxSize = 8; //Show the number in page
     $scope.m = {};
     $scope.c = {};
@@ -1485,6 +1545,25 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             $scope.areaList = response.data;
         }, function (error) {
             console.log(error);
+        });
+    };
+
+    $scope.getEnquiry = function () {
+        $http.get('/getEnquiry').then(function (response) {
+            console.log(response.data);
+            $scope.enquiry = response.data;
+            $scope.totalItemsEnquiry = response.data.length;
+            $scope.searchRequestFilter = '';
+        }, function (error) {
+            console.log(error);
+        });
+        $http.post('/readEnquiry').then(function(response){
+            console.log(response.data);
+            if(response.data == "Enquiry Read"){
+                socket.emit('enquiry read');
+            }
+        }, function(err){
+            console.log(err);
         });
     };
 
@@ -2264,6 +2343,8 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         "action": "create user"
     });
     socket.emit('satisfaction form');
+
+    socket.emit('enquiry');
 
     socket.emit('complaint');
 
@@ -3905,6 +3986,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "approve": 'I'
         },
         "feedback": {
+            "view": 'I'
+        },
+        "enquiry": {
             "view": 'I'
         },
         "role": {

@@ -296,6 +296,40 @@ app.post('/updateBinRequest', function (req, res) {
     });
 });
 
+app.get('/getEnquiry', function (req, res) {
+    'use strict';
+
+    var sql = "", output = [], i = 0;
+    
+    sql = "SELECT * FROM tblenquiry JOIN tbluser WHERE tbluser.userID = tblenquiry.userID";
+    database.query(sql, function (err, result) {
+        if(result!=undefined){
+            for (i = 0; i < result.length; i += 1) {
+                output.push(result[i]);
+            }
+            console.log(output);
+            res.json(output);
+            res.end();
+        }
+    });
+});
+
+app.post('/updateEnquiry', function (req, res) {
+    'use strict';
+
+    var sql = "", output = [], i = 0;
+    
+    sql = "UPDATE tblenquiry SET enqStatus = '"+req.body.status+"' WHERE enquiryID = '"+req.body.id+"'";
+    database.query(sql, function (err, result) {
+        if(!err){
+            res.send("Enquiry Updated");
+            res.end();
+        }else{
+            throw err;
+        }
+    });
+});
+
 app.post('/deleteCarouselImg', function (req, res) {
     'use strict';
     console.log(req.body);
@@ -681,6 +715,15 @@ app.get('/readSatisfactionScheduled', function(req, res){
     var sql = "UPDATE tblsatisfaction_scheduled SET readStat = 'r'";
     database.query(sql, function(err, result){
         res.send("New Satisfaction Read");
+        res.end();
+    });
+});
+
+app.post('/readEnquiry', function(req, res){
+    'use strict';
+    var sql = "UPDATE tblenquiry SET readStat = 'r'";
+    database.query(sql, function(err, result){
+        res.send("Enquiry Read");
         res.end();
     });
 });
