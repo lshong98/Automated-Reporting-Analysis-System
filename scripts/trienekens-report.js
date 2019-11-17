@@ -84,7 +84,6 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "ton": '',
         "remark": '',
         "ifleetImg": '',
-        "digitalMapImg": '',
         "lng": '',
         "lat": '',
         "address": '',
@@ -523,27 +522,14 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         }
     }
 
-    $scope.colID = "none";
-    
-    $scope.selectIfleet = function(){
-        $scope.colID = "ifleetcol";
-    }
-
-    $scope.selectMap = function(){
-        $scope.colID = "mapcol";
-    }
     
     window.addEventListener("paste", function(e) {
-        
-        if($scope.colID == "none"){
-            $scope.notify("warn", "Please Select one of the column you want to paste");
-        }else{
 
             // Handle the event
             retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
                 // If there's an image, display it in the canvas
                 if (imageBlob) {
-                    var canvas = document.getElementById($scope.colID);
+                    var canvas = document.getElementById("ifleetcol");
                     var ctx = canvas.getContext('2d');
 
                     // Create an image to render the blob on the canvas
@@ -569,15 +555,10 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
                     reader.readAsDataURL(imageBlob);
                     reader.onloadend = function() {
                         var base64data = reader.result;
-                        if($scope.colID == "ifleetcol"){
-                            $scope.report.ifleetImg = base64data;
-                        }else if($scope.colID == "mapcol"){
-                            $scope.report.digitalMapImg = base64data;
-                        }
+                        $scope.report.ifleetImg = base64data;
                     }
                 }
             });
-        }
     }, false);
 
 });
@@ -1288,28 +1269,7 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             
         };
         ifleetImgShow.src = $scope.editField.ifleet;
-        
-        var d = document.getElementById("mapcol");
-        var dtx = d.getContext("2d");
-        var digitalMapShow = new Image();
-        digitalMapShow.onload = function() {
-//            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
-            // step 1
-            const od = document.getElementById('mapcol');
-            const odtx = od.getContext('2d');
-            od.width = this.width;
-            od.height = this.height;
-
-            // steo 2: pre-filter image using steps as radius
-            const stepsd = (od.width / d.width)>>1;
-            odtx.filter = `blur(${stepsd}px)`;
-            odtx.drawImage(this, 0, 0);
-
-            // step 3, draw scaled
-            dtx.drawImage(od, 0, 0, od.width, od.height, 0, 0, d.width, d.height);
-            
-        };
-        digitalMapShow.src = $scope.editField.digitalMap;        
+               
     });
 
     $http.get('/getTruckList').then(function(response) {
@@ -1389,64 +1349,44 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                 callback(blob);
             }
         }
-    }
-
-    $scope.colID = "none";
-
-    $scope.selectIfleet = function(){
-        console.log("aaa");
-        $scope.colID = "ifleetcol";
-    }
-
-    $scope.selectMap = function(){
-        console.log("bbb");
-        $scope.colID = "mapcol";
-    }     
+    } 
 
  
     window.addEventListener("paste", function(e) {
-        if($scope.colID == "none"){
-            $scope.notify("warn", "Please Select one of the column you want to paste");
-        }else{   
-            // Handle the event
-            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
-                // If there's an image, display it in the canvas
-                if (imageBlob) {
-                    var canvas = document.getElementById($scope.colID);
-                    var ctx = canvas.getContext('2d');
-                    //                ctx.drawImage($scope.editField.ifleet)
+        // Handle the event
+        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+            // If there's an image, display it in the canvas
+            if (imageBlob) {
+                var canvas = document.getElementById("ifleetcol");
+                var ctx = canvas.getContext('2d');
+                //                ctx.drawImage($scope.editField.ifleet)
 
-                    // Create an image to render the blob on the canvas
-                    var img = new Image();
+                // Create an image to render the blob on the canvas
+                var img = new Image();
 
-                    // Once the image loads, render the img on the canvas
-                    img.onload = function() {
-                        // Update dimensions of the canvas with the dimensions of the image
-                        canvas.width = this.width;
-                        canvas.height = this.height;
+                // Once the image loads, render the img on the canvas
+                img.onload = function() {
+                    // Update dimensions of the canvas with the dimensions of the image
+                    canvas.width = this.width;
+                    canvas.height = this.height;
 
-                        // Draw the image
-                        ctx.drawImage(img, 0, 0);
-                    };
+                    // Draw the image
+                    ctx.drawImage(img, 0, 0);
+                };
 
-                    // Crossbrowser support for URL
-                    var URLObj = window.URL || window.webkitURL;
+                // Crossbrowser support for URL
+                var URLObj = window.URL || window.webkitURL;
 
-                    // Creates a DOMString containing a URL representing the object given in the parameter
-                    // namely the original Blob
-                    img.src = URLObj.createObjectURL(imageBlob);
-                    var reader = new FileReader();
-                    reader.readAsDataURL(imageBlob);
-                    reader.onloadend = function() {
-                        var base64data = reader.result;
-                        if($scope.colID == "ifleetcol"){
-                            $scope.editField.ifleet = base64data;
-                        }else if($scope.colID == "mapcol"){
-                            $scope.editField.digitalMap = base64data;
-                        }
-                    }
+                // Creates a DOMString containing a URL representing the object given in the parameter
+                // namely the original Blob
+                img.src = URLObj.createObjectURL(imageBlob);
+                var reader = new FileReader();
+                reader.readAsDataURL(imageBlob);
+                reader.onloadend = function() {
+                    var base64data = reader.result;
+                    $scope.editField.ifleet = base64data;
                 }
-            });
-        }
+            }
+        });
     }, false);
 });
