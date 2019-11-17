@@ -5,16 +5,16 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = process.env.DATABASE_HOST || 'localhost';
-var DB_USER = process.env.DATABASE_USER || 'root';
+var DB_HOST = process.env.DATABASE_HOST || '';
+var DB_USER = process.env.DATABASE_USER || '';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || 'trienekens';
+var DB_NAME = process.env.DATABASE_NAME || '';
  
 var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3307,
+    port: 3306,
     timezone: 'utc'
 };
 
@@ -114,7 +114,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblwheelbindatabase (  idNo int auto_increment,  date datetime,  customerID VARCHAR(15),  areaID varchar(15),  serialNo varchar(15),  acrID varchar(15),  activeStatus char(1), rcDwell varchar(20), comment mediumtext, itemType varchar(20), path varchar(20),PRIMARY KEY (idNo),  foreign key (customerID) references tblcustomer(customerID),  foreign key (areaID) references tblarea(areaID),  foreign key (serialNo) references tblbins(serialNo),  foreign key (acrID) references tblacr(acrID))",
         "CREATE TABLE tbluseractions (  date datetime,  staffID varchar(15),  action varchar(20),  onObject varchar(20),  PRIMARY KEY (date, staffID),  foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblaccess (  positionID varchar(15),  mgmtID int,  status char(1),  primary key (positionID, mgmtID),  foreign key (positionID) references tblposition(positionID),  foreign key (mgmtID) references tblmanagement(mgmtID))",
-        "CREATE TABLE tblreport (  reportID VARCHAR(15),  areaID VARCHAR(15),  reportCollectionDate date,  creationDateTime datetime,  operationTimeStart time,  operationTimeEnd time,  garbageAmount int,  iFleetMap mediumtext, digitalMap mediumtext, readStatus char(1),  completionStatus char(1),  truckID varchar(15),  driverID varchar(15),  zoom double(2,2),  remark text,  PRIMARY KEY (reportID),  foreign key (areaID) references tblarea(areaID),  foreign key (truckID) references tbltruck(truckID),  foreign key (driverID) references tblstaff(staffID))",
+        "CREATE TABLE tblreport (  reportID VARCHAR(15),  areaID VARCHAR(15), staffID VARCHAR(15), reportCollectionDate date,  creationDateTime datetime,  operationTimeStart time,  operationTimeEnd time,  garbageAmount int,  iFleetMap mediumtext, readStatus char(1),  completionStatus char(1),  truckID varchar(15),  driverID varchar(15),  zoom double(2,2),  remark text,  PRIMARY KEY (reportID),  foreign key (areaID) references tblarea(areaID),  foreign key (truckID) references tbltruck(truckID),  foreign key (driverID) references tblstaff(staffID), foreign key (staffID) references tblstaff(staffID))",
         "CREATE TABLE tblmapcircle (  circleID int auto_increment,  radius varchar(50),  cLong double(10,7),  cLat double(10,7),  reportID varchar(15),  primary key (circleID),  foreign key (reportID) references tblreport(reportID))",
         "CREATE TABLE tblmaprect (  rectID int auto_increment,  neLat double(10,7),  neLng double(10,7),  swLat double(10,7),  swLng double(10,7),  reportID varchar(15),  primary key (rectID),  foreign key (reportID) references tblreport(reportID))",
         "CREATE TABLE tblbincenter (  binCenterID varchar(15),  areaID varchar(15),  binCenterName varchar(100),  binCenterLocation varchar(100),  binCenterStatus char(1),  creationDateTime datetime,  PRIMARY KEY (binCenterID),  foreign key (areaID) references tblarea(areaID))",
