@@ -4,8 +4,7 @@
         <button class="btn btn-md btn-success" data-ng-click="editReport()">Edit</button>
     </div>
     <div class="col-md-1" data-ng-show="show.export == 'A'">
-<!--        <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>-->
-        <a href="javascript:window.print();$('#responsiveMenuContent').removeClass('col-md-9').addClass('col-md-12');" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
+        <a href="javascript:exportPdf()" class="btn btn-md btn-danger clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
     </div>
 </div>
 <!---->
@@ -73,29 +72,13 @@
     
     function exportPdf(quality = 10) {
         var filename = 'TrienekensReport.pdf';
-        var transform = $("#googleMap .gm-style>div:first>div:first>div:last>div").css("transform");
-        var comp = transform.split(",");
-        var mapleft = parseFloat(comp[4]);
-        var maptop = parseFloat(comp[5]);
-        $("#googleMap .gm-style>div:first>div:first>div:last>div").css({
-            "transform": "none",
-            "left": mapleft,
-            "top": maptop
-        });
 
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
             useCORS: true,
-            imageTimeout: 30000,
+            imageTimeout: 2000,
             scale: quality,
-            onrendered: function(canvas) {
-                $("#googleMap .gm-style>div:first>div:first>div:last>div").css({
-                    "left": 0,
-                    "top": 0,
-                    "transform": transform
-                });
-            }
+            background :'#FFFFFF'
         }).then(function(canvas) {
-            
             var img = canvas.toDataURL("image/jpeg", 1.0);
             window.URL.revokeObjectURL(img);
             var pdf = new jsPDF('l', 'mm', 'a3');
