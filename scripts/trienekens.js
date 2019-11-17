@@ -1445,7 +1445,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
 
     $scope.sendNotifToDevice = function () {
         $scope.data = {
-            'target': $scope.notifTarget,
+            'target': "TriAllUsers",
             'title': $scope.notifTitle,
             'message': $scope.notifMessage
         };
