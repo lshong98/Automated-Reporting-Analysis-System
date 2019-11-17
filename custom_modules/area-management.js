@@ -17,18 +17,6 @@ app.post('/addArea', function (req, res) {
         f.log(req.body.creationDate, "Request to create new area.", req.body.iam);
         res.json({"status": "success", "message": "Request pending.."});
         res.end();
-        
-//        database.query(sql, function (err, result) {
-//            if (err) {
-//                res.json({"status": "error", "message": "Something error!"});
-//                res.end();
-//                throw err;
-//            } else {
-//                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Area", '', ID, "tblarea");
-//                res.json({"status": "success", "message": "Area added successfully!", "details": {"areaID": ID}});
-//                res.end();
-//            }
-//        });
     });
 }); // Complete
 

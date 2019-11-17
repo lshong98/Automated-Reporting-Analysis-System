@@ -90,6 +90,10 @@ io.sockets.on('connection', function (socket) {
         emitter.removeAllListeners('live map', this);
         emitter.removeAllListeners('new complaint from mobile', this);
         emitter.removeAllListeners('create new user', this);
+        emitter.removeAllListeners('create new truck', this);
+        emitter.removeAllListeners('create new zone', this);
+        emitter.removeAllListeners('create new area', this);
+        emitter.removeAllListeners('create new bin', this);
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
         connections.splice(connections.indexOf(socket), 1);
@@ -140,7 +144,7 @@ io.sockets.on('connection', function (socket) {
         });
     });
     
-    socket.on('authorize request', function (data) {
+    socket.on('authorize request', function () {
         var sql = "";
         //if (data.action === "create user") {
         sql = "SELECT COUNT(*) AS row FROM tblauthorization WHERE authorize = 'M'";
@@ -205,12 +209,12 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('enquiry', function () {
-//        var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
-//        database.query(sql, function (err, result) {
-//            io.sockets.in(roomManager).emit('new enquiry', {
-//                unread: result[0].unread
-//            });
-//        });
+        var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('new enquiry', {
+                unread: result[0].unread
+            });
+        });
     });
 
     socket.on('enquiry read', function () {
@@ -221,15 +225,6 @@ io.sockets.on('connection', function (socket) {
             });
         });
     });
-
-    // socket.on('complaint', function(){
-    //     var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
-    //     database.query(sql, function(err, result){
-    //         io.sockets.in(roomManager).emit('new complaint', {
-    //             unread: result[0].unread
-    //         });
-    //     });
-    // });
     
     socket.on('authorize form request', function () {
         var sql = "SELECT COUNT(*) AS row FROM tblformauthorization";
@@ -276,45 +271,38 @@ io.sockets.on('connection', function (socket) {
     });
     
     //Create New Truck
-    socket.on('create new truck', function (data) {
-        socket.broadcast.emit('append truck list', {
-            id: data.id,
-            no: data.no,
-            transporter: data.transporter,
-            ton: data.ton,
-            roadtax: data.roadtax,
-            status: 'ACTIVE'
+    emitter.on('create new truck', function () {
+        var latestData = "SELECT truckID AS id, transporter, truckTon AS ton, truckNum AS no, truckExpiryStatus AS roadtax, (CASE WHEN truckStatus = 'A' THEN 'ACTIVE' WHEN truckStatus = 'I' THEN 'INACTIVE' END) AS status FROM tbltruck ORDER BY creationDateTime DESC LIMIT 0, 1";
+        
+        database.query(latestData, function (err, result) {
+            socket.broadcast.emit('append truck list', result[0]);
         });
     });
     
     //Create New Zone
-    socket.on('create new zone', function (data) {
-        socket.broadcast.emit('append zone list', {
-            "id": data.id,
-            "name": data.name,
-            "status": 'ACTIVE'
+    emitter.on('create new zone', function (data) {
+        var latestData = "SELECT zoneID AS id, zoneCode AS code, zoneName AS name, (CASE WHEN zoneStatus = 'A' THEN 'ACTIVE' WHEN zoneStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblzone ORDER BY creationDateTime DESC LIMIT 0, 1";
+        
+        database.query(latestData, function (err, result) {
+            socket.broadcast.emit('append zone list', result[0]);
         });
     });
     
     //Create New Area
-    socket.on('create new area', function (data) {
-        socket.broadcast.emit('append area list', {
-            "id": data.id,
-            "name": data.name,
-            "zoneName": data.zoneName,
-            "staffName": data.staffName,
-            "status": 'ACTIVE'
+    emitter.on('create new area', function (data) {
+        var latestData = "SELECT a.areaID AS id, a.areaCode AS code, a.areaName AS name, z.zoneID as zone, z.zoneCode as zoneCode, z.zoneName as zoneName, s.staffID as staff, s.staffName as staffName, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea a INNER JOIN tblzone z ON a.zoneID = z.zoneID INNER JOIN tblstaff s ON a.staffID = s.staffID ORDER BY a.creationDateTime DESC LIMIT 0, 1";
+        
+        database.query(latestData, function (err, result) {
+            socket.broadcast.emit('append area list', result[0]);
         });
     });
     
     //Create New Bin
-    socket.on('create new bin', function (data) {
-        socket.broadcast.emit('append bin list', {
-            "id": data.id,
-            "name": data.name,
-            "location": data.location,
-            "area": data.area,
-            "status": 'ACTIVE'
+    emitter.on('create new bin', function (data) {
+        var latestData = "SELECT tblbincenter.binCenterID AS id, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, tblarea.areaID AS area, tblbincenter.binCenterName as name, tblbincenter.binCenterLocation AS location, (CASE WHEN tblbincenter.binCenterStatus = 'A' THEN 'ACTIVE' WHEN tblbincenter.binCenterStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblbincenter JOIN tblarea ON tblbincenter.areaID = tblarea.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID ORDER BY tblbincenter.creationDateTime DESC LIMIT 0, 1";
+        
+        database.query(latestData, function (err, result) {
+            socket.broadcast.emit('append bin list', result[0]);
         });
     });
     

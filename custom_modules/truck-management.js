@@ -17,17 +17,6 @@ app.post('/addTruck', function (req, res) {
         f.log(req.body.creationDate, "Request to create new truck.", req.body.iam);
         res.json({"status": "success", "message": "Request pending.."});
         res.end();
-        
-//        database.query(sql, function (err, result) {
-//            if (err) {
-//                res.end();
-//                throw err;
-//            } else {
-//                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Truck", '', ID, "tbltruck");
-//                res.json({"status": "success", "message": "Truck added successfully!", "details": {"truckID": ID}});
-//                res.end();
-//            }
-//        });
     });
 }); // Complete
 
@@ -46,18 +35,6 @@ app.post('/editTruck', function (req, res) {
     f.log(dt, "Request to update truck.", req.body.iam);
     res.json({"status": "success", "message": "Request pending.."});
     res.end();
-    
-//    database.query(sql, function (err, result) {
-//        if (err) {
-//            res.json({"status": "error", "message": "Something wrong!"});
-//            res.end();
-//            throw err;
-//        } else {
-//            f.logTransaction(dt, req.body.iam, "update", "Update Truck - " + req.body.id + "", '', req.body.id, "tbltruck");
-//            res.json({"status": "success", "message": "Truck edited!"});
-//            res.end();
-//        }
-//    });
 }); // Complete
 
 // Used in comboBox - Truck
