@@ -204,6 +204,24 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
+    socket.on('enquiry', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('new enquiry', {
+                unread: result[0].unread
+            });
+        });
+    });
+
+    socket.on('enquiry read', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('read enquiry', {
+                unread: result[0].unread
+            });
+        });
+    });
+
     // socket.on('complaint', function(){
     //     var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
     //     database.query(sql, function(err, result){

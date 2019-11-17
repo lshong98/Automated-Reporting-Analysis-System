@@ -539,6 +539,16 @@ app.config(function($routeProvider, $locationProvider){
         },
         controller : 'historyController'
     })
+    .when('/customer-enquiry', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/customer-enquiry');
+            }
+        },
+        templateUrl: '/customer-enquiry',
+        controller: 'custServiceCtrl',
+        controllerAs:'custService'
+    })
     .when('/logout', {
         resolve: {
             "clear": function (routingService, $window, $location) {

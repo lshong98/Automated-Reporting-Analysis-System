@@ -620,6 +620,13 @@ input:checked + .slider:before {
                             <span class="slider"></span>
                         </label>
                     </li>
+                    <li class="list-group-item">
+                        Customer Enquiry
+                        <label class="switch">
+                            <input type="checkbox" class="primary" data-ng-model="auth.enquiry.view" data-ng-change="changeValue(auth.enquiry.view, 'view enquiry');" data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                            <span class="slider"></span>
+                        </label>
+                    </li>
                 </ul>
             </div> 
         </div>
