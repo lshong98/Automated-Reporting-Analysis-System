@@ -308,7 +308,7 @@
                     <span><b>Driver:</b> {{bdaf.driver}}</span><span id="buttons">
                         <button ng-show="!driverButton" class="btn btn-sm btn-danger" ng-click="clearDriver();"> <i
                                 class="fas fa-times"></i></button>
-                        <button ng-show="driverButton" class="btn btn-sm btn-success dropdown-toggle" type="button"
+                        <button ng-show="driverButton && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'" class="btn btn-sm btn-success dropdown-toggle" type="button"
                             id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-plus"></i>
                         </button>
@@ -329,7 +329,7 @@
                     <span><b>General Worker:</b> {{generalWorkers}}</span><span id="buttons">
                         <button ng-show="!generalWorkerButton" class="btn btn-sm btn-danger"
                             ng-click="clearGeneralWorker();"> <i class="fas fa-times"></i></button>
-                        <button class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+                        <button ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'" class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-plus"></i>
                         </button>
