@@ -8,7 +8,7 @@ var f = require('./function-management');
 app.post('/addReport', function (req, res) {
     'use strict';
     f.makeID('report', req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, readStatus, completionStatus, truckID, driverID, remark, creationDateTime) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.format_startTime + "', '" + req.body.format_endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', 'I', '" + req.body.status + "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "')",
+        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.format_startTime + "', '" + req.body.format_endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', 'I', '" + req.body.status + "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "', '" + req.body.staffID + "')",
             i = 0,
             j = 0,
             reportID = ID;
@@ -163,7 +163,7 @@ app.post('/getReportBinCenter', function (req, res) {
 app.post('/getReportingStaff', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblstaff.staffName FROM tblstaff JOIN tblarea ON tblstaff.staffID = tblarea.staffID WHERE tblarea.areaID = '" + req.body.areaID + "' ";
+    var sql = "SELECT tblstaff.staffName FROM tblstaff JOIN tblreport ON tblstaff.staffID = tblreport.staffID WHERE tblreport.reportID = '" + req.body.reportID + "' ";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -251,7 +251,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, staffName AS staffName, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark , tblreport.readStatus AS readStatus FROM tblreport JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblstaff ON tblstaff.staffID = tblarea.staffID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
+    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, tblstaff.staffName AS staffName, tbltruck.truckNum AS truck, tblreport.completionStatus AS status, tblreport.remark AS remark , tblreport.readStatus AS readStatus FROM tblreport JOIN tblstaff ON tblstaff.staffID = tblreport.staffID  JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
     
     database.query(sql, function (err, result) {
         if (err) {

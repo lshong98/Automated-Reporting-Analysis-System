@@ -682,8 +682,8 @@ app.post('/enquiry', function (req, resp) {
                 userID = res[0].userID;
 				var sql;
 				
-				sql = "INSERT INTO tblenquiry (userID, enquiry, submissionDate) VALUES ('" +
-						userID + "','" + data.enquiry + "','" + date + "')";
+				sql = "INSERT INTO tblenquiry (userID, enquiry, enqStatus, submissionDate, readStat) VALUES ('" +
+						userID + "','" + data.enquiry + "','New', '" + date + "','u')";
 
                 database.query(sql, function (err, res) 
 				{

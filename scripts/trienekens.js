@@ -7883,6 +7883,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.bdafID.id = $routeParams.bdafID;
     $scope.driverList = [];
     $scope.generalWorkerList = [];
+    $scope.bdaf.generalWorker = [];
     $scope.status = ''; //FOR AUTHORIZATION
     $scope.generalWorkers = ''; //Store assigned general worker list
     $scope.driverButton; //reveal driver buttons
@@ -7920,7 +7921,11 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.assignDriver = function (driver) {
         $scope.driverButton = false;
 
-        $scope.bdaf.driver = driver.staffName;
+        $scope.bdaf.driver = driver.staffName
+        $scope.bdaf[0].driverID = driver.staffID;
+        $http.post('/assignDriver', $scope.bdaf[0]).then(function (response) {
+
+        });
     }
     $scope.clearDriver = function () {
         $scope.driverButton = true;
@@ -7952,6 +7957,12 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             $scope.generalWorkers = $scope.generalWorkers.concat(", ", generalWorker.staffName);
         }
 
+        $scope.bdaf[0].staffID = generalWorker.staffID;
+        $http.post('/assignGeneralWorker', $scope.bdaf[0]).then(function (response) {
+
+        });
+        
+
     }
     $scope.clearGeneralWorker = function () {
         $scope.generalWorkerButton = true;
@@ -7959,6 +7970,9 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         $scope.bdaf.generalWorker = [];
         $scope.generalWorkers = '';
 
+        $http.post('/clearGeneralWorker', $scope.bdaf[0]).then(function (response) {
+
+        });
 
         getGeneralWorkers();
     }
@@ -8020,8 +8034,8 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         $http.post('/getBdafInfo', $scope.bdafID).then(function (response) {
 
             $scope.bdaf = response.data;
-            console.log($scope.bdaf);
 
+            console.log($scope.bdaf);
             if ($scope.bdaf[0].status == 'A') {
                 $scope.status = 'ACTIVE';
             } else if ($scope.bdaf[0].status == 'I') {
@@ -8036,6 +8050,34 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 $scope.status = 'COMPLETE';
                 $scope.show.edit = 'I';
             }
+
+            //get Driver name
+            $http.post('/getStaffName', {
+                "staffID": $scope.bdaf[0].driverID
+            }).then(function (response) {
+                $scope.bdaf.driver = response.data[0].staffName;
+            });
+
+            //get GeneralWorker name
+            var x = 1;
+            var generalWorkers = $scope.bdaf[0].staffID.split(" ");
+            console.log(generalWorkers);
+
+            
+            for(x = 1; x < generalWorkers.length; x++){
+                $http.post('/getStaffName', {
+                    "staffID": generalWorkers[x]
+                }).then(function (response) {
+                    var generalWorker = response.data[0].staffName;
+
+                    if ($scope.generalWorkers == '') {
+                        $scope.generalWorkers = generalWorker;
+                    } else {
+                        $scope.generalWorkerButton = false;
+                        $scope.generalWorkers = $scope.generalWorkers.concat(", ", generalWorker);
+                    }
+                });
+            }
         });
     }
     $scope.getBdafDetails = function () {
@@ -8049,7 +8091,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 console.log($scope.bdafDetailsList[x].status);
                 if ($scope.bdafDetailsList[x].status == 'complete') {
                     $scope.bdafDetailsList[x].completed = true;
-                }else{
+                } else {
                     $scope.bdafDetailsList[x].completed = false;
                 }
             }
@@ -8132,14 +8174,14 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 $http.post('/completeBinRequest', binRequest).then(function (response) {
                     console.log("Bin Request Completed!")
                 });
-            }else{
+            } else {
                 var binRequest = $scope.bdafDetailsList[x]
                 $http.post('/uncompleteBinRequest', binRequest).then(function (response) {
                     console.log("Bin Request Uncompleted!")
                 });
             }
         }
-    } 
+    }
 
 
     //AUTHORIZATION MODULE

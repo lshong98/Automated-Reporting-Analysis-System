@@ -90,7 +90,8 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "marker": centerArray,
         "rectangle": rectArray,
         "creationDate": '',
-        "status": ''
+        "status": '',
+        "staffID" : $window.sessionStorage.getItem('owner')
     };
 
 
@@ -851,7 +852,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             });
         });
 
-        $http.post('/getReportingStaff', $scope.area).then(function(response) {
+        $http.post('/getReportingStaff', $scope.report).then(function(response) {
             $scope.thisReport.reportingStaff = response.data[0].staffName;
         });
 
