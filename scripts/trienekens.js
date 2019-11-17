@@ -2453,7 +2453,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
         $scope.day = "fri";
     } else if (getday == 6) {
         $scope.day = "sat";
-    } else if (getday == 7) {
+    } else if (getday == 0) {
         $scope.day = "sun";
     }
 
