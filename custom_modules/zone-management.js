@@ -17,17 +17,6 @@ app.post('/addZone', function (req, res) {
         f.log(req.body.creationDate, "Request to create new zone.", req.body.iam);
         res.json({"status": "success", "message": "Request pending.."});
         res.end();
-         
-//        database.query(sql, function (err, result) {
-//            if (err) {
-//                res.end();
-//                throw err;
-//            } else {
-//                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Zone", '', ID, "tblzone");
-//                res.json({"status": "success", "message": "Zone added successfully!", "details": {"zoneID": ID}});
-//                res.end();
-//            }
-//        });
     });
 }); // Complete
 

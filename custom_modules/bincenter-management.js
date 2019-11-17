@@ -17,17 +17,6 @@ app.post('/addBinCenter', function (req, res) {
         f.log(req.body.creationDate, "Request to create new bin center.", req.body.iam);
         res.json({"status": "success", "message": "Request pending.."});
         res.end();
-        
-//        database.query(sql, function (err, result) {
-//            if (err) {
-//                res.end();
-//                throw err;
-//            } else {
-//                f.logTransaction(req.body.creationDate, req.body.iam, "add", "Create New Bin Center", '', ID, "tblbincenter");
-//                res.json({"status": "success", "message": "Bin Center added successfully!", "details": {"binID": ID}});
-//                res.end();
-//            }
-//        });
     });
 }); // Complete
 
@@ -44,17 +33,6 @@ app.post('/editBinCenter', function (req, res) {
     f.log(dt, "Request to update bin center.", req.body.iam);
     res.json({"status": "success", "message": "Request pending.."});
     res.end();
-    
-//    database.query(sql, function (err, result) {
-//        if (err) {
-//            res.end();
-//            throw err;
-//        } else {
-//            f.logTransaction(dt, req.body.iam, "update", "Update Bin Center - " + req.body.name + "", '', req.body.id, "tblbincenter");
-//            res.json({"status": "success", "message": "Successfully updated!"});
-//            res.end();
-//        }
-//    });
 }); // Complete
 
 // Load all bin center in management
