@@ -30,7 +30,7 @@ function handleDisconnect() {
     db = mysql.createConnection(config);
 
     // Connect
-    db.connect(function (err) {
+    db.connect(function (err) { 
         if (err) {
             throw err;
         }
