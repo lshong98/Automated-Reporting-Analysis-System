@@ -7057,12 +7057,86 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         var map;
 
         $http.post('/getReportForComplaint', $scope.report).then(function (response) {
-            $('div.report_reference').html(response.data.content);
+            
             $scope.thisReport = response.data.result[0];
 
             $scope.area = {
                 "areaID": $scope.thisReport.area
             };
+            
+            var htmlscripts = response.data.content;
+            
+            $http.post('/getReportBinCenter', $scope.area).then(function(binresponse) {
+                var bindataset = binresponse.data;
+                var bin = "";
+                
+                var row = Object.keys(bindataset).length;
+                $.each(bindataset, function(index, value) {
+                    bin += value.name;
+                    if ((index + 1) != row) {
+                        bin += ', ';
+                    }
+                });
+                
+                if(bin.length != 0){
+                    htmlscripts = htmlscripts.replace("programReplaceBinHere",bin);
+                }else{
+                    htmlscripts = htmlscripts.replace("programReplaceBinHere","(no bin centre information)");
+                }
+                
+                $scope.forGetAcrInfo = {
+                    "area" : response.data.result[0].area
+                };
+                $scope.forGetAcrInfo.todayday = "";
+                var d = new Date(response.data.result[0].date);
+                var n = d.getDay();
+                if(n == 1){
+                    $scope.forGetAcrInfo.todayday = "mon";
+                }
+                else if(n == 2){
+                    $scope.forGetAcrInfo.todayday = "tue";
+                }
+                else if(n == 3){
+                    $scope.forGetAcrInfo.todayday = "wed";
+                }
+                else if(n == 4){
+                    $scope.forGetAcrInfo.todayday = "thu";
+                }
+                else if(n == 5){
+                    $scope.forGetAcrInfo.todayday = "fri";
+                }
+                else if(n == 6){
+                    $scope.forGetAcrInfo.todayday = "sat";
+                }else if(n == 0){
+                    $scope.forGetAcrInfo.todayday = "sun";
+                }   
+                
+                $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(acrresponse){
+                    if (acrresponse.data !== null) {
+                        if (acrresponse.data.length > 0) {
+                            var acrset = acrresponse.data;
+                        } else {
+                            var acrset = [];
+                        }
+                        var acrRow = Object.keys(acrset).length;
+                        var acr = "";
+                        $.each(acrset, function(index, value) {
+                            acr += value.name;
+                            if ((index + 1) != acrRow) {
+                                acr += ', ';
+                            }
+                        });
+                        htmlscripts = htmlscripts.replace("programReplaceACRHere",acr);
+                    }else{
+                        htmlscripts = htmlscripts.replace("programReplaceACRHere","(no acr information)");
+                    }
+                    $('div.report_reference').html(htmlscripts);                    
+                });
+                
+               
+            }); 
+            
+            
 //            $http.post('/loadSpecificBoundary', $scope.area).then(function (response) {
 //                var $googleMap;
 //
