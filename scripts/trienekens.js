@@ -63,6 +63,12 @@ socket.on('new satisfaction', function (data) {
     }
 });
 
+socket.on('new enquiry', function (data) {
+    if (data.unread > 0) {
+        $('.enquiry').addClass("badge badge-danger").html(data.unread);
+    }
+});
+
 socket.on('read municipal', function (data) {
     if (data.unread > 0) {
         var unread = $('.satisfaction').html();
@@ -95,6 +101,10 @@ socket.on('read scheduled', function (data) {
             $('.satisfaction').addClass("badge badge-danger").html(remaining);
         }
     }
+});
+
+socket.on('read enquiry', function (data) {
+    $('.enquiry').addClass("badge badge-danger").html(data.unread);
 });
 
 socket.on('new complaint', function (data) {
@@ -248,6 +258,10 @@ app.service('storeDataService', function () {
             "sat": ''
         },
         "binRequest": {
+            "id": '',
+            "status": ''
+        },
+        "enquiry": {
             "id": '',
             "status": ''
         },
@@ -407,6 +421,9 @@ app.service('storeDataService', function () {
             "feedback": {
                 "view": 'A'
             },
+            "enquiry": {
+                "view": 'A'
+            },
             "newBusiness": {
                 "view": 'I',
                 "create": 'I',
@@ -470,6 +487,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.showDbdDetails = true;
         scope.showBlostDetails = true;
         scope.showCollectionSchedule = true;
+        scope.showEnquiry = true;
         scope.thisAcr = {
             "areaCode": ''
         };
@@ -513,6 +531,11 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         };
 
         scope.thisBinRequest = {
+            "id": '',
+            "status": ''
+        };
+
+        scope.thisEnquiry = {
             "id": '',
             "status": ''
         };
@@ -926,12 +949,12 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
         };
 
-        scope.editBinRequestStatus = function () {
-            scope.showBinRequest = !scope.showBinRequest;
+        // scope.editBinRequestStatus = function () {
+        //     scope.showBinRequest = !scope.showBinRequest;
 
-            angular.element('.selectpicker').selectpicker('refresh');
-            angular.element('.selectpicker').selectpicker('render');
-        };
+        //     angular.element('.selectpicker').selectpicker('refresh');
+        //     angular.element('.selectpicker').selectpicker('render');
+        // };
 
         // scope.saveBinRequestStatus = function (status, id) {
         //     scope.showBinRequest = !scope.showBinRequest;
@@ -955,6 +978,42 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             $.each(storeDataService.binRequest, function (index, value) {
                 if (storeDataService.binRequest[index].id == scope.thisBinRequest.id) {
                     scope.x = angular.copy(storeDataService.binRequest[index]);
+                }
+            });
+        };
+
+        scope.editEnquiryStatus = function () {
+            scope.showEnquiry = !scope.showEnquiry;
+
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+        };
+
+        scope.saveEnquiryStatus = function (status, id) {
+            scope.showEnquiry = !scope.showEnquiry;
+
+            scope.thisEnquiry = {
+                "status": status,
+                "id": id
+            };
+
+            $http.post('/updateEnquiry', scope.thisEnquiry).then(function (response) {
+                var data = response.data;
+                if(data == "Enquiry Updated"){
+                    alert(data);
+                }
+                console.log(data);
+            }, function (error) {
+                console.log(error);
+            });
+        };
+
+        scope.cancelEnquiryStatus = function () {
+            scope.showEnquiry = !scope.showEnquiry;
+
+            $.each(storeDataService.enquiry, function (index, value) {
+                if (storeDataService.enquiry[index].id == scope.thisEnquiry.id) {
+                    scope.x = angular.copy(storeDataService.enquiry[index]);
                 }
             });
         };
@@ -1378,6 +1437,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 3; //Record number each page
     $scope.itemsPerPageBinReq = 10;
+    $scope.itemsPerPageEnquiry = 10;
     $scope.maxSize = 8; //Show the number in page
     $scope.m = {};
     $scope.c = {};
@@ -1485,6 +1545,25 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             $scope.areaList = response.data;
         }, function (error) {
             console.log(error);
+        });
+    };
+
+    $scope.getEnquiry = function () {
+        $http.get('/getEnquiry').then(function (response) {
+            console.log(response.data);
+            $scope.enquiry = response.data;
+            $scope.totalItemsEnquiry = response.data.length;
+            $scope.searchRequestFilter = '';
+        }, function (error) {
+            console.log(error);
+        });
+        $http.post('/readEnquiry').then(function(response){
+            console.log(response.data);
+            if(response.data == "Enquiry Read"){
+                socket.emit('enquiry read');
+            }
+        }, function(err){
+            console.log(err);
         });
     };
 
@@ -2264,6 +2343,8 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         "action": "create user"
     });
     socket.emit('satisfaction form');
+
+    socket.emit('enquiry');
 
     socket.emit('complaint');
 
@@ -3905,6 +3986,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "approve": 'I'
         },
         "feedback": {
+            "view": 'I'
+        },
+        "enquiry": {
             "view": 'I'
         },
         "role": {
@@ -7057,99 +7141,173 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         var map;
 
         $http.post('/getReportForComplaint', $scope.report).then(function (response) {
-            $('div.report_reference').html(response.data.content);
+            
             $scope.thisReport = response.data.result[0];
 
             $scope.area = {
                 "areaID": $scope.thisReport.area
             };
-            $http.post('/loadSpecificBoundary', $scope.area).then(function (response) {
-                var $googleMap;
-
-                if (response.data.length != 0) {
-                    var sumOfCoLat = 0;
-                    var sumOfCoLng = 0;
-                    for (var i = 0; i < response.data.length; i++) {
-                        sumOfCoLat += response.data[i].lat;
-                        sumOfCoLng += response.data[i].lng;
+            
+            var htmlscripts = response.data.content;
+            
+            $http.post('/getReportBinCenter', $scope.area).then(function(binresponse) {
+                var bindataset = binresponse.data;
+                var bin = "";
+                
+                var row = Object.keys(bindataset).length;
+                $.each(bindataset, function(index, value) {
+                    bin += value.name;
+                    if ((index + 1) != row) {
+                        bin += ', ';
                     }
-                    var avgOfCoLat = sumOfCoLat / response.data.length;
-                    var avgOfCoLng = sumOfCoLng / response.data.length;
-                    var data = response.data;
-                    var boundary = [];
-
-                    for (var i = 0; i < response.data.length; i++) {
-                        boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
-
-                    }
-                    var polygonColorCode = "#" + response.data[0].color;
-                    var myPolygon = new google.maps.Polygon({
-                        paths: boundary,
-                        strokeColor: polygonColorCode,
-                        strokeWeight: 2,
-                        fillColor: polygonColorCode,
-                        fillOpacity: 0.45
-                    });
-
-                    $googleMap = document.getElementById('googleMap');
-                    var visualizeMap = {
-                        center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
-                        mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        mapTypeControl: false,
-                        panControl: false,
-                        zoomControl: false,
-                        streetViewControl: false,
-                        disableDefaultUI: true,
-                        editable: false
-                    };
-
-                    map = new google.maps.Map($googleMap, visualizeMap);
-                    myPolygon.setMap(map);
-
-                    $window.setTimeout(function () {
-                        map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
-                        map.setZoom(12);
-                    }, 1000);
-                } else {
-                    $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
+                });
+                
+                if(bin.length != 0){
+                    htmlscripts = htmlscripts.replace("programReplaceBinHere",bin);
+                }else{
+                    htmlscripts = htmlscripts.replace("programReplaceBinHere","(no bin centre information)");
                 }
-            });
-
-            $http.post('/getReportCircle', $scope.report).then(function (response) {
-                var data = response.data;
-                $window.setTimeout(function () {
-                    $.each(data, function (index, value) {
-                        var circle = new google.maps.Circle({
-                            map: map,
-                            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
-                            radius: parseFloat(data[index].radius),
-                            fillColor: 'transparent',
-                            strokeColor: 'red',
-                            editable: false,
-                            draggable: false
+                
+                $scope.forGetAcrInfo = {
+                    "area" : response.data.result[0].area
+                };
+                $scope.forGetAcrInfo.todayday = "";
+                var d = new Date(response.data.result[0].date);
+                var n = d.getDay();
+                if(n == 1){
+                    $scope.forGetAcrInfo.todayday = "mon";
+                }
+                else if(n == 2){
+                    $scope.forGetAcrInfo.todayday = "tue";
+                }
+                else if(n == 3){
+                    $scope.forGetAcrInfo.todayday = "wed";
+                }
+                else if(n == 4){
+                    $scope.forGetAcrInfo.todayday = "thu";
+                }
+                else if(n == 5){
+                    $scope.forGetAcrInfo.todayday = "fri";
+                }
+                else if(n == 6){
+                    $scope.forGetAcrInfo.todayday = "sat";
+                }else if(n == 0){
+                    $scope.forGetAcrInfo.todayday = "sun";
+                }   
+                
+                $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(acrresponse){
+                    if (acrresponse.data !== null) {
+                        if (acrresponse.data.length > 0) {
+                            var acrset = acrresponse.data;
+                        } else {
+                            var acrset = [];
+                        }
+                        var acrRow = Object.keys(acrset).length;
+                        var acr = "";
+                        $.each(acrset, function(index, value) {
+                            acr += value.name;
+                            if ((index + 1) != acrRow) {
+                                acr += ', ';
+                            }
                         });
-                    });
-                }, 1000);
-            });
+                        htmlscripts = htmlscripts.replace("programReplaceACRHere",acr);
+                    }else{
+                        htmlscripts = htmlscripts.replace("programReplaceACRHere","(no acr information)");
+                    }
+                    $('div.report_reference').html(htmlscripts);                    
+                });
+                
+               
+            }); 
+            
+            
+//            $http.post('/loadSpecificBoundary', $scope.area).then(function (response) {
+//                var $googleMap;
+//
+//                if (response.data.length != 0) {
+//                    var sumOfCoLat = 0;
+//                    var sumOfCoLng = 0;
+//                    for (var i = 0; i < response.data.length; i++) {
+//                        sumOfCoLat += response.data[i].lat;
+//                        sumOfCoLng += response.data[i].lng;
+//                    }
+//                    var avgOfCoLat = sumOfCoLat / response.data.length;
+//                    var avgOfCoLng = sumOfCoLng / response.data.length;
+//                    var data = response.data;
+//                    var boundary = [];
+//
+//                    for (var i = 0; i < response.data.length; i++) {
+//                        boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+//
+//                    }
+//                    var polygonColorCode = "#" + response.data[0].color;
+//                    var myPolygon = new google.maps.Polygon({
+//                        paths: boundary,
+//                        strokeColor: polygonColorCode,
+//                        strokeWeight: 2,
+//                        fillColor: polygonColorCode,
+//                        fillOpacity: 0.45
+//                    });
+//
+//                    $googleMap = document.getElementById('googleMap');
+//                    var visualizeMap = {
+//                        center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+//                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                        mapTypeControl: false,
+//                        panControl: false,
+//                        zoomControl: false,
+//                        streetViewControl: false,
+//                        disableDefaultUI: true,
+//                        editable: false
+//                    };
+//
+//                    map = new google.maps.Map($googleMap, visualizeMap);
+//                    myPolygon.setMap(map);
+//
+//                    $window.setTimeout(function () {
+//                        map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+//                        map.setZoom(12);
+//                    }, 1000);
+//                } else {
+//                    $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
+//                }
+//            });
 
-            $http.post('/getReportRect', $scope.report).then(function (response) {
-                var data = response.data;
-                $window.setTimeout(function () {
-                    $.each(data, function (index, value) {
-                        var rect = new google.maps.Rectangle({
-                            map: map,
-                            bounds: new google.maps.LatLngBounds(
-                                new google.maps.LatLng(data[index].swLat, data[index].swLng),
-                                new google.maps.LatLng(data[index].neLat, data[index].neLng),
-                            ),
-                            fillColor: 'transparent',
-                            strokeColor: 'red',
-                            editable: false,
-                            draggable: false
-                        });
-                    })
-                }, 1000);
-            });
+//            $http.post('/getReportCircle', $scope.report).then(function (response) {
+//                var data = response.data;
+//                $window.setTimeout(function () {
+//                    $.each(data, function (index, value) {
+//                        var circle = new google.maps.Circle({
+//                            map: map,
+//                            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+//                            radius: parseFloat(data[index].radius),
+//                            fillColor: 'transparent',
+//                            strokeColor: 'red',
+//                            editable: false,
+//                            draggable: false
+//                        });
+//                    });
+//                }, 1000);
+//            });
+
+//            $http.post('/getReportRect', $scope.report).then(function (response) {
+//                var data = response.data;
+//                $window.setTimeout(function () {
+//                    $.each(data, function (index, value) {
+//                        var rect = new google.maps.Rectangle({
+//                            map: map,
+//                            bounds: new google.maps.LatLngBounds(
+//                                new google.maps.LatLng(data[index].swLat, data[index].swLng),
+//                                new google.maps.LatLng(data[index].neLat, data[index].neLng),
+//                            ),
+//                            fillColor: 'transparent',
+//                            strokeColor: 'red',
+//                            editable: false,
+//                            draggable: false
+//                        });
+//                    })
+//                }, 1000);
+//            });
         });
     }
 
