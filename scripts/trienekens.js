@@ -7992,11 +7992,14 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             var x = 0;
             for (x = 0; x < $scope.bdafDetailsList.length; x++) {
                 console.log($scope.bdafDetailsList[x].status);
-                if ($scope.bdafDetailsList[x].status == 'completed') {
+                if ($scope.bdafDetailsList[x].status == 'complete') {
                     $scope.bdafDetailsList[x].completed = true;
-                    document.getElementById("completed").checked = true;
+                }else{
+                    $scope.bdafDetailsList[x].completed = false;
                 }
             }
+
+            console.log($scope.bdafDetailsList);
         });
     }
     $scope.addBdafEntry = function () {
@@ -8054,14 +8057,14 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             }
         });
     }
-    $scope.saveDcsEntry = function () {
+    $scope.saveBdafEntry = function () {
 
         $http.post('/updateBdafEntry', $scope.bdafEntry).then(function (response) {
 
             $scope.getBdafDetails();
         });
 
-        angular.element('#editDcsEntry').modal('toggle');
+        angular.element('#editBdafEntry').modal('toggle');
     }
 
     function completeForm() {
@@ -8075,12 +8078,13 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                     console.log("Bin Request Completed!")
                 });
             }else{
+                var binRequest = $scope.bdafDetailsList[x]
                 $http.post('/uncompleteBinRequest', binRequest).then(function (response) {
                     console.log("Bin Request Uncompleted!")
                 });
             }
         }
-    }
+    } 
 
 
     //AUTHORIZATION MODULE
