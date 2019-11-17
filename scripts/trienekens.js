@@ -7063,93 +7063,93 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             $scope.area = {
                 "areaID": $scope.thisReport.area
             };
-            $http.post('/loadSpecificBoundary', $scope.area).then(function (response) {
-                var $googleMap;
+//            $http.post('/loadSpecificBoundary', $scope.area).then(function (response) {
+//                var $googleMap;
+//
+//                if (response.data.length != 0) {
+//                    var sumOfCoLat = 0;
+//                    var sumOfCoLng = 0;
+//                    for (var i = 0; i < response.data.length; i++) {
+//                        sumOfCoLat += response.data[i].lat;
+//                        sumOfCoLng += response.data[i].lng;
+//                    }
+//                    var avgOfCoLat = sumOfCoLat / response.data.length;
+//                    var avgOfCoLng = sumOfCoLng / response.data.length;
+//                    var data = response.data;
+//                    var boundary = [];
+//
+//                    for (var i = 0; i < response.data.length; i++) {
+//                        boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+//
+//                    }
+//                    var polygonColorCode = "#" + response.data[0].color;
+//                    var myPolygon = new google.maps.Polygon({
+//                        paths: boundary,
+//                        strokeColor: polygonColorCode,
+//                        strokeWeight: 2,
+//                        fillColor: polygonColorCode,
+//                        fillOpacity: 0.45
+//                    });
+//
+//                    $googleMap = document.getElementById('googleMap');
+//                    var visualizeMap = {
+//                        center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+//                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                        mapTypeControl: false,
+//                        panControl: false,
+//                        zoomControl: false,
+//                        streetViewControl: false,
+//                        disableDefaultUI: true,
+//                        editable: false
+//                    };
+//
+//                    map = new google.maps.Map($googleMap, visualizeMap);
+//                    myPolygon.setMap(map);
+//
+//                    $window.setTimeout(function () {
+//                        map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+//                        map.setZoom(12);
+//                    }, 1000);
+//                } else {
+//                    $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
+//                }
+//            });
 
-                if (response.data.length != 0) {
-                    var sumOfCoLat = 0;
-                    var sumOfCoLng = 0;
-                    for (var i = 0; i < response.data.length; i++) {
-                        sumOfCoLat += response.data[i].lat;
-                        sumOfCoLng += response.data[i].lng;
-                    }
-                    var avgOfCoLat = sumOfCoLat / response.data.length;
-                    var avgOfCoLng = sumOfCoLng / response.data.length;
-                    var data = response.data;
-                    var boundary = [];
+//            $http.post('/getReportCircle', $scope.report).then(function (response) {
+//                var data = response.data;
+//                $window.setTimeout(function () {
+//                    $.each(data, function (index, value) {
+//                        var circle = new google.maps.Circle({
+//                            map: map,
+//                            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+//                            radius: parseFloat(data[index].radius),
+//                            fillColor: 'transparent',
+//                            strokeColor: 'red',
+//                            editable: false,
+//                            draggable: false
+//                        });
+//                    });
+//                }, 1000);
+//            });
 
-                    for (var i = 0; i < response.data.length; i++) {
-                        boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
-
-                    }
-                    var polygonColorCode = "#" + response.data[0].color;
-                    var myPolygon = new google.maps.Polygon({
-                        paths: boundary,
-                        strokeColor: polygonColorCode,
-                        strokeWeight: 2,
-                        fillColor: polygonColorCode,
-                        fillOpacity: 0.45
-                    });
-
-                    $googleMap = document.getElementById('googleMap');
-                    var visualizeMap = {
-                        center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
-                        mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        mapTypeControl: false,
-                        panControl: false,
-                        zoomControl: false,
-                        streetViewControl: false,
-                        disableDefaultUI: true,
-                        editable: false
-                    };
-
-                    map = new google.maps.Map($googleMap, visualizeMap);
-                    myPolygon.setMap(map);
-
-                    $window.setTimeout(function () {
-                        map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
-                        map.setZoom(12);
-                    }, 1000);
-                } else {
-                    $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
-                }
-            });
-
-            $http.post('/getReportCircle', $scope.report).then(function (response) {
-                var data = response.data;
-                $window.setTimeout(function () {
-                    $.each(data, function (index, value) {
-                        var circle = new google.maps.Circle({
-                            map: map,
-                            center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
-                            radius: parseFloat(data[index].radius),
-                            fillColor: 'transparent',
-                            strokeColor: 'red',
-                            editable: false,
-                            draggable: false
-                        });
-                    });
-                }, 1000);
-            });
-
-            $http.post('/getReportRect', $scope.report).then(function (response) {
-                var data = response.data;
-                $window.setTimeout(function () {
-                    $.each(data, function (index, value) {
-                        var rect = new google.maps.Rectangle({
-                            map: map,
-                            bounds: new google.maps.LatLngBounds(
-                                new google.maps.LatLng(data[index].swLat, data[index].swLng),
-                                new google.maps.LatLng(data[index].neLat, data[index].neLng),
-                            ),
-                            fillColor: 'transparent',
-                            strokeColor: 'red',
-                            editable: false,
-                            draggable: false
-                        });
-                    })
-                }, 1000);
-            });
+//            $http.post('/getReportRect', $scope.report).then(function (response) {
+//                var data = response.data;
+//                $window.setTimeout(function () {
+//                    $.each(data, function (index, value) {
+//                        var rect = new google.maps.Rectangle({
+//                            map: map,
+//                            bounds: new google.maps.LatLngBounds(
+//                                new google.maps.LatLng(data[index].swLat, data[index].swLng),
+//                                new google.maps.LatLng(data[index].neLat, data[index].neLng),
+//                            ),
+//                            fillColor: 'transparent',
+//                            strokeColor: 'red',
+//                            editable: false,
+//                            draggable: false
+//                        });
+//                    })
+//                }, 1000);
+//            });
         });
     }
 

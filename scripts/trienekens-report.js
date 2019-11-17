@@ -84,6 +84,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "ton": '',
         "remark": '',
         "ifleetImg": '',
+        "digitalMapImg": '',
         "lng": '',
         "lat": '',
         "address": '',
@@ -169,159 +170,160 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
     $scope.passArea = {
         "areaID": $routeParams.areaCode
     }
-    $http.post('/loadSpecificBoundary', $scope.passArea).then(function(response) {
-        if(response.data.length != 0 ){
-        var sumOfCoLat = 0;
-        var sumOfCoLng = 0;
-        for (var i = 0; i < response.data.length; i++) {
-            sumOfCoLat += response.data[i].lat;
-            sumOfCoLng += response.data[i].lng;
-        }
-
-        var avgOfCoLat = sumOfCoLat / response.data.length;
-        var avgOfCoLng = sumOfCoLng / response.data.length;
-        var data = response.data;
-        var boundary = [];
-        for (var i = 0; i < response.data.length; i++) {
-            boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
-
-        }
-
-        var $googleMap = document.getElementById('googleMap');
-        var visualizeMap = {
-            center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapTypeControl: false,
-            panControl: false,
-            zoomControl: false,
-            streetViewControl: false,
-            disableDefaultUI: true,
-            editable: false
-        };
-
-        var polygonColorCode = "#" + response.data[0].color;
-        var myPolygon = new google.maps.Polygon({
-            paths: boundary,
-            strokeColor: polygonColorCode,
-            strokeWeight: 2,
-            fillColor: polygonColorCode,
-            fillOpacity: 0.45
-        });
-
-        var map = new google.maps.Map($googleMap, visualizeMap);
-        myPolygon.setMap(map);
-
-        // OnClick add Marker and get address
-        google.maps.event.addListener(map, "click", function(e) {
-            var latLng, latitude, longtitude, circle, rectangle;
-
-            latLng = e.latLng;
-            latitude = latLng.lat();
-            longtitude = latLng.lng();
-
-            if ($scope.shape == "circle") {
-                $scope.circleID++;
-                circle = new google.maps.Circle({
-                    id: $scope.circleID,
-                    map: map,
-                    center: new google.maps.LatLng(latitude, longtitude),
-                    radius: 200,
-                    fillColor: 'transparent',
-                    strokeColor: 'red',
-                    editable: true,
-                    draggable: true
-                });
-                centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
-
-                google.maps.event.addListener(circle, "radius_changed", function() {
-                    $.each(centerArray, function(index, value) {
-                        if (circle.id == (index + 1)) {
-                            centerArray[index].radius = circle.getRadius();
-                        }
-                    });
-                });
-                google.maps.event.addListener(circle, "center_changed", function() {
-                    $.each(centerArray, function(index, value) {
-                        if (circle.id == (index + 1)) {
-                            centerArray[index].cLat = circle.getCenter().lat();
-                            centerArray[index].cLong = circle.getCenter().lng();
-                            console.log(centerArray);
-                        }
-                    });
-                });
-            } else if ($scope.shape == "rectangle") {
-                $scope.rectangleID++;
-                rectangle = new google.maps.Rectangle({
-                    id: $scope.rectangleID,
-                    strokeColor: '#FF0000',
-                    strokeWeight: 2,
-                    fillColor: 'transparent',
-                    map: map,
-                    editable: true,
-                    draggable: true,
-                    center: new google.maps.LatLng(latitude, longtitude),
-                    bounds: new google.maps.LatLngBounds(
-                        new google.maps.LatLng(latitude, longtitude),
-                        new google.maps.LatLng(latitude + 0.001, longtitude + 0.001),
-                    )
-                });
-                rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
-
-                google.maps.event.addListener(rectangle, "bounds_changed", function() {
-                    var bounds = rectangle.getBounds();
-                    var ne = bounds.getNorthEast();
-                    var sw = bounds.getSouthWest();
-                    $.each(rectArray, function(index, value) {
-                        if (rectangle.id == (index + 1)) {
-                            rectArray[index].neLat = ne.lat();
-                            rectArray[index].neLng = ne.lng();
-                            rectArray[index].swLat = sw.lat();
-                            rectArray[index].swLng = sw.lng();
-                        }
-                    });
-                });
-            }
-
-
-            //                    var marker = new google.maps.Marker({
-            //                        position: new google.maps.LatLng(latitude, longtitude),
-            //                        title: 'Marker',
-            //                        map: map,
-            //                        draggable: true
-            //                    });
-            //
-            //                    var geocoder = new google.maps.Geocoder();
-            //                    geocoder.geocode({'address': 'Kuching, MY'}, function(results, status) {
-            //                        if (status == google.maps.GeocoderStatus.OK) {
-            //                            alert("Location: " + results[0].geometry.location.lat() + " " + results[0].geometry.location.lng() + " " + results[0].formatted_address);
-            //                        } else {
-            //                            alert("Something got wrong " + status);
-            //                        }
-            //                    });
-        });
-
-        $window.setTimeout(function() {
-            map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
-            map.setZoom(13);
-        }, 1000);
-        }else{
-            $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");     
-                var $googleMap = document.getElementById('googleMap');
-
-                var visualizeMap = {
-                    center: new google.maps.LatLng(1.5503052, 110.3394602),
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    mapTypeControl: false,
-                    panControl: false,
-                    zoomControl: false,
-                    streetViewControl: false,
-                    disableDefaultUI: true,
-                    editable: false,
-                    zoom: 13
-                };
-                map = new google.maps.Map($googleMap, visualizeMap);
-        }         
-    });
+    
+//    $http.post('/loadSpecificBoundary', $scope.passArea).then(function(response) {
+//        if(response.data.length != 0 ){
+//        var sumOfCoLat = 0;
+//        var sumOfCoLng = 0;
+//        for (var i = 0; i < response.data.length; i++) {
+//            sumOfCoLat += response.data[i].lat;
+//            sumOfCoLng += response.data[i].lng;
+//        }
+//
+//        var avgOfCoLat = sumOfCoLat / response.data.length;
+//        var avgOfCoLng = sumOfCoLng / response.data.length;
+//        var data = response.data;
+//        var boundary = [];
+//        for (var i = 0; i < response.data.length; i++) {
+//            boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+//
+//        }
+//
+//        var $googleMap = document.getElementById('googleMap');
+//        var visualizeMap = {
+//            center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+//            mapTypeId: google.maps.MapTypeId.ROADMAP,
+//            mapTypeControl: false,
+//            panControl: false,
+//            zoomControl: false,
+//            streetViewControl: false,
+//            disableDefaultUI: true,
+//            editable: false
+//        };
+//
+//        var polygonColorCode = "#" + response.data[0].color;
+//        var myPolygon = new google.maps.Polygon({
+//            paths: boundary,
+//            strokeColor: polygonColorCode,
+//            strokeWeight: 2,
+//            fillColor: polygonColorCode,
+//            fillOpacity: 0.45
+//        });
+//
+//        var map = new google.maps.Map($googleMap, visualizeMap);
+//        myPolygon.setMap(map);
+//
+//        // OnClick add Marker and get address
+//        google.maps.event.addListener(map, "click", function(e) {
+//            var latLng, latitude, longtitude, circle, rectangle;
+//
+//            latLng = e.latLng;
+//            latitude = latLng.lat();
+//            longtitude = latLng.lng();
+//
+//            if ($scope.shape == "circle") {
+//                $scope.circleID++;
+//                circle = new google.maps.Circle({
+//                    id: $scope.circleID,
+//                    map: map,
+//                    center: new google.maps.LatLng(latitude, longtitude),
+//                    radius: 200,
+//                    fillColor: 'transparent',
+//                    strokeColor: 'red',
+//                    editable: true,
+//                    draggable: true
+//                });
+//                centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
+//
+//                google.maps.event.addListener(circle, "radius_changed", function() {
+//                    $.each(centerArray, function(index, value) {
+//                        if (circle.id == (index + 1)) {
+//                            centerArray[index].radius = circle.getRadius();
+//                        }
+//                    });
+//                });
+//                google.maps.event.addListener(circle, "center_changed", function() {
+//                    $.each(centerArray, function(index, value) {
+//                        if (circle.id == (index + 1)) {
+//                            centerArray[index].cLat = circle.getCenter().lat();
+//                            centerArray[index].cLong = circle.getCenter().lng();
+//                            console.log(centerArray);
+//                        }
+//                    });
+//                });
+//            } else if ($scope.shape == "rectangle") {
+//                $scope.rectangleID++;
+//                rectangle = new google.maps.Rectangle({
+//                    id: $scope.rectangleID,
+//                    strokeColor: '#FF0000',
+//                    strokeWeight: 2,
+//                    fillColor: 'transparent',
+//                    map: map,
+//                    editable: true,
+//                    draggable: true,
+//                    center: new google.maps.LatLng(latitude, longtitude),
+//                    bounds: new google.maps.LatLngBounds(
+//                        new google.maps.LatLng(latitude, longtitude),
+//                        new google.maps.LatLng(latitude + 0.001, longtitude + 0.001),
+//                    )
+//                });
+//                rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
+//
+//                google.maps.event.addListener(rectangle, "bounds_changed", function() {
+//                    var bounds = rectangle.getBounds();
+//                    var ne = bounds.getNorthEast();
+//                    var sw = bounds.getSouthWest();
+//                    $.each(rectArray, function(index, value) {
+//                        if (rectangle.id == (index + 1)) {
+//                            rectArray[index].neLat = ne.lat();
+//                            rectArray[index].neLng = ne.lng();
+//                            rectArray[index].swLat = sw.lat();
+//                            rectArray[index].swLng = sw.lng();
+//                        }
+//                    });
+//                });
+//            }
+//
+//
+//            //                    var marker = new google.maps.Marker({
+//            //                        position: new google.maps.LatLng(latitude, longtitude),
+//            //                        title: 'Marker',
+//            //                        map: map,
+//            //                        draggable: true
+//            //                    });
+//            //
+//            //                    var geocoder = new google.maps.Geocoder();
+//            //                    geocoder.geocode({'address': 'Kuching, MY'}, function(results, status) {
+//            //                        if (status == google.maps.GeocoderStatus.OK) {
+//            //                            alert("Location: " + results[0].geometry.location.lat() + " " + results[0].geometry.location.lng() + " " + results[0].formatted_address);
+//            //                        } else {
+//            //                            alert("Something got wrong " + status);
+//            //                        }
+//            //                    });
+//        });
+//
+//        $window.setTimeout(function() {
+//            map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+//            map.setZoom(13);
+//        }, 1000);
+//        }else{
+//            $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");     
+//                var $googleMap = document.getElementById('googleMap');
+//
+//                var visualizeMap = {
+//                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+//                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                    mapTypeControl: false,
+//                    panControl: false,
+//                    zoomControl: false,
+//                    streetViewControl: false,
+//                    disableDefaultUI: true,
+//                    editable: false,
+//                    zoom: 13
+//                };
+//                map = new google.maps.Map($googleMap, visualizeMap);
+//        }         
+//    });
 
     $scope.addReport = function() {
         $scope.showSubmitBtn = false;
@@ -348,7 +350,6 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             if ($scope.report.ton == "" || $scope.report.ton == null) {
                 $scope.report.ton = 0;
             }
-            
             $http.post('/addReport', $scope.report).then(function(response) {
                 var returnedData = response.data;
                 var newReportID = returnedData.details.reportID;
@@ -522,42 +523,61 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         }
     }
 
+    $scope.colID = "none";
+    
+    $scope.selectIfleet = function(){
+        $scope.colID = "ifleetcol";
+    }
+
+    $scope.selectMap = function(){
+        $scope.colID = "mapcol";
+    }
+    
     window.addEventListener("paste", function(e) {
+        
+        if($scope.colID == "none"){
+            $scope.notify("warn", "Please Select one of the column you want to paste");
+        }else{
 
-        // Handle the event
-        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
-            // If there's an image, display it in the canvas
-            if (imageBlob) {
-                var canvas = document.getElementById("mycanvas");
-                var ctx = canvas.getContext('2d');
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById($scope.colID);
+                    var ctx = canvas.getContext('2d');
 
-                // Create an image to render the blob on the canvas
-                var img = new Image();
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
 
-                // Once the image loads, render the img on the canvas
-                img.onload = function() {
-                    // Update dimensions of the canvas with the dimensions of the image
-                    canvas.width = this.width;
-                    canvas.height = this.height;
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
 
-                    // Draw the image
-                    ctx.drawImage(img, 0, 0);
-                };
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
 
-                // Crossbrowser support for URL
-                var URLObj = window.URL || window.webkitURL;
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
 
-                // Creates a DOMString containing a URL representing the object given in the parameter
-                // namely the original Blob
-                img.src = URLObj.createObjectURL(imageBlob);
-                var reader = new FileReader();
-                reader.readAsDataURL(imageBlob);
-                reader.onloadend = function() {
-                    var base64data = reader.result;
-                    $scope.report.ifleetImg = base64data;
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        if($scope.colID == "ifleetcol"){
+                            $scope.report.ifleetImg = base64data;
+                        }else if($scope.colID == "mapcol"){
+                            $scope.report.digitalMapImg = base64data;
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
     }, false);
 
 });
@@ -642,7 +662,7 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         $scope.filterReportList = angular.copy($scope.reportList);
 
         $scope.searchReport = function(report) {
-            return (report.area + report.date + report.truck + report.remark).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+            return (report.area + report.date + report.truck + report.remark + report.staffName).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
         }
 
         $scope.totalItems = $scope.filterReportList.length;
@@ -695,37 +715,37 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     //$scope.acr = "";
     var map;
 
-    function GMapCircle(lat, lng, circleArr, detail = 8) {
-        var uri = 'https://maps.googleapis.com/maps/api/staticmap?';
-        var staticMapSrc = 'center=' + lat + ',' + lng;
-        staticMapSrc += '&size=650x650';
-        staticMapSrc += '&path=color:0xFF0000FF|weight:1|';
-        var r = 6371;
-        var pi = Math.PI;
-
-        $.each(circleArr, function(index, value) {
-            var _lat = (value.lat * pi) / 180;
-            var _lng = (value.lng * pi) / 180;
-            var d = (value.radius / 1000) / r;
-            var i = 0;
-
-            for (i = 0; i <= 360; i += detail) {
-                var brng = i * pi / 180;
-                var pLat = Math.asin(Math.sin(_lat) * Math.cos(d) + Math.cos(_lat) * Math.sin(d) * Math.cos(brng));
-                var pLng = ((_lng + Math.atan2(Math.sin(brng) * Math.sin(d) * Math.cos(_lat), Math.cos(d) - Math.sin(_lat) * Math.sin(pLat))) * 180) / pi;
-                pLat = (pLat * 180) / pi;
-                if (staticMapSrc.slice(-32) == "&path=color:0xFF0000FF|weight:1|") {
-                    staticMapSrc += pLat + "," + pLng;
-                } else {
-                    staticMapSrc += "|" + pLat + "," + pLng;
-                }
-            }
-            if (index != circleArr.length) {
-                staticMapSrc += "&path=color:0xFF0000FF|weight:1|";
-            }
-        });
-        return uri + encodeURI(staticMapSrc) + '&key=<APIKEY>';
-    }
+//    function GMapCircle(lat, lng, circleArr, detail = 8) {
+//        var uri = 'https://maps.googleapis.com/maps/api/staticmap?';
+//        var staticMapSrc = 'center=' + lat + ',' + lng;
+//        staticMapSrc += '&size=650x650';
+//        staticMapSrc += '&path=color:0xFF0000FF|weight:1|';
+//        var r = 6371;
+//        var pi = Math.PI;
+//
+//        $.each(circleArr, function(index, value) {
+//            var _lat = (value.lat * pi) / 180;
+//            var _lng = (value.lng * pi) / 180;
+//            var d = (value.radius / 1000) / r;
+//            var i = 0;
+//
+//            for (i = 0; i <= 360; i += detail) {
+//                var brng = i * pi / 180;
+//                var pLat = Math.asin(Math.sin(_lat) * Math.cos(d) + Math.cos(_lat) * Math.sin(d) * Math.cos(brng));
+//                var pLng = ((_lng + Math.atan2(Math.sin(brng) * Math.sin(d) * Math.cos(_lat), Math.cos(d) - Math.sin(_lat) * Math.sin(pLat))) * 180) / pi;
+//                pLat = (pLat * 180) / pi;
+//                if (staticMapSrc.slice(-32) == "&path=color:0xFF0000FF|weight:1|") {
+//                    staticMapSrc += pLat + "," + pLng;
+//                } else {
+//                    staticMapSrc += "|" + pLat + "," + pLng;
+//                }
+//            }
+//            if (index != circleArr.length) {
+//                staticMapSrc += "&path=color:0xFF0000FF|weight:1|";
+//            }
+//        });
+//        return uri + encodeURI(staticMapSrc) + '&key=<APIKEY>';
+//    }
 
     $scope.report = {
         "reportID": $routeParams.reportCode,
@@ -749,95 +769,95 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
             "reportID": $routeParams.reportCode
         };
 
-        $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
-        if(response.data.length != 0 ){    
-            var sumOfCoLat = 0;
-            var sumOfCoLng = 0;
-            for (var i = 0; i < response.data.length; i++) {
-                sumOfCoLat += response.data[i].lat;
-                sumOfCoLng += response.data[i].lng;
-            }
-            var avgOfCoLat = sumOfCoLat / response.data.length;
-            var avgOfCoLng = sumOfCoLng / response.data.length;
-            var data = response.data;
-            var boundary = [];
-
-            for (var i = 0; i < response.data.length; i++) {
-                boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
-
-            }
-            //            for (var i = 0; i < data.length; i++) {
-            //                if (i === 0) {
-            //                    boundaries.push({"id": data[i].id, "color": data[i].color, "areaID": data[i].areaID, "area": (data[i].zone + data[i].area), "latLngs": [], "coordinate": []});
-            //                } else if (i > 0 && data[i - 1].id !== data[i].id) {
-            //                    boundaries.push({"id": data[i].id, "color": data[i].color, "areaID": data[i].areaID, "area": (data[i].zone + data[i].area), "latLngs": [], "coordinate": []});
-            //                }
-            //            }
-            //
-            //            for (var j = 0; j < data.length; j++) {
-            //
-            //                for (var k = 0; k < boundaries.length; k++) {
-            //                    if (data[j].id === boundaries[k].id) {
-            //                        boundaries[k].coordinate.push(new google.maps.LatLng(data[j].lat, data[j].lng));
-            //                        boundaries[k].latLngs.push({"lat": data[j].lat, "lng": data[j].lng});
-            //                    }
-            //                }
-            //            }        
-            //            
-            //
-
-
-
-
-            var polygonColorCode = "#" + response.data[0].color;
-            var myPolygon = new google.maps.Polygon({
-                paths: boundary,
-                strokeColor: polygonColorCode,
-                strokeWeight: 2,
-                fillColor: polygonColorCode,
-                fillOpacity: 0.45
-            });
-
-
-
-            var $googleMap = document.getElementById('googleMap');
-            var visualizeMap = {
-                center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                mapTypeControl: false,
-                panControl: false,
-                zoomControl: false,
-                streetViewControl: false,
-                disableDefaultUI: true,
-                editable: false
-            };
-
-            map = new google.maps.Map($googleMap, visualizeMap);
-            myPolygon.setMap(map);
-
-            $window.setTimeout(function() {
-                map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
-                map.setZoom(12);
-                }, 1000);
-            
-            }else{
-                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
-                var $googleMap = document.getElementById('googleMap');
-
-                var visualizeMap = {
-                    center: new google.maps.LatLng(1.5503052, 110.3394602),
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    mapTypeControl: false,
-                    panControl: false,
-                    zoomControl: false,
-                    streetViewControl: false,
-                    disableDefaultUI: true,
-                    editable: false,
-                    zoom: 13
-                };
-                map = new google.maps.Map($googleMap, visualizeMap);
-            }               
-        });
+//        $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
+//        if(response.data.length != 0 ){    
+//            var sumOfCoLat = 0;
+//            var sumOfCoLng = 0;
+//            for (var i = 0; i < response.data.length; i++) {
+//                sumOfCoLat += response.data[i].lat;
+//                sumOfCoLng += response.data[i].lng;
+//            }
+//            var avgOfCoLat = sumOfCoLat / response.data.length;
+//            var avgOfCoLng = sumOfCoLng / response.data.length;
+//            var data = response.data;
+//            var boundary = [];
+//
+//            for (var i = 0; i < response.data.length; i++) {
+//                boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+//
+//            }
+//            //            for (var i = 0; i < data.length; i++) {
+//            //                if (i === 0) {
+//            //                    boundaries.push({"id": data[i].id, "color": data[i].color, "areaID": data[i].areaID, "area": (data[i].zone + data[i].area), "latLngs": [], "coordinate": []});
+//            //                } else if (i > 0 && data[i - 1].id !== data[i].id) {
+//            //                    boundaries.push({"id": data[i].id, "color": data[i].color, "areaID": data[i].areaID, "area": (data[i].zone + data[i].area), "latLngs": [], "coordinate": []});
+//            //                }
+//            //            }
+//            //
+//            //            for (var j = 0; j < data.length; j++) {
+//            //
+//            //                for (var k = 0; k < boundaries.length; k++) {
+//            //                    if (data[j].id === boundaries[k].id) {
+//            //                        boundaries[k].coordinate.push(new google.maps.LatLng(data[j].lat, data[j].lng));
+//            //                        boundaries[k].latLngs.push({"lat": data[j].lat, "lng": data[j].lng});
+//            //                    }
+//            //                }
+//            //            }        
+//            //            
+//            //
+//
+//
+//
+//
+//            var polygonColorCode = "#" + response.data[0].color;
+//            var myPolygon = new google.maps.Polygon({
+//                paths: boundary,
+//                strokeColor: polygonColorCode,
+//                strokeWeight: 2,
+//                fillColor: polygonColorCode,
+//                fillOpacity: 0.45
+//            });
+//
+//
+//
+//            var $googleMap = document.getElementById('googleMap');
+//            var visualizeMap = {
+//                center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+//                mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                mapTypeControl: false,
+//                panControl: false,
+//                zoomControl: false,
+//                streetViewControl: false,
+//                disableDefaultUI: true,
+//                editable: false
+//            };
+//
+//            map = new google.maps.Map($googleMap, visualizeMap);
+//            myPolygon.setMap(map);
+//
+//            $window.setTimeout(function() {
+//                map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+//                map.setZoom(12);
+//                }, 1000);
+//            
+//            }else{
+//                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
+//                var $googleMap = document.getElementById('googleMap');
+//
+//                var visualizeMap = {
+//                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+//                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                    mapTypeControl: false,
+//                    panControl: false,
+//                    zoomControl: false,
+//                    streetViewControl: false,
+//                    disableDefaultUI: true,
+//                    editable: false,
+//                    zoom: 13
+//                };
+//                map = new google.maps.Map($googleMap, visualizeMap);
+//            }               
+//        });
 
         $http.post('/getReportBinCenter', $scope.area).then(function(response) {
             $scope.thisReport.bin = response.data;
@@ -855,46 +875,46 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         });
 
 
-        $http.post('/getReportCircle', $scope.report).then(function(response) {
-            var data = response.data;
-            $window.setTimeout(function() {
-                $.each(data, function(index, value) {
-                    var circle = new google.maps.Circle({
-                        map: map,
-                        center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
-                        radius: parseFloat(data[index].radius),
-                        fillColor: 'transparent',
-                        strokeColor: 'red',
-                        editable: false,
-                        draggable: false
-                    });
-                });
-            }, 1000);
-        });
+//        $http.post('/getReportCircle', $scope.report).then(function(response) {
+//            var data = response.data;
+//            $window.setTimeout(function() {
+//                $.each(data, function(index, value) {
+//                    var circle = new google.maps.Circle({
+//                        map: map,
+//                        center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+//                        radius: parseFloat(data[index].radius),
+//                        fillColor: 'transparent',
+//                        strokeColor: 'red',
+//                        editable: false,
+//                        draggable: false
+//                    });
+//                });
+//            }, 1000);
+//        });
 
         //    $window.setTimeout(function() {
         //        var image = GMapCircle($scope.thisReport.lat, $scope.thisReport.lng, $scope.circles);
         //        $('.googleMap').attr("src", image);
         //    }, 1000);
 
-        $http.post('/getReportRect', $scope.report).then(function(response) {
-            var data = response.data;
-            $window.setTimeout(function() {
-                $.each(data, function(index, value) {
-                    var rect = new google.maps.Rectangle({
-                        map: map,
-                        bounds: new google.maps.LatLngBounds(
-                            new google.maps.LatLng(data[index].swLat, data[index].swLng),
-                            new google.maps.LatLng(data[index].neLat, data[index].neLng),
-                        ),
-                        fillColor: 'transparent',
-                        strokeColor: 'red',
-                        editable: false,
-                        draggable: false
-                    });
-                })
-            }, 1000);
-        });
+//        $http.post('/getReportRect', $scope.report).then(function(response) {
+//            var data = response.data;
+//            $window.setTimeout(function() {
+//                $.each(data, function(index, value) {
+//                    var rect = new google.maps.Rectangle({
+//                        map: map,
+//                        bounds: new google.maps.LatLngBounds(
+//                            new google.maps.LatLng(data[index].swLat, data[index].swLng),
+//                            new google.maps.LatLng(data[index].neLat, data[index].neLng),
+//                        ),
+//                        fillColor: 'transparent',
+//                        strokeColor: 'red',
+//                        editable: false,
+//                        draggable: false
+//                    });
+//                })
+//            }, 1000);
+//        });
 
 //        $http.post('/getPeriodForReportACR', $scope.thisReport).then(function(response){
 //            if(response.data != null){
@@ -1033,225 +1053,227 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         
         
 
-        $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
-            if(response.data.length != 0){
-                var sumOfCoLat = 0;
-                var sumOfCoLng = 0;
-                for (var i = 0; i < response.data.length; i++) {
-                    sumOfCoLat += response.data[i].lat;
-                    sumOfCoLng += response.data[i].lng;
-                }
-
-                var avgOfCoLat = sumOfCoLat / response.data.length;
-                var avgOfCoLng = sumOfCoLng / response.data.length;
-                var data = response.data;
-                var boundary = [];
-
-                for (var i = 0; i < response.data.length; i++) {
-                    boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
-
-                }
-
-                var polygonColorCode = "#" + response.data[0].color;
-                var myPolygon = new google.maps.Polygon({
-                    paths: boundary,
-                    strokeColor: polygonColorCode,
-                    strokeWeight: 2,
-                    fillColor: polygonColorCode,
-                    fillOpacity: 0.45
-                });
-
-                var $googleMap = document.getElementById('googleMap');
-                var visualizeMap = {
-                    center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    mapTypeControl: false,
-                    panControl: false,
-                    zoomControl: false,
-                    streetViewControl: false,
-                    disableDefaultUI: true,
-                    editable: false
-                };
-
-                map = new google.maps.Map($googleMap, visualizeMap);
-                myPolygon.setMap(map);
-
-                $window.setTimeout(function() {
-                    map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
-                    map.setZoom(12);
-                }, 1000);
-
-                // OnClick add Marker and get address
-                google.maps.event.addListener(map, "click", function(e) {
-                    var latLng, latitude, longtitude, circle, rectangle;
-
-                    latLng = e.latLng;
-                    latitude = latLng.lat();
-                    longtitude = latLng.lng();
-
-                    if ($scope.shape == "circle") {
-                        $scope.circleID++;
-                        circle = new google.maps.Circle({
-                            id: $scope.circleID,
-                            map: map,
-                            center: new google.maps.LatLng(latitude, longtitude),
-                            radius: 200,
-                            fillColor: 'transparent',
-                            strokeColor: 'red',
-                            editable: true,
-                            draggable: true
-                        });
-                        centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
-
-
-                        google.maps.event.addListener(circle, "radius_changed", function() {
-                            $.each(centerArray, function(index, value) {
-                                if (circle.id == (index + 1)) {
-                                    centerArray[index].radius = circle.getRadius();
-                                }
-                            });
-                        });
-                        google.maps.event.addListener(circle, "center_changed", function() {
-                            $.each(centerArray, function(index, value) {
-                                if (circle.id == (index + 1)) {
-                                    centerArray[index].cLat = circle.getCenter().lat();
-                                    centerArray[index].cLong = circle.getCenter().lng();
-                                }
-                            });
-                        });
-                    } else if ($scope.shape == "rectangle") {
-                        $scope.rectangleID++;
-                        rectangle = new google.maps.Rectangle({
-                            id: $scope.rectangleID,
-                            strokeColor: '#FF0000',
-                            strokeWeight: 2,
-                            fillColor: 'transparent',
-                            map: map,
-                            editable: true,
-                            draggable: true,
-                            center: new google.maps.LatLng(latitude, longtitude),
-                            bounds: new google.maps.LatLngBounds(
-                                new google.maps.LatLng(latitude, longtitude),
-                                new google.maps.LatLng(latitude + 0.001, longtitude + 0.001),
-                            )
-                        });
-                        rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
-
-                        google.maps.event.addListener(rectangle, "bounds_changed", function() {
-                            var bounds = rectangle.getBounds();
-                            var ne = bounds.getNorthEast();
-                            var sw = bounds.getSouthWest();
-                            $.each(rectArray, function(index, value) {
-                                if (rectangle.id == (index + 1)) {
-                                    rectArray[index].neLat = ne.lat();
-                                    rectArray[index].neLng = ne.lng();
-                                    rectArray[index].swLat = sw.lat();
-                                    rectArray[index].swLng = sw.lng();
-                                }
-                            });
-                        });
-                    }
-                });
-
-                $http.post('/getReportCircle', $scope.reportObj).then(function(response) {
-                    var data = response.data;
-                    $window.setTimeout(function() {
-                        $.each(data, function(index, value) {
-                            $scope.circleID++;
-                            var circle = new google.maps.Circle({
-                                id: $scope.circleID,
-                                map: map,
-                                center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
-                                radius: parseFloat(data[index].radius),
-                                fillColor: 'transparent',
-                                strokeColor: 'red',
-                                editable: true,
-                                draggable: true
-                            });
-                            centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
-
-                            google.maps.event.addListener(circle, "radius_changed", function() {
-                                $.each(centerArray, function(index, value) {
-                                    if (circle.id == (index + 1)) {
-                                        centerArray[index].radius = circle.getRadius();
-                                    }
-                                });
-                            });
-                            google.maps.event.addListener(circle, "center_changed", function() {
-                                $.each(centerArray, function(index, value) {
-                                    if (circle.id == (index + 1)) {
-                                        centerArray[index].cLat = circle.getCenter().lat();
-                                        centerArray[index].cLong = circle.getCenter().lng();
-                                    }
-                                });
-                            });
-                        });
-                    }, 1000);
-
-                });
-
-                $http.post('/getReportRect', $scope.reportObj).then(function(response) {
-                    var data = response.data;
-                    $window.setTimeout(function() {
-                        $.each(data, function(index, value) {
-                            $scope.rectangleID++;
-                            var rectangle = new google.maps.Rectangle({
-                                id: $scope.rectangleID,
-                                map: map,
-                                center: new google.maps.LatLng(data[index].lat, data[index].lng),
-                                bounds: new google.maps.LatLngBounds(
-                                    new google.maps.LatLng(data[index].swLat, data[index].swLng),
-                                    new google.maps.LatLng(data[index].neLat, data[index].neLng),
-                                ),
-                                fillColor: 'transparent',
-                                strokeColor: 'red',
-                                strokeWeight: 2,
-                                editable: true,
-                                draggable: true
-                            });
-                            rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
-
-                            google.maps.event.addListener(rectangle, "bounds_changed", function() {
-                                var bounds = rectangle.getBounds();
-                                var ne = bounds.getNorthEast();
-                                var sw = bounds.getSouthWest();
-                                $.each(rectArray, function(index, value) {
-                                    if (rectangle.id == (index + 1)) {
-                                        rectArray[index].neLat = ne.lat();
-                                        rectArray[index].neLng = ne.lng();
-                                        rectArray[index].swLat = sw.lat();
-                                        rectArray[index].swLng = sw.lng();
-                                    }
-                                });
-                            });
-                        })
-                    }, 1000);
-                });
-            }else{
-                $scope.notify("warn", "Certain area has no draw boundary yet!");      
-                var $googleMap = document.getElementById('googleMap');
-
-                var visualizeMap = {
-                    center: new google.maps.LatLng(1.5503052, 110.3394602),
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    mapTypeControl: false,
-                    panControl: false,
-                    zoomControl: false,
-                    streetViewControl: false,
-                    disableDefaultUI: true,
-                    editable: false,
-                    zoom: 13
-                };
-                map = new google.maps.Map($googleMap, visualizeMap);
-            }  
-        });
-        var c = document.getElementById("mycanvas");
+//        $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
+//            if(response.data.length != 0){
+//                var sumOfCoLat = 0;
+//                var sumOfCoLng = 0;
+//                for (var i = 0; i < response.data.length; i++) {
+//                    sumOfCoLat += response.data[i].lat;
+//                    sumOfCoLng += response.data[i].lng;
+//                }
+//
+//                var avgOfCoLat = sumOfCoLat / response.data.length;
+//                var avgOfCoLng = sumOfCoLng / response.data.length;
+//                var data = response.data;
+//                var boundary = [];
+//
+//                for (var i = 0; i < response.data.length; i++) {
+//                    boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
+//
+//                }
+//
+//                var polygonColorCode = "#" + response.data[0].color;
+//                var myPolygon = new google.maps.Polygon({
+//                    paths: boundary,
+//                    strokeColor: polygonColorCode,
+//                    strokeWeight: 2,
+//                    fillColor: polygonColorCode,
+//                    fillOpacity: 0.45
+//                });
+//
+//                var $googleMap = document.getElementById('googleMap');
+//                var visualizeMap = {
+//                    center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
+//                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                    mapTypeControl: false,
+//                    panControl: false,
+//                    zoomControl: false,
+//                    streetViewControl: false,
+//                    disableDefaultUI: true,
+//                    editable: false
+//                };
+//
+//                map = new google.maps.Map($googleMap, visualizeMap);
+//                myPolygon.setMap(map);
+//
+//                $window.setTimeout(function() {
+//                    map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
+//                    map.setZoom(12);
+//                }, 1000);
+//
+//                // OnClick add Marker and get address
+//                google.maps.event.addListener(map, "click", function(e) {
+//                    var latLng, latitude, longtitude, circle, rectangle;
+//
+//                    latLng = e.latLng;
+//                    latitude = latLng.lat();
+//                    longtitude = latLng.lng();
+//
+//                    if ($scope.shape == "circle") {
+//                        $scope.circleID++;
+//                        circle = new google.maps.Circle({
+//                            id: $scope.circleID,
+//                            map: map,
+//                            center: new google.maps.LatLng(latitude, longtitude),
+//                            radius: 200,
+//                            fillColor: 'transparent',
+//                            strokeColor: 'red',
+//                            editable: true,
+//                            draggable: true
+//                        });
+//                        centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
+//
+//
+//                        google.maps.event.addListener(circle, "radius_changed", function() {
+//                            $.each(centerArray, function(index, value) {
+//                                if (circle.id == (index + 1)) {
+//                                    centerArray[index].radius = circle.getRadius();
+//                                }
+//                            });
+//                        });
+//                        google.maps.event.addListener(circle, "center_changed", function() {
+//                            $.each(centerArray, function(index, value) {
+//                                if (circle.id == (index + 1)) {
+//                                    centerArray[index].cLat = circle.getCenter().lat();
+//                                    centerArray[index].cLong = circle.getCenter().lng();
+//                                }
+//                            });
+//                        });
+//                    } else if ($scope.shape == "rectangle") {
+//                        $scope.rectangleID++;
+//                        rectangle = new google.maps.Rectangle({
+//                            id: $scope.rectangleID,
+//                            strokeColor: '#FF0000',
+//                            strokeWeight: 2,
+//                            fillColor: 'transparent',
+//                            map: map,
+//                            editable: true,
+//                            draggable: true,
+//                            center: new google.maps.LatLng(latitude, longtitude),
+//                            bounds: new google.maps.LatLngBounds(
+//                                new google.maps.LatLng(latitude, longtitude),
+//                                new google.maps.LatLng(latitude + 0.001, longtitude + 0.001),
+//                            )
+//                        });
+//                        rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
+//
+//                        google.maps.event.addListener(rectangle, "bounds_changed", function() {
+//                            var bounds = rectangle.getBounds();
+//                            var ne = bounds.getNorthEast();
+//                            var sw = bounds.getSouthWest();
+//                            $.each(rectArray, function(index, value) {
+//                                if (rectangle.id == (index + 1)) {
+//                                    rectArray[index].neLat = ne.lat();
+//                                    rectArray[index].neLng = ne.lng();
+//                                    rectArray[index].swLat = sw.lat();
+//                                    rectArray[index].swLng = sw.lng();
+//                                }
+//                            });
+//                        });
+//                    }
+//                });
+//
+//                $http.post('/getReportCircle', $scope.reportObj).then(function(response) {
+//                    var data = response.data;
+//                    $window.setTimeout(function() {
+//                        $.each(data, function(index, value) {
+//                            $scope.circleID++;
+//                            var circle = new google.maps.Circle({
+//                                id: $scope.circleID,
+//                                map: map,
+//                                center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
+//                                radius: parseFloat(data[index].radius),
+//                                fillColor: 'transparent',
+//                                strokeColor: 'red',
+//                                editable: true,
+//                                draggable: true
+//                            });
+//                            centerArray.push({ "cLat": circle.getCenter().lat(), "cLong": circle.getCenter().lng(), "radius": circle.getRadius() });
+//
+//                            google.maps.event.addListener(circle, "radius_changed", function() {
+//                                $.each(centerArray, function(index, value) {
+//                                    if (circle.id == (index + 1)) {
+//                                        centerArray[index].radius = circle.getRadius();
+//                                    }
+//                                });
+//                            });
+//                            google.maps.event.addListener(circle, "center_changed", function() {
+//                                $.each(centerArray, function(index, value) {
+//                                    if (circle.id == (index + 1)) {
+//                                        centerArray[index].cLat = circle.getCenter().lat();
+//                                        centerArray[index].cLong = circle.getCenter().lng();
+//                                    }
+//                                });
+//                            });
+//                        });
+//                    }, 1000);
+//
+//                });
+//
+//                $http.post('/getReportRect', $scope.reportObj).then(function(response) {
+//                    var data = response.data;
+//                    $window.setTimeout(function() {
+//                        $.each(data, function(index, value) {
+//                            $scope.rectangleID++;
+//                            var rectangle = new google.maps.Rectangle({
+//                                id: $scope.rectangleID,
+//                                map: map,
+//                                center: new google.maps.LatLng(data[index].lat, data[index].lng),
+//                                bounds: new google.maps.LatLngBounds(
+//                                    new google.maps.LatLng(data[index].swLat, data[index].swLng),
+//                                    new google.maps.LatLng(data[index].neLat, data[index].neLng),
+//                                ),
+//                                fillColor: 'transparent',
+//                                strokeColor: 'red',
+//                                strokeWeight: 2,
+//                                editable: true,
+//                                draggable: true
+//                            });
+//                            rectArray.push({ "neLat": rectangle.getBounds().getNorthEast().lat(), "neLng": rectangle.getBounds().getNorthEast().lng(), "swLat": rectangle.getBounds().getSouthWest().lat(), "swLng": rectangle.getBounds().getSouthWest().lng() });
+//
+//                            google.maps.event.addListener(rectangle, "bounds_changed", function() {
+//                                var bounds = rectangle.getBounds();
+//                                var ne = bounds.getNorthEast();
+//                                var sw = bounds.getSouthWest();
+//                                $.each(rectArray, function(index, value) {
+//                                    if (rectangle.id == (index + 1)) {
+//                                        rectArray[index].neLat = ne.lat();
+//                                        rectArray[index].neLng = ne.lng();
+//                                        rectArray[index].swLat = sw.lat();
+//                                        rectArray[index].swLng = sw.lng();
+//                                    }
+//                                });
+//                            });
+//                        })
+//                    }, 1000);
+//                });
+//            }else{
+//                $scope.notify("warn", "Certain area has no draw boundary yet!");      
+//                var $googleMap = document.getElementById('googleMap');
+//
+//                var visualizeMap = {
+//                    center: new google.maps.LatLng(1.5503052, 110.3394602),
+//                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                    mapTypeControl: false,
+//                    panControl: false,
+//                    zoomControl: false,
+//                    streetViewControl: false,
+//                    disableDefaultUI: true,
+//                    editable: false,
+//                    zoom: 13
+//                };
+//                map = new google.maps.Map($googleMap, visualizeMap);
+//            }  
+//        });
+        
+        
+        var c = document.getElementById("ifleetcol");
         var ctx = c.getContext("2d");
-        var image = new Image();
-        image.onload = function() {
+        var ifleetImgShow = new Image();
+        ifleetImgShow.onload = function() {
 //            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
             // step 1
-            const oc = document.getElementById('mycanvas');
+            const oc = document.getElementById('ifleetcol');
             const octx = oc.getContext('2d');
             oc.width = this.width;
             oc.height = this.height;
@@ -1265,7 +1287,29 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, c.width, c.height);
             
         };
-        image.src = $scope.editField.ifleet;
+        ifleetImgShow.src = $scope.editField.ifleet;
+        
+        var d = document.getElementById("mapcol");
+        var dtx = d.getContext("2d");
+        var digitalMapShow = new Image();
+        digitalMapShow.onload = function() {
+//            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
+            // step 1
+            const od = document.getElementById('mapcol');
+            const odtx = od.getContext('2d');
+            od.width = this.width;
+            od.height = this.height;
+
+            // steo 2: pre-filter image using steps as radius
+            const stepsd = (od.width / d.width)>>1;
+            odtx.filter = `blur(${stepsd}px)`;
+            odtx.drawImage(this, 0, 0);
+
+            // step 3, draw scaled
+            dtx.drawImage(od, 0, 0, od.width, od.height, 0, 0, d.width, d.height);
+            
+        };
+        digitalMapShow.src = $scope.editField.digitalMap;        
     });
 
     $http.get('/getTruckList').then(function(response) {
@@ -1347,43 +1391,62 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         }
     }
 
+    $scope.colID = "none";
+
+    $scope.selectIfleet = function(){
+        console.log("aaa");
+        $scope.colID = "ifleetcol";
+    }
+
+    $scope.selectMap = function(){
+        console.log("bbb");
+        $scope.colID = "mapcol";
+    }     
+
+ 
     window.addEventListener("paste", function(e) {
+        if($scope.colID == "none"){
+            $scope.notify("warn", "Please Select one of the column you want to paste");
+        }else{   
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById($scope.colID);
+                    var ctx = canvas.getContext('2d');
+                    //                ctx.drawImage($scope.editField.ifleet)
 
-        // Handle the event
-        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
-            // If there's an image, display it in the canvas
-            if (imageBlob) {
-                var canvas = document.getElementById("mycanvas");
-                var ctx = canvas.getContext('2d');
-                //                ctx.drawImage($scope.editField.ifleet)
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
 
-                // Create an image to render the blob on the canvas
-                var img = new Image();
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
 
-                // Once the image loads, render the img on the canvas
-                img.onload = function() {
-                    // Update dimensions of the canvas with the dimensions of the image
-                    canvas.width = this.width;
-                    canvas.height = this.height;
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
 
-                    // Draw the image
-                    ctx.drawImage(img, 0, 0);
-                };
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
 
-                // Crossbrowser support for URL
-                var URLObj = window.URL || window.webkitURL;
-
-                // Creates a DOMString containing a URL representing the object given in the parameter
-                // namely the original Blob
-                img.src = URLObj.createObjectURL(imageBlob);
-                img.src = URLObj.createObjectURL(imageBlob);
-                var reader = new FileReader();
-                reader.readAsDataURL(imageBlob);
-                reader.onloadend = function() {
-                    var base64data = reader.result;
-                    $scope.editField.ifleet = base64data;
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        if($scope.colID == "ifleetcol"){
+                            $scope.editField.ifleet = base64data;
+                        }else if($scope.colID == "mapcol"){
+                            $scope.editField.digitalMap = base64data;
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
     }, false);
 });
