@@ -93,7 +93,7 @@ app.post('/getReportForComplaint', function (req, res) {
         if (err) {
             throw err;
         }else{
-            database.query("SELECT tblstaff.staffName FROM tblstaff JOIN tblarea ON tblstaff.staffID = tblarea.staffID WHERE tblarea.areaID = '" + result[0].area + "' ", function(err2, area){
+            database.query("SELECT tblstaff.staffName FROM tblstaff JOIN tblreport ON tblstaff.staffID = tblreport.staffID WHERE tblreport.reportID = '" + req.body.reportID + "' ", function(err2, area){
                 if(err){
                     throw err;
                 }else{

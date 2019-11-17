@@ -2339,9 +2339,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         });
         storeDataService.show = angular.copy($scope.show);
     });
-    socket.emit('authorize request', {
-        "action": "create user"
-    });
+    socket.emit('authorize request');
     socket.emit('satisfaction form');
 
     socket.emit('enquiry');
@@ -2453,7 +2451,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
         $scope.day = "fri";
     } else if (getday == 6) {
         $scope.day = "sat";
-    } else if (getday == 7) {
+    } else if (getday == 0) {
         $scope.day = "sun";
     }
 
@@ -3062,83 +3060,18 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                 $scope.notify(data.status, data.message);
 
                 if (data.status === "success") {
-                    //                    $scope.areaList.push({
-                    //                        "code": $scope.area.zone.code + $scope.area.code,
-                    //                        "name": $scope.area.name,
-                    //                        "status": 'ACTIVE',
-                    //                        "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
-                    //                        "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
-                    //                    });
-                    //                    $scope.filterAreaList = angular.copy($scope.areaList);
+                    socket.emit('authorize request');
                     angular.element('#createArea').modal('toggle');
-                    //                    $scope.totalItems = $scope.filterAreaList.length;
                 }
                 $scope.showCreateBtn = true;
             });
         }
-
-        //
-        //        $http.post('/addArea', $scope.area).then(function(response) {
-        //            var data = response.data;
-        //            var newAreaID;
-        //
-        //            $scope.notify(data.status, data.message);
-        //            
-        //            if (data.status === "success") {
-        //                newAreaID = data.details.areaID;
-        //                $scope.newArea.areaCode = newAreaID;
-        //                $scope.areaList.push({
-        //                    "id": newAreaID,
-        //                    "name": $scope.area.name,
-        //                    "status": 'ACTIVE',
-        //                    "zoneName": $scope.area.zone.code + ' - ' + $scope.area.zone.name,
-        //                    "staffName": $scope.area.staff.id + ' - ' + $scope.area.staff.name
-        //                });
-        //                $scope.area.id = newAreaID;
-        //                $scope.area.zoneName = $scope.area.zone.code + ' - ' + $scope.area.zone.name;
-        //                $scope.area.staffName = $scope.area.staff.id + ' - ' + $scope.area.staff.name;
-        //                socket.emit('create new area', $scope.area);
-        //                $scope.filterAreaList = angular.copy($scope.areaList);
-        //                angular.element('#createArea').modal('toggle');
-        //                $scope.totalItems = $scope.filterAreaList.length;
-        //            
-        //                var $googleMap, visualizeMap, map, lat = 0,
-        //                    lng = 0,
-        //                    myPlace, address;
-        //
-        //                $http.post('/getGoogleLocation', $scope.newArea).then(function(response) {
-        //                    address = $scope.geocodeLink(response.data[0]);
-        //
-        //                    $http.get(address).then(function(response) {
-        //                        if(response.data.status == "ZERO_RESULTS"){
-        //                            angular.element('body').overhang({
-        //                                type: "error",
-        //                                message: "Cant obtain area's Longitude and Latitude."
-        //                            });
-        //                            
-        //                        }else{
-        //                        // JSON data returned by API above
-        //                            var myPlace = response.data;
-        //
-        //                            $scope.newArea.lng = myPlace.results[0].geometry.location.lng;
-        //                            $scope.newArea.lat = myPlace.results[0].geometry.location.lat;
-        //                            $http.post('/updateAreaLngLat', $scope.newArea).then(function(response) {
-        //                                angular.element('body').overhang({
-        //                                    type: response.data.type,
-        //                                    message: response.data.msg
-        //                                });                                
-        //                            });
-        //                        }
-        //
-        //                    });
-        //                });
-        //            }
-        //        });
     }
 
     socket.on('append area list', function (data) {
         $scope.areaList.push({
             "id": data.id,
+            "code": (data.zoneCode + data.code),
             "name": data.name,
             "zoneName": data.zoneName,
             "staffName": data.staffName,
@@ -3428,9 +3361,7 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
                 var data = response.data;
 
                 if (data.status === "success") {
-                    socket.emit('authorize request', {
-                        "action": "create user"
-                    });
+                    socket.emit('authorize request');
                     var rowId = 1;
                 }
 
@@ -3647,22 +3578,9 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    //                    $scope.truckList.push({
-                    //                        "id": newTruckID,
-                    //                        "no": $scope.truck.no,
-                    //                        "transporter": $scope.truck.transporter,
-                    //                        "ton": $scope.truck.ton,
-                    //                        "roadtax": $scope.truck.roadtax,
-                    //                        "status": 'Active'
-                    //                    });
-                    //                    $scope.truck.id = newTruckID;
-                    //                    socket.emit('create new truck', $scope.truck);
-                    //                    storeDataService.truck = angular.copy($scope.truckList);
-                    //                    $scope.filterTruckList = angular.copy($scope.truckList);
-                    //                    $scope.totalItems = $scope.filterTruckList.length;
+                    socket.emit('authorize request');
                     angular.element('#createTruck').modal('toggle');
                     $scope.initializeTruck();
-
                 }
                 $scope.showCreateBtn = true;
             });
@@ -3671,6 +3589,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
     };
 
     socket.on('append truck list', function (data) {
+        data.roadtax = $filter('date')(data.roadtax, 'yyyy-MM-dd');
         $scope.truckList.push({
             "id": data.id,
             "no": data.no,
@@ -3770,21 +3689,10 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
             $scope.zone.iam = window.sessionStorage.getItem('owner');
             $http.post('/addZone', $scope.zone).then(function (response) {
                 var data = response.data;
-                //var newZoneID = data.details.zoneID;
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    //                    $scope.zoneList.push({
-                    //                        "id": newZoneID,
-                    //                        "code": $scope.zone.code,
-                    //                        "name": $scope.zone.name,
-                    //                        "status": 'ACTIVE'
-                    //                    });
-                    //                    $scope.zone.id = newZoneID;
-                    //                    socket.emit('create new zone', $scope.zone);
-                    //                    $scope.filterZoneList = angular.copy($scope.zoneList);
-                    //                    storeDataService.zone = angular.copy($scope.zoneList);
-                    //                    $scope.totalItems = $scope.filterZoneList.length;
+                    socket.emit('authorize request');
                     angular.element('#createZone').modal('toggle');
                     $scope.initializeZone();
                     $scope.showCreateBtn = true;
@@ -3798,6 +3706,7 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
     socket.on('append zone list', function (data) {
         $scope.zoneList.push({
             "id": data.id,
+            "code": data.code,
             "name": data.name,
             "status": data.status
         });
@@ -4529,20 +4438,8 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    //                    $scope.binList.push({
-                    //                        "id": newBinID,
-                    //                        "name": $scope.bin.name,
-                    //                        "location": $scope.bin.location,
-                    //                        "area": $scope.bin.area,
-                    //                        "areaCode": $scope.bin.areaCode,
-                    //                        "status": 'ACTIVE'
-                    //                    });
-                    //$scope.bin.id = newBinID;
-                    //socket.emit('create new bin', $scope.bin);
-                    //storeDataService.bin = angular.copy($scope.binList);
-                    //$scope.filterBinList = angular.copy($scope.binList);
+                    socket.emit('authorize request');
                     angular.element('#createBin').modal('toggle');
-                    //$scope.totalItems = $scope.filterBinList.length;
                 }
                 $scope.showCreateBtn = true;
             });
@@ -7986,6 +7883,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.bdafID.id = $routeParams.bdafID;
     $scope.driverList = [];
     $scope.generalWorkerList = [];
+    $scope.bdaf.generalWorker = [];
     $scope.status = ''; //FOR AUTHORIZATION
     $scope.generalWorkers = ''; //Store assigned general worker list
     $scope.driverButton; //reveal driver buttons
@@ -8023,7 +7921,11 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.assignDriver = function (driver) {
         $scope.driverButton = false;
 
-        $scope.bdaf.driver = driver.staffName;
+        $scope.bdaf.driver = driver.staffName
+        $scope.bdaf[0].driverID = driver.staffID;
+        $http.post('/assignDriver', $scope.bdaf[0]).then(function (response) {
+
+        });
     }
     $scope.clearDriver = function () {
         $scope.driverButton = true;
@@ -8055,6 +7957,12 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             $scope.generalWorkers = $scope.generalWorkers.concat(", ", generalWorker.staffName);
         }
 
+        $scope.bdaf[0].staffID = generalWorker.staffID;
+        $http.post('/assignGeneralWorker', $scope.bdaf[0]).then(function (response) {
+
+        });
+        
+
     }
     $scope.clearGeneralWorker = function () {
         $scope.generalWorkerButton = true;
@@ -8062,6 +7970,9 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         $scope.bdaf.generalWorker = [];
         $scope.generalWorkers = '';
 
+        $http.post('/clearGeneralWorker', $scope.bdaf[0]).then(function (response) {
+
+        });
 
         getGeneralWorkers();
     }
@@ -8123,8 +8034,8 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         $http.post('/getBdafInfo', $scope.bdafID).then(function (response) {
 
             $scope.bdaf = response.data;
-            console.log($scope.bdaf);
 
+            console.log($scope.bdaf);
             if ($scope.bdaf[0].status == 'A') {
                 $scope.status = 'ACTIVE';
             } else if ($scope.bdaf[0].status == 'I') {
@@ -8139,6 +8050,39 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 $scope.status = 'COMPLETE';
                 $scope.show.edit = 'I';
             }
+
+            //get Driver name
+            $http.post('/getStaffName', {
+                "staffID": $scope.bdaf[0].driverID
+            }).then(function (response) {
+                $scope.bdaf.driver = response.data[0].staffName;
+            });
+
+            //get GeneralWorker name
+            var x = 1;
+            console.log($scope.bdaf[0].staffID);
+            var generalWorkers = $scope.bdaf[0].staffID.split(" ");
+            console.log(generalWorkers);
+
+            
+            for(x = 1; x < generalWorkers.length; x++){
+                $http.post('/getStaffName', {
+                    "staffID": generalWorkers[x]
+                }).then(function (response) {
+                    console.log(response.data[0])
+                    var generalWorker = response.data[0].staffName;
+
+                    console.log(generalWorker);
+                    if ($scope.generalWorkers == '') {
+                        $scope.generalWorkers = generalWorker;
+                    } else {
+                        $scope.generalWorkerButton = false;
+                        $scope.generalWorkers = $scope.generalWorkers.concat(", ", generalWorker);
+                    }
+
+                    console.log($scope.generalWorkers);
+                });
+            }
         });
     }
     $scope.getBdafDetails = function () {
@@ -8152,7 +8096,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 console.log($scope.bdafDetailsList[x].status);
                 if ($scope.bdafDetailsList[x].status == 'complete') {
                     $scope.bdafDetailsList[x].completed = true;
-                }else{
+                } else {
                     $scope.bdafDetailsList[x].completed = false;
                 }
             }
@@ -8235,14 +8179,14 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 $http.post('/completeBinRequest', binRequest).then(function (response) {
                     console.log("Bin Request Completed!")
                 });
-            }else{
+            } else {
                 var binRequest = $scope.bdafDetailsList[x]
                 $http.post('/uncompleteBinRequest', binRequest).then(function (response) {
                     console.log("Bin Request Uncompleted!")
                 });
             }
         }
-    } 
+    }
 
 
     //AUTHORIZATION MODULE
@@ -8266,11 +8210,11 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         angular.element('#rejectForm').modal('toggle');
     }
-
+ 
     //VERIFIED BY
     $scope.requestVerification = function () {
         sendFormForVerification($routeParams.dcsID, "bdaf");
-        angular.element('#completeConfirmation').modal('toggle');
+        angular.element('#completeConfirmation').modal('toggle');  
         $scope.status = 'PENDING';
     };
 
@@ -8285,7 +8229,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
     //INTIALIZE PAGE
     $scope.getBdafInfo();
-    $scope.getBdafDetails();
+    $scope.getBdafDetails(); 
     getDrivers();
     getGeneralWorkers();
     getBinSize();

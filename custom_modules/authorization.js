@@ -70,15 +70,19 @@ app.post('/approveTask', function (req, res) {
                 } else if (table === "tbltruck") {
                     key = "truck";
                     prefix = "TRK";
+                    emit_key = "create new truck";
                 } else if (table === "tblzone") {
                     key = "zone";
                     prefix = "ZON";
+                    emit_key = "create new zone";
                 } else if (table === "tblarea") {
                     key = "area";
                     prefix = "ARE";
+                    emit_key = "create new area";
                 } else if (table === "tblbincenter") {
                     key = "bincenter";
                     prefix = "BIN";
+                    emit_key = "create new bin";
                 }
                 
                 f.makeID(key, formatted).then(function (ID) {
@@ -89,7 +93,9 @@ app.post('/approveTask', function (req, res) {
                     result[0].query = (result[0].query).replace(oldID, ID);
                     f.insertNewData(result[0].query, req, res);
                     f.log(formatted, content, req.body.approvedBy);
-                    emitter.emit(emit_key);
+                    if (emit_key !== "") {
+                        emitter.emit(emit_key);
+                    }
                 });
             } else {
                 f.log(formatted, content, req.body.approvedBy);

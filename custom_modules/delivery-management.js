@@ -10,10 +10,11 @@ app.post('/addBdaf', function (req, res) {
 
     f.makeID("bdaf", req.body.creationDate).then(function (ID) {
 
-        var sql = "INSERT INTO tblbdaf (bdafID, creationDateTime, driverID, staffID, preparedBy, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.driverID + "' , '" + req.body.staffID + "', '" + req.body.preparedBy + "', 'A')";
+        var sql = "INSERT INTO tblbdaf (bdafID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "', '" + req.body.preparedBy + "', 'A')";
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
-                throw err;
+                throw err; 
             }
 
             res.json({
@@ -109,7 +110,7 @@ app.post('/addBdafEntry', function (req, res) {
 
 app.post('/getBdafInfo', function (req, res) {
     'use strict';
-    //console.log("DCS ID: " + req.body.dcsID);
+    
     var sql = "SELECT * from tblbdaf where bdafID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
         if (err) {
@@ -149,6 +150,60 @@ app.post('/completeBinRequest', function (req, res) {
 app.post('/uncompleteBinRequest', function (req, res) {
     'use strict';
     var sql = "UPDATE tblbinrequest SET status = 'in progress' WHERE reqID = '" + req.body.reqID + "'";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
+
+app.post('/assignDriver', function (req, res) {
+    'use strict';
+    console.log(req.body)
+    var sql = "UPDATE tblbdaf SET driverID = '" + req.body.driverID + "' WHERE bdafID = '" + req.body.bdafID + "'";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+ 
+        res.json(result);
+    });
+}); // Complete
+
+app.post('/assignGeneralWorker', function (req, res) {
+    'use strict';
+    console.log(req.body)
+    var sql = "UPDATE tblbdaf SET staffID = concat(staffID, ' ', '" + req.body.staffID + "') WHERE bdafID = '" + req.body.bdafID + "'";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err; 
+        }
+
+        res.json(result);
+    });
+}); // Complete
+
+app.post('/getStaffName', function (req, res) {
+    'use strict';
+    var sql = "Select staffName from tblstaff where staffID = '" + req.body.staffID + "'";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+}); // Complete
+
+app.post('/clearGeneralWorker', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblbdaf SET staffID = '' where bdafID = '" + req.body.bdafID + "'";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {

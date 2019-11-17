@@ -97,7 +97,7 @@ function makeID(keyword, creationDate) {
         table = "tblhistory";
         property = "historyID";
         header = "HIS";
-        break;
+        break; 
     case "complaint":
         table = "tblcomplaintofficer";
         property = "coID";
@@ -108,6 +108,7 @@ function makeID(keyword, creationDate) {
     }
     
     sql = "SELECT " + property + " FROM " + table + " WHERE creationDateTime LIKE '%" + getDate[0] + "%'";
+    console.log(sql);
     return new Promise(function (resolve, reject) {
         database.query(sql, function (err, result) {
             if (err) {
