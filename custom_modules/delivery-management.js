@@ -10,10 +10,11 @@ app.post('/addBdaf', function (req, res) {
 
     f.makeID("bdaf", req.body.creationDate).then(function (ID) {
 
-        var sql = "INSERT INTO tblbdaf (bdafID, creationDateTime, driverID, staffID, preparedBy, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.driverID + "' , '" + req.body.staffID + "', '" + req.body.preparedBy + "', 'A')";
+        var sql = "INSERT INTO tblbdaf (bdafID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "', '" + req.body.preparedBy + "', 'A')";
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
-                throw err;
+                throw err; 
             }
 
             res.json({
@@ -166,9 +167,9 @@ app.post('/assignDriver', function (req, res) {
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
-            throw err;
+            throw err; 
         }
-
+ 
         res.json(result);
     });
 }); // Complete
@@ -176,11 +177,11 @@ app.post('/assignDriver', function (req, res) {
 app.post('/assignGeneralWorker', function (req, res) {
     'use strict';
     console.log(req.body)
-    var sql = "UPDATE tblbdaf SET staffID = concat(staffID, ' ', '" + req.body.staffID + "' ) WHERE bdafID = '" + req.body.bdafID + "'";
+    var sql = "UPDATE tblbdaf SET staffID = concat(staffID, ' ', '" + req.body.staffID + "') WHERE bdafID = '" + req.body.bdafID + "'";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
-            throw err;
+            throw err; 
         }
 
         res.json(result);

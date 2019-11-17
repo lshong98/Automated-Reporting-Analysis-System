@@ -8163,6 +8163,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
             //get GeneralWorker name
             var x = 1;
+            console.log($scope.bdaf[0].staffID);
             var generalWorkers = $scope.bdaf[0].staffID.split(" ");
             console.log(generalWorkers);
 
@@ -8171,14 +8172,18 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 $http.post('/getStaffName', {
                     "staffID": generalWorkers[x]
                 }).then(function (response) {
+                    console.log(response.data[0])
                     var generalWorker = response.data[0].staffName;
 
+                    console.log(generalWorker);
                     if ($scope.generalWorkers == '') {
                         $scope.generalWorkers = generalWorker;
                     } else {
                         $scope.generalWorkerButton = false;
                         $scope.generalWorkers = $scope.generalWorkers.concat(", ", generalWorker);
                     }
+
+                    console.log($scope.generalWorkers);
                 });
             }
         });
@@ -8308,11 +8313,11 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         angular.element('#rejectForm').modal('toggle');
     }
-
+ 
     //VERIFIED BY
     $scope.requestVerification = function () {
         sendFormForVerification($routeParams.dcsID, "bdaf");
-        angular.element('#completeConfirmation').modal('toggle');
+        angular.element('#completeConfirmation').modal('toggle');  
         $scope.status = 'PENDING';
     };
 
@@ -8327,7 +8332,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
     //INTIALIZE PAGE
     $scope.getBdafInfo();
-    $scope.getBdafDetails();
+    $scope.getBdafDetails(); 
     getDrivers();
     getGeneralWorkers();
     getBinSize();
