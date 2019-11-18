@@ -1445,7 +1445,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
 
     $scope.sendNotifToDevice = function () {
         $scope.data = {
-            'target': $scope.notifTarget,
+            //'target': $scope.notifTarget,
+            'target': "TriAllUsers",
             'title': $scope.notifTitle,
             'message': $scope.notifMessage
         };
@@ -6672,7 +6673,7 @@ app.controller('taskAuthorizationController', function ($scope, $window, $http, 
             });
             $scope.notify(data.status, data.message);
 
-            socket.emit('create new user');
+            //socket.emit('create new user');
         });
         $http.get('/getAllTasks').then(function (response) {
             storeDataService.task = angular.copy(response.data);
@@ -6701,10 +6702,7 @@ app.controller('taskAuthorizationController', function ($scope, $window, $http, 
     $scope.itemsPerPage = 8; //Record number each page
     $scope.maxSize = 10; //Show the number in page
 
-
     $scope.show = angular.copy(storeDataService.show.authorization);
-
-
 
     $scope.orderBy = function (property) {
         $scope.taskList = $filter('orderBy')($scope.taskList, ['' + property + ''], asc);
