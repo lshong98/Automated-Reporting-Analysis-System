@@ -83,23 +83,10 @@ app.post('/updateArea', function (req, res) {
         var sql = "UPDATE tblarea SET areaName = '" + req.body.name + "', areaCode = '" + req.body.code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + req.body.driver + "', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '" + req.body.id + "'";
         
         f.sendForAuthorization(dt, req.body.iam, "update", "Update area", req.body.id, "tblarea", "\"" + sql + "\"");
-        f.logTransaction(dt, req.body.iam, "update", "Request to update area", req.body.id, "tblarea");
+        //f.logTransaction(dt, req.body.iam, "update", "Request to update area", req.body.id, "tblarea");
         f.log(dt, "Request to update area.", req.body.iam);
         res.json({"status": "success", "message": "Request pending.."});
         res.end();
-        
-//        database.query(sql, function (err, result) {
-//            if (err) {
-//                res.json({"status": "error", "message": "Update failed."});
-//                res.end();
-//                throw err;
-//            } else {
-//                f.logTransaction(dt, req.body.iam, "update", "Update Area - " + req.body.id + "", '', req.body.id, "tblarea");
-//                res.json({"status": "success", "message": "Area Information Updated."});
-//                res.end();
-//            }
-//        });
-        
     });
 }); // Complete
 
@@ -151,21 +138,10 @@ app.post('/addCollection', function (req, res) {
         sql = "INSERT INTO tbltaman(areaID, tamanName) VALUE ('" + req.body.area + "', '" + req.body.address + "')";
     
     f.sendForAuthorization(dt, req.body.iam, "add", "Create new area collection", '', "tbltaman", "\"" + sql + "\"");
-    f.logTransaction(dt, req.body.iam, "add", "Request to create new area collection", '', "tbltaman");
+    //f.logTransaction(dt, req.body.iam, "add", "Request to create new area collection", '', "tbltaman");
     f.log(dt, "Request to create new area collection.", req.body.iam);
     res.json({"status": "success", "message": "Request pending.."});
     res.end();
-    
-//    database.query(sql, function (err, result) {
-//        if (err) {
-//            res.end();
-//            throw err;
-//        } else {
-//            f.logTransaction(dt, req.body.iam, "add", "Create New Area Collection - " + req.body.address + "", '', req.body.address, "tbltaman");
-//            res.json({"status": "success", "message": "Taman Added!", "details": {"id": result.insertId}});
-//            res.end();
-//        }
-//    });
 });
 
 // Load Area Collection
