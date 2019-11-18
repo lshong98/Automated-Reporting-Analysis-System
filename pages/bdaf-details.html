@@ -113,7 +113,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Add a BDAF</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit BDAF Entry</h5>
+                <h6>{{editBdafEntry.reqID}}</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -121,23 +122,23 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="txtCompany form-label">Council</label>
-                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="bdafEntry.council" />
+                    <input type="text" class="form-control" id="txtCouncil" data-ng-model="editedBdafEntry.council" />
                 </div>
                 <div class="form-group">
                     <label for="txtAcrBins form-label">ACR Sticker</label>
-                    <input type="text" class="form-control" id="txtAcrSticker" data-ng-model="bdafEntry.acrSticker" />
+                    <input type="text" class="form-control" id="txtAcrSticker" data-ng-model="editedBdafEntry.acrSticker" />
                 </div>
                 <div class="form-group">
                     <label for="txtAreaCode form-label">ACRF No.</label>
-                    <input type="text" class="form-control" id="txtAcrfNo" data-ng-model="bdafEntry.acrID" />
+                    <input type="text" class="form-control" id="txtAcrfNo" data-ng-model="editedBdafEntry.acrID" />
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label">Job Description</label>
-                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="bdafEntry.jobDesc" />
+                    <input type="textArea" class="form-control" id="txtJobDesc" data-ng-model="editedBdafEntry.jobDesc" />
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label">Remarks</label>
-                    <textarea class="form-control" rows="4" data-ng-model="bdafEntry.remarks"></textarea>
+                    <textarea class="form-control" rows="4" id="txtRemarks" data-ng-model="editedBdafEntry.remarks"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label"><b>Bin Delivered No.</b></label>
@@ -170,8 +171,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-ng-click="saveBdafEntry();">Create</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="saveBdafEntry();">Save</button>
             </div>
         </div>
     </div>
@@ -318,9 +319,7 @@
                                 ng-click="assignDriver(d);">{{d.staffName}}</a>
                         </div>
                 </div>
-                <div class="col-md-6">
-                    <h6>Date: {{bdaf[0].creationDateTime | date: "dd-MM-yyyy"}}</h6>
-                </div>
+                
 
             </div>
             <div class="row">
@@ -340,6 +339,9 @@
                                 ng-click="assignGeneralWorker(gw, $index);">{{gw.staffName}}</a>
                         </div>
                 </div>
+                <div class="col-md-6">
+                        <h6>Date: {{bdaf[0].creationDateTime | date: "dd-MM-yyyy"}}</h6>
+                    </div>
             </div>
 
 
@@ -365,7 +367,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-hover table-striped table-clickable">
+                <table class="table table-hover table-striped">
                     <thead>
                         <tr>
                             <th>No.</th>
@@ -439,11 +441,12 @@
                                 <span data-ng-bind="b.binPulled"></span>
                             </td>
                             <td>
-                                    <input type="checkbox" data-ng-model="b.completed" class="form-control checkbox-big"/>
+                                    <input data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'" id="completedCheckbox" type="checkbox" data-ng-model="b.completed" class="form-control checkbox-big"/>
+                                    <span data-ng-hide="b.status != 'Settled' || status == 'CORRECTION REQUIRED' || status == 'ACTIVE'">&#10004;</span>
                             </td>
-                            <td>
+                            <td data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'">
                                 <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                    data-target="#editBdafEntry"><i class="fa fa-pencil-alt"></i></button>
+                                    data-target="#editBdafEntry" data-ng-click="editBdafEntry(b)"><i class="fa fa-pencil-alt"></i></button>
 
                             </td>
 

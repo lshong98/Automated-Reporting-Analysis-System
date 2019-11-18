@@ -61,14 +61,14 @@ app.post('/getBdafDetails', function (req, res) {
 //IF CUSTOMER CANNOT REGISTER
 app.post('/addBdafEntry', function (req, res) {
     'use strict';
-    //console.log("DCS ID: " + req.body.dcsID); 
-    if (req.body.binDelivered == '') {
-        req.body.binDelivered = null;
-    }
+    // //console.log("DCS ID: " + req.body.dcsID); 
+    // if (req.body.binDelivered == '') {
+    //     req.body.binDelivered = null;
+    // }
 
-    if (req.body.binPulled == '') {
-        req.body.binPulled = null;
-    }
+    // if (req.body.binPulled == '') {
+    //     req.body.binPulled = null;
+    // }
     var sql = "INSERT INTO tblbdafentry (bdafID, company, address, council, contactPerson, contactNo, acrSticker, acrID, jobDesc, binSize, unit, remarks, binDelivered, binPulled) VALUE ('" + req.body.bdafID + "' , '" + req.body.company + "', '" + req.body.address + "', '" + req.body.council + "', '" + req.body.contactPerson + "', '" + req.body.contactNo + "', '" + req.body.acrSticker + "', '" + req.body.acrID + "', '" + req.body.jobDesc + "', '" + req.body.binSize + "', '" + req.body.unit + "', '" + req.body.remarks + "')";
     database.query(sql, function (err, result) {
         if (err) {
@@ -78,6 +78,32 @@ app.post('/addBdafEntry', function (req, res) {
         res.json({
             "status": "success",
             "message": "BDAF entry added!",
+            "details": {
+                "bdafID": req.body.bdafID
+            }
+        });
+    });
+}); // Complete
+
+app.post('/updateBdafEntry', function (req, res) {
+    'use strict';
+    //console.log("DCS ID: " + req.body.dcsID); 
+    if (req.body.binDelivered == '') {
+        req.body.binDelivered = null;
+    }
+
+    if (req.body.binPulled == '') {
+        req.body.binPulled = null;
+    }
+    var sql = "UPDATE tblbinrequest SET council = '" + req.body.council + "', acrSticker = '" + req.body.acrSticker + "', acrfNumber = '" + req.body.acrID + "', jobDesc = '" + req.body.jobDesc + "', binSize = '" + req.body.binSize + "', unit = '" + req.body.unit + "', binDelivered = '" + req.body.binDelivered + "', binPulled = '" + req.body.binPulled + "', remarks = '" + req.body.remarks + "' WHERE reqID = '" + req.body.reqID + "'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json({
+            "status": "success",
+            "message": "BDAF entry updated!",
             "details": {
                 "bdafID": req.body.bdafID
             }
@@ -136,7 +162,7 @@ app.post('/assignRequest', function (req, res) {
 
 app.post('/completeBinRequest', function (req, res) {
     'use strict';
-    var sql = "UPDATE tblbinrequest SET status = 'complete' WHERE reqID = '" + req.body.reqID + "'";
+    var sql = "UPDATE tblbinrequest SET status = 'Settled' WHERE reqID = '" + req.body.reqID + "'";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
@@ -149,7 +175,7 @@ app.post('/completeBinRequest', function (req, res) {
 
 app.post('/uncompleteBinRequest', function (req, res) {
     'use strict';
-    var sql = "UPDATE tblbinrequest SET status = 'in progress' WHERE reqID = '" + req.body.reqID + "'";
+    var sql = "UPDATE tblbinrequest SET status = 'In Progress' WHERE reqID = '" + req.body.reqID + "'";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {

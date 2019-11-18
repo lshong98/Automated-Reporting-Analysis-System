@@ -7984,9 +7984,12 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         if ($scope.binDelivered == '') {
             $scope.binDelivered = binDelivered;
+            $scope.editedBdafEntry.binDelivered = binDelivered;
         } else {
-            $scope.binDelivered = $scope.binDelivered.concat(", ", binDelivered);
+            $scope.binDelivered = $scope.binDelivered.concat(" ", binDelivered);
+            $scope.editedBdafEntry.binDelivered = $scope.binDelivered;
         }
+        
 
         $scope.newBinDelivered = '';
         $scope.newBinDeliveredButton = false;
@@ -7996,8 +7999,10 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
         if ($scope.binPulled == '') {
             $scope.binPulled = binPulled;
+            $scope.editBdafEntry.binPulled = binPulled;
         } else {
             $scope.binPulled = $scope.binPulled.concat(", ", binPulled);
+            $scope.editBdafEntry.binPulled = $scope.binPulled;
         }
 
         $scope.newBinPulled = '';
@@ -8040,14 +8045,19 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 $scope.status = 'ACTIVE';
             } else if ($scope.bdaf[0].status == 'I') {
                 $scope.status = 'INACTIVE';
+                document.getElementById("checkbox").disabled = true;
             } else if ($scope.bdaf[0].status == 'R') {
                 $scope.status = 'CORRECTION REQUIRED';
             } else if ($scope.bdaf[0].status == 'P') {
                 $scope.status = 'PENDING';
+                document.getElementById("checkbox").disabled = true;
             } else if ($scope.bdaf[0].status == 'K') {
                 $scope.status = 'CHECKED';
+                document.getElementById("checkbox").disabled = true;
             } else if ($scope.bdaf[0].status == 'C') {
                 $scope.status = 'COMPLETE';
+                document.getElementById("completedCheckbox").disabled = true;
+                console.log("disabled");
                 $scope.show.edit = 'I';
             }
 
@@ -8094,7 +8104,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             var x = 0;
             for (x = 0; x < $scope.bdafDetailsList.length; x++) {
                 console.log($scope.bdafDetailsList[x].status);
-                if ($scope.bdafDetailsList[x].status == 'complete') {
+                if ($scope.bdafDetailsList[x].status == 'Settled') {
                     $scope.bdafDetailsList[x].completed = true;
                 } else {
                     $scope.bdafDetailsList[x].completed = false;
@@ -8159,9 +8169,17 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             }
         });
     }
+    $scope.editBdafEntry = function(request) {
+
+        $scope.editedBdafEntry = request;
+
+        //get binPulled and binDelivered
+
+    }
     $scope.saveBdafEntry = function () {
 
-        $http.post('/updateBdafEntry', $scope.bdafEntry).then(function (response) {
+        console.log($scope.editedBdafEntry);
+        $http.post('/updateBdafEntry', $scope.editedBdafEntry).then(function (response) {
 
             $scope.getBdafDetails();
         });
@@ -8170,7 +8188,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     }
 
     function completeForm() {
-        //set requests that are checked to complete
+        //set requests that are checked to 'Settled'
         var x = 0;
         for (x = 0; x < $scope.bdafDetailsList.length; x++) {
             console.log($scope.bdafDetailsList[x].completed)
@@ -8224,6 +8242,54 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         verifyForm($routeParams.bdafID, "bdaf");
 
         angular.element('#approveVerification').modal('toggle');
+
+        //UPDATE WBD AND WBSI
+        
+
+        var x = 0;
+        for(x = 0; x < $scope.binRequestList.length; x++) {
+            var pulledBins = $scope.binRequestList[x].binPulled.split(" ");
+            var deliveredBins = $scope.binRequestList[x].binDelivered.split(" ");
+            var newPulledBins = [];
+            var reusablePulledBins = [];
+            var newDeliveredBins = [];
+            var reusableDeliveredBins = [];
+
+            //Check if bins are Reusable bins or New bins
+            var y = 0;
+            for(y = 0; y < pulledBins.length; y++) {
+                $http.post('/checkBin', {"bin" : pulledBins[y]}).then(function (response) {
+                    if(response.result = 'new') {
+                        newPulledBins.push(pulledBins[x]);
+                    }else if (response.result = 'reusable') {
+                        reusablePulledBins.push(pulledBins[x]);
+                    }
+                });
+            }
+
+            for(y = 0; y < deliveredBins.length; y++) {
+                $http.post('/checkBin', {"bin" : deliveredBins[y]}).then(function (response) {
+                    if(response.result = 'new') {
+                        newDeliveredBins.push(deliveredBins[x]);
+                    }else if (response.result = 'reusable') {
+                        reusableDeliveredBins.push(deliveredBins[x]);
+                    }
+                });
+            }
+
+            //NEW BINS: CREATE NEW WBD ENTRY AND UPDATE WBSI
+            var z = 0;
+            for(z = 0; z < newDeliveredBins.length; z++) {
+                $http.post('/executeBin', {"bin" : newDeliveredBins[z]}).then(function (response) {
+                    
+                });
+            }
+
+
+
+
+            //REUSABLE BINS: UPDATE WBD AND UPDATE WBSI
+        }
     }
 
 

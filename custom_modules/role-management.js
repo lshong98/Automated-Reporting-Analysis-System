@@ -11,6 +11,8 @@ app.post('/addRole', function (req, res) {
     f.makeID("role", req.body.creationDate).then(function (ID) {
         var sql = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUE ('" + ID + "', '" + req.body.name + "', '" + req.body.creationDate + "', 'A')",
             i = 0;
+
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
