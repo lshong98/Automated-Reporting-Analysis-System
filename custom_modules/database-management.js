@@ -15,7 +15,7 @@ var config = {
     password: DB_PASS,
     host: DB_HOST,
     port: 3307,
-    timezone: 'utc'
+    timezone: 'utc+08:00'
 };
 
 var db; 
