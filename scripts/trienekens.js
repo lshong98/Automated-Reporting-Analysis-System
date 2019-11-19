@@ -3500,6 +3500,8 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
         $.each($scope.truckList, function (index, value) {
             $scope.truckList[index].roadtax = $filter('date')($scope.truckList[index].roadtax, 'yyyy-MM-dd');
         });
+        
+        storeDataService.truck = angular.copy($scope.truckList);
 
         $scope.searchTruck = function (truck) {
             return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
