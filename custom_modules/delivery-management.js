@@ -240,4 +240,150 @@ app.post('/clearGeneralWorker', function (req, res) {
     });
 }); // Complete
 
+
+// EXECUTE AFTER BDAF IS VERIFIED
+app.post('/deliverNewBin', function (req, res) {
+    'use strict';
+
+    var binType;
+
+    if(req.body.binSize.match(/120/g)) {
+        binType = 'inNew120';
+    }else if(req.body.binSize.match(/240/g)) {
+        binType = 'inNew240';
+    }else if(req.body.binSize.match(/660/g)) {
+        binType = 'inNew660';
+    }else if(req.body.binSize.match(/1000/g)) {
+        binType = 'inNew1000';
+    }
+
+    //INSERT INTO WBD
+    var sql = "INSERT INTO tblwheelbindatabase ";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+
+    var sql2 = "UPDATE tblbininventory SET " + binType + " = " + binType + " + 1 WHERE date = '" + req.body.date + "'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+
+}); // Complete
+
+app.post('/pullNewBin', function (req, res) {
+    'use strict';
+
+    var binType;
+
+    if(req.body.binSize.match(/120/g)) {
+        binType = 'outNew120';
+    }else if(req.body.binSize.match(/240/g)) {
+        binType = 'outNew240';
+    }else if(req.body.binSize.match(/660/g)) {
+        binType = 'outNew660';
+    }else if(req.body.binSize.match(/1000/g)) {
+        binType = 'outNew1000';
+    }
+
+    //INSERT INTO WBD
+    var sql = "INSERT INTO tblwheelbindatabase ";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+
+    var sql2 = "UPDATE tblbininventory SET " + binType + " = " + binType + " - 1 WHERE date = '" + req.body.date + "'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+    
+}); // Complete
+
+app.post('/deliverReusableBin', function (req, res) {
+    'use strict';
+
+    var binType;
+
+    if(req.body.binSize.match(/120/g)) {
+        binType = 'inReusable120';
+    }else if(req.body.binSize.match(/240/g)) {
+        binType = 'inReusable240';
+    }else if(req.body.binSize.match(/660/g)) {
+        binType = 'inReusable660';
+    }else if(req.body.binSize.match(/1000/g)) {
+        binType = 'inReusable1000';
+    }
+
+    //INSERT INTO WBD
+    var sql = "INSERT INTO tblwheelbindatabase ";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+
+    var sql2 = "UPDATE tblbininventory SET " + binType + " = " + binType + " + 1 WHERE date = '" + req.body.date + "'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+    
+}); // Complete
+
+app.post('/pullReusableBin', function (req, res) {
+    'use strict';
+
+    var binType;
+
+    if(req.body.binSize.match(/120/g)) {
+        binType = 'outReusable120';
+    }else if(req.body.binSize.match(/240/g)) {
+        binType = 'outReusable240';
+    }else if(req.body.binSize.match(/660/g)) {
+        binType = 'outReusable660';
+    }else if(req.body.binSize.match(/1000/g)) {
+        binType = 'outReusable1000';
+    }
+
+    //INSERT INTO WBD
+    var sql = "INSERT INTO tblwheelbindatabase ";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+
+    var sql2 = "UPDATE tblbininventory SET " + binType + " = " + binType + " - 1 WHERE date = '" + req.body.date + "'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json(result);
+    });
+    
+}); // Complete
+
 module.exports = app;

@@ -8278,15 +8278,29 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
             //NEW BINS: CREATE NEW WBD ENTRY AND UPDATE WBSI
             var z = 0;
             for(z = 0; z < newDeliveredBins.length; z++) {
-                $http.post('/executeBin', {"bin" : newDeliveredBins[z]}).then(function (response) {
+                $http.post('/deliverNewBin', {"bin" : newDeliveredBins[z]}).then(function (response) {
                     
                 });
             }
 
-
-
+            for(z = 0; z < newPulledBins.length; z++) {
+                $http.post('/pullNewBin', {"bin" : newPulledBins[z]}).then(function (response) {
+                    
+                });
+            }
 
             //REUSABLE BINS: UPDATE WBD AND UPDATE WBSI
+            for(z = 0; z < reusableDeliveredBins.length; z++) {
+                $http.post('/deliverReusableBin', {"bin" : reusableDeliveredBins[z]}).then(function (response) {
+                    
+                });
+            }
+
+            for(z = 0; z < reusablePulledBins.length; z++) {
+                $http.post('/pullReusableBin', {"bin" : reusablePulledBins[z]}).then(function (response) {
+                    
+                });
+            }
         }
     }
 
