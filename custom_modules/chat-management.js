@@ -85,7 +85,7 @@ app.post('/sendMessage', function (req, resp) {
     'use strict';
     var data;
     var userID, staffID;
-    process.env.TZ = 'Asia/Kuala_Lumpur';
+    //process.env.TZ = 'Asia/Kuching';
     var date = dateTime.create().format('Y-m-d H:M:S');
     var currentTime = date.substr(11, 18);
     var startTime = "08:30:00";
@@ -108,6 +108,7 @@ app.post('/sendMessage', function (req, resp) {
                 userID = result[0].userID;
                 staffID = result[0].staffID;
                 f.makeID('chat', date).then(function (ID) {
+                    console.log(date);
                     sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + result[0].userID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', '" + date + "', 'A','u')";
                     database.query(sql, function (err, result) {
                         if (err) {
