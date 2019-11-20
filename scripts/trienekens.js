@@ -6948,6 +6948,8 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
 
         $scope.sendMessage = function () {
             $scope.message.content = $scope.mymsg;
+            $scope.message.creationDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+            console.log($scope.message);
             $http.post('/messageSend', $scope.message).then(function (response) {
                 chatContent += '<div class="message right"><div class="message-text">' + $scope.message.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
                 angular.element('.chat-box').html(chatContent);

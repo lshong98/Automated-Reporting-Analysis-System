@@ -26,7 +26,8 @@ app.post('/messageSend', function (req, res) {
     'use strict';
     
     var dt = dateTime.create(),
-        formatted = dt.format('Y-m-d H:M:S'),
+//        formatted = dt.format('Y-m-d H:M:S'),
+        formatted = req.body.creationDateTime,
         sql = "SELECT userID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1",
         topic = "TriComplaintID" + req.body.id;
 
@@ -38,7 +39,7 @@ app.post('/messageSend', function (req, res) {
             },
         topic: topic
     };
-
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
