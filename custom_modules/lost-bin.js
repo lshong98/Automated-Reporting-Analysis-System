@@ -54,11 +54,9 @@ app.post('/getBlostInfo', function (req, res) {
 
 app.post('/getBlostDetails', function (req, res) {
     'use strict';
-    console.log("GET BLOST DETAILS: HELLO FROM THE SERVER");
-    console.log(req.body);
-
+    console.log("GET BLOST DETAILS:");
     
-    var sql = "SELECT b.blostID, c.name as contactPerson, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, c.contactNumber as contactNo, wbd.areaID, db.size, db.serialNo, b.sharedBin, b.areaCode, b.dateOfLoss, b.reason from tblblostentry b INNER JOIN tblcustomer c on c.customerID = b.customerID INNER JOIN tblwheelbindatabase wbd on wbd.customerID = c.customerID INNER JOIN tblbins db on db.serialNo = wbd.serialNo where b.blostID = '" + req.body.id + "'";
+    var sql = "SELECT b.name, b.phoneNo, b.binSize, b.noOfBins, b.collectionArea, b.sharedBin, b.dateOfLoss, b.reason FROM tblblostentry b where b.blostID = '" + req.body.id + "'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     
     console.log(sql);

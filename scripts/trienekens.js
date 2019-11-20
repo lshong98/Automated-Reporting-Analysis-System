@@ -7774,6 +7774,7 @@ app.controller('deliveryController', function ($scope, $http, $filter, storeData
 
             $scope.bdafList = response.data;
 
+            
             console.log("BDAF data received by controller");
             console.log(response.data);
         });
@@ -8562,36 +8563,6 @@ app.controller('lostBinController', function ($scope, $http, $filter, storeDataS
 
 app.controller('blostDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
 
-    $scope.status = '';
-
-    $scope.requestAuthorization = function () {
-        sendFormForAuthorization($routeParams.dcsID, "blost");
-        $scope.status = 'PENDING';
-    };
-
-    $scope.confirm = function (request) {
-        if (request == 'approve') {
-            $scope.approveForm();
-        } else if (request == 'reject') {
-            $scope.rejectForm();
-        }
-    };
-
-    $scope.approveForm = function () {
-        $scope.status = 'APPROVED';
-        approveForm($routeParams.dcsID, "blost");
-
-        angular.element('#approveConfirmation').modal('toggle');
-    }
-
-    $scope.rejectForm = function () {
-        $scope.status = 'CORRECTION REQUIRED';
-        rejectForm($routeParams.dcsID, "blost");
-
-
-        angular.element('#rejectConfirmation').modal('toggle');
-    }
-
 
     $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
@@ -8608,70 +8579,49 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
     $scope.blostID.id = $routeParams.blostID;
     $scope.areaList = [];
     $scope.binList = [];
+    $scope.status = '';
 
-    $scope.test = {
-        "id": "sdfs",
-        "info": "info"
-    }
+    
 
-    //$scope.initializeDcsDetails = function(){
-    $scope.blostDetails = {
-        "dcsID": '',
-        "acrID": '',
-        "areaID": '',
-        "customerID": '',
-        "beBins": '',
-        "acrBins": '',
-        "mon": '',
-        "tue": '',
-        "wed": '',
-        "thu": '',
-        "fri": '',
-        "sat": '',
-        "remarks": ''
-    }
-    //}
+
 
     $http.post('/getBlostInfo', $scope.blostID).then(function (response) {
 
         $scope.blost = response.data;
         console.log($scope.blost);
 
-
-        if ($scope.blost[0].status == 'G') {
-            $scope.status = 'APPROVED';
-        } else if ($scope.blost[0].status == 'P') {
-            $scope.status = 'PENDING';
+        console.log($scope.blost);
+        if ($scope.blost[0].status == 'A') {
+            $scope.status = 'ACTIVE';
+        } else if ($scope.blost[0].status == 'I') {
+            $scope.status = 'INACTIVE';
+            document.getElementById("checkbox").disabled = true;
         } else if ($scope.blost[0].status == 'R') {
             $scope.status = 'CORRECTION REQUIRED';
-        } else if ($scope.blost[0].status == 'A') {
-            $scope.status = 'ACTIVE';
+        } else if ($scope.blost[0].status == 'P') {
+            $scope.status = 'PENDING';
+            document.getElementById("checkbox").disabled = true;
+        } else if ($scope.blost[0].status == 'K') {
+            $scope.status = 'CHECKED';
+            document.getElementById("checkbox").disabled = true;
         } else if ($scope.blost[0].status == 'C') {
             $scope.status = 'COMPLETE';
             $scope.show.edit = 'I';
         }
     });
 
-    $http.post('/getBlostDetails', $scope.blostID).then(function (response) {
+    function getCustomerList() {
+        $http.get('/getCustomerList', $scope.blostID).then(function (response) {
+            $scope.customerList = response.data;
+        });
+    }
+    function getBlostDetails() {
+        $http.post('/getBlostDetails', $scope.blostID).then(function (response) {
 
-        $scope.blostDetailsList = response.data;
-        console.log($scope.blostDetailsList);
-        console.log("Hello blostdetails");
-    });
-
-    $http.get('/getCustomerList', $scope.blostID).then(function (response) {
-        $scope.customerList = response.data;
-    });
-
-    $http.get('/getBinList', $scope.blostID).then(function (response) {
-        $scope.binList = response.data;
-    });
-
-    $http.post('/getAreaList').then(function (response) {
-        $scope.areaList = response.data;
-        console.log($scope.areaList);
-    });
-
+            $scope.blostDetailsList = response.data;
+            console.log($scope.blostDetailsList);
+        });
+    }
     $scope.addBlostEntry = function () {
         $scope.blostEntry.blostID = $routeParams.blostID;
 
@@ -8702,6 +8652,36 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
                 angular.element('#createBlostEntry').modal('toggle');
             }
         });
+    }
+
+
+    // FORM AUTHORIZATIONs
+    $scope.requestAuthorization = function () {
+        sendFormForAuthorization($routeParams.blostID, "blost");
+        $scope.status = 'PENDING';
+    };
+
+    $scope.confirm = function (request) {
+        if (request == 'approve') {
+            $scope.approveForm();
+        } else if (request == 'reject') {
+            $scope.rejectForm();
+        }
+    };
+
+    $scope.approveForm = function () {
+        $scope.status = 'APPROVED';
+        approveForm($routeParams.blostID, "blost");
+
+        angular.element('#approveConfirmation').modal('toggle');
+    }
+
+    $scope.rejectForm = function () {
+        $scope.status = 'CORRECTION REQUIRED';
+        rejectForm($routeParams.dcsID, "blost");
+
+
+        angular.element('#rejectConfirmation').modal('toggle');
     }
 });
 
