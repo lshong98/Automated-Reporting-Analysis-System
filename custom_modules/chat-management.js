@@ -86,8 +86,7 @@ app.post('/sendMessage', function (req, resp) {
     var data;
     var userID, staffID;
     //process.env.TZ = 'Asia/Kuching';
-    var date = dateTime.create().format('Y-m-d H:M:S');
-    var currentTime = date.substr(11, 18);
+    //var date = dateTime.create().format('Y-m-d H:M:S');
     var startTime = "08:30:00";
     var endTime = "17:30:00";
     var today = new Date();
@@ -98,6 +97,9 @@ app.post('/sendMessage', function (req, resp) {
     });
     
     req.addListener('end', function () {
+        console.log(data.date);
+        var date = data.date;
+        var currentTime = date.substr(11, 18);
         var sql = "SELECT tbluser.userID, tblcomplaint.staffID FROM tbluser, tblcomplaint WHERE tbluser.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' AND tbluser.userID = tblcomplaint.userID LIMIT 0, 1";
         database.query(sql, function (err, result) {
             if (err) {
