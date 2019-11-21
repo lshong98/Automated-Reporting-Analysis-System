@@ -365,22 +365,37 @@ app.service('storeDataService', function () {
             "dcsDetails": {
                 "view": 'I',
                 "edit": 'I',
-                "create": 'I'
+                "create": 'I',
+                "checkView": 'I',
+                "verifyView": 'I'
             },
             "bdafDetails": {
                 "view": 'I',
                 "edit": 'I',
-                "create": 'I'
+                "create": 'I',
+                "checkView": 'I',
+                "verifyView": 'I'
             },
             "dbdDetails": {
                 "view": 'I',
                 "edit": 'I',
-                "create": 'I'
+                "create": 'I',
+                "checkView": 'I',
+                "verifyView": 'I'
+            },
+            "dbrDetails": {
+                "view": 'I',
+                "edit": 'I',
+                "create": 'I',
+                "checkView": 'I',
+                "verifyView": 'I'
             },
             "blostDetails": {
                 "view": 'I',
                 "edit": 'I',
-                "create": 'I'
+                "create": 'I',
+                "checkView": 'I',
+                "verifyView": 'I'
             },
             "reporting": {
                 "view": 'I',
@@ -468,6 +483,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
     'use strict';
     return function (scope) {
         scope.showAcr = true;
+        scope.showDbr = true;
         scope.showTruck = true;
         scope.showZone = true;
         scope.showProfile = true;
@@ -491,6 +507,14 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.thisAcr = {
             "areaCode": ''
         };
+        scope.thisDbr = {
+            "areaCode": '',
+            "damageCode": '',
+            "unit": '',
+            "binSize": '',
+            "serialNo": '',
+            "damageReason": ''
+        }
         scope.thisTruck = {
             "id": '',
             "no": '',
@@ -625,6 +649,25 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
 
         };
+
+        scope.editDbr = function(dbr) {
+
+        }
+
+        scope.saveDbr = function(dbr) {
+
+        }
+
+        scope.cancelDbr = function() {
+            scope.showDbr = !scope.showDbr;
+            $.each(storeDataService.dbr, function (index, value) {
+                if (storeDataService.dbr[index].id == scope.dbr.id) {
+                    scope.b = angular.copy(storeDataService.dbr[index]);
+                    return false;
+                }
+            });
+
+        }
 
         scope.editTruck = function (id, no, transporter, ton, tax, status) {
             scope.showTruck = !scope.showTruck;
@@ -3849,22 +3892,37 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "dcsDetails": {
             "view": 'I',
             "edit": 'I',
-            "create": 'I'
+            "create": 'I',
+            "checkView": 'I',
+            "verifyView": 'I'
         },
         "bdafDetails": {
             "view": 'I',
             "edit": 'I',
-            "create": 'I'
+            "create": 'I',
+            "checkView": 'I',
+            "verifyView": 'I'
         },
         "dbdDetails": {
             "view": 'I',
             "edit": 'I',
-            "create": 'I'
+            "create": 'I',
+            "checkView": 'I',
+            "verifyView": 'I'
+        },
+        "dbrDetails": {
+            "view": 'I',
+            "edit": 'I',
+            "create": 'I',
+            "checkView": 'I',
+            "verifyView": 'I'
         },
         "blostDetails": {
             "view": 'I',
             "edit": 'I',
-            "create": 'I'
+            "create": 'I',
+            "checkView": 'I',
+            "verifyView": 'I'
         },
         "reporting": {
             "view": 'I',
@@ -4107,6 +4165,13 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "checkView": 'A',
                             "verifyView": 'A'
                         },
+                        "dbrDetails": {
+                            "view": 'A',
+                            "edit": 'A',
+                            "create": 'A',
+                            "checkView": 'A',
+                            "verifyView": 'A'
+                        },
                         "blostDetails": {
                             "view": 'A',
                             "edit": 'A',
@@ -4246,22 +4311,37 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "dcsDetails": {
                             "view": 'I',
                             "edit": 'I',
-                            "create": 'I'
+                            "create": 'I',
+                            "checkView": 'I',
+                            "verifyView": 'I'
                         },
                         "bdafDetails": {
                             "view": 'I',
                             "edit": 'I',
-                            "create": 'I'
+                            "create": 'I',
+                            "checkView": 'I',
+                            "verifyView": 'I'
                         },
                         "dbdDetails": {
                             "view": 'I',
                             "edit": 'I',
-                            "create": 'I'
+                            "create": 'I',
+                            "checkView": 'I',
+                            "verifyView": 'I'
+                        },
+                        "dbrDetails": {
+                            "view": 'I',
+                            "edit": 'I',
+                            "create": 'I',
+                            "checkView": 'I',
+                            "verifyView": 'I'
                         },
                         "blostDetails": {
                             "view": 'I',
                             "edit": 'I',
-                            "create": 'I'
+                            "create": 'I',
+                            "checkView": 'I',
+                            "verifyView": 'I'
                         },
                         "reporting": {
                             "view": 'I',
@@ -5216,7 +5296,7 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
 
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.pagination.itemsPerPage = 11;
-
+ 
     //$scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.acr);
 
@@ -8508,6 +8588,43 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
 
     getDbdInfo();
     getDbdDetails();
+
+});
+
+app.controller('dbrDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
+
+    $scope.show = angular.copy(storeDataService.show.dbrDetails); 
+    console.log($scope.show);
+    //$scope.authorize = angular.copy(storeDataService.show.formAuthorization);
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemPerPage = 8; //Record number each page
+    $scope.maxSize = 10;
+    $scope.showDbrDetails = true;
+    $scope.dbrDetailsList = [];
+    $scope.dbr = [];
+    $scope.customerList = [];
+    $scope.dbrID = {};
+    $scope.dbrID.id = $routeParams.dbrID;
+
+    function getDbrInfo() {
+        $http.post('/getDbrInfo', $scope.dbrID).then(function (response) {
+
+            $scope.dbr = response.data;
+            console.log($scope.dbr);
+        });
+    }
+    
+    function getDbrDetails() {
+        $http.post('/getDbrDetails', $scope.dbrID).then(function (response) {
+
+            $scope.dbrDetailsList = response.data;
+            console.log($scope.dbrDetailsList);
+        });
+    }
+    
+
+    //getDbrInfo();
+    getDbrDetails();
 
 });
 

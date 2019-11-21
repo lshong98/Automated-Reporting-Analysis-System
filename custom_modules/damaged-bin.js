@@ -16,8 +16,16 @@ app.post('/addDbr', function (req, res) {
                 throw err;
             }
 
+            sql = "INSERT INTO tbldbrentry (id, dbrID) VALUE ('null', '" + ID + "')";
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+            });
+
             res.json({"status": "success", "message": "DBR created!", "details": {"dbrID": ID}});
         });
+
     });
 }); // Complete
 
@@ -72,12 +80,9 @@ app.post('/getAllDbd', function (req, res) {
 
 app.post('/getDbrDetails', function (req, res) {
     'use strict';
-    console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
-    console.log(req.body);
 
-    
-    var sql = "SELECT b.bdafID, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as location, c.name as contactPerson, c.contactNumber as contactNo, b.acrID, b.acrSticker, b.jobDesc, db.size as binSize, b.serialNo, b.remarks, b.binDelivered, b.binPulled, b.completed from tblcustomer as c inner join tblbdafentry as b on b.customerID = c.customerID inner join tblbins as db on b.serialNo = db.serialNo where b.bdafID = '" + req.body.id + "'";
-    //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
+    var sql = "SELECT * FROM tbldbrentry where dbrID = '" + req.body.id + "'";
+
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
