@@ -7032,6 +7032,8 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'img': complaint[0].complaintImg,
             'staffID': complaint[0].staffID
         };
+        
+        console.log($scope.comDetail);
 
         //get report dates for certain area id
         $scope.reportList = [];

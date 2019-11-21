@@ -1569,14 +1569,14 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
 
     'use strict';
     var data, sql;
-    var date = dateTime.create().format('Y-m-d H-M-S');
+    var date = dateTime.create().format('YmdHMS');
 
     data = JSON.parse(req.rawBody);
-    sql = "UPDATE tblcomplaint SET complaintImg ='complaintImg/ComplaintCase_" + data.cID + "_" + date.toString() + ".jpg' WHERE complaintID =" + data.cID + "";
+    sql = "UPDATE tblcomplaint SET complaintImg ='complaintImg/complaintcase_" + data.cID + "_" + date.toString() + ".jpg' WHERE complaintID =" + data.cID + "";
     console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
-    fs.writeFile(__dirname + '/../images/complaintImg/ComplaintCase_' + data.cID + '_' + date.toString() + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
+    fs.writeFile(__dirname + '/../images/complaintImg/complaintcase_' + data.cID + '_' + date.toString() + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
         if (err) {
             console.log(err);
         } else {
