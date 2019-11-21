@@ -4059,7 +4059,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "edit": 'A',
                             "view": 'A',
                             "lgview": 'A',
-                            "bdview": 'A'
+                            "bdview": 'A',
+                            "checkView": 'A',
+                            "verifyView": 'A'
                         },
                         "database": {
                             "create": 'A',
@@ -4087,22 +4089,30 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "dcsDetails": {
                             "view": 'A',
                             "edit": 'A',
-                            "create": 'A'
+                            "create": 'A',
+                            "checkView": 'A',
+                            "verifyView": 'A'
                         },
                         "bdafDetails": {
                             "view": 'A',
                             "edit": 'A',
-                            "create": 'A'
+                            "create": 'A',
+                            "checkView": 'A',
+                            "verifyView": 'A'
                         },
                         "dbdDetails": {
                             "view": 'A',
                             "edit": 'A',
-                            "create": 'A'
+                            "create": 'A',
+                            "checkView": 'A',
+                            "verifyView": 'A'
                         },
                         "blostDetails": {
                             "view": 'A',
                             "edit": 'A',
-                            "create": 'A'
+                            "create": 'A',
+                            "checkView": 'A',
+                            "verifyView": 'A'
                         },
                         "reporting": {
                             "view": 'A',
@@ -4111,11 +4121,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "export": 'A'
                         },
                         "delivery": {
-                            "view": 'A',
-                            "edit": 'A',
-                            "create": 'A'
-                        },
-                        "damagedlost": {
                             "view": 'A',
                             "edit": 'A',
                             "create": 'A'
@@ -5212,7 +5217,7 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.pagination.itemsPerPage = 11;
 
-    $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
+    //$scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.acr);
 
 
@@ -6722,6 +6727,8 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
     $scope.bdafList = [];
     $scope.dcsList = [];
     $scope.dbrList = [];
+    $scope.blostList = [];
+    $scope.dbdList = [];
 
 
 
@@ -6739,6 +6746,8 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
             window.location.href = '#/dcs-details/' + formID;
         } else if (formType == 'BDF') {
             window.location.href = '#/bdaf-details/' + formID;
+        } else if (formType == 'BST') {
+            window.location.href = '#/blost-details/' + formID;
         }
     }
 
@@ -6753,6 +6762,28 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
             //     $scope.formList[i].formType = $scope.formList[i].formID.match(/[a-zA-Z]+/g)[0].toLowerCase();
             // }
         });
+        $http.post('/getAllDcs').then(function (response) {
+            $scope.dcsList = response.data;
+
+            console.log($scope.dcsList);
+        });
+        $http.post('/getAllBlost').then(function (response) {
+            $scope.blostList = response.data;
+
+            console.log($scope.blostList);
+        });
+        $http.post('/getAllDbr').then(function (response) {
+            $scope.dbrList = response.data;
+
+            console.log($scope.dbrList);
+        });
+        $http.post('/getAllDbd').then(function (response) {
+            $scope.dbdList = response.data;
+
+            console.log($scope.dbdList);
+        });
+
+        
     }
 
 
@@ -7875,7 +7906,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
 
     // VARIABLES
-    $scope.authorize = angular.copy(storeDataService.show.formAuthorization); //To reveal authorization controls
+    //$scope.authorize = angular.copy(storeDataService.show.formAuthorization); //To reveal authorization controls
     $scope.show = angular.copy(storeDataService.show.bdafDetails); //To reveal other controls
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
@@ -8332,9 +8363,6 @@ app.controller('damagedBinController', function ($scope, $http, $filter, storeDa
 
     $scope.dbrList = [];
     $scope.dbdList = [];
-    console.log("DAMAGED BIN MANAGEMENT ACTIVATED!!");
-
-
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
@@ -8358,8 +8386,7 @@ app.controller('damagedBinController', function ($scope, $http, $filter, storeDa
     }
 
     function getAllDbd() {
-        $http.post('/getAllDbd', $scope.currentStatus).then(function (response) {
-            $scope.searchAcrFilter = '';
+        $http.post('/getAllDbd').then(function (response) {
             $scope.dbdList = response.data;
 
             console.log("DBD data received by controller");
@@ -8376,9 +8403,7 @@ app.controller('damagedBinController', function ($scope, $http, $filter, storeDa
             console.log(response.data);
         });
     }
-    //getAllDbd(); //call
-    getAllDbd();
-    getAllDbr();
+    
 
 
     $scope.addDbr = function () {
@@ -8412,63 +8437,77 @@ app.controller('damagedBinController', function ($scope, $http, $filter, storeDa
             }
         });
     }
+
+    $scope.addDbd = function () {
+        var position = window.sessionStorage.getItem('owner');
+
+        $scope.dbd.preparedBy = position;
+        $scope.dbd.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.dbd.periodFrom = $filter('date')( $scope.dbd.periodFrom, 'yyyy-MM-dd HH:mm:ss');
+        $scope.dbd.periodTo = $filter('date')($scope.dbd.periodTo, 'yyyy-MM-dd HH:mm:ss');
+        $http.post('/addDbd', $scope.dbd).then(function (response) {
+            var returnedData = response.data;
+            var newDbdID = returnedData.details.dbdID;
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "DBD added successfully!"
+                });
+
+                $scope.dbdList.push({
+                    "id": newDbdID,
+                    "periodFrom": $scope.dbd.periodFrom,
+                    "periodTo": $scope.dbd.periodTo,
+                    "preparedBy": $scope.dbd.preparedBy,
+                    "status": 'ACTIVE'
+                });
+                // $scope.filterAcrList = angular.copy($scope.acrList);
+                angular.element('#createDbd').modal('toggle');
+                // $scope.totalItems = $scope.filterAcrList.length;
+            }
+        });
+    }
+
+    //CALL FUNCTIONS
+    getAllDbd();
+    getAllDbr();
 });
 
 app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
 
-    $scope.show = angular.copy(storeDataService.show.dcsDetails);
+    $scope.show = angular.copy(storeDataService.show.dbdDetails);
+    //$scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
-
-    $scope.showDcsDetails = true;
-
-    $scope.dcsDetailsList = [];
-    $scope.dcs = [];
+    $scope.showDbdDetails = true;
+    $scope.dbdDetailsList = [];
+    $scope.dbd = [];
     $scope.customerList = [];
-    $scope.dcsID = {};
-    $scope.dcsID.id = $routeParams.dcsID;
+    $scope.dbdID = {};
+    $scope.dbdID.id = $routeParams.dbdID;
 
-    $scope.test = {
-        "id": "sdfs",
-        "info": "info"
+    function getDbdInfo() {
+        $http.post('/getDbdInfo', $scope.dbdID).then(function (response) {
+
+            $scope.dbd = response.data;
+            console.log($scope.dbd);
+        });
     }
+    
+    function getDbdDetails() {
+        $http.post('/getDbdDetails', $scope.dbdID).then(function (response) {
 
-    //$scope.initializeDcsDetails = function(){
-    $scope.dcsDetails = {
-        "dcsID": '',
-        "acrID": '',
-        "areaID": '',
-        "customerID": '',
-        "beBins": '',
-        "acrBins": '',
-        "mon": '',
-        "tue": '',
-        "wed": '',
-        "thu": '',
-        "fri": '',
-        "sat": '',
-        "remarks": ''
+            $scope.dbdDetailsList = response.data;
+            console.log($scope.dbdDetailsList);
+            console.log("Hello dbdDetails");
+        });
     }
-    //}
+    
 
-    $http.post('/getDcsInfo', $scope.dcsID).then(function (response) {
-
-        $scope.dcs = response.data;
-        console.log($scope.dcs);
-    });
-
-    $http.post('/getDcsDetails', $scope.dcsID).then(function (response) {
-
-        $scope.dcsDetailsList = response.data;
-        console.log($scope.dcsDetailsList);
-        console.log("Hello dcsdetails");
-    });
-
-    $http.get('/getCustomerList', $scope.dcsID).then(function (response) {
-        $scope.customerList = response.data;
-    });
-
+    getDbdInfo();
+    getDbdDetails();
 
 });
 
@@ -8564,7 +8603,7 @@ app.controller('lostBinController', function ($scope, $http, $filter, storeDataS
 app.controller('blostDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
 
 
-    $scope.authorize = angular.copy(storeDataService.show.formAuthorization);
+    //$scope.authorize = angular.copy(storeDataService.show.formAuthorization);
     $scope.show = angular.copy(storeDataService.show.dcsDetails);
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemPerPage = 8; //Record number each page
@@ -8580,6 +8619,7 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
     $scope.areaList = [];
     $scope.binList = [];
     $scope.status = '';
+    $scope.editedBlostEntry = [];
 
     
 
@@ -8595,15 +8635,12 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
             $scope.status = 'ACTIVE';
         } else if ($scope.blost[0].status == 'I') {
             $scope.status = 'INACTIVE';
-            document.getElementById("checkbox").disabled = true;
         } else if ($scope.blost[0].status == 'R') {
             $scope.status = 'CORRECTION REQUIRED';
         } else if ($scope.blost[0].status == 'P') {
             $scope.status = 'PENDING';
-            document.getElementById("checkbox").disabled = true;
         } else if ($scope.blost[0].status == 'K') {
             $scope.status = 'CHECKED';
-            document.getElementById("checkbox").disabled = true;
         } else if ($scope.blost[0].status == 'C') {
             $scope.status = 'COMPLETE';
             $scope.show.edit = 'I';
@@ -8611,8 +8648,9 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
     });
 
     function getCustomerList() {
-        $http.get('/getCustomerList', $scope.blostID).then(function (response) {
+        $http.get('/getBlostCustomerList').then(function (response) {
             $scope.customerList = response.data;
+            console.log($scope.customerList);
         });
     }
     function getBlostDetails() {
@@ -8637,13 +8675,12 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
 
 
                 $scope.blostDetailsList.push({
-                    "customerName": $scope.blostEntry.customerName,
-                    "company": $scope.blostEntry.company,
+                    "name": $scope.blostEntry.name,
+                    "phoneNo": $scope.blostEntry.phoneNo,
                     "address": $scope.blostEntry.address,
-                    "phoneNo": $scope.blostEntry.contactNumber,
-                    "collectionArea": $scope.blostEntry.areaID,
+                    "collectionArea": $scope.blostEntry.collectionArea,
                     "binSize": $scope.blostEntry.binSize,
-                    "serialNo": $scope.blostEntry.serialNo,
+                    "noOfBins": $scope.blostEntry.noOfBins,
                     "sharedBin": $scope.blostEntry.sharedBin,
                     "dateOfLoss": $scope.blostEntry.dateOfLoss,
                     "reason": $scope.blostEntry.reason
@@ -8653,6 +8690,32 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
             }
         });
     }
+    $scope.assignCustomer = function (customer) {
+        if(customer.company == null) {
+            $scope.blostEntry.name = customer.name;
+        }else{
+            $scope.blostEntry.name = customer.companyName + ", " + customer.name;
+        }
+    }
+    $scope.editBlostEntry = function(blostEntry) {
+        $scope.editedBlostEntry = blostEntry;
+    }
+    $scope.saveBlostEntry = function() {
+        $http.post('/editBlostEntry', $scope.editedBlostEntry).then(function (response) {
+
+            var returnedData = response.data;
+
+            if (returnedData.status === "success") {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "BLOST Entry updated successfully!"
+                });
+                getBlostDetails();
+                angular.element('#editBlostEntry').modal('toggle');
+            }
+        });
+    }
+
 
 
     // FORM AUTHORIZATIONs
@@ -8660,29 +8723,25 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
         sendFormForAuthorization($routeParams.blostID, "blost");
         $scope.status = 'PENDING';
     };
+    
+    $scope.checkForm = function () {
+        $scope.status = 'CHECKED';
+        checkForm($routeParams.blostID, "blost");
 
-    $scope.confirm = function (request) {
-        if (request == 'approve') {
-            $scope.approveForm();
-        } else if (request == 'reject') {
-            $scope.rejectForm();
-        }
-    };
-
-    $scope.approveForm = function () {
-        $scope.status = 'APPROVED';
-        approveForm($routeParams.blostID, "blost");
-
-        angular.element('#approveConfirmation').modal('toggle');
+        angular.element('#approveCheck').modal('toggle');
     }
-
     $scope.rejectForm = function () {
         $scope.status = 'CORRECTION REQUIRED';
-        rejectForm($routeParams.dcsID, "blost");
+        rejectForm($routeParams.blostID, "blost", $scope.blost[0].feedback);
 
 
-        angular.element('#rejectConfirmation').modal('toggle');
+        angular.element('#rejectForm').modal('toggle');
     }
+
+    //CALL FUNCTIONS
+    //getCustomerList();
+    getBlostDetails();
+
 });
 
 function checkForm(formID, formType) {

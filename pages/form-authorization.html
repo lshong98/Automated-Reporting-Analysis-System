@@ -15,7 +15,7 @@
 
 
 <div class="row">
-    
+
     <div class="col-md-12">
         <ul class="nav nav-tabs" id="acrTab" role=tablist>
             <li class="nav-item">
@@ -26,11 +26,154 @@
                 <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#dcs" role="tab"
                     aria-controls="dcs" aria-selected="false">DCS</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#blost" role="tab"
+                    aria-controls="blost" aria-selected="false">BLOST</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#dbr" role="tab"
+                    aria-controls="dbr" aria-selected="false">DBR</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#dbd" role="tab"
+                    aria-controls="dbd" aria-selected="false">DBD</a>
+            </li>
         </ul>
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="bdaf" role="tabpanel" aria-labelledby="bdaf-tab">
-                    <div class="row" data-ng-show="show.checkView == 'A'">
-                            <h6>Check Form</h6>
+                <div class="row" data-ng-show="show.checkView == 'A'">
+                    <h6>Check Form</h6>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped table-clickable">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%" data-ng-click="orderBy('date');">Date <i
+                                                        class="fas fa-sort-down"></i>
+                                                </th>
+                                                <th width="25%" data-ng-click="orderBy('id');">Form ID <i
+                                                        class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i
+                                                        class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i
+                                                        class="fas fa-sort-down"></i></th>
+                                                    <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- data-ng-show="f.status == 'P'" -->
+                                            <tr data-ng-repeat="f in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                                                ng-show="f.status == 'P'">
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.date"></span>
+                                                </td>
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.id"></span>
+                                                </td>
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.preparedBy"></span>
+                                                </td>
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.status"></span>
+                                                </td>
+                                                <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle"
+                                                    data-ng-click="getForm(f.id);"></i></button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                            <div class="col-md-12">
+                                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage"
+                                    data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;"
+                                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                                    boundary-link-numbers="true"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" data-ng-show="show.verifyView == 'A'">
+                    <h6>Verify Form</h6>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped table-clickable">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%" data-ng-click="orderBy('date');">Date <i
+                                                        class="fas fa-sort-down"></i>
+                                                </th>
+                                                <th width="25%" data-ng-click="orderBy('formID');">Form ID <i
+                                                        class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i
+                                                        class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="orderBy('checkedBy')">Checked By <i
+                                                        class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i
+                                                        class="fas fa-sort-down"></i></th>
+                                                        <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- data-ng-show="f.status == 'P'" -->
+                                            <tr data-ng-repeat="f in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                                                data-ng-click="getForm(f.id);" ng-show="f.status == 'K'">
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.date"></span>
+                                                </td>
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.id"></span>
+                                                </td>
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.preparedBy"></span>
+                                                </td>
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.checkedBy"></span>
+                                                </td>
+                                                <td
+                                                    ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
+                                                    <span data-ng-bind="f.status"></span>
+                                                </td>
+                                                <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle"
+                                                    data-ng-click="getForm(f.id);"></i></button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                            <div class="col-md-12">
+                                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage"
+                                    data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;"
+                                    next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                                    boundary-link-numbers="true"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="dcs" role="tabpanel" aria-labelledby="dcs-tab">
+
+
+            </div>
+            <div class="tab-pane fade" id="blost" role="tabpanel" aria-labelledby="blost-tab">
+                    <div class="row">
+                            <h6>Review Form</h6>
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -38,7 +181,8 @@
                                             <table class="table table-hover table-striped table-clickable">
                                                 <thead>
                                                     <tr>
-                                                        <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i>
+                                                        <th width="20%" data-ng-click="orderBy('date');">Date <i
+                                                                class="fas fa-sort-down"></i>
                                                         </th>
                                                         <th width="25%" data-ng-click="orderBy('id');">Form ID <i
                                                                 class="fas fa-sort-down"></i></th>
@@ -46,11 +190,12 @@
                                                                 class="fas fa-sort-down"></i></th>
                                                         <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i
                                                                 class="fas fa-sort-down"></i></th>
+                                                            <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <!-- data-ng-show="f.status == 'P'" -->
-                                                    <tr data-ng-repeat="f in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                                                    <tr data-ng-repeat="f in blostList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
                                                         data-ng-click="getForm(f.id);" ng-show="f.status == 'P'">
                                                         <td
                                                             ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
@@ -68,6 +213,8 @@
                                                             ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
                                                             <span data-ng-bind="f.status"></span>
                                                         </td>
+                                                        <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle"
+                                                            data-ng-click="getForm(f.id);"></i></button></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -77,87 +224,20 @@
                                 <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
                                     <div class="col-md-12">
                                         <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage"
-                                            data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;"
-                                            first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row" data-ng-show="show.verifyView == 'A'">
-                                <h6>Verify Form</h6>
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover table-striped table-clickable">
-                                                <thead>
-                                                    <tr>
-                                                        <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i>
-                                                        </th>
-                                                        <th width="25%" data-ng-click="orderBy('formID');">Form ID <i
-                                                                class="fas fa-sort-down"></i></th>
-                                                        <th width="15%" data-ng-click="orderBy('preparedBy');">Prepared By <i
-                                                                class="fas fa-sort-down"></i></th>
-                                                        <th width="15%" data-ng-click="orderBy('checkedBy')">Checked By <i
-                                                                class="fas fa-sort-down"></i></th>
-                                                        <th width="15%" data-ng-click="orderBy('preparedBy');">Status <i
-                                                                class="fas fa-sort-down"></i></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <!-- data-ng-show="f.status == 'P'" -->
-                                                    <tr data-ng-repeat="f in bdafList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
-                                                        data-ng-click="getForm(f.id);" ng-show="f.status == 'K'">
-                                                        <td
-                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                                            <span data-ng-bind="f.date"></span>
-                                                        </td>
-                                                        <td
-                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                                            <span data-ng-bind="f.id"></span>
-                                                        </td>
-                                                        <td
-                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                                            <span data-ng-bind="f.preparedBy"></span>
-                                                        </td>
-                                                        <td
-                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                                            <span data-ng-bind="f.checkedBy"></span>
-                                                        </td>
-                                                        <td
-                                                            ng-class="{'red': f.status === 'R', 'green': f.status == 'G', 'orange': f.status == 'P'}">
-                                                            <span data-ng-bind="f.status"></span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-                                    <div class="col-md-12">
-                                        <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage"
-                                            data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;"
-                                            first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                                            data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;"
+                                            next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                                            boundary-link-numbers="true"></ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
             </div>
-            <div class="tab-pane fade" id="dcs" role="tabpanel" aria-labelledby="dcs-tab">
+            <div class="tab-pane fade" id="dbr" role="tabpanel" aria-labelledby="dbr-tab">
 
 
             </div>
-            <div class="tab-pane fade" id="binRequests" role="tabpanel" aria-labelledby="binRequests-tab">
-
-
-            </div>
-            <div class="tab-pane fade" id="binRequests" role="tabpanel" aria-labelledby="binRequests-tab">
-
-
-            </div>
-            <div class="tab-pane fade" id="binRequests" role="tabpanel" aria-labelledby="binRequests-tab">
+            <div class="tab-pane fade" id="dbd" role="tabpanel" aria-labelledby="dbd-tab">
 
 
             </div>

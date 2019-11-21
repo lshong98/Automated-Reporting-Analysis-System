@@ -201,9 +201,9 @@
 
         <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();"
             ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
-        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
+        <button ng-show="show.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
             data-toggle="modal" data-target="#approveConfirmation">Approve</button>
-        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal"
+        <button ng-show="show.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal"
             data-target="#rejectConfirmation">Reject</button>
 
     </div>

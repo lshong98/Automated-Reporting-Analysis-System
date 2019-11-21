@@ -277,11 +277,11 @@
 
         <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#checkConfirmation"
             ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Send for Checking</button> <!--Mark form as 'Pending' and request for checking-->
-        <button ng-show="authorize.verifyView == 'A' && status == 'CHECKED'" class="btn btn-sm btn-success"
+        <button ng-show="show.verifyView == 'A' && status == 'CHECKED'" class="btn btn-sm btn-success"
             data-toggle="modal" data-target="#approveVerification">Verify</button> <!--Mark form as 'Verified' and execute inventory functions-->
-        <button ng-show="authorize.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
+        <button ng-show="show.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
             data-toggle="modal" data-target="#approveCheck">Approve</button> <!--Mark form as 'Checked' and request verification-->
-        <button ng-show="authorize.view == 'A' && status == 'PENDING' || status == 'CHECKED'"
+        <button ng-show="show.checkView == 'A' || show.verifyView == 'A' && status == 'PENDING' || status == 'CHECKED'"
             class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectForm">Reject</button> <!--Reset form to 'Active'-->
 
     </div>

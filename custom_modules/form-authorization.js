@@ -5,44 +5,6 @@ var database = require('./database-management');
 var f = require('./function-management');
 var dateTime = require('node-datetime');
 
-app.get('/getAllForms', function (req, res) {
-    'use strict';
-
-    var sql = "SELECT creationDateTime as date, dcsID as formID, preparedBy, authorizedBy, status from tbldcs WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, bdafID as formID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, blostID as formID, preparedBy, authorizedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-        console.log("ALL FORMS COLLECTED");
-    });
-}); // Complete
-
-app.get('/getAllCompletedBdaf', function (req, res) {
-    'use strict';
-
-    var sql = "SELECT creationDateTime as date, bdafID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, bdafID as formID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, blostID as formID, preparedBy, authorizedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-        console.log("ALL FORMS COLLECTED");
-    });
-}); // Complete
-
-app.get('/getAllCheckedBdaf', function (req, res) {
-    'use strict';
-
-    var sql = "SELECT creationDateTime as date, dcsID as formID, preparedBy, authorizedBy, status from tbldcs WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, bdafID as formID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, blostID as formID, preparedBy, authorizedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-        console.log("ALL FORMS COLLECTED");
-    });
-}); // Complete
 
 app.post('/checkForm', function (req, res) {
     'use strict';
@@ -174,5 +136,55 @@ app.post('/sendFormForVerification', function (req, res) {
 });
 
 
+// app.get('/getAllForms', function (req, res) {
+//     'use strict';
 
+//     var sql = "SELECT creationDateTime as date, dcsID as formID, preparedBy, authorizedBy, status from tbldcs WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, bdafID as formID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, blostID as formID, preparedBy, authorizedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
+//     database.query(sql, function (err, result) {
+//         if (err) {
+//             throw err;
+//         }
+//         res.json(result);
+//         console.log("ALL FORMS COLLECTED");
+//     });
+// }); // Complete
+
+// app.get('/getAllCompletedBdaf', function (req, res) {
+//     'use strict';
+
+//     var sql = "SELECT creationDateTime as date, bdafID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, bdafID as formID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, blostID as formID, preparedBy, authorizedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
+//     database.query(sql, function (err, result) {
+//         if (err) {
+//             throw err;
+//         }
+//         res.json(result);
+//         console.log("ALL FORMS COLLECTED");
+//     });
+// }); // Complete
+
+// app.get('/getAllCheckedBdaf', function (req, res) {
+//     'use strict';
+
+//     var sql = "SELECT creationDateTime as date, dcsID as formID, preparedBy, authorizedBy, status from tbldcs WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, bdafID as formID, preparedBy, authorizedBy, status from tblbdaf WHERE status != 'I' AND status != 'C' AND status !='A' UNION SELECT creationDateTime as date, blostID as formID, preparedBy, authorizedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
+//     database.query(sql, function (err, result) {
+//         if (err) {
+//             throw err;
+//         }
+//         res.json(result);
+//         console.log("ALL FORMS COLLECTED");
+//     });
+// }); // Complete
+
+// app.get('/getAllCompletedBlost', function (req, res) {
+//     'use strict';
+
+//     var sql = "SELECT creationDateTime as date, blostID as formID, preparedBy, status from tblblost WHERE status != 'I' AND status != 'C' AND status !='A'";
+//     database.query(sql, function (err, result) {
+//         if (err) {
+//             throw err;
+//         }
+//         res.json(result);
+//         console.log("ALL FORMS COLLECTED");
+//     });
+// }); // Complete
 module.exports = app;
