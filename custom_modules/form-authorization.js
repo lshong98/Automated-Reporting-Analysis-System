@@ -55,6 +55,7 @@ app.post('/rejectForm', function (req, res) {
 
         var sql = "UPDATE tbl" + req.body.formType + " set status = 'R', feedback = '" + req.body.feedback + "' where " + req.body.formType + "ID = '" + req.body.formID + "'";
 
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;

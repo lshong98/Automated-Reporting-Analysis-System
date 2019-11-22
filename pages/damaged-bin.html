@@ -13,7 +13,35 @@
                     <label for="txtBdafDate form-label">Date</label>
                     <input type="date" class="form-control" id="txtBdafDate" data-ng-model="dbr.creationDate" />
                 </div>
+                <div class="form-group">
+                    <label for="txtAddress form-label">Company Name</label>
+                    <input type="text" class="form-control" rows="5" id="txtRemarks" data-ng-model="dbr.companyName" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCompany form-label">Address</label>
+                    <textarea class="form-control" rows="4" data-ng-model="dbr.address"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtAddress form-label">Contact Person</label>
+                            <input type="text" class="form-control" rows="5" id="txtRemarks"
+                                data-ng-model="dbr.contactPerson" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtBeBins form-label">Phone No</label>
+                            <input type="text" class="form-control" rows="5" id="txtRemarks"
+                                data-ng-model="dbr.phoneNo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
 
+                    <label for="txtRemarks form-label">Comments</label>
+                    <textarea class="form-control" rows="4" data-ng-model="dbr.comment"></textarea>
+                </div>
 
 
 
@@ -39,20 +67,18 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="txtRemarks form-label">From</label>
-                            <input type="date" class="form-control" id="txtRemarks"
-                                data-ng-model="dbd.periodFrom" />
+                            <input type="date" class="form-control" id="txtRemarks" data-ng-model="dbd.periodFrom" />
                         </div>
 
                     </div>
                     <div class="col-md-2">
-                            <p style="padding-top: 40px; text-align: center;">-</p>
+                        <p style="padding-top: 40px; text-align: center;">-</p>
                     </div>
-                    
+
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="txtRemarks form-label">To</label>
-                            <input type="date" class="form-control" id="txtRemarks"
-                                data-ng-model="dbd.periodTo" />
+                            <input type="date" class="form-control" id="txtRemarks" data-ng-model="dbd.periodTo" />
                         </div>
                     </div>
                 </div>
@@ -83,14 +109,14 @@
         </ul>
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="acrSchedule" role="tabpanel" aria-labelledby="acrSchedule-tab">
-            </br>
+                </br>
                 <div class="row" data-ng-show="show.create == 'A'">
                     <div class="col-md-12">
                         <button class="btn btn-success" data-toggle="modal" data-target="#createDbr"><i
                                 class="fa fa-plus"></i> New DBR</button>
                     </div>
                 </div>
-            </br>
+                </br>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
@@ -132,21 +158,22 @@
             </div>
             <div class="tab-pane fade" id="acrInformation" role="tabpanel" aria-labelledby="acrInformation-tab"
                 data-ng-show="show.view == 'A'">
-            </br>
+                </br>
                 <div class="row" data-ng-show="show.create == 'A'">
                     <div class="col-md-12">
                         <button class="btn btn-success" data-toggle="modal" data-target="#createDbd"><i
                                 class="fa fa-plus"></i> New DBD</button>
                     </div>
                 </div>
-            </br>
+                </br>
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
                         <thead>
                             <tr>
-                                <th width="20%" data-ng-click="orderBy('id');">DBD ID <i
-                                        class="fas fa-sort-down"></i></th>
-                                <th width="20%" data-ng-click="orderBy('periodFrom');">From <i class="fas fa-sort-down"></i>
+                                <th width="20%" data-ng-click="orderBy('id');">DBD ID <i class="fas fa-sort-down"></i>
+                                </th>
+                                <th width="20%" data-ng-click="orderBy('periodFrom');">From <i
+                                        class="fas fa-sort-down"></i>
                                 </th>
                                 <th width="20%" data-ng-click="orderBy('periodTo');">To <i class="fas fa-sort-down"></i>
                                 </th>
@@ -161,7 +188,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="b in dbdList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                            <tr
+                                data-ng-repeat="b in dbdList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
                                 <td data-ng-bind="b.id"></td>
                                 <td data-ng-bind="b.periodFrom | date: 'dd-MM-yyyy' : 'UTC+06'"></td>
                                 <td data-ng-bind="b.periodTo | date: 'dd-MM-yyyy' : 'UTC+06'"></td>
@@ -170,7 +198,7 @@
                                 <td data-ng-bind="b.authorizedDate"></td>
                                 <td data-ng-bind="b.status"></td>
                                 <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle"
-                                    data-ng-click="viewDbd(b.id);"></i></button></td>
+                                            data-ng-click="viewDbd(b.id);"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
