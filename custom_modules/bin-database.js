@@ -73,36 +73,10 @@ app.post('/addDatabaseBin', function (req, res) {
     setTimeout(addBin, 100);
 });
 
-app.post('/editDatabaseBin', function (req, res) {
-    'use strict';
-    console.log(req.body.acrID);
-    var temp = 'null';
-    //var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = '" + req.body.areaID +"', serialNo = '" + req.body.serialNo + "', acrID = '" + null + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
-
-    var sql = `update tblwheelbindatabase set date = '${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaID}', serialNo = '${req.body.serialNo}', acrID = ${temp}, activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = '${req.body.idNo}'`;
-
-    /*if(req.body.acrID == 'null') {
-        //var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = '" + req.body.areaID +"', serialNo = '" + req.body.serialNo + "', acrID =  + 'null' + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
-        var sql = `update tblwheelbindatabase set data = ${req.body.date}, customerID = ${req.body.customerID}, areaID = ${req.body.areaID}, serialNo = ${req.body.serialNo}, acrID = 'null', activeStatus = ${req.body.activeStatus}, rcDwell = ${req.body.rcDwell}, comment = ${req.body.comment}, where idNo = ${req.body.idNo}`;
-    }else{
-        var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = 'a001', serialNo = '" + req.body.serialNo + "', acrID = '" + req.body.acrID + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
-    }*/
-    //var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = 'a001', serialNo = '" + req.body.serialNo + "', acrID = '" + req.body.acrID + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        console.log("Update WBD entry success");
-        console.log(result);
-        res.json({"status": "success", "message": "WBD Entry updated successfully!"});
-        
-    });
-});
-
 app.put('/editDatabaseBin', function (req, res) {
     'use strict';
 
-    var temp = 'null';
+    /*var temp = 'null';
 
     if(req.body.acrID === 'null'){
         var sql = `update tblwheelbindatabase set date = '${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaCode}', serialNo = '${req.body.serialNo}', acrID = ${temp}, activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = '${req.body.idNo}'`;
@@ -119,7 +93,44 @@ app.put('/editDatabaseBin', function (req, res) {
         console.log(result);
         res.json({"status": "success", "message": "WBD Entry updated successfully!"});
         
-    });
+    });*/
+
+    //New edit code
+    var test_sql = `select * from tblwheelbindatabase where serialNo = '${req.body.serialNo}' and activeStatus = 'a'`;
+    database.query(test_sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        if(result.json !== null){
+            var inactive_sql = `update tblwheelbindatabase set activeStatus = 'i' where serialNo = '${req.body.serialNo}'`;
+            database.query(inactive_sql, function(err, result){
+                console.log(result);
+                console.log("Old bins deactivated");
+            })
+        }
+    })
+
+    function editBin(){
+        var temp = 'null';
+
+        if(req.body.acrID === 'null'){
+            var sql = `update tblwheelbindatabase set date = '${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaCode}', serialNo = '${req.body.serialNo}', acrID = ${temp}, activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = '${req.body.idNo}'`;
+        } else{
+            var sql = `update tblwheelbindatabase set date = '${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaCode}', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = '${req.body.idNo}'`;
+        }
+    
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            console.log("Update WBD entry success");
+            console.log(result);
+            res.json({"status": "success", "message": "WBD Entry updated successfully!"});
+            
+        });
+    }
+
+    setTimeout(editBin, 100);
 });
 
 app.post('/addCustomer', function (req, res) {
