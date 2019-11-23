@@ -75,8 +75,19 @@ app.post('/addDatabaseBin', function (req, res) {
 
 app.post('/editDatabaseBin', function (req, res) {
     'use strict';
+    console.log(req.body.acrID);
+    var temp = 'null';
+    //var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = '" + req.body.areaID +"', serialNo = '" + req.body.serialNo + "', acrID = '" + null + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
 
-    var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = 'a001', serialNo = '" + req.body.serialNo + "', acrID = '" + req.body.acrID + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
+    var sql = `update tblwheelbindatabase set date = '${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaID}', serialNo = '${req.body.serialNo}', acrID = ${temp}, activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = '${req.body.idNo}'`;
+
+    /*if(req.body.acrID == 'null') {
+        //var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = '" + req.body.areaID +"', serialNo = '" + req.body.serialNo + "', acrID =  + 'null' + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
+        var sql = `update tblwheelbindatabase set data = ${req.body.date}, customerID = ${req.body.customerID}, areaID = ${req.body.areaID}, serialNo = ${req.body.serialNo}, acrID = 'null', activeStatus = ${req.body.activeStatus}, rcDwell = ${req.body.rcDwell}, comment = ${req.body.comment}, where idNo = ${req.body.idNo}`;
+    }else{
+        var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = 'a001', serialNo = '" + req.body.serialNo + "', acrID = '" + req.body.acrID + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
+    }*/
+    //var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = 'a001', serialNo = '" + req.body.serialNo + "', acrID = '" + req.body.acrID + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -91,7 +102,15 @@ app.post('/editDatabaseBin', function (req, res) {
 app.put('/editDatabaseBin', function (req, res) {
     'use strict';
 
-    var sql = "UPDATE tblwheelbindatabase SET date = '" + req.body.date + "', customerID = '" + req.body.customerID + "', areaID = '" + req.body.areaCode + "', serialNo = '" + req.body.serialNo + "', acrID = '" + req.body.acrID + "', activeStatus = '" + req.body.activeStatus + "', rcDwell = '" + req.body.rcDwell + "', comment = '" + req.body.comment + "' WHERE idNo = '" + req.body.idNo + "'";
+    var temp = 'null';
+
+    if(req.body.acrID === 'null'){
+        var sql = `update tblwheelbindatabase set date = '${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaCode}', serialNo = '${req.body.serialNo}', acrID = ${temp}, activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = '${req.body.idNo}'`;
+    } else{
+        var sql = `update tblwheelbindatabase set date = '${req.body.date}', customerID = '${req.body.customerID}', areaID = '${req.body.areaCode}', serialNo = '${req.body.serialNo}', acrID = '${req.body.acrID}', activeStatus = '${req.body.activeStatus}', rcDwell = '${req.body.rcDwell}', comment = '${req.body.comment}' where idNo = '${req.body.idNo}'`;
+    }
+
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -288,6 +307,70 @@ app.post('/deleteCustomer', function (req, res) {
         
     });
 });
+
+// BIN STOCK MODULE
+app.put('/editBinStock', function(req, res){
+    'use strict';
+
+    var sql = `update tblbins set size='${req.body.size}', status='${req.body.status}' where serialNo ='${req.body.serialNo}'`;
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        console.log(result);
+        res.json(result)
+        //res.json({"status": "success", "message": "Bin updated successfully!"});
+    })
+})
+
+app.post('/deleteBinStock', function(req, res){
+    'use strict';
+
+    var sql = `delete from tblbins where serialNo = '${req.body.serialNo}'`;
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        console.log('Delete bin stock bindatabase.js');
+        console.log(result);
+        res.json(result);
+        res.json({"status":"success", "message":"Bin deleted successfully!"});
+    })
+})
+
+// TAMAN MODULE
+app.put('/editTaman', function(req, res){
+    'use strict';
+
+    //tamanID, areaID, tamanName, longitude, latitude, areaCollStatus
+
+    var sql = `update tbltaman set areaID='${req.body.areaID}', tamanName='${req.body.tamanName}', longitude='${req.body.longitude}', latitude='${req.body.latitude}', areaCollStatus='${req.body.areaCollStatus}' where tamanID ='${req.body.tamanID}'`;
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        console.log(result);
+        res.json(result)
+        //res.json({"status": "success", "message": "Bin updated successfully!"});
+    })
+})
+
+app.post('/deleteTaman', function(req, res){
+    'use strict';
+
+    console.log(req.body.tamanID);
+
+    var sql = `delete from tbltaman where tamanID = '${req.body.tamanID}'`;
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        console.log(result);
+        //res.json(result);
+        //res.json({"status":"success", "message":"Taman deleted successfully!"});
+        //res.json(result);
+    })
+})
 
 
 module.exports = app;
