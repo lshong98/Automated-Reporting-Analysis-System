@@ -26,7 +26,8 @@ app.post('/messageSend', function (req, res) {
     'use strict';
     
     var dt = dateTime.create(),
-        formatted = dt.format('Y-m-d H:M:S'),
+//        formatted = dt.format('Y-m-d H:M:S'),
+        formatted = req.body.creationDateTime,
         sql = "SELECT userID AS id FROM tblcomplaint WHERE complaintID = '" + req.body.id + "' LIMIT 0, 1",
         topic = "TriComplaintID" + req.body.id;
 
@@ -38,7 +39,7 @@ app.post('/messageSend', function (req, res) {
             },
         topic: topic
     };
-
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -85,9 +86,8 @@ app.post('/sendMessage', function (req, resp) {
     'use strict';
     var data;
     var userID, staffID;
-    process.env.TZ = 'Asia/Kuala_Lumpur';
-    var date = dateTime.create().format('Y-m-d H:M:S');
-    var currentTime = date.substr(11, 18);
+    //process.env.TZ = 'Asia/Kuching';
+    //var date = dateTime.create().format('Y-m-d H:M:S');
     var startTime = "08:30:00";
     var endTime = "17:30:00";
     var today = new Date();
@@ -98,6 +98,9 @@ app.post('/sendMessage', function (req, resp) {
     });
     
     req.addListener('end', function () {
+        console.log(data.date);
+        var date = data.date;
+        var currentTime = date.substr(11, 18);
         var sql = "SELECT tbluser.userID, tblcomplaint.staffID FROM tbluser, tblcomplaint WHERE tbluser.userEmail = '" + data.user + "' OR tblcomplaint.complaintID = '" + data.id + "' AND tbluser.userID = tblcomplaint.userID LIMIT 0, 1";
         database.query(sql, function (err, result) {
             if (err) {
@@ -108,6 +111,7 @@ app.post('/sendMessage', function (req, resp) {
                 userID = result[0].userID;
                 staffID = result[0].staffID;
                 f.makeID('chat', date).then(function (ID) {
+                    console.log(date);
                     sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + result[0].userID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', '" + date + "', 'A','u')";
                     database.query(sql, function (err, result) {
                         if (err) {
