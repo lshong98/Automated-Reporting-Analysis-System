@@ -682,31 +682,31 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             } else {
                 acr.mon = 0;
             }
-    
+
             if (acr.tue) {
                 acr.tue = 1;
             } else {
                 acr.tue = 0;
             }
-    
+
             if (acr.wed) {
                 acr.wed = 1;
             } else {
                 acr.wed = 0;
             }
-    
+
             if (acr.thu) {
                 acr.thu = 1;
             } else {
                 acr.thu = 0;
             }
-    
+
             if (acr.fri) {
                 acr.fri = 1;
             } else {
                 acr.fri = 0;
             }
-    
+
             if (acr.sat) {
                 acr.sat = 1;
             } else {
@@ -716,7 +716,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             scope.thisAcr = acr;
             console.log(scope.thisAcr);
 
-            
+
             $http.post('/editAcr', scope.thisAcr).then(function (response) {
                 var data = response.data;
 
@@ -1234,13 +1234,13 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         };
         scope.deleteTaman = function (tamanID) {
             scope.tamanIDJSON = {
-                "tamanID":tamanID
+                "tamanID": tamanID
             };
             $http.post('/deleteTaman', scope.tamanIDJSON).then(function (response) {
                 //var data = response.data;
                 scope.message = {
-                    "status":"success", 
-                    "message":"Taman deleted successfully!"
+                    "status": "success",
+                    "message": "Taman deleted successfully!"
                 }
 
                 scope.notify(scope.message.status, scope.message.message);
@@ -2520,14 +2520,14 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             }, function (error) {
                 console.log(error);
             });
-        } 
+        }
 
 
     };
 
     $scope.confirmStatus = function () {
         $scope.entry.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $scope.entry.status = "Approved"; 
+        $scope.entry.status = "Approved";
         $scope.entry.id = $routeParams.reqID;
 
         $http.post('/updateBinRequest', $scope.entry).then(function (response) {
@@ -5687,10 +5687,10 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
             $http.post('/getDcsDetails', $scope.period).then(function (response) {
                 $scope.dcsDetailsList = response.data;
                 console.log($scope.dcsDetailsList);
-    
+
                 $scope.totalItems = $scope.dcsDetailsList.length;
             });
-    
+
 
         });
 
@@ -5717,7 +5717,7 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
         $scope.replacementDriverButton = true;
 
 
-        
+
     }
 
     $scope.getDcsDetails();
@@ -6031,7 +6031,7 @@ app.controller('binHistoryController', function ($scope, $http, $filter, storeDa
     }
 })
 
-app.controller('binStockController', function($scope, $http){
+app.controller('binStockController', function ($scope, $http) {
     'use strict';
     $scope.binStockList = [];
 
@@ -8874,11 +8874,35 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
     $scope.dbdID = {};
     $scope.dbdID.id = $routeParams.dbdID;
     $scope.dbrID = [];
+    $scope.status = '';
+    $scope.rightStatus = false;
+    $scope.permission = false;
 
     function getAllDbd() {
         $http.post('/getDbdInfo', $scope.dbdID).then(function (response) {
 
             $scope.dbd = response.data;
+
+            if ($scope.dbd[0].status == 'A') {
+                $scope.status = 'ACTIVE';
+            } else if ($scope.dbd[0].status == 'I') {
+                $scope.status = 'INACTIVE';
+            } else if ($scope.dbd[0].status == 'R') {
+                $scope.status = 'CORRECTION REQUIRED';
+            } else if ($scope.dbd[0].status == 'P') {
+                $scope.status = 'PENDING';
+                $scope.rightStatus = true;
+            } else if ($scope.dbd[0].status == 'K') {
+                $scope.status = 'CHECKED';
+                $scope.rightStatus = true;
+            } else if ($scope.dbd[0].status == 'C') {
+                $scope.status = 'COMPLETE';
+                $scope.show.edit = 'I';
+            }
+
+            if ($scope.show.checkView || $scope.show.verifyView) {
+                $scope.permission = true;
+            }
 
 
             console.log($scope.dbd);
@@ -8890,7 +8914,16 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
                 for (var x = 0; x < $scope.dbdDetailsList.length; x++) {
                     $scope.dbrID.push($scope.dbdDetailsList[x].dbrID)
 
-                    getAllDbdDetails($scope.dbrID[x], x)
+                    $http.post('/getDbdDetailsDetails', {
+                        "dbrID": $scope.dbrID[0]
+                    }).then(function (response) {
+                        $scope.dbdDetailsDetailsList = response.data;
+
+                        $scope.dbdDetailsList[x - 1].areaCode = $scope.dbdDetailsDetailsList[0].areaCode;
+                        $scope.dbdDetailsList[x - 1].binSize = $scope.dbdDetailsDetailsList[0].binSize;
+                        window.alert(index);
+
+                    });
 
                 }
 
@@ -8898,24 +8931,53 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
 
             });
         });
+
+        //AUTHORIZATION MODULE
+    //CHECKED BY
+    $scope.requestAuthorization = function () {
+        sendFormForAuthorization($routeParams.dbdID, "dbd");
+        angular.element('#checkConfirmation').modal('toggle');
+        $scope.rightStatus = true;
+        $scope.status = 'PENDING';
+    };
+    $scope.checkForm = function () {
+        $scope.status = 'CHECKED';
+
+        //UPDATE DBR WITH BD INPUT
+        console.log($scope.dbd);
+        $http.post('/checkForm', $scope.dbd[0]).then(function (response) {
+            checkForm($routeParams.dbdID, "dbd");
+        });
+
+
+        angular.element('#approveCheck').modal('toggle');
+    }
+    $scope.rejectForm = function () {
+        $scope.status = 'CORRECTION REQUIRED';
+        rejectForm($routeParams.dbdID, "dbd", $scope.dbd[0].feedback);
+        $scope.rightStatus = false;
+
+        angular.element('#rejectForm').modal('toggle');
     }
 
-    function getAllDbdDetails(dbrID, index) {
-        $http.post('/getDbdDetailsDetails', {
-            "dbrID": dbrID[0]
-        }).then(function (response) {
-            $scope.dbdDetailsDetailsList = response.data;
+    //VERIFIED BY
+    $scope.requestVerification = function () {
+        sendFormForVerification($routeParams.dbdID, "dbd");
+        angular.element('#completeConfirmation').modal('toggle');
+        $scope.status = 'PENDING';
+    };
 
-            $scope.dbdDetailsList[index].areaCode = $scope.dbdDetailsDetailsList[0].areaCode;
-            $scope.dbdDetailsList[index].binSize = $scope.dbdDetailsDetailsList[0].binSize;
-            window.alert(index);
 
-        });
+    $scope.verifyForm = function () {
+        $scope.status = 'COMPLETE';
+        verifyForm($routeParams.dbdID, "dbd");
+        $scope.rightStatus = false;
+        angular.element('#approveVerification').modal('toggle');
+    }
     }
 
 
     getAllDbd();
-    getAllDbdDetails();
 });
 
 app.controller('dbrDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
