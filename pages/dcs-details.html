@@ -1,72 +1,75 @@
-<div class="modal fade" id="createDcsEntry" tabindex="-1" role="dialog" aria-labelledby="createDcsEntry" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
+<div class="modal fade" id="createDcsEntry" tabindex="-1" role="dialog" aria-labelledby="createDcsEntry"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Add a DCS</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <h5 class="modal-title" id="exampleModalLongTitle">Add a DCS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                
+
                 <div class="form-group">
                     <label for="txtCompany form-label">Company Name</label>
-                    <select type="text" class="form-control" id="txtCompany" data-ng-model="dcsEntry.companyName" data-ng-change="filterAddress();">
-                            <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
-                    </select>
-                </div>
-                <div class="form-group"> 
-                  <label for="txtAddress form-label">Address</label>
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="dcsEntry.customerID">
-                        <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+                    <select type="text" class="form-control" id="txtCompany" data-ng-model="dcsEntry.companyName"
+                        data-ng-change="filterAddress();">
+                        <option data-ng-repeat="c in customerList" value={{c.companyName}}>{{c.companyName}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                  <label for="txtBeBins form-label">BE Bins/Units</label> 
-                  <input type="text" class="form-control" id="txtBeBins" data-ng-model="dcsEntry.beBins" />
+                    <label for="txtAddress form-label">Address</label>
+                    <select type="text" class="form-control" id="txtAddress" data-ng-model="dcsEntry.customerID">
+                        <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.houseNo}},
+                            {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
+                    </select>
                 </div>
-            
+                <div class="form-group">
+                    <label for="txtBeBins form-label">BE Bins/Units</label>
+                    <input type="text" class="form-control" id="txtBeBins" data-ng-model="dcsEntry.beBins" />
+                </div>
+
                 <div class="form-group">
                     <label for="txtAcrBins form-label">ACR Bins/Units</label>
                     <input type="text" class="form-control" id="txtAcrBins" data-ng-model="dcsEntry.acrBins" />
                 </div>
                 <div class="form-group">
                     <label>Collection Days</label>
-                        <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.mon"> Mon</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.tue"> Tue</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.wed"> Wed</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.thu"> Thu</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.fri"> Fri</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" data-ng-model="dcsEntry.sat"> Sat</label>
-                        </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" data-ng-model="dcsEntry.mon"> Mon</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" data-ng-model="dcsEntry.tue"> Tue</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" data-ng-model="dcsEntry.wed"> Wed</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" data-ng-model="dcsEntry.thu"> Thu</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" data-ng-model="dcsEntry.fri"> Fri</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" data-ng-model="dcsEntry.sat"> Sat</label>
+                    </div>
                 </div>
                 <div class="form-group">
-                        <label for="txtRemarks form-label">Remarks</label>
-                        <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="dcsEntry.remarks" />
-                      </div>
-         
-                
-                
-                
+                    <label for="txtRemarks form-label">Remarks</label>
+                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="dcsEntry.remarks" />
+                </div>
+
+
+
+
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="addDcsEntry();">Create</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addDcsEntry();">Create</button>
             </div>
-          </div>
         </div>
-</div> 
+    </div>
+</div>
 <div class="modal fade" id="editDcsEntry" tabindex="-1" role="dialog" aria-labelledby="editDcsEntry" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -138,8 +141,48 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="checkConfirmation" tabindex="-1" role="dialog" aria-labelledby="checkConfirmation"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Is the Job complete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Click 'Yes' to proceed. Click 'No' to cancel.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" ng-model="value"
+                    data-ng-click="requestAuthorization()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="approveCheck" tabindex="-1" role="dialog" aria-labelledby="approveCheck" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Is the form Complete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
-<div class="modal fade" id="approveConfirmation" tabindex="-1" role="dialog" aria-labelledby="approveConfirmation"
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="checkForm();">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="approveVerification" tabindex="-1" role="dialog" aria-labelledby="approveVerification"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -152,20 +195,15 @@
             <div class="modal-body">
 
 
-
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-ng-click="confirm('approve');">Confirm</button>
+                <button type="button" class="btn btn-primary" data-ng-click="verifyForm();">Confirm</button>
             </div>
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="rejectConfirmation" tabindex="-1" role="dialog" aria-labelledby="rejectConfirmation"
-    aria-hidden="true">
+<div class="modal fade" id="rejectForm" tabindex="-1" role="dialog" aria-labelledby="rejectForm" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -177,34 +215,38 @@
             <div class="modal-body">
 
                 <p>Feedback:</p>
-                <input type="textArea" data-ng-model="dcs.feedback">
+                <textarea class="form-control" rows="4" data-ng-model="dcs[0].feedback"></textarea>
 
 
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-ng-click="confirm('reject');">Confirm</button>
+                <button type="button" class="btn btn-primary" data-ng-click="rejectForm();">Confirm</button>
             </div>
         </div>
     </div>
 </div>
 
-
-
 <div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
     <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
         <span style="text-align:left"><strong>Form Status: {{status}}</strong></span>
-        <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dcs.feedback}}</p>
+        <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dcs[0].feedback}}</p>
     </div>
     <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
 
-        <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();"
-            ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
-        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
-            data-toggle="modal" data-target="#approveConfirmation">Approve</button>
-        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal"
-            data-target="#rejectConfirmation">Reject</button>
+        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#checkConfirmation"
+            ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Send for Checking</button>
+        <!--Mark form as 'Pending' and request for checking-->
+        <button ng-show="show.verifyView == 'A' && status == 'CHECKED'" class="btn btn-sm btn-success"
+            data-toggle="modal" data-target="#approveVerification">Verify</button>
+        <!--Mark form as 'Verified' and execute inventory functions-->
+        <button ng-show="show.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
+            data-toggle="modal" data-target="#approveCheck">Approve</button>
+        <!--Mark form as 'Checked' and request verification-->
+        <button ng-show="permission && status == 'CHECKED' || permission && status == 'PENDING'"
+            class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectForm">Reject</button>
+        <!--Reset form to 'Active'-->
 
     </div>
 </div>
@@ -228,7 +270,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    {{dcs[0].areas}}
+                    {{dcs[0].areaID}}
                 </div>
             </div>
 
@@ -262,8 +304,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">{{dcs[0].driver}}</div>
-                <div class="col-md-6">{{dcs[0].replacementDriver}}</div>
+                <div class="col-md-6">{{dcs[0].driverID}}</div>
+                <div class="col-md-6">{{dcs[0].replacementDriverID}}</div>
             </div>
 
         </div>
@@ -318,7 +360,8 @@
                                     class="fas fa-sort-down"></i></th>
                             <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i
                                     class="fas fa-sort-down"></i></th>
-                            <th width="10%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i>
+                            <th width="10%" data-ng-click="orderBy('areaID');">Area Code <i
+                                    class="fas fa-sort-down"></i>
                             </th>
                             <th width="5%" data-ng-click="orderBy('Mon');">Mon</i></th>
                             <th width="5%" data-ng-click="orderBy('Tue');">Tue</i></th>
@@ -328,7 +371,7 @@
                             <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
                             <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i>
                             </th>
-                            <th width="7%" id="editButtons" ></th>
+                            <th width="7%" id="editButtons"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -353,37 +396,65 @@
                                 <div editable>
                                     <select type="text" class="form-control" data-ng-model="d.areaCode"
                                         data-ng-show="!showAcr">
-                                        <option data-ng-repeat="a in areaList" value={{a.areaCode}}>{{a.areaCode}}</option>
+                                        <option data-ng-repeat="a in areaList" value={{a.areaCode}}>{{a.areaCode}}
+                                        </option>
                                     </select>
-                                    <span data-ng-show="showAcr" data-ng-bind="d.areaCode"></span>
+                                    <span data-ng-show="showAcr" data-ng-bind="d.areaID"></span>
                                 </div>
                             </td>
                             <td>
-                                <span data-ng-show="d.mon">&#10004;</span>
+                                <div editable>
+                                    <input id="mon" type="checkbox" class="form-control checkbox-big" data-ng-model="d.mon"
+                                        data-ng-show="!showAcr">
+                                    <span data-ng-show="d.mon && showAcr">&#10004;</span>
+                                </div>
                             </td>
                             <td>
-                                <span data-ng-show="d.tue">&#10004;</span>
+                                <div editable>
+                                    <input id="tue" type="checkbox" class="form-control checkbox-big" data-ng-model="d.tue"
+                                        data-ng-show="!showAcr">
+                                    <span data-ng-show="d.tue && showAcr">&#10004;</span>
+                                </div>
                             </td>
                             <td>
-                                <span data-ng-show="d.wed">&#10004;</span>
+                                <div editable>
+                                    <input id="wed" type="checkbox" class="form-control checkbox-big" data-ng-model="d.wed"
+                                        data-ng-show="!showAcr">
+                                    <span data-ng-show="d.wed && showAcr">&#10004;</span>
+                                </div>
                             </td>
                             <td>
-                                <span data-ng-show="d.thu">&#10004;</span>
+                                <div editable>
+                                    <input id="thu" type="checkbox" class="form-control checkbox-big" data-ng-model="d.thu"
+                                        data-ng-show="!showAcr">
+                                    <span data-ng-show="d.thu && showAcr">&#10004;</span>
+                                </div>
                             </td>
                             <td>
-                                <span data-ng-show="d.fri">&#10004;</span>
+                                <div editable>
+                                    <input id="fri" type="checkbox" class="form-control checkbox-big" data-ng-model="d.fri"
+                                        data-ng-show="!showAcr">
+                                    <span data-ng-show="d.fri && showAcr">&#10004;</span>
+                                </div>
                             </td>
                             <td>
-                                <span data-ng-show="d.sat">&#10004;</span>
+                                <div editable>
+                                    <input id="mon" type="checkbox" class="form-control checkbox-big" data-ng-model="d.sat"
+                                        data-ng-show="!showAcr">
+                                    <span data-ng-show="d.sat && showAcr">&#10004;</span>
+                                </div>
                             </td>
                             <td>
                                 <span data-ng-bind="d.remarks"></span>
                             </td>
                             <td>
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showAcr" data-ng-click="editAcr();"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showAcr" data-ng-click="saveAcr(d.acrID, d.areaCode);"><i class="fa fa-save"></i></button>
-                                    <button class="btn btn-sm btn-default" data-ng-show="!showAcr" data-ng-click="cancelAcr();"><i class="fa fa-times"></i></button>
-                                </td>
+                                <button class="btn btn-sm btn-primary" data-ng-show="showAcr"
+                                    data-ng-click="editAcr(d, $index);"><i class="fa fa-pencil-alt"></i></button>
+                                <button class="btn btn-sm btn-warning" data-ng-show="!showAcr"
+                                    data-ng-click="saveAcr(d);"><i class="fa fa-save"></i></button>
+                                <button class="btn btn-sm btn-default" data-ng-show="!showAcr"
+                                    data-ng-click="cancelAcr();"><i class="fa fa-times"></i></button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

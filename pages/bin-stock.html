@@ -1,0 +1,113 @@
+<!-- Modal For new Bin -->
+<div class="modal fade" id="createBin" tabindex="-1" role="dialog" aria-labelledby="createBin" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add New Bin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtBinSerialNo form-label">Serial No.</label>
+                    <input type="text" class="form-control" id="txtBinSerialNo" data-ng-model="bin.serialNo" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtBinSize form-label">Size</label>
+                    <select type="text" class="form-control" id="txtBinSize" data-ng-model="bin.size">
+                        <option value="120">120L</option>
+                        <option value="240">240L</option>
+                        <option value="660">660L</option>
+                        <option value="1000">1000L</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtBinStatus form-label">Status</label>
+                    <select type="text" class="form-control" id="txtBinStatus" data-ng-model="bin.status">
+                        <option value="a">Active</option>
+                        <option value="i">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addBin();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>Bin Stock</h5>
+    </div>
+</div>
+<div class="row filter-div">
+    <div class="col-md-3">
+        <h6>Search :</h6>
+        <input class="form-control" type="text" id="serialNum" ng-model="searchText">
+
+    </div>
+</div>
+
+<br />
+
+<div class="row" >
+    <div class="col-md-3">
+        <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New Bin</button>
+    </div>
+</div>
+
+<br />
+
+<!--Beginning of tab code-->
+
+<div class="row">
+    <table class="table table-hover table-striped table-clickable">
+        <thead>
+            <tr>
+                <th width="20%" data-ng-click="orderBy('serialNo');">Serial No <i class="fas fa-sort-down"></i></th>
+                <th width="20%" data-ng-click="orderBy('size');">Size <i class="fas fa-sort-down"></i></th>
+                <th width="35%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="b in binStockList | filter: searchText |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="wbdHistory(b.serialNo)">
+                <td>
+                    <div editable>
+                        <input ng-disabled='true' type="text" class="form-control" data-ng-model="b.serialNo" data-ng-show="!showBinStock" />
+                        <span data-ng-show="showBinStock" data-ng-bind="b.serialNo"></span>
+                    </div>
+                </td>
+                <td>
+                    <div editable>
+                        <select type="text" class="form-control" data-ng-model="b.size" data-ng-show="!showBinStock">
+                            <option value='120'>120L</option>
+                            <option value='240'>240L</option>
+                            <option value='660'>660L</option>
+                            <option value='1000'>1000l</option>
+                        </select>
+                        <span data-ng-show="showBinStock" data-ng-bind="b.size"></span>
+                    </div>
+                </td>
+                <td>
+                    <div editable>
+                        <input type="text" class="form-control" data-ng-model="b.status" data-ng-show="!showBinStock">
+                        <span data-ng-show="showBinStock" data-ng-bind="b.status"></span>
+                    </div>
+                </td>
+                <td >
+                    <button class="btn btn-sm btn-primary" data-ng-show="showBinStock" data-ng-click="editBinStock();"><i class="fa fa-pencil-alt"></i></button>
+                    <!--<button class="btn btn-sm btn-danger" data-ng-show="showBinStock" data-ng-click="deleteBinStock(b.serialNo)"><i class="fas fa-trash-alt"></i></button>-->
+                    <button class="btn btn-sm btn-warning" data-ng-show="!showBinStock" data-ng-click="saveBinStock(b.serialNo, b.size, b.status);"><i class="fa fa-save"></i></button>
+                    <button class="btn btn-sm btn-default" data-ng-show="!showBinStock" data-ng-click="cancelBinStock();"><i class="fa fa-times"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -185,7 +185,16 @@
         <p><strong>Content: </strong></p>
         <p class="contentBox">{{comDetail.content}}</p>
         <p><strong>Complaint image:</strong></p>
-        <p><img ng-src=../images/{{comDetail.img}} class="thumbnail"></p>
+        <!-- <p><img ng-src=../images/{{comDetail.img}} class="thumbnail"></p> -->
+<!--
+        <a href="https://trienekens-trial.appspot.com/images/{{comDetail.img}}" class="thumbnail" data-fancybox data-width="2048">
+            <img ng-src="https://trienekens-trial.appspot.com/images/{{comDetail.img}}" data-ng-show="comDetail.img != null">
+        </a>
+-->
+        <a href="../images/{{comDetail.img}}" class="thumbnail" data-fancybox data-width="2048">
+            <img ng-src="../images/{{comDetail.img}}" data-ng-show="comDetail.img != null">
+        </a>
+        <p data-ng-show="comDetail.img == '' || comDetail.img == null">No image attached</p>
     </div>
 <!--
     <div class="col-md-6">

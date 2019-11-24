@@ -225,5 +225,9 @@ app.get('/customer-enquiry', function (req, res) {
     'use strict';
     res.sendFile('pages/customer-enquiry.html', {root: __dirname});
 });
+app.get('/bin-stock', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bin-stock.html', {root: __dirname});
+});
 
 module.exports = app;
