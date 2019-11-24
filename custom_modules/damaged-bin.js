@@ -137,7 +137,7 @@ app.post('/getDbdDetails', function (req, res) {
         if (err) {
             throw err;
         }
-         
+
         res.json(result);
         console.log(result);
     });
@@ -155,7 +155,7 @@ app.post('/getDbdDetailsDetails', function (req, res) {
         if (err) {
             throw err;
         }
-         
+        
         res.json(result);
         console.log(result);
     });
@@ -180,6 +180,19 @@ app.post('/addBdafEntry', function (req, res) {
         res.json({"status": "success", "message": "BDAF entry added!", "details": {"bdafID": req.body.bdafJD}});
     }); 
 }); // Complete
+
+app.post('/editDbr', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tbldbrentry SET areaCode = '" + req.body.areaCode + "', damageCode = '" + req.body.damageCode + "', unit = '" + req.body.unit + "', binSize = '" + req.body.binSize + "', serialNo = '" + req.body.serialNo+ "', damageReason = '" + req.body.damageReason + "' WHERE dbrID = '" + req.body.dbrID + "' AND id = '" + req.body.id + "'";
+        
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        } 
+        res.json(result);
+    });
+});
 
 app.post('/updateDbrBD', function (req, res) {
     'use strict';

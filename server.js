@@ -41,7 +41,9 @@ var general = require('./custom_modules/general');
 
 
 // Parse JSON bodies (as sent by API clients)
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({
+    limit: '50mb'
+}));
 // Parse URL-encoded bodies (as sent by HTML forms)
 //app.use(express.urlencoded());
 
@@ -56,15 +58,14 @@ FCMAdmin.initializeApp({
 
 app.post('/sendNotifToDevice', function (req, res) {
     'use strict';
-    
+
     var topic = req.body.target;
 
     var payloadWithTopic = {
-        'notification':
-            {
-                'title': req.body.title,
-                'body': req.body.message
-            },
+        'notification': {
+            'title': req.body.title,
+            'body': req.body.message
+        },
         topic: topic
     };
 
@@ -108,13 +109,18 @@ app.post('/insertAnnouncement', function (req, res) {
 
 app.get('/fetchCarouselImg', function (req, res) {
     'use strict';
-    var sql = "", output = {}, i = 0;
-    
+    var sql = "",
+        output = {},
+        i = 0;
+
     sql = "SELECT * FROM tblcarouselimg";
     output.output = [];
     database.query(sql, function (err, result) {
         for (i = 0; i < result.length; i += 1) {
-            output.output.push({"imageName": result[i].fileName, "id": result[i].id});
+            output.output.push({
+                "imageName": result[i].fileName,
+                "id": result[i].id
+            });
         }
         console.log(output);
         res.json(output);
@@ -125,8 +131,10 @@ app.get('/fetchCarouselImg', function (req, res) {
 app.get('/getAllSchedule', function (req, res) {
     'use strict';
 
-    var sql = "", output = [], i = 0;
-    
+    var sql = "",
+        output = [],
+        i = 0;
+
     sql = "SELECT * FROM tblschedule";
     database.query(sql, function (err, result) {
         for (i = 0; i < result.length; i += 1) {
@@ -144,7 +152,7 @@ app.get('/getAreas', function (req, res) {
     var sql = "SELECT * FROM tblarea";
     var output = [];
     database.query(sql, function (err, result) {
-        for (var i=0; i<result.length; i++){
+        for (var i = 0; i < result.length; i++) {
             output.push(result[i]);
         }
         console.log(output);
@@ -156,8 +164,10 @@ app.get('/getAreas', function (req, res) {
 app.get('/getPendingUser', function (req, res) {
     'use strict';
 
-    var sql = "", output = [], i = 0;
-    
+    var sql = "",
+        output = [],
+        i = 0;
+
     sql = "SELECT * FROM tblcustomer WHERE status = 0";
     database.query(sql, function (err, result) {
         for (i = 0; i < result.length; i += 1) {
@@ -172,11 +182,13 @@ app.get('/getPendingUser', function (req, res) {
 app.get('/getPendingBinRequest', function (req, res) {
     'use strict';
 
-    var sql = "", output = [], i = 0;
-    
+    var sql = "",
+        output = [],
+        i = 0;
+
     sql = "SELECT * FROM tblbinrequest";
     database.query(sql, function (err, result) {
-        if(result!=undefined){
+        if (result != undefined) {
             for (i = 0; i < result.length; i += 1) {
                 output.push(result[i]);
             }
@@ -202,13 +214,13 @@ app.post('/getBinReqDetail', function (req, res) {
 app.post('/updatePendingUser', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "UPDATE tblcustomer SET status = '"+req.body.status+"' WHERE customerID = '"+req.body.pendingID+"'";
+    var sql = "UPDATE tblcustomer SET status = '" + req.body.status + "' WHERE customerID = '" + req.body.pendingID + "'";
     var transporter, subject, text, email, mailOptions;
     var date = dateTime.create().format('Y-m-d H:i:s');
-    var tbluserSql = "INSERT INTO tbluser(customerID,userEmail,password,status,creationDate) VALUES('"+req.body.pendingID+"','"+req.body.email+"','"+req.body.pass+"',1,'"+date+"')";
+    var tbluserSql = "INSERT INTO tbluser(customerID,userEmail,password,status,creationDate) VALUES('" + req.body.pendingID + "','" + req.body.email + "','" + req.body.pass + "',1,'" + date + "')";
 
-    database.query(sql, function(err, result){
-        if(err){
+    database.query(sql, function (err, result) {
+        if (err) {
             throw err;
         }
         transporter = nodemailer.createTransport({
@@ -219,15 +231,15 @@ app.post('/updatePendingUser', function (req, res) {
             }
         });
 
-        if(req.body.status == 1){
+        if (req.body.status == 1) {
             text = "Dear user, we are pleased to inform you that your registration has been approved. You can log in to our app using the email and password that you have entered during registration. ";
-            database.query(tbluserSql, function(err, result){
-                if(err){
+            database.query(tbluserSql, function (err, result) {
+                if (err) {
                     throw err;
                 }
                 console.log("Succeess");
             });
-        }else{
+        } else {
             text = "Dear user, we regret to inform you that your registration has been declined. We apologise for any inconveniences caused.";
         }
 
@@ -240,13 +252,13 @@ app.post('/updatePendingUser', function (req, res) {
             text: text
         };
 
-        transporter.sendMail(mailOptions, function(error, info){
-            if(error){
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
                 res.send("Mail Failed");
                 res.end();
                 console.log(error);
             }
-            console.log("Email sent: "+info.response);
+            console.log("Email sent: " + info.response);
         });
         res.send("User Status Updated");
         res.end();
@@ -257,34 +269,58 @@ app.post('/updateBinRequest', function (req, res) {
     'use strict';
     console.log(req.body);
     var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.id + "'";
-    var msg = "The status of your bin request with the ID "+req.body.id+" has been updated to "+req.body.status+". Please go to the View My Requests tab for information on any necessary actions.";
-    var getUserID = "SELECT userID FROM tblbinrequest WHERE reqID = '"+req.body.id+"'";
+    console.log(sql);
+    var msg = "The status of your bin request with the ID " + req.body.id + " has been updated to " + req.body.status + ". Please go to the View My Requests tab for information on any necessary actions.";
+    var getUserID = "SELECT userID FROM tblbinrequest WHERE reqID = '" + req.body.id + "'";
     var userID, date = dateTime.create().format('Y-m-d H:M:S');
-    var topic = "TriBinReq"+req.body.id;
+    var topic = "TriBinReq" + req.body.id;
     var payloadWithTopic = {
-        'notification':
-            {
-                'title': "Bin Request Update",
-                'body': msg
-            },
+        'notification': {
+            'title': "Bin Request Update",
+            'body': msg
+        },
         topic: topic
     };
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
-        database.query(getUserID, function(err, result){
-            if(err){
+        database.query(getUserID, function (err, result) {
+            if (err) {
                 throw err;
             }
             userID = result[0].userID;
-            var insertNotif = "INSERT INTO tblnotif(userID, notifText, notifDate, readStat) VALUES('"+userID+"','"+msg+"','"+date+"','u')";
+            var insertNotif = "INSERT INTO tblnotif(userID, notifText, notifDate, readStat) VALUES('" + userID + "','" + msg + "','" + date + "','u')";
             FCMAdmin.messaging().send(payloadWithTopic)
-                .then(function (response) {
-                    database.query(insertNotif, function(err, result){
-                        if(err){
+                .then(function (response) { 
+                    database.query(insertNotif, function (err, result) {
+                        if (err) {
                             throw err;
                         }
+                        if (req.body.status == 'Approved') {
+
+                            sql = "INSERT INTO tblbinrequest (binSize, unit, remarks, acrfNumber, beBins, acrBins) VALUES ('" + req.body.binSize + "', '" + req.body.unit + "', '" + req.body.remarks + "', '" + req.body.acrfNumber + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
+                            console.log(sql);
+                            database.query(sql, function (err, result) {
+                                if (err) {
+                                    throw err;
+                                }
+
+                                if (req.body.acrBin == 'yes') {
+                                    sql = "INSERT INTO tblacr (acrID, customerID, creationDateTime, `from`, `to`, remarks, beBins, acrBins) VALUES ('" + req.body.acrfNumber + "', '" + userID + "', '" + req.body.creationDate + "', '" + req.body.from + "', '" + req.body.to + "', '" + req.body.remarks + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
+
+                                    console.log(sql);
+                                    database.query(sql, function (err, result) {
+                                        if (err) {
+                                            throw err;
+                                        }
+                                    });
+                                }
+                            });
+
+
+                        }
+
                     });
                     console.log("Topic message sent successfully");
                 }).catch(function (err) {
@@ -299,11 +335,13 @@ app.post('/updateBinRequest', function (req, res) {
 app.get('/getEnquiry', function (req, res) {
     'use strict';
 
-    var sql = "", output = [], i = 0;
-    
+    var sql = "",
+        output = [],
+        i = 0;
+
     sql = "SELECT * FROM tblenquiry JOIN tbluser WHERE tbluser.userID = tblenquiry.userID";
     database.query(sql, function (err, result) {
-        if(result!=undefined){
+        if (result != undefined) {
             for (i = 0; i < result.length; i += 1) {
                 output.push(result[i]);
             }
@@ -317,14 +355,16 @@ app.get('/getEnquiry', function (req, res) {
 app.post('/updateEnquiry', function (req, res) {
     'use strict';
 
-    var sql = "", output = [], i = 0;
-    
-    sql = "UPDATE tblenquiry SET enqStatus = '"+req.body.status+"' WHERE enquiryID = '"+req.body.id+"'";
+    var sql = "",
+        output = [],
+        i = 0;
+
+    sql = "UPDATE tblenquiry SET enqStatus = '" + req.body.status + "' WHERE enquiryID = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
-        if(!err){
+        if (!err) {
             res.send("Enquiry Updated");
             res.end();
-        }else{
+        } else {
             throw err;
         }
     });
@@ -333,9 +373,10 @@ app.post('/updateEnquiry', function (req, res) {
 app.post('/deleteCarouselImg', function (req, res) {
     'use strict';
     console.log(req.body);
-    
-    var imgDir = "", sql = "";
-    
+
+    var imgDir = "",
+        sql = "";
+
     imgDir = "images/img/" + req.body.name;
     sql = "DELETE FROM tblcarouselimg WHERE id = '" + req.body.id + "'";
     database.query(sql, function (err, result) {
@@ -390,7 +431,7 @@ app.post('/editCollectionSchedule', function (req, res) {
 //     });
 // });
 
-app.get('/customerFeedbackMunicipal', function(req, res){
+app.get('/customerFeedbackMunicipal', function (req, res) {
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_municipal GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_municipal GROUP BY teamEfficiency UNION SELECT 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_municipal GROUP BY collectionPromptness UNION SELECT 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_municipal GROUP BY binHandling UNION SELECT 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_municipal GROUP BY spillageControl UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_municipal GROUP BY queryResponse";
     var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined'";
@@ -400,67 +441,90 @@ app.get('/customerFeedbackMunicipal', function(req, res){
     var json = {};
     var data = {};
     data.data = [];
-    database.query(sql, function(err,result){
+    database.query(sql, function (err, result) {
         console.log(result);
-        if(result != undefined){
-            for(var i = 0; i<result.length; i++){
-                if(result[i].source == "companyRating" && result[i].category == "1"){
+        if (result != undefined) {
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].source == "companyRating" && result[i].category == "1") {
                     compRateUS = result[i].value;
-                }else if(result[i].source == "companyRating" && result[i].category == "2"){
+                } else if (result[i].source == "companyRating" && result[i].category == "2") {
                     compRateAvg = result[i].value;
-                }else if(result[i].source == "companyRating" && result[i].category == "3"){
+                } else if (result[i].source == "companyRating" && result[i].category == "3") {
                     compRateS = result[i].value;
                 }
-    
-                if(result[i].source == "teamEfficiency" && result[i].category == "1"){
+
+                if (result[i].source == "teamEfficiency" && result[i].category == "1") {
                     teamEffUS = result[i].value;
-                }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
+                } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
                     teamEffAvg = result[i].value;
-                }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
+                } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
                     teamEffS = result[i].value;
                 }
-    
-                if(result[i].source == "collectionPromptness" && result[i].category == "1"){
+
+                if (result[i].source == "collectionPromptness" && result[i].category == "1") {
                     collPromptUS = result[i].value;
-                }else if(result[i].source == "collectionPromptness" && result[i].category == "2"){
+                } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
                     collPromptAvg = result[i].value;
-                }else if(result[i].source == "collectionPromptness" && result[i].category == "3"){
+                } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
                     collPromptS = result[i].value;
                 }
-    
-                if(result[i].source == "binHandling" && result[i].category == "1"){
+
+                if (result[i].source == "binHandling" && result[i].category == "1") {
                     binHandUS = result[i].value;
-                }else if(result[i].source == "binHandling" && result[i].category == "2"){
+                } else if (result[i].source == "binHandling" && result[i].category == "2") {
                     binHandAvg = result[i].value;
-                }else if(result[i].source == "binHandling" && result[i].category == "3"){
+                } else if (result[i].source == "binHandling" && result[i].category == "3") {
                     binHandS = result[i].value;
                 }
-    
-                if(result[i].source == "spillageControl" && result[i].category == "1"){
+
+                if (result[i].source == "spillageControl" && result[i].category == "1") {
                     spillCtrlUS = result[i].value;
-                }else if(result[i].source == "spillageControl" && result[i].category == "2"){
+                } else if (result[i].source == "spillageControl" && result[i].category == "2") {
                     spillCtrlAvg = result[i].value;
-                }else if(result[i].source == "spillageControl" && result[i].category == "3"){
+                } else if (result[i].source == "spillageControl" && result[i].category == "3") {
                     spillCtrlS = result[i].value;
                 }
-    
-                if(result[i].source == "queryResponse" && result[i].category == "1"){
+
+                if (result[i].source == "queryResponse" && result[i].category == "1") {
                     qryRespUS = result[i].value;
-                }else if(result[i].source == "queryResponse" && result[i].category == "2"){
+                } else if (result[i].source == "queryResponse" && result[i].category == "2") {
                     qryRespAvg = result[i].value;
-                }else if(result[i].source == "queryResponse" && result[i].category == "3"){
+                } else if (result[i].source == "queryResponse" && result[i].category == "3") {
                     qryRespS = result[i].value;
                 }
             }
         }
 
-        database.query(sqlComments, function(err, result){
-            for(var i = 0; i<result.length; i++){
-                if(result[i].extraComment != "" && result[i].extraComment != null){
-                    data.data.push({"comments":result[i].extraComment,"user":result[i].name});
+        database.query(sqlComments, function (err, result) {
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].extraComment != "" && result[i].extraComment != null) {
+                    data.data.push({
+                        "comments": result[i].extraComment,
+                        "user": result[i].name
+                    });
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"binHandUS":binHandUS,"binHandAvg":binHandAvg,"binHandS":binHandS,"spillCtrlUS":spillCtrlUS,"spillCtrlAvg":spillCtrlAvg,"spillCtrlS":spillCtrlS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data.data};
+            json = {
+                "compRateUS": compRateUS,
+                "compRateAvg": compRateAvg,
+                "compRateS": compRateS,
+                "teamEffUS": teamEffUS,
+                "teamEffAvg": teamEffAvg,
+                "teamEffS": teamEffS,
+                "collPromptUS": collPromptUS,
+                "collPromptAvg": collPromptAvg,
+                "collPromptS": collPromptS,
+                "binHandUS": binHandUS,
+                "binHandAvg": binHandAvg,
+                "binHandS": binHandS,
+                "spillCtrlUS": spillCtrlUS,
+                "spillCtrlAvg": spillCtrlAvg,
+                "spillCtrlS": spillCtrlS,
+                "qryRespUS": qryRespUS,
+                "qryRespAvg": qryRespAvg,
+                "qryRespS": qryRespS,
+                "comments": data.data
+            };
             res.json(json);
             res.end();
         });
@@ -492,7 +556,7 @@ app.get('/customerFeedbackMunicipal', function(req, res){
 //     });
 // });
 
-app.get('/customerFeedbackCommercial', function(req, res){
+app.get('/customerFeedbackCommercial', function (req, res) {
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_commercial GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_commercial GROUP BY teamEfficiency UNION SELECT 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_commercial GROUP BY collectionPromptness UNION SELECT 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_commercial GROUP BY cleanliness UNION SELECT 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_commercial GROUP BY physicalCondition UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_commercial GROUP BY queryResponse";
     var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined'";
@@ -502,66 +566,89 @@ app.get('/customerFeedbackCommercial', function(req, res){
     var json = {};
     var data = {};
     data.data = [];
-    database.query(sql, function(err,result){
-        if(result != undefined){
-            for(var i = 0; i<result.length; i++){
-                if(result[i].source == "companyRating" && result[i].category == "1"){
+    database.query(sql, function (err, result) {
+        if (result != undefined) {
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].source == "companyRating" && result[i].category == "1") {
                     compRateUS = result[i].value;
-                }else if(result[i].source == "companyRating" && result[i].category == "2"){
+                } else if (result[i].source == "companyRating" && result[i].category == "2") {
                     compRateAvg = result[i].value;
-                }else if(result[i].source == "companyRating" && result[i].category == "3"){
+                } else if (result[i].source == "companyRating" && result[i].category == "3") {
                     compRateS = result[i].value;
                 }
-    
-                if(result[i].source == "teamEfficiency" && result[i].category == "1"){
+
+                if (result[i].source == "teamEfficiency" && result[i].category == "1") {
                     teamEffUS = result[i].value;
-                }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
+                } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
                     teamEffAvg = result[i].value;
-                }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
+                } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
                     teamEffS = result[i].value;
                 }
-    
-                if(result[i].source == "collectionPromptness" && result[i].category == "1"){
+
+                if (result[i].source == "collectionPromptness" && result[i].category == "1") {
                     collPromptUS = result[i].value;
-                }else if(result[i].source == "collectionPromptness" && result[i].category == "2"){
+                } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
                     collPromptAvg = result[i].value;
-                }else if(result[i].source == "collectionPromptness" && result[i].category == "3"){
+                } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
                     collPromptS = result[i].value;
                 }
-    
-                if(result[i].source == "cleanliness" && result[i].category == "1"){
+
+                if (result[i].source == "cleanliness" && result[i].category == "1") {
                     cleanlinessUS = result[i].value;
-                }else if(result[i].source == "cleanliness" && result[i].category == "2"){
+                } else if (result[i].source == "cleanliness" && result[i].category == "2") {
                     cleanlinessAvg = result[i].value;
-                }else if(result[i].source == "cleanliness" && result[i].category == "3"){
+                } else if (result[i].source == "cleanliness" && result[i].category == "3") {
                     cleanlinessS = result[i].value;
                 }
-    
-                if(result[i].source == "physicalCondition" && result[i].category == "1"){
+
+                if (result[i].source == "physicalCondition" && result[i].category == "1") {
                     physicalCondUS = result[i].value;
-                }else if(result[i].source == "physicalCondition" && result[i].category == "2"){
+                } else if (result[i].source == "physicalCondition" && result[i].category == "2") {
                     physicalCondAvg = result[i].value;
-                }else if(result[i].source == "physicalCondition" && result[i].category == "3"){
+                } else if (result[i].source == "physicalCondition" && result[i].category == "3") {
                     physicalCondS = result[i].value;
                 }
-    
-                if(result[i].source == "queryResponse" && result[i].category == "1"){
+
+                if (result[i].source == "queryResponse" && result[i].category == "1") {
                     qryRespUS = result[i].value;
-                }else if(result[i].source == "queryResponse" && result[i].category == "2"){
+                } else if (result[i].source == "queryResponse" && result[i].category == "2") {
                     qryRespAvg = result[i].value;
-                }else if(result[i].source == "queryResponse" && result[i].category == "3"){
+                } else if (result[i].source == "queryResponse" && result[i].category == "3") {
                     qryRespS = result[i].value;
                 }
             }
         }
 
-        database.query(sqlComments, function(err, result){
-            for(var i = 0; i<result.length; i++){
-                if(result[i].extraComment != "" && result[i].extraComment != null){
-                    data.data.push({"comments":result[i].extraComment,"user":result[i].name});
+        database.query(sqlComments, function (err, result) {
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].extraComment != "" && result[i].extraComment != null) {
+                    data.data.push({
+                        "comments": result[i].extraComment,
+                        "user": result[i].name
+                    });
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"collPromptUS":collPromptUS,"collPromptAvg":collPromptAvg,"collPromptS":collPromptS,"cleanlinessUS":cleanlinessUS,"cleanlinessAvg":cleanlinessAvg,"cleanlinessS":cleanlinessS,"physicalCondUS":physicalCondUS,"physicalCondAvg":physicalCondAvg,"physicalCondS":physicalCondS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data.data};
+            json = {
+                "compRateUS": compRateUS,
+                "compRateAvg": compRateAvg,
+                "compRateS": compRateS,
+                "teamEffUS": teamEffUS,
+                "teamEffAvg": teamEffAvg,
+                "teamEffS": teamEffS,
+                "collPromptUS": collPromptUS,
+                "collPromptAvg": collPromptAvg,
+                "collPromptS": collPromptS,
+                "cleanlinessUS": cleanlinessUS,
+                "cleanlinessAvg": cleanlinessAvg,
+                "cleanlinessS": cleanlinessS,
+                "physicalCondUS": physicalCondUS,
+                "physicalCondAvg": physicalCondAvg,
+                "physicalCondS": physicalCondS,
+                "qryRespUS": qryRespUS,
+                "qryRespAvg": qryRespAvg,
+                "qryRespS": qryRespS,
+                "comments": data.data
+            };
             res.json(json);
             res.end();
         });
@@ -592,7 +679,7 @@ app.get('/customerFeedbackCommercial', function(req, res){
 //     });
 // });
 
-app.get('/customerFeedbackScheduled', function(req, res){
+app.get('/customerFeedbackScheduled', function (req, res) {
     'use strict';
     var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency UNION SELECT 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence UNION SELECT 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse";
     var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined'";
@@ -603,78 +690,102 @@ app.get('/customerFeedbackScheduled', function(req, res){
     var data = {};
     data.data = [];
 
-    database.query(sql, function(err,result){
-        if(result != undefined){
-            for(var i = 0; i<result.length; i++){
-                if(result[i].source == "companyRating" && result[i].category == "1"){
+    database.query(sql, function (err, result) {
+        if (result != undefined) {
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].source == "companyRating" && result[i].category == "1") {
                     compRateUS = result[i].value;
-                }else if(result[i].source == "companyRating" && result[i].category == "2"){
+                } else if (result[i].source == "companyRating" && result[i].category == "2") {
                     compRateAvg = result[i].value;
-                }else if(result[i].source == "companyRating" && result[i].category == "3"){
+                } else if (result[i].source == "companyRating" && result[i].category == "3") {
                     compRateS = result[i].value;
                 }
-    
-                if(result[i].source == "teamEfficiency" && result[i].category == "1"){
+
+                if (result[i].source == "teamEfficiency" && result[i].category == "1") {
                     teamEffUS = result[i].value;
-                }else if(result[i].source == "teamEfficiency" && result[i].category == "2"){
+                } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
                     teamEffAvg = result[i].value;
-                }else if(result[i].source == "teamEfficiency" && result[i].category == "3"){
+                } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
                     teamEffS = result[i].value;
                 }
-    
-                if(result[i].source == "healthAdherence" && result[i].category == "1"){
+
+                if (result[i].source == "healthAdherence" && result[i].category == "1") {
                     healthAdhUS = result[i].value;
-                }else if(result[i].source == "healthAdherence" && result[i].category == "2"){
+                } else if (result[i].source == "healthAdherence" && result[i].category == "2") {
                     healthAdhAvg = result[i].value;
-                }else if(result[i].source == "healthAdherence" && result[i].category == "3"){
+                } else if (result[i].source == "healthAdherence" && result[i].category == "3") {
                     healthAdhS = result[i].value;
                 }
-    
-                if(result[i].source == "regulationsAdherence" && result[i].category == "1"){
+
+                if (result[i].source == "regulationsAdherence" && result[i].category == "1") {
                     regAdhUS = result[i].value;
-                }else if(result[i].source == "regulationsAdherence" && result[i].category == "2"){
+                } else if (result[i].source == "regulationsAdherence" && result[i].category == "2") {
                     regAdhAvg = result[i].value;
-                }else if(result[i].source == "regulationsAdherence" && result[i].category == "3"){
+                } else if (result[i].source == "regulationsAdherence" && result[i].category == "3") {
                     regAdhS = result[i].value;
                 }
-    
-                if(result[i].source == "queryResponse" && result[i].category == "1"){
+
+                if (result[i].source == "queryResponse" && result[i].category == "1") {
                     qryRespUS = result[i].value;
-                }else if(result[i].source == "queryResponse" && result[i].category == "2"){
+                } else if (result[i].source == "queryResponse" && result[i].category == "2") {
                     qryRespAvg = result[i].value;
-                }else if(result[i].source == "queryResponse" && result[i].category == "3"){
+                } else if (result[i].source == "queryResponse" && result[i].category == "3") {
                     qryRespS = result[i].value;
                 }
             }
         }
 
-        database.query(sqlComments, function(err, result){
-            for(var i = 0; i<result.length; i++){
-                if(result[i].extraComment != "" && result[i].extraComment != null){
-                    data.data.push({"comments":result[i].extraComment,"user":result[i].name});
+        database.query(sqlComments, function (err, result) {
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].extraComment != "" && result[i].extraComment != null) {
+                    data.data.push({
+                        "comments": result[i].extraComment,
+                        "user": result[i].name
+                    });
                 }
             }
-            json = {"compRateUS":compRateUS,"compRateAvg":compRateAvg,"compRateS":compRateS,"teamEffUS":teamEffUS,"teamEffAvg":teamEffAvg,"teamEffS":teamEffS,"healthAdhUS":healthAdhUS,"healthAdhAvg":healthAdhAvg,"healthAdhS":healthAdhS,"regAdhUS":regAdhUS,"regAdhAvg":regAdhAvg,"regAdhS":regAdhS,"qryRespUS":qryRespUS,"qryRespAvg":qryRespAvg,"qryRespS":qryRespS,"comments":data.data};
+            json = {
+                "compRateUS": compRateUS,
+                "compRateAvg": compRateAvg,
+                "compRateS": compRateS,
+                "teamEffUS": teamEffUS,
+                "teamEffAvg": teamEffAvg,
+                "teamEffS": teamEffS,
+                "healthAdhUS": healthAdhUS,
+                "healthAdhAvg": healthAdhAvg,
+                "healthAdhS": healthAdhS,
+                "regAdhUS": regAdhUS,
+                "regAdhAvg": regAdhAvg,
+                "regAdhS": regAdhS,
+                "qryRespUS": qryRespUS,
+                "qryRespAvg": qryRespAvg,
+                "qryRespS": qryRespS,
+                "comments": data.data
+            };
             res.json(json);
             res.end();
         });
     });
 });
 
-app.get('/unreadSatisfaction', function(req, res){
+app.get('/unreadSatisfaction', function (req, res) {
     'use strict';
     var unread = "SELECT COUNT(readStat) as unreadMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE readStat = 'u') as unreadScheduled, (SELECT COUNT(readStat) from tblsatisfaction_commercial WHERE readStat = 'u') as unreadCommercial FROM tblsatisfaction_municipal WHERE readStat = 'u'";
     //var commercial = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
     //var scheduled = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
     var unreadMunicipal, unreadCommercial, unreadScheduled, json = {};
 
-    database.query(unread, function(err, result){
-        if(result != undefined){
+    database.query(unread, function (err, result) {
+        if (result != undefined) {
             unreadMunicipal = result[0].unreadMunicipal;
             unreadCommercial = result[0].unreadCommercial;
             unreadScheduled = result[0].unreadScheduled;
 
-            json = {"municipal":unreadMunicipal,"commercial":unreadCommercial,"scheduled":unreadScheduled};
+            json = {
+                "municipal": unreadMunicipal,
+                "commercial": unreadCommercial,
+                "scheduled": unreadScheduled
+            };
             res.json(json);
             res.end();
         }
@@ -692,37 +803,37 @@ app.get('/unreadSatisfaction', function(req, res){
 });
 
 
-app.get('/readSatisfactionMunicipal', function(req, res){
+app.get('/readSatisfactionMunicipal', function (req, res) {
     'use strict';
     var sql = "UPDATE tblsatisfaction_municipal SET readStat = 'r'";
-    database.query(sql, function(err, result){
+    database.query(sql, function (err, result) {
         res.send("New Satisfaction Read");
         res.end();
     });
 });
 
-app.get('/readSatisfactionCommercial', function(req, res){
+app.get('/readSatisfactionCommercial', function (req, res) {
     'use strict';
     var sql = "UPDATE tblsatisfaction_commercial SET readStat = 'r'";
-    database.query(sql, function(err, result){
+    database.query(sql, function (err, result) {
         res.send("New Satisfaction Read");
         res.end();
     });
 });
 
-app.get('/readSatisfactionScheduled', function(req, res){
+app.get('/readSatisfactionScheduled', function (req, res) {
     'use strict';
     var sql = "UPDATE tblsatisfaction_scheduled SET readStat = 'r'";
-    database.query(sql, function(err, result){
+    database.query(sql, function (err, result) {
         res.send("New Satisfaction Read");
         res.end();
     });
 });
 
-app.post('/readEnquiry', function(req, res){
+app.post('/readEnquiry', function (req, res) {
     'use strict';
     var sql = "UPDATE tblenquiry SET readStat = 'r'";
-    database.query(sql, function(err, result){
+    database.query(sql, function (err, result) {
         res.send("Enquiry Read");
         res.end();
     });
@@ -731,7 +842,7 @@ app.post('/readEnquiry', function(req, res){
 app.post('/addMunicipal', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_municipal(name, company, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('"+req.body.name+"','"+req.body.company+"','"+req.body.address+"','"+req.body.number+"','"+req.body.compRate+"','"+req.body.teamEff+"','"+req.body.collPrompt+"','"+req.body.binHand+"','"+req.body.spillCtrl+"','"+req.body.qryResp+"','"+req.body.extraComment+"','r')";
+    var sql = "INSERT INTO tblsatisfaction_municipal(name, company, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -745,7 +856,7 @@ app.post('/addMunicipal', function (req, res) {
 app.post('/addCommercial', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_commercial(name, company, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('"+req.body.name+"','"+req.body.company+"','"+req.body.address+"','"+req.body.number+"','"+req.body.compRate+"','"+req.body.teamEff+"','"+req.body.collPrompt+"','"+req.body.cleanliness+"','"+req.body.physicalCond+"','"+req.body.qryResp+"','"+req.body.extraComment+"','r')";
+    var sql = "INSERT INTO tblsatisfaction_commercial(name, company, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.cleanliness + "','" + req.body.physicalCond + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -759,7 +870,7 @@ app.post('/addCommercial', function (req, res) {
 app.post('/addScheduled', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_scheduled(name, company, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('"+req.body.name+"','"+req.body.company+"','"+req.body.address+"','"+req.body.number+"','"+req.body.compRate+"','"+req.body.teamEff+"','"+req.body.healthAdh+"','"+req.body.regAdh+"','"+req.body.qryResp+"','"+req.body.extraComment+"','r')";
+    var sql = "INSERT INTO tblsatisfaction_scheduled(name, company, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.healthAdh + "','" + req.body.regAdh + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -773,13 +884,13 @@ app.post('/addScheduled', function (req, res) {
 app.post('/uploadCarouselImg', function (req, res) {
     'use strict';
     //console.log(req.files);
-    
+
     if (req.files) {
         var file = req.files.carouselImg,
-        allowed = ["png", "jpg", "jpeg"],
-        fileExt, actualFileExt, i, sql;
+            allowed = ["png", "jpg", "jpeg"],
+            fileExt, actualFileExt, i, sql;
 
-        for(var x = 0;x<file.length;x++){
+        for (var x = 0; x < file.length; x++) {
             fileExt = file[x].name.split('.');
             actualFileExt = fileExt[1].toLowerCase();
 
@@ -803,22 +914,22 @@ app.post('/uploadCarouselImg', function (req, res) {
             }
         }
 
-        if(file.length == undefined){
+        if (file.length == undefined) {
             fileExt = file.name.split('.');
             actualFileExt = fileExt[1].toLowerCase();
 
-            for(i=0;i<allowed.length;i++){
-                if(actualFileExt == allowed[i]){
-                    if(file.size <= 2000000){
-                        sql = "INSERT INTO tblcarouselimg(fileName) VALUES('"+file.name+"')";
-                        database.query(sql, function(err, result){
-                            if(err){
+            for (i = 0; i < allowed.length; i++) {
+                if (actualFileExt == allowed[i]) {
+                    if (file.size <= 2000000) {
+                        sql = "INSERT INTO tblcarouselimg(fileName) VALUES('" + file.name + "')";
+                        database.query(sql, function (err, result) {
+                            if (err) {
                                 throw err;
                             }
                             //console.log("Image Uploaded");
                         });
-                        file.mv('./images/img/'+file.name, function(err){
-                            if(err){
+                        file.mv('./images/img/' + file.name, function (err) {
+                            if (err) {
                                 throw err;
                             }
                         });
@@ -827,8 +938,8 @@ app.post('/uploadCarouselImg', function (req, res) {
             }
         }
         res.redirect('/pages/#/upload-image-carousel');
-//        console.log("fileExt: " + fileExt);
-//        console.log("actualFileExt: ", actualFileExt);
+        //        console.log("fileExt: " + fileExt);
+        //        console.log("actualFileExt: ", actualFileExt);
     }
 });
 
@@ -837,31 +948,33 @@ app.post('/loadMenu', function (req, res) {
     var content = '',
         sql = "",
         first_text = "";
-    
+
     if (req.body.position === "Manager") {
         content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
     } else if (req.body.position === "Reporting Officer") {
         content += '<li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>';
     }
-    
+
     sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
-    
+
     database.query(sql, function (err, result) {
         result.forEach(function (key, value) {
             first_text = (key.mgmtName).split(" ")[0];
-            
+
             if (first_text === "view" || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
                 // || (key.mgmtName).indexOf("lgview") !== -1 || (key.mgmtName).indexOf("bdview") !== -1
                 content += f.menuItem(key.mgmtName, key.status);
             }
         });
-        
+
         content += '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>';
-        
-        res.json({"content": content});
+
+        res.json({
+            "content": content
+        });
         res.end();
     });
-    
+
 });
 
 app.post('/getAreaLngLat', function (req, res) {
@@ -878,7 +991,7 @@ app.post('/getAreaLngLat', function (req, res) {
 app.post('/updateAreaLngLat', function (req, res) {
     'use strict';
     var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat + "' WHERE areaID = '" + req.body.areaCode + "'";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -892,13 +1005,13 @@ app.post('/updateAreaLngLat', function (req, res) {
 // Visualization Management
 app.post('/getDataVisualization', function (req, res) {
     'use strict';
-    
+
     var sql = "SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.completionStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '" + req.body.dateStart + "' AND '" + req.body.dateEnd + "' ORDER BY r.reportCollectionDate";
-    
+
     if (req.body.zoneID !== '') {
         sql = "SELECT a.areaID, a.areaName, r.reportCollectionDate, r.operationTimeStart, r.operationTimeEnd, r.garbageAmount, r.completionStatus FROM tblreport r INNER JOIN tblarea a ON r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '" + req.body.dateStart + "' AND '" + req.body.dateEnd + "' AND a.zoneID = '" + req.body.zoneID + "' ORDER BY r.reportCollectionDate";
     }
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -908,13 +1021,13 @@ app.post('/getDataVisualization', function (req, res) {
 });
 app.post('/getDataVisualizationGroupByDate', function (req, res) {
     'use strict';
-    
+
     var sql = "SELECT r.reportCollectionDate, SUM(r.operationTimeStart) AS 'operationTimeStart', SUM(r.operationTimeEnd) AS 'operationTimeEnd', SUM(r.garbageAmount) AS 'garbageAmount' FROM tblreport r INNER JOIN tblarea a ON  r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '" + req.body.dateStart + "' AND '" + req.body.dateEnd + "' GROUP BY r.reportCollectionDate ORDER BY r.reportCollectionDate";
-    
+
     if (req.body.zoneID !== '') {
         sql = "SELECT r.reportCollectionDate, SUM(r.operationTimeStart) AS 'operationTimeStart', SUM(r.operationTimeEnd) AS 'operationTimeEnd', SUM(r.garbageAmount) AS 'garbageAmount' FROM tblreport r INNER JOIN tblarea a ON  r.areaID = a.areaID WHERE r.reportCollectionDate BETWEEN '" + req.body.dateStart + "' AND '" + req.body.dateEnd + "' AND a.zoneID = '" + req.body.zoneID + "' GROUP BY r.reportCollectionDate ORDER BY r.reportCollectionDate";
     }
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -927,7 +1040,7 @@ app.post('/getDataVisualizationGroupByDate', function (req, res) {
 app.get('/getCount', function (req, res) {
     'use strict';
     var results = {};
-    
+
     f.waterfallQuery("SELECT COUNT(*) AS zone FROM tblzone").then(function (zone) {
         results.zone = zone.zone;
         return f.waterfallQuery("SELECT COUNT(*) AS area FROM tblarea");
@@ -951,7 +1064,7 @@ app.get('/getCount', function (req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'N' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (completeReport) {
         results.completeReport = completeReport.completeReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A'");
+        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (incompleteReport) {
         results.incompleteReport = incompleteReport.incompleteReport;
         res.json(results);
@@ -972,9 +1085,9 @@ app.post('/getTodayAreaCount', function (req, res) {
 
 app.post('/getUnsubmitted', function (req, res) {
     'use strict';
-    
+
     var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -984,9 +1097,9 @@ app.post('/getUnsubmitted', function (req, res) {
 });
 app.post('/getSubmitted', function (req, res) {
     'use strict';
-    
+
     var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE()";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -998,7 +1111,7 @@ app.post('/getSubmitted', function (req, res) {
 app.post('/updateAreaLngLat', function (req, res) {
     'use strict';
     var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat + "' WHERE areaID = '" + req.body.areaCode + "'";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -1011,7 +1124,7 @@ app.post('/updateAreaLngLat', function (req, res) {
 //get all customer lng and lat
 app.get('/getLngLat', function (req, res) {
     'use strict';
-    
+
     var sql = "SELECT longitude, latitude FROM tblbins";
 
     database.query(sql, function (err, result) {
@@ -1019,7 +1132,7 @@ app.get('/getLngLat', function (req, res) {
             throw err;
         }
         res.json(result);
-//        SELECT serialNo, longitude, latitude, mystatus FROM (SELECT serialNo, latitude, longitude, 'NOT COLLECTED' AS mystatus FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE) UNION ALL SELECT serialNo, latitude, longitude, 'COLLECTED' AS mystatus FROM tbltag WHERE serialNo NOT IN (SELECT serialNo FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE))) AS t ORDER BY serialNo
+        //        SELECT serialNo, longitude, latitude, mystatus FROM (SELECT serialNo, latitude, longitude, 'NOT COLLECTED' AS mystatus FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE) UNION ALL SELECT serialNo, latitude, longitude, 'COLLECTED' AS mystatus FROM tbltag WHERE serialNo NOT IN (SELECT serialNo FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date = CURRENT_DATE))) AS t ORDER BY serialNo
     });
 });
 
@@ -1027,7 +1140,7 @@ app.get('/getLngLat', function (req, res) {
 app.get('/getCollectedLngLat', function (req, res) {
     'use strict';
     var sql = "SELECT tblbins.longitude AS longitude, tblbins.latitude AS latitude FROM tblbins JOIN tbltag on tblbins.serialNo = tbltag.serialNo WHERE tbltag.date = CURDATE()";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -1039,9 +1152,9 @@ app.get('/getCollectedLngLat', function (req, res) {
 
 app.get('/livemap', function (req, res) {
     'use strict';
-    
+
     var sql = "SELECT serialNo, longitude, latitude, status FROM (SELECT serialNo, latitude, longitude, 'NOT COLLECTED' AS status FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date >= CURRENT_DATE) UNION ALL SELECT b.serialNo, b.latitude, b.longitude, 'COLLECTED' AS status FROM tbltag t, tblbins b WHERE b.serialNo NOT IN (SELECT serialNo FROM tblbins WHERE serialNo NOT IN (SELECT serialNo FROM tbltag WHERE date >= CURRENT_DATE))) AS t ORDER BY serialNo";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             res.end();
