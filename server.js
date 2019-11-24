@@ -307,7 +307,7 @@ app.post('/updateBinRequest', function (req, res) {
                                 }
 
                                 if (req.body.acrBin == 'yes') {
-                                    sql = "INSERT INTO tblacr (acrID, customerID, creationDateTime, `from`, `to`, remarks, beBins, acrBins) VALUES ('" + req.body.acrfNumber + "', '" + userID + "', '" + req.body.creationDate + "', '" + req.body.from + "', '" + req.body.to + "', '" + req.body.remarks + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
+                                    sql = "INSERT INTO tblacr (acrID, userID, creationDateTime, `from`, `to`, remarks, beBins, acrBins) VALUES ('" + req.body.acrfNumber + "', '" + userID + "', '" + req.body.creationDate + "', '" + req.body.from + "', '" + req.body.to + "', '" + req.body.remarks + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
 
                                     console.log(sql);
                                     database.query(sql, function (err, result) {

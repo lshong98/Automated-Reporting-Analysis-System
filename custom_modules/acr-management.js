@@ -121,23 +121,30 @@ app.post('/getAreaID', function (req, res) {
 app.post('/editAcr', function (req, res) {
     'use strict';
 
-    var sql = "SELECT dcsID FROM tbldcs WHERE ((periodFrom BETWEEN '" + req.body.from + "' AND '" + req.body.to + "') OR (periodTo BETWEEN '" + req.body.from + "' AND '" + req.body.to + "')) AND areaID LIKE ('%" + req.body.areaID + "%')";
+    var sql = "SELECT dcsID FROM tbldcs WHERE ((periodFrom >= '" + req.body.from + "' OR periodFrom <= '" + req.body.to + "') OR (periodTo >= '" + req.body.from + "' OR periodTo <= '" + req.body.to + "')) AND areaID LIKE ('%" + req.body.areaID + "%')";
     console.log(sql);
 
-    database.query(sql, function (err, result) {
+    database.query(sql, function (err, result) { 
         if (err) {
             throw err;
         }
-
+        if (result.length > 0) {
+            console.log(result[0].dcsID);
         sql = "UPDATE tblacr SET dcsID = '" + result[0].dcsID + "', areaID = '" + req.body.areaCode + "', mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thu = '" + req.body.thu + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE acrID = '" + req.body.acrID + "'";
         console.log(result);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
+        
             res.json(result);
         });
-    });
+        } else {
+            result = [{"status": 'error'}];
+            res.json(result);
+        }
+        
+    }); 
 });
 
 app.post('/editAcrDays', function (req, res) {

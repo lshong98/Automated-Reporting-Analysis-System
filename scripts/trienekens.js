@@ -713,14 +713,21 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             scope.thisAcr = acr;
             console.log(scope.thisAcr);
 
+            // Change Date Format
+            scope.thisAcr.from = $filter('date')(scope.thisAcr.from, 'yyyy-MM-dd HH:mm:ss');
+            scope.thisAcr.to = $filter('date')(scope.thisAcr.to, 'yyyy-MM-dd HH:mm:ss');
+
             $http.post('/getAreaID', scope.thisAcr).then(function (response) {
 
                 console.log(response.data);
                 scope.thisAcr.areaID = response.data[0].areaID;
                 console.log(scope.thisAcr);
                 $http.post('/editAcr', scope.thisAcr).then(function (response) {
-                    var data = response.data;
-
+                    var data = response.data[0];
+                    
+                    if(data === 'error') {
+                        window.alert("DCS Doesn't Exist!");
+                    }
                 });
             });
 
@@ -5251,7 +5258,7 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
     $scope.assignArea = function (areaCode, index) {
         $scope.areaButton = false;
 
-        $scope.dcsList.areaCode.push(areaCode.areaID);
+        //$scope.dcsList.areaCode.push(areaCode.areaID);
         $scope.areaList.splice(index, 1);
 
         if ($scope.area == '') {
