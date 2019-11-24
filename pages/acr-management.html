@@ -1,4 +1,62 @@
 <!-- ACR Modal -->
+       <!-- <div class="modal fade" id="createDCS" tabindex="-1" role="dialog" aria-labelledby="createDCS" aria-hidden="true"> 
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Add a DCS</h5>
+                          <div class="form-group">
+                                  <label for="txtDcsPeriodFrom form-label">Period From</label>
+                                  <input type="date" class="form-control" id="txtDcsPeriodFrom" data-ng-model="dcs.periodFrom" />
+                              </div>
+                              
+                              <div class="form-group">
+                                  <label for="txtDcsPeriodTo form-label">Period To</label>
+                                  <input type="date" class="form-control" id="txtDcsPeriodTo" data-ng-model="dcs.periodTo" />
+                              </div>  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                              
+                              <div class="form-group">
+                                <label for="txtDcsDriver form-label">Driver</label>
+                                <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.driverID" data-ng-change="filterArea();">
+                                    <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffID}}: {{d.staffName}}</option>
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <label for="txtArea form-label">Area ID</label>
+                                <select type="text" class="form-control" id="editArea" data-ng-model="dcs.areaID">
+                                    <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaID}}: {{a.areaName}}</option>
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <label for="txtDcsReplacementPeriodFrom form-label">Replacement Period From</label>
+                                <input type="date" class="form-control" id="txtDcsReplacementPeriodFrom" data-ng-model="dcs.replacementPeriodFrom" />
+                              </div>
+                          
+                              <div class="form-group">
+                                  <label for="txtDcsReplacementPeriodTo form-label">Replacement Period To</label>
+                                  <input type="date" class="form-control" id="txtDcsReplacementPeriodTo" data-ng-model="dcs.replacementPeriodTo" />
+                              </div>
+                              <div class="form-group">
+                                <label for="txtDcsReplacementDriver form-label">Replacement Driver</label>
+                                <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.replacementDriverID">
+                                    <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffID}}: {{d.staffName}}</option>
+                                </select>
+                              </div>
+                       
+                              
+                              
+                              
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-ng-click="addDcs();">Create</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>  -->
 <div class="modal fade" id="createAcr" tabindex="-1" role="dialog" aria-labelledby="createAcr" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -246,7 +304,7 @@
             <div class="form-group">
               <label>Area Code</label>
             <br />
-                <span>{{area}}</span><span id="buttons"></span>
+                <span>{{areaCode}}</span><span id="buttons"></span>
                 <button ng-show="!areaButton" class="btn btn-sm btn-danger" ng-click="clearArea();"> <i class="fas fa-times"></i></button>
                 <button class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i></button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -267,211 +325,205 @@
   </div>
   </div>
 </div>
-
-<div class="lg-view" data-ng-show="show.lgview == 'A'">
-  <h1>LOGISTICS VIEW</h1>
-  
-  <div class="row" id="createButton" data-ng-show="show.create == 'A'">
-    <div class="col-md-6">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createDcs" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
-        
-    </div>
-</div>
- <!-- <div class="modal fade" id="createDCS" tabindex="-1" role="dialog" aria-labelledby="createDCS" aria-hidden="true"> 
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add a DCS</h5>
-        <div class="form-group">
-                <label for="txtDcsPeriodFrom form-label">Period From</label>
-                <input type="date" class="form-control" id="txtDcsPeriodFrom" data-ng-model="dcs.periodFrom" />
-            </div>
-            
-            <div class="form-group">
-                <label for="txtDcsPeriodTo form-label">Period To</label>
-                <input type="date" class="form-control" id="txtDcsPeriodTo" data-ng-model="dcs.periodTo" />
-            </div>  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            
-            <div class="form-group">
-              <label for="txtDcsDriver form-label">Driver</label>
-              <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.driverID" data-ng-change="filterArea();">
-                  <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffID}}: {{d.staffName}}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="txtArea form-label">Area ID</label>
-              <select type="text" class="form-control" id="editArea" data-ng-model="dcs.areaID">
-                  <option data-ng-repeat="a in areaList" value={{a.areaID}}>{{a.areaID}}: {{a.areaName}}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="txtDcsReplacementPeriodFrom form-label">Replacement Period From</label>
-              <input type="date" class="form-control" id="txtDcsReplacementPeriodFrom" data-ng-model="dcs.replacementPeriodFrom" />
-            </div>
-        
-            <div class="form-group">
-                <label for="txtDcsReplacementPeriodTo form-label">Replacement Period To</label>
-                <input type="date" class="form-control" id="txtDcsReplacementPeriodTo" data-ng-model="dcs.replacementPeriodTo" />
-            </div>
-            <div class="form-group">
-              <label for="txtDcsReplacementDriver form-label">Replacement Driver</label>
-              <select type="text" class="form-control" id="txtCustomer" data-ng-model="dcs.replacementDriverID">
-                  <option data-ng-repeat="d in driverList" value={{d.staffID}}>{{d.staffID}}: {{d.staffName}}</option>
-              </select>
-            </div>
-     
-            
-            
-            
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-ng-click="addDcs();">Create</button>
-        </div>
-      </div>
-    </div>
-  </div>  -->
-  
-  <div class="row">
-      <div class="col-md-12">
-          <h5>ACR Management</h5>
-      </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th width="20%" data-ick="orderBy('dcsID');">DCS ID <i class="fas fa-sort-down"></i></th>
-                        <th width="15%" data-ng-click="orderBy('periodFrom');">Period From <i class="fas fa-sort-down"></i></th>
-                        <th width="20%" data-ng-click="orderBy('periodTo');">Period To <i class="fas fa-sort-down"></i></th>
-                        <th width="20%" data-ng-click="orderBy('periodTo');">Driver <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                        <th width="10%"></th>
-                    </tr>
-                </thead>
-                <tbody>               
-                    <tr data-ng-repeat="d in dcsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
-                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.id"></td>
-                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.periodFrom | date: dd/MM/yyyy"></td>
-                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.periodTo | date: dd/MM/yyyy"></td>
-                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.driverID"></td>
-                        <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.status"></td>
-                        <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle" data-ng-click="viewdcs(d.id);"></i></button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> 
-    </div>
-  </div>
-  <div class="row" id="pagination">
-      <div class="col-md-12">
-          <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-      </div>
-  </div>
-
-</div>
-
-<!-- <div class="bd-view" data-ng-show="show.bdview == 'A'">
-  <h1>BUSINESS DEVELOPMENT VIEW</h1>
-
-
-<div class="row" id="createButton" data-ng-show="show.create == 'A'">
-    <div class="col-md-6">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createAcr" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
-        
-    </div>
-</div>
-
 <div class="row">
     <div class="col-md-12">
-        <div class="table-responsive" style="height:650px;">
-            <table id="table" class="table table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th width="10%" data-ng-click="orderBy('acrID');">ACRF Number <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
-                        <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('from');">From <i class="fas fa-sort-down"></i></th>
-                        <th width="10%" data-ng-click="orderBy('to');">To <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i></th>
-                        <th width="5%" data-ng-click="orderBy('Mon');">Mon</th>
-                        <th width="5%" data-ng-click="orderBy('Tue');">Tue</th>
-                        <th width="5%" data-ng-click="orderBy('Wed');">Wed</th>
-                        <th width="5%" data-ng-click="orderBy('Thu');">Thu</th>
-                        <th width="5%" data-ng-click="orderBy('Fri');">Fri</th>
-                        <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
-                        <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
-                        <th width="7%" id="editButtons" data-ng-show="show.edit == 'A'"></th>
-                    </tr>
-                </thead>
-                <tbody>               
-                        <tr data-ng-repeat="a in acrList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" class="clickable-row">
-                            <td>
-                                            <span data-ng-bind="a.acrID"></span>
-                            </td>
-                            <td>
-                                            <span data-ng-bind="a.companyName"></span>
-                            </td>
-                            <td>
-                                            <span data-ng-bind="a.address"></span>
-                            </td>
-                            <td>
-                                            <span data-ng-bind="a.from"></span>
-                            </td>
-                            <td>
-                                            <span data-ng-bind="a.to"></span>
-                            </td>
-                            <td>
-                                            <span data-ng-bind="a.beBins"></span>
-                            </td>
-                            <td>
-                                            <span data-ng-bind="a.acrBins"></span>
-                            </td>
-                            <td>
-                                            <span data-ng-bind="a.areaID"></span>
-                            </td>
-                            <td>
-                                        <span data-ng-show="a.mon">&#10004;</span>
-                            </td>       
-                            <td>    
-                                        <span data-ng-show="a.tue">&#10004;</span>
-                            </td>
-                            <td>
-                                        <span data-ng-show="a.wed">&#10004;</span>
-                            </td>
-                            <td>
-                                        <span data-ng-show="a.thu">&#10004;</span>
-                            </td>
-                            <td>
-                                        <span data-ng-show="a.fri">&#10004;</span>
-                            </td>
-                            <td>
-                                        <span data-ng-show="a.sat">&#10004;</span>
-                            </td>
-                            <td>
-                                        <span data-ng-bind="a.remarks"></span>
-                            </td>
-                           
-                            <td data-ng-show="show.edit == 'A'">
-                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editAcr" data-ng-click="editAcr(a.acrID);"><i class="fa fa-pencil-alt"></i></button>
-                                <button class="btn btn-sm btn-danger" data-ng-click="deleteAcr(a,$index);"><i class="fa fa-times"></i></button>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
-        </div>
+        <h5>ACR Management</h5>
     </div>
 </div>
-</div> -->
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="acrTab" role=tablist>
+            <li class="nav-item">
+                <a class="nav-link active" id="schedule-tab" data-toggle="tab" data-target="#bdaf" role="tab"
+                    aria-controls="bdaf" aria-selected="true">Bin Delivery & Activity Form</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="information-tab" data-toggle="tab" data-target="#binRequests" role="tab"
+                    aria-controls="binRequests" aria-selected="false">ACR Requests</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="bdaf" role="tabpanel" aria-labelledby="bdaf-tab">
+                <div class="lg-view" data-ng-show="show.lgview == 'A'">
+                    
+                    <div class="row" id="createButton" data-ng-show="show.create == 'A'">
+                      <div class="col-md-6">
+                          <button class="btn btn-success" data-toggle="modal" data-target="#createDcs" ng-click="resetForm();"><i class="fa fa-plus"></i> New</button>
+                          
+                      </div>
+                  </div>
+            
+                    
+                    
+                    
+                    <div class="row">
+                      <div class="col-md-12">
+                          <div class="table-responsive">
+                              <table class="table table-hover table-striped">
+                                  <thead>
+                                      <tr>
+                                          <th width="20%" data-ick="orderBy('dcsID');">DCS ID <i class="fas fa-sort-down"></i></th>
+                                          <th width="15%" data-ng-click="orderBy('periodFrom');">Period From <i class="fas fa-sort-down"></i></th>
+                                          <th width="20%" data-ng-click="orderBy('periodTo');">Period To <i class="fas fa-sort-down"></i></th>
+                                          <th width="20%" data-ng-click="orderBy('periodTo');">Driver <i class="fas fa-sort-down"></i></th>
+                                          <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                          <th width="10%"></th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>               
+                                      <tr data-ng-repeat="d in dcsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                          <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.id"></td>
+                                          <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.periodFrom | date: dd/MM/yyyy"></td>
+                                          <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.periodTo | date: dd/MM/yyyy"></td>
+                                          <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.driverID"></td>
+                                          <td ng-class="{'red': f.status === 'CORRECTION REQUIRED', 'green': f.status == 'APPROVED', 'orange': f.status == 'PENDING'}" data-ng-bind="d.status"></td>
+                                          <td><button class="btn btn-sm btn-primary"><i class="fa fa-info-circle" data-ng-click="viewdcs(d.id);"></i></button></td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div> 
+                      </div>
+                    </div>
+                    <div class="row" id="pagination">
+                        <div class="col-md-12">
+                            <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                        </div>
+                    </div>
+                  
+                  </div>
+
+            </div>
+            <div class="tab-pane fade" id="binRequests" role="tabpanel" aria-labelledby="binRequests-tab">
+                <div class="bd-view" data-ng-show="show.bdview == 'A'">
+                  
+                  
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="table-responsive" style="height:650px;">
+                              <table id="table" class="table table-hover table-striped">
+                                  <thead>
+                                      <tr>
+                                          <th width="10%" data-ng-click="orderBy('acrID');">ACRF Number <i class="fas fa-sort-down"></i></th>
+                                          <th width="10%" data-ng-click="orderBy('companyName');">Company Name <i class="fas fa-sort-down"></i></th>
+                                          <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
+                                          <th width="10%" data-ng-click="orderBy('from');">From <i class="fas fa-sort-down"></i></th>
+                                          <th width="10%" data-ng-click="orderBy('to');">To <i class="fas fa-sort-down"></i></th>
+                                          <th width="5%" data-ng-click="orderBy('beBins');">BE Bins/Unit <i class="fas fa-sort-down"></i></th>
+                                          <th width="5%" data-ng-click="orderBy('acrBins');">ACR Bins/Unit <i class="fas fa-sort-down"></i></th>
+                                          <th width="5%" data-ng-click="orderBy('areaID');">Area Code <i class="fas fa-sort-down"></i></th>
+                                          <th width="5%" data-ng-click="orderBy('Mon');">Mon</th>
+                                          <th width="5%" data-ng-click="orderBy('Tue');">Tue</th>
+                                          <th width="5%" data-ng-click="orderBy('Wed');">Wed</th>
+                                          <th width="5%" data-ng-click="orderBy('Thu');">Thu</th>
+                                          <th width="5%" data-ng-click="orderBy('Fri');">Fri</th>
+                                          <th width="5%" data-ng-click="orderBy('Sat');">Sat</th>
+                                          <th width="10%" data-ng-click="orderBy('remarks');">Remarks <i class="fas fa-sort-down"></i></th>
+                                          <th width="7%" id="editButtons" data-ng-show="show.edit == 'A'"></th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>               
+                                          <tr data-ng-repeat="d in acrList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" class="clickable-row">
+                                              <td>
+                                                              <span data-ng-bind="d.acrID"></span>
+                                              </td>
+                                              <td>
+                                                              <span data-ng-bind="d.companyName"></span>
+                                              </td>
+                                              <td>
+                                                              <span data-ng-bind="d.address"></span>
+                                              </td>
+                                              <td>
+                                                              <span data-ng-bind="d.from | date: 'dd-MM-yyyy' : 'UTC+06'"></span>
+                                              </td>
+                                              <td>
+                                                              <span data-ng-bind="d.to | date: 'dd-MM-yyyy' : 'UTC+06'"></span>
+                                              </td>
+                                              <td>
+                                                              <span data-ng-bind="d.beBins"></span>
+                                              </td>
+                                              <td>
+                                                              <span data-ng-bind="d.acrBins"></span>
+                                              </td>
+                                              <td>
+                                                  <div editable>
+                                                      <select type="text" class="form-control" data-ng-model="d.areaCode"
+                                                          data-ng-show="!showAcr">
+                                                          <option data-ng-repeat="a in areaList" value={{a.areaCode}}>{{a.areaCode}}
+                                                          </option>
+                                                      </select>
+                                                      <span data-ng-show="showAcr" data-ng-bind="d.areaID"></span>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                  <div editable>
+                                                      <input id="mon" type="checkbox" class="form-control checkbox-big" data-ng-model="d.mon"
+                                                          data-ng-show="!showAcr">
+                                                      <span data-ng-show="d.mon && showAcr">&#10004;</span>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                  <div editable>
+                                                      <input id="tue" type="checkbox" class="form-control checkbox-big" data-ng-model="d.tue"
+                                                          data-ng-show="!showAcr">
+                                                      <span data-ng-show="d.tue && showAcr">&#10004;</span>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                  <div editable>
+                                                      <input id="wed" type="checkbox" class="form-control checkbox-big" data-ng-model="d.wed"
+                                                          data-ng-show="!showAcr">
+                                                      <span data-ng-show="d.wed && showAcr">&#10004;</span>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                  <div editable>
+                                                      <input id="thu" type="checkbox" class="form-control checkbox-big" data-ng-model="d.thu"
+                                                          data-ng-show="!showAcr">
+                                                      <span data-ng-show="d.thu && showAcr">&#10004;</span>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                  <div editable>
+                                                      <input id="fri" type="checkbox" class="form-control checkbox-big" data-ng-model="d.fri"
+                                                          data-ng-show="!showAcr">
+                                                      <span data-ng-show="d.fri && showAcr">&#10004;</span>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                  <div editable>
+                                                      <input id="mon" type="checkbox" class="form-control checkbox-big" data-ng-model="d.sat"
+                                                          data-ng-show="!showAcr">
+                                                      <span data-ng-show="d.sat && showAcr">&#10004;</span>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                          <span data-ng-bind="a.remarks"></span>
+                                              </td>
+                                             
+                                              <td>
+                                                  <button class="btn btn-sm btn-primary" data-ng-show="showAcr"
+                                                      data-ng-click="editAcr(d, $index);"><i class="fa fa-pencil-alt"></i></button>
+                                                  <button class="btn btn-sm btn-warning" data-ng-show="!showAcr"
+                                                      data-ng-click="saveAcr(d);"><i class="fa fa-save"></i></button>
+                                                  <button class="btn btn-sm btn-default" data-ng-show="!showAcr"
+                                                      data-ng-click="cancelAcr();"><i class="fa fa-times"></i></button>
+                                              </td>
+                                          </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+                  
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 
 
 <!-- <script>

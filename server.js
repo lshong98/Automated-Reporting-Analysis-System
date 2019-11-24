@@ -287,7 +287,7 @@ app.post('/updateBinRequest', function (req, res) {
         }
         database.query(getUserID, function (err, result) {
             if (err) {
-                throw err;
+                throw err; 
             }
             userID = result[0].userID;
             var insertNotif = "INSERT INTO tblnotif(userID, notifText, notifDate, readStat) VALUES('" + userID + "','" + msg + "','" + date + "','u')";
