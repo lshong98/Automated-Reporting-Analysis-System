@@ -72,7 +72,7 @@ app.post('/updatePassword', function (req, res) {
         res.end();
         
 //        database.query(sql, function (err, result) {
-//            if (err) {
+//            if (err) { 
 //                res.json({"status": "error", "message": "Update failed."});
 //                res.end();
 //                throw err;

@@ -617,20 +617,101 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
         };
 
-        scope.editAcr = function (areaCode) {
+        scope.editAcr = function (acr) {
+
+            if (acr.mon == 1) {
+                document.getElementById("mon").checked = true;
+                acr.mon = true;
+            } else {
+                document.getElementById("mon").checked = false;
+                acr.mon = false;
+            }
+            if (acr.tue == 1) {
+                document.getElementById("tue").checked = true;
+                acr.tue = true;
+            } else {
+                document.getElementById("tue").checked = false;
+                acr.tue = false;
+            }
+            if (acr.wed == 1) {
+                document.getElementById("wed").checked = true;
+                acr.wed = true;
+            } else {
+                document.getElementById("wed").checked = false;
+                acr.wed = false;
+            }
+            if (acr.thu == 1) {
+                document.getElementById("thu").checked = true;
+                acr.thu = true;
+            } else {
+                document.getElementById("thu").checked = false;
+                acr.thu = false;
+            }
+            if (acr.fri == 1) {
+                document.getElementById("fri").checked = true;
+                acr.fri = true;
+            } else {
+                document.getElementById("fri").checked = false;
+                acr.fri = false;
+            }
+            if (acr.sat == 1) {
+                document.getElementById("sat").checked = true;
+                acr.sat = true;
+            } else {
+                document.getElementById("sat").checked = false;
+                acr.sat = false;
+            }
+
             scope.showAcr = !scope.showAcr;
             scope.thisAcr = {
                 "areaCode": areaCode
             };
         };
 
-        scope.saveAcr = function (acrID, areaCode) {
+        scope.saveAcr = function (acr) {
             scope.showAcr = !scope.showAcr;
 
-            $scope.thisAcr.acrID = acrID;
-            $scope.thisAcr.areaCode = areaCode;
+            if (acr.mon) {
+                acr.mon = 1;
+            } else {
+                acr.mon = 0;
+            }
+    
+            if (acr.tue) {
+                acr.tue = 1;
+            } else {
+                acr.tue = 0;
+            }
+    
+            if (acr.wed) {
+                acr.wed = 1;
+            } else {
+                acr.wed = 0;
+            }
+    
+            if (acr.thu) {
+                acr.thu = 1;
+            } else {
+                acr.thu = 0;
+            }
+    
+            if (acr.fri) {
+                acr.fri = 1;
+            } else {
+                acr.fri = 0;
+            }
+    
+            if (acr.sat) {
+                acr.sat = 1;
+            } else {
+                acr.sat = 0;
+            }
 
-            $http.put('/editAcr', scope.thisAcr).then(function (response) {
+            scope.thisAcr = acr;
+            console.log(scope.thisAcr);
+
+            
+            $http.post('/editAcr', scope.thisAcr).then(function (response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
@@ -660,11 +741,22 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 "serialNo": dbr.serialNo,
                 "damageReason": dbr.damageReason
             };
+
+            console.log(scope.thisDbr);
         }
 
         scope.saveDbrEntry = function (dbr) {
             scope.showDbr = !scope.showDbr;
 
+            scope.thisDbr = {
+                "areaCode": dbr.areaCode,
+                "damageCode": dbr.damageCode,
+                "unit": dbr.unit,
+                "binSize": dbr.binSize,
+                "serialNo": dbr.serialNo,
+                "damageReason": dbr.damageReason,
+                "id": dbr.id
+            };
             scope.thisDbr.dbrID = dbr.dbrID;
             // $scope.thisDbr.areaCode = dbr.areaCode;
             // $scope.thisDbr.damageCode = dbr.damageCode;
@@ -672,8 +764,9 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             // $scope.thisDbr.binSize = dbr.binSize;
             // $scope.thisDbr.serialNo = dbr.serialNo;
             // $scope.thisDbr.damageReason = dbr.damageReason;
+            console.log(scope.thisDbr);
 
-            $http.put('/editDbr', scope.thisDbr).then(function (response) {
+            $http.post('/editDbr', scope.thisDbr).then(function (response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
@@ -2320,8 +2413,9 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     };
 });
 
-app.controller('binReqDetailCtrl', function ($scope, $http, $routeParams) {
+app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParams) {
     'use strict';
+    $scope.entry = {};
     $scope.req = {
         'id': $routeParams.reqID
     };
@@ -2346,6 +2440,8 @@ app.controller('binReqDetailCtrl', function ($scope, $http, $routeParams) {
             'reqDate': request[0].dateRequest,
             'reqID': request[0].reqID
         };
+
+        $scope.entry.acrBin = 'no';
     });
 
     $scope.saveBinRequestStatus = function (status, id) {
@@ -2356,14 +2452,45 @@ app.controller('binReqDetailCtrl', function ($scope, $http, $routeParams) {
             "id": id
         };
 
-        $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
+        if (status == 'Approved') {
+            angular.element('#confirmStatus').modal('toggle');
+        } else {
+            $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
+                var data = response.data;
+                angular.element('body').overhang({
+                    type: 'success',
+                    message: 'Status Updated!'
+                });
+
+
+                console.log(data);
+            }, function (error) {
+                console.log(error);
+            });
+        } 
+
+
+    };
+
+    $scope.confirmStatus = function () {
+        $scope.entry.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.entry.status = "Approved"; 
+        $scope.entry.id = $routeParams.reqID;
+
+        $http.post('/updateBinRequest', $scope.entry).then(function (response) {
             var data = response.data;
-            alert('Status Updated');
+            angular.element('body').overhang({
+                type: 'success',
+                message: 'Status Updated!'
+            });
+
+            angular.element('#confirmStatus').modal('toggle');
             console.log(data);
         }, function (error) {
             console.log(error);
         });
-    };
+    }
+
 });
 
 app.controller('navigationController', function ($scope, $http, $window, storeDataService) {
@@ -2792,14 +2919,14 @@ app.controller('managerController', function ($scope, $http, $filter) {
     //            formattedBoundary = [],
     //            _prev,
     //            _this;
-    //        
+    //
     //        for (var i = 0; i < read_placemark.length; i++) {
     //            thisName = (read_placemark[i].querySelector("name").textContent).split(" ")[0];
     //            thisColor = (read_placemark[i].querySelector("styleUrl").textContent).split("-")[1];
     //            coordinateSpliter = (read_placemark[i].querySelector("coordinates").textContent).split(",");
     //            boundary.push({"name": thisName, "color": thisColor, "coordinates": coordinateSpliter});
     //        }
-    //        
+    //
     //        for (var i = 0; i < boundary.length; i++) {
     //            for (var j = 0; j < boundary[i].coordinates.length; j++) {
     //                _this = (boundary[i].coordinates[j]).replace(/ +/g, "");
@@ -2819,10 +2946,10 @@ app.controller('managerController', function ($scope, $http, $filter) {
     //            formattedBoundary.push({"id": (i + 1), "area": boundary[i].name, "areaID": '', "color": boundary[i].color, "latLngs": thisCoordinate});
     //            thisCoordinate = [];
     //        }
-    //        
+    //
     //        $http.get('/bounArea').then(function (response) {
     //            var bounArea = response.data;
-    //            
+    //
     //            for (var i = 0; i < formattedBoundary.length; i++) {
     //                for (var j = 0; j < bounArea.length; j++) {
     //                    if (formattedBoundary[i].area === bounArea[j].area) {
@@ -2838,7 +2965,7 @@ app.controller('managerController', function ($scope, $http, $filter) {
     //            }
     //            //cc();
     //        });
-    //        
+    //
     //        function cc() {
     //            $http.post('/createBoundary', {polygons: formattedBoundary}).then(function (response) {
     //                console.log('ok');
@@ -5058,6 +5185,7 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
     $scope.addDcs = function () {
         $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.dcs.preparedBy = window.sessionStorage.getItem('owner');
+        $scope.dcs.areaID = $scope.area;
 
         console.log($scope.dcs.preparedBy);
         $http.post('/addDcs', $scope.dcs).then(function (response) {
@@ -5073,7 +5201,7 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
 
                 //     var area = $('.selectpicker option:selected').text();
                 //    var areastr = area.split(" ")[2];
-                //                console.log(areastr); 
+                //                console.log(areastr);
                 $scope.dcsList.push({
                     "id": newDcsID,
                     "creationDateTime": today,
@@ -5086,7 +5214,7 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
                     "status": 'ACTIVE'
                 });
                 // $scope.filterAcrList = angular.copy($scope.acrList);
-                angular.element('#createDCS').modal('toggle');
+                angular.element('#createDcs').modal('toggle');
                 // $scope.totalItems = $scope.filterAcrList.length;
             }
         });
@@ -5261,16 +5389,16 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
 
     }
 
-    $scope.saveAcr = function () {
+    $scope.saveAcr = function (acr) {
 
-        console.log($scope.acr.customerID);
+        console.log(acr);
         if ($scope.acr.customerID != null || $scope.acr.from != null || $scope.acr.to != null) {
-            $http.post('/updateAcr', $scope.acr).then(function (response) {
+            $http.post('/updateAcr', acr).then(function (response) {
 
                 getAllDcs();
             });
 
-            angular.element('#editAcr').modal('toggle');
+            //angular.element('#editAcr').modal('toggle');
         } else {
             window.alert("Please fill all fields.");
         }
@@ -5284,6 +5412,26 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
 app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
 
     $scope.status = '';
+    $scope.pagination = angular.copy(storeDataService.pagination);
+    $scope.pagination.itemsPerPage = 11;
+
+    //$scope.authorize = angular.copy(storeDataService.show.formAuthorization);
+    $scope.show = angular.copy(storeDataService.show.dcsDetails);
+    console.log($scope.show);
+
+    $scope.dcsDetailsList = [];
+    $scope.dcs = [];
+    $scope.customerList = [];
+    $scope.filteredCustomerList = [];
+    $scope.dcsID = {};
+    $scope.editAddress = {};
+    $scope.dcsID.id = $routeParams.dcsID;
+    $scope.dcsEntry = {};
+    $scope.areaList = {};
+    $scope.driverButton;
+    $scope.replacementDriverButton;
+    $scope.areaCodeButton = [];
+    $scope.dcs = {};
 
     $scope.requestAuthorization = function () {
         sendFormForAuthorization($routeParams.dcsID, "dcs");
@@ -5316,26 +5464,7 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
 
 
 
-    $scope.pagination = angular.copy(storeDataService.pagination);
-    $scope.pagination.itemsPerPage = 11;
 
-    //$scope.authorize = angular.copy(storeDataService.show.formAuthorization);
-    $scope.show = angular.copy(storeDataService.show.acr);
-
-
-    $scope.dcsDetailsList = [];
-    $scope.dcs = [];
-    $scope.customerList = [];
-    $scope.filteredCustomerList = [];
-    $scope.dcsID = {};
-    $scope.editAddress = {};
-    $scope.dcsID.id = $routeParams.dcsID;
-    $scope.dcsEntry = {};
-    $scope.areaList = {};
-    $scope.driverButton;
-    $scope.replacementDriverButton;
-    $scope.areaCodeButton = [];
-    $scope.dcs = {};
 
 
 
@@ -5477,19 +5606,24 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
             console.log($scope.dcs);
 
 
-            if ($scope.dcs[0].status == 'G') {
-                $scope.status = 'APPROVED';
-            } else if ($scope.dcs[0].status == 'P') {
-                $scope.status = 'PENDING';
+            if ($scope.dcs[0].status == 'A') {
+                $scope.status = 'ACTIVE';
+            } else if ($scope.dcs[0].status == 'I') {
+                $scope.status = 'INACTIVE';
             } else if ($scope.dcs[0].status == 'R') {
                 $scope.status = 'CORRECTION REQUIRED';
-            } else if ($scope.dcs[0].status == 'A') {
-                $scope.status = 'ACTIVE';
+            } else if ($scope.dcs[0].status == 'P') {
+                $scope.status = 'PENDING';
+            } else if ($scope.dcs[0].status == 'K') {
+                $scope.status = 'CHECKED';
             } else if ($scope.dcs[0].status == 'C') {
                 $scope.status = 'COMPLETE';
                 $scope.show.edit = 'I';
             }
 
+            if ($scope.show.checkView || $scope.show.verifyView) {
+                $scope.permission = true;
+            }
             $scope.period.periodFrom = $scope.dcs[0].periodFrom;
             $scope.period.periodTo = $scope.dcs[0].periodTo;
 
@@ -5497,12 +5631,13 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
 
             $scope.dcsEntry.dcsID = $routeParams.dcsID
 
-            $http.post('/getDcsDetails', $scope.dcsEntry).then(function (response) {
+            $http.post('/getDcsDetails', $scope.period).then(function (response) {
                 $scope.dcsDetailsList = response.data;
                 console.log($scope.dcsDetailsList);
-
+    
                 $scope.totalItems = $scope.dcsDetailsList.length;
             });
+    
 
         });
 
@@ -5528,6 +5663,8 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
         $scope.driverButton = true;
         $scope.replacementDriverButton = true;
 
+
+        
     }
 
     $scope.getDcsDetails();
@@ -5681,6 +5818,44 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
 
     }
 
+    //AUTHORIZATION MODULE
+    //CHECKED BY
+    $scope.requestAuthorization = function () {
+        sendFormForAuthorization($routeParams.dcsID, "dcs");
+        angular.element('#checkConfirmation').modal('toggle');
+        $scope.status = 'PENDING';
+    };
+    $scope.checkForm = function () {
+        $scope.status = 'CHECKED';
+
+        //UPDATE DBR WITH BD INPUT
+        console.log($scope.dcs);
+        checkForm($routeParams.dcsID, "dcs");
+
+
+
+        angular.element('#approveCheck').modal('toggle');
+    }
+    $scope.rejectForm = function () {
+        $scope.status = 'CORRECTION REQUIRED';
+        rejectForm($routeParams.dcsID, "dcs", $scope.dcs[0].feedback);
+
+        angular.element('#rejectForm').modal('toggle');
+    }
+
+    //VERIFIED BY
+    $scope.requestVerification = function () {
+        sendFormForVerification($routeParams.dcsID, "dcs");
+        angular.element('#completeConfirmation').modal('toggle');
+        $scope.status = 'PENDING';
+    };
+
+
+    $scope.verifyForm = function () {
+        $scope.status = 'COMPLETE';
+        verifyForm($routeParams.dcsID, "dcs");
+        angular.element('#approveVerification').modal('toggle');
+    }
 
 });
 
@@ -6964,9 +7139,9 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         var myLatLng = [];
         var marker = [];
         var complaintInfo = [];
-        //        
+        //
         //        for(var i =0; i <$scope.complaintLocList.length; i++){
-        //        
+        //
         //            myLatLng[i] = {lat: $scope.complaintLocList[i].latitude, lng: $scope.complaintLocList[i].longitude};
         //
         //            marker[i] = new google.maps.Marker({
@@ -7168,7 +7343,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     });
 
     $scope.viewReport = function (reportCode) {
-        //window.location.href = '#/view-report/' + reportCode;    
+        //window.location.href = '#/view-report/' + reportCode;
         $scope.report = {
             "reportID": reportCode
         };
@@ -7457,7 +7632,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
 app.controller('complaintOfficerController', function ($scope, $http, $filter) {
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page 
+    $scope.maxSize = 10; //Show the number in page
 
     $http.get('/getComplaintOfficerList').then(function (response) {
         $scope.complaintOfficerList = response.data;
@@ -7835,7 +8010,7 @@ app.controller('complaintOfficereditController', function ($scope, $http, $route
 //         //     console.error('error');
 //         // });
 
-//     console.log("test"); 
+//     console.log("test");
 // };
 
 app.controller('transactionLogController', function ($scope, $http, $filter, storeDataService) {
@@ -8250,6 +8425,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.addBdafEntry = function () {
         $scope.bdafEntry.bdafID = $routeParams.bdafID;
 
+        console.log($scope.bdafEntry);
         console.log($scope.bdafEntry.binDelivered);
         console.log($scope.bdafEntry.binPulled);
         console.log($scope.bdafEntry.serialNo);
@@ -8593,41 +8769,57 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
     $scope.itemPerPage = 8; //Record number each page
     $scope.maxSize = 10;
     $scope.showDbdDetails = true;
-    $scope.dbdDetailsList = [];
+    $scope.dbdDetailsList = [{
+        "areaCode": ''
+    }];
     $scope.dbdDetailsDetailsList = [];
     $scope.dbd = [];
     $scope.customerList = [];
     $scope.dbdID = {};
     $scope.dbdID.id = $routeParams.dbdID;
+    $scope.dbrID = [];
 
     function getAllDbd() {
         $http.post('/getDbdInfo', $scope.dbdID).then(function (response) {
 
             $scope.dbd = response.data;
-            
-        
+
+
             console.log($scope.dbd);
             $http.post('/getDbdDetails', $scope.dbd[0]).then(function (response) {
 
                 $scope.dbdDetailsList = response.data;
-                var x = 0;
-                for(x = 0; x < $scope.dbdDetailsList.length; x++){
-                    $http.post('/getDbdDetailsDetails', $scope.dbdDetailsList[x]).then(function (response) {
-                        $scope.dbdDetailsDetailsList = response.data;
-                        console.log(  $scope.dbdDetailsDetailsList);
+                console.log($scope.dbdDetailsList);
 
-                        $scope.dbdDetailsList[x].areaCode = $scope.dbdDetailsDetailsList.areaCode;
-                        $scope.dbdDetailsList[x].areaCode += ", " + $scope.dbdDetailsDetailsList.areaCode;
-                    });
+                for (var x = 0; x < $scope.dbdDetailsList.length; x++) {
+                    $scope.dbrID.push($scope.dbdDetailsList[x].dbrID)
+
+                    getAllDbdDetails($scope.dbrID[x], x)
+
                 }
+
+
+
             });
         });
     }
 
+    function getAllDbdDetails(dbrID, index) {
+        $http.post('/getDbdDetailsDetails', {
+            "dbrID": dbrID[0]
+        }).then(function (response) {
+            $scope.dbdDetailsDetailsList = response.data;
+
+            $scope.dbdDetailsList[index].areaCode = $scope.dbdDetailsDetailsList[0].areaCode;
+            $scope.dbdDetailsList[index].binSize = $scope.dbdDetailsDetailsList[0].binSize;
+            window.alert(index);
+
+        });
+    }
 
 
     getAllDbd();
-
+    getAllDbdDetails();
 });
 
 app.controller('dbrDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
@@ -8684,7 +8876,7 @@ app.controller('dbrDetailsController', function ($scope, $http, $filter, storeDa
             $scope.dbrDetailsList = response.data;
             console.log($scope.dbrDetailsList);
         });
-    } 
+    }
 
     //AUTHORIZATION MODULE
     //CHECKED BY
@@ -8702,7 +8894,7 @@ app.controller('dbrDetailsController', function ($scope, $http, $filter, storeDa
         $http.post('/updateDbrBD', $scope.dbr[0]).then(function (response) {
             checkForm($routeParams.dbrID, "dbr");
         });
-        
+
 
         angular.element('#approveCheck').modal('toggle');
     }
@@ -8886,6 +9078,7 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
     }
     $scope.addBlostEntry = function () {
         $scope.blostEntry.blostID = $routeParams.blostID;
+        console.log($scope.blostEntry);
 
         $http.post('/addBlostEntry', $scope.blostEntry).then(function (response) {
 
@@ -9014,6 +9207,7 @@ function verifyForm(formID, formType) {
 
 function rejectForm(formID, formType, feedback) {
     $http = angular.injector(["ng"]).get("$http");
+
 
     var formDetails = {
         "formID": formID,

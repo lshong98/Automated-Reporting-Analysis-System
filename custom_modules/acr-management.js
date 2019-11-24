@@ -62,11 +62,12 @@ app.post('/getAllAcr', function (req, res) {
     });
 });
 
+
 app.post('/getDcsDetails', function (req, res) {
     'use strict';
     //var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr as a inner join tblcustomer as c on a.customerID = c.customerID WHERE a.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR a.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
     
-    var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr a inner join tblcustomer c on a.customerID = c.customerID WHERE a.dcsID = '" + req.body.dcsID + "'";
+    var sql = "SELECT a.acrID, a.areaID, u.companyName, u.address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr a inner join tbluser u on u.userID = a.customerID WHERE a.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR a.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
     
     console.log(sql);
     database.query(sql, function (err, result) {
@@ -78,6 +79,18 @@ app.post('/getDcsDetails', function (req, res) {
     });
 });
 
+app.post('/editAcr', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblacr SET areaID = '" + req.body.areaCode + "', mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thu = '" + req.body.thu + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE acrID = '" + req.body.acrID + "'";
+        
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        } 
+        res.json(result);
+    });
+});
 
 app.post('/addDcsEntry', function (req, res) {
     'use strict';
@@ -95,8 +108,9 @@ app.post('/addDcsEntry', function (req, res) {
             var areaID = result[0].areaID;
             
 
-            sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, areaID, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + areaID + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.remarks + "')";
-             
+            // sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, areaID, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + areaID + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.remarks + "')";
+            sql = "INSERT INTO tblacr (acrID, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + req.body.acrID + "', '" + req.body.customerID + "', '" + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.remarks + "')";
+
             database.query(sql, function (err, result) {
                 if (err) {
                     console.log("err2");
