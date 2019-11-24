@@ -1064,7 +1064,7 @@ app.get('/getCount', function (req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'N' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (completeReport) {
         results.completeReport = completeReport.completeReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A'");
+        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(creationDateTime)= CURRENT_DATE");
     }).then(function (incompleteReport) {
         results.incompleteReport = incompleteReport.incompleteReport;
         res.json(results);
