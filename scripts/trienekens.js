@@ -4463,6 +4463,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "feedback": {
                             "view": 'A'
                         },
+                        "enquiry": {
+                            "view": 'A'
+                        },
                         "role": {
                             "view": 'I'
                         },
@@ -4632,6 +4635,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "feedback": {
                             "view": 'I'
                         },
+                        "enquiry": {
+                            "view": 'I'
+                        },                        
                         "role": {
                             "view": 'I'
                         },
