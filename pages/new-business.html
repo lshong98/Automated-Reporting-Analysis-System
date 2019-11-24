@@ -315,7 +315,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="b in tamanList |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
+                            <tr data-ng-repeat="b in tamanList | filter: searchFilter |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
                                 <td>
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="b.tamanID" data-ng-show="!showTaman" />
