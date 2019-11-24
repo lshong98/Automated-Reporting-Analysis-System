@@ -444,6 +444,11 @@ app.service('storeDataService', function () {
                 "create": 'I',
                 "edit": 'I'
             },
+            "binStock": {
+                "view": 'I',
+                "create": 'I',
+                "edit": 'I'
+            },
             "role": {
                 "view": 'I'
             },
@@ -495,6 +500,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
         scope.showCustomer = true;
         scope.showTaman = true;
         scope.showBinHistory = true;
+        scope.showBinStock = true;
         scope.showNewMgb = true;
         scope.showReusableMgb = true;
         scope.showDcsDetails = true;
@@ -1186,26 +1192,19 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             angular.element('.selectpicker').selectpicker('render');
 
         };
-        scope.saveTaman = function () {
+        scope.saveTaman = function (tamanID, areaID, tamanName, longitude, latitude, areaCollStatus) {
             scope.showTaman = !scope.showTaman;
 
-            scope.thisDatabaseBin = {
-                "idNo": id,
-                "date": date,
-                "customerID": customerID,
-                "areaCode": areaCode,
-                "serialNo": serialNo,
-                "acrID": acrfSerialNo,
-                "activeStatus": status,
-                "rcDwell": rcDwell,
-                "comment": comment,
-                "itemType": itemType,
-                "path": path
+            scope.thisTaman = {
+                "tamanID": tamanID,
+                "areaID": areaID,
+                "tamanName": tamanName,
+                "longitude": longitude,
+                "latitude": latitude,
+                "areaCollStatus": areaCollStatus
             };
-            console.log("The databasebin thing: ");
-            console.log(scope.thisDatabaseBin);
 
-            $http.put('/editTaman', scope.thisDatabaseBin).then(function (response) {
+            $http.put('/editTaman', scope.thisTaman).then(function (response) {
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
@@ -1233,11 +1232,18 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
 
         };
-        scope.deleteTaman = function () {
-            $http.post('/deleteTaman', scope.b).then(function (response) {
-                var data = response.data;
+        scope.deleteTaman = function (tamanID) {
+            scope.tamanIDJSON = {
+                "tamanID":tamanID
+            };
+            $http.post('/deleteTaman', scope.tamanIDJSON).then(function (response) {
+                //var data = response.data;
+                scope.message = {
+                    "status":"success", 
+                    "message":"Taman deleted successfully!"
+                }
 
-                scope.notify(data.status, data.message);
+                scope.notify(scope.message.status, scope.message.message);
 
             });
         };
@@ -1313,10 +1319,57 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
         };
 
+        //BIN STOCK MODULE EDITABLE TABLES
+        scope.editBinStock = function () {
+            scope.showBinStock = !scope.showBinStock;
+            angular.element('.selectpicker').selectpicker('refresh');
+            angular.element('.selectpicker').selectpicker('render');
+
+        };
+
+        scope.saveBinStock = function (serialNo, size, status) {
+            scope.showBinStock = !scope.showBinStock;
+
+            scope.thisBinStock = {
+                "serialNo": serialNo,
+                "size": size,
+                "status": status
+            }
+
+            $http.put('/editBinStock', scope.thisBinStock).then(function (response) {
+                var data = response.data;
+
+                scope.notify(data.status, data.message);
+            });
+        };
+
+        scope.cancelBinStock = function () {
+            scope.showBinStock = !scope.showBinStock;
+
+            $.each(storeDataService.bin, function (index, value) {
+                if (storeDataService.databaseBin[index].id == scope.thisDatabaseBin.id) {
+                    scope.b = angular.copy(storeDataService.databaseBin[index]);
+                    return false;
+                }
+            });
+
+        };
+        scope.deleteBinStock = function (serialNo) {
+            $http.post('/deleteBinStock', scope.b).then(function (response) {
+                //var data = response.data;
+                console.log('Delete bin stock trienekens.js');
+
+                //scope.notify(data.status, data.message);
+
+            });
+        };
+
         //BIN INVENTORY MODULE EDITABLE TABLES
         scope.editDatabaseBin = function () {
             scope.showDatabaseBin = !scope.showDatabaseBin;
             //scope.b.area = area;
+
+
 
 
             console.log("hello from editDatabaseBin");
@@ -5864,9 +5917,9 @@ app.controller('newBusinessController', function ($scope, $http, $filter) {
     $scope.customerList = [];
     $scope.tamanList = [];
     $scope.areaList = [];
-    //$scope.currentPage = 1; //Initial current page to 1
-    //$scope.itemsPerPage = 20; //Record number each page
-    //$scope.maxSize = 8; //Show the number in page
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 20; //Record number each page
+    $scope.maxSize = 8; //Show the number in page
 
     //Customer Details
     $scope.initializeCustomer = function () {
@@ -5974,6 +6027,49 @@ app.controller('binHistoryController', function ($scope, $http, $filter, storeDa
             console.log($scope.binHistoryList);
 
         })
+
+    }
+})
+
+app.controller('binStockController', function($scope, $http){
+    'use strict';
+    $scope.binStockList = [];
+
+    //Retrieve all Bin entries and store them in binList
+    $http.get('/getAllBins').then(function (response) {
+        $scope.binStockList = response.data;
+    })
+
+    /*$scope.deleteBinStock = function(){
+        $http.post('/deleteBinStock', $scope.bin).then(function(response){
+            $scope.notify(response.data.status, response.data.message);
+            if(response.data.status === 'success'){
+                angular.element('body').overhang({
+                    type:"success",
+                    "message": response.data.message
+                });
+            }
+        })
+    }*/
+
+
+    $scope.addBin = function () {
+
+        $http.post('/addBin', $scope.bin).then(function (response) {
+
+            $scope.notify(response.data.status, response.data.message);
+            if (response.data.status === 'success') {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "New Bin added successfully!"
+                });
+                $scope.binList.push({
+                    "serialNo": $scope.bin.serialNo
+                });
+                angular.element('#createBin').modal('toggle');
+                $scope.initializeBin();
+            }
+        });
 
     }
 })

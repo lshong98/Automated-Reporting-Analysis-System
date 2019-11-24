@@ -240,6 +240,10 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.newBusiness.view == \'A\'" role="menuitem"><a class="menu__link" href="#/new-business"><i class="fas fa-dumpster"></i> New Business</a></li>';
             }
+        case "view binStock":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.binStock.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-stock"><i class="fas fa-dumpster"></i> Bin Stock</a></li>';
+            }
         case "view authorization":
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.authorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/authorization"><i class="fas fa-clipboard-check"></i> Task Authorization <span class="authorization"></span></a></li>';
