@@ -3516,24 +3516,12 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
         concatDays = concatDays.slice(0, -1);
         $scope.area.frequency = concatDays;
         //console.log($scope.collectionList.length);
-        if ($scope.area.frequency == "" || $scope.collectionList.length == 0) {
-            if ($scope.area.frequency == "" && $scope.collectionList.length == 0) {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Collection Frequency And Area Collection "
-                });
-            } else if ($scope.area.frequency == "") {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Collection Frequency"
-                });
-            } else if ($scope.collectionList.length == 0) {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Area Collection"
-                });
-            }
-        } else {
+        if ($scope.area.frequency == "") {
+            angular.element('body').overhang({
+                "type": "error",
+                "message": "Please Fill In Collection Frequency"
+            });
+        }else {
             $http.post('/updateArea', $scope.area).then(function (response) {
                 var data = response.data;
                 if (data.status === "success") {

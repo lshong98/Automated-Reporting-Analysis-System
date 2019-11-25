@@ -137,11 +137,18 @@ app.post('/addCollection', function (req, res) {
     var dt = dateTime.create().format('Y-m-d H:M:S'),
         sql = "INSERT INTO tbltaman(areaID, tamanName) VALUE ('" + req.body.area + "', '" + req.body.address + "')";
     
-    f.sendForAuthorization(dt, req.body.iam, "add", "Create new area collection", '', "tbltaman", "\"" + sql + "\"");
+    //f.sendForAuthorization(dt, req.body.iam, "add", "Create new area collection", '', "tbltaman", "\"" + sql + "\"");
     //f.logTransaction(dt, req.body.iam, "add", "Request to create new area collection", '', "tbltaman");
-    f.log(dt, "Request to create new area collection.", req.body.iam);
-    res.json({"status": "success", "message": "Request pending.."});
-    res.end();
+    //f.log(dt, "Request to create new area collection.", req.body.iam);
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Taman Has been added"});
+        res.end();
+    });    
+    
 });
 
 // Load Area Collection
@@ -165,11 +172,17 @@ app.post('/deleteCollection', function (req, res) {
     var dt = dateTime.create().format('Y-m-d H:M:S'),
         sql = "DELETE FROM tbltaman WHERE tamanID = '" + req.body.id + "'";
     
-    f.sendForAuthorization(dt, req.body.iam, "delete", "Delete area collection", req.body.id, "tbltaman", "\"" + sql + "\"");
-    f.logTransaction(dt, req.body.iam, "delete", "Request to delete area collection", req.body.id, "tbltaman");
-    f.log(dt, "Request to delete area collection.", req.body.iam);
-    res.json({"status": "success", "message": "Request pending.."});
-    res.end();
+    //f.sendForAuthorization(dt, req.body.iam, "delete", "Delete area collection", req.body.id, "tbltaman", "\"" + sql + "\"");
+    //f.logTransaction(dt, req.body.iam, "delete", "Request to delete area collection", req.body.id, "tbltaman");
+    //f.log(dt, "Request to delete area collection.", req.body.iam);
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Taman Has been deleted"});
+        res.end();
+    });     
     
 //    database.query(sql, function (err, result) {
 //        if (err) {
@@ -190,11 +203,9 @@ app.post('/updateCollection', function (req, res) {
     var dt = dateTime.create().format('Y-m-d H:M:S'),
         sql = "UPDATE tbltaman SET tamanName = '" + req.body.address + "' WHERE tamanID = '" + req.body.id + "'";
     
-    f.sendForAuthorization(dt, req.body.iam, "update", "Update area collection", req.body.id, "tbltaman", "\"" + sql + "\"");
-    f.logTransaction(dt, req.body.iam, "update", "Request to update area collection", req.body.id, "tbltaman");
-    f.log(dt, "Request to update area collection.", req.body.iam);
-    res.json({"status": "success", "message": "Request pending.."});
-    res.end();
+    //f.sendForAuthorization(dt, req.body.iam, "update", "Update area collection", req.body.id, "tbltaman", "\"" + sql + "\"");
+    //f.logTransaction(dt, req.body.iam, "update", "Request to update area collection", req.body.id, "tbltaman");
+    //f.log(dt, "Request to update area collection.", req.body.iam);
     
 //    database.query(sql, function (err, result) {
 //        if (err) {
@@ -206,6 +217,14 @@ app.post('/updateCollection', function (req, res) {
 //            res.end();
 //        }
 //    });
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({"status": "success", "message": "Taman Has been updated"});
+        res.end();
+    });      
 });
 
 app.post('/getGoogleLocation', function (req, res) {
