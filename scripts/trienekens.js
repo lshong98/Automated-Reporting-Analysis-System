@@ -724,8 +724,8 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 console.log(scope.thisAcr);
                 $http.post('/editAcr', scope.thisAcr).then(function (response) {
                     var data = response.data[0];
-                    
-                    if(data === 'error') {
+
+                    if (data === 'error') {
                         window.alert("DCS Doesn't Exist!");
                     }
                 });
@@ -2568,6 +2568,10 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         if (status == 'Approved') {
             angular.element('#confirmStatus').modal('toggle');
         } else {
+            $scope.thisBinRequest.from = $filter('date')($scope.thisBinRequest.from, 'yyyy-MM-dd');
+            $scope.thisBinRequest.to = $filter('date')($scope.thisBinRequest.to, 'yyyy-MM-dd');
+
+            console.log($scope.thisBinRequest);
             $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
                 var data = response.data;
                 angular.element('body').overhang({
@@ -2590,6 +2594,8 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         $scope.entry.status = "Approved";
         $scope.entry.id = $routeParams.reqID;
 
+        $scope.entry.formattedFrom = $filter('date')($scope.entry.from, 'yyyy-MM-dd');
+        $scope.entry.formattedTo = $filter('date')($scope.entry.to, 'yyyy-MM-dd');
         $http.post('/updateBinRequest', $scope.entry).then(function (response) {
             var data = response.data;
             angular.element('body').overhang({
@@ -4644,7 +4650,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         },
                         "enquiry": {
                             "view": 'I'
-                        },                        
+                        },
                         "role": {
                             "view": 'I'
                         },
@@ -5188,14 +5194,15 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
         $scope.dcs = {
             "id": '',
             "creationDateTime": '',
-            "driver": '',
+            "driverID": '',
             "periodFrom": '',
             "periodTo": '',
-            "replacementDriver": '',
+            "replacementDriverID": '',
             "replacementPeriodFrom": '',
             "replacementPeriodTo": ''
         };
     }
+    initializeDcs();
 
     $scope.show = angular.copy(storeDataService.show.acr);
     var driverPosition = angular.copy(storeDataService.positionID.driverPosition);
@@ -5307,6 +5314,10 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
 
     $scope.addDcs = function () {
         $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.dcs.formattedPeriodFrom = $filter('date')($scope.dcs.periodFrom, 'yyyy-MM-dd');
+        $scope.dcs.formattedPeriodTo = $filter('date')($scope.dcs.periodTo, 'yyyy-MM-dd');
+        $scope.dcs.formattedReplacementPeriodFrom = $filter('date')($scope.dcs.replacementPeriodFrom, 'yyyy-MM-dd');
+        $scope.dcs.formattedReplacementPeriodTo = $filter('date')($scope.dcs.replacementPeriodTo, 'yyyy-MM-dd');
         $scope.dcs.preparedBy = window.sessionStorage.getItem('owner');
         $scope.dcs.areaID = $scope.area;
 
@@ -8384,7 +8395,8 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.newBinDeliveredButton = false; //reveal bin delivered buttons
     $scope.newBinPulledButton = false; //reveal bin pulled buttons
     $scope.binSizeList = [] //To store bin sizes
-
+    $scope.rightStatus = false;
+    $scope.permission = false;
 
     //GET BIN SIZE LIST
     var getBinSize = function () {
@@ -8539,22 +8551,34 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 $scope.status = 'CORRECTION REQUIRED';
             } else if ($scope.bdaf[0].status == 'P') {
                 $scope.status = 'PENDING';
-                document.getElementById("checkbox").disabled = true;
+                $scope.rightStatus = true;
             } else if ($scope.bdaf[0].status == 'K') {
                 $scope.status = 'CHECKED';
-                document.getElementById("checkbox").disabled = true;
+                $scope.rightStatus = true;
             } else if ($scope.bdaf[0].status == 'C') {
                 $scope.status = 'COMPLETE';
-                document.getElementById("completedCheckbox").disabled = true;
                 console.log("disabled");
                 $scope.show.edit = 'I';
             }
 
+
+
+            if ($scope.show.checkView || $scope.show.verifyView) {
+                $scope.permission = true;
+            }
+
+            console.log($scope.rightStatus);
+            console.log($scope.permission);
             //get Driver name
             $http.post('/getStaffName', {
                 "staffID": $scope.bdaf[0].driverID
             }).then(function (response) {
-                $scope.bdaf.driver = response.data[0].staffName;
+                if(response.data.length > 0) {
+                    $scope.bdaf.driver = response.data[0].staffName;
+                } else {
+                    $scope.bdaf.driver = "";
+                }
+                
             });
 
             //get GeneralWorker name
@@ -8589,6 +8613,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
             $scope.bdafDetailsList = response.data;
             console.log($scope.bdafDetailsList);
+            console.log($scope.show);
 
             var x = 0;
             for (x = 0; x < $scope.bdafDetailsList.length; x++) {
@@ -8703,6 +8728,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         sendFormForAuthorization($routeParams.bdafID, "bdaf");
         angular.element('#checkConfirmation').modal('toggle');
         $scope.status = 'PENDING';
+        $scope.rightStatus = true;
         completeForm();
     };
     $scope.checkForm = function () {
@@ -8714,7 +8740,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.rejectForm = function () {
         $scope.status = 'CORRECTION REQUIRED';
         rejectForm($routeParams.bdafID, "bdaf", $scope.bdaf[0].feedback);
-
+        $scope.rightStatus = true;
 
         angular.element('#rejectForm').modal('toggle');
     }
@@ -8722,6 +8748,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     //VERIFIED BY
     $scope.requestVerification = function () {
         sendFormForVerification($routeParams.dcsID, "bdaf");
+        $scope.rightStatus = true;
         angular.element('#completeConfirmation').modal('toggle');
         $scope.status = 'PENDING';
     };
@@ -8730,82 +8757,80 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.verifyForm = function () {
         $scope.status = 'COMPLETE';
         verifyForm($routeParams.bdafID, "bdaf");
-
+        $scope.rightStatus = false;
         angular.element('#approveVerification').modal('toggle');
 
         //UPDATE WBD AND WBSI
+        // var x = 0;
+        // for (x = 0; x < $scope.binRequestList.length; x++) {
+        //     var pulledBins = $scope.binRequestList[x].binPulled.split(" ");
+        //     var deliveredBins = $scope.binRequestList[x].binDelivered.split(" ");
+        //     var newPulledBins = [];
+        //     var reusablePulledBins = [];
+        //     var newDeliveredBins = [];
+        //     var reusableDeliveredBins = [];
 
+        //     //Check if bins are Reusable bins or New bins
+        //     var y = 0;
+        //     for (y = 0; y < pulledBins.length; y++) {
+        //         $http.post('/checkBin', {
+        //             "bin": pulledBins[y]
+        //         }).then(function (response) {
+        //             if (response.result = 'new') {
+        //                 newPulledBins.push(pulledBins[x]);
+        //             } else if (response.result = 'reusable') {
+        //                 reusablePulledBins.push(pulledBins[x]);
+        //             }
+        //         });
+        //     }
 
-        var x = 0;
-        for (x = 0; x < $scope.binRequestList.length; x++) {
-            var pulledBins = $scope.binRequestList[x].binPulled.split(" ");
-            var deliveredBins = $scope.binRequestList[x].binDelivered.split(" ");
-            var newPulledBins = [];
-            var reusablePulledBins = [];
-            var newDeliveredBins = [];
-            var reusableDeliveredBins = [];
+        //     for (y = 0; y < deliveredBins.length; y++) {
+        //         $http.post('/checkBin', {
+        //             "bin": deliveredBins[y]
+        //         }).then(function (response) {
+        //             if (response.result = 'new') {
+        //                 newDeliveredBins.push(deliveredBins[x]);
+        //             } else if (response.result = 'reusable') {
+        //                 reusableDeliveredBins.push(deliveredBins[x]);
+        //             }
+        //         });
+        //     }
 
-            //Check if bins are Reusable bins or New bins
-            var y = 0;
-            for (y = 0; y < pulledBins.length; y++) {
-                $http.post('/checkBin', {
-                    "bin": pulledBins[y]
-                }).then(function (response) {
-                    if (response.result = 'new') {
-                        newPulledBins.push(pulledBins[x]);
-                    } else if (response.result = 'reusable') {
-                        reusablePulledBins.push(pulledBins[x]);
-                    }
-                });
-            }
+        //     //NEW BINS: CREATE NEW WBD ENTRY AND UPDATE WBSI
+        //     var z = 0;
+        //     for (z = 0; z < newDeliveredBins.length; z++) {
+        //         $http.post('/deliverNewBin', {
+        //             "bin": newDeliveredBins[z]
+        //         }).then(function (response) {
 
-            for (y = 0; y < deliveredBins.length; y++) {
-                $http.post('/checkBin', {
-                    "bin": deliveredBins[y]
-                }).then(function (response) {
-                    if (response.result = 'new') {
-                        newDeliveredBins.push(deliveredBins[x]);
-                    } else if (response.result = 'reusable') {
-                        reusableDeliveredBins.push(deliveredBins[x]);
-                    }
-                });
-            }
+        //         });
+        //     }
 
-            //NEW BINS: CREATE NEW WBD ENTRY AND UPDATE WBSI
-            var z = 0;
-            for (z = 0; z < newDeliveredBins.length; z++) {
-                $http.post('/deliverNewBin', {
-                    "bin": newDeliveredBins[z]
-                }).then(function (response) {
+        //     for (z = 0; z < newPulledBins.length; z++) {
+        //         $http.post('/pullNewBin', {
+        //             "bin": newPulledBins[z]
+        //         }).then(function (response) {
 
-                });
-            }
+        //         });
+        //     }
 
-            for (z = 0; z < newPulledBins.length; z++) {
-                $http.post('/pullNewBin', {
-                    "bin": newPulledBins[z]
-                }).then(function (response) {
+        //     //REUSABLE BINS: UPDATE WBD AND UPDATE WBSI
+        //     for (z = 0; z < reusableDeliveredBins.length; z++) {
+        //         $http.post('/deliverReusableBin', {
+        //             "bin": reusableDeliveredBins[z]
+        //         }).then(function (response) {
 
-                });
-            }
+        //         });
+        //     }
 
-            //REUSABLE BINS: UPDATE WBD AND UPDATE WBSI
-            for (z = 0; z < reusableDeliveredBins.length; z++) {
-                $http.post('/deliverReusableBin', {
-                    "bin": reusableDeliveredBins[z]
-                }).then(function (response) {
+        //     for (z = 0; z < reusablePulledBins.length; z++) {
+        //         $http.post('/pullReusableBin', {
+        //             "bin": reusablePulledBins[z]
+        //         }).then(function (response) {
 
-                });
-            }
-
-            for (z = 0; z < reusablePulledBins.length; z++) {
-                $http.post('/pullReusableBin', {
-                    "bin": reusablePulledBins[z]
-                }).then(function (response) {
-
-                });
-            }
-        }
+        //         });
+        //     }
+        // }
     }
 
 
@@ -8878,6 +8903,7 @@ app.controller('damagedBinController', function ($scope, $http, $filter, storeDa
         var position = window.sessionStorage.getItem('owner');
         console.log(position);
         $scope.dbr.preparedBy = position;
+        $scope.dbr.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.dbr.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addDbr', $scope.dbr).then(function (response) {
             var returnedData = response.data;
@@ -8996,21 +9022,21 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
                 $scope.dbdDetailsList = response.data;
                 console.log($scope.dbdDetailsList);
 
-                for (var x = 0; x < $scope.dbdDetailsList.length; x++) {
-                    $scope.dbrID.push($scope.dbdDetailsList[x].dbrID)
+                // for (var x = 0; x < $scope.dbdDetailsList.length; x++) {
+                //     $scope.dbrID.push($scope.dbdDetailsList[x].dbrID)
 
-                    $http.post('/getDbdDetailsDetails', {
-                        "dbrID": $scope.dbrID[0]
-                    }).then(function (response) {
-                        $scope.dbdDetailsDetailsList = response.data;
+                //     $http.post('/getDbdDetailsDetails', {
+                //         "dbrID": $scope.dbrID[0]
+                //     }).then(function (response) {
+                //         $scope.dbdDetailsDetailsList = response.data;
 
-                        $scope.dbdDetailsList[x - 1].areaCode = $scope.dbdDetailsDetailsList[0].areaCode;
-                        $scope.dbdDetailsList[x - 1].binSize = $scope.dbdDetailsDetailsList[0].binSize;
-                        window.alert(index);
+                //         $scope.dbdDetailsList[x - 1].areaCode = $scope.dbdDetailsDetailsList[0].areaCode;
+                //         $scope.dbdDetailsList[x - 1].binSize = $scope.dbdDetailsDetailsList[0].binSize;
+                //         window.alert(index);
 
-                    });
+                //     });
 
-                }
+                // }
 
 
 
@@ -9323,6 +9349,7 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
         $scope.blostEntry.blostID = $routeParams.blostID;
         console.log($scope.blostEntry);
 
+        $scope.blostEntry.formattedDateOfLoss = $filter('date')(  $scope.blostEntry.dateOfLoss, 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addBlostEntry', $scope.blostEntry).then(function (response) {
 
             var returnedData = response.data;

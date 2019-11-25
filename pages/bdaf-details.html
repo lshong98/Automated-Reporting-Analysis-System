@@ -126,7 +126,8 @@
                 </div>
                 <div class="form-group">
                     <label for="txtAcrBins form-label">ACR Sticker</label>
-                    <input type="text" class="form-control" id="txtAcrSticker" data-ng-model="editedBdafEntry.acrSticker" />
+                    <input type="text" class="form-control" id="txtAcrSticker"
+                        data-ng-model="editedBdafEntry.acrSticker" />
                 </div>
                 <div class="form-group">
                     <label for="txtAreaCode form-label">ACRF No.</label>
@@ -134,11 +135,13 @@
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label">Job Description</label>
-                    <input type="textArea" class="form-control" id="txtJobDesc" data-ng-model="editedBdafEntry.jobDesc" />
+                    <input type="textArea" class="form-control" id="txtJobDesc"
+                        data-ng-model="editedBdafEntry.jobDesc" />
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label">Remarks</label>
-                    <textarea class="form-control" rows="4" id="txtRemarks" data-ng-model="editedBdafEntry.remarks"></textarea>
+                    <textarea class="form-control" rows="4" id="txtRemarks"
+                        data-ng-model="editedBdafEntry.remarks"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="txtRemarks form-label"><b>Bin Delivered No.</b></label>
@@ -198,8 +201,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="approveCheck" tabindex="-1" role="dialog" aria-labelledby="approveCheck"
-    aria-hidden="true">
+<div class="modal fade" id="approveCheck" tabindex="-1" role="dialog" aria-labelledby="approveCheck" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -240,8 +242,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="rejectForm" tabindex="-1" role="dialog" aria-labelledby="rejectForm"
-    aria-hidden="true">
+<div class="modal fade" id="rejectForm" tabindex="-1" role="dialog" aria-labelledby="rejectForm" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -276,13 +277,17 @@
     <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
 
         <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#checkConfirmation"
-            ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Send for Checking</button> <!--Mark form as 'Pending' and request for checking-->
+            ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Send for Checking</button>
+        <!--Mark form as 'Pending' and request for checking-->
         <button ng-show="show.verifyView == 'A' && status == 'CHECKED'" class="btn btn-sm btn-success"
-            data-toggle="modal" data-target="#approveVerification">Verify</button> <!--Mark form as 'Verified' and execute inventory functions-->
+            data-toggle="modal" data-target="#approveVerification">Verify</button>
+        <!--Mark form as 'Verified' and execute inventory functions-->
         <button ng-show="show.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
-            data-toggle="modal" data-target="#approveCheck">Approve</button> <!--Mark form as 'Checked' and request verification-->
-        <button ng-show="show.checkView == 'A' || show.verifyView == 'A' && status == 'PENDING' || status == 'CHECKED'"
-            class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectForm">Reject</button> <!--Reset form to 'Active'-->
+            data-toggle="modal" data-target="#approveCheck">Approve</button>
+        <!--Mark form as 'Checked' and request verification-->
+        <button ng-show="permission && rightStatus" class="btn btn-sm btn-danger" data-toggle="modal"
+            data-target="#rejectForm">Reject</button>
+        <!--Reset form to 'Active'-->
 
     </div>
 </div>
@@ -309,8 +314,9 @@
                     <span><b>Driver:</b> {{bdaf.driver}}</span><span id="buttons">
                         <button ng-show="!driverButton" class="btn btn-sm btn-danger" ng-click="clearDriver();"> <i
                                 class="fas fa-times"></i></button>
-                        <button ng-show="driverButton && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'" class="btn btn-sm btn-success dropdown-toggle" type="button"
-                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button ng-show="driverButton && status == 'ACTIVE' || status == 'CORRECTION REQUIRED'"
+                            class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-plus"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -319,7 +325,7 @@
                                 ng-click="assignDriver(d);">{{d.staffName}}</a>
                         </div>
                 </div>
-                
+
 
             </div>
             <div class="row">
@@ -328,7 +334,8 @@
                     <span><b>General Worker:</b> {{generalWorkers}}</span><span id="buttons">
                         <button ng-show="!generalWorkerButton" class="btn btn-sm btn-danger"
                             ng-click="clearGeneralWorker();"> <i class="fas fa-times"></i></button>
-                        <button ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'" class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+                        <button ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'"
+                            class="btn btn-sm btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-plus"></i>
                         </button>
@@ -340,8 +347,8 @@
                         </div>
                 </div>
                 <div class="col-md-6">
-                        <h6>Date: {{bdaf[0].creationDateTime | date: "dd-MM-yyyy"}}</h6>
-                    </div>
+                    <h6>Date: {{bdaf[0].creationDateTime | date: "dd-MM-yyyy"}}</h6>
+                </div>
             </div>
 
 
@@ -441,12 +448,15 @@
                                 <span data-ng-bind="b.binPulled"></span>
                             </td>
                             <td>
-                                    <input data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'" id="completedCheckbox" type="checkbox" data-ng-model="b.completed" class="form-control checkbox-big"/>
-                                    <span data-ng-hide="b.status != 'Settled' || status == 'CORRECTION REQUIRED' || status == 'ACTIVE'">&#10004;</span>
+                                <input data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'"
+                                    id="completedCheckbox" type="checkbox" data-ng-model="b.completed"
+                                    class="form-control checkbox-big" />
+                                <span
+                                    data-ng-hide="b.status != 'Settled' || status == 'CORRECTION REQUIRED' || status == 'ACTIVE'">&#10004;</span>
                             </td>
                             <td data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'">
-                                <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                    data-target="#editBdafEntry" data-ng-click="editBdafEntry(b)"><i class="fa fa-pencil-alt"></i></button>
+                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editBdafEntry"
+                                    data-ng-click="editBdafEntry(b)"><i class="fa fa-pencil-alt"></i></button>
 
                             </td>
 

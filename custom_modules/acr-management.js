@@ -10,7 +10,13 @@ app.post('/addDcs', function (req, res) {
 
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
 
-        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.areaID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
+        var sql = "";
+        if (req.body.replacementDriverID === '') {
+            sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.areaID + "', '" + req.body.formattedPeriodFrom + "', '" + req.body.formattedPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
+
+        } else {
+            sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.areaID + "', '" + req.body.formattedPeriodFrom + "', '" + req.body.formattedPeriodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.formattedReplacementPeriodFrom + "', '" + req.body.formattedReplacementPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
+        }
         console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
@@ -124,27 +130,30 @@ app.post('/editAcr', function (req, res) {
     var sql = "SELECT dcsID FROM tbldcs WHERE ((periodFrom >= '" + req.body.from + "' OR periodFrom <= '" + req.body.to + "') OR (periodTo >= '" + req.body.from + "' OR periodTo <= '" + req.body.to + "')) AND areaID LIKE ('%" + req.body.areaID + "%')";
     console.log(sql);
 
-    database.query(sql, function (err, result) { 
+    database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
+
         if (result.length > 0) {
             console.log(result[0].dcsID);
-        sql = "UPDATE tblacr SET dcsID = '" + result[0].dcsID + "', areaID = '" + req.body.areaCode + "', mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thu = '" + req.body.thu + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE acrID = '" + req.body.acrID + "'";
-        console.log(result);
-        database.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-        
-            res.json(result);
-        });
+            sql = "UPDATE tblacr SET dcsID = '" + result[0].dcsID + "', areaID = '" + req.body.areaCode + "', mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thu = '" + req.body.thu + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE acrID = '" + req.body.acrID + "'";
+            console.log(sql);
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+
+                res.json(result);
+            });
         } else {
-            result = [{"status": 'error'}];
+            result = [{
+                "status": 'error'
+            }];
             res.json(result);
         }
-        
-    }); 
+
+    });
 });
 
 app.post('/editAcrDays', function (req, res) {
@@ -152,7 +161,7 @@ app.post('/editAcrDays', function (req, res) {
 
 
     var sql = "UPDATE tblacr SET mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thu = '" + req.body.thu + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE acrID = '" + req.body.acrID + "'";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
