@@ -2699,48 +2699,51 @@ app.controller('managerController', function ($scope, $http, $filter) {
         var objReturn = [];
         var i, j;
         var exist;
-        for (i = 0; i < data.length; i += 1) {
-            if (element === "reportCollectionDate") {
-                exist = false;
-                var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j] === formattedDate) {
-                        exist = true;
+        
+        if (data.length > 0) {
+            for (i = 0; i < data.length; i += 1) {
+                if (element === "reportCollectionDate") {
+                    exist = false;
+                    var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j] === formattedDate) {
+                            exist = true;
+                        }
                     }
-                }
-                if (!exist) {
-                    objReturn.push(formattedDate);
-                }
-            } else if (element === "garbageAmount") {
-                objReturn.push(parseInt(data[i].garbageAmount));
-            } else if (element === "duration") {
-                var duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
-                objReturn.push(duration);
-            } else if (element === "amountGarbageOnArea") {
-                exist = false;
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j].name === data[i].areaName) {
-                        objReturn[j].y += parseInt(data[i].garbageAmount);
-                        exist = true;
+                    if (!exist) {
+                        objReturn.push(formattedDate);
                     }
-                }
-                if (!exist) {
-                    objReturn.push({
-                        "name": data[i].areaName,
-                        "y": parseInt(data[i].garbageAmount)
-                    });
-                }
-            } else if (element === "timeSeries") {
-                var date = new Date(data[i].reportCollectionDate);
-                exist = false;
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j][0] === date.getTime()) {
-                        objReturn[j][1] += parseInt(data[i].garbageAmount);
-                        exist = true;
+                } else if (element === "garbageAmount") {
+                    objReturn.push(parseInt(data[i].garbageAmount));
+                } else if (element === "duration") {
+                    var duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
+                    objReturn.push(duration);
+                } else if (element === "amountGarbageOnArea") {
+                    exist = false;
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j].name === data[i].areaName) {
+                            objReturn[j].y += parseInt(data[i].garbageAmount);
+                            exist = true;
+                        }
                     }
-                }
-                if (!exist) {
-                    objReturn.push([date.getTime(), parseInt(data[i].garbageAmount)]);
+                    if (!exist) {
+                        objReturn.push({
+                            "name": data[i].areaName,
+                            "y": parseInt(data[i].garbageAmount)
+                        });
+                    }
+                } else if (element === "timeSeries") {
+                    var date = new Date(data[i].reportCollectionDate);
+                    exist = false;
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j][0] === date.getTime()) {
+                            objReturn[j][1] += parseInt(data[i].garbageAmount);
+                            exist = true;
+                        }
+                    }
+                    if (!exist) {
+                        objReturn.push([date.getTime(), parseInt(data[i].garbageAmount)]);
+                    }
                 }
             }
         }
@@ -2994,8 +2997,8 @@ app.controller('managerController', function ($scope, $http, $filter) {
 
 
     var $googleMap, visualizeMap, map;
-    var src = '../KUCHING_COLLECTION_ZONE DIGITAL_MAP.kml',
-        kmlLayer;
+//    var src = '../KUCHING_COLLECTION_ZONE DIGITAL_MAP.kml',
+//        kmlLayer;
     //    var src = '../split.kml', kmlLayer;
 
     $googleMap = document.getElementById('googleMap');
@@ -3013,10 +3016,10 @@ app.controller('managerController', function ($scope, $http, $filter) {
 
     map = new google.maps.Map($googleMap, visualizeMap);
 
-    var myParser = new geoXML3.parser({
-        map: map
-    });
-    myParser.parse(src);
+//    var myParser = new geoXML3.parser({
+//        map: map
+//    });
+//    myParser.parse(src);
 
     //--------------------------------------------------------
     //    fetch(src)
@@ -3516,24 +3519,12 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
         concatDays = concatDays.slice(0, -1);
         $scope.area.frequency = concatDays;
         //console.log($scope.collectionList.length);
-        if ($scope.area.frequency == "" || $scope.collectionList.length == 0) {
-            if ($scope.area.frequency == "" && $scope.collectionList.length == 0) {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Collection Frequency And Area Collection "
-                });
-            } else if ($scope.area.frequency == "") {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Collection Frequency"
-                });
-            } else if ($scope.collectionList.length == 0) {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Area Collection"
-                });
-            }
-        } else {
+        if ($scope.area.frequency == "") {
+            angular.element('body').overhang({
+                "type": "error",
+                "message": "Please Fill In Collection Frequency"
+            });
+        }else {
             $http.post('/updateArea', $scope.area).then(function (response) {
                 var data = response.data;
                 if (data.status === "success") {

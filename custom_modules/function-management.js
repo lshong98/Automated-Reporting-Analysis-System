@@ -326,14 +326,24 @@ function insertNewData(query, req, res) {
 function log(dt, content, staff) {
     var sql = "";
     
-    makeID('history', dt).then(function (ID) {
-        sql = "INSERT INTO tblhistory (historyID, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + content + "', '" + staff + "', now(), 'A')";
-        database.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
+    database.query("SELECT now() AS serverdate",function(err,result){
+        
+        if(err){
+            throw err;
+        }
+
+        dt = dateTime.create();
+        dt._now = result[0].serverdate;
+        dt = dt.format('Y-m-d H:M:S');
+        makeID('history', dt).then(function (ID) {
+            sql = "INSERT INTO tblhistory (historyID, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + content + "', '" + staff + "', now(), 'A')";
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+            });
         });
-    });
+    });        
 }
 
 function waterfallQuery(query) {
