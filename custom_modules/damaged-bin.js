@@ -141,7 +141,7 @@ app.post('/getDbdDetails', function (req, res) {
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
-        }
+        } 
 
         res.json(result);
         console.log(result);
