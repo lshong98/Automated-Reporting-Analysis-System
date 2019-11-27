@@ -21,6 +21,13 @@ function lobi_notify(type, title, content, avatar) {
     });
 }
 
+function isOpen(ws) {
+    if (socket.disconnected) {
+        socket.connect();
+    }
+    //return ws.io.readyState === "open";
+}
+
 //var socket = io.connect('wss://trienekens.appspot.com:3000', {transports: ['websocket'], 'force new connection': true});
 socket.on('connect', function () {
     if (flag === true) {
@@ -3375,6 +3382,7 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                 $scope.notify(data.status, data.message);
 
                 if (data.status === "success") {
+                    isOpen(socket);
                     socket.emit('authorize request');
                     angular.element('#createArea').modal('toggle');
                 }
@@ -3664,6 +3672,7 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
                 var data = response.data;
 
                 if (data.status === "success") {
+                    isOpen(socket);
                     socket.emit('authorize request');
                     var rowId = 1;
                 }
@@ -3883,6 +3892,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
+                    isOpen(socket);
                     socket.emit('authorize request');
                     angular.element('#createTruck').modal('toggle');
                     $scope.initializeTruck();
@@ -3997,6 +4007,7 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
+                    isOpen(socket);
                     socket.emit('authorize request');
                     angular.element('#createZone').modal('toggle');
                     $scope.initializeZone();
@@ -4791,6 +4802,7 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
+                    isOpen(socket);
                     socket.emit('authorize request');
                     angular.element('#createBin').modal('toggle');
                 }

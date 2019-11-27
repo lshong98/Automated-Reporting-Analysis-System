@@ -66,6 +66,10 @@ io.sockets.on('connection', function (socket) {
     
     var channels = [{"chat-channel": []}], i = 0, channelName = "";
     
+//    if(socket.readyState === socket.CLOSED){
+//        console.log('closee');
+//    }
+    
     //--- Create Channels
 //    var sql = "SELECT positionName AS position FROM tblposition WHERE positionStatus = 'A'";
 //    database.query(sql, function (err, result) {
@@ -94,6 +98,7 @@ io.sockets.on('connection', function (socket) {
         emitter.removeAllListeners('create new zone', this);
         emitter.removeAllListeners('create new area', this);
         emitter.removeAllListeners('create new bin', this);
+        socket.removeAllListeners();
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
         connections.splice(connections.indexOf(socket), 1);
