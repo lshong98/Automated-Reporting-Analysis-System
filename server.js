@@ -299,7 +299,7 @@ app.post('/updateBinRequest', function (req, res) {
                         }
                         if (req.body.status == 'Approved') {
 
-                            sql = "INSERT INTO tblbinrequest (binSize, userID, dateRequest, unit, remarks, acrfNumber, beBins, acrBins) VALUES ('" + req.body.binSize + "', '" + userID + "', '" + date + "', '" + req.body.unit + "', '" + req.body.remarks + "', '" + req.body.acrfNumber + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
+                            sql = "UPDATE tblbinrequest SET binSize = '" + req.body.binSize + "', userID = '" + userID + "', dateRequest = '" + date + "', unit = '" + req.body.unit + "', remarks = '" + req.body.remarks + "', acrfNumber = '" + req.body.acrfNumber + "', beBins = '" + req.body.beBins + "', acrBins = '" + req.body.acrBins + "'";
                             console.log(sql);
                             database.query(sql, function (err, result) {
                                 if (err) {
