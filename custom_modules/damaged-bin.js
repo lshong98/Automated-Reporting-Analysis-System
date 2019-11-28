@@ -134,7 +134,7 @@ app.post('/getDbdDetails', function (req, res) {
 
     console.log(req.body);
     //var sql = "SELECT * FROM tbldbr WHERE (creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
-    var sql = "SELECT b.council, b.creationDateTime as date, db.areaCode, b.companyName, b.address, db.binSize, db.serialNo as damagedBinNo, db.damageCode, db.damageReason, b.preparedBy, b.repairBin, b.replaceBin, b.cost, b.status, b.rectifiedDate FROM tbldbr b inner join tbldbrentry db on b.dbrID = db.dbrID WHERE (b.creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "') GROUP BY b.dbrID";
+    var sql = "SELECT b.council, b.creationDateTime as date, db.areaCode, b.companyName, b.address, db.binSize, db.serialNo as damagedBinNo, db.damageCode, db.damageReason, b.preparedBy, b.repairBin, b.replaceBin, b.cost, b.status, b.rectifiedDate FROM tbldbr b inner join tbldbrentry db on b.dbrID = db.dbrID WHERE (b.creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
        
 
     console.log(sql);

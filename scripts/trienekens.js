@@ -9020,27 +9020,14 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
             console.log($scope.dbd);
             $http.post('/getDbdDetails', $scope.dbd[0]).then(function (response) {
 
-                $scope.dbdDetailsList = response.data;
+                var dbdDetailsList = response.data;
+                console.log(dbdDetailsList);
+                $scope.dbdDetailsList = [];
+                for(i = 0; i < dbdDetailsList.length; i+=5){
+                    $scope.dbdDetailsList.push(dbdDetailsList[i]);
+                }
+
                 console.log($scope.dbdDetailsList);
-
-                // for (var x = 0; x < $scope.dbdDetailsList.length; x++) {
-                //     $scope.dbrID.push($scope.dbdDetailsList[x].dbrID)
-
-                //     $http.post('/getDbdDetailsDetails', {
-                //         "dbrID": $scope.dbrID[0]
-                //     }).then(function (response) {
-                //         $scope.dbdDetailsDetailsList = response.data;
-
-                //         $scope.dbdDetailsList[x - 1].areaCode = $scope.dbdDetailsDetailsList[0].areaCode;
-                //         $scope.dbdDetailsList[x - 1].binSize = $scope.dbdDetailsDetailsList[0].binSize;
-                //         window.alert(index);
-
-                //     });
-
-                // }
-
-
-
             });
         });
 
