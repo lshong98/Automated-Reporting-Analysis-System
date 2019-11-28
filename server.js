@@ -299,7 +299,7 @@ app.post('/updateBinRequest', function (req, res) {
                         }
                         if (req.body.status == 'Approved') {
 
-                            sql = "UPDATE tblbinrequest SET binSize = '" + req.body.binSize + "', userID = '" + userID + "', dateRequest = '" + date + "', unit = '" + req.body.unit + "', remarks = '" + req.body.remarks + "', acrfNumber = '" + req.body.acrfNumber + "', beBins = '" + req.body.beBins + "', acrBins = '" + req.body.acrBins + "'";
+                            sql = "UPDATE tblbinrequest SET binSize = '" + req.body.binSize + "', userID = '" + userID + "', dateRequest = '" + date + "', unit = '" + req.body.unit + "', remarks = '" + req.body.remarks + "', acrfNumber = '" + req.body.acrfNumber + "', beBins = '" + req.body.beBins + "', acrBins = '" + req.body.acrBins + "' WHERE reqID = '"+req.body.id+"'";
                             console.log(sql);
                             database.query(sql, function (err, result) {
                                 if (err) {
