@@ -4,16 +4,7 @@ global angular, document, google, Highcharts
 */
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv', 'easypiechart']);
 
-var socket = io.connect({
-    reconnect: true,
-    reconnectDelay: 1000,
-    reconnectDelayMax: 5000,
-    reconnectAttempts: Infinity,
-    transport: ["websocket"],
-    rejectUnauthorized: false,
-    forceNew: true,
-    timeout: 6000
-});
+var socket = io.connect();
 var flag = false;
 
 function lobi_notify(type, title, content, avatar) {
@@ -31,11 +22,14 @@ function lobi_notify(type, title, content, avatar) {
 }
 
 function isOpen(ws) {
-    if (socket.disconnected) {
-        socket.connect();
-    }
+    var ping = {"type":"ping"};
+    ws.send(JSON.stringify(ping));
     //return ws.io.readyState === "open";
 }
+
+window.setInterval(function () {
+    isOpen(socket);
+}, 10000);
 
 //var socket = io.connect('wss://trienekens.appspot.com:3000', {transports: ['websocket'], 'force new connection': true});
 socket.on('connect', function () {
@@ -3391,7 +3385,6 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
                 $scope.notify(data.status, data.message);
 
                 if (data.status === "success") {
-                    isOpen(socket);
                     socket.emit('authorize request');
                     angular.element('#createArea').modal('toggle');
                 }
@@ -3681,7 +3674,6 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
                 var data = response.data;
 
                 if (data.status === "success") {
-                    isOpen(socket);
                     socket.emit('authorize request');
                     var rowId = 1;
                 }
@@ -3901,7 +3893,6 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    isOpen(socket);
                     socket.emit('authorize request');
                     angular.element('#createTruck').modal('toggle');
                     $scope.initializeTruck();
@@ -4016,7 +4007,6 @@ app.controller('zoneController', function ($scope, $http, $filter, storeDataServ
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    isOpen(socket);
                     socket.emit('authorize request');
                     angular.element('#createZone').modal('toggle');
                     $scope.initializeZone();
@@ -4811,7 +4801,6 @@ app.controller('binController', function ($scope, $http, $filter, storeDataServi
 
                 $scope.notify(data.status, data.message);
                 if (data.status === "success") {
-                    isOpen(socket);
                     socket.emit('authorize request');
                     angular.element('#createBin').modal('toggle');
                 }
