@@ -66,12 +66,34 @@ app.post('/addDatabaseBin', function (req, res) {
             console.log("Add WBD entry success");
             console.log(result);
             res.json({"status": "success", "message": "WBD Entry created successfully!"});
+
+            /*var refreshSql = `SELECT wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, wbd.rcDwell as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, wbd.comment as comment, bins.size as binSize, concat(customer.houseNo,' ',customer.streetNo,' ',taman.tamanName) as address, customer.name as companyName, acr.acrID as acrfSerialNo from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID where wbd.activeStatus = 'a' ORDER BY idNo DESC LIMIT 1`;
+            database.query(refreshSql, function(err,result){
+                if(err){
+                    throw err;
+                }
+                console.log(result);
+                res.json(result);
+            })*/
             
         });
     }
 
     setTimeout(addBin, 100);
 });
+
+app.get('/refreshDatabaseBin', function(req,res){
+    'use strict';
+
+    var refreshSql = `SELECT wbd.idNo as id,wbd.date as date, customer.name as name, customer.ic as icNo, bins.serialNo, wbd.rcDwell as rcDwell, customer.houseNo, taman.tamanName as tmnKpg, customer.postCode as areaCode, wbd.activeStatus as status, wbd.comment as comment, bins.size as binSize, concat(customer.houseNo,' ',customer.streetNo,' ',taman.tamanName) as address, customer.name as companyName, acr.acrID as acrfSerialNo from tblwheelbindatabase as wbd left join tblbins as bins on wbd.serialNo = bins.serialNo left join tblacr as acr on wbd.acrID = acr.acrID left join tblcustomer as customer on wbd.customerID = customer.customerID left join tbltaman as taman on customer.tamanID = taman.tamanID where wbd.activeStatus = 'a' ORDER BY idNo DESC LIMIT 1`;
+    database.query(refreshSql, function(err, response){
+        if(err){
+            throw err;
+        }
+        console.log(response);
+        res.json(response);
+    })
+})
 
 app.put('/editDatabaseBin', function (req, res) {
     'use strict';
@@ -146,7 +168,7 @@ app.post('/addCustomer', function (req, res) {
 
     req.body.customerID = f.makeID('customer', req.body.creationDateTime).then(function (ID) {
         //console.log(`${ID}`);
-        var sql = "insert into tblcustomer values('" + ID + "', '" + req.body.tamanID + "','" + req.body.username + "','" + req.body.password + "','" + req.body.contactNumber + "','" + req.body.ic + "','" + req.body.tradingLicense + "','" + req.body.name + "', '" + req.body.companyName + "','" + req.body.houseNo + "','" + req.body.streetNo + "','" + req.body.postCode + "','" + req.body.city + "','" + req.body.status + "', current_timestamp())";
+        var sql = "insert into tblcustomer values('" + ID + "', '" + req.body.tamanID + "','" + req.body.username + "','" + req.body.password + "','" + req.body.contactNumber + "','" + req.body.ic + "','" + req.body.tradingLicense + "','" + req.body.name + "', '" + req.body.companyName + "','" + req.body.houseNo + "','" + req.body.streetNo + "','" + req.body.postCode + "','" + req.body.city + "','" + req.body.state + "','" + req.body.status + "','" + req.body.imgPath + "', current_timestamp())";
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;

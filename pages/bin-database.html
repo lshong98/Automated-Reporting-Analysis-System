@@ -19,6 +19,9 @@
                     <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.customerID">
                         <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.customerID}} - {{c.name}} - {{c.companyName}}</option>
                     </select>
+                    <!--<select id="txtCustomer" data-ng-model="databaseBin.customerID" class="selectpicker" data-live-search="true" data-width="100%">
+                            <option value="{{c.customerID}}" data-ng-repeat="c in customerList">{{c.customerID}} - {{c.name}} - {{c.companyName}}</option>
+                    </select>-->
                 </div>
 
                 <div class="form-group">
