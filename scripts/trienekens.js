@@ -4,7 +4,7 @@ global angular, document, google, Highcharts
 */
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv', 'easypiechart']);
 
-var socket = io.connect("wss://trienekens-trial.appspot.com", {
+var socket = io.connect({
     reconnect: true,
     reconnectDelay: 1000,
     reconnectDelayMax: 5000,
