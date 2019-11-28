@@ -21,7 +21,7 @@
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="image in imgs track by $index">
-                        <td><img ng-src=../images/img/{{image.imageName}} class="thumbnail"></td>
+                        <td><img data-ng-src=../images/img/{{image.imageName}} class="thumbnail"></td>
                         <td class="action"><button class="btn btn-danger" data-ng-click="deleteImg(image.id, image.imageName)">Delete</button></td>
                     </tr>
                 </tbody>
