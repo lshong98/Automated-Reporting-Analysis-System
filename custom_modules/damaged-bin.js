@@ -11,12 +11,14 @@ app.post('/addDbr', function (req, res) {
     f.makeID("dbr", req.body.creationDate).then(function (ID) {
         
         var sql = "INSERT INTO tbldbr (dbrID, creationDateTime, preparedBy, companyName, address, contactPerson, phoneNo, comment, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.preparedBy + "' , '" + req.body.companyName + "' , '" + req.body.address + "' , '" + req.body.contactPerson + "' , '" + req.body.phoneNo + "' , '" + req.body.comment +  "', 'A')";
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
 
-            sql = "INSERT INTO tbldbrentry (id, dbrID) VALUES ('null', '" + ID + "'), ('null', '" + ID + "'), ('null', '" + ID + "'), ('null', '" + ID + "'), ('null', '" + ID + "')";
+            sql = "INSERT INTO tbldbrentry (dbrID) VALUES ('" + ID + "'), ('" + ID + "'),('" + ID + "'),('" + ID + "'),('" + ID + "')"
+            console.log(sql);
             database.query(sql, function (err, result) {
                 if (err) {
                     throw err;
@@ -36,6 +38,7 @@ app.post('/addDbd', function (req, res) {
         
         console.log("dbdID: " + ID)
         var sql = "INSERT INTO tbldbd (dbdID, creationDateTime, periodFrom, periodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.periodFrom + "' , '" + req.body.periodTo + "' , '" + req.body.preparedBy +  "', 'A')";
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
@@ -66,6 +69,7 @@ app.post('/getAllDbd', function (req, res) {
     //var sql = "SELECT b.council, b.creationDateTime as date, db.areaCode, b.companyName, b.address, db.binSize, db.serialNo as damagedBinNo, db.damageCode, db.damageReason, b.preparedBy, b.repairBin, b.replaceBin, b.cost, b.status, b.rectifiedDate FROM tbldbr b inner join tbldbrentry db on b.dbrID = db.dbrID WHERE (b.creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
         
     var sql = "SELECT dbdID as id, periodFrom, periodTo, preparedBy, authorizedBy, verifiedBy, status FROM tbldbd";
+    console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -129,14 +133,15 @@ app.post('/getDbdDetails', function (req, res) {
     'use strict';
 
     console.log(req.body);
-    var sql = "SELECT * FROM tbldbr WHERE (creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
-    
+    //var sql = "SELECT * FROM tbldbr WHERE (creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
+    var sql = "SELECT b.council, b.creationDateTime as date, db.areaCode, b.companyName, b.address, db.binSize, db.serialNo as damagedBinNo, db.damageCode, db.damageReason, b.preparedBy, b.repairBin, b.replaceBin, b.cost, b.status, b.rectifiedDate FROM tbldbr b inner join tbldbrentry db on b.dbrID = db.dbrID WHERE (b.creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
+       
 
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
-        }
+        } 
 
         res.json(result);
         console.log(result);

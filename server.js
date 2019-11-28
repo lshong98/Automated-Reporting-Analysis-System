@@ -287,7 +287,7 @@ app.post('/updateBinRequest', function (req, res) {
         }
         database.query(getUserID, function (err, result) {
             if (err) {
-                throw err;
+                throw err; 
             }
             userID = result[0].userID;
             var insertNotif = "INSERT INTO tblnotif(userID, notifText, notifDate, readStat) VALUES('" + userID + "','" + msg + "','" + date + "','u')";
@@ -299,24 +299,26 @@ app.post('/updateBinRequest', function (req, res) {
                         }
                         if (req.body.status == 'Approved') {
 
-                            sql = "INSERT INTO tblbinrequest (binSize, unit, remarks, acrfNumber, beBins, acrBins) VALUES ('" + req.body.binSize + "', '" + req.body.unit + "', '" + req.body.remarks + "', '" + req.body.acrfNumber + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
+                            sql = "UPDATE tblbinrequest SET binSize = '" + req.body.binSize + "', userID = '" + userID + "', dateRequest = '" + date + "', unit = '" + req.body.unit + "', remarks = '" + req.body.remarks + "', acrfNumber = '" + req.body.acrfNumber + "', beBins = '" + req.body.beBins + "', acrBins = '" + req.body.acrBins + "' WHERE reqID = '"+req.body.id+"'";
                             console.log(sql);
                             database.query(sql, function (err, result) {
                                 if (err) {
                                     throw err;
                                 }
 
-                                if (req.body.acrBin == 'yes') {
-                                    sql = "INSERT INTO tblacr (acrID, customerID, creationDateTime, `from`, `to`, remarks, beBins, acrBins) VALUES ('" + req.body.acrfNumber + "', '" + userID + "', '" + req.body.creationDate + "', '" + req.body.from + "', '" + req.body.to + "', '" + req.body.remarks + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
+                                f.makeID("acr", req.body.creationDate).then(function (ID) {
+                                    if (req.body.acrBin == 'yes') {
+                                        sql = "INSERT INTO tblacr (acrID, acrfNumber, userID, creationDateTime, `from`, `to`, remarks, beBins, acrBins) VALUES ('" + ID + "', '" + req.body.acrfNumber + "', '" + userID + "', '" + req.body.creationDate + "', '" + req.body.formattedFrom + "', '" + req.body.formattedTo + "', '" + req.body.remarks + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
 
-                                    console.log(sql);
-                                    database.query(sql, function (err, result) {
-                                        if (err) {
-                                            throw err;
-                                        }
-                                    });
+                                        console.log(sql);
+                                        database.query(sql, function (err, result) {
+                                            if (err) {
+                                                throw err;
+                                            }
+                                        });
                                 }
                             });
+                            });  
 
 
                         }

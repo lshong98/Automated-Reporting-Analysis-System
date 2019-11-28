@@ -3,14 +3,20 @@ var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
- 
+
 // ACR Management
 app.post('/addDcs', function (req, res) {
     'use strict';
 
     f.makeID("dcs", req.body.creationDate).then(function (ID) {
-         
-        var sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" +  req.body.areaID + "', '" + req.body.periodFrom + "', '" + req.body.periodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.replacementPeriodFrom + "', '" + req.body.replacementPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
+
+        var sql = "";
+        if (req.body.replacementDriverID === '') {
+            sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.areaID + "', '" + req.body.formattedPeriodFrom + "', '" + req.body.formattedPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
+
+        } else {
+            sql = "INSERT INTO tbldcs (dcsID, creationDateTime, driverID, areaID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.driverID + "', '" + req.body.areaID + "', '" + req.body.formattedPeriodFrom + "', '" + req.body.formattedPeriodTo + "', '" + req.body.replacementDriverID + "', '" + req.body.formattedReplacementPeriodFrom + "', '" + req.body.formattedReplacementPeriodTo + "', '" + req.body.preparedBy + "', 'A')";
+        }
         console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
@@ -26,7 +32,13 @@ app.post('/addDcs', function (req, res) {
             //         }); 
             //     }
             // }
-            res.json({"status": "success", "message": "ACR created!", "details": {"dcsID": ID}});
+            res.json({
+                "status": "success",
+                "message": "ACR created!",
+                "details": {
+                    "dcsID": ID
+                }
+            });
         });
     });
 }); // Complete
@@ -35,13 +47,13 @@ app.post('/getAllDcs', function (req, res) {
 
     var sql = "SELECT dcsID AS id, creationDateTime, driverID, periodFrom, periodTo, replacementDriverID, replacementPeriodFrom, replacementPeriodTo, (CASE WHEN status = 'A' THEN 'ACTIVE' WHEN status = 'I' THEN 'INACTIVE'  WHEN status = 'P' THEN 'PENDING' WHEN status = 'G' THEN 'APPROVED' WHEN status = 'C' THEN 'COMPLETE' WHEN status = 'R' THEN 'CORRECTION REQUIRED' END) AS status from tbldcs where status != 'I'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
-    
+
     // if(req.body.status){
     //     sql += " WHERE status = 'A'";
     // }else{
     //     sql += " WHERE status = 'I'";
     // }
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -52,8 +64,8 @@ app.post('/getAllDcs', function (req, res) {
 
 app.post('/getAllAcr', function (req, res) {
     'use strict';
-    var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr as a inner join tblcustomer as c on a.customerID = c.customerID";
-    
+    var sql = "SELECT a.acrID, a.areaID, c.companyName, c.address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr as a inner join tbluser as c on a.userID = c.userID WHERE areaID IS NULL";
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -66,62 +78,136 @@ app.post('/getAllAcr', function (req, res) {
 app.post('/getDcsDetails', function (req, res) {
     'use strict';
     //var sql = "SELECT a.acrID, a.areaID, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr as a inner join tblcustomer as c on a.customerID = c.customerID WHERE a.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR a.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
-    
-    var sql = "SELECT a.acrID, a.areaID, u.companyName, u.address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr a inner join tbluser u on u.userID = a.customerID WHERE a.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR a.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
-    
+
+    var sql = "SELECT a.acrID, a.areaID, u.companyName, u.address, a.from, a.to, a.beBins, a.acrBins, a.mon, a.tue, a.wed, a.thu, a.fri, a.sat, a.remarks FROM tblacr a inner join tbluser u on u.userID = a.userID WHERE a.dcsID LIKE '%" + req.body.dcsID + "%'";
+
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
-         
+
+
+
         res.json(result);
     });
+});
+app.post('/getAreaID', function (req, res) {
+    'use strict';
+
+    if (req.body.areaCode != undefined) {
+
+        var sql = "SELECT zoneID FROM tblzone WHERE zoneCode LIKE '%" + req.body.areaCode.charAt(0) + "%'";
+        console.log(sql);
+        database.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+            }
+            console.log(result);
+            var zoneID = result[0].zoneID;
+            sql = "SELECT areaID FROM tblarea WHERE areaCode LIKE '%" + req.body.areaCode.substr(1) + "%' AND zoneID = '" + zoneID + "'";
+
+
+            console.log(sql);
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+
+                res.json(result);
+            });
+
+
+        });
+
+    }
+
 });
 
 app.post('/editAcr', function (req, res) {
     'use strict';
-    var sql = "UPDATE tblacr SET areaID = '" + req.body.areaCode + "', mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thu = '" + req.body.thu + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE acrID = '" + req.body.acrID + "'";
-        
+
+    var sql = "SELECT dcsID FROM tbldcs WHERE ((periodFrom >= '" + req.body.from + "' OR periodFrom <= '" + req.body.to + "') OR (periodTo >= '" + req.body.from + "' OR periodTo <= '" + req.body.to + "')) AND areaID LIKE ('%" + req.body.areaID + "%')";
     console.log(sql);
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
-        } 
+        }
+
+        if (result.length > 0) {
+            console.log(result[0].dcsID);
+            sql = "UPDATE tblacr SET dcsID = '" + result[0].dcsID + "', areaID = '" + req.body.areaCode + "', mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thu = '" + req.body.thu + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE acrID = '" + req.body.acrID + "'";
+            console.log(sql);
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+
+                res.json(result);
+            });
+        } else {
+            result = [{
+                "status": 'error'
+            }];
+            res.json(result);
+        }
+
+    });
+});
+
+app.post('/editAcrDays', function (req, res) {
+    'use strict';
+
+
+    var sql = "UPDATE tblacr SET mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thu = '" + req.body.thu + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE acrID = '" + req.body.acrID + "'";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
         res.json(result);
     });
 });
 
-app.post('/addDcsEntry', function (req, res) {
-    'use strict';
-    console.log("TEST");
-    f.makeID("acr", req.body.creationDate).then(function (ID) {
 
-        var sql = "SELECT areaID FROM tbltaman t inner join tblcustomer c on c.tamanID = t.tamanID WHERE customerID = '" + req.body.customerID + "'";
 
-        database.query(sql, function (err, result) {
-            if (err) {
-                console.log("err1");
-                throw err;
-            }
+// app.post('/addDcsEntry', function (req, res) {
+//     'use strict';
+//     console.log("TEST");
+//     f.makeID("acr", req.body.creationDate).then(function (ID) {
 
-            var areaID = result[0].areaID;
-            
+//         var sql = "SELECT areaID FROM tbltaman t inner join tblcustomer c on c.tamanID = t.tamanID WHERE customerID = '" + req.body.customerID + "'";
 
-            // sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, areaID, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + areaID + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.remarks + "')";
-            sql = "INSERT INTO tblacr (acrID, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + req.body.acrID + "', '" + req.body.customerID + "', '" + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.remarks + "')";
+//         database.query(sql, function (err, result) {
+//             if (err) {
+//                 console.log("err1");
+//                 throw err;
+//             }
 
-            database.query(sql, function (err, result) {
-                if (err) {
-                    console.log("err2");
-                    throw err;
-                }
-                res.json({"status": "success", "message": "ACR created!", "details": {"acrID": ID}});
-            });
-        });
-    });
-}); // Complete
- 
+//             var areaID = result[0].areaID;
+
+
+//             // sql = "INSERT INTO tblacr (acrID, dcsID, creationDateTime, customerID, beBins, acrBins, areaID, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + ID + "', '" + req.body.dcsID + "' , '"  + req.body.creationDate + "', '" + req.body.customerID + "', '"  + req.body.beBins + "', '" + req.body.acrBins + "', '" + areaID + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.remarks + "')";
+//             sql = "INSERT INTO tblacr (acrID, customerID, beBins, acrBins, mon, tue, wed, thu, fri, sat, remarks) VALUE ('" + req.body.acrID + "', '" + req.body.customerID + "', '" + req.body.beBins + "', '" + req.body.acrBins + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.remarks + "')";
+
+//             database.query(sql, function (err, result) {
+//                 if (err) {
+//                     console.log("err2");
+//                     throw err;
+//                 }
+//                 res.json({
+//                     "status": "success",
+//                     "message": "ACR created!",
+//                     "details": {
+//                         "acrID": ID
+//                     }
+//                 });
+//             });
+//         });
+//     });
+// }); // Complete
+
 app.post('/addAcr', function (req, res) {
     'use strict';
 
@@ -131,7 +217,13 @@ app.post('/addAcr', function (req, res) {
         if (err) {
             throw err;
         }
-        res.json({"status": "success", "message": "ACR created!", "details": {"acrID": req.body.acrID}});
+        res.json({
+            "status": "success",
+            "message": "ACR created!",
+            "details": {
+                "acrID": req.body.acrID
+            }
+        });
     });
 
 }); // Complete
@@ -168,20 +260,26 @@ app.post('/deleteAcr', function (req, res) {
     'use strict';
 
     var sql = "DELETE FROM tblacr WHERE acrID = '" + req.body.acrID + "'";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
-        res.json({"status": "success", "message": "ACR created!", "details": {"acrID": req.body.acrID}});
+        res.json({
+            "status": "success",
+            "message": "ACR created!",
+            "details": {
+                "acrID": req.body.acrID
+            }
+        });
     });
 });
 
 app.get('/getCustomerList', function (req, res) {
     'use strict';
-    
+
     var sql = "SELECT * from tblcustomer";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -230,7 +328,7 @@ app.post('/filterArea', function (req, res) {
 app.post('/getAreaList', function (req, res) {
     'use strict';
     console.log("GETTING AREA LIST");
-    var sql = "SELECT concat(z.zoneCode, a.areaCode) as areaCode from tblzone z inner join tblarea a on z.zoneID = a.zoneID";
+    var sql = "SELECT concat(z.zoneCode, a.areaCode) as areaCode, a.areaID from tblzone z inner join tblarea a on z.zoneID = a.zoneID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -245,10 +343,11 @@ app.post('/getStaffList', function (req, res) {
     'use strict';
 
 
-    var positionID = '', sql;
+    var positionID = '',
+        sql;
 
     sql = "SELECT positionID from tblposition WHERE positionName = '" + req.body.position + "'";
-    
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

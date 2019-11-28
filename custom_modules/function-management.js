@@ -189,8 +189,9 @@ function logTransaction(date, staffID, action, description, rowID, tblName) {
 }
 
 function sendForAuthorization(date, staffId, action, description, rowID, tblName, query) {
-    
-    var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (\"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", NULL, \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
+    var dt = dateTime.create().format('Y-m-d H:M:S');
+    console.log(dt);
+    var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (now(), \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", NULL, \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
 
     //var sql = "INSERT INTO tblauthorization (date, staffID, action, description, rowID, tblName, authorize, query) VALUES ('"+ date +"', '"+ staffId +"', '"+ action +"', '"+ description +"', '"+ rowID +"', '"+ tblName +"', 'M', '"+ query +"')";
 
@@ -325,14 +326,24 @@ function insertNewData(query, req, res) {
 function log(dt, content, staff) {
     var sql = "";
     
-    makeID('history', dt).then(function (ID) {
-        sql = "INSERT INTO tblhistory (historyID, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + content + "', '" + staff + "', '" + dt + "', 'A')";
-        database.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
+    database.query("SELECT now() AS serverdate",function(err,result){
+        
+        if(err){
+            throw err;
+        }
+
+        dt = dateTime.create();
+        dt._now = result[0].serverdate;
+        dt = dt.format('Y-m-d H:M:S');
+        makeID('history', dt).then(function (ID) {
+            sql = "INSERT INTO tblhistory (historyID, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + content + "', '" + staff + "', now(), 'A')";
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+            });
         });
-    });
+    });        
 }
 
 function waterfallQuery(query) {

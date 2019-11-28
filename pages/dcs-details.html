@@ -375,8 +375,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            data-ng-repeat="d in dcsDetailsList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
+                        <tr data-ng-repeat="d in dcsDetailsList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
                             <td>
                                 <span data-ng-bind="d.acrID"></span>
                             </td>
@@ -393,14 +392,7 @@
                                 <span data-ng-bind="d.acrBins"></span>
                             </td>
                             <td>
-                                <div editable>
-                                    <select type="text" class="form-control" data-ng-model="d.areaCode"
-                                        data-ng-show="!showAcr">
-                                        <option data-ng-repeat="a in areaList" value={{a.areaCode}}>{{a.areaCode}}
-                                        </option>
-                                    </select>
-                                    <span data-ng-show="showAcr" data-ng-bind="d.areaID"></span>
-                                </div>
+                                <span data-ng-bind="d.areaID"></span>
                             </td>
                             <td>
                                 <div editable>
@@ -451,7 +443,7 @@
                                 <button class="btn btn-sm btn-primary" data-ng-show="showAcr"
                                     data-ng-click="editAcr(d, $index);"><i class="fa fa-pencil-alt"></i></button>
                                 <button class="btn btn-sm btn-warning" data-ng-show="!showAcr"
-                                    data-ng-click="saveAcr(d);"><i class="fa fa-save"></i></button>
+                                    data-ng-click="saveAcrDays(d);"><i class="fa fa-save"></i></button>
                                 <button class="btn btn-sm btn-default" data-ng-show="!showAcr"
                                     data-ng-click="cancelAcr();"><i class="fa fa-times"></i></button>
                             </td>

@@ -67,7 +67,7 @@ app.post('/getBlostDetails', function (req, res) {
 app.post('/addBlostEntry', function (req, res) {
     'use strict';
 
-    var sql = "INSERT INTO tblblostentry (id, blostID, name, address, phoneNo, collectionArea, binSize, noOfBins, sharedBin, dateOfLoss, reason) VALUE ('" + null + "', '" + req.body.blostID + "', '"  + req.body.name + "', '" + req.body.address + "', '"  + req.body.phoneNo + "', '" + req.body.collectionArea + "', '" + req.body.binSize + "', '" + req.body.noOfBins + "', '" + req.body.sharedBin + "', '" + req.body.dateOfLoss + "', '" + req.body.reason + "')";
+    var sql = "INSERT INTO tblblostentry (blostID, name, address, phoneNo, collectionArea, binSize, noOfBins, sharedBin, dateOfLoss, reason) VALUE ('" + req.body.blostID + "', '"  + req.body.name + "', '" + req.body.address + "', '"  + req.body.phoneNo + "', '" + req.body.collectionArea + "', '" + req.body.binSize + "', '" + req.body.noOfBins + "', '" + req.body.sharedBin + "', '" + req.body.formattedDateOfLoss + "', '" + req.body.reason + "')";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {

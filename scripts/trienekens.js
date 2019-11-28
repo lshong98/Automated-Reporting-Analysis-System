@@ -21,6 +21,16 @@ function lobi_notify(type, title, content, avatar) {
     });
 }
 
+function isOpen(ws) {
+    var ping = {"type":"ping"};
+    ws.send(JSON.stringify(ping));
+    //return ws.io.readyState === "open";
+}
+
+window.setInterval(function () {
+    isOpen(socket);
+}, 10000);
+
 //var socket = io.connect('wss://trienekens.appspot.com:3000', {transports: ['websocket'], 'force new connection': true});
 socket.on('connect', function () {
     if (flag === true) {
@@ -669,9 +679,6 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             }
 
             scope.showAcr = !scope.showAcr;
-            scope.thisAcr = {
-                "areaCode": areaCode
-            };
         };
 
         scope.saveAcr = function (acr) {
@@ -716,15 +723,78 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             scope.thisAcr = acr;
             console.log(scope.thisAcr);
 
+            // Change Date Format
+            scope.thisAcr.from = $filter('date')(scope.thisAcr.from, 'yyyy-MM-dd HH:mm:ss');
+            scope.thisAcr.to = $filter('date')(scope.thisAcr.to, 'yyyy-MM-dd HH:mm:ss');
 
-            $http.post('/editAcr', scope.thisAcr).then(function (response) {
-                var data = response.data;
+            $http.post('/getAreaID', scope.thisAcr).then(function (response) {
 
-                scope.notify(data.status, data.message);
+                console.log(response.data);
+                scope.thisAcr.areaID = response.data[0].areaID;
+                console.log(scope.thisAcr);
+                $http.post('/editAcr', scope.thisAcr).then(function (response) {
+                    var data = response.data[0];
+
+                    if (data === 'error') {
+                        window.alert("DCS Doesn't Exist!");
+                    }
+                });
             });
+
+
+
 
         };
 
+        scope.saveAcrDays = function (acr) {
+            scope.showAcr = !scope.showAcr;
+
+            if (acr.mon) {
+                acr.mon = 1;
+            } else {
+                acr.mon = 0;
+            }
+
+            if (acr.tue) {
+                acr.tue = 1;
+            } else {
+                acr.tue = 0;
+            }
+
+            if (acr.wed) {
+                acr.wed = 1;
+            } else {
+                acr.wed = 0;
+            }
+
+            if (acr.thu) {
+                acr.thu = 1;
+            } else {
+                acr.thu = 0;
+            }
+
+            if (acr.fri) {
+                acr.fri = 1;
+            } else {
+                acr.fri = 0;
+            }
+
+            if (acr.sat) {
+                acr.sat = 1;
+            } else {
+                acr.sat = 0;
+            }
+
+            scope.thisAcr = acr;
+            $http.post('/editAcrDays', scope.thisAcr).then(function (response) {
+                var data = response.data;
+
+            });
+
+
+
+
+        };
         scope.cancelAcr = function () {
             scope.showAcr = !scope.showAcr;
 
@@ -2513,6 +2583,10 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         if (status == 'Approved') {
             angular.element('#confirmStatus').modal('toggle');
         } else {
+            $scope.thisBinRequest.from = $filter('date')($scope.thisBinRequest.from, 'yyyy-MM-dd');
+            $scope.thisBinRequest.to = $filter('date')($scope.thisBinRequest.to, 'yyyy-MM-dd');
+
+            console.log($scope.thisBinRequest);
             $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
                 var data = response.data;
                 angular.element('body').overhang({
@@ -2535,6 +2609,8 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         $scope.entry.status = "Approved";
         $scope.entry.id = $routeParams.reqID;
 
+        $scope.entry.formattedFrom = $filter('date')($scope.entry.from, 'yyyy-MM-dd');
+        $scope.entry.formattedTo = $filter('date')($scope.entry.to, 'yyyy-MM-dd');
         $http.post('/updateBinRequest', $scope.entry).then(function (response) {
             var data = response.data;
             angular.element('body').overhang({
@@ -2638,48 +2714,51 @@ app.controller('managerController', function ($scope, $http, $filter) {
         var objReturn = [];
         var i, j;
         var exist;
-        for (i = 0; i < data.length; i += 1) {
-            if (element === "reportCollectionDate") {
-                exist = false;
-                var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j] === formattedDate) {
-                        exist = true;
+        
+        if (data.length > 0) {
+            for (i = 0; i < data.length; i += 1) {
+                if (element === "reportCollectionDate") {
+                    exist = false;
+                    var formattedDate = $filter('date')(data[i].reportCollectionDate, 'EEEE, MMM d');
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j] === formattedDate) {
+                            exist = true;
+                        }
                     }
-                }
-                if (!exist) {
-                    objReturn.push(formattedDate);
-                }
-            } else if (element === "garbageAmount") {
-                objReturn.push(parseInt(data[i].garbageAmount));
-            } else if (element === "duration") {
-                var duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
-                objReturn.push(duration);
-            } else if (element === "amountGarbageOnArea") {
-                exist = false;
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j].name === data[i].areaName) {
-                        objReturn[j].y += parseInt(data[i].garbageAmount);
-                        exist = true;
+                    if (!exist) {
+                        objReturn.push(formattedDate);
                     }
-                }
-                if (!exist) {
-                    objReturn.push({
-                        "name": data[i].areaName,
-                        "y": parseInt(data[i].garbageAmount)
-                    });
-                }
-            } else if (element === "timeSeries") {
-                var date = new Date(data[i].reportCollectionDate);
-                exist = false;
-                for (j = 0; j < objReturn.length; j += 1) {
-                    if (objReturn[j][0] === date.getTime()) {
-                        objReturn[j][1] += parseInt(data[i].garbageAmount);
-                        exist = true;
+                } else if (element === "garbageAmount") {
+                    objReturn.push(parseInt(data[i].garbageAmount));
+                } else if (element === "duration") {
+                    var duration = (data[i].operationTimeEnd - data[i].operationTimeStart) / 1000;
+                    objReturn.push(duration);
+                } else if (element === "amountGarbageOnArea") {
+                    exist = false;
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j].name === data[i].areaName) {
+                            objReturn[j].y += parseInt(data[i].garbageAmount);
+                            exist = true;
+                        }
                     }
-                }
-                if (!exist) {
-                    objReturn.push([date.getTime(), parseInt(data[i].garbageAmount)]);
+                    if (!exist) {
+                        objReturn.push({
+                            "name": data[i].areaName,
+                            "y": parseInt(data[i].garbageAmount)
+                        });
+                    }
+                } else if (element === "timeSeries") {
+                    var date = new Date(data[i].reportCollectionDate);
+                    exist = false;
+                    for (j = 0; j < objReturn.length; j += 1) {
+                        if (objReturn[j][0] === date.getTime()) {
+                            objReturn[j][1] += parseInt(data[i].garbageAmount);
+                            exist = true;
+                        }
+                    }
+                    if (!exist) {
+                        objReturn.push([date.getTime(), parseInt(data[i].garbageAmount)]);
+                    }
                 }
             }
         }
@@ -2933,8 +3012,8 @@ app.controller('managerController', function ($scope, $http, $filter) {
 
 
     var $googleMap, visualizeMap, map;
-    var src = '../KUCHING_COLLECTION_ZONE DIGITAL_MAP.kml',
-        kmlLayer;
+//    var src = '../KUCHING_COLLECTION_ZONE DIGITAL_MAP.kml',
+//        kmlLayer;
     //    var src = '../split.kml', kmlLayer;
 
     $googleMap = document.getElementById('googleMap');
@@ -2952,10 +3031,10 @@ app.controller('managerController', function ($scope, $http, $filter) {
 
     map = new google.maps.Map($googleMap, visualizeMap);
 
-    var myParser = new geoXML3.parser({
-        map: map
-    });
-    myParser.parse(src);
+//    var myParser = new geoXML3.parser({
+//        map: map
+//    });
+//    myParser.parse(src);
 
     //--------------------------------------------------------
     //    fetch(src)
@@ -3455,24 +3534,12 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
         concatDays = concatDays.slice(0, -1);
         $scope.area.frequency = concatDays;
         //console.log($scope.collectionList.length);
-        if ($scope.area.frequency == "" || $scope.collectionList.length == 0) {
-            if ($scope.area.frequency == "" && $scope.collectionList.length == 0) {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Collection Frequency And Area Collection "
-                });
-            } else if ($scope.area.frequency == "") {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Collection Frequency"
-                });
-            } else if ($scope.collectionList.length == 0) {
-                angular.element('body').overhang({
-                    "type": "error",
-                    "message": "Please Fill In Area Collection"
-                });
-            }
-        } else {
+        if ($scope.area.frequency == "") {
+            angular.element('body').overhang({
+                "type": "error",
+                "message": "Please Fill In Collection Frequency"
+            });
+        }else {
             $http.post('/updateArea', $scope.area).then(function (response) {
                 var data = response.data;
                 if (data.status === "success") {
@@ -4415,6 +4482,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "feedback": {
                             "view": 'A'
                         },
+                        "enquiry": {
+                            "view": 'A'
+                        },
                         "role": {
                             "view": 'I'
                         },
@@ -4582,6 +4652,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "approve": 'I'
                         },
                         "feedback": {
+                            "view": 'I'
+                        },
+                        "enquiry": {
                             "view": 'I'
                         },
                         "role": {
@@ -5127,14 +5200,15 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
         $scope.dcs = {
             "id": '',
             "creationDateTime": '',
-            "driver": '',
+            "driverID": '',
             "periodFrom": '',
             "periodTo": '',
-            "replacementDriver": '',
+            "replacementDriverID": '',
             "replacementPeriodFrom": '',
             "replacementPeriodTo": ''
         };
     }
+    initializeDcs();
 
     $scope.show = angular.copy(storeDataService.show.acr);
     var driverPosition = angular.copy(storeDataService.positionID.driverPosition);
@@ -5193,18 +5267,22 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
 
 
     $scope.area = '';
+    $scope.areaCode = '';
     $scope.assignArea = function (areaCode, index) {
         $scope.areaButton = false;
 
-        $scope.dcsList.areaCode.push(areaCode.areaCode);
+        //$scope.dcsList.areaCode.push(areaCode.areaID);
         $scope.areaList.splice(index, 1);
 
         if ($scope.area == '') {
-            $scope.area = areaCode.areaCode;
+            $scope.area = areaCode.areaID;
+            $scope.areaCode = areaCode.areaCode;
         } else {
-            $scope.area = $scope.area.concat(", ", areaCode.areaCode);
+            $scope.area = $scope.area.concat(", ", areaCode.areaID);
+            $scope.areaCode = $scope.areaCode.concat(", ", areaCode.areaCode);
         }
 
+        console.log($scope.area);
     }
 
     $scope.clearArea = function () {
@@ -5242,6 +5320,10 @@ app.controller('acrController', function ($scope, $http, $filter, storeDataServi
 
     $scope.addDcs = function () {
         $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        $scope.dcs.formattedPeriodFrom = $filter('date')($scope.dcs.periodFrom, 'yyyy-MM-dd');
+        $scope.dcs.formattedPeriodTo = $filter('date')($scope.dcs.periodTo, 'yyyy-MM-dd');
+        $scope.dcs.formattedReplacementPeriodFrom = $filter('date')($scope.dcs.replacementPeriodFrom, 'yyyy-MM-dd');
+        $scope.dcs.formattedReplacementPeriodTo = $filter('date')($scope.dcs.replacementPeriodTo, 'yyyy-MM-dd');
         $scope.dcs.preparedBy = window.sessionStorage.getItem('owner');
         $scope.dcs.areaID = $scope.area;
 
@@ -5684,10 +5766,25 @@ app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDa
             }
             $scope.period.periodFrom = $scope.dcs[0].periodFrom;
             $scope.period.periodTo = $scope.dcs[0].periodTo;
-
+            $scope.period.areaID = '';
+            $scope.period.dcsID = $routeParams.dcsID;
             console.log($scope.period);
 
             $scope.dcsEntry.dcsID = $routeParams.dcsID
+            var areaIDArr = $scope.dcs[0].areaID.split(", ");
+            console.log(areaIDArr);
+            for (var x = 0; x < areaIDArr.length; x++) {
+                console.log(areaIDArr[x]);
+                if (x == areaIDArr.length - 1) {
+                    $scope.period.areaID += ("'" + areaIDArr[x] + "'")
+                } else {
+
+                    $scope.period.areaID += ("'" + areaIDArr[x] + "',")
+                }
+            }
+
+            console.log($scope.period.areaID);
+
 
             $http.post('/getDcsDetails', $scope.period).then(function (response) {
                 $scope.dcsDetailsList = response.data;
@@ -8328,7 +8425,8 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.newBinDeliveredButton = false; //reveal bin delivered buttons
     $scope.newBinPulledButton = false; //reveal bin pulled buttons
     $scope.binSizeList = [] //To store bin sizes
-
+    $scope.rightStatus = false;
+    $scope.permission = false;
 
     //GET BIN SIZE LIST
     var getBinSize = function () {
@@ -8483,22 +8581,34 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
                 $scope.status = 'CORRECTION REQUIRED';
             } else if ($scope.bdaf[0].status == 'P') {
                 $scope.status = 'PENDING';
-                document.getElementById("checkbox").disabled = true;
+                $scope.rightStatus = true;
             } else if ($scope.bdaf[0].status == 'K') {
                 $scope.status = 'CHECKED';
-                document.getElementById("checkbox").disabled = true;
+                $scope.rightStatus = true;
             } else if ($scope.bdaf[0].status == 'C') {
                 $scope.status = 'COMPLETE';
-                document.getElementById("completedCheckbox").disabled = true;
                 console.log("disabled");
                 $scope.show.edit = 'I';
             }
 
+
+
+            if ($scope.show.checkView || $scope.show.verifyView) {
+                $scope.permission = true;
+            }
+
+            console.log($scope.rightStatus);
+            console.log($scope.permission);
             //get Driver name
             $http.post('/getStaffName', {
                 "staffID": $scope.bdaf[0].driverID
             }).then(function (response) {
-                $scope.bdaf.driver = response.data[0].staffName;
+                if(response.data.length > 0) {
+                    $scope.bdaf.driver = response.data[0].staffName;
+                } else {
+                    $scope.bdaf.driver = "";
+                }
+                
             });
 
             //get GeneralWorker name
@@ -8533,6 +8643,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
 
             $scope.bdafDetailsList = response.data;
             console.log($scope.bdafDetailsList);
+            console.log($scope.show);
 
             var x = 0;
             for (x = 0; x < $scope.bdafDetailsList.length; x++) {
@@ -8647,6 +8758,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
         sendFormForAuthorization($routeParams.bdafID, "bdaf");
         angular.element('#checkConfirmation').modal('toggle');
         $scope.status = 'PENDING';
+        $scope.rightStatus = true;
         completeForm();
     };
     $scope.checkForm = function () {
@@ -8658,7 +8770,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.rejectForm = function () {
         $scope.status = 'CORRECTION REQUIRED';
         rejectForm($routeParams.bdafID, "bdaf", $scope.bdaf[0].feedback);
-
+        $scope.rightStatus = true;
 
         angular.element('#rejectForm').modal('toggle');
     }
@@ -8666,6 +8778,7 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     //VERIFIED BY
     $scope.requestVerification = function () {
         sendFormForVerification($routeParams.dcsID, "bdaf");
+        $scope.rightStatus = true;
         angular.element('#completeConfirmation').modal('toggle');
         $scope.status = 'PENDING';
     };
@@ -8674,82 +8787,80 @@ app.controller('bdafDetailsController', function ($scope, $http, $filter, storeD
     $scope.verifyForm = function () {
         $scope.status = 'COMPLETE';
         verifyForm($routeParams.bdafID, "bdaf");
-
+        $scope.rightStatus = false;
         angular.element('#approveVerification').modal('toggle');
 
         //UPDATE WBD AND WBSI
+        // var x = 0;
+        // for (x = 0; x < $scope.binRequestList.length; x++) {
+        //     var pulledBins = $scope.binRequestList[x].binPulled.split(" ");
+        //     var deliveredBins = $scope.binRequestList[x].binDelivered.split(" ");
+        //     var newPulledBins = [];
+        //     var reusablePulledBins = [];
+        //     var newDeliveredBins = [];
+        //     var reusableDeliveredBins = [];
 
+        //     //Check if bins are Reusable bins or New bins
+        //     var y = 0;
+        //     for (y = 0; y < pulledBins.length; y++) {
+        //         $http.post('/checkBin', {
+        //             "bin": pulledBins[y]
+        //         }).then(function (response) {
+        //             if (response.result = 'new') {
+        //                 newPulledBins.push(pulledBins[x]);
+        //             } else if (response.result = 'reusable') {
+        //                 reusablePulledBins.push(pulledBins[x]);
+        //             }
+        //         });
+        //     }
 
-        var x = 0;
-        for (x = 0; x < $scope.binRequestList.length; x++) {
-            var pulledBins = $scope.binRequestList[x].binPulled.split(" ");
-            var deliveredBins = $scope.binRequestList[x].binDelivered.split(" ");
-            var newPulledBins = [];
-            var reusablePulledBins = [];
-            var newDeliveredBins = [];
-            var reusableDeliveredBins = [];
+        //     for (y = 0; y < deliveredBins.length; y++) {
+        //         $http.post('/checkBin', {
+        //             "bin": deliveredBins[y]
+        //         }).then(function (response) {
+        //             if (response.result = 'new') {
+        //                 newDeliveredBins.push(deliveredBins[x]);
+        //             } else if (response.result = 'reusable') {
+        //                 reusableDeliveredBins.push(deliveredBins[x]);
+        //             }
+        //         });
+        //     }
 
-            //Check if bins are Reusable bins or New bins
-            var y = 0;
-            for (y = 0; y < pulledBins.length; y++) {
-                $http.post('/checkBin', {
-                    "bin": pulledBins[y]
-                }).then(function (response) {
-                    if (response.result = 'new') {
-                        newPulledBins.push(pulledBins[x]);
-                    } else if (response.result = 'reusable') {
-                        reusablePulledBins.push(pulledBins[x]);
-                    }
-                });
-            }
+        //     //NEW BINS: CREATE NEW WBD ENTRY AND UPDATE WBSI
+        //     var z = 0;
+        //     for (z = 0; z < newDeliveredBins.length; z++) {
+        //         $http.post('/deliverNewBin', {
+        //             "bin": newDeliveredBins[z]
+        //         }).then(function (response) {
 
-            for (y = 0; y < deliveredBins.length; y++) {
-                $http.post('/checkBin', {
-                    "bin": deliveredBins[y]
-                }).then(function (response) {
-                    if (response.result = 'new') {
-                        newDeliveredBins.push(deliveredBins[x]);
-                    } else if (response.result = 'reusable') {
-                        reusableDeliveredBins.push(deliveredBins[x]);
-                    }
-                });
-            }
+        //         });
+        //     }
 
-            //NEW BINS: CREATE NEW WBD ENTRY AND UPDATE WBSI
-            var z = 0;
-            for (z = 0; z < newDeliveredBins.length; z++) {
-                $http.post('/deliverNewBin', {
-                    "bin": newDeliveredBins[z]
-                }).then(function (response) {
+        //     for (z = 0; z < newPulledBins.length; z++) {
+        //         $http.post('/pullNewBin', {
+        //             "bin": newPulledBins[z]
+        //         }).then(function (response) {
 
-                });
-            }
+        //         });
+        //     }
 
-            for (z = 0; z < newPulledBins.length; z++) {
-                $http.post('/pullNewBin', {
-                    "bin": newPulledBins[z]
-                }).then(function (response) {
+        //     //REUSABLE BINS: UPDATE WBD AND UPDATE WBSI
+        //     for (z = 0; z < reusableDeliveredBins.length; z++) {
+        //         $http.post('/deliverReusableBin', {
+        //             "bin": reusableDeliveredBins[z]
+        //         }).then(function (response) {
 
-                });
-            }
+        //         });
+        //     }
 
-            //REUSABLE BINS: UPDATE WBD AND UPDATE WBSI
-            for (z = 0; z < reusableDeliveredBins.length; z++) {
-                $http.post('/deliverReusableBin', {
-                    "bin": reusableDeliveredBins[z]
-                }).then(function (response) {
+        //     for (z = 0; z < reusablePulledBins.length; z++) {
+        //         $http.post('/pullReusableBin', {
+        //             "bin": reusablePulledBins[z]
+        //         }).then(function (response) {
 
-                });
-            }
-
-            for (z = 0; z < reusablePulledBins.length; z++) {
-                $http.post('/pullReusableBin', {
-                    "bin": reusablePulledBins[z]
-                }).then(function (response) {
-
-                });
-            }
-        }
+        //         });
+        //     }
+        // }
     }
 
 
@@ -8822,6 +8933,7 @@ app.controller('damagedBinController', function ($scope, $http, $filter, storeDa
         var position = window.sessionStorage.getItem('owner');
         console.log(position);
         $scope.dbr.preparedBy = position;
+        $scope.dbr.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.dbr.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addDbr', $scope.dbr).then(function (response) {
             var returnedData = response.data;
@@ -8937,72 +9049,59 @@ app.controller('dbdDetailsController', function ($scope, $http, $filter, storeDa
             console.log($scope.dbd);
             $http.post('/getDbdDetails', $scope.dbd[0]).then(function (response) {
 
-                $scope.dbdDetailsList = response.data;
-                console.log($scope.dbdDetailsList);
-
-                for (var x = 0; x < $scope.dbdDetailsList.length; x++) {
-                    $scope.dbrID.push($scope.dbdDetailsList[x].dbrID)
-
-                    $http.post('/getDbdDetailsDetails', {
-                        "dbrID": $scope.dbrID[0]
-                    }).then(function (response) {
-                        $scope.dbdDetailsDetailsList = response.data;
-
-                        $scope.dbdDetailsList[x - 1].areaCode = $scope.dbdDetailsDetailsList[0].areaCode;
-                        $scope.dbdDetailsList[x - 1].binSize = $scope.dbdDetailsDetailsList[0].binSize;
-                        window.alert(index);
-
-                    });
-
+                var dbdDetailsList = response.data;
+                console.log(dbdDetailsList);
+                $scope.dbdDetailsList = [];
+                for(i = 0; i < dbdDetailsList.length; i+=5){
+                    $scope.dbdDetailsList.push(dbdDetailsList[i]);
                 }
 
-
-
+                console.log($scope.dbdDetailsList);
             });
         });
 
         //AUTHORIZATION MODULE
-    //CHECKED BY
-    $scope.requestAuthorization = function () {
-        sendFormForAuthorization($routeParams.dbdID, "dbd");
-        angular.element('#checkConfirmation').modal('toggle');
-        $scope.rightStatus = true;
-        $scope.status = 'PENDING';
-    };
-    $scope.checkForm = function () {
-        $scope.status = 'CHECKED';
+        //CHECKED BY
+        $scope.requestAuthorization = function () {
+            sendFormForAuthorization($routeParams.dbdID, "dbd");
+            angular.element('#checkConfirmation').modal('toggle');
+            $scope.rightStatus = true;
+            $scope.status = 'PENDING';
+        };
+        $scope.checkForm = function () {
+            $scope.status = 'CHECKED';
 
-        //UPDATE DBR WITH BD INPUT
-        console.log($scope.dbd);
-        $http.post('/checkForm', $scope.dbd[0]).then(function (response) {
-            checkForm($routeParams.dbdID, "dbd");
-        });
-
-
-        angular.element('#approveCheck').modal('toggle');
-    }
-    $scope.rejectForm = function () {
-        $scope.status = 'CORRECTION REQUIRED';
-        rejectForm($routeParams.dbdID, "dbd", $scope.dbd[0].feedback);
-        $scope.rightStatus = false;
-
-        angular.element('#rejectForm').modal('toggle');
-    }
-
-    //VERIFIED BY
-    $scope.requestVerification = function () {
-        sendFormForVerification($routeParams.dbdID, "dbd");
-        angular.element('#completeConfirmation').modal('toggle');
-        $scope.status = 'PENDING';
-    };
+            //UPDATE DBR WITH BD INPUT
+            console.log($scope.dbd);
+            $http.post('/checkForm', $scope.dbd[0]).then(function (response) {
+                checkForm($routeParams.dbdID, "dbd");
+            });
 
 
-    $scope.verifyForm = function () {
-        $scope.status = 'COMPLETE';
-        verifyForm($routeParams.dbdID, "dbd");
-        $scope.rightStatus = false;
-        angular.element('#approveVerification').modal('toggle');
-    }
+            angular.element('#approveCheck').modal('toggle');
+        }
+        $scope.rejectForm = function () {
+            $scope.status = 'CORRECTION REQUIRED';
+            rejectForm($routeParams.dbdID, "dbd", $scope.dbd[0].feedback);
+            $scope.rightStatus = false;
+
+            angular.element('#rejectForm').modal('toggle');
+        }
+
+        //VERIFIED BY
+        $scope.requestVerification = function () {
+            sendFormForVerification($routeParams.dbdID, "dbd");
+            angular.element('#completeConfirmation').modal('toggle');
+            $scope.status = 'PENDING';
+        };
+
+
+        $scope.verifyForm = function () {
+            $scope.status = 'COMPLETE';
+            verifyForm($routeParams.dbdID, "dbd");
+            $scope.rightStatus = false;
+            angular.element('#approveVerification').modal('toggle');
+        }
     }
 
 
@@ -9267,6 +9366,7 @@ app.controller('blostDetailsController', function ($scope, $http, $filter, store
         $scope.blostEntry.blostID = $routeParams.blostID;
         console.log($scope.blostEntry);
 
+        $scope.blostEntry.formattedDateOfLoss = $filter('date')(  $scope.blostEntry.dateOfLoss, 'yyyy-MM-dd HH:mm:ss');
         $http.post('/addBlostEntry', $scope.blostEntry).then(function (response) {
 
             var returnedData = response.data;
