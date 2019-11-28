@@ -4,7 +4,16 @@ global angular, document, google, Highcharts
 */
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv', 'easypiechart']);
 
-var socket = io.connect();
+var socket = io.connect("wss://trienekens-trial.appspot.com", {
+    reconnect: true,
+    reconnectDelay: 1000,
+    reconnectDelayMax: 5000,
+    reconnectAttempts: Infinity,
+    transport: ["websocket"],
+    rejectUnauthorized: false,
+    forceNew: true,
+    timeout: 6000
+});
 var flag = false;
 
 function lobi_notify(type, title, content, avatar) {
