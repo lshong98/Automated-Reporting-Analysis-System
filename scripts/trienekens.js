@@ -1429,6 +1429,11 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 var data = response.data;
 
                 scope.notify(data.status, data.message);
+                $http.get('/getAllDatabaseBin').then(function (response) {
+
+                    $scope.databaseBinList = response.data;
+                    storeDataService.databaseBin = angular.copy($scope.databaseBinList);
+                });
 
             });
         };
@@ -5972,6 +5977,40 @@ app.controller('newBusinessController', function ($scope, $http, $filter) {
 
     })
 
+    $scope.addTaman = function () {
+        $scope.customer.creationDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+        //$scope.customer.customerID = f.makeID('customer',$filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+        //console.log($scope.customer.customeriD);
+        //console.log($scope.customer);
+
+        $http.post('/addTaman', $scope.taman).then(function (response) {
+
+            $scope.notify(response.data.status, response.data.message);
+            if (response.data.status === 'success') {
+                angular.element('body').overhang({
+                    type: "success",
+                    "message": "New Taman added successfully!"
+                });
+
+                $http.get('/getAllTaman').then(function (response) {
+                    $scope.tamanList = response.data;
+                    console.log($scope.tamanList);
+            
+                })
+
+                /*$scope.customerList.push({
+                    "name": $scope.customer.name,
+                    "ic": $scope.customer.ic,
+                    "companyName": $scope.customer.companyName
+                });*/
+                angular.element('#createTaman').modal('toggle');
+                $scope.initializeTaman();
+            }
+        });
+
+    }
+
     $scope.addCustomer = function () {
         $scope.customer.creationDateTime = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
@@ -5987,6 +6026,13 @@ app.controller('newBusinessController', function ($scope, $http, $filter) {
                     type: "success",
                     "message": "New Customer added successfully!"
                 });
+
+                $http.get('/getAllCustomers').then(function (response) {
+                    $scope.customerList = response.data;
+                    console.log($scope.customerList);
+            
+                })
+
                 $scope.customerList.push({
                     "name": $scope.customer.name,
                     "ic": $scope.customer.ic,
@@ -6040,19 +6086,6 @@ app.controller('binStockController', function ($scope, $http) {
         $scope.binStockList = response.data;
     })
 
-    /*$scope.deleteBinStock = function(){
-        $http.post('/deleteBinStock', $scope.bin).then(function(response){
-            $scope.notify(response.data.status, response.data.message);
-            if(response.data.status === 'success'){
-                angular.element('body').overhang({
-                    type:"success",
-                    "message": response.data.message
-                });
-            }
-        })
-    }*/
-
-
     $scope.addBin = function () {
 
         $http.post('/addBin', $scope.bin).then(function (response) {
@@ -6063,11 +6096,18 @@ app.controller('binStockController', function ($scope, $http) {
                     type: "success",
                     "message": "New Bin added successfully!"
                 });
+
+                $http.get('/getAllBins').then(function (response) {
+                    console.log("Get all bins worked");
+                    $scope.binStockList = response.data;
+                })
+
                 $scope.binList.push({
                     "serialNo": $scope.bin.serialNo
                 });
                 angular.element('#createBin').modal('toggle');
                 $scope.initializeBin();
+                
             }
         });
 
@@ -6231,25 +6271,13 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
                     type: "success",
                     "message": "New Entry added successfully!"
                 });
-                //console.log("Hello from addDatabaseBin serverside!");
-                $scope.databaseBinList.push({
-                    "date": $scope.databaseBin.date,
-                    "name": $scope.databaseBin.name,
-                    "icNo": $scope.databaseBin.ic,
-                    "serialNo": $scope.databaseBin.serialNo,
-                    "rcDwell": $scope.databaseBin.rcDwell,
-                    "houseNo": $scope.databaseBin.houseNo,
-                    "tmnKpg": $scope.databaseBin.tmnkpg,
-                    "areaCode": $scope.databaseBin.areaCode,
-                    "status": $scope.databaseBin.status,
-                    "comment": $scope.databaseBin.comment,
-                    "binSize": $scope.databaseBin.binSize,
-                    "address": concat($scope.databaseBin.houseNo, $scope.databaseBin.streetNo, $scope.databaseBin.tmgkpg),
-                    "companyName": $scope.databaseBin.companyName,
-                    "acrfSerialNo": $scope.databaseBin.acrID,
-                    "itemType": $scope.databaseBin.itemType,
-                    "path": $scope.databaseBin.path
+
+                $http.get('/getAllDatabaseBin').then(function (response) {
+
+                    $scope.databaseBinList = response.data;
+                    storeDataService.databaseBin = angular.copy($scope.databaseBinList);
                 });
+
                 //storeDataService.databaseBin = angular.copy($scope.databaseBinList);
                 //$scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
                 angular.element('#createDatabaseBin').modal('toggle');
@@ -6362,6 +6390,7 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
                 $scope.binList.push({
                     "serialNo": $scope.bin.serialNo
                 });
+                
                 //storeDataService.databaseBin = angular.copy($scope.databaseBinList);
                 //$scope.filterDatabaseBinList = angular.copy($scope.databaseBinList);
                 angular.element('#createBin').modal('toggle');
