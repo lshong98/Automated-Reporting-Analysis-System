@@ -194,8 +194,8 @@
             <img data-ng-src="../images/{{comDetail.img}}" data-ng-show="comDetail.img != null">
         </a>
         <p data-ng-show="comDetail.img == '' || comDetail.img == null">No image attached</p> -->
-        <a href="/images/{{comDetail.img}}" class="thumbnail" data-fancybox data-width="2048">
-            <img data-ng-src="/images/{{comDetail.img}}" data-ng-show="comDetail.img != null">
+        <a href="{{comDetail.img}}" class="thumbnail" data-fancybox data-width="2048">
+            <img data-ng-src="{{comDetail.img}}" data-ng-show="comDetail.img != null">
         </a>
         <p data-ng-show="comDetail.img == '' || comDetail.img == null">No image attached</p>
     </div>
