@@ -553,6 +553,7 @@ app.post('/complaint', function (req, resp) {
     var date = dateTime.create().format('Y-m-d H:M:S');
     var complaintID = 0;
     var sqlComplaintID = "SELECT MAX(complaintID) AS max FROM tblcomplaint";
+    var dateID = dateTime.create().format('YmdHMS');
 
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
@@ -567,12 +568,13 @@ app.post('/complaint', function (req, resp) {
                 //if(!err){
                 database.query(sqlComplaintID, function (err, res) {
                     console.log("complaintID = " + res[0].max);
-                    if(res[0].max == undefined){
-                        complaintID = 1;
-                    }else{
-                        complaintID = res[0].max;
-                        complaintID = parseInt(complaintID) + 1;
-                    }
+                    // if(res[0].max == undefined){
+                    //     complaintID = 1;
+                    // }else{
+                    //     complaintID = res[0].max;
+                    //     complaintID = parseInt(complaintID) + 1;
+                    // }
+                    complaintID = "COM"+userID+dateID;
                     if (data.compRemarks == null || data.compRemarks == "") {
                         var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','ACC201908080002','" + data.premise + "','" + data.complaint + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
