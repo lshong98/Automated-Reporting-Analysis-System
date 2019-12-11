@@ -1574,7 +1574,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
     var date = dateTime.create().format('YmdHMS');
 
     data = JSON.parse(req.rawBody);
-    sql = "UPDATE tblcomplaint SET complaintImg ='/images/complaintImg/complaintcase_" + data.cID + ".jpg' WHERE complaintID =" + data.cID + "";
+    sql = "UPDATE tblcomplaint SET complaintImg ='/images/complaintImg/complaintcase_" + data.cID + ".jpg' WHERE complaintID ='" + data.cID + "'";
     console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
@@ -1587,6 +1587,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
                     resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
                 } else {
                     resp.send("Please Try Again");
+                    console.log(err);
                 }
             });
             console.log("success");
