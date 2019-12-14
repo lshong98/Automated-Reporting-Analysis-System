@@ -433,66 +433,134 @@ app.post('/editCollectionSchedule', function (req, res) {
 //     });
 // });
 
-app.get('/customerFeedbackMunicipal', function (req, res) {
+app.post('/customerFeedbackMunicipal', function (req, res) {
     'use strict';
-    var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_municipal GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_municipal GROUP BY teamEfficiency UNION SELECT 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_municipal GROUP BY collectionPromptness UNION SELECT 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_municipal GROUP BY binHandling UNION SELECT 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_municipal GROUP BY spillageControl UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_municipal GROUP BY queryResponse";
-    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined'";
+    var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_municipal GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_municipal GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_municipal GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_municipal GROUP BY binHandling, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_municipal GROUP BY spillageControl, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_municipal GROUP BY queryResponse, year, month";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined'";
     var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, binHandS, spillCtrlS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
+    var year, month;
     var json = {};
     var data = {};
     data.data = [];
+    //console.log(req);
+
+    if(req.body.year != undefined){
+        year = req.body.year.value;
+    }
+    
+    if(req.body.month!=undefined){
+        month = req.body.month;
+    }
     database.query(sql, function (err, result) {
-        console.log(result);
+        //console.log(result);
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
-                if (result[i].source == "companyRating" && result[i].category == "1") {
-                    compRateUS = result[i].value;
-                } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                    compRateAvg = result[i].value;
-                } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                    compRateS = result[i].value;
+                //Filter by year only
+                if(month == undefined){
+                    if(result[i].year == year){
+                        if (result[i].source == "companyRating" && result[i].category == "1") {
+                            compRateUS = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
+                            compRateAvg = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
+                            compRateS = result[i].value;
+                        }
+        
+                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
+                            teamEffUS = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
+                            teamEffAvg = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
+                            teamEffS = result[i].value;
+                        }
+        
+                        if (result[i].source == "collectionPromptness" && result[i].category == "1") {
+                            collPromptUS = result[i].value;
+                        } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
+                            collPromptAvg = result[i].value;
+                        } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
+                            collPromptS = result[i].value;
+                        }
+        
+                        if (result[i].source == "binHandling" && result[i].category == "1") {
+                            binHandUS = result[i].value;
+                        } else if (result[i].source == "binHandling" && result[i].category == "2") {
+                            binHandAvg = result[i].value;
+                        } else if (result[i].source == "binHandling" && result[i].category == "3") {
+                            binHandS = result[i].value;
+                        }
+        
+                        if (result[i].source == "spillageControl" && result[i].category == "1") {
+                            spillCtrlUS = result[i].value;
+                        } else if (result[i].source == "spillageControl" && result[i].category == "2") {
+                            spillCtrlAvg = result[i].value;
+                        } else if (result[i].source == "spillageControl" && result[i].category == "3") {
+                            spillCtrlS = result[i].value;
+                        }
+        
+                        if (result[i].source == "queryResponse" && result[i].category == "1") {
+                            qryRespUS = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
+                            qryRespAvg = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
+                            qryRespS = result[i].value;
+                        }
+                    }
                 }
 
-                if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                    teamEffUS = result[i].value;
-                } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                    teamEffAvg = result[i].value;
-                } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                    teamEffS = result[i].value;
-                }
-
-                if (result[i].source == "collectionPromptness" && result[i].category == "1") {
-                    collPromptUS = result[i].value;
-                } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
-                    collPromptAvg = result[i].value;
-                } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
-                    collPromptS = result[i].value;
-                }
-
-                if (result[i].source == "binHandling" && result[i].category == "1") {
-                    binHandUS = result[i].value;
-                } else if (result[i].source == "binHandling" && result[i].category == "2") {
-                    binHandAvg = result[i].value;
-                } else if (result[i].source == "binHandling" && result[i].category == "3") {
-                    binHandS = result[i].value;
-                }
-
-                if (result[i].source == "spillageControl" && result[i].category == "1") {
-                    spillCtrlUS = result[i].value;
-                } else if (result[i].source == "spillageControl" && result[i].category == "2") {
-                    spillCtrlAvg = result[i].value;
-                } else if (result[i].source == "spillageControl" && result[i].category == "3") {
-                    spillCtrlS = result[i].value;
-                }
-
-                if (result[i].source == "queryResponse" && result[i].category == "1") {
-                    qryRespUS = result[i].value;
-                } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                    qryRespAvg = result[i].value;
-                } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                    qryRespS = result[i].value;
+                //Filter by year and month
+                else if(month != undefined){
+                    if(result[i].year == year && result[i].month == month){
+                        if (result[i].source == "companyRating" && result[i].category == "1") {
+                            compRateUS = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
+                            compRateAvg = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
+                            compRateS = result[i].value;
+                        }
+        
+                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
+                            teamEffUS = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
+                            teamEffAvg = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
+                            teamEffS = result[i].value;
+                        }
+        
+                        if (result[i].source == "collectionPromptness" && result[i].category == "1") {
+                            collPromptUS = result[i].value;
+                        } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
+                            collPromptAvg = result[i].value;
+                        } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
+                            collPromptS = result[i].value;
+                        }
+        
+                        if (result[i].source == "binHandling" && result[i].category == "1") {
+                            binHandUS = result[i].value;
+                        } else if (result[i].source == "binHandling" && result[i].category == "2") {
+                            binHandAvg = result[i].value;
+                        } else if (result[i].source == "binHandling" && result[i].category == "3") {
+                            binHandS = result[i].value;
+                        }
+        
+                        if (result[i].source == "spillageControl" && result[i].category == "1") {
+                            spillCtrlUS = result[i].value;
+                        } else if (result[i].source == "spillageControl" && result[i].category == "2") {
+                            spillCtrlAvg = result[i].value;
+                        } else if (result[i].source == "spillageControl" && result[i].category == "3") {
+                            spillCtrlS = result[i].value;
+                        }
+        
+                        if (result[i].source == "queryResponse" && result[i].category == "1") {
+                            qryRespUS = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
+                            qryRespAvg = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
+                            qryRespS = result[i].value;
+                        }
+                    }
                 }
             }
         }
@@ -500,10 +568,25 @@ app.get('/customerFeedbackMunicipal', function (req, res) {
         database.query(sqlComments, function (err, result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].extraComment != "" && result[i].extraComment != null) {
-                    data.data.push({
-                        "comments": result[i].extraComment,
-                        "user": result[i].name
-                    });
+                    //Filter by year only
+                    if(month == undefined){
+                        if(result[i].year == year){
+                            data.data.push({
+                                "comments": result[i].extraComment,
+                                "user": result[i].name
+                            });
+                        }
+                    }
+
+                    //Filter by year and month
+                    if(month != undefined){
+                        if(result[i].year == year && result[i].month == month){
+                            data.data.push({
+                                "comments": result[i].extraComment,
+                                "user": result[i].name
+                            });
+                        }
+                    }
                 }
             }
             json = {
@@ -558,65 +641,132 @@ app.get('/customerFeedbackMunicipal', function (req, res) {
 //     });
 // });
 
-app.get('/customerFeedbackCommercial', function (req, res) {
+app.post('/customerFeedbackCommercial', function (req, res) {
     'use strict';
-    var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_commercial GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_commercial GROUP BY teamEfficiency UNION SELECT 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_commercial GROUP BY collectionPromptness UNION SELECT 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_commercial GROUP BY cleanliness UNION SELECT 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_commercial GROUP BY physicalCondition UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_commercial GROUP BY queryResponse";
-    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined'";
+    var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_commercial GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_commercial GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_commercial GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_commercial GROUP BY cleanliness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_commercial GROUP BY physicalCondition, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_commercial GROUP BY queryResponse, year, month";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined'";
     var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
+    var year, month;
     var json = {};
     var data = {};
     data.data = [];
+
+    if(req.body.year != undefined){
+        year = req.body.year.value;
+    }
+    
+    if(req.body.month!=undefined){
+        month = req.body.month;
+    }
     database.query(sql, function (err, result) {
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
-                if (result[i].source == "companyRating" && result[i].category == "1") {
-                    compRateUS = result[i].value;
-                } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                    compRateAvg = result[i].value;
-                } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                    compRateS = result[i].value;
+                //Filter by year only
+                if(month == undefined){
+                    if(result[i].year == year){
+                        if (result[i].source == "companyRating" && result[i].category == "1") {
+                            compRateUS = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
+                            compRateAvg = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
+                            compRateS = result[i].value;
+                        }
+        
+                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
+                            teamEffUS = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
+                            teamEffAvg = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
+                            teamEffS = result[i].value;
+                        }
+        
+                        if (result[i].source == "collectionPromptness" && result[i].category == "1") {
+                            collPromptUS = result[i].value;
+                        } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
+                            collPromptAvg = result[i].value;
+                        } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
+                            collPromptS = result[i].value;
+                        }
+        
+                        if (result[i].source == "cleanliness" && result[i].category == "1") {
+                            cleanlinessUS = result[i].value;
+                        } else if (result[i].source == "cleanliness" && result[i].category == "2") {
+                            cleanlinessAvg = result[i].value;
+                        } else if (result[i].source == "cleanliness" && result[i].category == "3") {
+                            cleanlinessS = result[i].value;
+                        }
+        
+                        if (result[i].source == "physicalCondition" && result[i].category == "1") {
+                            physicalCondUS = result[i].value;
+                        } else if (result[i].source == "physicalCondition" && result[i].category == "2") {
+                            physicalCondAvg = result[i].value;
+                        } else if (result[i].source == "physicalCondition" && result[i].category == "3") {
+                            physicalCondS = result[i].value;
+                        }
+        
+                        if (result[i].source == "queryResponse" && result[i].category == "1") {
+                            qryRespUS = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
+                            qryRespAvg = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
+                            qryRespS = result[i].value;
+                        }
+                    }
                 }
 
-                if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                    teamEffUS = result[i].value;
-                } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                    teamEffAvg = result[i].value;
-                } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                    teamEffS = result[i].value;
-                }
-
-                if (result[i].source == "collectionPromptness" && result[i].category == "1") {
-                    collPromptUS = result[i].value;
-                } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
-                    collPromptAvg = result[i].value;
-                } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
-                    collPromptS = result[i].value;
-                }
-
-                if (result[i].source == "cleanliness" && result[i].category == "1") {
-                    cleanlinessUS = result[i].value;
-                } else if (result[i].source == "cleanliness" && result[i].category == "2") {
-                    cleanlinessAvg = result[i].value;
-                } else if (result[i].source == "cleanliness" && result[i].category == "3") {
-                    cleanlinessS = result[i].value;
-                }
-
-                if (result[i].source == "physicalCondition" && result[i].category == "1") {
-                    physicalCondUS = result[i].value;
-                } else if (result[i].source == "physicalCondition" && result[i].category == "2") {
-                    physicalCondAvg = result[i].value;
-                } else if (result[i].source == "physicalCondition" && result[i].category == "3") {
-                    physicalCondS = result[i].value;
-                }
-
-                if (result[i].source == "queryResponse" && result[i].category == "1") {
-                    qryRespUS = result[i].value;
-                } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                    qryRespAvg = result[i].value;
-                } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                    qryRespS = result[i].value;
+                //Filter by year and month
+                else if(month != undefined){
+                    if(result[i].year == year && result[i].month == month){
+                        if (result[i].source == "companyRating" && result[i].category == "1") {
+                            compRateUS = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
+                            compRateAvg = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
+                            compRateS = result[i].value;
+                        }
+        
+                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
+                            teamEffUS = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
+                            teamEffAvg = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
+                            teamEffS = result[i].value;
+                        }
+        
+                        if (result[i].source == "collectionPromptness" && result[i].category == "1") {
+                            collPromptUS = result[i].value;
+                        } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
+                            collPromptAvg = result[i].value;
+                        } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
+                            collPromptS = result[i].value;
+                        }
+        
+                        if (result[i].source == "cleanliness" && result[i].category == "1") {
+                            cleanlinessUS = result[i].value;
+                        } else if (result[i].source == "cleanliness" && result[i].category == "2") {
+                            cleanlinessAvg = result[i].value;
+                        } else if (result[i].source == "cleanliness" && result[i].category == "3") {
+                            cleanlinessS = result[i].value;
+                        }
+        
+                        if (result[i].source == "physicalCondition" && result[i].category == "1") {
+                            physicalCondUS = result[i].value;
+                        } else if (result[i].source == "physicalCondition" && result[i].category == "2") {
+                            physicalCondAvg = result[i].value;
+                        } else if (result[i].source == "physicalCondition" && result[i].category == "3") {
+                            physicalCondS = result[i].value;
+                        }
+        
+                        if (result[i].source == "queryResponse" && result[i].category == "1") {
+                            qryRespUS = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
+                            qryRespAvg = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
+                            qryRespS = result[i].value;
+                        }
+                    }
                 }
             }
         }
@@ -624,10 +774,25 @@ app.get('/customerFeedbackCommercial', function (req, res) {
         database.query(sqlComments, function (err, result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].extraComment != "" && result[i].extraComment != null) {
-                    data.data.push({
-                        "comments": result[i].extraComment,
-                        "user": result[i].name
-                    });
+                    //Filter by year only
+                    if(month == undefined){
+                        if(result[i].year == year){
+                            data.data.push({
+                                "comments": result[i].extraComment,
+                                "user": result[i].name
+                            });
+                        }
+                    }
+
+                    //Filter by year and month
+                    if(month != undefined){
+                        if(result[i].year == year && result[i].month == month){
+                            data.data.push({
+                                "comments": result[i].extraComment,
+                                "user": result[i].name
+                            });
+                        }
+                    }
                 }
             }
             json = {
@@ -681,69 +846,143 @@ app.get('/customerFeedbackCommercial', function (req, res) {
 //     });
 // });
 
-app.get('/customerFeedbackScheduled', function (req, res) {
+app.post('/customerFeedbackScheduled', function (req, res) {
     'use strict';
-    var sql = "SELECT 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating UNION SELECT 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency UNION SELECT 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence UNION SELECT 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence UNION SELECT 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse";
-    var sqlComments = "SELECT name, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined'";
+    var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse, year, month";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined'";
     var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS;
     var compRateS, teamEffS, healthAdhS, regAdhS, qryRespS;
     var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
+    var year, month;
     var json = {};
     var data = {};
     data.data = [];
 
+    if(req.body.year != undefined){
+        year = req.body.year.value;
+    }
+    
+    if(req.body.month!=undefined){
+        month = req.body.month;
+    }
     database.query(sql, function (err, result) {
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
-                if (result[i].source == "companyRating" && result[i].category == "1") {
-                    compRateUS = result[i].value;
-                } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                    compRateAvg = result[i].value;
-                } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                    compRateS = result[i].value;
+                //Filter by year only
+                if(month == undefined){
+                    if(result[i].year == year){
+                        if (result[i].source == "companyRating" && result[i].category == "1") {
+                            compRateUS = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
+                            compRateAvg = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
+                            compRateS = result[i].value;
+                        }
+        
+                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
+                            teamEffUS = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
+                            teamEffAvg = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
+                            teamEffS = result[i].value;
+                        }
+        
+                        if (result[i].source == "healthAdherence" && result[i].category == "1") {
+                            healthAdhUS = result[i].value;
+                        } else if (result[i].source == "healthAdherence" && result[i].category == "2") {
+                            healthAdhAvg = result[i].value;
+                        } else if (result[i].source == "healthAdherence" && result[i].category == "3") {
+                            healthAdhS = result[i].value;
+                        }
+        
+                        if (result[i].source == "regulationsAdherence" && result[i].category == "1") {
+                            regAdhUS = result[i].value;
+                        } else if (result[i].source == "regulationsAdherence" && result[i].category == "2") {
+                            regAdhAvg = result[i].value;
+                        } else if (result[i].source == "regulationsAdherence" && result[i].category == "3") {
+                            regAdhS = result[i].value;
+                        }
+        
+                        if (result[i].source == "queryResponse" && result[i].category == "1") {
+                            qryRespUS = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
+                            qryRespAvg = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
+                            qryRespS = result[i].value;
+                        }
+                    }
                 }
 
-                if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                    teamEffUS = result[i].value;
-                } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                    teamEffAvg = result[i].value;
-                } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                    teamEffS = result[i].value;
+                //Filter by year and month
+                else if(month != undefined){
+                    if(result[i].year == year && result[i].month == month){
+                        if (result[i].source == "companyRating" && result[i].category == "1") {
+                            compRateUS = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
+                            compRateAvg = result[i].value;
+                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
+                            compRateS = result[i].value;
+                        }
+        
+                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
+                            teamEffUS = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
+                            teamEffAvg = result[i].value;
+                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
+                            teamEffS = result[i].value;
+                        }
+        
+                        if (result[i].source == "healthAdherence" && result[i].category == "1") {
+                            healthAdhUS = result[i].value;
+                        } else if (result[i].source == "healthAdherence" && result[i].category == "2") {
+                            healthAdhAvg = result[i].value;
+                        } else if (result[i].source == "healthAdherence" && result[i].category == "3") {
+                            healthAdhS = result[i].value;
+                        }
+        
+                        if (result[i].source == "regulationsAdherence" && result[i].category == "1") {
+                            regAdhUS = result[i].value;
+                        } else if (result[i].source == "regulationsAdherence" && result[i].category == "2") {
+                            regAdhAvg = result[i].value;
+                        } else if (result[i].source == "regulationsAdherence" && result[i].category == "3") {
+                            regAdhS = result[i].value;
+                        }
+        
+                        if (result[i].source == "queryResponse" && result[i].category == "1") {
+                            qryRespUS = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
+                            qryRespAvg = result[i].value;
+                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
+                            qryRespS = result[i].value;
+                        }
+                    }
                 }
-
-                if (result[i].source == "healthAdherence" && result[i].category == "1") {
-                    healthAdhUS = result[i].value;
-                } else if (result[i].source == "healthAdherence" && result[i].category == "2") {
-                    healthAdhAvg = result[i].value;
-                } else if (result[i].source == "healthAdherence" && result[i].category == "3") {
-                    healthAdhS = result[i].value;
-                }
-
-                if (result[i].source == "regulationsAdherence" && result[i].category == "1") {
-                    regAdhUS = result[i].value;
-                } else if (result[i].source == "regulationsAdherence" && result[i].category == "2") {
-                    regAdhAvg = result[i].value;
-                } else if (result[i].source == "regulationsAdherence" && result[i].category == "3") {
-                    regAdhS = result[i].value;
-                }
-
-                if (result[i].source == "queryResponse" && result[i].category == "1") {
-                    qryRespUS = result[i].value;
-                } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                    qryRespAvg = result[i].value;
-                } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                    qryRespS = result[i].value;
-                }
+                
             }
         }
 
         database.query(sqlComments, function (err, result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].extraComment != "" && result[i].extraComment != null) {
-                    data.data.push({
-                        "comments": result[i].extraComment,
-                        "user": result[i].name
-                    });
+                    //Filter by year only
+                    if(month == undefined){
+                        if(result[i].year == year){
+                            data.data.push({
+                                "comments": result[i].extraComment,
+                                "user": result[i].name
+                            });
+                        }
+                    }
+
+                    //Filter by year and month
+                    if(month != undefined){
+                        if(result[i].year == year && result[i].month == month){
+                            data.data.push({
+                                "comments": result[i].extraComment,
+                                "user": result[i].name
+                            });
+                        }
+                    }
                 }
             }
             json = {

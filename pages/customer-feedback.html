@@ -376,7 +376,7 @@
 </div>
 <!--form end-->
 
-<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getMunicipalFeedback()">
+<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="filterFunction()">
     <div class="row">
         <div class="col-md-12">
             <h1>Customer Feedback</h1><br /><br />
@@ -386,8 +386,8 @@
         <div class="col-md-12">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item"><a class="nav-link active" role="tab" href="#customer-feedback" data-target="#municipalFeedback" data-toggle="tab" data-ng-click="getMunicipalFeedback()">Municipal Services ({{unreadMunicipal}})</a></li>
-                <li class="nav-item"><a class="nav-link" role="tab" href="#customer-feedback" data-target="#commercialFeedback" data-toggle="tab" data-ng-click="getCommercialFeedback()">Commercial Services (RoRo) ({{unreadCommercial}})</a></li>
-                <li class="nav-item"><a class="nav-link" role="tab" href="#customer-feedback" data-target="#scheduledFeedback" data-toggle="tab" data-ng-click="getScheduledFeedback()">Scheduled & Hazardous Waste ({{unreadScheduled}})</a></li>
+                <li class="nav-item"><a class="nav-link" role="tab" href="#customer-feedback" data-target="#commercialFeedback" data-toggle="tab" data-ng-click="filterFunction()">Commercial Services (RoRo) ({{unreadCommercial}})</a></li>
+                <li class="nav-item"><a class="nav-link" role="tab" href="#customer-feedback" data-target="#scheduledFeedback" data-toggle="tab" data-ng-click="filterFunction()">Scheduled & Hazardous Waste ({{unreadScheduled}})</a></li>
             </ul>
 
             <div class="tab-content">
@@ -398,6 +398,33 @@
                             <button class="btn btn-success" data-toggle="modal" data-target="#municipal-form" ng-click="resetFormM();"><i class="fa fa-plus"></i> New Municipal Feedback</button>
                         </div>
                     </div><br />
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Select results from:</p>
+                            <span>Year: </span>
+                            <select id="year" data-ng-options="y.name for y in yearOptions track by y.value" data-ng-model="filters.year" data-ng-change="getMunicipalFeedback()">
+                                <option value="">Select year</option>
+                            </select>
+
+                            <span>Month: </span>
+                            <select id="month" data-ng-model="filters.month" data-ng-change="getMunicipalFeedback()">
+                                <option data-ng-value="SelectMonth">All Months</option>
+                                <option data-ng-value="01">January</option>
+                                <option data-ng-value="02">February</option>
+                                <option data-ng-value="03">March</option>
+                                <option data-ng-value="04">April</option>
+                                <option data-ng-value="05">May</option>
+                                <option data-ng-value="06">June</option>
+                                <option data-ng-value="07">July</option>
+                                <option data-ng-value="08">August</option>
+                                <option data-ng-value="09">September</option>
+                                <option data-ng-value="10">October</option>
+                                <option data-ng-value="11">November</option>
+                                <option data-ng-value="12">December</option>
+                            </select>
+                        </div>
+                    </div><br/>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -512,6 +539,34 @@
                             <button class="btn btn-success" data-toggle="modal" data-target="#commercial-form" ng-click="resetFormC();"><i class="fa fa-plus"></i> New Commercial Feedback</button>
                         </div>
                     </div><br />
+
+                    <div class="row">
+                            <div class="col-md-12">
+                                <p>Select results from:</p>
+                                <span>Year: </span>
+                                <select id="year" data-ng-options="y.name for y in yearOptions track by y.value" data-ng-model="filters.year" data-ng-change="getCommercialFeedback()">
+                                    <option value="">Select year</option>
+                                </select>
+    
+                                <span>Month: </span>
+                                <select id="month" data-ng-model="filters.month" data-ng-change="getCommercialFeedback()">
+                                    <option data-ng-value="SelectMonth">All Months</option>
+                                    <option data-ng-value="01">January</option>
+                                    <option data-ng-value="02">February</option>
+                                    <option data-ng-value="03">March</option>
+                                    <option data-ng-value="04">April</option>
+                                    <option data-ng-value="05">May</option>
+                                    <option data-ng-value="06">June</option>
+                                    <option data-ng-value="07">July</option>
+                                    <option data-ng-value="08">August</option>
+                                    <option data-ng-value="09">September</option>
+                                    <option data-ng-value="10">October</option>
+                                    <option data-ng-value="11">November</option>
+                                    <option data-ng-value="12">December</option>
+                                </select>
+                            </div>
+                        </div><br/>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
@@ -625,6 +680,34 @@
                             <button class="btn btn-success" data-toggle="modal" data-target="#scheduled-form" ng-click="resetFormS();"><i class="fa fa-plus"></i> New Scheduled Feedback</button>
                         </div>
                     </div><br />
+
+                    <div class="row">
+                            <div class="col-md-12">
+                                <p>Select results from:</p>
+                                <span>Year: </span>
+                                <select id="year" data-ng-options="y.name for y in yearOptions track by y.value" data-ng-model="filters.year" data-ng-change="getScheduledFeedback()">
+                                    <option value="">Select year</option>
+                                </select>
+    
+                                <span>Month: </span>
+                                <select id="month" data-ng-model="filters.month" data-ng-change="getScheduledFeedback()">
+                                    <option data-ng-value="SelectMonth">All Months</option>
+                                    <option data-ng-value="01">January</option>
+                                    <option data-ng-value="02">February</option>
+                                    <option data-ng-value="03">March</option>
+                                    <option data-ng-value="04">April</option>
+                                    <option data-ng-value="05">May</option>
+                                    <option data-ng-value="06">June</option>
+                                    <option data-ng-value="07">July</option>
+                                    <option data-ng-value="08">August</option>
+                                    <option data-ng-value="09">September</option>
+                                    <option data-ng-value="10">October</option>
+                                    <option data-ng-value="11">November</option>
+                                    <option data-ng-value="12">December</option>
+                                </select>
+                            </div>
+                        </div><br/>
+
                     <div class="row">
                             <div class="col-md-6">
                                 <div class="card">

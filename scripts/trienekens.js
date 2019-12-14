@@ -1894,9 +1894,30 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     //     });
     // };
 
+    $scope.filterFunction = function(){
+        var currentYear = (new Date()).getFullYear();
+        $scope.yearOptions = [];
+        $scope.filters = {};
+
+        for (var i = currentYear; i >= 2018; i--) {
+            $scope.yearKV = {"name":i, "value": i};
+            $scope.yearOptions.push($scope.yearKV);
+        }
+        var year = document.getElementById("year");
+        var selectedYear = year.options[year.selectedIndex].value;
+        //console.log(selectedYear);
+        var month = document.getElementById("month");
+        var selectedMonth = month.options[month.selectedIndex].value;
+
+        $scope.filters.year = selectedYear.value;
+        $scope.filters.month = selectedMonth.value;
+    }
+
     $scope.getMunicipalFeedback = function () {
         socket.emit('municipal satisfaction');
-        $http.get('/customerFeedbackMunicipal').then(function (response) {
+        
+        console.log($scope.filters);
+        $http.post('/customerFeedbackMunicipal', $scope.filters).then(function (response) {
             console.log(response.data);
             $scope.reviews = response.data;
             $scope.totalItems = response.data.comments.length;
@@ -2104,7 +2125,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
 
     $scope.getCommercialFeedback = function () {
         socket.emit('commercial satisfaction');
-        $http.get('/customerFeedbackCommercial').then(function (response) {
+        $http.post('/customerFeedbackCommercial', $scope.filters).then(function (response) {
             console.log(response.data);
             $scope.reviewsCommercial = response.data;
             $scope.totalItemsCommercial = response.data.comments.length;
@@ -2309,7 +2330,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
 
     $scope.getScheduledFeedback = function () {
         socket.emit('scheduled satisfaction');
-        $http.get('/customerFeedbackScheduled').then(function (response) {
+        $http.post('/customerFeedbackScheduled', $scope.filters).then(function (response) {
             console.log(response.data);
             $scope.reviewsScheduled = response.data;
             $scope.totalItemsScheduled = response.data.comments.length;
