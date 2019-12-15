@@ -457,110 +457,117 @@ app.post('/customerFeedbackMunicipal', function (req, res) {
         //console.log(result);
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
-                //Filter by year only
-                if(month == undefined){
-                    if(result[i].year == year){
-                        if (result[i].source == "companyRating" && result[i].category == "1") {
-                            compRateUS = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                            compRateAvg = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                            compRateS = result[i].value;
-                        }
-        
-                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                            teamEffUS = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                            teamEffAvg = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                            teamEffS = result[i].value;
-                        }
-        
-                        if (result[i].source == "collectionPromptness" && result[i].category == "1") {
-                            collPromptUS = result[i].value;
-                        } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
-                            collPromptAvg = result[i].value;
-                        } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
-                            collPromptS = result[i].value;
-                        }
-        
-                        if (result[i].source == "binHandling" && result[i].category == "1") {
-                            binHandUS = result[i].value;
-                        } else if (result[i].source == "binHandling" && result[i].category == "2") {
-                            binHandAvg = result[i].value;
-                        } else if (result[i].source == "binHandling" && result[i].category == "3") {
-                            binHandS = result[i].value;
-                        }
-        
-                        if (result[i].source == "spillageControl" && result[i].category == "1") {
-                            spillCtrlUS = result[i].value;
-                        } else if (result[i].source == "spillageControl" && result[i].category == "2") {
-                            spillCtrlAvg = result[i].value;
-                        } else if (result[i].source == "spillageControl" && result[i].category == "3") {
-                            spillCtrlS = result[i].value;
-                        }
-        
-                        if (result[i].source == "queryResponse" && result[i].category == "1") {
-                            qryRespUS = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                            qryRespAvg = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                            qryRespS = result[i].value;
-                        }
-                    }
-                }
+                //Filter by year only or by year and month
+                if((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)){
+                    //if(result[i].year == year){
+                        if (result[i].source == "companyRating") {
+                            if(result[i].category == "1"){
+                                compRateUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                compRateAvg = result[i].value;
+                            } else if (result[i].category == "3") {
+                                compRateS = result[i].value;
+                            }
 
-                //Filter by year and month
-                else if(month != undefined){
-                    if(result[i].year == year && result[i].month == month){
-                        if (result[i].source == "companyRating" && result[i].category == "1") {
-                            compRateUS = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                            compRateAvg = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                            compRateS = result[i].value;
-                        }
+                            if(compRateUS == undefined){
+                                compRateUS = 0;
+                            }else if (compRateAvg == undefined) {
+                                compRateAvg = 0;
+                            }else if (compRateS == undefined) {
+                                compRateS = 0;
+                            }
+                        } 
         
-                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                            teamEffUS = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                            teamEffAvg = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                            teamEffS = result[i].value;
-                        }
+                        if (result[i].source == "teamEfficiency") {
+                            if(result[i].category == "1"){
+                                teamEffUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                teamEffAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                teamEffS = result[i].value;
+                            }
+                            
+                            if(teamEffUS == undefined){
+                                teamEffUS = 0;
+                            }else if (teamEffAvg == undefined) {
+                                teamEffAvg = 0;
+                            }else if (teamEffS == undefined) {
+                                teamEffS = 0;
+                            }
+                        } 
+
+                        if (result[i].source == "collectionPromptness") {
+                            if(result[i].category == "1"){
+                                collPromptUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                collPromptAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                collPromptS = result[i].value;
+                            }
+
+                            if(collPromptUS == undefined){
+                                collPromptUS = 0;
+                            }else if (collPromptAvg == undefined) {
+                                collPromptAvg = 0;
+                            }else if (collPromptS == undefined) {
+                                collPromptS = 0;
+                            }
+                        } 
         
-                        if (result[i].source == "collectionPromptness" && result[i].category == "1") {
-                            collPromptUS = result[i].value;
-                        } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
-                            collPromptAvg = result[i].value;
-                        } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
-                            collPromptS = result[i].value;
-                        }
+                        if (result[i].source == "binHandling") {
+                            if(result[i].category == "1"){
+                                binHandUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                binHandAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                binHandS = result[i].value;
+                            }
+
+                            if(binHandUS == undefined){
+                                binHandUS = 0;
+                            }else if (binHandAvg == undefined) {
+                                binHandAvg = 0;
+                            }else if (binHandS == undefined) {
+                                binHandS = 0;
+                            }
+                        } 
         
-                        if (result[i].source == "binHandling" && result[i].category == "1") {
-                            binHandUS = result[i].value;
-                        } else if (result[i].source == "binHandling" && result[i].category == "2") {
-                            binHandAvg = result[i].value;
-                        } else if (result[i].source == "binHandling" && result[i].category == "3") {
-                            binHandS = result[i].value;
-                        }
+                        if (result[i].source == "spillageControl") {
+                            if(result[i].category == "1"){
+                                spillCtrlUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                spillCtrlAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                spillCtrlS = result[i].value;
+                            }
+                            
+                            if(spillCtrlUS == undefined){
+                                spillCtrlUS = 0;
+                            }else if (spillCtrlAvg == undefined) {
+                                spillCtrlAvg = 0;
+                            }else if (spillCtrlS == undefined) {
+                                spillCtrlS = 0;
+                            }
+                        } 
         
-                        if (result[i].source == "spillageControl" && result[i].category == "1") {
-                            spillCtrlUS = result[i].value;
-                        } else if (result[i].source == "spillageControl" && result[i].category == "2") {
-                            spillCtrlAvg = result[i].value;
-                        } else if (result[i].source == "spillageControl" && result[i].category == "3") {
-                            spillCtrlS = result[i].value;
+                        if (result[i].source == "queryResponse") {
+                            if(result[i].category == "1"){
+                                qryRespUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                qryRespAvg = result[i].value;
+                            } else if (result[i].category == "3") {
+                                qryRespS = result[i].value;
+                            }
+
+                            if(qryRespUS == undefined){
+                                qryRespUS = 0;
+                            }else if (qryRespAvg == undefined) {
+                                qryRespAvg = 0;
+                            } else if (qryRespS == undefined) {
+                                qryRespS = 0;
+                            }
                         }
-        
-                        if (result[i].source == "queryResponse" && result[i].category == "1") {
-                            qryRespUS = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                            qryRespAvg = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                            qryRespS = result[i].value;
-                        }
-                    }
+                    //}
                 }
             }
         }
@@ -568,24 +575,14 @@ app.post('/customerFeedbackMunicipal', function (req, res) {
         database.query(sqlComments, function (err, result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].extraComment != "" && result[i].extraComment != null) {
-                    //Filter by year only
-                    if(month == undefined){
-                        if(result[i].year == year){
+                    //Filter by year only or by year and month
+                    if((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)){
+                        //if(result[i].year == year){
                             data.data.push({
                                 "comments": result[i].extraComment,
                                 "user": result[i].name
                             });
-                        }
-                    }
-
-                    //Filter by year and month
-                    if(month != undefined){
-                        if(result[i].year == year && result[i].month == month){
-                            data.data.push({
-                                "comments": result[i].extraComment,
-                                "user": result[i].name
-                            });
-                        }
+                        //}
                     }
                 }
             }
@@ -663,110 +660,117 @@ app.post('/customerFeedbackCommercial', function (req, res) {
     database.query(sql, function (err, result) {
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
-                //Filter by year only
-                if(month == undefined){
-                    if(result[i].year == year){
-                        if (result[i].source == "companyRating" && result[i].category == "1") {
-                            compRateUS = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                            compRateAvg = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                            compRateS = result[i].value;
-                        }
-        
-                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                            teamEffUS = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                            teamEffAvg = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                            teamEffS = result[i].value;
-                        }
-        
-                        if (result[i].source == "collectionPromptness" && result[i].category == "1") {
-                            collPromptUS = result[i].value;
-                        } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
-                            collPromptAvg = result[i].value;
-                        } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
-                            collPromptS = result[i].value;
-                        }
-        
-                        if (result[i].source == "cleanliness" && result[i].category == "1") {
-                            cleanlinessUS = result[i].value;
-                        } else if (result[i].source == "cleanliness" && result[i].category == "2") {
-                            cleanlinessAvg = result[i].value;
-                        } else if (result[i].source == "cleanliness" && result[i].category == "3") {
-                            cleanlinessS = result[i].value;
-                        }
-        
-                        if (result[i].source == "physicalCondition" && result[i].category == "1") {
-                            physicalCondUS = result[i].value;
-                        } else if (result[i].source == "physicalCondition" && result[i].category == "2") {
-                            physicalCondAvg = result[i].value;
-                        } else if (result[i].source == "physicalCondition" && result[i].category == "3") {
-                            physicalCondS = result[i].value;
-                        }
-        
-                        if (result[i].source == "queryResponse" && result[i].category == "1") {
-                            qryRespUS = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                            qryRespAvg = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                            qryRespS = result[i].value;
-                        }
-                    }
-                }
+                //Filter by year only or by year and month
+                if((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)){
+                    //if(result[i].year == year){
+                        if (result[i].source == "companyRating") {
+                            if(result[i].category == "1"){
+                                compRateUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                compRateAvg = result[i].value;
+                            } else if (result[i].category == "3") {
+                                compRateS = result[i].value;
+                            }
 
-                //Filter by year and month
-                else if(month != undefined){
-                    if(result[i].year == year && result[i].month == month){
-                        if (result[i].source == "companyRating" && result[i].category == "1") {
-                            compRateUS = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                            compRateAvg = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                            compRateS = result[i].value;
+                            if(compRateUS == undefined){
+                                compRateUS = 0;
+                            }else if (compRateAvg == undefined) {
+                                compRateAvg = 0;
+                            }else if (compRateS == undefined) {
+                                compRateS = 0;
+                            }
+                        } 
+        
+                        if (result[i].source == "teamEfficiency") {
+                            if(result[i].category == "1"){
+                                teamEffUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                teamEffAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                teamEffS = result[i].value;
+                            }
+                            
+                            if(teamEffUS == undefined){
+                                teamEffUS = 0;
+                            }else if (teamEffAvg == undefined) {
+                                teamEffAvg = 0;
+                            }else if (teamEffS == undefined) {
+                                teamEffS = 0;
+                            }
                         }
         
-                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                            teamEffUS = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                            teamEffAvg = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                            teamEffS = result[i].value;
+                        if (result[i].source == "collectionPromptness") {
+                            if(result[i].category == "1"){
+                                collPromptUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                collPromptAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                collPromptS = result[i].value;
+                            }
+
+                            if(collPromptUS == undefined){
+                                collPromptUS = 0;
+                            }else if (collPromptAvg == undefined) {
+                                collPromptAvg = 0;
+                            }else if (collPromptS == undefined) {
+                                collPromptS = 0;
+                            }
                         }
         
-                        if (result[i].source == "collectionPromptness" && result[i].category == "1") {
-                            collPromptUS = result[i].value;
-                        } else if (result[i].source == "collectionPromptness" && result[i].category == "2") {
-                            collPromptAvg = result[i].value;
-                        } else if (result[i].source == "collectionPromptness" && result[i].category == "3") {
-                            collPromptS = result[i].value;
-                        }
+                        if (result[i].source == "cleanliness") {
+                            if(result[i].category == "1"){
+                                cleanlinessUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                cleanlinessAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                cleanlinessS = result[i].value;
+                            }
+                            
+                            if(cleanlinessUS == undefined){
+                                cleanlinessUS = 0;
+                            }else if (cleanlinessAvg == undefined) {
+                                cleanlinessAvg = 0;
+                            }else if (cleanlinessS == undefined) {
+                                cleanlinessS = 0;
+                            }
+                        } 
         
-                        if (result[i].source == "cleanliness" && result[i].category == "1") {
-                            cleanlinessUS = result[i].value;
-                        } else if (result[i].source == "cleanliness" && result[i].category == "2") {
-                            cleanlinessAvg = result[i].value;
-                        } else if (result[i].source == "cleanliness" && result[i].category == "3") {
-                            cleanlinessS = result[i].value;
-                        }
+                        if (result[i].source == "physicalCondition") {
+                            if(result[i].category == "1"){
+                                physicalCondUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                physicalCondAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                physicalCondS = result[i].value;
+                            }
+                            
+                            if(physicalCondUS == undefined){
+                                physicalCondUS = 0;
+                            }else if (physicalCondAvg == undefined) {
+                                physicalCondAvg = 0;
+                            }else if (physicalCondS == undefined) {
+                                physicalCondS = 0;
+                            }
+                        } 
         
-                        if (result[i].source == "physicalCondition" && result[i].category == "1") {
-                            physicalCondUS = result[i].value;
-                        } else if (result[i].source == "physicalCondition" && result[i].category == "2") {
-                            physicalCondAvg = result[i].value;
-                        } else if (result[i].source == "physicalCondition" && result[i].category == "3") {
-                            physicalCondS = result[i].value;
-                        }
-        
-                        if (result[i].source == "queryResponse" && result[i].category == "1") {
-                            qryRespUS = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                            qryRespAvg = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                            qryRespS = result[i].value;
-                        }
-                    }
+                        if (result[i].source == "queryResponse") {
+                            if(result[i].category == "1"){
+                                qryRespUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                qryRespAvg = result[i].value;
+                            } else if (result[i].category == "3") {
+                                qryRespS = result[i].value;
+                            }
+
+                            if(qryRespUS == undefined){
+                                qryRespUS = 0;
+                            }else if (qryRespAvg == undefined) {
+                                qryRespAvg = 0;
+                            } else if (qryRespS == undefined) {
+                                qryRespS = 0;
+                            }
+                        } 
+                    //}
                 }
             }
         }
@@ -774,24 +778,14 @@ app.post('/customerFeedbackCommercial', function (req, res) {
         database.query(sqlComments, function (err, result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].extraComment != "" && result[i].extraComment != null) {
-                    //Filter by year only
-                    if(month == undefined){
-                        if(result[i].year == year){
+                    //Filter by year only or by year and month
+                    if((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)){
+                        //if(result[i].year == year){
                             data.data.push({
                                 "comments": result[i].extraComment,
                                 "user": result[i].name
                             });
-                        }
-                    }
-
-                    //Filter by year and month
-                    if(month != undefined){
-                        if(result[i].year == year && result[i].month == month){
-                            data.data.push({
-                                "comments": result[i].extraComment,
-                                "user": result[i].name
-                            });
-                        }
+                        //}
                     }
                 }
             }
@@ -868,120 +862,114 @@ app.post('/customerFeedbackScheduled', function (req, res) {
     database.query(sql, function (err, result) {
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
-                //Filter by year only
-                if(month == undefined){
-                    if(result[i].year == year){
-                        if (result[i].source == "companyRating" && result[i].category == "1") {
-                            compRateUS = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                            compRateAvg = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                            compRateS = result[i].value;
-                        }
-        
-                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                            teamEffUS = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                            teamEffAvg = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                            teamEffS = result[i].value;
-                        }
-        
-                        if (result[i].source == "healthAdherence" && result[i].category == "1") {
-                            healthAdhUS = result[i].value;
-                        } else if (result[i].source == "healthAdherence" && result[i].category == "2") {
-                            healthAdhAvg = result[i].value;
-                        } else if (result[i].source == "healthAdherence" && result[i].category == "3") {
-                            healthAdhS = result[i].value;
-                        }
-        
-                        if (result[i].source == "regulationsAdherence" && result[i].category == "1") {
-                            regAdhUS = result[i].value;
-                        } else if (result[i].source == "regulationsAdherence" && result[i].category == "2") {
-                            regAdhAvg = result[i].value;
-                        } else if (result[i].source == "regulationsAdherence" && result[i].category == "3") {
-                            regAdhS = result[i].value;
-                        }
-        
-                        if (result[i].source == "queryResponse" && result[i].category == "1") {
-                            qryRespUS = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                            qryRespAvg = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                            qryRespS = result[i].value;
-                        }
-                    }
-                }
+                //Filter by year only or by year and month
+                if((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)){
+                    //if(result[i].year == year){
+                        if (result[i].source == "companyRating") {
+                            if(result[i].category == "1"){
+                                compRateUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                compRateAvg = result[i].value;
+                            } else if (result[i].category == "3") {
+                                compRateS = result[i].value;
+                            }
 
-                //Filter by year and month
-                else if(month != undefined){
-                    if(result[i].year == year && result[i].month == month){
-                        if (result[i].source == "companyRating" && result[i].category == "1") {
-                            compRateUS = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "2") {
-                            compRateAvg = result[i].value;
-                        } else if (result[i].source == "companyRating" && result[i].category == "3") {
-                            compRateS = result[i].value;
+                            if(compRateUS == undefined){
+                                compRateUS = 0;
+                            }else if (compRateAvg == undefined) {
+                                compRateAvg = 0;
+                            }else if (compRateS == undefined) {
+                                compRateS = 0;
+                            }
+                        } 
+        
+                        if (result[i].source == "teamEfficiency") {
+                            if(result[i].category == "1"){
+                                teamEffUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                teamEffAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                teamEffS = result[i].value;
+                            }
+                            
+                            if(teamEffUS == undefined){
+                                teamEffUS = 0;
+                            }else if (teamEffAvg == undefined) {
+                                teamEffAvg = 0;
+                            }else if (teamEffS == undefined) {
+                                teamEffS = 0;
+                            }
                         }
         
-                        if (result[i].source == "teamEfficiency" && result[i].category == "1") {
-                            teamEffUS = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "2") {
-                            teamEffAvg = result[i].value;
-                        } else if (result[i].source == "teamEfficiency" && result[i].category == "3") {
-                            teamEffS = result[i].value;
-                        }
+                        if (result[i].source == "healthAdherence") {
+                            if(result[i].category == "1"){
+                                healthAdhUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                healthAdhAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                healthAdhS = result[i].value;
+                            }
+                            
+                            if(healthAdhUS == undefined){
+                                healthAdhUS = 0;
+                            }else if (healthAdhAvg == undefined) {
+                                healthAdhAvg = 0;
+                            }else if (healthAdhS == undefined) {
+                                healthAdhS = 0;
+                            }
+                        } 
         
-                        if (result[i].source == "healthAdherence" && result[i].category == "1") {
-                            healthAdhUS = result[i].value;
-                        } else if (result[i].source == "healthAdherence" && result[i].category == "2") {
-                            healthAdhAvg = result[i].value;
-                        } else if (result[i].source == "healthAdherence" && result[i].category == "3") {
-                            healthAdhS = result[i].value;
-                        }
+                        if (result[i].source == "regulationsAdherence") {
+                            if(result[i].category == "1"){
+                                regAdhUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                regAdhAvg = result[i].value;
+                            }else if (result[i].category == "3") {
+                                regAdhS = result[i].value;
+                            }
+                            
+                            if(regAdhUS == undefined){
+                                regAdhUS = 0;
+                            }else if (regAdhAvg == undefined) {
+                                regAdhAvg = 0;
+                            }else if (regAdhS == undefined) {
+                                regAdhS = 0;
+                            }
+                        } 
         
-                        if (result[i].source == "regulationsAdherence" && result[i].category == "1") {
-                            regAdhUS = result[i].value;
-                        } else if (result[i].source == "regulationsAdherence" && result[i].category == "2") {
-                            regAdhAvg = result[i].value;
-                        } else if (result[i].source == "regulationsAdherence" && result[i].category == "3") {
-                            regAdhS = result[i].value;
+                        if (result[i].source == "queryResponse") {
+                            if(result[i].category == "1"){
+                                qryRespUS = result[i].value;
+                            }else if (result[i].category == "2") {
+                                qryRespAvg = result[i].value;
+                            } else if (result[i].category == "3") {
+                                qryRespS = result[i].value;
+                            }
+
+                            if(qryRespUS == undefined){
+                                qryRespUS = 0;
+                            }else if (qryRespAvg == undefined) {
+                                qryRespAvg = 0;
+                            } else if (qryRespS == undefined) {
+                                qryRespS = 0;
+                            }
                         }
-        
-                        if (result[i].source == "queryResponse" && result[i].category == "1") {
-                            qryRespUS = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "2") {
-                            qryRespAvg = result[i].value;
-                        } else if (result[i].source == "queryResponse" && result[i].category == "3") {
-                            qryRespS = result[i].value;
-                        }
-                    }
+                    //}
                 }
-                
             }
         }
 
         database.query(sqlComments, function (err, result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].extraComment != "" && result[i].extraComment != null) {
-                    //Filter by year only
-                    if(month == undefined){
-                        if(result[i].year == year){
+                    //Filter by year only or by year and month
+                    if((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)){
+                        //if(result[i].year == year){
                             data.data.push({
                                 "comments": result[i].extraComment,
                                 "user": result[i].name
                             });
-                        }
-                    }
-
-                    //Filter by year and month
-                    if(month != undefined){
-                        if(result[i].year == year && result[i].month == month){
-                            data.data.push({
-                                "comments": result[i].extraComment,
-                                "user": result[i].name
-                            });
-                        }
+                        //}
                     }
                 }
             }
@@ -1083,7 +1071,7 @@ app.post('/readEnquiry', function (req, res) {
 app.post('/addMunicipal', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_municipal(name, company, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_municipal(submissionDate, name, company, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.date + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -1097,7 +1085,7 @@ app.post('/addMunicipal', function (req, res) {
 app.post('/addCommercial', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_commercial(name, company, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.cleanliness + "','" + req.body.physicalCond + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_commercial(submissionDate, name, company, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('" + req.body.date + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.cleanliness + "','" + req.body.physicalCond + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -1111,7 +1099,7 @@ app.post('/addCommercial', function (req, res) {
 app.post('/addScheduled', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_scheduled(name, company, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.healthAdh + "','" + req.body.regAdh + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_scheduled(submissionDate, name, company, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('" + req.body.date + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.healthAdh + "','" + req.body.regAdh + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {

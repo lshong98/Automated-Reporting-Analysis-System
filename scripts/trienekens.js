@@ -1894,6 +1894,19 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     //     });
     // };
 
+    //ng-csv
+    $scope.separator = ",";
+    $scope.getDataHeaderMunicipal = function(){
+        return["Collection Promptness Unsatisfied", "Collection Promptness Satisfied", "Collection Promptness Very Satisfied", "Team Efficiency Unsatisfied", "Team Efficiency Satisfied", "Team Efficiency Very Satisfied", "Company Rating Unsatisfied", "Company Rating Satisfied", "Company Rating Very Satisfied", "Bin Handling Unsatisfied", "Bin Handling Satisfied", "Bin Handling Very Satisfied", "Spillage Control Unsatisfied", "Spillage Control Satisfied", "Spillage Control Very Satisfied", "Query Response Unsatisfied", "Query Response Satisfied", "Query Response Very Satisfied"];
+    };
+    $scope.getDataHeaderCommercial = function(){
+        return["Collection Promptness Unsatisfied", "Collection Promptness Satisfied", "Collection Promptness Very Satisfied", "Team Efficiency Unsatisfied", "Team Efficiency Satisfied", "Team Efficiency Very Satisfied", "Company Rating Unsatisfied", "Company Rating Satisfied", "Company Rating Very Satisfied", "Cleanliness Unsatisfied", "Cleanliness Satisfied", "Cleanliness Very Satisfied", "Physical Condition Unsatisfied", "Physical Condition Satisfied", "Physical Condition Very Satisfied", "Query Response Unsatisfied", "Query Response Satisfied", "Query Response Very Satisfied"];
+    };
+    $scope.getDataHeaderScheduled = function(){
+        return["Team Efficiency Unsatisfied", "Team Efficiency Satisfied", "Team Efficiency Very Satisfied", "Company Rating Unsatisfied", "Company Rating Satisfied", "Company Rating Very Satisfied", "Health Adherence Unsatisfied", "Health Adherence Satisfied", "Health Adherence Very Satisfied", "Regulations Adherence Unsatisfied", "Regulations Adherence Satisfied", "Regulations Adherence Very Satisfied", "Query Response Unsatisfied", "Query Response Satisfied", "Query Response Very Satisfied"];
+    };
+
+    //Filter cust satisfaction
     $scope.filterFunction = function(){
         var currentYear = (new Date()).getFullYear();
         $scope.yearOptions = [];
@@ -1921,7 +1934,19 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             console.log(response.data);
             $scope.reviews = response.data;
             $scope.totalItems = response.data.comments.length;
-            console.log($scope.totalItems);
+
+            var data = {... response.data};
+            delete data.comments;
+            $scope.municipalData = [];
+            $scope.municipalData.push(data);
+            
+            //ng-csv filename
+            if($scope.filters.month == undefined){
+                $scope.filename = $scope.filters.year.value + "_custsatisfaction_municipal.csv";
+            }else{
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_municipal.csv";
+            }
+            
             var collPromptUS = parseInt(response.data.collPromptUS);
             var collPromptAvg = parseInt(response.data.collPromptAvg);
             var collPromptS = parseInt(response.data.collPromptS);
@@ -2129,6 +2154,19 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             console.log(response.data);
             $scope.reviewsCommercial = response.data;
             $scope.totalItemsCommercial = response.data.comments.length;
+
+            var data = {... response.data};
+            delete data.comments;
+            $scope.commercialData = [];
+            $scope.commercialData.push(data);
+            
+            //ng-csv filename
+            if($scope.filters.month == undefined){
+                $scope.filename = $scope.filters.year.value + "_custsatisfaction_commercial.csv";
+            }else{
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_commercial.csv";
+            }
+
             var collPromptUS = parseInt(response.data.collPromptUS);
             var collPromptAvg = parseInt(response.data.collPromptAvg);
             var collPromptS = parseInt(response.data.collPromptS);
@@ -2334,6 +2372,19 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             console.log(response.data);
             $scope.reviewsScheduled = response.data;
             $scope.totalItemsScheduled = response.data.comments.length;
+
+            var data = {... response.data};
+            delete data.comments;
+            $scope.scheduledData = [];
+            $scope.scheduledData.push(data);
+            
+            //ng-csv filename
+            if($scope.filters.month == undefined){
+                $scope.filename = $scope.filters.year.value + "_custsatisfaction_scheduled.csv";
+            }else{
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_scheduled.csv";
+            }
+
             var compRateUS = parseInt(response.data.compRateUS);
             var compRateAvg = parseInt(response.data.compRateAvg);
             var compRateS = parseInt(response.data.compRateS);
@@ -2470,7 +2521,15 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         });
     };
 
+    //auto-fill satisfaction form date
+    console.log(today);
+    var today = new Date();
+    $scope.m.date = today;
+    $scope.c.date = today;
+    $scope.s.date = today;
+
     $scope.resetFormM = function () {
+        $scope.m.date = today;
         $scope.m.name = '';
         $scope.m.company = '';
         $scope.m.address = '';
@@ -2485,6 +2544,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     }
 
     $scope.resetFormC = function () {
+        $scope.c.date = today;
         $scope.c.name = '';
         $scope.c.company = '';
         $scope.c.address = '';
@@ -2499,6 +2559,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     }
 
     $scope.resetFormS = function () {
+        $scope.s.date = today;
         $scope.s.name = '';
         $scope.s.company = '';
         $scope.s.address = '';
