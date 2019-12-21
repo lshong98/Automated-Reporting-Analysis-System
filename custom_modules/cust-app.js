@@ -1042,7 +1042,7 @@ app.post('/NewRegister', function (req, resp) {
                     //console.log("Email sent: " + info.response);
                     database.query(sql3, function (err, res) {
                         if (err) {
-                            throw err;
+                            console.log(err);
                         }else{
                             //console.log("Registered");
                             resp.send("Registered");
