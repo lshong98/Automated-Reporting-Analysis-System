@@ -10,29 +10,41 @@ app.post('/addDbr', function (req, res) {
     console.log("HELLO FROM THE SERVER");
     f.makeID("dbr", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tbldbr (dbrID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.preparedBy +  "', 'A')";
+        var sql = "INSERT INTO tbldbr (dbrID, creationDateTime, preparedBy, companyName, address, contactPerson, phoneNo, comment, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.preparedBy + "' , '" + req.body.companyName + "' , '" + req.body.address + "' , '" + req.body.contactPerson + "' , '" + req.body.phoneNo + "' , '" + req.body.comment +  "', 'A')";
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
 
+            sql = "INSERT INTO tbldbrentry (dbrID) VALUES ('" + ID + "'), ('" + ID + "'),('" + ID + "'),('" + ID + "'),('" + ID + "')"
+            console.log(sql);
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+            });
+
             res.json({"status": "success", "message": "DBR created!", "details": {"dbrID": ID}});
         });
+
     });
 }); // Complete
 
 app.post('/addDbd', function (req, res) {
     'use strict';
     console.log("HELLO FROM THE SERVER");
-    f.makeID("blost", req.body.creationDate).then(function (ID) {
+    f.makeID("dbd", req.body.creationDate).then(function (ID) {
         
-        var sql = "INSERT INTO tblblost (blostID, creationDateTime, preparedBy, status) VALUE ('" + ID + "', '" + req.body.date + "' , '" + req.body.preparedBy +  "', 'A')";
+        console.log("dbdID: " + ID)
+        var sql = "INSERT INTO tbldbd (dbdID, creationDateTime, periodFrom, periodTo, preparedBy, status) VALUE ('" + ID + "', '" + req.body.creationDate + "' , '" + req.body.periodFrom + "' , '" + req.body.periodTo + "' , '" + req.body.preparedBy +  "', 'A')";
+        console.log(sql);
         database.query(sql, function (err, result) {
             if (err) {
                 throw err;
             }
 
-            res.json({"status": "success", "message": "BLOST created!", "details": {"blostID": ID}});
+            res.json({"status": "success", "message": "DBD created!", "details": {"dbdID": ID}});
         });
     });
 }); // Complete
@@ -43,12 +55,21 @@ app.post('/getAllDbr', function (req, res) {
     'use strict';
     var sql = "SELECT dbrID as id, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, verifiedBy, verifiedDate, status from tbldbr";
         
-    if (req.body.status) {
-        sql += " WHERE status = 'A'";
-    } else {
-        sql += " WHERE status = 'I'";
-    }
-    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        } 
+        res.json(result);
+        console.log("GET ALL DBR: " + result);
+    });
+});
+
+app.post('/getAllDbd', function (req, res) {
+    'use strict';
+    //var sql = "SELECT b.council, b.creationDateTime as date, db.areaCode, b.companyName, b.address, db.binSize, db.serialNo as damagedBinNo, db.damageCode, db.damageReason, b.preparedBy, b.repairBin, b.replaceBin, b.cost, b.status, b.rectifiedDate FROM tbldbr b inner join tbldbrentry db on b.dbrID = db.dbrID WHERE (b.creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
+        
+    var sql = "SELECT dbdID as id, periodFrom, periodTo, preparedBy, authorizedBy, verifiedBy, status FROM tbldbd";
+    console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -58,42 +79,88 @@ app.post('/getAllDbr', function (req, res) {
     });
 });
 
-app.post('/getAllDbd', function (req, res) {
+app.post('/getDbrInfo', function (req, res) {
     'use strict';
-    var sql = "SELECT blostID, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, status from tblblost";
-        
-    if (req.body.status) {
-        sql += " WHERE status = 'A'";
-    } else {
-        sql += " WHERE status = 'I'";
-    }
-    
-    database.query(sql, function (err, result) {
-        if (err) {
-            throw err;
-        }
-        res.json(result);
-        console.log("GET ALL BLOST: " + result);
-    });
-});
 
+    var sql = "SELECT * FROM tbldbr where dbrID = '" + req.body.id + "'";
 
-
-
-app.post('/getDbrDetails', function (req, res) {
-    'use strict';
-    console.log("GET BDAF DETAILS: HELLO FROM THE SERVER");
-    console.log(req.body);
-
-    
-    var sql = "SELECT b.bdafID, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as location, c.name as contactPerson, c.contactNumber as contactNo, b.acrID, b.acrSticker, b.jobDesc, db.size as binSize, b.serialNo, b.remarks, b.binDelivered, b.binPulled, b.completed from tblcustomer as c inner join tblbdafentry as b on b.customerID = c.customerID inner join tblbins as db on b.serialNo = db.serialNo where b.bdafID = '" + req.body.id + "'";
-    //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
          
+        res.json(result);
+        console.log(result);
+    });
+});
+
+app.post('/getDbdInfo', function (req, res) {
+    'use strict';
+
+    var sql = "SELECT * FROM tbldbd where dbdID = '" + req.body.id + "'";
+
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+         
+        res.json(result);
+        console.log(result);
+    });
+});
+
+
+
+app.post('/getDbrDetails', function (req, res) {
+    'use strict';
+
+    var sql = "SELECT * FROM tbldbrentry where dbrID = '" + req.body.id + "'";
+
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+         
+        res.json(result);
+        console.log(result);
+    });
+});
+
+app.post('/getDbdDetails', function (req, res) {
+    'use strict';
+
+    console.log(req.body);
+    //var sql = "SELECT * FROM tbldbr WHERE (creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
+    var sql = "SELECT b.council, b.creationDateTime as date, db.areaCode, b.companyName, b.address, db.binSize, db.serialNo as damagedBinNo, db.damageCode, db.damageReason, b.preparedBy, b.repairBin, b.replaceBin, b.cost, b.status, b.rectifiedDate FROM tbldbr b inner join tbldbrentry db on b.dbrID = db.dbrID WHERE (b.creationDateTime  BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "')";
+       
+
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        } 
+
+        res.json(result);
+        console.log(result);
+    });
+});
+
+app.post('/getDbdDetailsDetails', function (req, res) {
+    'use strict';
+
+    console.log(req.body);
+    var sql = "SELECT * FROM tbldbrentry WHERE dbrID = '" + req.body.dbrID + "'";
+    
+
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        
         res.json(result);
         console.log(result);
     });
@@ -116,9 +183,34 @@ app.post('/addBdafEntry', function (req, res) {
         }
 
         res.json({"status": "success", "message": "BDAF entry added!", "details": {"bdafID": req.body.bdafJD}});
-    });
+    }); 
 }); // Complete
 
+app.post('/editDbr', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tbldbrentry SET areaCode = '" + req.body.areaCode + "', damageCode = '" + req.body.damageCode + "', unit = '" + req.body.unit + "', binSize = '" + req.body.binSize + "', serialNo = '" + req.body.serialNo+ "', damageReason = '" + req.body.damageReason + "' WHERE dbrID = '" + req.body.dbrID + "' AND id = '" + req.body.id + "'";
+        
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        } 
+        res.json(result);
+    });
+});
+
+app.post('/updateDbrBD', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tbldbr SET cost = '" + req.body.cost + "', alternativeAction = '" + req.body.alternativeAction + "' WHERE dbrID = '" + req.body.dbrID + "'";
+        
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        } 
+        res.json(result);
+    });
+});
 
 app.get('/getCustomerList', function (req, res) {
     'use strict';

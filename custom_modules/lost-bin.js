@@ -22,14 +22,8 @@ app.post('/addBlost', function (req, res) {
 }); // Complete
 app.post('/getAllBlost', function (req, res) {
     'use strict';
-    var sql = "SELECT blostID as id, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, status from tblblost";
-        
-    if (req.body.status) {
-        sql += " WHERE status = 'A'";
-    } else {
-        sql += " WHERE status = 'I'";
-    }
-    
+    var sql = "SELECT blostID as id, creationDateTime as date, preparedBy, authorizedBy, authorizedDate, status, feedback from tblblost";
+
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -54,11 +48,9 @@ app.post('/getBlostInfo', function (req, res) {
 
 app.post('/getBlostDetails', function (req, res) {
     'use strict';
-    console.log("GET BLOST DETAILS: HELLO FROM THE SERVER");
-    console.log(req.body);
-
+    console.log("GET BLOST DETAILS:");
     
-    var sql = "SELECT b.blostID, c.name as contactPerson, c.companyName, concat(c.houseNo, ', ', c.streetNo, ', ', c.postCode, ', ', c.city) as address, c.contactNumber as contactNo, wbd.areaID, db.size, db.serialNo, b.sharedBin, b.areaCode, b.dateOfLoss, b.reason from tblblostentry b INNER JOIN tblcustomer c on c.customerID = b.customerID INNER JOIN tblwheelbindatabase wbd on wbd.customerID = c.customerID INNER JOIN tblbins db on db.serialNo = wbd.serialNo where b.blostID = '" + req.body.id + "'";
+    var sql = "SELECT b.id, b.name, b.phoneNo, b.address, b.binSize, b.noOfBins, b.collectionArea, b.sharedBin, b.dateOfLoss, b.reason FROM tblblostentry b where b.blostID = '" + req.body.id + "'";
     //var sql = "SELECT DISTINCT a.acrID AS id, a.acrName AS name, a.acrPhoneNo AS phone, a.acrAddress AS address, DATE_FORMAT(a.acrPeriod, '%d %M %Y') as enddate, c.areaName as area,(CASE WHEN a.acrStatus = 'A' THEN 'ACTIVE' WHEN a.acrStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblacr a INNER JOIN tblacrfreq b ON a.acrID = b.acrID INNER JOIN tblarea c ON c.areaID = b.areaID";
     
     console.log(sql);
@@ -75,7 +67,7 @@ app.post('/getBlostDetails', function (req, res) {
 app.post('/addBlostEntry', function (req, res) {
     'use strict';
 
-    var sql = "INSERT INTO tblblostentry (idNo, areaCode, blostID, customerID, serialNo, sharedBin, dateOfLoss, reason, status) VALUE ('" + null + "', '" + req.body.areaID + "', '"  + req.body.blostID + "', '" + req.body.customerID + "', '"  + req.body.serialNo + "', '" + req.body.sharedBin + "', '" + req.body.dateOfLoss + "', '" + req.body.reason + "', '" + req.body.status + "')";
+    var sql = "INSERT INTO tblblostentry (blostID, name, address, phoneNo, collectionArea, binSize, noOfBins, sharedBin, dateOfLoss, reason) VALUE ('" + req.body.blostID + "', '"  + req.body.name + "', '" + req.body.address + "', '"  + req.body.phoneNo + "', '" + req.body.collectionArea + "', '" + req.body.binSize + "', '" + req.body.noOfBins + "', '" + req.body.sharedBin + "', '" + req.body.formattedDateOfLoss + "', '" + req.body.reason + "')";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
@@ -86,11 +78,25 @@ app.post('/addBlostEntry', function (req, res) {
     });
 }); // Complete
 
+app.post('/editBlostEntry', function (req, res) {
+    'use strict';
 
-app.get('/getCustomerList', function (req, res) {
+    var sql = "UPDATE tblblostentry SET name = '" + req.body.name + "', address = '" +req.body.address + "', phoneNo = '" + req.body.phoneNo + "', collectionArea = '" + req.body.collectionArea + "', binSize = '" + req.body.collectionArea + "', noOfBins = '" + req.body.noOfBins + "', sharedBin = '" + req.body.sharedBin + "', dateOfLoss = '" + req.body.dateOfLoss + "', reason = '" + req.body.reason + "' WHERE id = '" + req.body.id + "'";
+    console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+
+        res.json({"status": "success", "message": "BLOST entry updated!", "details": {"BLOSTID": req.body.blostID}});
+    });
+}); // Complete
+
+
+app.get('/getBlostCustomerList', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "SELECT * from tblcustomer";
+    var sql = "SELECT CONCAT(COALESCE(concat(companyName, ', '), ''), name) as name, address FROM tbluser";
     
     database.query(sql, function (err, result) {
         if (err) {

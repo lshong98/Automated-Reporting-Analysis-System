@@ -44,7 +44,7 @@ app.post('/getStaffList', function (req, res) {
         }
         console.log(result[0].positionID);
         positionID = result[0].positionID;
-
+ 
         var newsql = "SELECT * from tblstaff where positionID = '" + result[0].positionID + "'";
 
         database.query(newsql, function (err, result) {

@@ -1,43 +1,67 @@
-<div class="modal fade" id="createBlostEntry" tabindex="-1" role="dialog" aria-labelledby="createBlostEntry" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
+<div class="modal fade" id="createBlostEntry" tabindex="-1" role="dialog" aria-labelledby="createBlostEntry"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Add a BLOST</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <h5 class="modal-title" id="exampleModalLongTitle">Add a BLOST</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                
-                <div class="form-group"> 
-                  <label for="txtAddress form-label">Contact Person</label>
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.customerName">
-                        <option data-ng-repeat="c in customerList" value={{c.name}}>{{c.name}} - {{c.ic}}</option>
-                    </select>
+
+                <div class="form-group">
+                    <label for="txtAddress form-label">Contact Person</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="blostEntry.name" />
+                    <!-- <button class="form-control btn btn-md dropdown-button dropdown-toggle" type="button"
+                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{c.name}}
+                    </button>
+                    <div class="dropdown-menu form-control" aria-labelledby="dropdownMenuButton">
+                        <input type=text class="form-control" placeholder="Search.." ng-model="customerFilter">
+                        <a class="dropdown-item" data-ng-repeat="c in customerList | filter:customerFilter"
+                            ng-click="assignCustomer(c);">{{c.name}}</a>
+                    </div> -->
                 </div>
                 <div class="form-group">
                     <label for="txtCompany form-label">Address</label>
-                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="blostEntry.customerID">
-                            <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.houseNo}}, {{c.streetNo}}, {{c.postCode}}, {{c.city}}</option>
-                    </select>
+                    <!-- <select type="text" class="form-control" id="txtCustomer" data-ng-model="blostEntry.customerID">
+                        <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.address}}</option>
+                    </select> -->
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="blostEntry.address" />
                 </div>
                 <div class="form-group">
-                  <label for="txtBeBins form-label">Phone No</label> 
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.contactNumber">
-                        <option data-ng-repeat="c in customerList" value={{c.contactNumber}}>{{c.contactNumber}}</option>
-                    </select>
+                    <label for="txtBeBins form-label">Phone No</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="blostEntry.phoneNo" />
                 </div>
-            
+
                 <div class="form-group">
                     <label for="txtAcrBins form-label">Collection Area</label>
-                    <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.areaID">
-                        <option data-ng-repeat="a in areaList" value={{a.areaCode}}>{{a.areaCode}}</option>
-                    </select>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="blostEntry.collectionArea" />
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">Bin Size</label>
+                            <input type="text" class="form-control" id="txtRemarks"
+                                data-ng-model="blostEntry.binSize" />
+                        </div>
+
+                    </div>
+                    <p style="padding-top: 40px;">X</p>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">No. of Bins</label>
+                            <input type="text" class="form-control" id="txtRemarks"
+                                data-ng-model="blostEntry.noOfBins" />
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                  <label for="txtAreaCode form-label">Serial No.</label>
-                  <select type="text" class="form-control" id="txtAddress" data-ng-model="blostEntry.serialNo">
-                        <option data-ng-repeat="b in binList" value={{b.serialNo}}>{{b.serialNo}}</option>
+                    <label for="txtAreaCode form-label">Shared Bin</label>
+                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="blostEntry.sharedBin">
+                        <option>Yes</option>
+                        <option>No</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -48,244 +72,389 @@
                     <label for="txtRemarks form-label">Reason of Loss</label>
                     <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="blostEntry.reason" />
                 </div>
-    
-         
-                
-                
-                
+
+
+
+
+
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="addBlostEntry();">Create</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addBlostEntry();">Create</button>
             </div>
-          </div>
         </div>
-      </div>
-    
-      
-    
+    </div>
+</div>
 
+<div class="modal fade" id="editBlostEntry" tabindex="-1" role="dialog" aria-labelledby="editBlostEntry"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add a BLOST</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
-        <div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
-            <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
-                  <span style="text-align:left"><strong>Form Status: {{status}}</strong></span>
-                  <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dcs.feedback}}</p>
-            </div>
-            <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
-                  
-                  <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();" ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
-                  <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveConfirmation">Approve</button>
-                  <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectConfirmation">Reject</button>
-              
-            </div>
-          </div>
-    
-    <div id="nodeToRenderAsPDF">
-        <div class="row">
-            <div class="col-md-12">
-                    <div class="row">
-                            <div class="col-md-6">
-                                <h5>Record for Lost Bins</h5>
-                            </div>
-                            <div class="col-md-6" style="background-color: darkgreen; text-align: center">
-                                    <img src="/images/trienekenslogo_form.png" alt="Trienekens Logo" height= "50px">
-                            </div>
+                <div class="form-group">
+                    <label for="txtAddress form-label">Contact Person</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="editedBlostEntry.name" />
+                    <!-- <button class="form-control btn btn-md dropdown-button dropdown-toggle" type="button"
+                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{c.name}}
+                    </button>
+                    <div class="dropdown-menu form-control" aria-labelledby="dropdownMenuButton">
+                        <input type=text class="form-control" placeholder="Search.." ng-model="customerFilter">
+                        <a class="dropdown-item" data-ng-repeat="c in customerList | filter:customerFilter"
+                            ng-click="assignCustomer(c);">{{c.name}}</a>
+                    </div> -->
+                </div>
+                <div class="form-group">
+                    <label for="txtCompany form-label">Address</label>
+                    <!-- <select type="text" class="form-control" id="txtCustomer" data-ng-model="blostEntry.customerID">
+                        <option data-ng-repeat="c in filteredCustomerList" value={{c.customerID}}>{{c.address}}</option>
+                    </select> -->
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="editedBlostEntry.address" />
+                </div>
+                <div class="form-group">
+                    <label for="txtBeBins form-label">Phone No</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="editedBlostEntry.phoneNo" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtAcrBins form-label">Collection Area</label>
+                    <input type="text" class="form-control" id="txtRemarks"
+                        data-ng-model="editedBlostEntry.collectionArea" />
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">Bin Size</label>
+                            <input type="text" class="form-control" id="txtRemarks"
+                                data-ng-model="editedBlostEntry.binSize" />
+                        </div>
+
                     </div>
-    
+                    <p style="padding-top: 40px;">X</p>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">No. of Bins</label>
+                            <input type="text" class="form-control" id="txtRemarks"
+                                data-ng-model="editedBlostEntry.noOfBins" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtAreaCode form-label">Shared Bin</label>
+                    <select type="text" class="form-control" id="txtCustomer"
+                        data-ng-model="editedBlostEntry.sharedBin">
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Date of Loss</label>
+                    <input type="date" class="form-control" id="txtRemarks"
+                        data-ng-model="editedBlostEntry.dateOfLoss" />
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Reason of Loss</label>
+                    <input type="textArea" class="form-control" id="txtRemarks"
+                        data-ng-model="editedBlostEntry.reason" />
+                </div>
             </div>
-    
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="saveBlostEntry();">Save</button>
+            </div>
         </div>
-        
-               
-            
-        <div class="row" id="createButton" data-ng-show="show.create == 'A'">
-            <div class="col-md-6">
-                <button class="btn btn-success" data-toggle="modal" data-target="#createBlostEntry"><i class="fa fa-plus"></i> New</button>
-                
+    </div>
+</div>
+<div class="modal fade" id="approveCheck" tabindex="-1" role="dialog" aria-labelledby="approveCheck" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Submit form for Review?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="col-md-6" style="text-align: right">
-                    
-                 <a href="javascript:exportPdf()"  class="btn btn-danger clearfix"><span class="fa fa-file-pdf-o" ></span> Export to PDF</a>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="checkForm();">Confirm</button>
             </div>
         </div>
-            
-            </br>
+    </div>
+</div>
+<div class="modal fade" id="rejectForm" tabindex="-1" role="dialog" aria-labelledby="rejectForm" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <p>Feedback:</p>
+                <textarea class="form-control" rows="4" data-ng-model="blost[0].feedback"></textarea>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="rejectForm();">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
+    <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
+        <span style="text-align:left"><strong>Form Status: {{status}}</strong></span>
+        <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{blost[0].feedback}}</p>
+    </div>
+    <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
+
+        <button class="btn btn-sm btn-primary" data-ng-click="requestAuthorization();"
+            ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Authorize</button>
+        <button ng-show="show.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
+            data-toggle="modal" data-target="#approveCheck">Approve</button>
+        <button ng-show="authorize.view == 'A' && status == 'PENDING'" class="btn btn-sm btn-danger" data-toggle="modal"
+            data-target="#rejectForm">Reject</button>
+
+    </div>
+</div>
+
+<div id="nodeToRenderAsPDF">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Record for Lost Bins</h5>
+                </div>
+                <div class="col-md-6" style="background-color: darkgreen; text-align: center">
+                    <img src="/images/trienekenslogo_form.png" alt="Trienekens Logo" height="50px">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="row" id="createButton" data-ng-show="show.create == 'A'">
+        <div class="col-md-6">
+            <button class="btn btn-success" data-toggle="modal" data-target="#createBlostEntry"><i
+                    class="fa fa-plus"></i> New</button>
+
+        </div>
+        <div class="col-md-6" style="text-align: right">
+
+            <a href="javascript:exportPdf()" class="btn btn-danger clearfix"><span class="fa fa-file-pdf-o"></span>
+                Export to PDF</a>
+        </div>
+    </div>
+
+    </br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th width="20%" data-ng-click="orderBy('company');">Name/Company <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="15%" data-ng-click="orderBy('phoneNo');">Phone No. <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="5%" data-ng-click="orderBy('collectionArea');">Collection Area <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="10%" data-ng-click="orderBy('binSize');">Bin Size <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="5%" data-ng-click="orderBy('noOfBins');">No. of Bins<i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="5%" data-ng-click="orderBy('sharedBin');">Shared Bin <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="15%" data-ng-click="orderBy('dateOfLoss');">Date of Loss <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="5%" data-ng-click="orderBy('reason');">Reason for Loss <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="b in blostDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                            class="clickable-row">
+                            <td>
+                                <span data-ng-bind="b.name"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.address"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.phoneNo"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.collectionArea"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.binSize"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.noOfBins"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.sharedBin"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.dateOfLoss | date: 'dd-MM-yyyy' : 'UTC+06'"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.reason"></span>
+                            </td>
+
+                            <td data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'">
+                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editBlostEntry"
+                                    data-ng-click="editBlostEntry(b)"><i class="fa fa-pencil-alt"></i></button>
+
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-striped table-clickable">
-                            <thead>
-                                <tr>
-                                    <th width="15%" data-ng-click="orderBy('customerName');">Customer Name <i class="fas fa-sort-down"></i></th>
-                                    <th width="15%" data-ng-click="orderBy('company');">Company <i class="fas fa-sort-down"></i></th>
-                                    <th width="15%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i></th>
-                                    <th width="5%" data-ng-click="orderBy('phoneNo');">Phone No. <i class="fas fa-sort-down"></i></th>
-                                    <th width="5%" data-ng-click="orderBy('collectionArea');">Collection Area <i class="fas fa-sort-down"></i></th>
-                                    <th width="5%" data-ng-click="orderBy('binSize');">Bin Size <i class="fas fa-sort-down"></i></th>
-                                    <th width="5%" data-ng-click="orderBy('serialNo');">Serial No. <i class="fas fa-sort-down"></i></th>
-                                    <th width="5%" data-ng-click="orderBy('sharedBin');">Shared Bin <i class="fas fa-sort-down"></i></th>
-                                    <th width="10%" data-ng-click="orderBy('dateOfLoss');">Date of Loss <i class="fas fa-sort-down"></i></th>
-                                    <th width="10%" data-ng-click="orderBy('reason');">Reason for Loss <i class="fas fa-sort-down"></i></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>               
-                                    <tr data-ng-repeat="b in blostDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row">
-                                        <td>
-                                            <span data-ng-bind="b.contactPerson"></span>
-                                        </td>
-                                        <td>
-                                            <span data-ng-bind="b.companyName"></span>
-                                        </td>
-                                        <td>
-                                            <span data-ng-bind="b.address"></span>
-                                        </td>
-                                        <td>
-                                            <span data-ng-bind="b.contactNo"></span>
-                                        </td>
-                                        <td>
-                                            <span data-ng-bind="b.areaCode"></span>
-                                        </td>
-                                        <td>
-                                            <span data-ng-bind="b.size"></span>
-                                        </td>   
-                                        <td>
-                                            <span data-ng-bind="b.serialNo"></span>
-                                        </td>       
-                                        <td>   
-                                            <span data-ng-bind="b.sharedBin"></span>
-                                        </td>
-                                        <td>
-                                            <span data-ng-bind="b.dateOfLoss | date: 'dd-MM-yyyy'"></span>
-                                        </td>
-                                        <td>
-                                            <span data-ng-bind="b.reason"></span>
-                                        </td>
-                                        
-                                    </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    Prepared by:
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            Prepared by:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            Name:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            Date:
-                        </div>
-                    </div>
+                <div class="col-md-12">
+
                 </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            Checked by:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Name:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Date:
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            Verified by:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Name:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Date:
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            Job completed:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                                Name:
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            Date:
-                        </div>
-                    </div>
-                </div>
-            
             </div>
-    
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Checked by:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Verified by:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Job completed:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
+        </div>
+
     </div>
-    
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
-    <script src="/scripts/html2canvas.min.js"></script>
-    <script>
-    
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="/scripts/html2canvas.min.js"></script>
+<script>
     // This one lets you improve the PDF sharpness by scaling up the HTML node tree to render as an image before getting pasted on the PDF.
     function exportPdf(quality = 10) {
         var filename = 'dcs[0].pdf';
-        
+
         document.getElementById("createButton").style.display = "none";
         html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
             useCORS: true,
             scale: quality,
-            onrendered: function(canvas) {
-                
+            onrendered: function (canvas) {
+
                 var img = canvas.toDataURL("image/png", 1.0);
-    
+
                 document.getElementById("createButton").style.display = "block";
-    
+
                 var pdf = new jsPDF('l', 'mm', 'a3');
                 pdf.addImage(img, 'PNG', 45, 45, 350, 200);
                 pdf.save(filename);
             }
         });
     }
-    
-    </script>
+</script>

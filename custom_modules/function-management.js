@@ -189,8 +189,9 @@ function logTransaction(date, staffID, action, description, rowID, tblName) {
 }
 
 function sendForAuthorization(date, staffId, action, description, rowID, tblName, query) {
-    
-    var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (\"" + date + "\", \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", NULL, \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
+    var dt = dateTime.create().format('Y-m-d H:M:S');
+    console.log(dt);
+    var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (now(), \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", NULL, \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
 
     //var sql = "INSERT INTO tblauthorization (date, staffID, action, description, rowID, tblName, authorize, query) VALUES ('"+ date +"', '"+ staffId +"', '"+ action +"', '"+ description +"', '"+ rowID +"', '"+ tblName +"', 'M', '"+ query +"')";
 
@@ -239,6 +240,10 @@ function menuItem(keyword, status) {
         case "view newBusiness":
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.newBusiness.view == \'A\'" role="menuitem"><a class="menu__link" href="#/new-business"><i class="fas fa-dumpster"></i> New Business</a></li>';
+            }
+        case "view binStock":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.binStock.view == \'A\'" role="menuitem"><a class="menu__link" href="#/bin-stock"><i class="fas fa-dumpster"></i> Bin Stock</a></li>';
             }
         case "view authorization":
             if (status == 'A') {
@@ -321,14 +326,24 @@ function insertNewData(query, req, res) {
 function log(dt, content, staff) {
     var sql = "";
     
-    makeID('history', dt).then(function (ID) {
-        sql = "INSERT INTO tblhistory (historyID, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + content + "', '" + staff + "', '" + dt + "', 'A')";
-        database.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
+    database.query("SELECT now() AS serverdate",function(err,result){
+        
+        if(err){
+            throw err;
+        }
+
+        dt = dateTime.create();
+        dt._now = result[0].serverdate;
+        dt = dt.format('Y-m-d H:M:S');
+        makeID('history', dt).then(function (ID) {
+            sql = "INSERT INTO tblhistory (historyID, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + content + "', '" + staff + "', now(), 'A')";
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                }
+            });
         });
-    });
+    });        
 }
 
 function waterfallQuery(query) {

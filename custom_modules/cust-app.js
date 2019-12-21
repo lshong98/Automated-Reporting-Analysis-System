@@ -378,7 +378,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 	//console.log(data.BinRequestICLost);
 
 	if (typeof data.BinRequestICLost !== 'undefined') {
-		sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestICLost_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+		sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
 		console.log(sql);
 		console.log(req.rawBody);
 		//console.log(data);
@@ -397,7 +397,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 			}
 		});
 	} else if (typeof data.BinRequestBin !== 'undefined') {
-		sql = "UPDATE tblbinrequest SET binImg ='BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+		sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
 		console.log(sql);
 		console.log(req.rawBody);
 		//console.log(data);
@@ -421,7 +421,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 
 		var async = require('async');
 		if (data.BinRequestTrading != "") {
-            sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
+            sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
 			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
 
 				fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
@@ -449,7 +449,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 				}
 			});
 		} else {
-            sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+            sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
 			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
 				fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
@@ -553,6 +553,7 @@ app.post('/complaint', function (req, resp) {
     var date = dateTime.create().format('Y-m-d H:M:S');
     var complaintID = 0;
     var sqlComplaintID = "SELECT MAX(complaintID) AS max FROM tblcomplaint";
+    var dateID = dateTime.create().format('YmdHMS');
 
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
@@ -567,12 +568,13 @@ app.post('/complaint', function (req, resp) {
                 //if(!err){
                 database.query(sqlComplaintID, function (err, res) {
                     console.log("complaintID = " + res[0].max);
-                    if(res[0].max == undefined){
-                        complaintID = 1;
-                    }else{
-                        complaintID = res[0].max;
-                        complaintID = parseInt(complaintID) + 1;
-                    }
+                    // if(res[0].max == undefined){
+                    //     complaintID = 1;
+                    // }else{
+                    //     complaintID = res[0].max;
+                    //     complaintID = parseInt(complaintID) + 1;
+                    // }
+                    complaintID = "COM"+userID+dateID;
                     if (data.compRemarks == null || data.compRemarks == "") {
                         var sql = "INSERT INTO tblcomplaint (complaintID, userID, staffID, premiseType, complaint, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','ACC201908080002','" + data.premise + "','" + data.complaint + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
@@ -1569,14 +1571,14 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
 
     'use strict';
     var data, sql;
-    var date = dateTime.create().format('Y-m-d H-M-S');
+    var date = dateTime.create().format('YmdHMS');
 
     data = JSON.parse(req.rawBody);
-    sql = "UPDATE tblcomplaint SET complaintImg ='complaintImg/ComplaintCase_" + data.cID + "_" + date.toString() + ".jpg' WHERE complaintID =" + data.cID + "";
+    sql = "UPDATE tblcomplaint SET complaintImg ='/images/complaintImg/complaintcase_" + data.cID + ".jpg' WHERE complaintID ='" + data.cID + "'";
     console.log(sql);
     console.log(req.rawBody);
     //console.log(data);
-    fs.writeFile(__dirname + '/../images/complaintImg/ComplaintCase_' + data.cID + '_' + date.toString() + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
+    fs.writeFile(__dirname + '/../images/complaintImg/complaintcase_' + data.cID + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
         if (err) {
             console.log(err);
         } else {
@@ -1585,6 +1587,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
                     resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
                 } else {
                     resp.send("Please Try Again");
+                    console.log(err);
                 }
             });
             console.log("success");

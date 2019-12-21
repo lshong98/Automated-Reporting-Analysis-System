@@ -11,13 +11,12 @@ var emitter = variable.emitter;
 app.get('/getAllTasks', function (req, res) {
     'use strict';
     
-    var sql = "SELECT taskId, date, staffID, action, description, rowID, query, authorize, tblName from tblauthorization WHERE authorize = 'M'";
+    var sql = "SELECT taskId, DATE_FORMAT(date, '%d %b %Y %H:%i') AS date, staffID, action, description, rowID, query, authorize, tblName from tblauthorization WHERE authorize = 'M'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
         }
         res.json(result);
-        console.log("ALL TASKS COLLECTED");
     });
 }); // Complete
 

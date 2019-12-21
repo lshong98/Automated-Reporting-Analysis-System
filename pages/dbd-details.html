@@ -1,2 +1,514 @@
+<div class="modal fade" id="createdbdEntry" tabindex="-1" role="dialog" aria-labelledby="createdbdEntry"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add a dbd</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="txtAddress form-label">Contact Person</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="dbdEntry.name" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCompany form-label">Address</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="dbdEntry.address" />
+                </div>
+                <div class="form-group">
+                    <label for="txtBeBins form-label">Phone No</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="dbdEntry.phoneNo" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtAcrBins form-label">Collection Area</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="dbdEntry.collectionArea" />
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">Bin Size</label>
+                            <input type="text" class="form-control" id="txtRemarks" data-ng-model="dbdEntry.binSize" />
+                        </div>
+
+                    </div>
+                    <p style="padding-top: 40px;">X</p>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">No. of Bins</label>
+                            <input type="text" class="form-control" id="txtRemarks" data-ng-model="dbdEntry.noOfBins" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtAreaCode form-label">Shared Bin</label>
+                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="dbdEntry.sharedBin">
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Date of Loss</label>
+                    <input type="date" class="form-control" id="txtRemarks" data-ng-model="dbdEntry.dateOfLoss" />
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Reason of Loss</label>
+                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="dbdEntry.reason" />
+                </div>
 
 
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="adddbdEntry();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editdbdEntry" tabindex="-1" role="dialog" aria-labelledby="editdbdEntry" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add a dbd</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="txtAddress form-label">Contact Person</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="editeddbdEntry.name" />
+                </div>
+                <div class="form-group">
+                    <label for="txtCompany form-label">Address</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="editeddbdEntry.address" />
+                </div>
+                <div class="form-group">
+                    <label for="txtBeBins form-label">Phone No</label>
+                    <input type="text" class="form-control" id="txtRemarks" data-ng-model="editeddbdEntry.phoneNo" />
+                </div>
+
+                <div class="form-group">
+                    <label for="txtAcrBins form-label">Collection Area</label>
+                    <input type="text" class="form-control" id="txtRemarks"
+                        data-ng-model="editeddbdEntry.collectionArea" />
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">Bin Size</label>
+                            <input type="text" class="form-control" id="txtRemarks"
+                                data-ng-model="editeddbdEntry.binSize" />
+                        </div>
+
+                    </div>
+                    <p style="padding-top: 40px;">X</p>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">No. of Bins</label>
+                            <input type="text" class="form-control" id="txtRemarks"
+                                data-ng-model="editeddbdEntry.noOfBins" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtAreaCode form-label">Shared Bin</label>
+                    <select type="text" class="form-control" id="txtCustomer" data-ng-model="editeddbdEntry.sharedBin">
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Date of Loss</label>
+                    <input type="date" class="form-control" id="txtRemarks" data-ng-model="editeddbdEntry.dateOfLoss" />
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Reason of Loss</label>
+                    <input type="textArea" class="form-control" id="txtRemarks" data-ng-model="editeddbdEntry.reason" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="savedbdEntry();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="checkConfirmation" tabindex="-1" role="dialog" aria-labelledby="checkConfirmation"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Is the Job complete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Click 'Yes' to proceed. Click 'No' to cancel.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" ng-model="value"
+                    data-ng-click="requestAuthorization()">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="approveCheck" tabindex="-1" role="dialog" aria-labelledby="approveCheck" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Is the form Complete?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="checkForm();">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="approveVerification" tabindex="-1" role="dialog" aria-labelledby="approveVerification"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="verifyForm();">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="rejectForm" tabindex="-1" role="dialog" aria-labelledby="rejectForm" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <p>Feedback:</p>
+                <textarea class="form-control" rows="4" data-ng-model="dbd[0].feedback"></textarea>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-ng-click="rejectForm();">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="background-color: #f5f4f4; padding-top: 15px; margin-bottom: 10px">
+        <div class="col-md-6" style="text-align: left; margin-bottom: 10px">
+            <span style="text-align:left"><strong>Form Status: {{status}}</strong></span>
+            <p ng-show="status == 'CORRECTION REQUIRED'">Feedback: {{dbd[0].feedback}}</p>
+        </div>
+        <div class="col-md-6" style="text-align: right; margin-bottom: 10px">
+    
+            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#checkConfirmation"
+                ng-show="status == 'ACTIVE' || status == 'CORRECTION REQUIRED'">Send for Checking</button>
+            <!--Mark form as 'Pending' and request for checking-->
+            <button ng-show="show.verifyView == 'A' && status == 'CHECKED'" class="btn btn-sm btn-success"
+                data-toggle="modal" data-target="#approveVerification">Verify</button>
+            <!--Mark form as 'Verified' and execute inventory functions-->
+            <button ng-show="show.checkView == 'A' && status == 'PENDING'" class="btn btn-sm btn-success"
+                data-toggle="modal" data-target="#approveCheck">Approve</button>
+            <!--Mark form as 'Checked' and request verification-->
+            <button ng-show="permission && rightStatus" class="btn btn-sm btn-danger" data-toggle="modal"
+                data-target="#rejectForm">Reject</button>
+            <!--Reset form to 'Active'-->
+    
+        </div>
+    </div>
+
+<div id="nodeToRenderAsPDF">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Damaged Bin Data</h5>
+                </div>
+                <div class="col-md-6" style="background-color: darkgreen; text-align: center">
+                    <img src="/images/trienekenslogo_form.png" alt="Trienekens Logo" height="50px">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</br>
+    <div class="row" id="createButton" data-ng-show="show.create == 'A'">
+        <div class="col-md-6">
+            <!-- <button class="btn btn-success" data-toggle="modal" data-target="#createdbdEntry"><i class="fa fa-plus"></i>
+                New</button> -->
+
+        </div>
+        <div class="col-md-6" style="text-align: right">
+
+            <a href="javascript:exportPdf()" class="btn btn-danger clearfix"><span class="fa fa-file-pdf-o"></span>
+                Export to PDF</a>
+        </div>
+    </div>
+
+    </br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th width="20%" data-ng-click="orderBy('date');">Date of Report <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('council');">Council <i class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('areaCode');">Area Code <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('companyName');">Name of Company <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('address');">Address <i class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="10%" data-ng-click="orderBy('binSize');">Bin Size <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="5%" data-ng-click="orderBy('binNo');">Damaged Bin No. <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="5%" data-ng-click="orderBy('damageType');">Type of Damage <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="15%" data-ng-click="orderBy('damageReason');">Reason of Damage <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="5%" data-ng-click="orderBy('preparedBy');">Reported By <i
+                                    class="fas fa-sort-down"></i></th>
+                            <th width="20%" data-ng-click="orderBy('repairBin');">Repair of Bin <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('replaceBin');">Replacement of Bin <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('chargeCustomer');">Charge Customer <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i>
+                            </th>
+                            <th width="20%" data-ng-click="orderBy('rectifiedDate');">Rectified Date <i
+                                    class="fas fa-sort-down"></i>
+                            </th>
+                            <th data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="b in dbdDetailsList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage"
+                            class="clickable-row">
+                            <td>
+                                <span data-ng-bind="b.date | date: 'dd-MM-yyyy' : 'UTC+06'"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.council"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.areaCode"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.companyName"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.address"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.binSize"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.damagedBinNo"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.damageCode"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.damageReason"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.reportedBy"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.repairOfBin"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.reasonOfDamage"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.replacementOfBin"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.chargeCustomer"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.status"></span>
+                            </td>
+                            <td>
+                                <span data-ng-bind="b.rectifiedDate"></span>
+                            </td>
+                            <td data-ng-show="status == 'CORRECTION REQUIRED' || status == 'ACTIVE'">
+                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editdbdEntry"
+                                    data-ng-click="editdbdEntry(b)"><i class="fa fa-pencil-alt"></i></button>
+
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Prepared by:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Checked by:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Verified by:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    Job completed:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Name:
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    Date:
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="/scripts/html2canvas.min.js"></script>
+<script>
+    // This one lets you improve the PDF sharpness by scaling up the HTML node tree to render as an image before getting pasted on the PDF.
+    function exportPdf(quality = 10) {
+        var filename = 'dcs[0].pdf';
+
+        document.getElementById("createButton").style.display = "none";
+        html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
+            useCORS: true,
+            scale: quality,
+            onrendered: function (canvas) {
+
+                var img = canvas.toDataURL("image/png", 1.0);
+
+                document.getElementById("createButton").style.display = "block";
+
+                var pdf = new jsPDF('l', 'mm', 'a3');
+                pdf.addImage(img, 'PNG', 45, 45, 350, 200);
+                pdf.save(filename);
+            }
+        });
+    }
+</script>

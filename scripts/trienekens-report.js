@@ -951,6 +951,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         }else if(n == 0){
             $scope.forGetAcrInfo.todayday = "sun";
         }
+        console.log($scope.forGetAcrInfo);
         $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(response){
             if (response.data !== null) {
                 if (response.data.length > 0) {

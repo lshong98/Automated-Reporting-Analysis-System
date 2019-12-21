@@ -78,6 +78,16 @@ app.config(function($routeProvider, $locationProvider){
         },
         controller: 'binHistoryController'
     })
+    .when('/bin-stock', { 
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/bin-stock');
+            }
+        },
+        templateUrl: '/bin-stock',
+        controller: 'binStockController',
+        controllerAs: 'binStock'
+    })
     .when('/new-business', { 
         resolve: {
             "check": function (routingService, $window, $location) {

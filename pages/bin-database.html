@@ -19,6 +19,9 @@
                     <select type="text" class="form-control" id="txtCustomer" data-ng-model="databaseBin.customerID">
                         <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.customerID}} - {{c.name}} - {{c.companyName}}</option>
                     </select>
+                    <!--<select id="txtCustomer" data-ng-model="databaseBin.customerID" class="selectpicker" data-live-search="true" data-width="100%">
+                            <option value="{{c.customerID}}" data-ng-repeat="c in customerList">{{c.customerID}} - {{c.name}} - {{c.companyName}}</option>
+                    </select>-->
                 </div>
 
                 <div class="form-group">
@@ -258,12 +261,12 @@
 </div>
 <div class="row filter-div">
     <div class="col-md-3">
-        <h6>Serial No :</h6>
-        <input class="form-control" type="text" id="serialNum" ng-model="serialNoFilter.serialNo">
+        <h6>Search :</h6>
+        <input class="form-control" type="text" id="serialNum" ng-model="searchFilter">
 
     </div>
     
-    
+    <!--
     <div class="col-md-3">
         <h6>ACRF Serial No :</h6>
         <input class="form-control" type="text" id="acrfNo" ng-model="wbdFilter.acrfSerialNo">
@@ -279,7 +282,9 @@
                     <span></span> <i class="fa fa-caret-down" style="float: right; padding: 5px;"></i>
                 </div>
             </div>
+            -->
 </div>
+
 
 <!--
     <div class="col-md-3">
@@ -328,7 +333,7 @@
                             </tr>
                         </thead>
                         <tbody> <!--dateFilter:date.from:date.to |filter: wbdFilter |-->
-                            <tr data-ng-repeat="b in databaseBinList |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="wbdHistory(b.serialNo)">
+                            <tr data-ng-repeat="b in databaseBinList | filter: searchFilter |   offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" ><!--data-ng-click="wbdHistory(b.serialNo)"-->
                                 <td>
                                     <div editable>
                                         <input type="date" class="form-control" data-ng-model="b.date" data-ng-show="!showDatabaseBin" />
@@ -338,14 +343,14 @@
                                 <td>
                                     <div editable>
                                         <select type="text" class="form-control" data-ng-model="b.customerID" data-ng-show="!showDatabaseBin">
-                                                <option data-ng-repeat="c in customerList" value={{c.customerID}}>{{c.ic}} - {{c.name}}</option>
+                                                <option data-ng-repeat="b in customerList" value={{b.customerID}}>{{b.ic}} - {{b.name}}</option>
                                         </select>
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.name"></span>
                                     </div>
                                 </td>
                                 <td>
                                     <div editable>
-                                        <!--<input type="text" class="form-control" data-ng-model="b.icNo" data-ng-show="!showDatabaseBin" />-->
+                                        <input type="text" class="form-control" data-ng-model="b.icNo" data-ng-show="!showDatabaseBin" data-ng-disabled="true"/>
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.icNo"></span>
                                     </div>
                                 </td>
@@ -382,7 +387,7 @@
                                 <td>
                                     <div editable> <!--Should be automatic based on address-->
                                         <select type="text" class="form-control" data-ng-model="b.areaCode" data-ng-show="!showDatabaseBin">
-                                            <option data-ng-repeat="a in areaList" value={{a.id}}>{{a.id}}</option>
+                                            <option data-ng-repeat="b in areaList" value={{b.id}}>{{b.id}}</option>
                                         </select>
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.areaCode"></span>
                                     </div>
@@ -429,7 +434,14 @@
                                 </td>
                                 <td>
                                     <div editable>
-                                        <input type="text" class="form-control" data-ng-model="b.acrfSerialNo" data-ng-show="!showDatabaseBin" />
+                                        <select type="text" class="form-control" data-ng-model="b.acrfSerialNo" data-ng-show="!showDatabaseBin">
+                                            <option value='null'>N/A</option>
+                                            <option data-ng-repeat="a in acrList" value={{a.acrID}}>{{a.acrID}}</option>
+                                        </select>
+                                       <!-- <select type="text" class="form-control" id="txtAcr" data-ng-model="databaseBin.acrID">
+                                            <option value='null'>N/A</option>
+                                            <option data-ng-repeat="a in acrList" value={{a.acrID}}>{{a.acrID}}</option>
+                                        </select>-->
                                         <span data-ng-show="showDatabaseBin" data-ng-bind="b.acrfSerialNo"></span>
                                     </div>
                                 </td>

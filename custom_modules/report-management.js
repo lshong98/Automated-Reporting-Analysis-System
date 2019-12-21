@@ -209,7 +209,7 @@ app.post('/getReportACR', function (req, res) {
             if (req.body.todayday == "sun") {
                 res.json(null);
             } else {
-                var sql = "SELECT tblcustomer.name, tblacr.mon, tblacr.tue, tblacr.wed, tblacr.thu, tblacr.fri, tblacr.sat FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID WHERE tblacr.dcsID LIKE '%" + dcs.dcsID + "%' AND tblacr." + req.body.todayday + " = 1";
+                var sql = "SELECT tbluser.name, tblacr.mon, tblacr.tue, tblacr.wed, tblacr.thu, tblacr.fri, tblacr.sat FROM tbluser JOIN tblacr ON tbluser.userID = tblacr.userID WHERE tblacr.dcsID LIKE '%" + dcs.dcsID + "%' AND tblacr." + req.body.todayday + " = 1";
 
                 database.query(sql, function (err, result) {
                     if (err) {

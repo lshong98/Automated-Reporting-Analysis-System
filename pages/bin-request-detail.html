@@ -1,12 +1,102 @@
+<div class="modal fade" id="confirmStatus" tabindex="-1" role="dialog" aria-labelledby="confirmStatus"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Confirm Status?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">Bin Size</label>
+                            <input type="text" class="form-control" id="txtRemarks" data-ng-model="entry.binSize" />
+                        </div>
+
+                    </div>
+                    <p style="padding-top: 40px;">X</p>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">No. of Bins</label>
+                            <input type="text" class="form-control" id="txtRemarks" data-ng-model="entry.unit" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="txtRemarks form-label">Remarks </label>
+                    <textarea class="form-control" rows="4" id="txtRemarks" data-ng-model="entry.remarks"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtRemarks form-label">ACR Bin</label>
+                    <div class="radio">
+                        <label style="padding-right: 20px;" class="radio-inline"><input type="radio"
+                                ng-model="entry.acrBin" value="yes"> Yes</label>
+                        <label style="padding-right: 20px;" class="radio-inline"><input type="radio"
+                                ng-model="entry.acrBin" value="no"> No</label>
+
+                    </div>
+                </div>
+                <div class="form-group" data-ng-show="entry.acrBin == 'yes'">
+                    <label for="txtBeBins form-label">ACRF Number</label>
+                    <input type="text" class="form-control" id="txtBeBins" data-ng-model="entry.acrfNumber" />
+                </div>
+
+                <div class="row" data-ng-show="entry.acrBin == 'yes'">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">From</label>
+                            <input type="date" class="form-control" id="txtRemarks" data-ng-model="entry.from" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-1">
+                        <p style="padding-top: 40px; text-align: center;">-</p>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="txtRemarks form-label">To </label>
+                            <input type="date" class="form-control" id="txtRemarks" data-ng-model="entry.to" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" data-ng-show="entry.acrBin == 'yes'">
+                    <label for="txtBeBins form-label">BE Bins/Units</label>
+                    <input type="text" class="form-control" id="txtBeBins" data-ng-model="entry.beBins" />
+                </div>
+
+                <div class="form-group" data-ng-show="entry.acrBin == 'yes'">
+                    <label for="txtAcrBins form-label">ACR Bins/Units</label>
+                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="entry.acrBins" />
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="confirmStatus();">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    img{
+    img {
         max-width: 250px;
     }
 </style>
 <div class="container" data-ng-controller="binReqDetailCtrl">
     <div class="row">
         <div class="col-md-6">
-            <h1>Request Detail</h1><br/><br/>
+            <h1>Request Detail</h1><br /><br />
             <p><strong>Status of Request: </strong>
                 <select name="binReqStatus" data-ng-model="reqDetail.status" class="form-control" style="width: 150px;">
                     <option value="PENDING">Pending</option>
@@ -15,8 +105,9 @@
                     <option value="In Progress">In Progress</option>
                     <option value="No Response">No Response</option>
                 </select>
-                <br/>
-                <button class="btn btn-sm btn-primary" data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID)">Update</button>
+                <br />
+                <button class="btn btn-sm btn-primary"
+                    data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID)">Update</button>
             </p>
             <p><strong>Request Date: </strong>{{reqDetail.reqDate}}</p>
             <p><strong>Requested By: </strong>{{reqDetail.name}}</p>
@@ -35,48 +126,70 @@
             <div class="row">
                 <div class="col-md-6">
                     <h6>IC</h6>
-                    <a href=../images/{{reqDetail.icImg}} data-fancybox data-width="2048">
-                        <img ng-src=../images/{{reqDetail.icImg}} data-ng-show="reqDetail.icImg != null">
+                    <!-- <a href="../images/{{reqDetail.icImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="../images/{{reqDetail.icImg}}" data-ng-show="reqDetail.icImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.icImg == '' || reqDetail.icImg == null">No image attached</p> -->
+                    <a href="{{reqDetail.icImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="{{reqDetail.icImg}}" data-ng-show="reqDetail.icImg != null">
                     </a>
                     <p data-ng-show="reqDetail.icImg == '' || reqDetail.icImg == null">No image attached</p>
                 </div>
 
                 <div class="col-md-6">
                     <h6>Bin Image</h6>
-                    <a href=../images/{{reqDetail.binImg}} data-fancybox data-width="2048">
-                        <img ng-src=../images/{{reqDetail.binImg}} data-ng-show="reqDetail.binImg != null">
+                    <!-- <a href="../images/{{reqDetail.binImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="../images/{{reqDetail.binImg}}" data-ng-show="reqDetail.binImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.binImg == '' || reqDetail.binImg == null">No image attached</p> -->
+                    <a href="{{reqDetail.binImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="{{reqDetail.binImg}}" data-ng-show="reqDetail.binImg != null">
                     </a>
                     <p data-ng-show="reqDetail.binImg == '' || reqDetail.binImg == null">No image attached</p>
                 </div>
             </div>
-            <br/>
+            <br />
             <div class="row">
                 <div class="col-md-6">
                     <h6>Utility Bill</h6>
-                    <a href=../images/{{reqDetail.utilityImg}} data-fancybox data-width="2048">
-                        <img ng-src=../images/{{reqDetail.utilityImg}} data-ng-show="reqDetail.utilityImg != null">
+                    <!-- <a href="../images/{{reqDetail.utilityImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="../images/{{reqDetail.utilityImg}}" data-ng-show="reqDetail.utilityImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.utilityImg == '' || reqDetail.utilityImg == null">No image attached</p> -->
+                    <a href="{{reqDetail.utilityImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="{{reqDetail.utilityImg}}" data-ng-show="reqDetail.utilityImg != null">
                     </a>
                     <p data-ng-show="reqDetail.utilityImg == '' || reqDetail.utilityImg == null">No image attached</p>
                 </div>
                 <div class="col-md-6">
                     <h6>Assessment Bill</h6>
-                    <a href=../images/{{reqDetail.assessmentImg}} data-fancybox data-width="2048">
-                        <img ng-src=../images/{{reqDetail.assessmentImg}} data-ng-show="reqDetail.assessmentImg != null">
+                    <!-- <a href="../images/{{reqDetail.assessmentImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="../images/{{reqDetail.assessmentImg}}" data-ng-show="reqDetail.assessmentImg != null">
                     </a>
-                    <p data-ng-show="reqDetail.assessmentImg == '' || reqDetail.assessmentImg == null">No image attached</p>
+                    <p data-ng-show="reqDetail.assessmentImg == '' || reqDetail.assessmentImg == null">No image attached
+                    </p> -->
+                    <a href="{{reqDetail.assessmentImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="{{reqDetail.assessmentImg}}" data-ng-show="reqDetail.assessmentImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.assessmentImg == '' || reqDetail.assessmentImg == null">No image attached
+                    </p>
                 </div>
             </div>
-            <br/>
+            <br />
             <div class="row">
                 <div class="col-md-6">
                     <h6>Trading License</h6>
-                    <a href=../images/{{reqDetail.tradingImg}} data-fancybox data-width="2048">
-                        <img ng-src=../images/{{reqDetail.tradingImg}} data-ng-show="reqDetail.tradingImg != null">
+                    <!-- <a href="../images/{{reqDetail.tradingImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="../images/{{reqDetail.tradingImg}}" data-ng-show="reqDetail.tradingImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.tradingImg == '' || reqDetail.tradingImg == null">No image attached</p> -->
+                    <a href="{{reqDetail.tradingImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="{{reqDetail.tradingImg}}" data-ng-show="reqDetail.tradingImg != null">
                     </a>
                     <p data-ng-show="reqDetail.tradingImg == '' || reqDetail.tradingImg == null">No image attached</p>
                 </div>
             </div>
-            <br/><br/>
+            <br /><br />
         </div>
     </div>
 </div>
