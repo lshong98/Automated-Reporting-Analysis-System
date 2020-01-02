@@ -70,7 +70,7 @@ app.post('/loginCustServiceApp', function (req, resp) {
                             service: 'gmail',
                             auth: {
                                 user: 'registercustomerapp@gmail.com',
-                                pass: 'trienekens123'
+                                pass: 'trienekens321'
                             }
                         });
                         vCode = Math.floor(Math.random() * 90000) + 10000;
@@ -984,7 +984,7 @@ app.post('/NewRegister', function (req, resp) {
             service: 'gmail',
             auth: {
                 user: 'registercustomerapp@gmail.com',
-                pass: 'trienekens123'
+                pass: 'trienekens321'
             }
         });
         vCode = Math.floor(Math.random() * 90000) + 10000;
@@ -1610,7 +1610,7 @@ app.post('/resetPassword', function (req, resp) {
             service: 'gmail',
             auth: {
                 user: 'registercustomerapp@gmail.com',
-                pass: 'trienekens123'
+                pass: 'trienekens321'
             }
         });
 
