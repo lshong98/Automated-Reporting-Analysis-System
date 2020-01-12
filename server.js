@@ -186,7 +186,7 @@ app.get('/getPendingBinRequest', function (req, res) {
         output = [],
         i = 0;
 
-    sql = "SELECT * FROM tblbinrequest";
+    sql = "SELECT * FROM tblbinrequest ORDER BY dateRequest DESC";
     database.query(sql, function (err, result) {
         if (result != undefined) {
             for (i = 0; i < result.length; i += 1) {
@@ -341,7 +341,7 @@ app.get('/getEnquiry', function (req, res) {
         output = [],
         i = 0;
 
-    sql = "SELECT * FROM tblenquiry JOIN tbluser WHERE tbluser.userID = tblenquiry.userID";
+    sql = "SELECT * FROM tblenquiry JOIN tbluser WHERE tbluser.userID = tblenquiry.userID ORDER BY submissionDate DESC";
     database.query(sql, function (err, result) {
         if (result != undefined) {
             for (i = 0; i < result.length; i += 1) {
@@ -997,38 +997,59 @@ app.post('/customerFeedbackScheduled', function (req, res) {
     });
 });
 
-app.get('/unreadSatisfaction', function (req, res) {
+app.post('/countSatisfaction', function (req, res) {
     'use strict';
-    var unread = "SELECT COUNT(readStat) as unreadMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE readStat = 'u') as unreadScheduled, (SELECT COUNT(readStat) from tblsatisfaction_commercial WHERE readStat = 'u') as unreadCommercial FROM tblsatisfaction_municipal WHERE readStat = 'u'";
     //var commercial = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
     //var scheduled = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
-    var unreadMunicipal, unreadCommercial, unreadScheduled, json = {};
+    var countMunicipal, countCommercial, countScheduled, json = {};
 
-    database.query(unread, function (err, result) {
-        if (result != undefined) {
-            unreadMunicipal = result[0].unreadMunicipal;
-            unreadCommercial = result[0].unreadCommercial;
-            unreadScheduled = result[0].unreadScheduled;
+    if(req.body.month == undefined && req.body.year != undefined){
+        var countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '"+req.body.year.value+"') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_commercial WHERE YEAR(submissionDate) = '"+req.body.year.value+"') as countCommercial FROM tblsatisfaction_municipal WHERE YEAR(submissionDate) = '"+req.body.year.value+"'";
+        database.query(countWOmonth, function (err, result) {
+            if (result != undefined) {
+                countMunicipal = result[0].countMunicipal;
+                countCommercial = result[0].countCommercial;
+                countScheduled = result[0].countScheduled;
+    
+                json = {
+                    "municipal": countMunicipal,
+                    "commercial": countCommercial,
+                    "scheduled": countScheduled
+                };
+                res.json(json);
+                res.end();
+            }
+            // unreadMunicipal = result[0].unread;
+            // database.query(commercial, function(err, result){
+            //     unreadCommercial = result[0].unread;
+            //     database.query(scheduled, function(err, result){
+            //         unreadScheduled = result[0].unread;
+            //         json = {"municipal":unreadMunicipal,"commercial":unreadCommercial,"scheduled":unreadScheduled};
+            //         res.json(json);
+            //         res.end();
+            //     });
+            // });
+        });
+    }
 
-            json = {
-                "municipal": unreadMunicipal,
-                "commercial": unreadCommercial,
-                "scheduled": unreadScheduled
-            };
-            res.json(json);
-            res.end();
-        }
-        // unreadMunicipal = result[0].unread;
-        // database.query(commercial, function(err, result){
-        //     unreadCommercial = result[0].unread;
-        //     database.query(scheduled, function(err, result){
-        //         unreadScheduled = result[0].unread;
-        //         json = {"municipal":unreadMunicipal,"commercial":unreadCommercial,"scheduled":unreadScheduled};
-        //         res.json(json);
-        //         res.end();
-        //     });
-        // });
-    });
+    if(req.body.month != undefined && req.body.year != undefined){
+        var countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '"+req.body.year.value+"' AND MONTH(submissionDate) = '"+req.body.month+"') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_commercial WHERE YEAR(submissionDate) = '"+req.body.year.value+"' AND MONTH(submissionDate) = '"+req.body.month+"') as countCommercial FROM tblsatisfaction_municipal WHERE YEAR(submissionDate) = '"+req.body.year.value+"' AND MONTH(submissionDate) = '"+req.body.month+"'";
+        database.query(countWmonth, function (err, result) {
+            if (result != undefined) {
+                countMunicipal = result[0].countMunicipal;
+                countCommercial = result[0].countCommercial;
+                countScheduled = result[0].countScheduled;
+    
+                json = {
+                    "municipal": countMunicipal,
+                    "commercial": countCommercial,
+                    "scheduled": countScheduled
+                };
+                res.json(json);
+                res.end();
+            }
+        });
+    }
 });
 
 
@@ -1064,6 +1085,15 @@ app.post('/readEnquiry', function (req, res) {
     var sql = "UPDATE tblenquiry SET readStat = 'r'";
     database.query(sql, function (err, result) {
         res.send("Enquiry Read");
+        res.end();
+    });
+});
+
+app.post('/readBinRequest', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblbinrequest SET readStat = 'r'";
+    database.query(sql, function (err, result) {
+        res.send("Binrequest Read");
         res.end();
     });
 });

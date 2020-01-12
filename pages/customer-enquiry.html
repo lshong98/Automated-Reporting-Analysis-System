@@ -17,7 +17,7 @@
                 <tbody>
                     <tr data-ng-repeat="e in enquiry | offset: (currentPage - 1) * itemsPerPageEnquiry | limitTo: itemsPerPageEnquiry track by $index">
                         <td>{{$index+1}}</td>
-                        <td>{{e.submissionDate}}</td>
+                        <td>{{e.submissionDate | date: "dd-MM-y"}}</td>
                         <td>{{e.name}}</td>
                         <td>{{e.contactNumber}}</td>
                         <td>{{e.userEmail}}</td>

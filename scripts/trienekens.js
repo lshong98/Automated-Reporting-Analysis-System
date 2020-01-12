@@ -79,6 +79,12 @@ socket.on('new enquiry', function (data) {
     }
 });
 
+socket.on('new binrequest', function (data) {
+    if (data.unread > 0) {
+        $('.binrequest').addClass("badge badge-danger").html(data.unread);
+    }
+});
+
 socket.on('read municipal', function (data) {
     if (data.unread > 0) {
         var unread = $('.satisfaction').html();
@@ -115,6 +121,10 @@ socket.on('read scheduled', function (data) {
 
 socket.on('read enquiry', function (data) {
     $('.enquiry').addClass("badge badge-danger").html(data.unread);
+});
+
+socket.on('read binrequest', function (data) {
+    $('.binrequest').addClass("badge badge-danger").html(data.unread);
 });
 
 socket.on('new complaint', function (data) {
@@ -1805,6 +1815,14 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
         }, function (error) {
             console.log(error);
         });
+        $http.post('/readBinRequest').then(function (response) {
+            console.log(response.data);
+            if (response.data == "Binrequest Read") {
+                socket.emit('binrequest read');
+            }
+        }, function (err) {
+            console.log(err);
+        });
     };
 
     $scope.updateBinRequest = function (id, status) {
@@ -2100,7 +2118,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             console.log(err);
         });
 
-        $http.get('/unreadSatisfaction').then(function (response) {
+        $http.post('/countSatisfaction', $scope.filters).then(function (response) {
             console.log(response.data);
             $scope.unreadMunicipal = response.data.municipal;
             $scope.unreadCommercial = response.data.commercial;
@@ -2320,7 +2338,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             console.log(err);
         });
 
-        $http.get('/unreadSatisfaction').then(function (response) {
+        $http.post('/countSatisfaction', $scope.filters).then(function (response) {
+            console.log(response.data);
             $scope.unreadMunicipal = response.data.municipal;
             $scope.unreadCommercial = response.data.commercial;
             $scope.unreadScheduled = response.data.scheduled;
@@ -2514,7 +2533,8 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             console.log(err);
         });
 
-        $http.get('/unreadSatisfaction').then(function (response) {
+        $http.post('/countSatisfaction', $scope.filters).then(function (response) {
+            console.log(response.data);
             $scope.unreadMunicipal = response.data.municipal;
             $scope.unreadCommercial = response.data.commercial;
             $scope.unreadScheduled = response.data.scheduled;
@@ -2750,6 +2770,8 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     });
     socket.emit('authorize request');
     socket.emit('satisfaction form');
+
+    socket.emit('binrequest');
 
     socket.emit('enquiry');
 
