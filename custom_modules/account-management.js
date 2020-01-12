@@ -65,7 +65,7 @@ app.post('/updatePassword', function (req, res) {
         thePassword = bcrypt.hashSync(req.body.password, 10);
         sql = "UPDATE tblstaff SET password = '" + thePassword + "' WHERE staffID = '" + req.body.id + "'";
         
-        f.sendForAuthorization(dt, req.body.iam, "update", "Update Account Password", '', req.body.id, "tblstaff", "\"" + sql + "\"");
+        f.sendForAuthorization(dt, req.body.iam, "update", "Update Account Password", req.body.id, "tblstaff", "\"" + sql + "\"");
         //f.logTransaction(dt, req.body.iam, "update", "Request to Update Account Password - " + req.body.id + " ", req.body.id, "tblstaff");
         f.log(dt, "Request to update password.", req.body.iam);
         res.json({"status": "success", "message": "Request pending.."});
