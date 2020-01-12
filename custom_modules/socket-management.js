@@ -222,10 +222,28 @@ io.sockets.on('connection', function (socket) {
        });
     });
 
+    socket.on('binrequest', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('new binrequest', {
+                unread: result[0].unread
+            });
+        });
+    });
+
     socket.on('enquiry read', function () {
         var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read enquiry', {
+                unread: result[0].unread
+            });
+        });
+    });
+
+    socket.on('binrequest read', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('read binrequest', {
                 unread: result[0].unread
             });
         });
