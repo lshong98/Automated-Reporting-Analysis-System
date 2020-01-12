@@ -640,24 +640,46 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
                 ($scope.normalReport).push(value);
             }
         });
-
-        $scope.filterReportList = angular.copy($scope.reportList);
+        console.log($scope.reportList);
+        
 
         $scope.searchReport = function(report) {
-            return (report.area + report.date + report.truck + report.remark + report.staffName).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+            return (report.area + report.date + report.truck + report.ton + report.remark + report.staffName).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
         }
 
+        //all reports
+        $scope.filterReportList = angular.copy($scope.reportList);
+        
         $scope.totalItems = $scope.filterReportList.length;
 
         $scope.getData = function() {
             return $filter('filter')($scope.filterReportList, $scope.searchReportFilter);
         };
 
+        
+        
+        //normal report only
+        $scope.filterNormalReportList = angular.copy($scope.normalReport);
+        $scope.totalNormalReport = $scope.filterNormalReportList.length;
+        $scope.getNormalReport = function(){
+            return $filter('filter')($scope.filterNormalReportList, $scope.searchReportFilter);
+        }
+        
+        //abnormal report
+        $scope.filterAbnormalReportList = angular.copy($scope.abnormalReport);
+        $scope.totalAbnormalReport = $scope.filterAbnormalReportList.length;
+        $scope.getAbnormalReport = function(){
+            return $filter('filter')($scope.filterAbnormalReportList, $scope.searchReportFilter);
+        }
+        
+        //filter pagination count
         $scope.$watch('searchReportFilter', function(newVal, oldVal) {
             var vm = this;
             if (oldVal !== newVal) {
                 $scope.currentPage = 1;
                 $scope.totalItems = $scope.getData().length;
+                $scope.totalNormalReport = $scope.getNormalReport().length;
+                $scope.totalNormalReport = $scope.getAbnormalReport().length;
             }
             return vm;
         }, true);
