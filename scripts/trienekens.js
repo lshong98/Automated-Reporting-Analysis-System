@@ -1728,7 +1728,7 @@ app.run(function ($rootScope) {
 });
 
 //Customer Service Pages Controller
-app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http, $window) {
+app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http, $window, $filter) {
     $scope.loggedUser = localStorage.getItem('user');
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 3; //Record number each page
@@ -2548,6 +2548,10 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     $scope.c.date = today;
     $scope.s.date = today;
 
+    $scope.m.formattedDate = $filter('date')($scope.m.date, 'yyyy-MM-dd HH:mm:ss');
+    $scope.c.formattedDate = $filter('date')($scope.c.date, 'yyyy-MM-dd HH:mm:ss');;
+    $scope.s.formattedDate = $filter('date')($scope.s.date, 'yyyy-MM-dd HH:mm:ss');;
+
     $scope.resetFormM = function () {
         $scope.m.date = today;
         $scope.m.name = '';
@@ -2593,7 +2597,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     }
 
     $scope.addFeedback = function (type) {
-        console.log(type);
+        console.log($scope.m);
         if (type == "municipal") {
             $http.post('/addMunicipal', $scope.m).then(function (response) {
                 var returnedData = response.data;

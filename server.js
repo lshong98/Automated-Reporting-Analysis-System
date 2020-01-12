@@ -1101,7 +1101,7 @@ app.post('/readBinRequest', function (req, res) {
 app.post('/addMunicipal', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_municipal(submissionDate, name, company, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.date + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_municipal(submissionDate, name, company, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -1115,7 +1115,7 @@ app.post('/addMunicipal', function (req, res) {
 app.post('/addCommercial', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_commercial(submissionDate, name, company, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('" + req.body.date + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.cleanliness + "','" + req.body.physicalCond + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_commercial(submissionDate, name, company, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.cleanliness + "','" + req.body.physicalCond + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -1129,7 +1129,7 @@ app.post('/addCommercial', function (req, res) {
 app.post('/addScheduled', function (req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_scheduled(submissionDate, name, company, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('" + req.body.date + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.healthAdh + "','" + req.body.regAdh + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_scheduled(submissionDate, name, company, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.healthAdh + "','" + req.body.regAdh + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function (err, result) {
         if (err) {
