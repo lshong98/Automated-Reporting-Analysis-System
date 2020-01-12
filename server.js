@@ -1270,21 +1270,21 @@ app.get('/getCount', function (req, res) {
     'use strict';
     var results = {};
 
-    f.waterfallQuery("SELECT COUNT(*) AS zone FROM tblzone").then(function (zone) {
+    f.waterfallQuery("SELECT COUNT(*) AS zone FROM tblzone WHERE zoneStatus = 'A'").then(function (zone) {
         results.zone = zone.zone;
-        return f.waterfallQuery("SELECT COUNT(*) AS area FROM tblarea");
+        return f.waterfallQuery("SELECT COUNT(*) AS area FROM tblarea WHERE areaStatus = 'A'");
     }).then(function (area) {
         results.area = area.area;
         return f.waterfallQuery("SELECT COUNT(*) AS acr FROM tblacr");
     }).then(function (acr) {
         results.acr = acr.acr;
-        return f.waterfallQuery("SELECT COUNT(*) AS bin FROM tblbincenter");
+        return f.waterfallQuery("SELECT COUNT(*) AS bin FROM tblbincenter WHERE binCenterStatus = 'A'");
     }).then(function (bin) {
         results.bin = bin.bin;
-        return f.waterfallQuery("SELECT COUNT(*) AS truck FROM tbltruck");
+        return f.waterfallQuery("SELECT COUNT(*) AS truck FROM tbltruck WHERE truckStatus = 'A'");
     }).then(function (truck) {
         results.truck = truck.truck;
-        return f.waterfallQuery("SELECT COUNT(*) AS staff FROM tblstaff");
+        return f.waterfallQuery("SELECT COUNT(*) AS staff FROM tblstaff WHERE staffStatus = 'A'");
     }).then(function (staff) {
         results.staff = staff.staff;
         return f.waterfallQuery("SELECT COUNT(*) AS complaint FROM tblcomplaint WHERE status != 'c'");
