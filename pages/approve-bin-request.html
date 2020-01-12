@@ -19,7 +19,7 @@
                         <td>{{pReq.name}}</td>
                         <td>{{pReq.contactNumber}}</td>
                         <td>{{pReq.type}}</td>
-                        <td>{{pReq.dateRequest}}</td>
+                        <td>{{pReq.dateRequest | date: "dd-MM-y"}}</td>
                         <td>
                             <div editable>
                                 <select name="binReqStatus" data-ng-model="pReq.status" class="form-control" data-ng-show="!showBinRequest">

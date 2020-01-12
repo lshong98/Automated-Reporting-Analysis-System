@@ -1024,6 +1024,8 @@ app.post('/NewRegister', function (req, resp) {
                     //console.log("Email sent: " + info.response);
                     database.query(sql3, function (err, res) {
                         if (err) {
+                            resp.send(err);
+                            console.log(err);
                             throw err;
                         }else{
                             //console.log("Registered");
@@ -1044,7 +1046,9 @@ app.post('/NewRegister', function (req, resp) {
                     //console.log("Email sent: " + info.response);
                     database.query(sql3, function (err, res) {
                         if (err) {
+                            resp.send(err);
                             console.log(err);
+                            throw err;
                         }else{
                             //console.log("Registered");
                             resp.send("Registered");

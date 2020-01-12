@@ -299,15 +299,15 @@ function menuItem(keyword, status) {
             }
         case "approve binrequest":
             if (status == 'A') {
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/manage-bin-request"><i class="fa fa-file"></i> Manage Bin Request</a></li>';
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/manage-bin-request"><i class="fa fa-file"></i> Manage Bin Request <span class="binrequest"></span></a></li>';
             }
         case "view feedback":
             if (status == 'A') {
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback <span class="satisfaction"></a></li>';
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback <span class="satisfaction"></span></a></li>';
             }
         case "view enquiry":
             if (status == 'A') {
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-enquiry"><i class="fa fa-file"></i> Customer Enquiry <span class="enquiry"></a></li>';
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-enquiry"><i class="fa fa-file"></i> Customer Enquiry <span class="enquiry"></span></a></li>';
             }
     }
 }
