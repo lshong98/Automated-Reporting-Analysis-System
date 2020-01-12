@@ -999,7 +999,7 @@ app.post('/NewRegister', function (req, resp) {
             text: text
         };
 
-        var sql = "SELECT MAX(userID) AS max FROM tbluser";
+        var sql = "SELECT MAX(CAST(userID as signed)) as max FROM tbluser";
         database.query(sql, function (err, res) {
             userID = res[0].max;
             userID = parseInt(userID) + 1;
