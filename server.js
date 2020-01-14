@@ -1379,6 +1379,19 @@ app.post('/getSubmitted', function (req, res) {
     });
 });
 
+app.post('/getSubmittedReportDetail', function (req, res) {
+    'use strict';
+
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, a.staffName AS staffName, tblreport.creationDateTime AS reportCreation, tbltruck.truckNum AS truckNum, b.staffName AS driverName, CONCAT(tblreport.operationTimeStart,' - ',operationTimeEnd) AS duration, tblreport.garbageAmount AS ton FROM tblarea INNER JOIN tblstaff a ON tblarea.staffID = a.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID INNER JOIN tbltruck ON tblreport.truckID = tbltruck.truckID INNER JOIN tblstaff b ON tblreport.driverID = b.staffID WHERE tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND DATE(tblreport.creationDateTime) = CURDATE()";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 app.post('/updateAreaLngLat', function (req, res) {
     'use strict';
     var sql = "UPDATE tblarea SET longitude = '" + req.body.lng + "', latitude = '" + req.body.lat + "' WHERE areaID = '" + req.body.areaCode + "'";

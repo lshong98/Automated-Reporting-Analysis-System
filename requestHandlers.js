@@ -33,6 +33,10 @@ app.get('/dashboard-officer', function (req, res) {
     'use strict';
     res.sendFile('pages/dashboard-officer.html', {root: __dirname});
 });
+app.get('/overall-report', function (req, res) {
+    'use strict';
+    res.sendFile('pages/overall-report.html', {root: __dirname});
+});
 app.get('/account-management', function (req, res) {
     'use strict';
     res.sendFile('pages/account-management.html', {root: __dirname});   

@@ -57,6 +57,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'officerController',
         controllerAs: 'officer'
     })
+    .when('/overall-report', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/overall-report');
+            }
+        },
+        templateUrl: '/overall-report',
+        controller: 'overallReportController',
+        controllerAs: 'overallReport'
+    })
     .when('/account-management', {
         resolve: {
             "check": function (routingService, $window, $location) {
@@ -83,7 +93,7 @@ app.config(function($routeProvider, $locationProvider){
             "check": function (routingService, $window, $location) {
                 return routingService.auth($window, $location, '/bin-stock');
             }
-        },
+        }, 
         templateUrl: '/bin-stock',
         controller: 'binStockController',
         controllerAs: 'binStock'

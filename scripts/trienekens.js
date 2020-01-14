@@ -3681,6 +3681,79 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
 
 });
 
+app.controller('overallReportController', function ($scope, $http, $filter, $window, storeDataService) {
+    'use strict';
+    
+    var dateobj = new Date();
+    var getday = dateobj.getDay();
+    $scope.day = "";
+    $scope.todayDate = new Date();
+
+    if (getday == 1) {
+        $scope.day = "mon";
+    } else if (getday == 2) {
+        $scope.day = "tue";
+    } else if (getday == 3) {
+        $scope.day = "wed";
+    } else if (getday == 4) {
+        $scope.day = "thu";
+    } else if (getday == 5) {
+        $scope.day = "fri";
+    } else if (getday == 6) {
+        $scope.day = "sat";
+    } else if (getday == 0) {
+        $scope.day = "sun";
+    }
+
+//    $http.post('/getTodayAreaCount', {
+//        "day": $scope.day
+//    }).then(function (response) {
+//        $scope.todayAreaCount = response.data[0].todayAreaCount;
+//    });
+//    $http.get('/getCount').then(function (response) {
+//        //console.log(response.data);
+//        var data = response.data;
+//
+//        $scope.zoneCount = data.zone;
+//        $scope.areaCount = data.area;
+//        $scope.acrCount = data.acr;
+//        $scope.binCount = data.bin;
+//        $scope.truckCount = data.truck;
+//        $scope.userCount = data.staff - 1;
+//        $scope.complaintCount = data.complaint;
+//        $scope.reportCompleteCount = data.completeReport;
+//        $scope.reportIncompleteCount = data.incompleteReport;
+//        $scope.unsubmittedCount = $scope.todayAreaCount - ($scope.reportCompleteCount + $scope.reportIncompleteCount);
+//    });
+
+    $http.post('/getUnsubmitted', {
+        "day": $scope.day
+    }).then(function (response) {
+        $scope.totalUnsubmitted = response.data.length;
+        if (response.data.length > 0) {
+            $scope.unsubmittedReport = response.data;
+        } else {
+            $scope.unsubmittedReport = [];
+        }
+    });
+    $http.post('/getSubmittedReportDetail', {
+        "day": $scope.day
+    }).then(function (response) {
+        $scope.totalSubmitted = response.data.length;
+        if (response.data.length > 0) {
+            $scope.submittedReport = response.data;
+        } else {
+            $scope.submittedReport = [];
+        }
+    });
+    
+    //count report submission
+//    $scope.totalSubmitted = $scope.submittedReport.length;
+//    $scope.totalUnsubmitted = $scope.unsubmittedReport.length;
+//    $scope.totalSubmissionLeft = angular.copy($scope.totalUnsubmitted - $scope.totalSubmitted)/;
+    
+});
+               
 app.controller('accountController', function ($scope, $http, $filter, $window, storeDataService) {
     'use strict';
 
