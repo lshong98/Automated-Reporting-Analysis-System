@@ -378,53 +378,13 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 	//console.log(data.BinRequestICLost);
 
 	if (typeof data.BinRequestICLost !== 'undefined') {
-		sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
-		console.log(sql);
 		console.log(req.rawBody);
-		//console.log(data);
-		fs.writeFile(__dirname + '/../images/BinReqImg/BinRequestICLost_' + data.cID + '.jpg', Buffer.from(data.BinRequestICLost, 'base64'), function (err) {
-			if (err) {
-				console.log(err);
-			} else {
-				database.query(sql, function (err, res) {
-					if (!err) {
-						resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-					} else {
-						resp.send("Please Try Again");
-					}
-				});
-				console.log("success");
-			}
-		});
-	} else if (typeof data.BinRequestBin !== 'undefined') {
-		sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
-		console.log(sql);
-		console.log(req.rawBody);
-		//console.log(data);
-		fs.writeFile(__dirname + '/../images/BinReqImg/BinRequestBin_' + data.cID + '.jpg', Buffer.from(data.BinRequestBin, 'base64'), function (err) {
-			if (err) {
-				console.log(err);
-			} else {
-				database.query(sql, function (err, res) {
-					if (!err) {
-						resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-					} else {
-						resp.send("Please Try Again");
-					}
-				});
-				console.log("success");
-			}
-		});
-	} else {
-		//console.log(sql);
-		console.log(req.rawBody);
-
 		var async = require('async');
-		if (data.BinRequestTrading != "") {
-            sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
-			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
+		if (typeof data.BinRequestAssessment !== 'undefined') {
+            sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='BinReqImg/BinRequestAssessment_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
+			async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
-				fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+				fs.writeFile(__dirname + '/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
 					if (err) {
 						console.log(err);
 					} else {
@@ -449,10 +409,91 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 				}
 			});
 		} else {
-            sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+            sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='BinReqImg/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+			async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility"], function (file, callback) {
+
+				fs.writeFile(__dirname + '/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log(file + '.json was updated.');
+					}
+
+					callback();
+				});
+
+			}, function (err) {
+				if (err) {
+					console.log(err);
+				} else {
+					database.query(sql, function (err, res) {
+						if (!err) {
+							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+						} else {
+							resp.send("Please Try Again");
+						}
+					});
+					console.log("success");
+				}
+			});
+		}
+	} else if (typeof data.BinRequestBin !== 'undefined') {
+		sql = "UPDATE tblbinrequest SET binImg ='BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+		console.log(sql);
+		console.log(req.rawBody);
+		//console.log(data);
+		fs.writeFile(__dirname + '/BinReqImg/BinRequestBin_' + data.cID + '.jpg', Buffer.from(data.BinRequestBin, 'base64'), function (err) {
+			if (err) {
+				console.log(err);
+			} else {
+				database.query(sql, function (err, res) {
+					if (!err) {
+						resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+					} else {
+						resp.send("Please Try Again");
+					}
+				});
+				console.log("success");
+			}
+		});
+	} else {
+		//console.log(sql);
+		console.log(req.rawBody);
+
+		var async = require('async');
+		if (typeof data.BinRequestTrading !== 'undefined') {
+            sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
+			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
+
+				fs.writeFile(__dirname + '/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log(file + '.json was updated.');
+					}
+
+					callback();
+				});
+
+			}, function (err) {
+				if (err) {
+					console.log(err);
+				} else {
+					database.query(sql, function (err, res) {
+						if (!err) {
+							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+						} else {
+							resp.send("Please Try Again");
+						}
+					});
+					console.log("success");
+				}
+			});
+		} else {
+            sql = "UPDATE tblbinrequest SET icImg ='BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
 			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
-				fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+				fs.writeFile(__dirname + '/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
 					if (err) {
 						console.log(err);
 					} else {
