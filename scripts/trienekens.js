@@ -2784,6 +2784,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     $http.post('/loadMenu', {
         "position": position
     }).then(function (response) {
+        console.log(response.data);
         $('ul.menu__level').html(response.data.content);
     });
 });
@@ -8176,7 +8177,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $scope.detailObj = {};
 
     $http.post('/getComplaintOfficerDetail', $scope.coIDobj).then(function (response) {
-        $scope.detailObj = response.data[0];
+        $scope.detailObj = response.data.data[0];
         $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
 

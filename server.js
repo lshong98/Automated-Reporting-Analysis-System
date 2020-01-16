@@ -1229,9 +1229,19 @@ app.post('/loadMenu', function (req, res) {
     sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
 
     database.query(sql, function (err, result) {
+        
+
+//        result.forEach(function (key, value) {
+//            first_text = (key.mgmtName).split(" ")[0];
+//
+//            if(first_text === "dashboard"){
+//                content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
+//            }
+//        });
+      
         result.forEach(function (key, value) {
             first_text = (key.mgmtName).split(" ")[0];
-
+            
             if (first_text === "view" || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
                 // || (key.mgmtName).indexOf("lgview") !== -1 || (key.mgmtName).indexOf("bdview") !== -1
                 content += f.menuItem(key.mgmtName, key.status);

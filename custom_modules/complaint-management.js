@@ -162,7 +162,10 @@ app.post('/getComplaintOfficerDetail', function (req, res) {
         if (err) {
             throw err;
         }
-        res.json({"status": "success"});
+        res.json({
+            "data":result,
+            "status": "success"
+        });
     });
 });
 
