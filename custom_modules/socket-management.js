@@ -166,6 +166,55 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
+    //to update notification badge everytime app user submits form
+    emitter.on('satisfaction form', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+        var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+        var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
+        var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
+        database.query(sql, function (err, result) {
+            municipalUnread = result[0].unread;
+            database.query(sql2, function (err, result) {
+                commercialUnread = result[0].unread;
+                database.query(sql3, function (err, result) {
+                    scheduledUnread = result[0].unread;
+                    totalUnread = parseInt(municipalUnread, 10) + parseInt(commercialUnread, 10) + parseInt(scheduledUnread, 10);
+                    io.sockets.in(roomManager).emit('new satisfaction', {
+                        unread: totalUnread
+                    });
+                });
+            });
+        });
+    });
+
+    emitter.on('enquiry', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('new enquiry', {
+                unread: result[0].unread
+            });
+        });
+     });
+ 
+     emitter.on('binrequest', function () {
+         var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
+         database.query(sql, function (err, result) {
+             io.sockets.in(roomManager).emit('new binrequest', {
+                 unread: result[0].unread
+             });
+         });
+     });
+
+    emitter.on('complaint', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('new complaint', {
+                unread: result[0].unread
+            });
+        });
+    });
+
+    //to keep the value of the notification if it's unread when officer logs in
     socket.on('satisfaction form', function () {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
         var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
@@ -186,6 +235,34 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
+    socket.on('enquiry', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('new enquiry', {
+                unread: result[0].unread
+            });
+        });
+     });
+ 
+     socket.on('binrequest', function () {
+         var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
+         database.query(sql, function (err, result) {
+             io.sockets.in(roomManager).emit('new binrequest', {
+                 unread: result[0].unread
+             });
+         });
+     });
+
+     socket.on('complaint', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('new complaint', {
+                unread: result[0].unread
+            });
+        });
+    });
+
+    //Update notif badge count after it is read
     socket.on('municipal satisfaction', function () {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
@@ -208,24 +285,6 @@ io.sockets.on('connection', function (socket) {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read scheduled', {
-                unread: result[0].unread
-            });
-        });
-    });
-
-    socket.on('enquiry', function () {
-       var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
-       database.query(sql, function (err, result) {
-           io.sockets.in(roomManager).emit('new enquiry', {
-               unread: result[0].unread
-           });
-       });
-    });
-
-    socket.on('binrequest', function () {
-        var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
-        database.query(sql, function (err, result) {
-            io.sockets.in(roomManager).emit('new binrequest', {
                 unread: result[0].unread
             });
         });
@@ -336,16 +395,6 @@ io.sockets.on('connection', function (socket) {
 //        users.push(socket.username);
 //        updateUsernames();
 //    });
-    
-    //get number of new complaints
-    socket.on('complaint', function () {
-        var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
-        database.query(sql, function (err, result) {
-            io.sockets.in(roomManager).emit('new complaint', {
-                unread: result[0].unread
-            });
-        });
-    });
     
     emitter.on('customer to staff message', function (complaintID) {
         var sql = "SELECT content AS content, sender AS sender, recipient AS recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date FROM tblchat WHERE complaintID = '" + complaintID + "' ORDER BY creationDateTime DESC LIMIT 0, 1";

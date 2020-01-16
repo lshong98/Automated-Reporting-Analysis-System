@@ -9,6 +9,8 @@
 // var database = require('./custom_modules/database-management');
 
 var variable = require('../variable');
+var EventEmitter = require('events');
+var emitter = new EventEmitter();
 var emitter = variable.emitter;
 var express = variable.express;
 var app = express();
@@ -21,6 +23,7 @@ var nodemailer = variable.nodemailer;
 var path = variable.path;
 var fs = variable.fs;
 var io = variable.io;
+//var socket = io.connect();
 
 // var mysql = require('mysql');
 // var bcrypt = require('bcryptjs');
@@ -357,6 +360,7 @@ app.post('/binRequest', function (req, resp) {
                         database.query(sqlRequestID, function (err, res) {
                             reqID = res[0].max;
                             resp.send("Submit Request Successfully " + reqID);
+                            emitter.emit('binrequest');
                         });
                     } else {
                         resp.send("Failed to Submit Request"+err);
@@ -623,6 +627,7 @@ app.post('/complaint', function (req, resp) {
                     }
                     database.query(sql, function (err, res) {
                         if (!err) {
+                            emitter.emit('complaint');
                             resp.send("Complaint Submitted for Complaint ID " + complaintID);
                         } else {
                             resp.send("Failed to Submit");
@@ -689,6 +694,7 @@ app.post('/satisfaction', function (req, resp) {
                 database.query(sql, function (err, res) 
 				{
                     if (!err) {
+                        emitter.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
                     } else {
                         resp.send("Failed to Submit");
@@ -731,6 +737,7 @@ app.post('/enquiry', function (req, resp) {
                 database.query(sql, function (err, res) 
 				{
                     if (!err) {
+                        emitter.emit('enquiry');
                         resp.send("Enquiry Submitted");
                     } else {
                         resp.send("Failed to Submit");
