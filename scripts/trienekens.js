@@ -2671,6 +2671,7 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             'utilityImg': request[0].utilityImg,
             'assessmentImg': request[0].assessmentImg,
             'tradingImg': request[0].tradingImg,
+            'policeImg': request[0].policeImg,
             'reqDate': request[0].dateRequest,
             'reqID': request[0].reqID
         };
