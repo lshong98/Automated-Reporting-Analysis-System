@@ -133,6 +133,10 @@ socket.on('new complaint', function (data) {
     }
 });
 
+socket.on('read complaint', function (data) {
+    $('.complaint').addClass("badge badge-danger").html(data.unread);
+});
+
 socket.on('receive report notification', function (data) {
     var content = data.name + ' have submitted a new report ' + data.id;
     lobi_notify('info', 'Daily Report', content, data.avatar);
@@ -421,7 +425,8 @@ app.service('storeDataService', function () {
                 "view": 'I',
                 "edit": 'I',
                 "create": 'I',
-                "export": 'I'
+                "export": 'I',
+                "check": 'I'
             },
             "delivery": {
                 "create": 'I',
@@ -2671,6 +2676,7 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             'utilityImg': request[0].utilityImg,
             'assessmentImg': request[0].assessmentImg,
             'tradingImg': request[0].tradingImg,
+            'policeImg': request[0].policeImg,
             'reqDate': request[0].dateRequest,
             'reqID': request[0].reqID
         };
@@ -2753,6 +2759,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     }
 
     $http.post('/getAllAuth', $scope.navigation).then(function (response) {
+
         $.each(response.data, function (index, value) {
             $.each($scope.show, function (bigKey, bigValue) {
                 $.each(bigValue, function (smallKey, smallValue) {
@@ -2784,6 +2791,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     $http.post('/loadMenu', {
         "position": position
     }).then(function (response) {
+        console.log(response.data);
         $('ul.menu__level').html(response.data.content);
     });
 });
@@ -4386,7 +4394,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "view": 'I',
             "edit": 'I',
             "create": 'I',
-            "export": 'I'
+            "export": 'I',
+            "check": 'I'
         },
         "delivery": {
             "view": 'I',
@@ -4644,7 +4653,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'A',
                             "edit": 'A',
                             "create": 'A',
-                            "export": 'A'
+                            "export": 'A',
+                            "check": 'A'
                         },
                         "delivery": {
                             "view": 'A',
@@ -4814,7 +4824,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'I',
                             "edit": 'I',
                             "create": 'I',
-                            "export": 'I'
+                            "export": 'I',
+                            "check": 'I'
                         },
                         "delivery": {
                             "view": 'I',
@@ -7525,6 +7536,18 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-primary': c.status == 'Confirmation', 'badge badge-success': c.status == 'Done'}";
     });
 
+    $scope.readComplaint = function(){
+        console.log('hello read complaint');
+        $http.post('/readComplaint').then(function (response) {
+            console.log(response.data);
+            if (response.data == "Complaint Read") {
+                socket.emit('complaint read');
+            }
+        }, function (err) {
+            console.log(err);
+        });
+    };
+
     $scope.complaintDetail = function (complaintCode) {
         window.location.href = '#/complaint-detail/' + complaintCode;
 
@@ -8185,7 +8208,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $scope.detailObj = {};
 
     $http.post('/getComplaintOfficerDetail', $scope.coIDobj).then(function (response) {
-        $scope.detailObj = response.data[0];
+        $scope.detailObj = response.data.data[0];
         $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
 

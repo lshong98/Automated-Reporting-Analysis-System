@@ -188,6 +188,17 @@
                     </a>
                     <p data-ng-show="reqDetail.tradingImg == '' || reqDetail.tradingImg == null">No image attached</p>
                 </div>
+                <div class="col-md-6">
+                    <h6>Police Report</h6>
+                    <!-- <a href="../images/{{reqDetail.tradingImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="../images/{{reqDetail.tradingImg}}" data-ng-show="reqDetail.tradingImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.tradingImg == '' || reqDetail.tradingImg == null">No image attached</p> -->
+                    <a href="{{reqDetail.policeImg}}" data-fancybox data-width="2048">
+                        <img data-ng-src="{{reqDetail.policeImg}}" data-ng-show="reqDetail.policeImg != null">
+                    </a>
+                    <p data-ng-show="reqDetail.policeImg == '' || reqDetail.policeImg == null">No image attached</p>
+                </div>
             </div>
             <br /><br />
         </div>

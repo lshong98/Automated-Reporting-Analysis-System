@@ -9,6 +9,8 @@
 // var database = require('./custom_modules/database-management');
 
 var variable = require('../variable');
+var EventEmitter = require('events');
+var emitter = new EventEmitter();
 var emitter = variable.emitter;
 var express = variable.express;
 var app = express();
@@ -21,6 +23,7 @@ var nodemailer = variable.nodemailer;
 var path = variable.path;
 var fs = variable.fs;
 var io = variable.io;
+//var socket = io.connect();
 
 // var mysql = require('mysql');
 // var bcrypt = require('bcryptjs');
@@ -325,8 +328,7 @@ app.post('/insertNotif', function (req, resp) {
 app.post('/binRequest', function (req, resp) {
     'use strict';
     var data;
-    var userID, name, contactNumber, companyName;
-    var date = dateTime.create().format('Y-m-d');
+    var userID, name, contactNumber, companyName, date;
 	var reqID = 0;
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
@@ -334,6 +336,7 @@ app.post('/binRequest', function (req, resp) {
 
     req.addListener('end', function () {
         var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
+        date = data.date;
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
@@ -346,9 +349,9 @@ app.post('/binRequest', function (req, resp) {
                 }
                 console.log("user id: " + userID);
                 if(data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != ""){
-                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status) VALUES('" + userID + "','" + date + "','" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "')";
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "','" + date + "','" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
                 }else{
-                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status) VALUES('" + userID + "','" + date + "','" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "')";
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "','" + date + "','" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
                 }
                 
                 database.query(insertSql, function (err, res) {
@@ -357,6 +360,7 @@ app.post('/binRequest', function (req, resp) {
                         database.query(sqlRequestID, function (err, res) {
                             reqID = res[0].max;
                             resp.send("Submit Request Successfully " + reqID);
+                            emitter.emit('binrequest');
                         });
                     } else {
                         resp.send("Failed to Submit Request"+err);
@@ -378,24 +382,65 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 	//console.log(data.BinRequestICLost);
 
 	if (typeof data.BinRequestICLost !== 'undefined') {
-		sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
-		console.log(sql);
 		console.log(req.rawBody);
-		//console.log(data);
-		fs.writeFile(__dirname + '/../images/BinReqImg/BinRequestICLost_' + data.cID + '.jpg', Buffer.from(data.BinRequestICLost, 'base64'), function (err) {
-			if (err) {
-				console.log(err);
-			} else {
-				database.query(sql, function (err, res) {
-					if (!err) {
-						resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+		var async = require('async');
+		if (typeof data.BinRequestAssessment !== 'undefined') {
+            sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
+			async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
+
+				fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+					if (err) {
+						console.log(err);
 					} else {
-						resp.send("Please Try Again");
+						console.log(file + '.json was updated.');
 					}
+
+					callback();
 				});
-				console.log("success");
-			}
-		});
+
+			}, function (err) {
+				if (err) {
+					console.log(err);
+				} else {
+					database.query(sql, function (err, res) {
+						if (!err) {
+							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+						} else {
+							resp.send("Please Try Again");
+						}
+					});
+					console.log("success");
+				}
+			});
+		} else {
+            sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+			async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility"], function (file, callback) {
+
+				fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log(file + '.json was updated.');
+					}
+
+					callback();
+				});
+
+			}, function (err) {
+				if (err) {
+					console.log(err);
+				} else {
+					database.query(sql, function (err, res) {
+						if (!err) {
+							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+						} else {
+							resp.send("Please Try Again");
+						}
+					});
+					console.log("success");
+				}
+			});
+		}
 	} else if (typeof data.BinRequestBin !== 'undefined') {
 		sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
 		console.log(sql);
@@ -420,7 +465,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 		console.log(req.rawBody);
 
 		var async = require('async');
-		if (data.BinRequestTrading != "") {
+		if (typeof data.BinRequestTrading !== 'undefined') {
             sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
 			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
 
@@ -582,6 +627,7 @@ app.post('/complaint', function (req, resp) {
                     }
                     database.query(sql, function (err, res) {
                         if (!err) {
+                            emitter.emit('complaint');
                             resp.send("Complaint Submitted for Complaint ID " + complaintID);
                         } else {
                             resp.send("Failed to Submit");
@@ -648,6 +694,7 @@ app.post('/satisfaction', function (req, resp) {
                 database.query(sql, function (err, res) 
 				{
                     if (!err) {
+                        emitter.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
                     } else {
                         resp.send("Failed to Submit");
@@ -690,6 +737,7 @@ app.post('/enquiry', function (req, resp) {
                 database.query(sql, function (err, res) 
 				{
                     if (!err) {
+                        emitter.emit('enquiry');
                         resp.send("Enquiry Submitted");
                     } else {
                         resp.send("Failed to Submit");

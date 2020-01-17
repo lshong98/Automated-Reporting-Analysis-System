@@ -107,7 +107,7 @@ app.post('/getReport', function (req, res) {
         if (err) {
             throw err;
         }
-        if(req.body.position == "Manager"){
+        if(req.body.check == "A"){
             var updateRead = "UPDATE tblreport SET readStatus = 'C' WHERE reportID = '" + req.body.reportID + "'";
 
             database.query(updateRead, function(err2, result2){

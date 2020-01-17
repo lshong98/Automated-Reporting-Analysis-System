@@ -753,7 +753,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
 
     $scope.report = {
         "reportID": $routeParams.reportCode,
-        "position" : position
+        "check": $scope.show.check
     };
     $scope.reportID = $routeParams.reportCode;
 
