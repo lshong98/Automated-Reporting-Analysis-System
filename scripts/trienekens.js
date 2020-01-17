@@ -133,6 +133,10 @@ socket.on('new complaint', function (data) {
     }
 });
 
+socket.on('read complaint', function (data) {
+    $('.complaint').addClass("badge badge-danger").html(data.unread);
+});
+
 socket.on('receive report notification', function (data) {
     var content = data.name + ' have submitted a new report ' + data.id;
     lobi_notify('info', 'Daily Report', content, data.avatar);
@@ -7522,6 +7526,18 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
         $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-primary': c.status == 'Confirmation', 'badge badge-success': c.status == 'Done'}";
     });
+
+    $scope.readComplaint = function(){
+        console.log('hello read complaint');
+        $http.post('/readComplaint').then(function (response) {
+            console.log(response.data);
+            if (response.data == "Complaint Read") {
+                socket.emit('complaint read');
+            }
+        }, function (err) {
+            console.log(err);
+        });
+    };
 
     $scope.complaintDetail = function (complaintCode) {
         window.location.href = '#/complaint-detail/' + complaintCode;
