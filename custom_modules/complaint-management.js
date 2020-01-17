@@ -59,6 +59,17 @@ app.get('/getComplaintLoc', function (req, res) {
         res.json(result);
     });
 });
+
+//read complaint
+app.post('/readComplaint', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblcomplaint SET readStat = 'r'";
+    database.query(sql, function (err, result) {
+        res.send("Complaint Read");
+        res.end();
+    });
+});
+
 //get complaint detail by id
 app.post('/getComplaintDetail', function (req, res) {
     'use strict';

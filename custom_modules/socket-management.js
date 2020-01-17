@@ -307,6 +307,15 @@ io.sockets.on('connection', function (socket) {
             });
         });
     });
+
+    socket.on('complaint read', function () {
+        var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            io.sockets.in(roomManager).emit('read complaint', {
+                unread: result[0].unread
+            });
+        });
+    });
     
     socket.on('authorize form request', function () {
         var sql = "SELECT COUNT(*) AS row FROM tblformauthorization";
