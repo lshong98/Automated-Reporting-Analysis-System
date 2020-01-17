@@ -4280,6 +4280,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
     $scope.showCheckBtn = true;
     $scope.checkall = false;
     $scope.auth = {
+        "managerDashboard": {
+            "show": 'I',
+        },
         "account": {
             "create": 'I',
             "edit": 'I',
@@ -4533,6 +4536,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                 $scope.showCheckBtn = true;
                 if (response.data.status == "success") {
                     $scope.auth = {
+                        "managerDashboard": {
+                            "show": 'A'
+                        },
                         "account": {
                             "create": 'A',
                             "edit": 'A',
@@ -4702,6 +4708,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                 $scope.showCheckBtn = true;
                 if (response.data.status == "success") {
                     $scope.auth = {
+                        "managerDashboard":{
+                            "show": 'I'
+                        },
                         "account": {
                             "create": 'I',
                             "edit": 'I',

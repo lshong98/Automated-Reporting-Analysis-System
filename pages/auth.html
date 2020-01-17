@@ -108,7 +108,24 @@
         <label data-ng-show="showCheckBtn"><input type="checkbox" data-ng-click="checkAllAuth()"> All</label>
     </div>
 </div>
-
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Manager Dashboard</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Show Dashboard
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.managerDashboard.show"
+                        data-ng-change="changeValue(auth.managerDashboard.show, 'show managerDashboard');"
+                        data-ng-true-value="'A'" data-ng-false-value="'I'"/>
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-6">
         <div class="card">

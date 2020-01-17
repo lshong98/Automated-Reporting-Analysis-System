@@ -205,6 +205,10 @@ function sendForAuthorization(date, staffId, action, description, rowID, tblName
 
 function menuItem(keyword, status) {
     switch (keyword) {
+        case "show managerDashboard":
+            if (status == 'A') {
+                return '<li class="menu__item" data-ng-show="show.managerDashboard.view == \'A\'" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
+            }
         case "view account":
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.account.view == \'A\'" role="menuitem"><a class="menu__link" href="#/account-management"><i class="fa fa-users"></i> Account Management</a></li>';
