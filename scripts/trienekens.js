@@ -421,7 +421,8 @@ app.service('storeDataService', function () {
                 "view": 'I',
                 "edit": 'I',
                 "create": 'I',
-                "export": 'I'
+                "export": 'I',
+                "check": 'I'
             },
             "delivery": {
                 "create": 'I',
@@ -2754,6 +2755,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     }
 
     $http.post('/getAllAuth', $scope.navigation).then(function (response) {
+
         $.each(response.data, function (index, value) {
             $.each($scope.show, function (bigKey, bigValue) {
                 $.each(bigValue, function (smallKey, smallValue) {
@@ -4385,7 +4387,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "view": 'I',
             "edit": 'I',
             "create": 'I',
-            "export": 'I'
+            "export": 'I',
+            "check": 'I'
         },
         "delivery": {
             "view": 'I',
@@ -4640,7 +4643,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'A',
                             "edit": 'A',
                             "create": 'A',
-                            "export": 'A'
+                            "export": 'A',
+                            "check": 'A'
                         },
                         "delivery": {
                             "view": 'A',
@@ -4807,7 +4811,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'I',
                             "edit": 'I',
                             "create": 'I',
-                            "export": 'I'
+                            "export": 'I',
+                            "check": 'I'
                         },
                         "delivery": {
                             "view": 'I',
