@@ -150,7 +150,7 @@ emitter.on('createTable', function () {
 emitter.on('defaultUser', function () {
     'use strict';
     
-    var management_sql = "INSERT INTO `tblmanagement` VALUES (1,'create account'),(2,'edit account'),(3,'view account'),(4,'view role'),(5,'create truck'),(6,'edit truck'),(7,'view truck'),(8,'create zone'),(9,'edit zone'),(10,'view zone'),(11,'create area'),(12,'edit area'),(13,'view area'),(14,'add collection'),(15,'edit collection'),(16,'create bin'),(17,'edit bin'),(18,'view bin'),(19,'create acr'),(20,'edit acr'),(21,'view acr'),(22,'create database'),(23,'edit database'),(24,'view database'),(25,'edit inventory'),(26,'view inventory'),(27,'view authorization'),(28,'view formAuthorization'),(29,'view complaintlist'),(30,'view transactionLog'),(31,'create reporting'),(32,'edit reporting'),(33,'view reporting'),(34,'export reporting'),(35,'create dcsDetails'),(36,'edit dcsDetails'),(37,'view dcsDetails'),(38,'create delivery'),(39,'edit delivery'),(40,'view delivery'),(41,'create bdafDetails'),(42,'edit bdafDetails'),(43,'view bdafDetails'),(44,'create damagedlost'),(45,'edit damagedlost'),(46,'view damagedlost'),(47,'create dbdDetails'),(48,'edit dbdDetails'),(49,'view dbdDetails'),(50,'create blostDetails'),(51,'edit blostDetails'),(52,'view blostDetails'),(53,'upload banner'),(55,'send notif'),(56,'approve binrequest'),(57,'view feedback'),(58,'lgview acr'),(59,'bdview acr'),(60,'view damagedBin'),(61,'view lostBin'),(62,'create damagedBin'),(63,'create lostBin'),(64,'edit damagedBin'),(65,'edit lostBin'),(66,'create complaintofficer'),(67,'view complaintofficer'),(68,'edit complaintofficer'),(69,'checkView formAuthorization'),(70,'verifyView formAuthorization'),(71,'view enquiry'),(72,'checkView bdafDetails'),(73,'verifyView bdafDetails'),(74,'checkView dcsDetails'),(75,'verifyView dcsDetails'),(76,'checkView dbrDetails'),(77,'verifyView dbrDetails'),(78,'checkView dbdDetails'),(79,'verifyView dbdDetails'),(80,'checkView blostDetails'),(81,'create dbrDetails'),(82,'edit dbrDetails'),(83,'view dbrDetails'),(84,'view newBusiness'),(85,'create newBusiness'),(86,'edit newBusiness'),(87,'view binStock'),(88,'create binStock'),(89,'edit binStock'),(90,'check reporting'),(91, 'show managerDashboard')",
+    var management_sql = "INSERT INTO tblmanagement (mgmtName) VALUES ('create account'), ('edit account'), ('view account'), ('view role'), ('create truck'), ('edit truck'), ('view truck'), ('create zone'), ('edit zone'), ('view zone'), ('create area'), ('edit area'), ('view area'), ('add collection'), ('edit collection'), ('create bin'), ('edit bin'), ('view bin'), ('create acr'), ('edit acr'), ('view acr'), ('create database'), ('edit database'), ('view database'), ('edit inventory'), ('view inventory'), ('view authorization'), ('view formAuthorization'), ('view complaintlist'), ('view transactionLog'), ('create reporting'), ('edit reporting'), ('view reporting'), ('export reporting'), ('create dcsDetails'), ('edit dcsDetails'), ('view dcsDetails'), ('create delivery'), ('edit delivery'), ('view delivery'), ('create bdafDetails'), ('edit bdafDetails'), ('view bdafDetails'), ('create damagedlost'), ('edit damagedlost'), ('view damagedlost'), ('create dbdDetails'), ('edit dbdDetails'), ('view dbdDetails'), ('create blostDetails'), ('edit blostDetails'), ('view blostDetails'), ('upload banner'), ('send notif'), ('approve binrequest'), ('view feedback'), ('lgview acr'), ('bdview acr'), ('view damagedBin'), ('view lostBin'), ('create damagedBin'), ('create lostBin'), ('edit damagedBin'), ('edit lostBin'), ('create complaintofficer'), ('view complaintofficer'), ('edit complaintofficer'), ('checkView formAuthorization'), ('verifyView formAuthorization'), ('view enquiry'), ('checkView bdafDetails'), ('verifyView bdafDetails'), ('checkView dcsDetails'), ('verifyView dcsDetails'), ('checkView dbrDetails'), ('verifyView dbrDetails'), ('checkView dbdDetails'), ('verifyView dbdDetails'), ('checkView blostDetails'), ('create dbrDetails'), ('edit dbrDetails'), ('view dbrDetails'), ('view newBusiness'), ('create newBusiness'), ('edit newBusiness'), ('view binStock'), ('create binStock'), ('edit binStock'), ('check reporting'), ('show managerDashboard')",
         i,
         j,
         management_row = "EXPLAIN SELECT COUNT(*) FROM tblmanagement",
@@ -175,14 +175,14 @@ emitter.on('defaultUser', function () {
         }
     });
     
-    admin_sql = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleID + "', 'ADMINISTRATOR', '" + formatted + "', 'A')";
+    admin_sql = "INSERT INTO tblposition (positionID, positionName, creationDateTime, positionStatus) VALUES ('" + roleID + "', 'DEVELOPER', '" + formatted + "', 'A')";
     
     db.query(admin_sql, function (err, result) {
         if (err) {
             throw err;
         } else {
-            var thePassword = bcrypt.hashSync('adminacc123', 10);
-            admin_staff = "INSERT INTO tblstaff (staffID, username, password, positionID, creationDateTime, staffStatus) VALUE ('" + staffID + "', 'admin@trienekens.com', '" + thePassword + "', '" + roleID + "', '" + formatted + "', 'A')";
+            var thePassword = bcrypt.hashSync('trienekens_developer', 10);
+            admin_staff = "INSERT INTO tblstaff (staffID, username, password, positionID, creationDateTime, staffStatus) VALUE ('" + staffID + "', 'dteam@trienekens.com', '" + thePassword + "', '" + roleID + "', '" + formatted + "', 'A')";
             
             db.query(admin_staff, function (err, result) {
                 if (err) {
@@ -200,7 +200,6 @@ emitter.on('defaultUser', function () {
                                     access_sql += ',';
                                 }
                             }
-                            
                             db.query(access_sql, function (err, result) {
                                 if (err) {
                                     throw err;

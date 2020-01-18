@@ -56,7 +56,7 @@ app.get('/getTruckList', function (req, res) {
 app.get('/getAllTruck', function (req, res) {
     'use strict';
     
-    var sql = "SELECT truckID AS id, transporter, truckTon AS ton, truckNum AS no, truckExpiryStatus AS roadtax, (CASE WHEN truckStatus = 'A' THEN 'ACTIVE' WHEN truckStatus = 'I' THEN 'INACTIVE' END) AS status FROM tbltruck";
+    var sql = "SELECT truckID AS id, transporter, truckTon AS ton, truckNum AS no, truckExpiryStatus AS roadtax, (CASE WHEN truckStatus = 'A' THEN 'ACTIVE' WHEN truckStatus = 'I' THEN 'INACTIVE' END) AS status FROM tbltruck ORDER BY truckID DESC";
     
     database.query(sql, function (err, result) {
         if (err) {

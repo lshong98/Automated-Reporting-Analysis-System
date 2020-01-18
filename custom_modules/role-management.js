@@ -38,7 +38,7 @@ app.post('/addRole', function (req, res) {
 app.get('/getAllRole', function (req, res) {
     'use strict';
     
-    var sql = "SELECT positionID AS id, positionName AS name, (CASE WHEN positionStatus = 'A' THEN 'ACTIVE' WHEN positionStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblposition WHERE positionName != 'ADMINISTRATOR'";
+    var sql = "SELECT positionID AS id, positionName AS name, (CASE WHEN positionStatus = 'A' THEN 'ACTIVE' WHEN positionStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblposition WHERE positionName != 'DEVELOPER'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -109,7 +109,7 @@ app.post('/setAllAuth', function (req, res) {
 app.get('/getPositionList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT positionID AS id, positionName AS name FROM tblposition WHERE positionStatus = 'A' AND positionName != 'ADMINISTRATOR'";
+    var sql = "SELECT positionID AS id, positionName AS name FROM tblposition WHERE positionStatus = 'A' AND positionName != 'DEVELOPER'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

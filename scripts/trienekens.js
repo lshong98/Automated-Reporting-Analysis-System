@@ -50,7 +50,7 @@ socket.on('connect', function () {
 
     //    socket.emit('room', window.sessionStorage.getItem('owner'));
 
-    if (window.sessionStorage.getItem('position') == "Manager" || window.sessionStorage.getItem('position') == "Administrator") {
+    if (window.sessionStorage.getItem('position') == "Manager" || window.sessionStorage.getItem('position') == "Administrator" || window.sessionStorage.getItem('position') == "Developer") {
         socket.emit('room', "manager");
     }
 });
@@ -2752,7 +2752,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
 
     $scope.show = angular.copy(storeDataService.show);
 
-    if (position == "Manager" || position == "Administrator") {
+    if (position == "Manager" || position == "Administrator" || position == "Developer") {
         $scope.navigation["manager"] = true;
     } else if (position == "Reporting Officer") {
         $scope.navigation["officer"] = true;

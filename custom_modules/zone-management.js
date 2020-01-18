@@ -38,7 +38,7 @@ app.get('/getZoneList', function (req, res) {
 // Load all zone in management
 app.get('/getAllZone', function (req, res) {
     'use strict';
-    var sql = "SELECT zoneID AS id, zoneCode AS code, zoneName AS name, (CASE WHEN zoneStatus = 'A' THEN 'ACTIVE' WHEN zoneStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblzone";
+    var sql = "SELECT zoneID AS id, zoneCode AS code, zoneName AS name, (CASE WHEN zoneStatus = 'A' THEN 'ACTIVE' WHEN zoneStatus = 'I' THEN 'INACTIVE' END) AS status FROM tblzone ORDER BY zoneID DESC";
     
     database.query(sql, function (err, result) {
         if (err) {

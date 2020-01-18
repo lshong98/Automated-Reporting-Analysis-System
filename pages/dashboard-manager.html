@@ -247,6 +247,7 @@
 </div>
 -->
 <br/>
+
 <div class="row">
     <div class="col-md-6" style="overflow-y: scroll; height: 500px">
         <table class="table table-bordered">
@@ -269,12 +270,14 @@
             <thead>
                 <tr>
                     <th>Submitted Report</th>
+                    <th>Submission Time</th>
                     <th>Officer</th>
                 </tr>
             </thead>
             <tbody data-ng-repeat = "s in submitted">
                 <tr>
                     <td>{{s.area}}</td>
+                    <td>{{s.time}}</td>
                     <td>{{s.staff}}</td>
                 </tr>
             </tbody>
