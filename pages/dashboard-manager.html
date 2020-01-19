@@ -254,12 +254,14 @@
             <thead>
                 <tr>
                     <th>Unsubmitted Report</th>
+                    <th>Collection Date</th>
                     <th>Officer</th>
                 </tr>
             </thead>
             <tbody data-ng-repeat = "u in unsubmitted">
                 <tr >
                     <td>{{u.area}}</td>
+                    <td data-ng-bind="u.date"></td>
                     <td>{{u.staff}}</td>
                 </tr>
             </tbody>
