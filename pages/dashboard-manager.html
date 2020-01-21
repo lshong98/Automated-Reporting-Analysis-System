@@ -252,17 +252,20 @@
     <div class="col-md-6" style="overflow-y: scroll; height: 500px">
         <table class="table table-bordered">
             <thead>
+                <tr class="text-center">
+                    <th colspan="3">Un-submitted Report</th>
+                </tr>
                 <tr>
-                    <th>Unsubmitted Report</th>
+                    <th>Area</th>
                     <th>Collection Date</th>
                     <th>Officer</th>
                 </tr>
             </thead>
             <tbody data-ng-repeat = "u in unsubmitted">
                 <tr >
-                    <td>{{u.area}}</td>
+                    <td data-ng-bind="u.area"></td>
                     <td data-ng-bind="u.date"></td>
-                    <td>{{u.staff}}</td>
+                    <td data-ng-bind="u.staff"></td>
                 </tr>
             </tbody>
         </table>
@@ -270,17 +273,20 @@
     <div class="col-md-6"  style="overflow-y: scroll; height: 500px">
         <table class="table table-bordered">
             <thead>
+                <tr class="text-center">
+                    <th colspan="3">Submitted Report</th>
+                </tr>
                 <tr>
-                    <th>Submitted Report</th>
+                    <th>Area</th>
                     <th>Submission Time</th>
                     <th>Officer</th>
                 </tr>
             </thead>
             <tbody data-ng-repeat = "s in submitted">
                 <tr>
-                    <td>{{s.area}}</td>
-                    <td>{{s.time}}</td>
-                    <td>{{s.staff}}</td>
+                    <td data-ng-bind="s.area"></td>
+                    <td data-ng-bind="s.time"></td>
+                    <td data-ng-bind="s.staff"></td>
                 </tr>
             </tbody>
         </table>

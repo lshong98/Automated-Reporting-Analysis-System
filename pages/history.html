@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped table-condensed">
+                        <table class="table table-hover table-striped table-condensed" id="table-history">
                             <thead>
                                 <tr>
                                     <th>Description</th>
@@ -25,9 +25,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-ng-repeat="h in historyList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
+                                <tr data-ng-repeat="h in historyList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" data-link="{{h.id}}">
                                     <td>
-                                        <span data-ng-bind="h.content"></span>
+                                        <span data-ng-bind="h.title"></span>
                                     </td>
                                     <td>
                                         <span data-ng-bind="h.staff"></span>
@@ -48,3 +48,14 @@
             </div>
         </div>
     </div>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '#table-history tbody tr', function () {
+            var $this = $(this),
+                path = $this.data('link');
+            
+            window.location.href = '#/history/' + path;
+        })
+    });
+</script>

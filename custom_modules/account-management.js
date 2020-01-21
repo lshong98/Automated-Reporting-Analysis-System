@@ -32,6 +32,8 @@ app.post('/login', function (req, res) {
 // Create User
 app.post('/addUser', function (req, res) {
     'use strict';
+    
+    var log = [];
 
     f.checkAuthority("create account", req.body.owner).then(function (status) {
         if (status === 'A') {
@@ -41,10 +43,22 @@ app.post('/addUser', function (req, res) {
                 
                 // Authorize
                 f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", ID, "tblstaff", "\"" + sql + "\"");
-                //f.logTransaction(req.body.creationDate, req.body.owner, "add", "Request to Create New Account", ID, "tblstaff");
-                f.log(req.body.creationDate, "Request to create new account.", req.body.owner);
-                res.json({"status": "success", "message": "Request pending.."});
-                res.end();
+                
+                f.waterfallQuery("SELECT s.staffName AS name, p.positionName AS position FROM tblstaff s JOIN tblposition p ON s.positionID = p.positionID WHERE s.staffID = '" + req.body.owner + "' LIMIT 0, 1").then(function (staff_info) {
+                    log.staff_name = staff_info.name;
+                    log.position_name = staff_info.position;
+                    
+                    var content = "";
+                    
+                    content = "" + log.staff_name + " would like to create a new " + log.position_name + " account. Account details shown below: \n";
+                    content += 'Username: ' + req.body.username + '\n';
+                    content += 'Staff Name: ' + req.body.name + '\n';
+                    content += 'Position: ' + log.position_name + '\n';
+                    
+                    f.log(req.body.creationDate, "Request to create new account.", content, req.body.owner);
+                    res.json({"status": "success", "message": "Request pending.."});
+                    res.end();
+                });
             });
         } else {
             res.json({"status": "error", "message": "You have no permission to create account!"});
@@ -95,7 +109,9 @@ app.post('/updateProfile', function (req, res) {
     
     var dt = dateTime.create(req.body.dob),
         sql = "SELECT positionID AS id FROM tblposition WHERE positionName = '" + req.body.position + "' LIMIT 0, 1",
-        cdt = dateTime.create().format('Y-m-d H:M:S');
+        cdt = dateTime.create().format('Y-m-d H:M:S'),
+        log = [];
+    
     req.body.status = req.body.status === "Active" ? 'A' : 'I';
     req.body.gender = req.body.gender === "Male" ? 'M' : 'F';
     req.body.dob = dt.format('Y-m-d');
@@ -109,20 +125,32 @@ app.post('/updateProfile', function (req, res) {
         var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', staffStatus = '" + req.body.status + "', staffPic = '" + req.body.avatar + "' WHERE staffID = '" + req.body.id + "'";
         
         f.sendForAuthorization(cdt, req.body.iam, "update", "Update Account Details", req.body.id, "tblstaff", "\"" + sql + "\"");
-        //f.logTransaction(cdt, req.body.iam, "update", "Request Update Account - " + req.body.id + " ", req.body.id, "tblstaff");
-        f.log(cdt, "Request to update account details.", req.body.iam);
-        res.json({"status": "success", "message": "Request pending.."});
-        res.end();
-//        database.query(sql, function (err, result) {
-//            if (err) {
-//                res.end();
-//                throw err;
-//            } else {
-//                f.logTransaction(cdt, req.body.iam, "update", "Request Update Account - " + req.body.id + "", 'NULL', req.body.id, "tblstaff");
-//                res.json({"status": "success", "message": "Profile Updated!"});
-//                res.end();
-//            }
-//        });
+        
+        f.waterfallQuery("SELECT s.staffName AS name, p.positionName AS position FROM tblstaff s JOIN tblposition p ON s.positionID = p.positionID WHERE s.staffID = '" + req.body.iam + "' LIMIT 0, 1").then(function (staff_info) {
+            log.staff_name = staff_info.name;
+            log.position_name = staff_info.position;
+            return f.waterfallQuery("SELECT * FROM tblstaff WHERE staffID = '" + req.body.id + "' LIMIT 0, 1");
+        }).then(function (original_information) {
+            log.original = original_information;
+            
+            var content = "";
+                    
+            content = "" + log.staff_name + " would like to update an account details. The changes shown below:\n";
+            content += 'Staff Name: <s>' + log.original.staffName + '</s> to ' + req.body.name + '\n';
+            content += 'Staff IC: <s>' + log.original.staffIC + '</s> to ' + req.body.ic + '\n';
+            content += 'Staff Gender: <s>' + log.original.staffGender + '</s> to ' + req.body.gender + '\n';
+            content += 'Date of Birth: <s>' + log.original.staffDOB + '</s> to ' + req.body.dob + '\n';
+            content += 'Address: <s>' + log.original.staffAddress + '</s> to ' + req.body.address + '\n';
+            content += 'Handphone: <s>' + log.original.handphone + '</s> to ' + req.body.handphone + '\n';
+            content += 'Home Phone: <s>' + log.original.phone + '</s> to ' + req.body.phone + '\n';
+            content += 'Email: <s>' + log.original.email + '</s> to ' + req.body.email + '\n';
+            content += 'Position: <s>' + log.original.positionID + '</s> to ' + log.position_name + '\n';
+            content += 'Account Status: <s>' + log.original.staffStatus + '</s> to ' + req.body.status + '\n';
+            
+            f.log(cdt, "Request to update account details.", content, req.body.iam);
+            res.json({"status": "success", "message": "Request pending.."});
+            res.end();
+        });
     });
 }); // Complete
 /********************************************************************************/

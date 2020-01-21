@@ -573,6 +573,17 @@ app.config(function($routeProvider, $locationProvider){
         },
         controller : 'historyController'
     })
+    .when('/history/:historyID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/history/' + $route.current.params.historyID);
+            }
+        },
+        templateUrl: function (params) {
+            return '/history/' + params.historyID;
+        },
+        controller: 'historyDetailController'
+    })
     .when('/customer-enquiry', {
         resolve: {
             "check": function (routingService, $window, $location) {

@@ -327,7 +327,7 @@ function insertNewData(query, req, res) {
     });
 }
 
-function log(dt, content, staff) {
+function log(dt, title, content, staff) {
     var sql = "";
     
     database.query("SELECT now() AS serverdate",function(err,result){
@@ -340,7 +340,7 @@ function log(dt, content, staff) {
         dt._now = result[0].serverdate;
         dt = dt.format('Y-m-d H:M:S');
         makeID('history', dt).then(function (ID) {
-            sql = "INSERT INTO tblhistory (historyID, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + content + "', '" + staff + "', now(), 'A')";
+            sql = "INSERT INTO tblhistory (historyID, title, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + title + "', '" + content + "', '" + staff + "', now(), 'A')";
             database.query(sql, function (err, result) {
                 if (err) {
                     throw err;

@@ -9,14 +9,38 @@ var dateTime = variable.dateTime;
 // Create Area
 app.post('/addArea', function (req, res) {
     'use strict';
+    
+    var log = [],
+        zone_id = req.body.zone.id,
+        in_charge_staff_id = req.body.staff.id,
+        driver_id = req.body.driver.id,
+        area_name = req.body.name,
+        area_code = req.body.code,
+        created_on = req.body.creationDate,
+        staff_id = req.body.iam;
+    
     f.makeID("area", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, driverID, areaName, areaCode, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + req.body.zone.id + "', '" + req.body.staff.id + "', '" + req.body.driver.id + "', '" + req.body.name + "', '" + req.body.code + "','" + req.body.creationDate + "', 'A')";
+        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, driverID, areaName, areaCode, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + zone_id + "', '" + in_charge_staff_id + "', '" + driver_id + "', '" + area_name + "', '" + area_code + "','" + created_on + "', 'A')";
         
-        f.sendForAuthorization(req.body.creationDate, req.body.iam, "add", "Create new area", ID, "tblarea", "\"" + sql + "\"");
-        f.logTransaction(req.body.creationDate, req.body.iam, "add", "Request to create new area", ID, "tblarea");
-        f.log(req.body.creationDate, "Request to create new area.", req.body.iam);
-        res.json({"status": "success", "message": "Request pending.."});
-        res.end();
+        f.sendForAuthorization(created_on, staff_id, "add", "Create new area", ID, "tblarea", "\"" + sql + "\"");
+        
+        f.waterfallQuery("SELECT s.staffName AS name, p.positionName AS positoin FROM tblstaff s JOIN tblposition p ON s.positionID = p.positionID WHERE s.staffID = '" + staff_id + "' LIMIT 0, 1").then(function (staff_info) {
+            log.staff_name = staff_info.name;
+            log.position_name = staff_info.position;
+            
+            var content = "";
+            
+            content = ""+log.staff_name+" would like to create a new area. Area details shown below:\n";
+            content += 'Area Code: ' + area_code + '\n';
+            content += 'Area Name: ' + area_name + '\n';
+            content += 'Belonging to: ' + zone_id + '\n';
+            content += 'Driver: ' + driver_id + '\n';
+            content += 'Reporting Officer: ' + in_charge_staff_id + '\n';
+            
+            f.log(created_on, "Request to create new area.", content, staff_id);
+            res.json({"status": "success", "message": "Request pending.."});
+            res.end();
+        });
     });
 }); // Complete
 
@@ -70,24 +94,59 @@ app.post('/getAreaCode', function (req, res) {
 app.post('/updateArea', function (req, res) {
     'use strict';
     
-    var information = {},
-        dt = dateTime.create().format('Y-m-d H:M:S');
+    var information = [],
+        dt = dateTime.create().format('Y-m-d H:M:S'),
+        area_id = req.body.id,
+        area_name = req.body.name,
+        area_code = req.body.code,
+        driver_id = req.body.driver,
+        collection_frequency = req.body.frequency,
+        area_status = req.body.status === "Active" ? 'A' : 'I',
+        staff_id = req.body.iam;
     
-    f.waterfallQuery("SELECT staffID FROM tblstaff WHERE staffName = '" + req.body.staff + "' LIMIT 0, 1").then(function (staffID) {
-        information.staffID = staffID.staffID;
-        return f.waterfallQuery("SELECT zoneID FROM tblzone WHERE zoneName = '" + req.body.zone + "' LIMIT 0, 1");
-    }).then(function (zoneID) {
-        information.zoneID = zoneID.zoneID;
-        req.body.status = req.body.status === "Active" ? 'A' : 'I';
+    f.waterfallQuery("SELECT s.staffID, z.zoneID FROM tblstaff s, tblzone z WHERE s.staffName = '" + req.body.staff + "' AND z.zoneName = '" + req.body.zone + "' LIMIT 0, 1").then(function (id) {
+        information.staffID = id.staffID;
+        information.zoneID = id.zoneID;
+        return f.waterfallQuery("SELECT * FROM tblarea WHERE areaID = '" + area_id + "' LIMIT 0, 1");
+    }).then(function (original_information) {
+        information.original = original_information;
+        return f.waterfallQuery("SELECT s.staffName AS name, p.positionName AS position FROM tblstaff s JOIN tblposition p ON s.positionID = p.positionID WHERE s.staffID = '" + staff_id + "' LIMIT 0, 1");
+    }).then(function (staff_info) {
+        information.staff_name = staff_info.name;
+        information.position_name = staff_info.position;
         
-        var sql = "UPDATE tblarea SET areaName = '" + req.body.name + "', areaCode = '" + req.body.code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + req.body.driver + "', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '" + req.body.id + "'";
-        
-        f.sendForAuthorization(dt, req.body.iam, "update", "Update area", req.body.id, "tblarea", "\"" + sql + "\"");
-        //f.logTransaction(dt, req.body.iam, "update", "Request to update area", req.body.id, "tblarea");
-        f.log(dt, "Request to update area.", req.body.iam);
+        var sql = "UPDATE tblarea SET areaName = '" + area_name + "', areaCode = '" + area_code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + driver_id + "', collection_frequency = '" + collection_frequency + "', areaStatus = '" + area_status + "' WHERE areaID = '" + area_id + "'",
+            content = "";
+
+        content = "" + information.staff_name + " would like to update area details. The changes shown below:\n";
+        content += 'Area Code: <s>' + information.original.areaCode + '</s> to ' + area_code + '\n';
+        content += 'Area Name: <s>' + information.original.areaName + '</s> to ' + area_name + '\n';
+        content += 'Belonging to: <s>' + information.original.zoneID + '</s> to ' + information.zoneID + '\n';
+        content += 'Collection Frequency: <s>' + information.original.collection_frequency + '</s> to ' + collection_frequency + '\n';
+        content += 'Driver: <s>' + information.original.driverID + '</s> to ' + driver_id + '\n';
+        content += 'Reporting Officer: <s>' + information.original.staffID + '</s> to ' + information.staffID + '\n';
+        content += 'Area Status: <s>' + information.original.areaStatus + '</s> to ' + area_status + '\n';
+
+        f.sendForAuthorization(dt, staff_id, "update", "Update area", area_id, "tblarea", "\"" + sql + "\"");
+        f.log(dt, "Request to update area details.", content, staff_id);
         res.json({"status": "success", "message": "Request pending.."});
         res.end();
     });
+    
+//    f.waterfallQuery("SELECT staffID FROM tblstaff WHERE staffName = '" + req.body.staff + "' LIMIT 0, 1").then(function (staffID) {
+//        information.staffID = staffID.staffID;
+//        return f.waterfallQuery("SELECT zoneID FROM tblzone WHERE zoneName = '" + req.body.zone + "' LIMIT 0, 1");
+//    }).then(function (zoneID) {
+//        information.zoneID = zoneID.zoneID;
+//        
+//        var sql = "UPDATE tblarea SET areaName = '" + req.body.name + "', areaCode = '" + req.body.code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + req.body.driver + "', collection_frequency = '" + req.body.frequency + "', areaStatus = '" + req.body.status + "' WHERE areaID = '" + req.body.id + "'";
+//        
+//        f.sendForAuthorization(dt, req.body.iam, "update", "Update area", req.body.id, "tblarea", "\"" + sql + "\"");
+//        //f.logTransaction(dt, req.body.iam, "update", "Request to update area", req.body.id, "tblarea");
+//        f.log(dt, "Request to update area.", '', req.body.iam);
+//        res.json({"status": "success", "message": "Request pending.."});
+//        res.end();
+//    });
 }); // Complete
 
 //app.post('/updateTamanSet',function (req, res){

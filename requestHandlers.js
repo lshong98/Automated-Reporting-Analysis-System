@@ -93,6 +93,10 @@ app.get('/area/:areaID', function(req, res) {
     'use strict';
     res.sendFile('pages/area.html', {root: __dirname});
 });
+app.get('/history/:historyID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/history-detail.html', {root: __dirname});
+});
 app.get('/bin-management', function(req, res) {
     'use strict';
     res.sendFile('pages/bin-management.html', {root: __dirname});

@@ -1404,6 +1404,21 @@ app.post('/getSubmitted', function(req, res) {
     });
 });
 
+app.post('/historyDetail', function (req, res) {
+    'use strict';
+    var history_id = req.body.id;
+    
+    var sql = "SELECT content FROM tblhistory WHERE historyID = '" + history_id + "' LIMIT 0, 1";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        } else {
+            res.json(result);
+            res.end();
+        }
+    });
+});
+
 app.post('/getSubmittedReportDetail', function(req, res) {
     'use strict';
 

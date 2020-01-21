@@ -37,6 +37,7 @@ app.post('/approveTask', function (req, res) {
     'use strict';
     var dt = dateTime.create(),
         formatted = dt.format('Y-m-d H:M:S'),
+        title = "",
         content = "",
         sql = "",
         findSQL = "",
@@ -59,7 +60,7 @@ app.post('/approveTask', function (req, res) {
             var action = result[0].action;
             var key = "", prefix = "";
             
-            content = result[0].description + " approved.";
+            title = result[0].description + " approved.";
             
             if (action === "add") {
                 if (table === "tblstaff") {
@@ -91,13 +92,13 @@ app.post('/approveTask', function (req, res) {
                     oldID = (result[0].query).substring(firstPosition, lastPosition);
                     result[0].query = (result[0].query).replace(oldID, ID);
                     f.insertNewData(result[0].query, req, res);
-                    f.log(formatted, content, req.body.approvedBy);
+                    f.log(formatted, title, content, req.body.approvedBy);
                     if (emit_key !== "") {
                         emitter.emit(emit_key);
                     }
                 });
             } else {
-                f.log(formatted, content, req.body.approvedBy);
+                f.log(formatted, title, content, req.body.approvedBy);
                 f.insertNewData(result[0].query, req, res);
             }
         });

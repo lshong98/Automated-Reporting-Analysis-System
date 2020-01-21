@@ -170,6 +170,12 @@ app.filter('offset', function () {
     };
 });
 
+app.filter('trustHtml',function($sce){
+  return function(html){
+    return $sce.trustAsHtml(html)
+  }
+});
+
 // WBD Filters
 app.filter('serialNoFilter', function () {
     'use strict';
@@ -5372,6 +5378,14 @@ app.controller('historyController', function ($scope, $http, storeDataService) {
     $http.get('/historyList').then(function (response) {
         $scope.historyList = response.data;
         $scope.totalItems = $scope.historyList.length;
+    });
+});
+
+app.controller('historyDetailController', function ($scope, $http, $routeParams) {
+    'use strict';
+    
+    $http.post('/historyDetail', {"id": $routeParams.historyID}).then(function (response) {
+        $scope.content = response.data[0].content;
     });
 });
 
