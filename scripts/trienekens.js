@@ -7513,7 +7513,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     $scope.complaintLocList = [];
     //pagination
     $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 3; //Record number each page
+    $scope.itemsPerPage = 7; //Record number each page
     $scope.maxSize = 8; //Show the number in page
 
     $http.get('/getComplaintList').then(function (response) {
