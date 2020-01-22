@@ -432,7 +432,8 @@ app.service('storeDataService', function () {
                 "edit": 'I',
                 "create": 'I',
                 "export": 'I',
-                "check": 'I'
+                "check": 'I',
+                "feedback": 'I'
             },
             "delivery": {
                 "create": 'I',
@@ -4416,7 +4417,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "edit": 'I',
             "create": 'I',
             "export": 'I',
-            "check": 'I'
+            "check": 'I',
+            "feedback": 'I'
         },
         "delivery": {
             "view": 'I',
@@ -4449,6 +4451,16 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "enquiry": {
             "view": 'I'
         },
+        "newBusiness": {
+            "view": 'I',
+            "create": 'I',
+            "edit": 'I'
+        },
+        "binStock": {
+            "view": 'I',
+            "create": 'I',
+            "edit": 'I'
+        },
         "role": {
             "view": 'I'
         },
@@ -4473,11 +4485,12 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
     };
 
     $http.post('/getAllAuth', $scope.role).then(function (response) {
-        //console.log(response.data);
+        console.log(response.data);
         var splitName, flag = false,
             key;
 
         $.each(response.data, function (index, value) {
+            console.log(index);
             $.each(value, function (bigKey, bigValue) {
                 if (bigKey == 'name') {
                     splitName = bigValue.split(' ');
@@ -4675,7 +4688,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "edit": 'A',
                             "create": 'A',
                             "export": 'A',
-                            "check": 'A'
+                            "check": 'A',
+                            "feedback": 'A'
                         },
                         "delivery": {
                             "view": 'A',
@@ -4702,6 +4716,16 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         },
                         "enquiry": {
                             "view": 'A'
+                        },
+                        "newBusiness": {
+                            "view": 'I',
+                            "create": 'I',
+                            "edit": 'I'
+                        },
+                        "binStock": {
+                            "view": 'I',
+                            "create": 'I',
+                            "edit": 'I'
                         },
                         "role": {
                             "view": 'I'
