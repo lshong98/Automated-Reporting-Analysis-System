@@ -112,7 +112,7 @@ app.post('/insertAnnouncement', function(req, res) {
     var message = req.body.message;
     var link = req.body.link;
     var date = dateTime.create().format('Y-m-d H:M:S');
-    var sql = "INSERT INTO tblannouncement(announcement, announceDate, announceLink, target) VALUES('" + message + "','" + date + "','" + link + "','" + target + "')";
+    var sql = "INSERT INTO tblannouncement(announcement, announceDate, announceLink, target, readStat) VALUES('" + message + "','" + date + "','" + link + "','" + target + "','r')";
     database.query(sql, function(err, result) {
         if (!err) {
             console.log("announcement inserted");
