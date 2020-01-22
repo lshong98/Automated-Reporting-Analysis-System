@@ -55,6 +55,21 @@
         </div>
     </div>
     <br /><br />
+    <div class="row border border-secondary">
+        <div class="col-md-12">
+            <div class="row border-bottom border-secondary pl-3 pt-2">
+                <div class="col-md-12">
+                    <h5>Report Feedback</h5>
+                </div>
+            </div>
+            <div class="row pl-3 pt-2">
+                <div class="col-md-12">
+                    <span data-ng-bind-html="thisReport.feedback | trustHtml"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br /><br />
     <div class="row">
         <div class="col-md-12 text-center">
             <div style="width: 1000px;height: 800px;">
@@ -63,14 +78,12 @@
         </div>
     </div>
     <div>
-        <form method="post">
-            <textarea id="summernote" name="editordata"></textarea>
-        </form>
+        <textarea id="summernote" name="report_feedback"></textarea>
     </div>
     <div class="row" style="padding: 30px 0;">
         <div class="col-md-12 text-center">
             <button class="btn btn-secondary">Back</button>
-            <button class="btn btn-primary">Submit</button>
+            <button class="btn btn-primary" name="submit_feedback">Submit</button>
         </div>
     </div>
 </div>

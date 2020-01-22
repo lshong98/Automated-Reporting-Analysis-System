@@ -761,9 +761,16 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         "acr": [],
         "date": ""
     };
+    
+    $('button[name="submit_feedback"]').on('click', function () {
+        $http.post('/report_feedback', {"id": $scope.reportID, "feedback": $('textarea[name="report_feedback"]').val()}).then(function (response) {
+            $scope.notify(response.data.status, response.data.message);
+        });
+    });
 
     $http.post('/getReport', $scope.report).then(function(response) {
         $scope.thisReport = response.data[0];
+        $("#summernote").summernote("code", $scope.thisReport.feedback);
         $scope.thisReport.date = $filter('date')($scope.thisReport.date, 'yyyy-MM-dd');
         $scope.area = {
             "areaID": $scope.thisReport.area
