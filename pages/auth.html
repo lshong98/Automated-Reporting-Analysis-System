@@ -667,7 +667,16 @@
                             data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
-                </li>                
+                </li>
+                <li class="list-group-item">
+                    Report Feedback
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.reporting.feedback"
+                            data-ng-change="changeValue(auth.reporting.feedback, 'feedback reporting');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
             </ul>
         </div>
     </div>
