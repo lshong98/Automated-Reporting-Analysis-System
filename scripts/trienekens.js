@@ -1745,6 +1745,7 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     $scope.itemsPerPage = 3; //Record number each page
     $scope.itemsPerPageBinReq = 10;
     $scope.itemsPerPageEnquiry = 10;
+    $scope.itemsPerPageAnnouncement = 10;
     $scope.maxSize = 8; //Show the number in page
     $scope.m = {};
     $scope.c = {};
@@ -1755,20 +1756,24 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
             //'target': $scope.notifTarget,
             'target': "TriAllUsers",
             'title': $scope.notifTitle,
-            'message': $scope.notifMessage
+            'message': $scope.notifMessage,
+            'link': $scope.notifLink
         };
 
-        $http.post('/sendNotifToDevice', $scope.data).then(function (response) {
-            console.log(response.data);
-        }, function (error) {
-            console.log(error);
-        });
-
-        $http.post('/insertAnnouncement', $scope.data).then(function (response) {
-            console.log(response.data);
-        }, function (error) {
-            console.log(error);
-        });
+        if(confirm("Poset Announcement?")){
+            $http.post('/sendNotifToDevice', $scope.data).then(function (response) {
+                console.log(response.data);
+            }, function (error) {
+                console.log(error);
+            });
+    
+            $http.post('/insertAnnouncement', $scope.data).then(function (response) {
+                console.log(response.data);
+            }, function (error) {
+                console.log(error);
+            });
+            alert("Announcement posted!");
+        };
     };
 
     $scope.uploadImg = function () {
@@ -1853,6 +1858,16 @@ app.controller('custServiceCtrl', function ($scope, $rootScope, $location, $http
     $scope.binReqDetail = function (reqID) {
         window.location.href = '#/bin-request-detail/' + reqID;
 
+    };
+
+    $scope.getAnnouncements = function () {
+        $http.get('/getAnnouncements').then(function (response) {
+            console.log(response.data);
+            $scope.announcements = response.data;
+            $scope.totalItemsAnnouncement = response.data.length;
+        }, function (error) {
+            console.log(error);
+        });
     };
 
     $scope.getAreas = function () {

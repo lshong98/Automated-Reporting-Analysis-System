@@ -110,11 +110,23 @@ app.post('/insertAnnouncement', function(req, res) {
     'use strict';
     var target = req.body.target;
     var message = req.body.message;
-    var date = dateTime.create().format('Y-m-d');
-    var sql = "INSERT INTO tblannouncement(announcement, announceDate, target) VALUES('" + message + "','" + date + "','" + target + "')";
+    var link = req.body.link;
+    var date = dateTime.create().format('Y-m-d H:M:S');
+    var sql = "INSERT INTO tblannouncement(announcement, announceDate, announceLink, target) VALUES('" + message + "','" + date + "','" + link + "','" + target + "')";
     database.query(sql, function(err, result) {
         if (!err) {
             console.log("announcement inserted");
+        }
+    });
+});
+
+app.get('/getAnnouncements', function(req, res){
+    'use strict';
+    var sql = "SELECT * FROM tblannouncement ORDER BY announceDate DESC";
+    database.query(sql, function(err, result) {
+        console.log(result);
+        if (!err) {
+            res.json(result);
         }
     });
 });

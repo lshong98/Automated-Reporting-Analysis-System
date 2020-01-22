@@ -1,4 +1,4 @@
-<div class="container" data-ng-controller="custServiceCtrl">
+<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getAnnouncements()">
     <div class="row">
         <div class="col-md-6 notif form-group">
             <h1>Post Announcement</h1><br/><br/>
@@ -10,8 +10,34 @@
                     <option data-ng-repeat="area in areaList" value="{{area.areaID}}">Area {{area.areaID}}</option>
                     <option value="TriAllUsers" >All Customers</option>
                 </select><br/><br/><br/> -->
+                <p>Link (Optional): <br /><input type="text" name="link" data-ng-model="notifLink" class="form-control"/></p>
                 <input type="submit" value="Submit" data-ng-click="sendNotifToDevice()" class="btn btn-primary" />
             </form>
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Posted Announcements</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Announcement</th>
+                        <th>Posted On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="a in announcements | offset: (currentPage - 1) * itemsPerPageAnnouncement | limitTo: itemsPerPageAnnouncement track by $index">
+                        <td>{{a.announcement}}</td>
+                        <td>{{a.announceDate | date: "dd-MM-y"}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+        <div class="col-md-12">
+            <ul uib-pagination boundary-links="true" total-items="totalItemsAnnouncement" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPageAnnouncement" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
         </div>
     </div>
 </div>
