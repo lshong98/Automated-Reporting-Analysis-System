@@ -266,6 +266,25 @@ app.post('/getNotifs', function (req, resp) {
     });
 });
 
+app.post('/getNotifUrl', function(req, resp){
+    'use strict';
+    var data;
+    req.addListener('data', function(postDataChunk){
+        data = JSON.parse(postDataChunk);
+    });
+
+    req.addListener('end', function(){
+        var sqlUser = "SELECT announceLink FROM tblannouncement WHERE announcement ='" + data.title + "'";
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
+                resp.send(res[0].announceLink);
+            } else {
+                resp.send("error");
+            }
+        });
+    });
+});
+
 app.post('/updateNotifStat', function(req, resp){
     'use strict';
 
@@ -290,7 +309,7 @@ app.post('/updateNotifStat', function(req, resp){
                 resp.send("error getting user id");
             }
         });
-    })
+    });
 
 });
 
