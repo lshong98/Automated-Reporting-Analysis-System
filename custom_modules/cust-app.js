@@ -235,6 +235,7 @@ app.post('/getNotifs', function (req, resp) {
                             results["announcements"].push({
                                 "announce": res[i].announcement,
                                 "announceDate": res[i].announceDate,
+                                "announceLink": res[i].announceLink,
                                 "unread": res[i].unread
                             });
                         }
@@ -246,6 +247,7 @@ app.post('/getNotifs', function (req, resp) {
                                         results["announcements"].push({
                                             "announce": res[i].announcement,
                                             "announceDate": res[i].announceDate,
+                                            "announceLink": res[i].announceLink,
                                             "unread": res[i].unread
                                         });
                                     }
