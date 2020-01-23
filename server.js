@@ -1382,7 +1382,7 @@ app.get('/getCount', function(req, res) {
 
 app.post('/getTodayAreaCount', function(req, res) {
     'use strict';
-    var sql = "SELECT COUNT(*) AS todayAreaCount FROM tblarea WHERE collection_frequency LIKE '%" + req.body.day + "%' WHERE tblarea.areaStatus = 'A'";
+    var sql = "SELECT COUNT(*) AS todayAreaCount FROM tblarea WHERE collection_frequency LIKE '%" + req.body.day + "%' AND tblarea.areaStatus = 'A'";
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
