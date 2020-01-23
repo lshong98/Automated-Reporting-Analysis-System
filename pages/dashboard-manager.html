@@ -274,10 +274,11 @@
         <table class="table table-bordered">
             <thead>
                 <tr class="text-center">
-                    <th colspan="3">Submitted Report</th>
+                    <th colspan="4">Submitted Report</th>
                 </tr>
                 <tr>
                     <th>Area</th>
+                    <th>Tonnage</th>
                     <th>Submission Time</th>
                     <th>Officer</th>
                 </tr>
@@ -285,6 +286,7 @@
             <tbody data-ng-repeat = "s in submitted">
                 <tr>
                     <td data-ng-bind="s.area"></td>
+                    <td data-ng-binf="u.collection_amount"></td>
                     <td data-ng-bind="s.time"></td>
                     <td data-ng-bind="s.staff"></td>
                 </tr>
