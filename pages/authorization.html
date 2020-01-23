@@ -3,6 +3,7 @@
       <h5>Task Authorization</h5>
   </div>
 </div>
+<!--
 <div class="row">
   <div class="col-md-12">
       <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
@@ -15,6 +16,7 @@
 
   </div>
 </div>
+-->
 <br />
 <div class="row" data-ng-show="show.view == 'A'">
   <div class="col-md-12">
@@ -25,7 +27,7 @@
                       <thead>
                           <tr>
                               <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                              <th width="15%" data-ng-click="orderBy('staffID');">Staff ID <i class="fas fa-sort-down"></i></th>
+                              <th width="15%" data-ng-click="orderBy('staffName');">Staff Name <i class="fas fa-sort-down"></i></th>
                               <th width="25%" data-ng-click="orderBy('description');">Description <i class="fas fa-sort-down"></i></th>
                               <th width="15%">Authorize</th>
                           </tr>
@@ -36,7 +38,7 @@
                                   <span data-ng-bind="t.date"></span>
                               </td>
                               <td>
-                                    <span data-ng-bind="t.staffID"></span>
+                                    <span data-ng-bind="t.staffName"></span>
                               </td>
                               <td>
                                     <span data-ng-bind="t.description"></span>

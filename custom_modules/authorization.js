@@ -11,7 +11,9 @@ var emitter = variable.emitter;
 app.get('/getAllTasks', function (req, res) {
     'use strict';
     
-    var sql = "SELECT taskId, DATE_FORMAT(date, '%d %b %Y %H:%i') AS date, staffID, action, description, rowID, query, authorize, tblName from tblauthorization WHERE authorize = 'M'";
+    //var sql = "SELECT taskId, DATE_FORMAT(date, '%d %b %Y %H:%i') AS date, staffID, action, description, rowID, query, authorize, tblName from tblauthorization WHERE authorize = 'M'";
+    
+    var sql = "SELECT a.taskId, DATE_FORMAT(a.date, '%d %b %Y %H:%i') AS date, s.staffName, a.action, a.description, a.rowID, a.query, a.authorize, a.tblName FROM tblauthorization a JOIN tblstaff s ON a.staffID = s.staffID WHERE a.authorize = 'M'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
