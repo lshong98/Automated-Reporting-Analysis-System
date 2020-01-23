@@ -1406,7 +1406,7 @@ app.post('/getUnsubmitted', function(req, res) {
 app.post('/getSubmitted', function(req, res) {
     'use strict';
 
-    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff, DATE_FORMAT(tblreport.creationDateTime, '%Y-%m-%d %r') AS time, tblreport.garbageAmount AS collection_amount FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE DATE(tblreport.creationDateTime) = CURDATE() WHERE tblarea.areaStatus = 'A'";
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff, DATE_FORMAT(tblreport.creationDateTime, '%Y-%m-%d %r') AS time, tblreport.garbageAmount AS collection_amount FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID INNER JOIN tblreport ON tblreport.areaID = tblarea.areaID WHERE DATE(tblreport.creationDateTime) = CURDATE() AND tblarea.areaStatus = 'A'";
 
     database.query(sql, function(err, result) {
         if (err) {
