@@ -3603,9 +3603,10 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
         $scope.zoneList = data;
     });
 
-    $http.get('/getStaffList').then(function (response) {
+    $http.get('/getReportingOfficerList').then(function (response) {
         var data = response.data;
         $scope.staffList = data;
+        console.log(response.data);
     });
 
     $http.get('/getDriverList').then(function (response) {
@@ -4313,6 +4314,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "managerDashboard": {
             "show": 'I',
         },
+        "reportingOfficer": {
+            "is": 'I',
+        },
         "account": {
             "create": 'I',
             "edit": 'I',
@@ -4582,6 +4586,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "managerDashboard": {
                             "show": 'A'
                         },
+                        "reportingOfficer": {
+                            "is": 'A'
+                        },
                         "account": {
                             "create": 'A',
                             "edit": 'A',
@@ -4765,6 +4772,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                     $scope.auth = {
                         "managerDashboard":{
                             "show": 'I'
+                        },
+                        "reportingOfficer": {
+                            "is": 'A'
                         },
                         "account": {
                             "create": 'I',

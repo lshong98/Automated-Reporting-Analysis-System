@@ -68,6 +68,17 @@ app.get('/getAreaList', function (req, res) {
         res.json(result);
     });
 }); // Complete
+//for staff list in area management
+app.get('/getReportingOfficerList', function (req, res) {
+    'use strict';
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaff INNER JOIN tblaccess ON tblstaff.positionID = tblaccess.positionID WHERE tblaccess.mgmtID = 92 AND tblaccess.status = 'A' AND tblstaff.staffStatus = 'A'";
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
 
 app.get('/getAreaCodeList', function (req, res) {
     'use strict';
@@ -89,6 +100,7 @@ app.post('/getAreaCode', function (req, res) {
         res.json(result);
     });
 });
+
 
 // Update specific area information
 app.post('/updateArea', function (req, res) {

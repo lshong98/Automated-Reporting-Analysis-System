@@ -1235,9 +1235,9 @@ app.post('/loadMenu', function(req, res) {
     //    if (req.body.position === "Manager") {
     //        content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
     //    } else 
-    if (req.body.position === "Reporting Officer") {
-        content += '<li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>';
-    }
+//    if (req.body.position === "Reporting Officer") {
+//        content += '<li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>';
+//    }
 
     sql = "SELECT tblmanagement.mgmtName, tblaccess.status FROM tblaccess INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID JOIN tblposition ON tblposition.positionID = tblaccess.positionID WHERE tblposition.positionName = '" + req.body.position + "' AND tblaccess.status = 'A'";
 
@@ -1247,7 +1247,7 @@ app.post('/loadMenu', function(req, res) {
         result.forEach(function(key, value) {
             first_text = (key.mgmtName).split(" ")[1];
 
-            if (first_text === "managerDashboard") {
+            if (first_text === "managerDashboard" || first_text === "reportingOfficer") {
                 content += f.menuItem(key.mgmtName, key.status);
             }
         });
@@ -1276,6 +1276,20 @@ app.get('/getAllRoleWithManagerDashboard', function(req, res) {
     'use strict';
     //91 is show manager dashboard in tblmanagement
     var sql = "SELECT DISTINCT tblposition.positionName FROM tblposition INNER JOIN tblaccess ON tblposition.positionID = tblaccess.positionID WHERE tblaccess.mgmtID = 91 AND tblaccess.status = 'A'";
+
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+//get all role authorized with reporting officer
+app.get('/getAllRoleWithReportingOfficer', function(req, res) {
+    'use strict';
+    //92 is reporting officer in tblmanagement
+    var sql = "SELECT DISTINCT tblposition.positionName FROM tblposition INNER JOIN tblaccess ON tblposition.positionID = tblaccess.positionID WHERE tblaccess.mgmtID = 92 AND tblaccess.status = 'A'";
 
     database.query(sql, function(err, result) {
         if (err) {

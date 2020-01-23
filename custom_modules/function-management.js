@@ -209,6 +209,10 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.managerDashboard.view == \'A\'" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
             }
+        case "is reportingOfficer":
+            if (status == 'A') {
+                return '<li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>';
+            }
         case "view account":
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.account.view == \'A\'" role="menuitem"><a class="menu__link" href="#/account-management"><i class="fa fa-users"></i> Account Management</a></li>';
