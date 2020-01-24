@@ -76,21 +76,53 @@ html, body {
     display: block;
 }
 
+/*count today report*/
 .card-counter .count-today-area{
     position: absolute;
-    right: 160px;
+    right: 380px;
     top: 15px;
     font-size: 13px;
     display: block;
 }
 .card-counter .count-unsubmitted{
     position: absolute;
-    right: 35px;
+    right: 255px;
     top: 15px;
     font-size: 13px;
     display: block;
 }
 .card-counter .count-report-complete{
+    position: absolute;
+    right: 255px;
+    top: 30px;
+    font-size: 13px;
+    display: block;
+}
+
+.card-counter .count-report-incomplete{
+    position: absolute;
+    right: 255px;
+    top: 45px;
+    font-size: 13px;
+    display: block;
+}
+
+/*count yesterday report*/
+.card-counter .count-yesterday-area{
+    position: absolute;
+    right: 150px;
+    top: 15px;
+    font-size: 13px;
+    display: block;
+}
+.card-counter .count-ytd-unsubmitted{
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    font-size: 13px;
+    display: block;
+}
+.card-counter .count-ytd-report-complete{
     position: absolute;
     right: 35px;
     top: 30px;
@@ -98,7 +130,7 @@ html, body {
     display: block;
 }
 
-.card-counter .count-report-incomplete{
+.card-counter .count-ytd-report-incomplete{
     position: absolute;
     right: 35px;
     top: 45px;
