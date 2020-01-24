@@ -1383,12 +1383,18 @@ app.get('/getCount', function(req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS complaint FROM tblcomplaint WHERE status != 'c'");
     }).then(function(complaint) {
         results.complaint = complaint.complaint;
-        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'N' AND DATE(creationDateTime)= CURRENT_DATE");
+        return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'N' AND DATE(reportCollectionDate)= CURRENT_DATE");
     }).then(function(completeReport) {
         results.completeReport = completeReport.completeReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(creationDateTime)= CURRENT_DATE");
+        return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(reportCollectionDate)= CURRENT_DATE");
     }).then(function(incompleteReport) {
         results.incompleteReport = incompleteReport.incompleteReport;
+        return f.waterfallQuery("SELECT COUNT(*) AS ytdCompleteReport FROM tblreport WHERE completionStatus = 'N' AND DATE(reportCollectionDate)= (CURRENT_DATE - 1)");
+    }).then(function(ytdCompleteReport) {
+        results.ytdCompleteReport = ytdCompleteReport.ytdCompleteReport;
+        return f.waterfallQuery("SELECT COUNT(*) AS ytdIncompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(reportCollectionDate)= (CURRENT_DATE - 1)");
+    }).then(function(ytdIncompleteReport) {
+        results.ytdIncompleteReport = ytdIncompleteReport.ytdIncompleteReport;
         res.json(results);
         res.end();
     });

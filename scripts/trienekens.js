@@ -2906,21 +2906,29 @@ app.controller('managerController', function ($scope, $http, $filter) {
     var dateobj = new Date();
     var getday = dateobj.getDay();
     $scope.day = "";
+    $scope.ytd = "";
 
     if (getday == 1) {
         $scope.day = "mon";
+        $scope.ytd = "sun";
     } else if (getday == 2) {
         $scope.day = "tue";
+        $scope.ytd = "mon";
     } else if (getday == 3) {
         $scope.day = "wed";
+        $scope.ytd = "tue";
     } else if (getday == 4) {
         $scope.day = "thu";
+        $scope.ytd = "wed";
     } else if (getday == 5) {
         $scope.day = "fri";
+        $scope.ytd = "thu";
     } else if (getday == 6) {
         $scope.day = "sat";
+        $scope.ytd = "fri";
     } else if (getday == 0) {
         $scope.day = "sun";
+        $scope.ytd = "sat";
     }
 
     $http.post('/getTodayAreaCount', {
@@ -2928,6 +2936,13 @@ app.controller('managerController', function ($scope, $http, $filter) {
     }).then(function (response) {
         $scope.todayAreaCount = response.data[0].todayAreaCount;
     });
+    
+    $http.post('/getTodayAreaCount', {
+        "day": $scope.ytd
+    }).then(function (response) {
+        $scope.ytdAreaCount = response.data[0].todayAreaCount;
+    });
+    
     $http.get('/getCount').then(function (response) {
         //console.log(response.data);
         var data = response.data;
@@ -2942,6 +2957,9 @@ app.controller('managerController', function ($scope, $http, $filter) {
         $scope.reportCompleteCount = data.completeReport;
         $scope.reportIncompleteCount = data.incompleteReport;
         $scope.unsubmittedCount = $scope.todayAreaCount - ($scope.reportCompleteCount + $scope.reportIncompleteCount);
+        $scope.ytdReportCompleteCount = data.ytdCompleteReport;
+        $scope.ytdReportIncompleteCount = data.ytdIncompleteReport;
+        $scope.ytdUnsubmittedCount = $scope.ytdAreaCount - ($scope.ytdReportCompleteCount + $scope.ytdReportIncompleteCount);
     });
 
     $http.post('/getUnsubmitted', {
