@@ -229,7 +229,7 @@ app.post('/getChats', function (req, resp) {
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var sql = "SELECT * FROM tblcomplaint WHERE userID = '" + userID + "'";
+                var sql = "SELECT * FROM tblcomplaint WHERE userID = '" + userID + "' ORDER BY complaintID DESC, complaintDate DESC";
                 database.query(sql, function (err, res) {
                     if (err) {
                         resp.send("Error");
