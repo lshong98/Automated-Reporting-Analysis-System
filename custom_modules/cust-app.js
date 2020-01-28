@@ -1456,7 +1456,7 @@ app.post('/getRequestList', function (req, resp) {
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var sql = "SELECT * FROM tblbinrequest WHERE userID = '" + userID + "'";
+                var sql = "SELECT * FROM tblbinrequest WHERE userID = '" + userID + "' ORDER BY reqID DESC, requestDate DESC";
                 //var sql2 = "SELECT message as offmsg, createdAt as offtime from tblchat WHERE complaintID ='"+data.id+"' AND sender!='"+userID+"' ORDER BY createdAt ASC";
                 database.query(sql, function (err, res) {
                     if (res != undefined) {
