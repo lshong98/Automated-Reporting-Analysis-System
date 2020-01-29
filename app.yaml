@@ -7,3 +7,4 @@ env_variables:
   INSTANCE_CONNECTION_NAME: trienekens-deploy:asia-southeast1:trienekensdeploy
 beta_settings:
   cloud_sql_instances: trienekens-deploy:asia-southeast1:trienekensdeploy
+  GCLOUD_STORAGE_BUCKET: trienekens-management-images
