@@ -244,14 +244,14 @@ io.sockets.on('connection', function (socket) {
         });
      });
  
-     socket.on('binrequest', function () {
-         var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
-         database.query(sql, function (err, result) {
-             io.sockets.in(roomManager).emit('new binrequest', {
-                 unread: result[0].unread
-             });
-         });
-     });
+//     socket.on('binrequest', function () {
+//         var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
+//         database.query(sql, function (err, result) {
+//             io.sockets.in(roomManager).emit('new binrequest', {
+//                 unread: result[0].unread
+//             });
+//         });
+//     });
 
      socket.on('complaint', function () {
         var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
