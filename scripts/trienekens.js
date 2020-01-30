@@ -4332,9 +4332,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "managerDashboard": {
             "show": 'I',
         },
-        "reportingOfficer": {
-            "is": 'I',
-        },
         "account": {
             "create": 'I',
             "edit": 'I',
@@ -4604,9 +4601,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "managerDashboard": {
                             "show": 'A'
                         },
-                        "reportingOfficer": {
-                            "is": 'A'
-                        },
                         "account": {
                             "create": 'A',
                             "edit": 'A',
@@ -4790,9 +4784,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                     $scope.auth = {
                         "managerDashboard":{
                             "show": 'I'
-                        },
-                        "reportingOfficer": {
-                            "is": 'A'
                         },
                         "account": {
                             "create": 'I',

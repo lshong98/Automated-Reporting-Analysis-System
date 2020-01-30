@@ -1247,7 +1247,7 @@ app.post('/loadMenu', function(req, res) {
         result.forEach(function(key, value) {
             first_text = (key.mgmtName).split(" ")[1];
 
-            if (first_text === "managerDashboard" || first_text === "reportingOfficer") {
+            if (first_text === "managerDashboard" || key.mgmtName === "create reporting") {
                 content += f.menuItem(key.mgmtName, key.status);
             }
         });
@@ -1275,7 +1275,7 @@ app.post('/loadMenu', function(req, res) {
 app.get('/getAllRoleWithManagerDashboard', function(req, res) {
     'use strict';
     //91 is show manager dashboard in tblmanagement
-    var sql = "SELECT DISTINCT tblposition.positionName FROM tblposition INNER JOIN tblaccess ON tblposition.positionID = tblaccess.positionID WHERE tblaccess.mgmtID = 91 AND tblaccess.status = 'A'";
+    var sql = "SELECT DISTINCT tblposition.positionName FROM tblposition INNER JOIN tblaccess ON tblposition.positionID = tblaccess.positionID INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblmanagement.mgmtName = 'show managerDashboard' AND tblaccess.status = 'A'";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -1289,7 +1289,7 @@ app.get('/getAllRoleWithManagerDashboard', function(req, res) {
 app.get('/getAllRoleWithReportingOfficer', function(req, res) {
     'use strict';
     //92 is reporting officer in tblmanagement
-    var sql = "SELECT DISTINCT tblposition.positionName FROM tblposition INNER JOIN tblaccess ON tblposition.positionID = tblaccess.positionID WHERE tblaccess.mgmtID = 92 AND tblaccess.status = 'A'";
+    var sql = "SELECT DISTINCT tblposition.positionName FROM tblposition INNER JOIN tblaccess ON tblposition.positionID = tblaccess.positionID INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblmanagement.mgmtName = 'create reporting' AND tblaccess.status = 'A'";
 
     database.query(sql, function(err, result) {
         if (err) {
