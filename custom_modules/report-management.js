@@ -3,44 +3,97 @@ var express = require('express');
 var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
+var fs = require('fs');
+const {Storage} = require('@google-cloud/storage');
+const storage = new Storage({
+    keyFilename: './trienekens-management-9f941010219d.json',
+    projectId: 'trienekens-management'
+});
+const bucketName = 'trienekens-management-images';
 
 // Report Management
 app.post('/addReport', function (req, res) {
     'use strict';
-    f.makeID('report', req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.format_startTime + "', '" + req.body.format_endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '', 'I', '" + req.body.status + "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "', '" + req.body.staffID + "')",
-            i = 0,
-            j = 0,
-            reportID = ID;
+    
+    var area_code = req.body.areaCode,
+        collection_date = req.body.collectionDate,
+        operation_start = req.body.format_startTime,
+        operation_end = req.body.format_endTime,
+        tonnage = req.body.ton,
+        image = req.body.ifleetImg,
+        read_status = 'I',
+        complete_status = req.body.status,
+        truck_id = req.body.truck,
+        driver_id = req.body.driver,
+        remark = req.body.remark,
+        created_on = req.body.creationDate,
+        staff_id = req.body.staffID;
+    
+    let base64Image = image.split(';base64,').pop();
+    
+    f.makeID('report', created_on).then(function (ID) {
+        var image_path = '/' + ID + '.jpg';
+        var local_store_path = 'images/daily-report' + image_path,
+            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
         
-        database.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            if (Object.keys(req.body.marker).length > 0) {
-                for (i = 0; i < Object.keys(req.body.marker).length; i += 1) {
-                    var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].cLong + "', '" + req.body.marker[i].cLat + "', '" + reportID + "')";
-
-                    database.query(circleSQL, function (err, result) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
+        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+            if (err) throw err;
+            
+            await storage.bucket(bucketName).upload('./' + local_store_path, {
+                gzip: true,
+                metadata: {
+                    cacheControl: 'public, no-cache',
+                },
+                public: true,
+                destination: 'images/daily-report' + image_path
+            });
+            
+            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + public_url + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "')",
+                reportID = ID;
+            
+            database.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                } else {
+                    res.json({"status": "success", "details": {"reportID": reportID}});
                 }
-            }
-            if (Object.keys(req.body.rectangle).length > 0) {
-                for (j = 0; j < Object.keys(req.body.rectangle).length; j += 1) {
-                    var rectSQL = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].swLng + "', '" + reportID + "')";
-                    
-                    database.query(rectSQL, function (err, result) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
-                }
-            }
-            res.json({"status": "success", "details": {"reportID": reportID}});
+            });
         });
+        
+        //With hand-draw circle
+//        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.format_startTime + "', '" + req.body.format_endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '', 'I', '" + req.body.status + "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "', '" + req.body.staffID + "')",
+//            i = 0,
+//            j = 0,
+//            reportID = ID;
+//        
+//        database.query(sql, function (err, result) {
+//            if (err) {
+//                throw err;
+//            }
+//            if (Object.keys(req.body.marker).length > 0) {
+//                for (i = 0; i < Object.keys(req.body.marker).length; i += 1) {
+//                    var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].cLong + "', '" + req.body.marker[i].cLat + "', '" + reportID + "')";
+//
+//                    database.query(circleSQL, function (err, result) {
+//                        if (err) {
+//                            throw err;
+//                        }
+//                    });
+//                }
+//            }
+//            if (Object.keys(req.body.rectangle).length > 0) {
+//                for (j = 0; j < Object.keys(req.body.rectangle).length; j += 1) {
+//                    var rectSQL = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].swLng + "', '" + reportID + "')";
+//                    
+//                    database.query(rectSQL, function (err, result) {
+//                        if (err) {
+//                            throw err;
+//                        }
+//                    });
+//                }
+//            }
+//            res.json({"status": "success", "details": {"reportID": reportID}});
+//        });
     });
 }); // Complete
 app.post('/report_feedback', function (req, res) {

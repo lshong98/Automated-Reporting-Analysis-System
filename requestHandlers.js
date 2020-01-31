@@ -9,6 +9,7 @@ app.use(express.static(path.join(__dirname, 'scripts')));
 app.use(express.static(path.join(__dirname, 'pages')));
 app.use(express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static(path.join(__dirname, 'images/daily-report')));
 app.use(express.static(path.join(__dirname, 'sounds')));
 app.use(express.static(path.join(__dirname, 'kml')));
 

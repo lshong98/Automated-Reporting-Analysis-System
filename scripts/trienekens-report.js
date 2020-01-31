@@ -331,7 +331,6 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         $scope.report.collectionDate = $filter('date')($scope.colDate, 'yyyy-MM-dd');
         $scope.report.format_startTime = $filter('date')($scope.report.startTime, 'HH:mm:ss');
         $scope.report.format_endTime = $filter('date')($scope.report.endTime, 'HH:mm:ss');
-        
 
         if ($scope.report.collectionDate == "" || $scope.report.collectionDate == null) {
             $scope.notify("error", "Collection Date Cannot Be Blank");
@@ -525,7 +524,6 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
 
     
     window.addEventListener("paste", function(e) {
-
             // Handle the event
             retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
                 // If there's an image, display it in the canvas
