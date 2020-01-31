@@ -125,36 +125,40 @@ app.post('/loginCustServiceApp', function (req, resp) {
     });
 });
 
-app.post('/getAreaID', function (req, resp) {
-    'use strict';
-    var data, tamanID, areaID;
+//unused method - commented for reference
+//get customer's area ID
+// app.post('/getAreaID', function (req, resp) {
+//     'use strict';
+//     var data, tamanID, areaID;
 
-    req.addListener('data', function (postDataChunk) {
-        data = JSON.parse(postDataChunk);
-    });
+//     req.addListener('data', function (postDataChunk) {
+//         data = JSON.parse(postDataChunk);
+//     });
 
-    req.addListener('end', function () {
-        var sql = "SELECT tamanID FROM tbluser WHERE userEmail = '" + data.email + "'";
-        database.query(sql, function (err, res) {
-            console.log(res);
-            if(err){
-                console.log(err);
-            }
-            if (res[0].tamanID != null) {
-                tamanID = res[0].tamanID;
-                var getAreaSql = "SELECT areaID FROM tbltaman WHERE tamanID = " + tamanID;
-                database.query(getAreaSql, function (err, res) {
-                    console.log(res[0]);
-                    areaID = res[0].areaID;
-                    resp.send(areaID);
-                });
-            }else{
-                resp.send("");
-            }
-        });
-    });
-});
+//     req.addListener('end', function () {
+//         var sql = "SELECT tamanID FROM tbluser WHERE userEmail = '" + data.email + "'";
+//         database.query(sql, function (err, res) {
+//             console.log(res);
+//             if(err){
+//                 console.log(err);
+//             }
+//             if (res[0].tamanID != null) {
+//                 tamanID = res[0].tamanID;
+//                 var getAreaSql = "SELECT areaID FROM tbltaman WHERE tamanID = " + tamanID;
+//                 database.query(getAreaSql, function (err, res) {
+//                     console.log(res[0]);
+//                     areaID = res[0].areaID;
+//                     resp.send(areaID);
+//                 });
+//             }else{
+//                 resp.send("");
+//             }
+//         });
+//     });
+// });
 
+//unused method - commented for reference
+//insert fcm token to db
 // app.post('/insertToken', function (req, resp) {
 //     'use strict';
 //     var data, msg;
