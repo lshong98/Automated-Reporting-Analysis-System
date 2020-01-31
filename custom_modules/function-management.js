@@ -261,13 +261,9 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.formAuthorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/form-authorization"><i class="fas fa-clipboard-check"></i> Form Authorization <span class="form-authorization"></span></a></li>';
             }
-        case "view complaintlist": 
+        case "view complaintweb": 
             if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module <span class="complaint"></span></a></li>';
-            }
-        case "view complaintofficer": 
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.complaintofficer.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-officer"><i class="fas fa-bullhorn"></i> Complaint Officer </a></li>';
+                return '<li class="menu__item" data-ng-show="show.complaintapp.view == \'A\' || show.complaintweb.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module <span class="complaint"></span></a></li>';
             }
         case "view transactionLog":
             if (status == 'A') {
