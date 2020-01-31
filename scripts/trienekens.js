@@ -3753,31 +3753,29 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
         $scope.day = "sun";
     }
 
-//    $http.post('/getTodayAreaCount', {
-//        "day": $scope.day
-//    }).then(function (response) {
-//        $scope.todayAreaCount = response.data[0].todayAreaCount;
-//    });
-//    $http.get('/getCount').then(function (response) {
-//        //console.log(response.data);
-//        var data = response.data;
-//
-//        $scope.zoneCount = data.zone;
-//        $scope.areaCount = data.area;
-//        $scope.acrCount = data.acr;
-//        $scope.binCount = data.bin;
-//        $scope.truckCount = data.truck;
-//        $scope.userCount = data.staff - 1;
-//        $scope.complaintCount = data.complaint;
-//        $scope.reportCompleteCount = data.completeReport;
-//        $scope.reportIncompleteCount = data.incompleteReport;
-//        $scope.unsubmittedCount = $scope.todayAreaCount - ($scope.reportCompleteCount + $scope.reportIncompleteCount);
-//    });
-
-    $http.post('/getUnsubmitted', {
+    $http.post('/getTodayAreaCount', {
         "day": $scope.day
     }).then(function (response) {
-        $scope.totalUnsubmitted = response.data.length;
+        $scope.todayAreaCount = response.data[0].todayAreaCount;
+    });
+    
+    setTimeout(function(){
+        $http.get('/getCount').then(function (response) {
+        var data = response.data;
+
+        $scope.reportCompleteCount = data.completeReport;
+        $scope.reportIncompleteCount = data.incompleteReport;
+        $scope.unsubmittedCount = $scope.todayAreaCount - ($scope.reportCompleteCount + $scope.reportIncompleteCount);
+            
+        $scope.progressBarFormat = ($scope.reportCompleteCount + $scope.reportIncompleteCount).toString() + " / " + $scope.todayAreaCount.toString();
+        $scope.progressBarPercent =  Math.round(($scope.reportCompleteCount + $scope.reportIncompleteCount) / $scope.todayAreaCount * 100) / 100;
+    });    
+    }, 500);
+    
+
+    $http.post('/getUnsubmittedToday', {
+        "day": $scope.day
+    }).then(function (response) {
         if (response.data.length > 0) {
             $scope.unsubmittedReport = response.data;
         } else {
@@ -3787,19 +3785,89 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
     $http.post('/getSubmittedReportDetail', {
         "day": $scope.day
     }).then(function (response) {
-        $scope.totalSubmitted = response.data.length;
         if (response.data.length > 0) {
             $scope.submittedReport = response.data;
         } else {
             $scope.submittedReport = [];
         }
     });
+    setTimeout(function(){
+        
     
-    //count report submission
-//    $scope.totalSubmitted = $scope.submittedReport.length;
-//    $scope.totalUnsubmitted = $scope.unsubmittedReport.length;
-//    $scope.totalSubmissionLeft = angular.copy($scope.totalUnsubmitted - $scope.totalSubmitted)/;
-    
+    var chart = new Highcharts.Chart({
+  title: {
+    text: 'Report Submission Progress Bar',
+    align: 'left',
+    margin: 0,
+  },
+  chart: {
+    renderTo: 'progressBar',
+    type: 'bar',
+    height: 90,
+  },
+  credits: false,
+  tooltip: false,
+  legend: false,
+  navigation: {
+    buttonOptions: {
+      enabled: false
+    }
+  },
+  xAxis: {
+    visible: false,
+  },
+  yAxis: {
+    visible: false,
+    min: 0,
+    max: 100,
+  },
+  series: [{
+    data: [100],
+    grouping: false,
+    animation: false,
+    enableMouseTracking: false,
+    showInLegend: false,
+    color: 'lightskyblue',
+    pointWidth: 50,
+    borderWidth: 0,
+    borderRadiusTopLeft: '5px',
+    borderRadiusTopRight: '5px',
+    borderRadiusBottomLeft: '5px',
+    borderRadiusBottomRight: '5px',
+    dataLabels: {
+      className: 'highlight',
+      format: $scope.progressBarFormat,
+      enabled: true,
+      align: 'right',
+      style: {
+        color: 'white',
+        textOutline: false,
+      }
+    }
+  }, {
+    enableMouseTracking: false,
+    data: [$scope.progressBarPercent],
+    borderRadiusBottomLeft: '4px',
+    borderRadiusBottomRight: '4px',
+    color: 'lightgreen',
+    borderWidth: 0,
+    pointWidth: 50,
+    animation: {
+      duration: 250,
+    },
+    dataLabels: {
+      enabled: true,
+      inside: true,
+      align: 'left',
+      format: '{point.y}%',
+      style: {
+        color: 'white',
+        textOutline: false,
+      }
+    }
+  }]
+});
+    }, 700);
 });
                
 app.controller('accountController', function ($scope, $http, $filter, $window, storeDataService) {
