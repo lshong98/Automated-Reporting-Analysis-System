@@ -10,6 +10,7 @@
     </div>
 </div>
 
+<!--
 <div class="form-group row">
     <label for="inputDate" class="col-xs-3 col-form-label form-label-width">Date</label>
     <div class="col-md-9">
@@ -23,18 +24,22 @@
         <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="comp.compTime" data-ng-change="compTimeChange(comp.compTime)" str-to-time="" />
     </div>
 </div>
+-->
 
 <div class="form-group row">
     <label for="inputSource" class="col-xs-3 col-form-label form-label-width">Source</label>
     <div class="col-md-9">
         <select class="form-control mx-sm-3" id="inputSource" data-ng-model="comp.compSource" data-live-search="true" data-width="100%">
             <option value="Telephone">Telephone</option>
+            <option value="Email">Email</option>
+            <option value="Fax">Fax</option>
             <option value="MBKS">MBKS</option>
             <option value="DBKU">DBKU</option>
             <option value="MPP">MPP</option>
-            <option value="Others">Others</option>
+            <option value="MDS">MDS</option>
+            <option value="Talikhidmat">Talikhidmat</option>
         </select>
-        <input type="text" class="form-control mx-sm-3" placeholder="Specify others item" data-ng-model="sourceOthers" data-ng-show="comp.compSource == 'Others'"/>
+
     </div>
 </div>
 
@@ -77,6 +82,7 @@
     </div>
 </div>
 
+<!--
 <div class="form-group row">
     <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Under</label>
     <div class="col-md-9">
@@ -100,13 +106,22 @@
         <input type="text" class="form-control mx-sm-3" placeholder="Specify others Council" data-ng-model="councilOthers" data-ng-show="comp.compCouncil == 'Others'"/>
     </div>
 </div>
+-->
+
+<div class="form-group row">
+    <label for="uploadImg" class="col-xs-3 col-form-label form-label-width">Image:</label>
+    <div class="col-md-9">
+        <canvas style="border:1px solid grey; width: 400px; height: 300px; margin: 15px;" id="uploadImg"></canvas>
+    </div>
+</div>
 
 <br/>
 <hr/>
 <br/>
 
+<!--
 <div class="form-group row">
-    <label for="inputType" class="col-xs-3 col-form-label form-label-width">Type of Complaint</label>
+    <label for="inputType" class="col-xs-3 col-form-label form-label-width">Type of Complaint:</label>
     <div class="col-md-9">
         <select class="form-control mx-sm-3" id="inputType" data-ng-model="comp.compType" data-live-search="true" data-width="100%">
             <option value="Waste not collected">Waste not collected</option>            
@@ -121,10 +136,28 @@
         <input type="text" class="form-control mx-sm-3" placeholder="Specify waste not collected for how many days" data-ng-model="type1days" data-ng-show="comp.compType == 'Waste not collected'"/>
     </div>
 </div>
+-->
+
+<div class="form-group row">
+    <label class="col-xs-3 col-form-label form-label-width">Type of Complaint:</label>
+    <div class="col-md-9">
+        <label for="tc1">Waste not collected <input id="tc1" type="checkbox" data-ng-model="tc1"> <input type="text" placeholder="Specify days" data-ng-show="tc1 == true" data-ng-model="tc1days"/></label><br/>
+        <label for="tc2">Bin not pushed back to its original location <input id="tc2" type="checkbox" data-ng-model="tc2"></label><br/>
+        <label for="tc3">Spillage of waste <input id="tc3" type="checkbox" data-ng-model="tc3"></label><br/>
+        <label for="tc4">Spillage of leachate water <input id="tc4" type="checkbox" data-ng-model="tc4"></label><br/>
+        <label for="tc5">RoRo not send <input id="tc5" type="checkbox" data-ng-model="tc5"></label><br/>
+        <label for="tc6">RoRo not exchanged <input id="tc6" type="checkbox" data-ng-model="tc6"></label><br/>
+        <label for="tc7">RoRo not pulled <input id="tc7" type="checkbox" data-ng-model="tc7"></label><br/>
+        <label for="tc8">RoRo not emptied <input id="tc8" type="checkbox" data-ng-model="tc8"></label><br/>
+        <label for="tc9">Others <input id="tc9" type="checkbox" data-ng-model="tc9"> <input type="text" placeholder="Specify others" data-ng-show="tc9 == true" data-ng-model="tc9others"/></label>
+        
+    </div>
+</div>
 
 <br/>
 <hr/>
 <br/>
+<!--
 
 
 <div class="form-group row">
@@ -150,7 +183,9 @@
 
 <br/>
 <hr/>
+-->
 
+<!--
 <div class="form-group row">
     <label for="inputCIDate" class="col-xs-3 col-form-label form-label-width">Customer Informed Date</label>
     <div class="col-md-9">
@@ -273,6 +308,7 @@
         <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="comp.compRemark"></textarea>
     </div>
 </div>
+-->
 
 <div class="row">
     <div class="col-md-11"></div>

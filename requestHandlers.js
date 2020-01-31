@@ -178,6 +178,10 @@ app.get('/complaint-detail/:complaintCode', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-detail.html', {root: __dirname});
 });
+app.get('/complaint-logistics-detail/:complaintCode', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-logistics-detail.html', {root: __dirname});
+});
 app.get('/delivery-management', function (req, res) {
     'use strict';
     res.sendFile('pages/delivery-management.html', {root: __dirname});

@@ -473,6 +473,18 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintDetailController',
         controllerAs: 'complaintDetail'
     })
+    .when('/complaint-logistics-detail/:complaintCode', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/complaint-logistics-detail/' + $route.current.params.complaintCode);
+            }
+        },
+        templateUrl: function (params) {
+            return '/complaint-logistics-detail/' + params.complaintCode;
+        },
+        controller: 'complaintLogisticsDetailController',
+        controllerAs: 'complaintLogisticsDetail'
+    })
     .when('/delivery-management', {
         resolve: {
             "check": function (routingService, $window, $location) {

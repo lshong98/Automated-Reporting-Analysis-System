@@ -386,7 +386,7 @@ app.service('storeDataService', function () {
                 "checkView": 'I',
                 "verifyView": 'I'
             },
-            "complaintlist": {
+            "complaintapp": {
                 "view": 'I'
             },
             "transactionLog": {
@@ -497,7 +497,7 @@ app.service('storeDataService', function () {
                 "edit": 'I',
                 "create": 'I'
             },
-            "complaintofficer": {
+            "complaintweb": {
                 "view": 'I',
                 "edit": 'I',
                 "create": 'I'
@@ -4389,7 +4389,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "checkView": 'I',
             "verifyView": 'I'
         },
-        "complaintlist": {
+        "complaintapp": {
             "view": 'I'
         },
         "transactionLog": {
@@ -4495,7 +4495,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "edit": 'I',
             "create": 'I'
         },
-        "complaintofficer": {
+        "complaintweb": {
             "view": 'I',
             "edit": 'I',
             "create": 'I'
@@ -4508,7 +4508,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             key;
 
         $.each(response.data, function (index, value) {
-            console.log(index);
             $.each(value, function (bigKey, bigValue) {
                 if (bigKey == 'name') {
                     splitName = bigValue.split(' ');
@@ -4660,7 +4659,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "checkView": 'A',
                             "verifyView": 'A'
                         },
-                        "complaintlist": {
+                        "complaintapp": {
                             "view": 'A'
                         },
                         "transactionLog": {
@@ -4761,7 +4760,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "edit": 'A',
                             "create": 'A'
                         },
-                        "complaintofficer": {
+                        "complaintweb": {
                             "view": 'A',
                             "edit": 'A',
                             "create": 'A'
@@ -4842,7 +4841,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "checkView": 'I',
                             "verifyView": 'I'
                         },
-                        "complaintlist": {
+                        "complaintapp": {
                             "view": 'I'
                         },
                         "transactionLog": {
@@ -4937,7 +4936,7 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "edit": 'I',
                             "create": 'I'
                         },
-                        "complaintofficer": {
+                        "complaintweb": {
                             "view": 'I',
                             "edit": 'I',
                             "create": 'I'
@@ -7563,16 +7562,36 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
 
 });
 
+
+
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {
     'use strict';
     var asc = true;
     $scope.complaintList = [];
-    $scope.complaintLocList = [];
+    $scope.complaintOfficerList = [];
+    $scope.logisticsComplaintList = [];
+    $scope.nowModule = 'web';
     //pagination
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 7; //Record number each page
     $scope.maxSize = 8; //Show the number in page
+  
+    //get verified complaint list
+    $http.get('/getComplaintOfficerList').then(function (response) {
+        $scope.complaintOfficerList = response.data;
+        for (var i = 0; i < $scope.complaintOfficerList.length; i++) {
+            $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
+            
+            if($scope.complaintOfficerList[i].step == 1){
+                $scope.complaintOfficerList[i].department = "Logistics";
+            }else{
+                $scope.complaintOfficerList[i].department = "Customer Services";
+            }
+        }
 
+    });
+    
+    //get app complaint list
     $http.get('/getComplaintList').then(function (response) {
         $scope.searchComplaintFilter = '';
         $scope.filterComplaintList = [];
@@ -7606,11 +7625,19 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
         $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-primary': c.status == 'Confirmation', 'badge badge-success': c.status == 'Done'}";
     });
+    
+    //get logistics complaint list
+    $http.get('/getLogisticsComplaintList').then(function (response) {
+        $scope.logisticsComplaintList = response.data;
+        if($scope.logisticsComplaintList.length != 0){
+            for (var i = 0; i < $scope.logisticsComplaintList.length; i++) {
+                $scope.logisticsComplaintList[i].complaintDate = $filter('date')($scope.logisticsComplaintList[i].complaintDate, 'yyyy-MM-dd');
+            }
+        }
+    });    
 
     $scope.readComplaint = function(){
-        console.log('hello read complaint');
         $http.post('/readComplaint').then(function (response) {
-            console.log(response.data);
             if (response.data == "Complaint Read") {
                 socket.emit('complaint read');
             }
@@ -7619,78 +7646,40 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         });
     };
 
+    //view app complaint
     $scope.complaintDetail = function (complaintCode) {
         window.location.href = '#/complaint-detail/' + complaintCode;
 
     };
-
-    var $googleMap = document.getElementById('googleMap');
-
-    var visualizeMap = {
-        center: new google.maps.LatLng(1.5503052, 110.3394602),
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: false,
-        panControl: false,
-        zoomControl: false,
-        streetViewControl: false,
-        disableDefaultUI: true,
-        editable: false,
-        zoom: 13
+    
+    //create verified complaint
+    $scope.createComp = function () {
+        window.location.href = '#/complaint-officer-create';
+    }  
+    
+    //view verified complaint
+    $scope.viewComp = function (coID) {
+        setTimeout(function () {
+            window.location.href = '#/complaint-officer-detail/' + coID;
+        }, 500);
     };
-
-    var map = new google.maps.Map($googleMap, visualizeMap);
-
-    $http.get('/getComplaintLoc').then(function (response) {
-        $scope.complaintLocList = response.data
-        var myLatLng = [];
-        var marker = [];
-        var complaintInfo = [];
-        //
-        //        for(var i =0; i <$scope.complaintLocList.length; i++){
-        //
-        //            myLatLng[i] = {lat: $scope.complaintLocList[i].latitude, lng: $scope.complaintLocList[i].longitude};
-        //
-        //            marker[i] = new google.maps.Marker({
-        //                position: myLatLng[i],
-        //                title: $scope.complaintLocList.area
-        //            });
-        //
-        //            marker[i].setMap(map);
-        //
-        //        }
-        console.log($scope.complaintLocList);
-        $.each($scope.complaintLocList, function (index, value) {
-            myLatLng[index] = {
-                lat: value.latitude,
-                lng: value.longitude
-            };
-
-            value.date = $filter('date')(value.date, 'yyyy-MM-dd');
-
-            complaintInfo[index] = value.customer + ',' + value.date + ',' + value.code + '-' + value.taman + ',' + 'View Detail.'.link('#/complaint-detail/' + value.complaintID);
-
-            marker[index] = new google.maps.Marker({
-                position: myLatLng[index],
-                title: value.area
-            });
-
-            marker[index].setMap(map);
-
-            marker[index].addListener('click', function () {
-                var infowindow = new google.maps.InfoWindow({
-                    content: complaintInfo[index]
-                });
-                infowindow.open(marker[index].get('map'), marker[index]);
-
-            });
-        });
-    });
-
+    
+    //view logistics complaint
+    $scope.viewLogComp =  function (coID){
+        setTimeout(function () {
+            window.location.href = '#/complaint-logistics-detail/' + coID;
+        }, 500);     
+        console.log(coID)
+    }
+    
     $scope.orderBy = function (property) {
         $scope.complaintList = $filter('orderBy')($scope.complaintList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
 
+    $scope.tabClick = function(module) {
+        $scope.nowModule = module;
+    }
 
 
 });
@@ -8135,6 +8124,211 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     }
 });
 
+app.controller('complaintLogisticsDetailController', function($scope, $http, $filter, $window, $routeParams){
+    
+    $scope.coIDobj = {
+        'coID': $routeParams.complaintCode
+    };
+     
+    
+    $scope.detailObj = {};
+    $scope.areaList = [];
+    $scope.logistics = {
+        'areaUnder':'',
+        'areaCouncil':'',
+        'sub':'',
+        'subDate':'',
+        'subTime':'',
+        'by':$window.sessionStorage.getItem('owner'),
+        'status':'',
+        'statusDate':'',
+        'statusTime':'',
+        'remark':'',
+        'logsImg':'',
+        
+    };
+    $scope.showSubmitBtn = true;
+    
+    $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function(response){
+        $scope.detailObj = response.data.data[0];
+        $scope.detailType = "";
+
+        var splitType = "";
+        var splitTypeContent = "";
+        var splitTypeSpecialContent = "";        
+        
+        $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
+        $scope.detailObj.logisticsDate = $filter('date')($scope.detailObj.logisticsDate, 'yyyy-MM-dd');  
+        
+        $scope.statusDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
+        
+        $scope.subTimeChange = function (time) {
+            $scope.logistics.subTime = time == undefined ? "" : time;
+        };
+        $scope.statusTimeChange = function (time) {
+            $scope.logistics.statusTime = time == undefined ? "" : time;
+        };        
+
+        splitType = $scope.detailObj.type.split(":,:");
+        for(var i = 0; i<splitType.length; i++){
+            if(splitType[i].length>1){
+                splitTypeSpecialContent = splitType[i].split(":::::");
+                if(splitTypeSpecialContent[0] == '1'){
+                    splitTypeSpecialContent[2] = "Waste not collected (days)";
+                }else if(splitTypeSpecialContent[0] == '9'){
+                    splitTypeSpecialContent[2] = "Others";
+                }
+                $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
+            }else{
+                if(splitType[i] == '2'){
+                    splitTypeContent = "Bin not pushed back to its original location";
+                }else if(splitType[i] == '3'){
+                    splitTypeContent = "Spillage of waste";
+                }else if(splitType[i] == '4'){
+                    splitTypeContent = "Spillage of leachate water";
+                }else if(splitType[i] == '5'){
+                    splitTypeContent = "RoRo not send";
+                }else if(splitType[i] == '6'){
+                    splitTypeContent = "RoRo not exchanged";
+                }else if(splitType[i] == '7'){
+                    splitTypeContent = "RoRo not pulled";
+                }else if(splitType[i] == '8'){
+                    splitTypeContent = "RoRo not emptied";
+                }
+                $scope.detailType += splitTypeContent;
+            }
+            
+            if(i < (splitType.length - 1)){
+                $scope.detailType += ", ";
+            } 
+            
+        }        
+    });
+    
+    $http.get('/getAreaList').then(function (response) {
+        $scope.renderSltPicker();
+        $.each(response.data, function (index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var code = value.code.split(",");
+            var area = [];
+            $.each(areaID, function (index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index],
+                    "code": code[index]
+                });
+            });
+            $scope.areaList.push({
+                "zone": {
+                    "id": value.zoneID,
+                    "name": value.zoneName
+                },
+                "area": area
+            });
+        });
+        $('.selectpicker').on('change', function () {
+            $scope.renderSltPicker();
+        });
+    });   
+    
+
+    function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
+        if (pasteEvent.clipboardData == false) {
+            if (typeof(callback) == "function") {
+                callback(undefined);
+            }
+        };
+
+        var items = pasteEvent.clipboardData.items;
+
+        if (items == undefined) {
+            if (typeof(callback) == "function") {
+                callback(undefined);
+            }
+        };
+
+        for (var i = 0; i < items.length; i++) {
+            // Skip content if not image
+            if (items[i].type.indexOf("image") == -1) continue;
+            // Retrieve image on clipboard as blob
+            var blob = items[i].getAsFile();
+
+            if (typeof(callback) == "function") {
+                callback(blob);
+            }
+        }
+    }
+    
+    window.addEventListener("paste", function(e) {
+
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById("uploadImg");
+                    var ctx = canvas.getContext('2d');
+
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
+
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
+
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
+
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
+
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        $scope.logistics.logsImg = base64data;
+                    }
+                }
+            });
+    }, false);  
+    
+    $scope.submit = function(){
+        console.log($scope.logistics);
+        $scope.logistics.statusDate = $filter('date')($scope.statusDate, 'yyyy-MM-dd');
+        $scope.logistics.subDate = $filter('date')($scope.logsSubDate, 'yyyy-MM-dd');
+        $scope.logistics.subTime = $filter('date')($scope.logistics.subTime, 'HH:mm:ss');
+        $scope.logistics.statusTime = $filter('date')($scope.logistics.statusTime, 'HH:mm:ss');
+        
+        
+        if($scope.logistics.areaUnder == "" || $scope.logistics.areaCouncil == "" || $scope.logistics.sub == "" || $scope.logistics.subDate == "" || $scope.logistics.subTime == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == ""){
+
+            $scope.notify("error", "There has some blank column");
+            $scope.showSubmitBtn = true;            
+        }else{
+            
+            $http.post('/submitLogisticsComplaint', $scope.logistics).then(function (response) {
+                if (response.data.status == "success") {
+                    $scope.notify(response.data.status, response.data.message);
+                    window.location.href = '#/complaint-module';
+                } else {
+                    $scope.notify("error", "There has some ERROR!");
+                }
+            });
+        }
+    }
+    
+    $scope.backList = function () {
+        window.location.href = '#/complaint-module';
+    }    
+    
+});
+
 app.controller('complaintOfficerController', function ($scope, $http, $filter) {
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 8; //Record number each page
@@ -8160,8 +8354,7 @@ app.controller('complaintOfficerController', function ($scope, $http, $filter) {
     };
 
 });
-app.controller('complaintOfficercreateController', function ($scope, $http, $filter) {
-
+app.controller('complaintOfficercreateController', function ($scope, $http, $filter, $window) {
     $scope.showSubmitBtn = true;
     $scope.comp = {
         "compDate": '',
@@ -8172,42 +8365,25 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         "compCompany": '',
         "compPhone": '',
         "compAddress": '',
-        "compUnder": '',
-        "compCouncil": '',
+        "compImg":'',
         "compType": '',
         "compLogDate": '',
         "compLogTime": '',
-        "compLogBy": '',
-        "compCIDate": '',
-        "compCITime": '',
-        "compCIBy": '',
-        "compRCDate": '',
-        "compRCTime": '',
-        "compRCBy": '',
-        "compSub": '',
-        "compSubDate": '',
-        "compSubTime": '',
-        "compSubBy": '',
-        "compStatus": '',
-        "compClosed": '',
-        "compSDate": '',
-        "compSTime": '',
-        "compSBy": '',
-        "compRemark": '',
+        "compLogBy": $window.sessionStorage.getItem('owner'),
         "creationDate": ''
     };
-
-    $scope.sourceOthers = '';
-    $scope.underOthers = '';
-    $scope.councilOthers = '';
-    $scope.type1days = '';
+    
+    $scope.tc1 = false;
+    $scope.tc2 = false;
+    $scope.tc3 = false;
+    $scope.tc4 = false;
+    $scope.tc5 = false;
+    $scope.tc6 = false;
+    $scope.tc7 = false;
+    $scope.tc8 = false;
 
     $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
     $scope.compLogDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
-    $scope.compCIDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
-    $scope.compRCDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
-    $scope.compSubDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
-    $scope.compSDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
 
     $scope.compTimeChange = function (time) {
         $scope.comp.compTime = time == undefined ? "" : time;
@@ -8215,55 +8391,129 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
     $scope.logTimeChange = function (time) {
         $scope.comp.compLogTime = time == undefined ? "" : time;
     };
-    $scope.ciTimeChange = function (time) {
-        $scope.comp.compCITime = time == undefined ? "" : time;
-    };
-    $scope.rcTimeChange = function (time) {
-        $scope.comp.compRCTime = time == undefined ? "" : time;
-    };
-    $scope.subTimeChange = function (time) {
-        $scope.comp.compSubTime = time == undefined ? "" : time;
-    };
-    $scope.sTimeChange = function (time) {
-        $scope.comp.compSTime = time == undefined ? "" : time;
-    };
 
+    function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
+        if (pasteEvent.clipboardData == false) {
+            if (typeof(callback) == "function") {
+                callback(undefined);
+            }
+        };
+
+        var items = pasteEvent.clipboardData.items;
+
+        if (items == undefined) {
+            if (typeof(callback) == "function") {
+                callback(undefined);
+            }
+        };
+
+        for (var i = 0; i < items.length; i++) {
+            // Skip content if not image
+            if (items[i].type.indexOf("image") == -1) continue;
+            // Retrieve image on clipboard as blob
+            var blob = items[i].getAsFile();
+
+            if (typeof(callback) == "function") {
+                callback(blob);
+            }
+        }
+    }
+    
+    window.addEventListener("paste", function(e) {
+
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById("uploadImg");
+                    var ctx = canvas.getContext('2d');
+
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
+
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
+
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
+
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
+
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        $scope.comp.compImg = base64data;
+                    }
+                }
+            });
+    }, false);
+    
     $scope.addComp = function () {
         $scope.showSubmitBtn = false;
         $scope.comp.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $scope.comp.compDate = $filter('date')($scope.compDate, 'yyyy-MM-dd');
-        $scope.comp.compLogDate = $filter('date')($scope.compLogDate, 'yyyy-MM-dd');
-        $scope.comp.compCIDate = $filter('date')($scope.compCIDate, 'yyyy-MM-dd');
-        $scope.comp.compRCDate = $filter('date')($scope.compRCDate, 'yyyy-MM-dd');
-        $scope.comp.compSubDate = $filter('date')($scope.compSubDate, 'yyyy-MM-dd');
-        $scope.comp.compSDate = $filter('date')($scope.compSDate, 'yyyy-MM-dd');
-        $scope.comp.compTime = $filter('date')($scope.comp.compTime, 'HH:mm:ss');
-        $scope.comp.compLogTime = $filter('date')($scope.comp.compLogTime, 'HH:mm:ss');
-        $scope.comp.compCITime = $filter('date')($scope.comp.compCITime, 'HH:mm:ss');
-        $scope.comp.compRCTime = $filter('date')($scope.comp.compRCTime, 'HH:mm:ss');
-        $scope.comp.compSubTime = $filter('date')($scope.comp.compSubTime, 'HH:mm:ss');
-        $scope.comp.compSTime = $filter('date')($scope.comp.compSTime, 'HH:mm:ss');
-        if ($scope.comp.compSource == "Others") {
-            $scope.comp.compSource = "Others: " + $scope.sourceOthers;
+        $scope.comp.compDate = $filter('date')(new Date(), 'yyyy-MM-dd');
+        $scope.comp.compLogDate = $filter('date')(new Date(), 'yyyy-MM-dd');
+        $scope.comp.compTime = $filter('date')(new Date(), 'HH:mm:ss');
+        $scope.comp.compLogTime = $filter('date')(new Date(), 'HH:mm:ss');
+        
+        if($scope.tc1 == true){
+            if($scope.tc1days == undefined || $scope.tc1days == ""){
+                $scope.tc1days = "0";
+            }
+            $scope.comp.compType += '1:::::';
+            $scope.comp.compType += $scope.tc1days + ':,:';
         }
-        if ($scope.comp.compUnder == "Subcontractors") {
-            $scope.comp.compUnder = "Subcontractors: " + $scope.underOthers;
+        if($scope.tc2 == true){
+            $scope.comp.compType += '2:,:';
         }
-        if ($scope.comp.compCouncil == "Others") {
-            $scope.comp.compCouncil = "Others: " + $scope.councilOthers;
+        if($scope.tc3 == true){
+            $scope.comp.compType += '3:,:';
         }
-        if ($scope.comp.compType == "Waste not collected") {
-            $scope.comp.compType = "Waste not collected (days): " + $scope.type1days;
+        if($scope.tc4 == true){
+            $scope.comp.compType += '4:,:';
         }
+        if($scope.tc5 == true){
+            $scope.comp.compType += '5:,:';
+        }
+        if($scope.tc6 == true){
+            $scope.comp.compType += '6:,:';
+        }
+        if($scope.tc7 == true){
+            $scope.comp.compType += '7:,:';
+        }
+        if($scope.tc8 == true){
+            $scope.comp.compType += '8:,:';
+        }
+        if($scope.tc9 == true){
+            if($scope.tc9others == undefined){
+                $scope.tc9others = "";
+            }
+            $scope.comp.compType += '9:::::';
+            $scope.comp.compType += $scope.tc9others + ':,:';
+        }
+        
+        
+        $scope.comp.compType = $scope.comp.compType.substring(0,$scope.comp.compType.length - 3);
 
-        if ($scope.comp.compDate == '' || $scope.comp.compTime == '' || $scope.comp.compSource == '' || $scope.comp.compRefNo == '' || $scope.comp.compName == '' || $scope.comp.compCompany == '' || $scope.comp.compPhone == '' || $scope.comp.compAddress == '' || $scope.comp.compUnder == '' || $scope.comp.compCouncil == '' || $scope.comp.compType == '' || $scope.comp.compLogDate == '' || $scope.comp.compLogTime == '' || $scope.comp.compLogBy == '' || $scope.comp.compCIDate == '' || $scope.comp.compCITime == '' || $scope.comp.compCIBy == '' || $scope.comp.compRCDate == '' || $scope.comp.compRCTime == '' || $scope.comp.compRCBy == '' || $scope.comp.compSub == '' || $scope.comp.compSubDate == '' || $scope.comp.compSubTime == '' || $scope.comp.compSubBy == '' || $scope.comp.compStatus == '' || $scope.comp.compClosed == '' || $scope.comp.compSDate == '' || $scope.comp.compSTime == '' || $scope.comp.compSBy == '' || $scope.comp.compRemark == '') {
+
+        if ($scope.comp.compDate == '' || $scope.comp.compTime == '' || $scope.comp.compSource == '' || $scope.comp.compRefNo == '' || $scope.comp.compName == '' || $scope.comp.compCompany == '' || $scope.comp.compPhone == '' || $scope.comp.compAddress == '' || $scope.comp.compType == '' || $scope.comp.compLogDate == '' || $scope.comp.compLogTime == '' || $scope.comp.compLogBy == '') {
+            console.log($scope.comp);
             $scope.notify("error", "There has some blank column");
             $scope.showSubmitBtn = true;
         } else {
             $http.post('/submitOfficeMadeComplaint', $scope.comp).then(function (response) {
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
-                    window.location.href = '#/complaint-officer';
+                    window.location.href = '#/complaint-module';
                 } else {
                     $scope.notify("error", "There has some ERROR!");
                 }
@@ -8272,14 +8522,52 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
 
     }
 });
-app.controller('complaintOfficerdetailController', function ($scope, $http, $routeParams, $filter) {
+app.controller('complaintOfficerdetailController', function ($scope, $http, $routeParams, $filter, $route) {
     $scope.coIDobj = {
         'coID': $routeParams.coID
     };
     $scope.detailObj = {};
+    $scope.detailType = "";
+    $scope.viewControl = 0;
+    $scope.areaCode = "";
+    $scope.cust = {
+        'custDate': "",
+        'custTime': "",
+        'custBy' : ""
+    };
+    $scope.showSubCustBtn = true;
+    
+    var splitType = "";
+    var splitTypeContent = "";
+    var splitTypeSpecialContent = "";
+    var areaSplit = "";
 
     $http.post('/getComplaintOfficerDetail', $scope.coIDobj).then(function (response) {
+        
         $scope.detailObj = response.data.data[0];
+        
+        //initialize staff
+        var staffID = {
+            'id':  $scope.detailObj.logisticsBy
+        };
+        
+        var logisticsStaffID = {
+            'id': $scope.detailObj.forwardedBy
+        };
+        
+        var informCustStaffID = {
+            'id': $scope.detailObj.customerBy
+        }
+        
+        $scope.staffName = '';
+        $scope.logsStaffName = '';
+        $http.post('/getStaffName', staffID).then(function(response){
+            $scope.staffName = response.data[0].staffName;
+        });
+        
+
+      
+        //date reformat
         $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
 
@@ -8287,22 +8575,103 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
         $scope.detailObj.customerDate = $filter('date')($scope.detailObj.customerDate, 'yyyy-MM-dd');
 
-        $scope.detailObj.recordedDate = $filter('date')($scope.detailObj.recordedDate, 'yyyy-MM-dd');
-
         $scope.detailObj.forwardedDate = $filter('date')($scope.detailObj.forwardedDate, 'yyyy-MM-dd');
 
         $scope.detailObj.statusDate = $filter('date')($scope.detailObj.statusDate, 'yyyy-MM-dd');
+        
+        splitType = $scope.detailObj.type.split(":,:");
+        for(var i = 0; i<splitType.length; i++){
+            if(splitType[i].length>1){
+                splitTypeSpecialContent = splitType[i].split(":::::");
+                if(splitTypeSpecialContent[0] == '1'){
+                    splitTypeSpecialContent[2] = "Waste not collected (days)";
+                }else if(splitTypeSpecialContent[0] == '9'){
+                    splitTypeSpecialContent[2] = "Others";
+                }
+                $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
+            }else{
+                if(splitType[i] == '2'){
+                    splitTypeContent = "Bin not pushed back to its original location";
+                }else if(splitType[i] == '3'){
+                    splitTypeContent = "Spillage of waste";
+                }else if(splitType[i] == '4'){
+                    splitTypeContent = "Spillage of leachate water";
+                }else if(splitType[i] == '5'){
+                    splitTypeContent = "RoRo not send";
+                }else if(splitType[i] == '6'){
+                    splitTypeContent = "RoRo not exchanged";
+                }else if(splitType[i] == '7'){
+                    splitTypeContent = "RoRo not pulled";
+                }else if(splitType[i] == '8'){
+                    splitTypeContent = "RoRo not emptied";
+                }
+                $scope.detailType += splitTypeContent;
+            }
+            
+            if(i < (splitType.length - 1)){
+                $scope.detailType += ", ";
+            } 
+            
+        }
+        
 
+        
+        $scope.viewControl = $scope.detailObj.step;
+
+        if($scope.viewControl >= 2){
+            areaSplit = $scope.detailObj.under;
+            $scope.areaCode = areaSplit.split(",")[1]; 
+            
+            $http.post('/getStaffName', logisticsStaffID).then(function(response){
+                $scope.logsStaffName = response.data[0].staffName;
+            });  
+            
+            if($scope.viewControl >= 3){
+                $http.post('/getStaffName', informCustStaffID).then(function(response){
+                    $scope.informCustStaffName = response.data[0].staffName;
+                });                
+            }
+        }
     });
+    
+    
+//    $scope.custTimeChange = function (time) {
+//        $scope.cust.custTime = time == undefined ? "" : time;
+//    };    
+    
+    $scope.updateCust = function() {
+        
+        $scope.showSubCustBtn = false;
+        
+        $scope.cust.custDate = $filter('date')($scope.custDate, 'yyyy-MM-dd'); 
+        $scope.cust.custTime = $filter('date')($scope.custTime, 'HH:mm:ss');
+        $scope.cust.custBy = window.sessionStorage.getItem('owner');
+        
 
-    $scope.editComp = function (coID) {
-        setTimeout(function () {
-            window.location.href = '#/complaint-officer-edit/' + coID;
-        }, 500);
-    }
+        if($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == ''){
+            $scope.notify("error", "There has some blank column");
+            $scope.showSubCustBtn = true;    
+        }else{
+            $http.post('/updateCustInformation', $scope.cust).then(function(response){
+                if (response.data.status == "success") {
+                    $scope.notify(response.data.status, response.data.message);
+                    $route.reload();
+                } else {
+                    $scope.notify("error", "There has some ERROR!");
+                }                
+            });
+        }
+        
+    };
+
+//    $scope.editComp = function (coID) {
+//        setTimeout(function () {
+//            window.location.href = '#/complaint-officer-edit/' + coID;
+//        }, 500);
+//    }
 
     $scope.backList = function () {
-        window.location.href = '#/complaint-officer';
+        window.location.href = '#/complaint-module';
     }
 });
 app.controller('complaintOfficereditController', function ($scope, $http, $routeParams, $filter) {

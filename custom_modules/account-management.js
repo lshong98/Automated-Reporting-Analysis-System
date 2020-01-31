@@ -209,6 +209,22 @@ app.get('/getDriverList', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+//get staff name by using staffID
+app.post('/getStaffName', function(req, res){
+    'use strict';
+    
+    var sql = "SELECT staffName FROM tblstaff WHERE staffID = '" + req.body.id + "' ";
+    
+    database.query(sql, function (err,result){
+        if(err){
+            res.end();
+            throw err;
+        }
+        res.json(result);
+        res.end();
+    });
+});
 /********************************************************************************/
 
 module.exports = app;
