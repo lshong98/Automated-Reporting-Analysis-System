@@ -125,22 +125,6 @@
             </ul>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">Reporting Officer</div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    Reporting Officer
-                    <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.reportingOfficer.is"
-                        data-ng-change="changeValue(auth.reportingOfficer.is, 'is reportingOfficer');"
-                        data-ng-true-value="'A'" data-ng-false-value="'I'"/>
-                        <span class="slider"></span>
-                    </label>
-                </li>
-            </ul>
-        </div>
-    </div>
 </div>
 <div class="row">
     <div class="col-md-6">
@@ -606,14 +590,42 @@
             <div class="card-header">Complaint Module</div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    View List
+                    Complaint from App
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.complaintlist.view"
-                            data-ng-change="changeValue(auth.complaintlist.view, 'view complaintlist');"
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintapp.view"
+                            data-ng-change="changeValue(auth.complaintapp.view, 'view complaintapp');"
                             data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
                 </li>
+                <li class="list-group-item">
+                    Complaint List
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintweb.view"
+                            data-ng-change="changeValue(auth.complaintweb.view, 'view complaintweb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>                
+                <li class="list-group-item">
+                    Create Complaint
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintweb.create"
+                            data-ng-change="changeValue(auth.complaintweb.create, 'create complaintweb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+
+                <li class="list-group-item">
+                    Edit Complaint
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintweb.edit"
+                            data-ng-change="changeValue(auth.complaintweb.edit, 'edit complaintweb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>                
             </ul>
         </div>
     </div>
@@ -855,41 +867,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card">
-            <!-- Default panel contents -->
-            <div class="card-header">Complaint Made by Officer</div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    Create Complaint
-                    <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.create"
-                            data-ng-change="changeValue(auth.complaintofficer.create, 'create complaintofficer');"
-                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
-                        <span class="slider"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    View Complaint
-                    <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.view"
-                            data-ng-change="changeValue(auth.complaintofficer.view, 'view complaintofficer');"
-                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
-                        <span class="slider"></span>
-                    </label>
-                </li>
-                <li class="list-group-item">
-                    Edit Complaint
-                    <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.complaintofficer.edit"
-                            data-ng-change="changeValue(auth.complaintofficer.edit, 'edit complaintofficer');"
-                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
-                        <span class="slider"></span>
-                    </label>
-                </li>
-            </ul>
-        </div>
-    </div>
+
 
 
 </div>

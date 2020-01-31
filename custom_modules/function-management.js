@@ -209,7 +209,7 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.managerDashboard.view == \'A\'" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
             }
-        case "is reportingOfficer":
+        case "create reporting":
             if (status == 'A') {
                 return '<li data-ng-show="navigation.officer" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-officer"><i class="fa fa-tachometer-alt"></i> Officer Dashboard</a></li>';
             }
@@ -261,13 +261,9 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" data-ng-show="show.formAuthorization.view == \'A\'" role="menuitem"><a class="menu__link" href="#/form-authorization"><i class="fas fa-clipboard-check"></i> Form Authorization <span class="form-authorization"></span></a></li>';
             }
-        case "view complaintlist": 
+        case "view complaintweb": 
             if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.complaintlist.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module <span class="complaint"></span></a></li>';
-            }
-        case "view complaintofficer": 
-            if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.complaintofficer.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-officer"><i class="fas fa-bullhorn"></i> Complaint Officer </a></li>';
+                return '<li class="menu__item" data-ng-show="show.complaintapp.view == \'A\' || show.complaintweb.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module <span class="complaint"></span></a></li>';
             }
         case "view transactionLog":
             if (status == 'A') {
