@@ -28,22 +28,6 @@ app.config(function($routeProvider, $locationProvider){
 	.when('/', {
         resolve: {
             "check": function (routingService, $window, $location, $http) {
-                //get all role with manager dashboard
-                $http.get('/getAllRoleWithManagerDashboard').then(function (response) {
-                    var result = response.data;
-                    var viewManagerDashboard = false;
-                    
-                    for(var i=0; i<result.length; i++){
-                        if(result[i].positionName == $window.sessionStorage.getItem('position')){
-                            viewManagerDashboard = true;
-                            break;
-                        }
-                    }
-                    
-                    
-                    if (viewManagerDashboard)
-                        return routingService.auth($window, $location, '/dashboard-manager');
-                });
                 //get all role with reporting officer
                 $http.get('/getAllRoleWithReportingOfficer').then(function (response) {
                     var result = response.data;
@@ -59,6 +43,23 @@ app.config(function($routeProvider, $locationProvider){
                     if (isReportingOfficer)
                         return routingService.auth($window, $location, '/dashboard-officer');
                     
+                });
+                
+                //get all role with manager dashboard
+                $http.get('/getAllRoleWithManagerDashboard').then(function (response) {
+                    var result = response.data;
+                    var viewManagerDashboard = false;
+                    
+                    for(var i=0; i<result.length; i++){
+                        if(result[i].positionName == $window.sessionStorage.getItem('position')){
+                            viewManagerDashboard = true;
+                            break;
+                        }
+                    }
+                    
+                    
+                    if (viewManagerDashboard)
+                        return routingService.auth($window, $location, '/dashboard-manager');
                 });
 //                else if ($window.sessionStorage.getItem('position') == "Officer")
 //                        return routingService.auth($window, $location, '/zone-management');

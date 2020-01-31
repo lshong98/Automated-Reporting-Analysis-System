@@ -2813,7 +2813,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     $http.post('/loadMenu', {
         "position": position
     }).then(function (response) {
-        console.log(response.data);
+//        console.log(response.data);
         $('ul.menu__level').html(response.data.content);
     });
 });
@@ -3401,7 +3401,7 @@ app.controller('officerController', function ($scope, $filter, $http, $window) {
             });
 
         });
-        console.log($scope.areaList);
+//        console.log($scope.areaList);
     });
 
     $http.post('/getPassReportingAreaList', $scope.getPassReport).then(function (response) {
@@ -3624,7 +3624,6 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
     $http.get('/getReportingOfficerList').then(function (response) {
         var data = response.data;
         $scope.staffList = data;
-        console.log(response.data);
     });
 
     $http.get('/getDriverList').then(function (response) {
@@ -4332,9 +4331,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "managerDashboard": {
             "show": 'I',
         },
-        "reportingOfficer": {
-            "is": 'I',
-        },
         "account": {
             "create": 'I',
             "edit": 'I',
@@ -4603,9 +4599,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "managerDashboard": {
                             "show": 'A'
                         },
-                        "reportingOfficer": {
-                            "is": 'A'
-                        },
                         "account": {
                             "create": 'A',
                             "edit": 'A',
@@ -4789,9 +4782,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                     $scope.auth = {
                         "managerDashboard":{
                             "show": 'I'
-                        },
-                        "reportingOfficer": {
-                            "is": 'A'
                         },
                         "account": {
                             "create": 'I',

@@ -10,5 +10,7 @@ env_variables:
   INSTANCE_CONNECTION_NAME: trienekens-management:asia-southeast1:trienekens
 beta_settings:
   cloud_sql_instances: trienekens-management:asia-southeast1:trienekens
+  GCLOUD_STORAGE_BUCKET: trienekens-management-images
 network:
   session_affinity: true
+  

@@ -71,7 +71,7 @@ app.get('/getAreaList', function (req, res) {
 //for staff list in area management
 app.get('/getReportingOfficerList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaff INNER JOIN tblaccess ON tblstaff.positionID = tblaccess.positionID WHERE tblaccess.mgmtID = 92 AND tblaccess.status = 'A' AND tblstaff.staffStatus = 'A'";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaff INNER JOIN tblaccess ON tblstaff.positionID = tblaccess.positionID INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblmanagement.mgmtName = 'create reporting' AND tblaccess.status = 'A' AND tblstaff.staffStatus = 'A'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
