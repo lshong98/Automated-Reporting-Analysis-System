@@ -24,6 +24,26 @@ app.post('/updateComplaintStatus', function (req, res) {
     });
 });
 
+app.post('/updateComplaintDetailsStatus', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblcomplaintOfficer SET status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "' WHERE coID = '" + req.body.coID + "' ";
+    
+        var status = {
+            "status": ""
+        };
+    database.query(sql, function (err, result) {
+        if (err) {
+            
+            status.status = "error";
+            res.json(status);
+            throw err;
+        } else {
+            status.status = "success";
+            res.json(status);
+        }
+    });
+});
+
 //complaint module
 app.get('/getComplaintList', function (req, res) {
     'use strict';
@@ -213,7 +233,7 @@ app.post('/getLogisticsComplaintDetail',function (req,res){
 app.post('/submitLogisticsComplaint', function (req,res){
     'use strict';
     
-    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate+ "', statusTime = '" + req.body.statusTime + "', remarks = '" + req.body.remark + "', logsImg = '" + req.body.logsImg + "', step = 2 ";
+    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate+ "', statusTime = '" + req.body.statusTime + "', remarks = '" + req.body.remark + "', logsImg = '" + req.body.logsImg + "', step = 2 WHERE coID = '" + req.body.coID+ "' ";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -229,7 +249,7 @@ app.post('/submitLogisticsComplaint', function (req,res){
 app.post('/updateCustInformation',function (req,res){
     'use strict';
     
-    var sql = "UPDATE tblcomplaintofficer SET customerDate = '" + req.body.custDate + "', customerTime = '" + req.body.custTime+ "', customerBy = '" + req.body.custBy + "', step = 3";
+    var sql = "UPDATE tblcomplaintofficer SET customerDate = '" + req.body.custDate + "', customerTime = '" + req.body.custTime+ "', customerBy = '" + req.body.custBy + "', step = 3 WHERE coID = '" + req.body.coID + "' ";
     
     database.query(sql, function (err, result) {
         if (err) {

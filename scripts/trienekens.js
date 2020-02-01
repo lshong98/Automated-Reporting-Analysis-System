@@ -8145,9 +8145,10 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         'statusTime':'',
         'remark':'',
         'logsImg':'',
-        
+        'coID': $routeParams.complaintCode
     };
     $scope.showSubmitBtn = true;
+    $scope.showCompImg = true;
     
     $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function(response){
         $scope.detailObj = response.data.data[0];
@@ -8202,6 +8203,11 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                 $scope.detailType += ", ";
             } 
             
+        }  
+        console.log($scope.detailObj);
+        
+        if($scope.detailObj.compImg == "" || $scope.detailObj.compImg == null){
+            $scope.showCompImg = false;
         }        
     });
     
@@ -8533,9 +8539,18 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $scope.cust = {
         'custDate': "",
         'custTime': "",
-        'custBy' : ""
+        'custBy' : "",
+        'coID' : $routeParams.coID
+    };
+    $scope.status = {
+        'status': "",
+        'statusDate': "",
+        'statusTime': "",
+        'coID' : $routeParams.coID
     };
     $scope.showSubCustBtn = true;
+    $scope.showCompImg = true;
+    $scope.showLogsImg = true;
     
     var splitType = "";
     var splitTypeContent = "";
@@ -8565,7 +8580,8 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             $scope.staffName = response.data[0].staffName;
         });
         
-
+        $scope.status.status = $scope.detailObj.status;
+        $scope.status.statusTime = $scope.detailObj.statusTime;
       
         //date reformat
         $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
@@ -8577,7 +8593,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
         $scope.detailObj.forwardedDate = $filter('date')($scope.detailObj.forwardedDate, 'yyyy-MM-dd');
 
-        $scope.detailObj.statusDate = $filter('date')($scope.detailObj.statusDate, 'yyyy-MM-dd');
+        $scope.status.statusDate = $filter('date')($scope.detailObj.statusDate, 'yyyy-MM-dd');
         
         splitType = $scope.detailObj.type.split(":,:");
         for(var i = 0; i<splitType.length; i++){
@@ -8614,6 +8630,14 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             
         }
         
+        if($scope.detailObj.compImg == "" || $scope.detailObj.compImg == null){
+            $scope.showCompImg = false;
+        }
+
+        if($scope.detailObj.logsImg == "" || $scope.detailObj.logsImg == null){
+            $scope.showLogsImg = false;
+        }        
+        
 
         
         $scope.viewControl = $scope.detailObj.step;
@@ -8633,11 +8657,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             }
         }
     });
-    
-    
-//    $scope.custTimeChange = function (time) {
-//        $scope.cust.custTime = time == undefined ? "" : time;
-//    };    
+      
     
     $scope.updateCust = function() {
         
@@ -8663,6 +8683,22 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         }
         
     };
+    
+    $scope.updateStatus = function(){
+        
+        $scope.status.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
+        var time = new Date();
+        $scope.status.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+        
+        $http.post('/updateComplaintDetailsStatus', $scope.status).then(function(response){
+            if(response.data.status == "success"){
+                $scope.notify(response.data.status, "Status has been updated");
+                $route.reload();
+            }else{
+                $scope.notify("error", "There has some ERROR!");
+            }
+        });
+    }
 
 //    $scope.editComp = function (coID) {
 //        setTimeout(function () {
