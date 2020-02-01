@@ -29,26 +29,26 @@ app.post('/addReport', function (req, res) {
         created_on = req.body.creationDate,
         staff_id = req.body.staffID;
     
-    let base64Image = image.split(';base64,').pop();
+    //let base64Image = image.split(';base64,').pop();
     
     f.makeID('report', created_on).then(function (ID) {
-        var image_path = '/' + ID + '.jpg';
-        var local_store_path = 'images/daily-report' + image_path,
-            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+//        var image_path = '/' + ID + '.jpg';
+//        var local_store_path = 'images/daily-report' + image_path,
+//            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
         
-        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
-            if (err) throw err;
+//        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+//            if (err) throw err;
+//            
+//            await storage.bucket(bucketName).upload('./' + local_store_path, {
+//                gzip: true,
+//                metadata: {
+//                    cacheControl: 'public, no-cache',
+//                },
+//                public: true,
+//                destination: 'images/daily-report' + image_path
+//            });
             
-            await storage.bucket(bucketName).upload('./' + local_store_path, {
-                gzip: true,
-                metadata: {
-                    cacheControl: 'public, no-cache',
-                },
-                public: true,
-                destination: 'images/daily-report' + image_path
-            });
-            
-            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + public_url + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "')",
+            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + image + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "')",
                 reportID = ID;
             
             database.query(sql, function (err, result) {
@@ -58,7 +58,7 @@ app.post('/addReport', function (req, res) {
                     res.json({"status": "success", "details": {"reportID": reportID}});
                 }
             });
-        });
+        //});
         
         //With hand-draw circle
 //        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.format_startTime + "', '" + req.body.format_endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '', 'I', '" + req.body.status + "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "', '" + req.body.staffID + "')",
