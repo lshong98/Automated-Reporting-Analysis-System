@@ -1451,6 +1451,19 @@ app.post('/historyDetail', function (req, res) {
     });
 });
 
+app.post('/getUnsubmittedToday', function(req, res) {
+    'use strict';
+    
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
+    
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 app.post('/getSubmittedReportDetail', function(req, res) {
     'use strict';
 
