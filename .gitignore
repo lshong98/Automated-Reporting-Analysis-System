@@ -10,3 +10,7 @@ kml/KUCHING_COLLECTION_ZONE DIGITAL_MAP.kml的副本
 trienekens-management-9f941010219d.json
 trienekens-994df-d5d29b87e6a8.json
 trienekens-994df-6c159f3db6fd.json
+*.png
+*.jpg
+._custapp-mailer-credentials.json
+._trienekens-994df-6c159f3db6fd.json
