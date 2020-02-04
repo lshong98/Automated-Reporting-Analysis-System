@@ -31,7 +31,47 @@ const storage = new Storage({
     projectId: 'trienekens-management'
 });
 const bucket = storage.bucket('trienekens-management-images');
-//var socket = io.connect();
+
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
+const mailer_cred = require('../custapp-mailer-credentials.json');
+const mailer_id = mailer_cred.client_id;
+const mailer_sec = mailer_cred.client_secret;
+const mailer_ref_tkn = mailer_cred.refresh_token;
+
+const oauth2Client = new OAuth2(
+	mailer_id,
+	mailer_sec,
+	"https://developers.google.com/oauthplayground"
+);
+
+oauth2Client.setCredentials({
+	refresh_token: mailer_ref_tkn
+});
+
+const accessToken = oauth2Client.getAccessToken();
+
+const smtpTransport = nodemailer.createTransport({
+     service: "gmail",
+     auth: {
+          type: "OAuth2",
+          user: "trienekensmobileapp@gmail.com", 
+          clientId: mailer_id,
+          clientSecret: mailer_sec,
+          refreshToken: mailer_ref_tkn,
+          accessToken: accessToken
+     }
+});
+
+//const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: 'registercustomerapp@gmail.com',
+//         pass: 'trienekens321'
+//     }
+// });
+
+// var socket = io.connect();
 
 // var mysql = require('mysql');
 // var bcrypt = require('bcryptjs');
@@ -99,7 +139,7 @@ app.post('/loginCustServiceApp', function (req, resp) {
 
                         var updateCode = "UPDATE tbluser SET vCode ='" + vCode + "' WHERE userEmail ='" + data.email + "'";
 
-                        transporter.sendMail(mailOptions, function (error, info) {
+                        smtpTransport.sendMail(mailOptions, function (error, info) {
                             if (error) {
                                 console.log(error);
                                 resp.send("Mail Failed");
@@ -1253,7 +1293,7 @@ app.post('/NewRegister', function (req, resp) {
                 
                 var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + vCode + "','" + date + "')";
 
-                transporter.sendMail(mailOptions, function (error, info) {
+                smtpTransport.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         console.log(error);
                         resp.send("Mail Failed");
@@ -1275,7 +1315,7 @@ app.post('/NewRegister', function (req, resp) {
                 
                 var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, address, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + address + "','" + vCode + "','" + date + "')";
 
-                transporter.sendMail(mailOptions, function (error, info) {
+                smtpTransport.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         console.log(error);
                         resp.send("Mail Failed");
@@ -1340,7 +1380,7 @@ app.post('/registerAcc', function (req, resp) {
             var sql2 = "INSERT INTO tbluser (customerID, userEmail, password, vCode) VALUES ('" + userID + "','" + data.email + "','" + data.pass + "','" + vCode + "')";
             var sql3 = "UPDATE tblcustomer SET userEmail = '" + data.email + "' WHERE ic ='" + data.ic + "'";
 
-            transporter.sendMail(mailOptions, function (error, info) {
+            smtpTransport.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     resp.send("Mail Failed");
                     console.log(error);
@@ -1877,21 +1917,13 @@ app.post('/resetPassword', function (req, resp) {
 
     req.addListener('end', function () {
 
-        transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'registercustomerapp@gmail.com',
-                pass: 'trienekens321'
-            }
-        });
-
         newPass = Math.floor(Math.random() * 90000) + 10000;
         subject = "Trienekens App Password Reset";
         text = "Your new password is: " + newPass + ". Please change your password when you login.";
         email = data.email;
 
         mailOptions = {
-            from: 'registercustomerapp@gmail.com',
+            from: 'trienekensmobileapp@gmail.com',
             to: email,
             subject: subject,
             text: text
@@ -1922,7 +1954,7 @@ app.post('/resetPassword', function (req, resp) {
                     }
                     else 
                     {
-                        transporter.sendMail(mailOptions, function (error, info) {
+                        smtpTransport.sendMail(mailOptions, function (error, info) {
                             if (error) {
                                 resp.send("Mail Failed");
                                 console.log(error);
