@@ -7788,6 +7788,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 //complaint detail controller
 app.controller('complaintDetailController', function ($scope, $http, $filter, $window, $routeParams, $route) {
     'use strict';
+    $scope.showInchargeBtn = true;
     $scope.showUpdateBtn = true;
     $scope.req = {
         'id': $routeParams.complaintCode

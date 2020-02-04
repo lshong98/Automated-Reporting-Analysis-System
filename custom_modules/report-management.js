@@ -10,6 +10,7 @@ const storage = new Storage({
     projectId: 'trienekens-management'
 });
 const bucketName = 'trienekens-management-images';
+const local_directory = './images/daily-report';
 
 // Report Management
 app.post('/addReport', function (req, res) {
@@ -29,16 +30,37 @@ app.post('/addReport', function (req, res) {
         created_on = req.body.creationDate,
         staff_id = req.body.staffID;
     
-    //let base64Image = image.split(';base64,').pop();
+    if (!fs.existsSync(local_directory)) {
+        fs.mkdirSync(local_directory);
+    }
     
     f.makeID('report', created_on).then(function (ID) {
-//        var image_path = '/' + ID + '.jpg';
-//        var local_store_path = 'images/daily-report' + image_path,
-//            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
-        
-//        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
-//            if (err) throw err;
-//            
+        if (image !== '') {
+            let base64Image = image.split(';base64,').pop();
+            var image_path = '/' + ID + '.jpg';
+            var local_store_path = 'images/daily-report' + image_path,
+                public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+            
+            fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+                if (err) throw err;
+                
+                await storage.bucket(bucketName).upload('./' + local_store_path, {
+                    gzip: true,
+                    metadata: {
+                        cacheControl: 'public, no-cache',
+                    },
+                    public: true,
+                    destination: local_store_path
+                });
+            });
+            image = public_url
+        } else {
+            image = '';
+        }
+
+        //fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+            //if (err) throw err;
+
 //            await storage.bucket(bucketName).upload('./' + local_store_path, {
 //                gzip: true,
 //                metadata: {
@@ -59,7 +81,7 @@ app.post('/addReport', function (req, res) {
                 }
             });
         //});
-        
+        {
         //With hand-draw circle
 //        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.format_startTime + "', '" + req.body.format_endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '', 'I', '" + req.body.status + "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "', '" + req.body.staffID + "')",
 //            i = 0,
@@ -94,6 +116,7 @@ app.post('/addReport', function (req, res) {
 //            }
 //            res.json({"status": "success", "details": {"reportID": reportID}});
 //        });
+        }
     });
 }); // Complete
 app.post('/report_feedback', function (req, res) {
