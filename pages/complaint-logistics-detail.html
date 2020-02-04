@@ -1,0 +1,224 @@
+<style>
+    .form-label-width {
+        width: 250px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+        <button class="btn btn-danger" data-ng-click="backList()" >Back</button>
+        <a href="javascript:exportPdf()" class="btn btn-md btn-success ">Print</a>
+<!--        <button class="btn btn-success" data-ng-click="editComp(detailObj.coID)"><i class="fa fa-plus"></i> Edit</button>            -->
+    </div>
+</div>
+
+<div id="nodeToRenderAsPDF" style="padding-left: 20px;">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Details of Complaint</h2>        
+        </div>
+    </div>
+
+    <br/>
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Date:</strong>
+        <p  class="mx-sm-3">{{detailObj.complaintDate}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Time:</strong>
+        <p  class="mx-sm-3">{{detailObj.complaintTime}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Source:</strong>
+        <p  class="mx-sm-3">{{detailObj.sorce}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Reference No:</strong>
+        <p  class="mx-sm-3">{{detailObj.refNo}}</p>
+    </div>
+
+    <br/>
+    <hr/>
+    <br/>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Name:</strong>
+        <p  class="mx-sm-3">{{detailObj.name}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Company:</strong>
+        <p  class="mx-sm-3">{{detailObj.company}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Tel No:</strong>
+        <p  class="mx-sm-3">{{detailObj.telNo}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Address:</strong>
+        <p  class="mx-sm-3">{{detailObj.address}}</p>
+    </div>
+
+    <div class="form-group row " data-ng-show="showCompImg">
+        <strong class="col-xs-3 form-label-width">Image:</strong>
+        <div class="mx-sm-3" style="width: 400px;height: 350px;">
+            <img src="{{detailObj.compImg}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>    
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Type of Complaint:</strong>
+        <p  class="mx-sm-3">{{detailType}}</p>
+    </div>
+
+    <br/>
+    <hr/>
+    <br/>
+
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Forwarded to Logistics Date:</strong>
+        <p  class="mx-sm-3">{{detailObj.logisticsDate}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Forwarded to Logistics Time:</strong>
+        <p  class="mx-sm-3">{{detailObj.logisticsTime}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Forwarded to Logistics By:</strong>
+        <p  class="mx-sm-3">{{detailObj.logisticsBy}}</p>
+    </div>
+    
+</div>
+
+
+<br/>
+<hr/>
+<br/>
+
+<h2>Action Taken By Logistics</h2>
+
+<div class="form-group row">
+    <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Under</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3 selectpicker" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
+              <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                  <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+              </optgroup>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputCouncil" class="col-xs-3 col-form-label form-label-width">Area by Council</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3" id="inputCouncil" data-ng-model="logistics.areaCouncil" data-live-search="true" data-width="100%">
+            <option value="DBKU">DBKU</option>            
+            <option value="MBKS">MBKS</option>
+            <option value="MPP">MPP</option>
+            <option value="MDS">MDS</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputSub" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor:</label>
+    <div class="col-md-9">
+        <input type="text" id="inputSub" placeholder="Sub-Contractor" class="form-control mx-sm-3" data-ng-model="logistics.sub" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputSubDate" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Date</label>
+    <div class="col-md-9">
+        <input type="date" id="inputSubDate" class="form-control mx-sm-3" data-ng-model="logsSubDate" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputSubTime" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Time</label>
+    <div class="col-md-9">
+        <input type="time" id="inputSubTime" class="form-control mx-sm-3" data-ng-model="logistics.subTime" data-ng-change="subTimeChange(logistics.subTime)" str-to-time="" />
+    </div>
+</div>
+
+<hr/>
+<div class="form-group row">
+    <label for="inputStatus" class="col-xs-3 col-form-label form-label-width">Status:</label>
+    <div class="col-md-9">
+        <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="logistics.status" data-live-search="true" data-width="100%">
+                <option value="open">Open</option>
+                <option value="pending">Pending</option>
+                <option value="closed">Closed</option>
+        </select>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label for="inputSDate" class="col-xs-3 col-form-label form-label-width">Status Date</label>
+    <div class="col-md-9">
+        <input type="date" id="inputSDate" class="form-control mx-sm-3" data-ng-model="statusDate" />
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputSTime" class="col-xs-3 col-form-label form-label-width">Status Time</label>
+    <div class="col-md-9">
+        <input type="time" id="inputSTime" class="form-control mx-sm-3" data-ng-model="logistics.statusTime" data-ng-change="sTimeChange(logistics.statusTime)" str-to-time="" />
+    </div>
+</div>
+    
+<hr/>
+
+<div class="form-group row">
+    <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
+    <div class="col-md-9">
+        <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="logistics.remark"></textarea>
+    </div>
+</div>
+
+<br/>
+
+<div class="form-group row">
+    <label for="uploadImg" class="col-xs-3 col-form-label form-label-width">Image:</label>
+    <div class="col-md-9">
+        <canvas style="border:1px solid grey; width: 400px; height: 300px; margin: 15px;" id="uploadImg"></canvas>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-11"></div>
+    <div class="col-md-1">
+        <button class="btn btn-primary success" data-ng-show="showSubmitBtn == true" data-ng-click="submit()" >Submit</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="/scripts/html2canvas.min.js"></script>
+<script>
+    function exportPdf(quality = 10) {
+        var filename = 'ComplaintExport.pdf';
+
+        html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
+            useCORS: true,
+            imageTimeout: 2000,
+            scale: quality,
+            background :'#FFFFFF'
+        }).then(function(canvas) {
+            var img = canvas.toDataURL("image/jpeg", 1.0);
+            window.URL.revokeObjectURL(img);
+            var pdf = new jsPDF('l', 'mm', 'a3');
+            pdf.addImage(img, 'JPEG', 45, 45, 380, 200);
+            pdf.save(filename);
+        });
+    }
+</script>

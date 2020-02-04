@@ -3,55 +3,142 @@
         <h5>Complaint Module</h5>
     </div>
 </div>
+<!--
 <div class="row">
     <div class="col-md-12">
         <div id="googleMap" style="min-height: 450px"></div>
     </div>
 </div>
+-->
 <br />
+<!--
 <div class="row">
     <div class="col-md-12">
         <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchComplaintFilter"/>
     </div>
 </div>
-<br/>
-<div class="row" style="min-height: 1000px;">
+-->
+<div class="row" data-ng-show="nowModule=='web'">
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped table-clickable" data-ng-init="readComplaint()">
-                        <thead>
-                            <tr>
-                                <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                                <th width="30%" data-ng-click="orderBy('title');">Title <i class="fas fa-sort-down"></i></th>
-                                <th width="20%" data-ng-click="orderBy('customer');">Customer <i class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('type');">Type <i class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('code');">Area <i class="fas fa-sort-down"></i></th>
-                                <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-click="complaintDetail(c.complaintID)">
-                                <td data-ng-bind="c.date"></td>
-                                <td data-ng-bind="c.title"></td>
-                                <td data-ng-bind="c.customer"></td>
-                                <td data-ng-bind="c.type"></td>
-                                <td data-ng-bind="c.code"></td>
-                                <td><span data-ng-bind="c.status" data-ng-class="{{showbadge}}"></span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <button class="btn btn-success" data-ng-click="createComp()"><i class="fa fa-plus"></i> New</button>            
+    </div>
+</div>
+
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="webComplaint-tab" data-toggle="tab" data-target="#webComplaint" role="tab" aria-controls="webComplaint" aria-selected="true" data-ng-click="tabClick('web')">Complaint Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="appComplaint-tab" data-toggle="tab" data-target="#appComplaint" role="tab" aria-controls="appComplaint" aria-selected="false" data-ng-click="tabClick('app')">App Complaint</a>
+            </li>            
+            <li class="nav-item">
+                <a class="nav-link" id="logistics-tab" data-toggle="tab" data-target="#logistics" role="tab" aria-controls="logistics" aria-selected="false" data-ng-click="tabClick('log')">Logistics</a>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="myTab">
+            <div class="tab-pane fade show active" id="webComplaint" role="tabpanel" aria-labelledby="webComplaint-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width="15%">Date</th>
+                                        <th width="15%">Name</th>
+                                        <th width="15%">Company Name</th>
+                                        <th width="15%">Processing Department</th>
+                                    </tr>
+                                </thead>
+                                <tbody>               
+                                    <tr data-ng-repeat="c in complaintOfficerList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewComp(c.coID)">
+                                        <td data-ng-bind="c.complaintDate"></td>
+                                        <td data-ng-bind="c.name"></td>
+                                        <td data-ng-bind="c.company"></td>
+                                        <td data-ng-bind="c.department"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>            
+            </div>
+            
+            <div class="tab-pane fade" id="appComplaint" role="tabpanel" aria-labelledby="appComplaint-tab">
+                <div class="row" style="min-height: 1000px;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped table-clickable" data-ng-init="readComplaint()">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="30%" data-ng-click="orderBy('title');">Title <i class="fas fa-sort-down"></i></th>
+                                                <th width="20%" data-ng-click="orderBy('customer');">Customer <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="orderBy('type');">Type <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="orderBy('code');">Area <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-click="complaintDetail(c.complaintID)">
+                                                <td data-ng-bind="c.date"></td>
+                                                <td data-ng-bind="c.title"></td>
+                                                <td data-ng-bind="c.customer"></td>
+                                                <td data-ng-bind="c.type"></td>
+                                                <td data-ng-bind="c.code"></td>
+                                                <td><span data-ng-bind="c.status" data-ng-class="{{showbadge}}"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+            <div class="tab-pane fade" id="logistics" role="tabpanel" aria-labelledby="logistics-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width="15%">Date</th>
+                                        <th width="15%">Name</th>
+                                        <th width="15%">Company Name</th>
+                                        <th width="15%">By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>               
+                                    <tr data-ng-repeat="l in logisticsComplaintList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewLogComp(l.coID)">
+                                        <td data-ng-bind="l.complaintDate"></td>
+                                        <td data-ng-bind="l.name"></td>
+                                        <td data-ng-bind="l.company"></td>
+                                        <td data-ng-bind="l.staff"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>                 
             </div>
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function() {
         $('.clickable').click(function() {

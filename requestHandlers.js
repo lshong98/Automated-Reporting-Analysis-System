@@ -9,6 +9,7 @@ app.use(express.static(path.join(__dirname, 'scripts')));
 app.use(express.static(path.join(__dirname, 'pages')));
 app.use(express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static(path.join(__dirname, 'images/daily-report')));
 app.use(express.static(path.join(__dirname, 'sounds')));
 app.use(express.static(path.join(__dirname, 'kml')));
 
@@ -176,6 +177,10 @@ app.get('/complaint-officer-edit/:coID', function (req, res) {
 app.get('/complaint-detail/:complaintCode', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-detail.html', {root: __dirname});
+});
+app.get('/complaint-logistics-detail/:complaintCode', function (req, res) {
+    'use strict';
+    res.sendFile('pages/complaint-logistics-detail.html', {root: __dirname});
 });
 app.get('/delivery-management', function (req, res) {
     'use strict';

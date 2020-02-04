@@ -1,29 +1,37 @@
+<style>
+#container {
+  width: 420px;
+  margin: 20px auto;
+}
+</style>
 <!-- Modal for settings-->
-<div class="modal fade" id="createZone" tabindex="-1" role="dialog" aria-labelledby="createZone" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Create Zone</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          <div class="form-group">
-              <label for="txtZoneCode form-label">Zone Code</label>
-              <input type="text" class="form-control" id="txtZoneCode" data-ng-model="zone.code" />
-          </div>
-          <div class="form-group">
-              <label for="txtZoneName form-label">Zone Name</label>
-              <input type="text" class="form-control" id="txtZoneName" data-ng-model="zone.name" />
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" data-ng-click="addZone();" data-ng-show="showCreateBtn">Create</button>
-      </div>
+<div class="modal fade" id="emailSettings" tabindex="-1" role="dialog" aria-labelledby="emailSettings" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Email Settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="txtZoneCode form-label">COMING SOON</label>
+<!--                    <input type="text" class="form-control" id="txtZoneCode" data-ng-model="" />-->
+                </div>
+<!--
+                <div class="form-group">
+                    <label for="txtZoneName form-label">Zone Name</label>
+                    <input type="text" class="form-control" id="txtZoneName" data-ng-model="zone.name" />
+                </div>
+-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<!--                <button type="button" class="btn btn-primary" data-ng-click="addZone();" data-ng-show="showCreateBtn">Create</button>-->
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="row">
@@ -31,56 +39,65 @@
         <h4>Overall Report</h4>
     </div>
 </div>
-<!--
 <div class="row">
-    <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchZoneFilter" />
-    </div>
-</div>
--->
-<br />
-<!--
-<div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-11">
-        <button class="btn btn-success" data-toggle="modal" data-target="#createZone"><i class="fa fa-plus"></i> New</button>
-        
+        <h5>{{todayDate | date:'fullDate'}}</h5>
     </div>
-    <div class="col-md-1" style="padding-top: 10px" >
-        <label style="cursor: pointer;"><input type="checkbox" data-ng-model="statusList" data-ng-click="updateStatusList()"> Active</label>
+    <div class="col-md-1">
+        <button class="btn btn-info" data-toggle="modal" data-target="#emailSettings"><i class="fa fa-cog"></i> Settings</button>
     </div>
 </div>
 <br />
--->
 <div class="row">
-    <div class="col-md-10"><h5>{{todayDate | date:'fullDate'}}</h5></div>
-    <div class="col-md-2"></div>
+    <div class="col-md-3">
+        <div class="card-counter info">
+            <!--            <i class="fa fa-map-marker"></i>-->
+            <span class="count-numbers" data-ng-bind="todayAreaCount"></span>
+            <span class="count-name">Total Today Report</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+       <div class="card-counter success">
+            <!--            <i class="fa fa-map-marker"></i>-->
+            <span class="count-numbers" data-ng-bind="reportCompleteCount"></span>
+            <span class="count-name">Total Complete Report</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+       <div class="card-counter danger">
+            <!--            <i class="fa fa-map-marker"></i>-->
+            <span class="count-numbers" data-ng-bind="reportIncompleteCount"></span>
+            <span class="count-name">Total Incomplete Report</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+       <div class="card-counter light">
+            <!--            <i class="fa fa-map-marker"></i>-->
+            <span class="count-numbers" data-ng-bind="unsubmittedCount"></span>
+            <span class="count-name">Total Submission Left</span>
+        </div>
+    </div>
 </div>
-<div class="row">
-   <div class="col-md-4">    
-       <div><h5>Total Submitted Report: {{totalSubmitted}}</h5></div>
-   </div>
-   <div class="col-md-4">
-      <div><h5>Total Submission Left: {{totalUnsubmitted - totalSubmitted}}</h5></div>
-   </div>
-   <div class="col-md-4">
-       <div><h5>Total Unsubmitted Report: {{totalUnsubmitted}}</h5></div>
-   </div>
-</div>
-<br/>
+<br />
+<div id="progressBar"></div>
+<br />
 <div class="row">
     <div class="col-md-8">
         <div class="table-responsive" style="overflow-y: scroll; height: 650px">
             <table class="table table-hover table-striped">
                 <thead>
-                   <tr>
-                       <th width="5%">Area</th>
-                       <th width="14%">Officer</th>
-                       <th width="23%">Date Time Submission</th>
-                       <th width="10%">Truck</th>
-                       <th width="20%">Driver</th>
-                       <th width="20%">Duration</th>
-                       <th width="8%">Ton</th>
-                   </tr>
+                    <tr class="text-center">
+                        <th colspan="7">Submitted Report</th>
+                    </tr>
+                    <tr>
+                        <th width="5%">Area</th>
+                        <th width="14%">Officer</th>
+                        <th width="23%">Date Time Submission</th>
+                        <th width="10%">Truck</th>
+                        <th width="20%">Driver</th>
+                        <th width="20%">Duration</th>
+                        <th width="8%">Ton</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="r in submittedReport">
@@ -91,7 +108,7 @@
                         <td width="20%" data-ng-bind="r.driverName"></td>
                         <td width="20%" data-ng-bind="r.duration"></td>
                         <td width="8%" data-ng-bind="r.ton"></td>
-                        
+
                     </tr>
                 </tbody>
             </table>
@@ -101,12 +118,15 @@
         <div class="table-responsive" style="overflow-y: scroll; height: 650px">
             <table class="table table-bordered">
                 <thead>
+                    <tr class="text-center">
+                        <th colspan="2">Un-submitted Report</th>
+                    </tr>
                     <tr>
                         <th>Area</th>
                         <th>Officer</th>
                     </tr>
                 </thead>
-                <tbody data-ng-repeat = "s in unsubmittedReport">
+                <tbody data-ng-repeat="s in unsubmittedReport">
                     <tr>
                         <td>{{s.area}}</td>
                         <td>{{s.staff}}</td>
@@ -116,6 +136,7 @@
         </div>
     </div>
 </div>
+<script src="https://rawgit.com/highcharts/rounded-corners/master/rounded-corners.js"></script>
 <!--
 <div class="row">
     <div class="col-md-12">
