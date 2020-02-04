@@ -150,8 +150,72 @@
 .message-time {
     font-size: 10px;
 }
+    
+.modal-body {
+    padding-left:50px;
+}   
 /*    */
 </style>
+<div class="modal fade" id="verifyComplaintModal" tabindex="-1" role="dialog" aria-labelledby="verifyComplaintModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Verify Complaint</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+            <label for="showDate" class="col-xs-3 col-form-label form-label-width">Date</label>
+            <div class="col-md-9">
+                <input type="text" id="showDate" class="form-control" data-ng-model="verify.date" readonly/>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="showTime" class="col-xs-3 col-form-label form-label-width">Time</label>
+            <div class="col-md-9">
+                <input type="text" id="showTime" class="form-control" data-ng-model="verify.time" readonly/>
+            </div>
+        </div>            
+        <div class="form-group row">
+            <label for="showSource" class="col-xs-3 col-form-label form-label-width">Source</label>
+            <div class="col-md-9">
+                <input type="text" id="showSource" class="form-control" data-ng-model="verify.source" readonly/>
+            </div>
+        </div> 
+        <div class="form-group row">
+            <label for="showRef" class="col-xs-3 col-form-label form-label-width">Ref No</label>
+            <div class="col-md-9">
+                <input type="text" id="showRef" class="form-control" data-ng-model="verify.refNo" readonly/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="showName" class="col-xs-3 col-form-label form-label-width">Name</label>
+            <div class="col-md-9">
+                <input type="text" id="showName" class="form-control" data-ng-model="verify.name" readonly/>
+            </div>
+        </div>  
+        <div class="form-group row">
+            <label for="showPhone" class="col-xs-3 col-form-label form-label-width">Phone No</label>
+            <div class="col-md-9">
+                <input type="text" id="showPhone" class="form-control" data-ng-model="verify.telNo" readonly/>
+            </div>
+        </div>  
+        <div class="form-group row">
+            <label for="showAddress" class="col-xs-3 col-form-label form-label-width">Address</label>
+            <div class="col-md-9">
+                <input type="text" id="showAddress" class="form-control" data-ng-model="verify.address" readonly/>
+            </div>
+        </div>            
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-ng-click="verifyComp();">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
     <div class="col-md-9">
         <h3>Complaint Detail</h3>
@@ -168,6 +232,9 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-md-1">
+        <button class="btn btn-success" data-toggle="modal" data-target="#verifyComplaintModal"><i class="fa fa-plus"></i> Verify</button> 
+    </div>
     <div class="col-md-1">
     <button class="btn btn-sm btn-danger" data-ng-show="showInchargeBtn" data-ng-click="inchargeChat()">Incharge</button>
     </div>

@@ -51,16 +51,20 @@
                                     <tr>
                                         <th width="15%">Date</th>
                                         <th width="15%">Name</th>
+                                        <th width="15%">Services</th>
                                         <th width="15%">Company Name</th>
                                         <th width="15%">Processing Department</th>
+                                        <th width="15%">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>               
                                     <tr data-ng-repeat="c in complaintOfficerList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewComp(c.coID)">
                                         <td data-ng-bind="c.complaintDate"></td>
                                         <td data-ng-bind="c.name"></td>
+                                        <td data-ng-bind="c.serviceType"></td>
                                         <td data-ng-bind="c.company"></td>
                                         <td data-ng-bind="c.department"></td>
+                                        <td data-ng-bind="c.status"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -118,16 +122,22 @@
                                     <tr>
                                         <th width="15%">Date</th>
                                         <th width="15%">Name</th>
+                                        <th width="15%">Services</th>
                                         <th width="15%">Company Name</th>
                                         <th width="15%">By</th>
+                                        <th width="15%">Processing Department</th>                                        
+                                        <th width="10%">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>               
                                     <tr data-ng-repeat="l in logisticsComplaintList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewLogComp(l.coID)">
                                         <td data-ng-bind="l.complaintDate"></td>
                                         <td data-ng-bind="l.name"></td>
+                                        <td data-ng-bind="l.serviceType"></td>
                                         <td data-ng-bind="l.company"></td>
                                         <td data-ng-bind="l.staff"></td>
+                                        <td data-ng-bind="l.department"></td>
+                                        <td data-ng-bind="l.status"></td>
                                     </tr>
                                 </tbody>
                             </table>
