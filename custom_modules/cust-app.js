@@ -117,20 +117,20 @@ app.post('/loginCustServiceApp', function (req, resp) {
                     if (result[0].status == 1) {
                         resp.send("Login Success");
                     } else {
-                        transporter = nodemailer.createTransport({
-                            service: 'gmail',
-                            auth: {
-                                user: 'registercustomerapp@gmail.com',
-                                pass: 'trienekens321'
-                            }
-                        });
+                        // transporter = nodemailer.createTransport({
+                        //     service: 'gmail',
+                        //     auth: {
+                        //         user: 'trienekensmobileapp@gmail.com',
+                        //         pass: 'trienekens321'
+                        //     }
+                        // });
                         vCode = Math.floor(Math.random() * 90000) + 10000;
                         subject = "Trienekens App Verification Code";
                         text = "Your Verification Code is: " + vCode;
                         email = data.email;
                         console.log("vCode: " + vCode);
                         mailOptions = {
-                            from: 'registercustomerapp@gmail.com',
+                            from: 'trienekensmobileapp@gmail.com',
                             to: email,
                             subject: subject,
                             text: text
@@ -1261,20 +1261,20 @@ app.post('/NewRegister', function (req, resp) {
     });
 
     req.addListener('end', function () {
-        transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'registercustomerapp@gmail.com',
-                pass: 'trienekens321'
-            }
-        });
+        // transporter = nodemailer.createTransport({
+        //     service: 'gmail',
+        //     auth: {
+        //         user: 'trienekensmobileapp@gmail.com',
+        //         pass: 'trienekens321'
+        //     }
+        // });
         vCode = Math.floor(Math.random() * 90000) + 10000;
         subject = "Trienekens App Verification Code";
         text = "Thank You for Signing Up to the Trienekens App. Your Verification Code is: " + vCode;
         email = data.email;
         console.log("vCode: " + vCode);
         mailOptions = {
-            from: 'registercustomerapp@gmail.com',
+            from: 'trienekensmobileapp@gmail.com',
             to: email,
             subject: subject,
             text: text
