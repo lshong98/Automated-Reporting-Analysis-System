@@ -10,6 +10,46 @@ const storage = new Storage({
     projectId: 'trienekens-management'
 });
 const bucketName = 'trienekens-management-images';
+const local_directory = './images/daily-report';
+
+app.post('/convertreport', function (req, res) {
+    var sql = "SELECT reportID AS id, iFleetMap AS image FROM tblreport WHERE iFleetMap != '' AND iFleetMap LIKE '%;base64,%' ORDER BY creationDateTime DESC LIMIT 0, 1";
+
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        } else {
+            for (var i = 0; i < result.length; i++) {
+                var base64Image = (result[i].image).split(';base64,').pop();
+                var extension = (result[i].image).split(';base64,')[0].split('/')[1];
+                var image_path = '/' + result[i].id + '.' + extension;
+                var local_store_path = 'images/daily-report' + image_path,
+                    public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+                
+                fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+                    if (err) throw err;
+
+                    await storage.bucket(bucketName).upload('./' + local_store_path, {
+                        gzip: true,
+                        metadata: {
+                            cacheControl: 'public, no-cache',
+                        },
+                        public: true,
+                        destination: local_store_path
+                    });
+                });
+                var update_sql = "UPDATE tblreport SET iFleetMap = '" + public_url + "' WHERE reportID = '" + result[i].id + "'";
+                console.log(update_sql);
+                database.query(update_sql, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                });
+            }
+            res.json({"message": "success"});
+        }
+    });
+});
 
 // Report Management
 app.post('/addReport', function (req, res) {
@@ -29,16 +69,38 @@ app.post('/addReport', function (req, res) {
         created_on = req.body.creationDate,
         staff_id = req.body.staffID;
     
-    //let base64Image = image.split(';base64,').pop();
+    if (!fs.existsSync(local_directory)) {
+        fs.mkdirSync(local_directory);
+    }
     
     f.makeID('report', created_on).then(function (ID) {
-//        var image_path = '/' + ID + '.jpg';
-//        var local_store_path = 'images/daily-report' + image_path,
-//            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
-        
-//        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
-//            if (err) throw err;
-//            
+        if (image !== '') {
+            let base64Image = image.split(';base64,').pop();
+            var extension = image.split(';base64,')[0].split('/')[1];
+            var image_path = '/' + ID + '.' + extension;
+            var local_store_path = 'images/daily-report-test' + image_path,
+                public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+            
+            fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+                if (err) throw err;
+                
+                await storage.bucket(bucketName).upload('./' + local_store_path, {
+                    gzip: true,
+                    metadata: {
+                        cacheControl: 'public, no-cache',
+                    },
+                    public: true,
+                    destination: local_store_path
+                });
+            });
+            image = public_url;
+        } else {
+            image = '';
+        }
+
+        //fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+            //if (err) throw err;
+
 //            await storage.bucket(bucketName).upload('./' + local_store_path, {
 //                gzip: true,
 //                metadata: {
@@ -59,7 +121,7 @@ app.post('/addReport', function (req, res) {
                 }
             });
         //});
-        
+        {
         //With hand-draw circle
 //        var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + req.body.areaCode + "', '" + req.body.collectionDate + "', '" + req.body.format_startTime + "', '" + req.body.format_endTime + "', '" + req.body.ton + "', '" + req.body.ifleetImg + "', '', 'I', '" + req.body.status + "','" + req.body.truck + "', '" + req.body.driver + "', '" + req.body.remark + "','" + req.body.creationDate + "', '" + req.body.staffID + "')",
 //            i = 0,
@@ -94,6 +156,7 @@ app.post('/addReport', function (req, res) {
 //            }
 //            res.json({"status": "success", "details": {"reportID": reportID}});
 //        });
+        }
     });
 }); // Complete
 app.post('/report_feedback', function (req, res) {
@@ -116,7 +179,46 @@ app.post('/report_feedback', function (req, res) {
 app.post('/editReport', function (req, res) {
     'use strict';
     
-    var sql = "UPDATE tblreport SET reportCollectionDate = '" + req.body.date + "', operationTimeStart = '" + req.body.format_startTime + "', operationTimeEnd = '" + req.body.format_endTime + "', garbageAmount = '" + req.body.ton + "', iFleetMap = '" + req.body.ifleet + "', completionStatus = '" + req.body.status + "', truckID = '" + req.body.truckID + "', driverID = '" + req.body.driverID + "', remark = '" + req.body.remark + "' WHERE reportID = '" + req.body.id + "'",
+    var image = req.body.ifleet,
+        report_id = req.body.id,
+        collection_date = req.bosy.date,
+        operation_start = req.body.format_startTime,
+        operation_end = req.body.format_endTime,
+        tonnage = req.body.ton,
+        status = req.body.status,
+        truck_id = trq.body.truckID,
+        driver_id = req.body.driverID,
+        remark = req.body.remark;
+    
+    if (!fs.existsSync(local_directory)) {
+        fs.mkdirSync(local_directory);
+    }
+    
+    if (image !== '') {
+        let base64Image = image.split(';base64,').pop();
+        var extension = image.split(';base64,')[0].split('/')[1];
+        var image_path = '/' + report_id + '.' + extension;
+        var local_store_path = 'images/daily-report-test' + image_path,
+            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+            
+        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+            if (err) throw err;
+
+            await storage.bucket(bucketName).upload('./' + local_store_path, {
+                gzip: true,
+                metadata: {
+                    cacheControl: 'public, no-cache',
+                },
+                public: true,
+                destination: local_store_path
+            });
+        });
+        image = public_url;
+    } else {
+        image = '';
+    }
+    
+    var sql = "UPDATE tblreport SET reportCollectionDate = '" + collection_date + "', operationTimeStart = '" + operation_start + "', operationTimeEnd = '" + operation_end + "', garbageAmount = '" + tonnage + "', iFleetMap = '" + image + "', completionStatus = '" + status + "', truckID = '" + truck_id + "', driverID = '" + driver_id + "', remark = '" + remark + "' WHERE reportID = '" + report_id + "'",
         i = 0,
         j = 0;
     
@@ -126,47 +228,47 @@ app.post('/editReport', function (req, res) {
             throw err;
         }
 
-        if (Object.keys(req.body.marker).length > 0) {
-            var dltCircleSQL = "DELETE FROM tblmapcircle WHERE reportID = '" + req.body.id + "'";
-            
-            database.query(dltCircleSQL, function (err, result) {
-                if (err) {
-                    throw err;
-                }
-            });
-            
-            
-            for (i = 0; i < Object.keys(req.body.marker).length; i += 1) {
-                var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].cLong + "', '" + req.body.marker[i].cLat + "', '" + req.body.id + "')";
-
-
-                database.query(circleSQL, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                });
-            }
-        }
-        if (Object.keys(req.body.rectangle).length > 0) {
-            
-            var dltRectSQL = "DELETE FROM tblmaprect WHERE reportID = '" + req.body.id + "'";
-            
-            database.query(dltRectSQL, function (err, result) {
-                if (err) {
-                    throw err;
-                }
-            });
-            
-            for (j = 0; j < Object.keys(req.body.rectangle).length; j += 1) {
-                var rectSQL = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].swLng + "', '" + req.body.id + "')";
-
-                database.query(rectSQL, function (err, result) {
-                    if (err) {
-                        throw err;
-                    }
-                });
-            }
-        }
+//        if (Object.keys(req.body.marker).length > 0) {
+//            var dltCircleSQL = "DELETE FROM tblmapcircle WHERE reportID = '" + req.body.id + "'";
+//            
+//            database.query(dltCircleSQL, function (err, result) {
+//                if (err) {
+//                    throw err;
+//                }
+//            });
+//            
+//            
+//            for (i = 0; i < Object.keys(req.body.marker).length; i += 1) {
+//                var circleSQL = "INSERT INTO tblmapcircle (radius, cLong, cLat, reportID) VALUE ('" + req.body.marker[i].radius + "', '" + req.body.marker[i].cLong + "', '" + req.body.marker[i].cLat + "', '" + req.body.id + "')";
+//
+//
+//                database.query(circleSQL, function (err, result) {
+//                    if (err) {
+//                        throw err;
+//                    }
+//                });
+//            }
+//        }
+//        if (Object.keys(req.body.rectangle).length > 0) {
+//            
+//            var dltRectSQL = "DELETE FROM tblmaprect WHERE reportID = '" + req.body.id + "'";
+//            
+//            database.query(dltRectSQL, function (err, result) {
+//                if (err) {
+//                    throw err;
+//                }
+//            });
+//            
+//            for (j = 0; j < Object.keys(req.body.rectangle).length; j += 1) {
+//                var rectSQL = "INSERT INTO tblmaprect (neLat, neLng, swLat, swLng, reportID) VALUE ('" + req.body.rectangle[j].neLat + "', '" + req.body.rectangle[j].neLng + "', '" + req.body.rectangle[j].swLat + "', '" + req.body.rectangle[j].swLng + "', '" + req.body.id + "')";
+//
+//                database.query(rectSQL, function (err, result) {
+//                    if (err) {
+//                        throw err;
+//                    }
+//                });
+//            }
+//        }
         res.json({"status": "success", "message": "report edited!"});
     });
 });

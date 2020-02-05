@@ -9,7 +9,7 @@
                         <th>Date</th>
                         <th>Enquired By</th>
                         <th>Contact Number</th>
-                        <th>Email</th>
+                        <th>Enquiry</th>
                         <th>Status</th>
                         <th></th>
                     </tr>
@@ -20,7 +20,7 @@
                         <td>{{e.submissionDate | date: "dd-MM-y"}}</td>
                         <td>{{e.name}}</td>
                         <td>{{e.contactNumber}}</td>
-                        <td>{{e.userEmail}}</td>
+                        <td>{{e.enquiry}}</td>
                         <td>
                             <div editable>
                                 <select name="enquiryStatus" data-ng-model="e.enqStatus" class="form-control" data-ng-show="!showEnquiry">

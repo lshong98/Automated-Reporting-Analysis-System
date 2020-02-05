@@ -19,6 +19,7 @@
         "express": "^4.17.1",
         "express-fileupload": "^1.1.6",
         "firebase-admin": "^8.6.0",
+        "googleapis": "^47.0.0",
         "moment": "^2.24.0",
         "mysql": "^2.17.1",
         "node-datetime": "^2.1.2",

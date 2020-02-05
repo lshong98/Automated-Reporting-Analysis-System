@@ -7732,7 +7732,20 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
             }else{
                 $scope.complaintOfficerList[i].department = "Customer Services";
             }
+            
+            if($scope.complaintOfficerList[i].services == 1){
+                $scope.complaintOfficerList[i].serviceType = "Compactor";
+            }else if($scope.complaintOfficerList[i].services == 2){
+                $scope.complaintOfficerList[i].serviceType = "Hooklift";
+            }else if($scope.complaintOfficerList[i].services == 3){
+                $scope.complaintOfficerList[i].serviceType = "Hazardous waste";
+            }
+            
+            if($scope.complaintOfficerList[i].status == null){
+                $scope.complaintOfficerList[i].status = "N/A";
+            }
         }
+        console.log($scope.complaintOfficerList);
 
     });
     
@@ -7773,10 +7786,31 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     
     //get logistics complaint list
     $http.get('/getLogisticsComplaintList').then(function (response) {
+            
+    
         $scope.logisticsComplaintList = response.data;
+        
         if($scope.logisticsComplaintList.length != 0){
             for (var i = 0; i < $scope.logisticsComplaintList.length; i++) {
                 $scope.logisticsComplaintList[i].complaintDate = $filter('date')($scope.logisticsComplaintList[i].complaintDate, 'yyyy-MM-dd');
+                
+                if($scope.logisticsComplaintList[i].services == 1){
+                    $scope.logisticsComplaintList[i].serviceType = "Compactor";
+                }else if($scope.logisticsComplaintList[i].services == 2){
+                    $scope.logisticsComplaintList[i].serviceType = "Hooklift";
+                }else if($scope.logisticsComplaintList[i].services == 3){
+                    $scope.logisticsComplaintList[i].serviceType = "Hazardous waste";
+                }
+                
+                if($scope.logisticsComplaintList[i].status == null){
+                    $scope.logisticsComplaintList[i].status = "N/A";
+                }
+                
+                if($scope.logisticsComplaintList[i].step == 1){
+                    $scope.logisticsComplaintList[i].department = "Logistics";
+                }else{
+                    $scope.logisticsComplaintList[i].department = "Customer Services";
+                }                    
             }
         }
     });    
@@ -7829,7 +7863,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
 });
 //complaint detail controller
-app.controller('complaintDetailController', function ($scope, $http, $filter, $window, $routeParams) {
+app.controller('complaintDetailController', function ($scope, $http, $filter, $window, $routeParams, $route) {
     'use strict';
     $scope.showInchargeBtn = true;
     $scope.showUpdateBtn = true;
@@ -7843,13 +7877,6 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     };
     var chatContent = '';
 
-    $scope.emailobj = {
-        "id": "",
-        "status": "",
-        "subject": "",
-        "text": "",
-        "email": "lshong9899@gmail.com"
-    };
 
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response) {
@@ -7868,10 +7895,27 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'code': complaint[0].code,
             'id': complaint[0].complaintID,
             'img': complaint[0].complaintImg,
-            'staffID': complaint[0].staffID
+            'staffID': complaint[0].staffID,
+            'telNo' : complaint[0].contactNumber
         };
 
-        console.log($scope.comDetail);
+        
+        $scope.verify={
+            'source': "Mobile App",
+            'refNo': $scope.comDetail.id,
+            'name': $scope.comDetail.customer,
+            'telNo': $scope.comDetail.telNo,
+            'address': $scope.comDetail.address,
+            'img': '', //$scope.comDetail.img, //incomplete
+            'type':  '', //$scope.comDetail.type, //incomplete
+            'services': '', //incomplete
+            'date': $filter('date')(complaint[0].complaintDate,'yyyy-MM-dd'),
+            'time': $filter('date')(complaint[0].complaintDate,'HH:mm:ss'),
+            "forwardLogisticsDate": $filter("date")(new Date(), 'yyyy-MM-dd'),
+            "forwardLogisticsTime": $filter('date')(new Date(), 'HH:mm:ss'),
+            "forwardLogisticsBy": $window.sessionStorage.getItem('owner'),
+            "creationDate": $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')
+        };
 
         //get report dates for certain area id
         $scope.reportList = [];
@@ -7924,21 +7968,21 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             lobi_notify('info', 'You received a new message.', 'from complaint', '');
         });
 
-        //initialize email subject and text
-        $scope.emailobj.id = $routeParams.complaintCode;
-        if ($scope.comDetail.status == "Pending") {
-            $scope.emailobj.subject = "Complaint received.";
-            $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). ";
-        } else if ($scope.comDetail.status == "In progress") {
-            $scope.emailobj.subject = "";
-            $scope.emailobj.text = "";
-        } else if ($scope.comDetail.status == "Confirmation") {
-            $scope.emailobj.subject = "Problem Solved.";
-            $scope.emailobj.text = "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)";
-        } else if ($scope.comDetail.status == "Done") {
-            $scope.emailobj.subject = "";
-            $scope.emailobj.text = "";
-        }
+//        //initialize email subject and text
+//        $scope.emailobj.id = $routeParams.complaintCode;
+//        if ($scope.comDetail.status == "Pending") {
+//            $scope.emailobj.subject = "Complaint received.";
+//            $scope.emailobj.text = "Your complaint has been received and pending for review. \nThank You. \n(Please wait patiently and do not reply to this email). ";
+//        } else if ($scope.comDetail.status == "In progress") {
+//            $scope.emailobj.subject = "";
+//            $scope.emailobj.text = "";
+//        } else if ($scope.comDetail.status == "Confirmation") {
+//            $scope.emailobj.subject = "Problem Solved.";
+//            $scope.emailobj.text = "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)";
+//        } else if ($scope.comDetail.status == "Done") {
+//            $scope.emailobj.subject = "";
+//            $scope.emailobj.text = "";
+//        }
 
         $scope.updateStatus = function () {
             $scope.showUpdateBtn = false;
@@ -7953,10 +7997,10 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             });
         }
 
-        if ($scope.comDetail.staffID != window.sessionStorage.getItem('owner')) {
-            $scope.showInchargeBtn = false;
-        } else {
+        if ($scope.comDetail.staffID == window.sessionStorage.getItem('owner') || $scope.comDetail.staffID == null ) {
             $scope.showInchargeBtn = true;
+        } else {
+            $scope.showInchargeBtn = false;
         }
 
 
@@ -7968,6 +8012,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                 if (response.data.status = "success") {
                     $scope.notify("success", "Updated Incharged Staff");
                     $scope.showInchargeBtn = true;
+                    $route.reload();
                 } else {
                     $scope.notify("error", "Update Status Error");
                     $scope.showInchargeBtn = true;
@@ -7981,6 +8026,15 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             $scope.allowChat = false;
         }
 
+        $scope.verifyComp = function(){
+            $http.post('/verifyAppComp', $scope.verify).then(function(response){
+                if (response.data.status == "success") {
+                    $scope.notify(response.data.status, response.data.message);
+                } else {
+                    $scope.notify("error", "There has some ERROR!");
+                }                
+            });
+        }
     });
 
     $scope.viewReport = function (reportCode) {
@@ -8156,118 +8210,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         });
     }
 
-    $scope.sendEmail = function (actioncode) {
 
-        if (actioncode == "ack") {
-
-            swal({
-                    title: "Acknowledgement",
-                    text: "This will send an acknowledgement email to customer, and move to next status, are you want to do it? (cannot be move back in next status)",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "Send email",
-                    cancelButtonText: "Cancel",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        swal("Acknowledge", "Acknowledgement email has been sent.", "success");
-                        $scope.emailobj.status = "i";
-                        $http.post('/emailandupdate', $scope.emailobj).then(function (response) {
-                            if (response.data.status == "success") {
-                                console.log(response.data);
-                                swal("Email Sent Successfully!", "", "success");
-                                $scope.comDetail.status = "In progress";
-                                $scope.emailobj.subject = "";
-                                $scope.emailobj.text = "";
-                            } else {
-                                swal("Email has not been sent successfully!", "", "error");
-                            }
-
-                        });
-
-                    } else {
-                        swal("Cancelled", "Acknowledgement email has not been sent.", "error");
-                    }
-                });
-
-        }
-        if (actioncode == "rpy") {
-
-            swal({
-                    title: "Reply email",
-                    text: "This will send an information email to customer, and move to next status, are you want to do it? (cannot be move back in next status)",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "Send email",
-                    cancelButtonText: "Cancel",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                },
-                function (isConfirm) {
-
-                    if (isConfirm) {
-                        swal("Information", "Email has been sent.", "success");
-                        $scope.emailobj.status = "c";
-
-                        $http.post('/emailandupdate', $scope.emailobj).then(function (response) {
-                            if (response.data.status == "success") {
-                                swal("Email Sent Successfully!", "", "success");
-                                $scope.comDetail.status = "Confirmation";
-                                $scope.emailobj.subject = "Problem Solved.";
-                                $scope.emailobj.text = "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)";
-                            } else {
-                                swal("Email has not been sent successfully!", "", "error");
-                            }
-
-                        });
-
-                    } else {
-                        swal("Cancelled", "Email has not been sent.", "error");
-                    }
-                });
-
-
-        }
-        if (actioncode == "slv") {
-
-            swal({
-                    title: "Solved",
-                    text: "This will send an confirmation email to customer, in order to inform customer the current problem has been solved. (After email sent, this complaint will count as complete and cannot be moved back.)",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-warning",
-                    confirmButtonText: "Send email",
-                    cancelButtonText: "Cancel",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        swal("Complete", "Confirmation email has been sent.", "success");
-                        $scope.emailobj.status = "d";
-
-                        $http.post('/emailandupdate', $scope.emailobj).then(function (response) {
-                            if (response.data.status == "success") {
-                                swal("Confirmation email Sent Successfully!", "", "success");
-                                $scope.comDetail.status = "Done";
-                                $scope.emailobj.subject = "";
-                                $scope.emailobj.text = "";
-                            } else {
-                                swal("Confirmation email has not been sent successfully!", "", "error");
-                            }
-
-                        });
-                    } else {
-                        swal("Cancelled", "Confirmation email has not been sent.", "error");
-                    }
-                });
-
-        }
-    }
 });
 
 app.controller('complaintLogisticsDetailController', function($scope, $http, $filter, $window, $routeParams){
@@ -8295,6 +8238,8 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
     };
     $scope.showSubmitBtn = true;
     $scope.showCompImg = true;
+    $scope.showForm = false;
+    $scope.showInfo = false;
     
     $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function(response){
         $scope.detailObj = response.data.data[0];
@@ -8316,14 +8261,26 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
             $scope.logistics.statusTime = time == undefined ? "" : time;
         };        
 
+        if($scope.detailObj.step == 2){
+            $scope.showForm = true;
+            $scope.showInfo = false;
+        }else if($scope.detailObj.step == 3){
+            $scope.showForm = false;
+            $scope.showInfo = true;
+        }
+        
         splitType = $scope.detailObj.type.split(":,:");
         for(var i = 0; i<splitType.length; i++){
-            if(splitType[i].length>1){
+            if(splitType[i].length>3){
                 splitTypeSpecialContent = splitType[i].split(":::::");
                 if(splitTypeSpecialContent[0] == '1'){
                     splitTypeSpecialContent[2] = "Waste not collected (days)";
-                }else if(splitTypeSpecialContent[0] == '9'){
-                    splitTypeSpecialContent[2] = "Others";
+                }else if(splitTypeSpecialContent[0] == '12'){
+                    splitTypeSpecialContent[2] = "Others(compactor)";
+                }else if(splitTypeSpecialContent[0] == '13'){
+                    splitTypeSpecialContent[2] = "Others(hooklift)";
+                }else if(splitTypeSpecialContent[0] == '14'){
+                    splitTypeSpecialContent[2] = "Others(hazardous waste)";
                 }
                 $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
             }else{
@@ -8341,6 +8298,12 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                     splitTypeContent = "RoRo not pulled";
                 }else if(splitType[i] == '8'){
                     splitTypeContent = "RoRo not emptied";
+                }else if(splitType[i] == '9'){
+                    splitTypeContent = "Waste not collected on time";
+                }else if(splitType[i] == '10'){
+                    splitTypeContent = "Spillage during collection";
+                }else if(splitType[i] == '11'){
+                    splitTypeContent = "Incomplete documents";
                 }
                 $scope.detailType += splitTypeContent;
             }
@@ -8349,12 +8312,25 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                 $scope.detailType += ", ";
             } 
             
-        }  
-        console.log($scope.detailObj);
+        }
         
         if($scope.detailObj.compImg == "" || $scope.detailObj.compImg == null){
             $scope.showCompImg = false;
-        }        
+        }    
+        
+        if($scope.showInfo == true){
+            $http.post('/getLogisticsFullComplaintDetail',$scope.coIDobj).then(function(response){
+                if(response.data.status == "success"){
+                    $scope.fullComplaintDetail = response.data.data[0];
+                    $scope.areaCode = $scope.fullComplaintDetail.area.split(",")[1];
+                    console.log($scope.fullComplaintDetail);
+                }else{
+                    $scope.showInfo = false;
+                    console.log("ERROR!");
+                }
+                
+            });
+        }
     });
     
     $http.get('/getAreaList').then(function (response) {
@@ -8508,6 +8484,7 @@ app.controller('complaintOfficerController', function ($scope, $http, $filter) {
 });
 app.controller('complaintOfficercreateController', function ($scope, $http, $filter, $window) {
     $scope.showSubmitBtn = true;
+    $scope.showTypeOption = 0;
     $scope.comp = {
         "compDate": '',
         "compTime": '',
@@ -8522,7 +8499,8 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         "compLogDate": '',
         "compLogTime": '',
         "compLogBy": $window.sessionStorage.getItem('owner'),
-        "creationDate": ''
+        "creationDate": '',
+        "services": ''
     };
     
     $scope.tc1 = false;
@@ -8646,21 +8624,46 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             $scope.comp.compType += '8:,:';
         }
         if($scope.tc9 == true){
-            if($scope.tc9others == undefined){
-                $scope.tc9others = "";
-            }
-            $scope.comp.compType += '9:::::';
-            $scope.comp.compType += $scope.tc9others + ':,:';
+            $scope.comp.compType += '9:,:';
         }
+        if($scope.tc10 == true){
+            $scope.comp.compType += '10:,:';
+        }
+        if($scope.tc11 == true){
+            $scope.comp.compType += '11:,:';
+        }
+        if($scope.tc12 == true){
+            if($scope.tc12others == undefined){
+                $scope.tc12others = "";
+            }
+            $scope.comp.compType += '12:::::';
+            $scope.comp.compType += $scope.tc12others + ':,:';
+        }
+        if($scope.tc13 == true){
+            if($scope.tc13others == undefined){
+                $scope.tc13others = "";
+            }
+            $scope.comp.compType += '13:::::';
+            $scope.comp.compType += $scope.tc13others + ':,:';
+        }
+        if($scope.tc14 == true){
+            if($scope.tc14others == undefined){
+                $scope.tc14others = "";
+            }
+            $scope.comp.compType += '14:::::';
+            $scope.comp.compType += $scope.tc14others + ':,:';
+        }        
         
         
         $scope.comp.compType = $scope.comp.compType.substring(0,$scope.comp.compType.length - 3);
+        $scope.comp.services = $scope.typeOption;
 
 
-        if ($scope.comp.compDate == '' || $scope.comp.compTime == '' || $scope.comp.compSource == '' || $scope.comp.compRefNo == '' || $scope.comp.compName == '' || $scope.comp.compCompany == '' || $scope.comp.compPhone == '' || $scope.comp.compAddress == '' || $scope.comp.compType == '' || $scope.comp.compLogDate == '' || $scope.comp.compLogTime == '' || $scope.comp.compLogBy == '') {
+        if ($scope.comp.compDate == '' || $scope.comp.compTime == '' || $scope.comp.compSource == '' || $scope.comp.compRefNo == '' || $scope.comp.compName == '' || $scope.comp.compPhone == '' || $scope.comp.compAddress == '' || $scope.comp.compType == '' || $scope.comp.compLogDate == '' || $scope.comp.compLogTime == '' || $scope.comp.compLogBy == '' || $scope.comp.services == '') {
             console.log($scope.comp);
             $scope.notify("error", "There has some blank column");
             $scope.showSubmitBtn = true;
+            $scope.comp.compType = '';
         } else {
             $http.post('/submitOfficeMadeComplaint', $scope.comp).then(function (response) {
                 if (response.data.status == "success") {
@@ -8686,6 +8689,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         'custDate': "",
         'custTime': "",
         'custBy' : "",
+        'action': "",
         'coID' : $routeParams.coID
     };
     $scope.status = {
@@ -8743,12 +8747,16 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         
         splitType = $scope.detailObj.type.split(":,:");
         for(var i = 0; i<splitType.length; i++){
-            if(splitType[i].length>1){
+            if(splitType[i].length>3){
                 splitTypeSpecialContent = splitType[i].split(":::::");
                 if(splitTypeSpecialContent[0] == '1'){
                     splitTypeSpecialContent[2] = "Waste not collected (days)";
-                }else if(splitTypeSpecialContent[0] == '9'){
-                    splitTypeSpecialContent[2] = "Others";
+                }else if(splitTypeSpecialContent[0] == '12'){
+                    splitTypeSpecialContent[2] = "Others(compactor)";
+                }else if(splitTypeSpecialContent[0] == '13'){
+                    splitTypeSpecialContent[2] = "Others(hooklift)";
+                }else if(splitTypeSpecialContent[0] == '14'){
+                    splitTypeSpecialContent[2] = "Others(hazardous waste)";
                 }
                 $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
             }else{
@@ -8766,6 +8774,12 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                     splitTypeContent = "RoRo not pulled";
                 }else if(splitType[i] == '8'){
                     splitTypeContent = "RoRo not emptied";
+                }else if(splitType[i] == '9'){
+                    splitTypeContent = "Waste not collected on time";
+                }else if(splitType[i] == '10'){
+                    splitTypeContent = "Spillage during collection";
+                }else if(splitType[i] == '11'){
+                    splitTypeContent = "Incomplete documents";
                 }
                 $scope.detailType += splitTypeContent;
             }
@@ -8814,7 +8828,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         $scope.cust.custBy = window.sessionStorage.getItem('owner');
         
 
-        if($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == ''){
+        if($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == '' || $scope.cust.action == ''){
             $scope.notify("error", "There has some blank column");
             $scope.showSubCustBtn = true;    
         }else{
