@@ -9,31 +9,30 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Email Settings</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Email Settings [ON PROGRESS]</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="txtZoneCode form-label">COMING SOON</label>
-<!--                    <input type="text" class="form-control" id="txtZoneCode" data-ng-model="" />-->
+                    <label for="txtEmail form-label">Email</label>
+                    <input type="text" class="form-control" id="txtEmail" data-ng-model="emailSettings.receivers" />
                 </div>
-<!--
                 <div class="form-group">
-                    <label for="txtZoneName form-label">Zone Name</label>
-                    <input type="text" class="form-control" id="txtZoneName" data-ng-model="zone.name" />
+                    <label for="txtTime form-label">Time</label>
+                    <input type="time" class="form-control" id="txtTime" data-ng-model="emailSettings.time" />
                 </div>
--->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-<!--                <button type="button" class="btn btn-primary" data-ng-click="addZone();" data-ng-show="showCreateBtn">Create</button>-->
+                <button type="button" class="btn btn-primary" data-ng-click="saveSettings();">Save</button>
             </div>
         </div>
     </div>
 </div>
 
+<div id="exportPDF">
 <div class="row">
     <div class="col-md-12">
         <h4>Overall Report</h4>
@@ -136,7 +135,10 @@
         </div>
     </div>
 </div>
+</div>
 <script src="https://rawgit.com/highcharts/rounded-corners/master/rounded-corners.js"></script>
+<script src="/scripts/html2canvas.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2.3.2/dist/email.min.js"></script>
 <!--
 <div class="row">
     <div class="col-md-12">

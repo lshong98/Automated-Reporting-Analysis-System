@@ -1358,6 +1358,16 @@ app.post('/getDataVisualizationGroupByDate', function(req, res) {
     });
 });
 
+app.post('/saveExternalEmailSettings', function(req, res) {
+    'use strict';
+    let jsonData = JSON.stringify(req.body);
+    fs.writeFile("./external/email_settings.json", jsonData, function(err){
+        if(err){
+            console.log(err);
+        }
+    })
+});
+
 //get count
 app.get('/getCount', function(req, res) {
     'use strict';

@@ -3769,6 +3769,16 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
             
         $scope.progressBarFormat = ($scope.reportCompleteCount + $scope.reportIncompleteCount).toString() + " / " + $scope.todayAreaCount.toString();
         $scope.progressBarPercent =  Math.round(($scope.reportCompleteCount + $scope.reportIncompleteCount) / $scope.todayAreaCount * 100) / 100;
+            
+        $scope.email_params = {
+            "receivers": "felixvincent9933@gmail.com",
+            "todayDate": $filter('date')($scope.todayDate, 'mediumDate'),
+            "submittedCount": ($scope.reportCompleteCount + $scope.reportIncompleteCount).toString(),
+            "completeReport": $scope.reportCompleteCount.toString(),
+            "incompleteReport": $scope.reportIncompleteCount.toString(),
+            "unsubmittedCount": $scope.unsubmittedCount.toString(),
+            "imageSource": "imageSource_value"
+        }
     });    
     }, 500);
     
@@ -3791,6 +3801,70 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
             $scope.submittedReport = [];
         }
     });
+    
+    $http.get('/external/email_settings.json').then(function (response) {
+        console.log(response.data);
+        
+        var time = new Date();
+        time.setHours(response.data.time.split(":")[0]);
+        time.setMinutes(response.data.time.split(":")[1]);
+        time.setSeconds(0);
+        time.setMilliseconds(0);
+        
+        $scope.emailSettings = response.data;
+        $scope.emailSettings.time = time;
+    });
+    $scope.saveSettings = function(){
+        $scope.emailSettings.time = $filter('date')($scope.emailSettings.time, 'HH:mm:ss');
+        $http.post('/saveExternalEmailSettings', $scope.emailSettings).then(function (response) {
+            console.log(response.data);
+//            $scope.emailSettings = response.data;
+        });
+        
+//        var variable = require('./variable');
+//        var fs = variable.fs;
+//        let data = JSON.stringify($scope.emailSettings);
+//        fs.writeFileSync('/external/email_settings.json', data);
+        $('#emailSettings').modal('toggle');
+    }
+    
+//    $scope.exportImg = function(){
+//        var filename = 'OverallReport.jpeg';
+//
+//        html2canvas(document.querySelector('#exportPDF'), {
+//        }).then(function(canvas) {
+//            var img = new Image();
+//            img.setAttribute('crossOrigin', 'anonymous');
+//            img.src = canvas.toDataURL("image/jpeg");            
+//            var link = document.createElement('a');
+//            link.download = filename;
+//            link.href = img.src
+//            link.click();           
+//        });
+//    }
+    
+    $scope.sendEmail = function(){
+//        var filename = 'OverallReport.jpeg';
+//        html2canvas(document.querySelector('#exportPDF'), {
+//        }).then(function(canvas) {
+//            var img = new Image();
+//            img.setAttribute('crossOrigin', 'anonymous');
+//            img.src = canvas.toDataURL("image/jpeg");            
+//            var link = document.createElement('a');
+//            link.download = filename;
+//            link.href = img.src
+//            link.click();
+//        });
+//        (function(){
+//            emailjs.init("user_kYs7EdKvcyVAmXd0IUZau");
+//        })();
+//        
+//        console.log($scope.email_params);
+//        var service_id = "gmail";
+//        var template_id = "overall_report";
+//        emailjs.send(service_id, template_id, $scope.email_params);
+    }
+    
     setTimeout(function(){
         
     
@@ -3867,7 +3941,10 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
     }
   }]
 });
-    }, 700);
+    }, 1000);
+    
+    
+    
 });
                
 app.controller('accountController', function ($scope, $http, $filter, $window, storeDataService) {
