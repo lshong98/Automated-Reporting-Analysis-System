@@ -11,13 +11,7 @@
 </div>
 -->
 <br />
-<!--
-<div class="row">
-    <div class="col-md-12">
-        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchComplaintFilter"/>
-    </div>
-</div>
--->
+
 <div class="row" data-ng-show="nowModule=='web'">
     <div class="col-md-12">
         <button class="btn btn-success" data-ng-click="createComp()"><i class="fa fa-plus"></i> New</button>            
@@ -44,36 +38,54 @@
             <div class="tab-pane fade show active" id="webComplaint" role="tabpanel" aria-labelledby="webComplaint-tab">
                 <div class="row">
                     <div class="col-md-12">
-                        
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <th width="15%">Date</th>
-                                        <th width="15%">Name</th>
-                                        <th width="15%">Services</th>
-                                        <th width="15%">Company Name</th>
-                                        <th width="15%">Processing Department</th>
-                                        <th width="15%">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>               
-                                    <tr data-ng-repeat="c in complaintOfficerList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewComp(c.coID)">
-                                        <td data-ng-bind="c.complaintDate"></td>
-                                        <td data-ng-bind="c.name"></td>
-                                        <td data-ng-bind="c.serviceType"></td>
-                                        <td data-ng-bind="c.company"></td>
-                                        <td data-ng-bind="c.department"></td>
-                                        <td data-ng-bind="c.status"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchWebComplaintFilter"/>
                     </div>
-                </div>            
+                </div>                
+                <div class="row" style="min-height: 1000px;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th width="15%" data-ng-click="webOrderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="webOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%">Services</th>
+                                                <th width="15%" data-ng-click="webOrderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%">Processing Department</th>
+                                                <th width="15%">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>               
+                                            <tr data-ng-repeat="c in complaintOfficerList | filter:searchWebComplaint | offset: (paginationWebComp.currentPage - 1) * paginationWebComp.itemsPerPage | limitTo: paginationWebComp.itemsPerPage" data-ng-click="viewComp(c.coID)">
+                                                <td data-ng-bind="c.complaintDate"></td>
+                                                <td data-ng-bind="c.name"></td>
+                                                <td data-ng-bind="c.serviceType"></td>
+                                                <td data-ng-bind="c.company"></td>
+                                                <td data-ng-bind="c.department"></td>
+                                                <td data-ng-bind="c.status"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>               
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul uib-pagination boundary-links="true" total-items="webComptotalItems" ng-model="paginationWebComp.currentPage" data-max-size="paginationWebComp.maxSize" items-per-page="paginationWebComp.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                            </div>
+                        </div> 
+                    </div>
+                </div>                        
             </div>
             
             <div class="tab-pane fade" id="appComplaint" role="tabpanel" aria-labelledby="appComplaint-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchComplaintFilter"/>
+                    </div>
+                </div>
                 <div class="row" style="min-height: 1000px;">
                     <div class="col-md-12">
                         <div class="row">
@@ -90,8 +102,8 @@
                                                 <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" data-ng-click="complaintDetail(c.complaintID)">
+                                        <tbody>                                         
+                                            <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (paginationAppComp.currentPage - 1) * paginationAppComp.itemsPerPage | limitTo: paginationAppComp.itemsPerPage" data-ng-click="complaintDetail(c.complaintID)">
                                                 <td data-ng-bind="c.date"></td>
                                                 <td data-ng-bind="c.title"></td>
                                                 <td data-ng-bind="c.customer"></td>
@@ -106,7 +118,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                                <ul uib-pagination boundary-links="true" total-items="appComptotalItems" ng-model="paginationAppComp.currentPage" data-max-size="paginationAppComp.maxSize" items-per-page="paginationAppComp.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
                             </div>
                         </div>
                     </div>
@@ -115,35 +127,48 @@
             <div class="tab-pane fade" id="logistics" role="tabpanel" aria-labelledby="logistics-tab">
                 <div class="row">
                     <div class="col-md-12">
-                        
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                    <tr>
-                                        <th width="15%">Date</th>
-                                        <th width="15%">Name</th>
-                                        <th width="15%">Services</th>
-                                        <th width="15%">Company Name</th>
-                                        <th width="15%">By</th>
-                                        <th width="15%">Processing Department</th>                                        
-                                        <th width="10%">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>               
-                                    <tr data-ng-repeat="l in logisticsComplaintList | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage" class="clickable-row" data-ng-click="viewLogComp(l.coID)">
-                                        <td data-ng-bind="l.complaintDate"></td>
-                                        <td data-ng-bind="l.name"></td>
-                                        <td data-ng-bind="l.serviceType"></td>
-                                        <td data-ng-bind="l.company"></td>
-                                        <td data-ng-bind="l.staff"></td>
-                                        <td data-ng-bind="l.department"></td>
-                                        <td data-ng-bind="l.status"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchLogComplaintFilter"/>
                     </div>
-                </div>                 
+                </div>
+                <div class="row" style="min-height: 1000px;">
+                    <div class="col-md-12">    
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th width="15%" data-ng-click="logsOrderBy('date');">Date</th>
+                                                <th width="15%" data-ng-click="logsOrderBy('name');">Name</th>
+                                                <th width="15%">Services</th>
+                                                <th width="15%" data-ng-click="logsOrderBy('company');">Company Name</th>
+                                                <th width="15%">By</th>
+                                                <th width="15%">Processing Department</th>                                        
+                                                <th width="10%">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>               
+                                            <tr data-ng-repeat="l in logisticsComplaintList | filter: searchLogComplaint | offset: (paginationLogComp.currentPage - 1) * paginationLogComp.itemsPerPage | limitTo: paginationLogComp.itemsPerPage" class="clickable-row" data-ng-click="viewLogComp(l.coID)">
+                                                <td data-ng-bind="l.complaintDate"></td>
+                                                <td data-ng-bind="l.name"></td>
+                                                <td data-ng-bind="l.serviceType"></td>
+                                                <td data-ng-bind="l.company"></td>
+                                                <td data-ng-bind="l.staff"></td>
+                                                <td data-ng-bind="l.department"></td>
+                                                <td data-ng-bind="l.status"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>                                
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ul uib-pagination boundary-links="true" total-items="logComptotalItems" ng-model="paginationLogComp.currentPage" data-max-size="paginationLogComp.maxSize" items-per-page="paginationLogComp.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                            </div>
+                        </div>                         
+                    </div> 
+                </div>
             </div>
         </div>
     </div>
