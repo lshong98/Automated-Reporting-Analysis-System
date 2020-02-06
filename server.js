@@ -1364,8 +1364,48 @@ app.post('/saveExternalEmailSettings', function(req, res) {
     fs.writeFile("./external/email_settings.json", jsonData, function(err){
         if(err){
             console.log(err);
+        }else{
+            res.json(jsonData);
         }
     })
+});
+app.post('/sendEmailImageToBucket', function(req, res) {
+    'use strict';
+    const {Storage} = require('@google-cloud/storage');
+    const storage = new Storage({
+        keyFilename: './trienekens-management-9f941010219d.json',
+        projectId: 'trienekens-management'
+    });
+    const bucketName = 'trienekens-management-images';
+    const local_directory = './images/overall-report';
+    
+    if (!fs.existsSync(local_directory)) {
+        fs.mkdirSync(local_directory);
+    }
+    
+    var base64Image = (req.body.imgSrc).split(';base64,').pop();
+    var extension = (req.body.imgSrc).split(';base64,')[0].split('/')[1];
+    
+    var dt = new Date();
+    var imageID = dt.getTime();
+    
+    var image_path = '/' + imageID + '.' + extension;
+    var local_store_path = 'images/overall-report' + image_path,
+        public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+
+    fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+        if (err) throw err;
+
+        await storage.bucket(bucketName).upload('./' + local_store_path, {
+            gzip: true,
+            metadata: {
+                cacheControl: 'public, no-cache',
+            },
+            public: true,
+            destination: local_store_path
+        });
+    });
+    res.json(public_url);
 });
 
 //get count
@@ -1399,10 +1439,10 @@ app.get('/getCount', function(req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(reportCollectionDate)= CURRENT_DATE");
     }).then(function(incompleteReport) {
         results.incompleteReport = incompleteReport.incompleteReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS ytdCompleteReport FROM tblreport WHERE completionStatus = 'N' AND DATE(reportCollectionDate)= (CURRENT_DATE - 1)");
+        return f.waterfallQuery("SELECT COUNT(*) AS ytdCompleteReport FROM tblreport WHERE completionStatus = 'N' AND DATE_FORMAT(reportCollectionDate, '%Y-%m-%d') = SUBDATE(CURDATE(), 1)");
     }).then(function(ytdCompleteReport) {
         results.ytdCompleteReport = ytdCompleteReport.ytdCompleteReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS ytdIncompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(reportCollectionDate)= (CURRENT_DATE - 1)");
+        return f.waterfallQuery("SELECT COUNT(*) AS ytdIncompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE_FORMAT(reportCollectionDate, '%Y-%m-%d') = SUBDATE(CURDATE(), 1)");
     }).then(function(ytdIncompleteReport) {
         results.ytdIncompleteReport = ytdIncompleteReport.ytdIncompleteReport;
         res.json(results);
@@ -1464,7 +1504,7 @@ app.post('/historyDetail', function (req, res) {
 app.post('/getUnsubmittedToday', function(req, res) {
     'use strict';
     
-    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND tblarea.areaStatus = 'A'";
     
     database.query(sql, function(err, result) {
         if (err) {

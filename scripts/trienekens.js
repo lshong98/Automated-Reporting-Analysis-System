@@ -3771,7 +3771,7 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
         $scope.progressBarPercent =  Math.round(($scope.reportCompleteCount + $scope.reportIncompleteCount) / $scope.todayAreaCount * 100) / 100;
             
         $scope.email_params = {
-            "receivers": "felixvincent9933@gmail.com",
+            "receivers": "",
             "todayDate": $filter('date')($scope.todayDate, 'mediumDate'),
             "submittedCount": ($scope.reportCompleteCount + $scope.reportIncompleteCount).toString(),
             "completeReport": $scope.reportCompleteCount.toString(),
@@ -3803,7 +3803,6 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
     });
     
     $http.get('/external/email_settings.json').then(function (response) {
-        console.log(response.data);
         
         var time = new Date();
         time.setHours(response.data.time.split(":")[0]);
@@ -3818,13 +3817,7 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
         $scope.emailSettings.time = $filter('date')($scope.emailSettings.time, 'HH:mm:ss');
         $http.post('/saveExternalEmailSettings', $scope.emailSettings).then(function (response) {
             console.log(response.data);
-//            $scope.emailSettings = response.data;
         });
-        
-//        var variable = require('./variable');
-//        var fs = variable.fs;
-//        let data = JSON.stringify($scope.emailSettings);
-//        fs.writeFileSync('/external/email_settings.json', data);
         $('#emailSettings').modal('toggle');
     }
     
@@ -3844,25 +3837,29 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
 //    }
     
     $scope.sendEmail = function(){
-//        var filename = 'OverallReport.jpeg';
-//        html2canvas(document.querySelector('#exportPDF'), {
-//        }).then(function(canvas) {
-//            var img = new Image();
-//            img.setAttribute('crossOrigin', 'anonymous');
-//            img.src = canvas.toDataURL("image/jpeg");            
-//            var link = document.createElement('a');
-//            link.download = filename;
-//            link.href = img.src
-//            link.click();
-//        });
-//        (function(){
-//            emailjs.init("user_kYs7EdKvcyVAmXd0IUZau");
-//        })();
-//        
-//        console.log($scope.email_params);
-//        var service_id = "gmail";
-//        var template_id = "overall_report";
-//        emailjs.send(service_id, template_id, $scope.email_params);
+        html2canvas(document.querySelector('#exportPDF'), {
+        }).then(function(canvas) {
+            var img = new Image();
+            img.setAttribute('crossOrigin', 'anonymous');
+            img.src = canvas.toDataURL("image/jpeg");    
+            var imageSource = {
+                "imgSrc": img.src
+            }
+            $http.post('/sendEmailImageToBucket', imageSource).then(function (response) {
+                
+                //send email
+                emailjs.init("user_kYs7EdKvcyVAmXd0IUZau");
+                $scope.email_params.receivers = $scope.emailSettings.receivers;
+                $scope.email_params.imageSource = response.data;
+                console.log($scope.email_params);
+                var service_id = "gmail";
+                var template_id = "overall_report";
+                emailjs.send(service_id, template_id, $scope.email_params);
+                alert("email sent!");
+            });
+        });
+        
+        $('#emailSettings').modal('toggle');
     }
     
     setTimeout(function(){
@@ -3920,7 +3917,7 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
     }
   }, {
     enableMouseTracking: false,
-    data: [$scope.progressBarPercent],
+    data: $scope.progressBarPercent,
     borderRadiusBottomLeft: '4px',
     borderRadiusBottomRight: '4px',
     color: 'lightgreen',
@@ -3941,7 +3938,7 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
     }
   }]
 });
-    }, 1000);
+    }, 800);
     
     
     
