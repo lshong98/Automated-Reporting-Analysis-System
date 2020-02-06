@@ -3867,7 +3867,7 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
     }
   }]
 });
-    }, 700);
+    }, 1000);
 });
                
 app.controller('accountController', function ($scope, $http, $filter, $window, storeDataService) {
@@ -7640,13 +7640,20 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     $scope.logisticsComplaintList = [];
     $scope.nowModule = 'web';
     //pagination
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 7; //Record number each page
-    $scope.maxSize = 8; //Show the number in page
-  
+    $scope.paginationWebComp = angular.copy(storeDataService.pagination);
+    $scope.paginationAppComp = angular.copy(storeDataService.pagination);
+    $scope.paginationLogComp = angular.copy(storeDataService.pagination);
+//    $scope.currentPage = 1; //Initial current page to 1
+//    $scope.itemsPerPage = 7; //Record number each page
+//    $scope.maxSize = 8; //Show the number in page
+    
     //get verified complaint list
     $http.get('/getComplaintOfficerList').then(function (response) {
+        
         $scope.complaintOfficerList = response.data;
+        $scope.searchWebComplaintFilter = '';
+        $scope.filterWebComplaintList = [];
+        
         for (var i = 0; i < $scope.complaintOfficerList.length; i++) {
             $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
             
@@ -7668,7 +7675,27 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 $scope.complaintOfficerList[i].status = "N/A";
             }
         }
-        console.log($scope.complaintOfficerList);
+
+        $scope.filterWebComplaintList = angular.copy($scope.complaintOfficerList);
+
+        $scope.searchWebComplaint = function (complaint) {
+            return (complaint.complaintDate + complaint.name + complaint.company).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.webComptotalItems = $scope.filterWebComplaintList.length;
+
+        $scope.getWebData = function () {
+            return $filter('filter')($scope.filterWebComplaintList, $scope.searchWebComplaintFilter);
+        }
+        
+        $scope.$watch('searchWebComplaintFilter', function (newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.paginationWebComp.currentPage = 1;
+                $scope.webComptotalItems = $scope.getWebData().length;
+            }
+            return vm;
+        }, true);        
 
     });
     
@@ -7688,22 +7715,21 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
             return (complaint.date + complaint.title + complaint.customer + complaint.type + complaint.code).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
         }
 
-        $scope.totalItems = $scope.filterComplaintList.length;
+        $scope.appComptotalItems = $scope.filterComplaintList.length;
 
         $scope.getData = function () {
             return $filter('filter')($scope.filterComplaintList, $scope.searchComplaintFilter);
-
-            $scope.$watch('searchComplaintFilter', function (newVal, oldVal) {
-                var vm = this;
-                if (oldVal !== newVal) {
-                    $scope.currentPage = 1;
-                    $scope.totalItems = $scope.getData().length;
-                }
-                return vm;
-            }, true);
-
         }
-
+        
+        $scope.$watch('searchComplaintFilter', function (newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.paginationAppComp.currentPage = 1;
+                $scope.appComptotalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);
+        
         $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-primary': c.status == 'Confirmation', 'badge badge-success': c.status == 'Done'}";
     });
     
@@ -7712,6 +7738,8 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
             
     
         $scope.logisticsComplaintList = response.data;
+        $scope.searchLogComplaintFilter = '';
+        $scope.filterLogComplaintList = [];    
         
         if($scope.logisticsComplaintList.length != 0){
             for (var i = 0; i < $scope.logisticsComplaintList.length; i++) {
@@ -7736,6 +7764,27 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 }                    
             }
         }
+        
+        $scope.filterLogComplaintList = angular.copy($scope.logisticsComplaintList);
+
+        $scope.searchLogComplaint = function (complaint) {
+            return (complaint.complaintDate + complaint.name + complaint.company).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.logComptotalItems = $scope.filterLogComplaintList.length;
+
+        $scope.getLogData = function () {
+            return $filter('filter')($scope.filterLogComplaintList, $scope.searchLogComplaintFilter);
+        }
+        
+        $scope.$watch('searchLogComplaintFilter', function (newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.paginationLogComp.currentPage = 1;
+                $scope.logComptotalItems = $scope.getWebData().length;
+            }
+            return vm;
+        }, true);           
     });    
 
     $scope.readComplaint = function(){
@@ -7775,10 +7824,22 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     }
     
     $scope.orderBy = function (property) {
+        
         $scope.complaintList = $filter('orderBy')($scope.complaintList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
     };
 
+    $scope.webOrderBy = function (property) {
+        $scope.complaintOfficerList = $filter('orderBy')($scope.complaintOfficerList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
+    
+    $scope.logsOrderBy = function (property) {
+        
+        $scope.logisticsComplaintList = $filter('orderBy')($scope.logisticsComplaintList, ['' + property + ''], asc);
+        asc == true ? asc = false : asc = true;
+    };
+    
     $scope.tabClick = function(module) {
         $scope.nowModule = module;
     }
@@ -7799,15 +7860,19 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         "sender": window.sessionStorage.getItem('owner')
     };
     var chatContent = '';
-
+    var splitType = "";
+    var splitTypeContent = "";
+    var splitTypeSpecialContent = "";   
+    $scope.detailType = "";
+    $scope.title = "";
 
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response) {
         var complaint = response.data;
 
         $scope.comDetail = {
-            'ctype': complaint[0].premiseType,
-            'title': complaint[0].complaint,
+            'ctype': complaint[0].complaint,
+            'title': complaint[0].premiseType,
             'content': complaint[0].remarks,
             'date': $filter('date')(complaint[0].complaintDate, 'medium'),
             'customer': complaint[0].name,
@@ -7821,7 +7886,6 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'staffID': complaint[0].staffID,
             'telNo' : complaint[0].contactNumber
         };
-
         
         $scope.verify={
             'source': "Mobile App",
@@ -7830,8 +7894,8 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'telNo': $scope.comDetail.telNo,
             'address': $scope.comDetail.address,
             'img': '', //$scope.comDetail.img, //incomplete
-            'type':  '', //$scope.comDetail.type, //incomplete
-            'services': '', //incomplete
+            'type': $scope.comDetail.ctype,
+            'services': $scope.comDetail.title, 
             'date': $filter('date')(complaint[0].complaintDate,'yyyy-MM-dd'),
             'time': $filter('date')(complaint[0].complaintDate,'HH:mm:ss'),
             "forwardLogisticsDate": $filter("date")(new Date(), 'yyyy-MM-dd'),
@@ -7839,6 +7903,59 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             "forwardLogisticsBy": $window.sessionStorage.getItem('owner'),
             "creationDate": $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')
         };
+            
+        if($scope.comDetail.title == 1){
+            $scope.title = "Compactor";
+        }else if($scope.comDetail.title == 2){
+            $scope.title = "Hooklift";
+        }else if($scope.comDetail.title == 3){
+            $scope.title = "Hazardous waste";
+        }
+        
+        splitType = $scope.comDetail.ctype.split(":,:");
+        for(var i = 0; i<splitType.length; i++){
+            if(splitType[i].length>3){
+                splitTypeSpecialContent = splitType[i].split(":::::");
+                if(splitTypeSpecialContent[0] == '1'){
+                    splitTypeSpecialContent[2] = "Waste not collected (days)";
+                }else if(splitTypeSpecialContent[0] == '12'){
+                    splitTypeSpecialContent[2] = "Others(compactor)";
+                }else if(splitTypeSpecialContent[0] == '13'){
+                    splitTypeSpecialContent[2] = "Others(hooklift)";
+                }else if(splitTypeSpecialContent[0] == '14'){
+                    splitTypeSpecialContent[2] = "Others(hazardous waste)";
+                }
+                $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
+            }else{
+                if(splitType[i] == '2'){
+                    splitTypeContent = "Bin not pushed back to its original location";
+                }else if(splitType[i] == '3'){
+                    splitTypeContent = "Spillage of waste";
+                }else if(splitType[i] == '4'){
+                    splitTypeContent = "Spillage of leachate water";
+                }else if(splitType[i] == '5'){
+                    splitTypeContent = "RoRo not send";
+                }else if(splitType[i] == '6'){
+                    splitTypeContent = "RoRo not exchanged";
+                }else if(splitType[i] == '7'){
+                    splitTypeContent = "RoRo not pulled";
+                }else if(splitType[i] == '8'){
+                    splitTypeContent = "RoRo not emptied";
+                }else if(splitType[i] == '9'){
+                    splitTypeContent = "Waste not collected on time";
+                }else if(splitType[i] == '10'){
+                    splitTypeContent = "Spillage during collection";
+                }else if(splitType[i] == '11'){
+                    splitTypeContent = "Incomplete documents";
+                }
+                $scope.detailType += splitTypeContent;
+            }
+            
+            if(i < (splitType.length - 1)){
+                $scope.detailType += ", ";
+            }
+            
+        }        
 
         //get report dates for certain area id
         $scope.reportList = [];
@@ -8184,10 +8301,10 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
             $scope.logistics.statusTime = time == undefined ? "" : time;
         };        
 
-        if($scope.detailObj.step == 2){
+        if($scope.detailObj.step == 1){
             $scope.showForm = true;
             $scope.showInfo = false;
-        }else if($scope.detailObj.step == 3){
+        }else if($scope.detailObj.step >= 2){
             $scope.showForm = false;
             $scope.showInfo = true;
         }
@@ -8246,7 +8363,36 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                 if(response.data.status == "success"){
                     $scope.fullComplaintDetail = response.data.data[0];
                     $scope.areaCode = $scope.fullComplaintDetail.area.split(",")[1];
-                    console.log($scope.fullComplaintDetail);
+                    $scope.fullComplaintDetail.subDate = $filter('date')($scope.fullComplaintDetail.subDate,'yyyy-MM-dd');
+                    $scope.fullComplaintDetail.statusDate = $filter('date')($scope.fullComplaintDetail.statusDate, 'yyyy-MM-dd');
+                    $scope.fullComplaintDetail.custDate = $filter('date')($scope.fullComplaintDetail.custDate, 'yyyy-MM-dd');
+                    
+                    $http.post('/getStaffName', {'id': $scope.fullComplaintDetail.custBy}).then(function(response){
+                        $scope.informCustStaffName = response.data[0].staffName;
+                    });                    
+                    
+                    $scope.updateStatus = function(){
+
+                        $scope.status={
+                            'status': $scope.fullComplaintDetail.status,
+                            'statusDate': '',
+                            'statusTime': '',
+                            'coID': $routeParams.complaintCode
+                        }
+                        
+                        $scope.status.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
+                        var time = new Date();
+                        $scope.status.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+
+                        $http.post('/updateComplaintDetailsStatus', $scope.status).then(function(response){
+                            if(response.data.status == "success"){
+                                $scope.notify(response.data.status, "Status has been updated");
+                                $route.reload();
+                            }else{
+                                $scope.notify("error", "There has some ERROR!");
+                            }
+                        });
+                    }                    
                 }else{
                     $scope.showInfo = false;
                     console.log("ERROR!");
@@ -8379,32 +8525,32 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
     }    
     
 });
-
-app.controller('complaintOfficerController', function ($scope, $http, $filter) {
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 8; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
-
-    $http.get('/getComplaintOfficerList').then(function (response) {
-        $scope.complaintOfficerList = response.data;
-        for (var i = 0; i < $scope.complaintOfficerList.length; i++) {
-            $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
-        }
-
-        $scope.totalItems = $scope.complaintOfficerList.length;
-    });
-
-    $scope.createComp = function () {
-        window.location.href = '#/complaint-officer-create';
-    }
-
-    $scope.viewComp = function (coID) {
-        setTimeout(function () {
-            window.location.href = '#/complaint-officer-detail/' + coID;
-        }, 500);
-    };
-
-});
+//
+//app.controller('complaintOfficerController', function ($scope, $http, $filter) {
+//    $scope.currentPage = 1; //Initial current page to 1
+//    $scope.itemsPerPage = 8; //Record number each page
+//    $scope.maxSize = 10; //Show the number in page
+//
+//    $http.get('/getComplaintOfficerList').then(function (response) {
+//        $scope.complaintOfficerList = response.data;
+//        for (var i = 0; i < $scope.complaintOfficerList.length; i++) {
+//            $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
+//        }
+//
+//        $scope.totalItems = $scope.complaintOfficerList.length;
+//    });
+//
+//    $scope.createComp = function () {
+//        window.location.href = '#/complaint-officer-create';
+//    }
+//
+//    $scope.viewComp = function (coID) {
+//        setTimeout(function () {
+//            window.location.href = '#/complaint-officer-detail/' + coID;
+//        }, 500);
+//    };
+//
+//});
 app.controller('complaintOfficercreateController', function ($scope, $http, $filter, $window) {
     $scope.showSubmitBtn = true;
     $scope.showTypeOption = 0;
