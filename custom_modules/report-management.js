@@ -181,7 +181,7 @@ app.post('/editReport', function (req, res) {
     
     var image = req.body.ifleet,
         report_id = req.body.id,
-        collection_date = req.bosy.date,
+        collection_date = req.body.date,
         operation_start = req.body.format_startTime,
         operation_end = req.body.format_endTime,
         tonnage = req.body.ton,
