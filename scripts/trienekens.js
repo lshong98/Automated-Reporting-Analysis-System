@@ -7996,6 +7996,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response) {
         var complaint = response.data;
+        console.log(complaint);
 
         $scope.comDetail = {
             'ctype': complaint[0].complaint,
@@ -8003,6 +8004,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'content': complaint[0].remarks,
             'date': $filter('date')(complaint[0].complaintDate, 'medium'),
             'customer': complaint[0].name,
+            'contactNumber': complaint[0].contactNumber,
             'address': complaint[0].address,
             'areaID': complaint[0].areaID,
             'area': complaint[0].areaName,
