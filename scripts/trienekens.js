@@ -7753,7 +7753,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterWebComplaintList = angular.copy($scope.complaintOfficerList);
 
         $scope.searchWebComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.name + complaint.company).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.customerDateTime + complaint.logisticsDateTime + complaint.name + complaint.company).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.webComptotalItems = $scope.filterWebComplaintList.length;
@@ -7996,7 +7996,6 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function (response) {
         var complaint = response.data;
-        console.log(complaint);
 
         $scope.comDetail = {
             'ctype': complaint[0].complaint,
