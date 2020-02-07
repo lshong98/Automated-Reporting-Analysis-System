@@ -78,7 +78,7 @@ app.post('/addReport', function (req, res) {
             let base64Image = image.split(';base64,').pop();
             var extension = image.split(';base64,')[0].split('/')[1];
             var image_path = '/' + ID + '.' + extension;
-            var local_store_path = 'images/daily-report-test' + image_path,
+            var local_store_path = 'images/daily-report' + image_path,
                 public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
             
             fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
@@ -198,7 +198,7 @@ app.post('/editReport', function (req, res) {
         let base64Image = image.split(';base64,').pop();
         var extension = image.split(';base64,')[0].split('/')[1];
         var image_path = '/' + report_id + '.' + extension;
-        var local_store_path = 'images/daily-report-test' + image_path,
+        var local_store_path = 'images/daily-report' + image_path,
             public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
             
         fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
