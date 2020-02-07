@@ -1,4 +1,5 @@
 /*jslint node:true*/
+/*jslint esversion: 8*/ 
 var variable = require('./variable');
 var express = variable.express;
 var app = variable.app;
@@ -38,7 +39,6 @@ var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
 var custApp = require('./custom_modules/cust-app');
 var general = require('./custom_modules/general');
-
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json({
@@ -1360,24 +1360,25 @@ app.post('/getDataVisualizationGroupByDate', function(req, res) {
 
 app.post('/saveExternalEmailSettings', function(req, res) {
     'use strict';
-    let jsonData = JSON.stringify(req.body);
+    var jsonData = JSON.stringify(req.body);
     fs.writeFile("./external/email_settings.json", jsonData, function(err){
         if(err){
             console.log(err);
         }else{
             res.json(jsonData);
         }
-    })
+    });
 });
 app.post('/sendEmailImageToBucket', function(req, res) {
     'use strict';
-    const {Storage} = require('@google-cloud/storage');
-    const storage = new Storage({
+    
+    var {Storage} = require('@google-cloud/storage');
+    var storage = new Storage({
         keyFilename: './trienekens-management-9f941010219d.json',
         projectId: 'trienekens-management'
     });
-    const bucketName = 'trienekens-management-images';
-    const local_directory = './images/overall-report';
+    var bucketName = 'trienekens-management-images';
+    var local_directory = './images/overall-report';
     
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);

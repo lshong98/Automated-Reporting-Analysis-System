@@ -7778,9 +7778,62 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.searchComplaintFilter = '';
         $scope.filterComplaintList = [];
         $scope.complaintList = response.data;
-
+        var splitType = "";
+        var splitTypeContent = "";
+        var splitTypeSpecialContent = "";  
+        
+        
         for (var i = 0; i < $scope.complaintList.length; i++) {
             $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
+            
+            var splitType = $scope.complaintList[i].title.split(":,:");
+            $scope.complaintList[i].detailType = "";
+            for(var j = 0; j < splitType.length; j++){
+
+                if(splitType[j].length>3){
+                    splitTypeSpecialContent = splitType[j].split(":::::");
+                    if(splitTypeSpecialContent[0] == '1'){
+                        splitTypeSpecialContent[2] = "Waste not collected (days)";
+                    }else if(splitTypeSpecialContent[0] == '12'){
+                        splitTypeSpecialContent[2] = "Others(compactor)";
+                    }else if(splitTypeSpecialContent[0] == '13'){
+                        splitTypeSpecialContent[2] = "Others(hooklift)";
+                    }else if(splitTypeSpecialContent[0] == '14'){
+                        splitTypeSpecialContent[2] = "Others(hazardous waste)";
+                    }
+                    
+                    $scope.complaintList[i].detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
+                    
+                }else{
+                    if(splitType[j] == '2'){
+                        splitTypeContent = "Bin not pushed back to its original location";
+                    }else if(splitType[j] == '3'){
+                        splitTypeContent = "Spillage of waste";
+                    }else if(splitType[j] == '4'){
+                        splitTypeContent = "Spillage of leachate water";
+                    }else if(splitType[j] == '5'){
+                        splitTypeContent = "RoRo not send";
+                    }else if(splitType[j] == '6'){
+                        splitTypeContent = "RoRo not exchanged";
+                    }else if(splitType[j] == '7'){
+                        splitTypeContent = "RoRo not pulled";
+                    }else if(splitType[j] == '8'){
+                        splitTypeContent = "RoRo not emptied";
+                    }else if(splitType[j] == '9'){
+                        splitTypeContent = "Waste not collected on time";
+                    }else if(splitType[j] == '10'){
+                        splitTypeContent = "Spillage during collection";
+                    }else if(splitType[j] == '11'){
+                        splitTypeContent = "Incomplete documents";
+                    }
+                    $scope.complaintList[i].detailType += splitTypeContent;
+                }
+    
+//                if(j < (splitType.length - 1)){
+//                    $scope.complaintList[i]detailType += ", ";
+//                }
+            }
+         
         }
 
         $scope.filterComplaintList = angular.copy($scope.complaintList);

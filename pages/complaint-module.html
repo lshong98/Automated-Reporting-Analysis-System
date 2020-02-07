@@ -105,7 +105,7 @@
                                         <tbody>                                         
                                             <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (paginationAppComp.currentPage - 1) * paginationAppComp.itemsPerPage | limitTo: paginationAppComp.itemsPerPage" data-ng-click="complaintDetail(c.complaintID)">
                                                 <td data-ng-bind="c.date"></td>
-                                                <td data-ng-bind="c.title"></td>
+                                                <td data-ng-bind="c.detailType"></td>
                                                 <td data-ng-bind="c.customer"></td>
                                                 <td data-ng-bind="c.type"></td>
                                                 <td data-ng-bind="c.code"></td>
