@@ -402,3 +402,9 @@ td[colspan] {
     border: 1px solid #DADADA;
     text-align: right;
 }
+
+/*Complaint detail image*/
+.complaint-img{
+    max-width: 100%;
+}
+/*Complaint detail image*/

@@ -9,8 +9,8 @@
 // var database = require('./custom_modules/database-management');
 
 var variable = require('../variable');
-var EventEmitter = require('events');
-var emitter = new EventEmitter();
+//var EventEmitter = require('events');
+//var emitter = new EventEmitter();
 var emitter = variable.emitter;
 var express = variable.express;
 var app = express();
