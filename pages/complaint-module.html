@@ -53,10 +53,10 @@
                                                 <th width="13%" data-ng-click="webOrderBy('customerDateTime');">BD Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="13%" data-ng-click="webOrderBy('logisticsDateTime');">LG Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="webOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
-                                                <th width="10%">Services</th>
+                                                <th width="10%" data-ng-click="webOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
                                                 <th width="14%" data-ng-click="webOrderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
-                                                <th width="15%">Processing Department</th>
-                                                <th width="10%">Status</th>
+                                                <th width="15%" data-ng-click="webOrderBy('department');">Processing Department <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="webOrderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                             </tr>
                                         </thead>
                                         <tbody>               
@@ -99,9 +99,9 @@
                                         <thead>
                                             <tr>
                                                 <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                                                <th width="30%" data-ng-click="orderBy('title');">Title <i class="fas fa-sort-down"></i></th>
+                                                <th width="30%" data-ng-click="orderBy('detailType');">Title <i class="fas fa-sort-down"></i></th>
                                                 <th width="20%" data-ng-click="orderBy('customer');">Customer <i class="fas fa-sort-down"></i></th>
-                                                <th width="10%" data-ng-click="orderBy('type');">Type <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="orderBy('serviceType');">Type <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="orderBy('code');">Area <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                             </tr>
@@ -111,7 +111,7 @@
                                                 <td data-ng-bind="c.date"></td>
                                                 <td data-ng-bind="c.detailType"></td>
                                                 <td data-ng-bind="c.customer"></td>
-                                                <td data-ng-bind="c.type"></td>
+                                                <td data-ng-bind="c.serviceType"></td>
                                                 <td data-ng-bind="c.code"></td>
                                                 <td><span data-ng-bind="c.status" data-ng-class="{{showbadge}}"></span></td>
                                             </tr>
@@ -142,13 +142,13 @@
                                     <table class="table table-hover table-striped">
                                         <thead>
                                             <tr>
-                                                <th width="15%" data-ng-click="logsOrderBy('date');">Date</th>
-                                                <th width="15%" data-ng-click="logsOrderBy('name');">Name</th>
-                                                <th width="15%">Services</th>
-                                                <th width="15%" data-ng-click="logsOrderBy('company');">Company Name</th>
-                                                <th width="15%">By</th>
-                                                <th width="15%">Processing Department</th>                                        
-                                                <th width="10%">Status</th>
+                                                <th width="15%" data-ng-click="logsOrderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="logsOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="logsOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="logsOrderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="logsOrderBy('staff');">By <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="logsOrderBy('department');">Processing Department <i class="fas fa-sort-down"></i></th>                                        
+                                                <th width="10%" data-ng-click="logsOrderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                             </tr>
                                         </thead>
                                         <tbody>               

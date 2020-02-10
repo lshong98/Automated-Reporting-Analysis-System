@@ -44,6 +44,26 @@ app.post('/updateComplaintDetailsStatus', function (req, res) {
     });
 });
 
+app.post('/updateComplaintDetailsCustStatus', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblcomplaintofficer SET custStatus = '" + req.body.status + "', customerDate = '" + req.body.statusDate + "', customerTime = '" + req.body.statusTime + "' WHERE coID = '" + req.body.coID + "' ";
+    
+        var status = {
+            "status": ""
+        };
+    database.query(sql, function (err, result) {
+        if (err) {
+            
+            status.status = "error";
+            res.json(status);
+            throw err;
+        } else {
+            status.status = "success";
+            res.json(status);
+        }
+    });
+});
+
 //complaint module
 app.get('/getComplaintList', function (req, res) {
     'use strict';
@@ -233,7 +253,7 @@ app.post('/getLogisticsComplaintDetail',function (req,res){
 app.post('/getLogisticsFullComplaintDetail', function (req,res){
     'use strict';
     
-    var sql="SELECT tblcomplaintofficer.under AS 'area', tblcomplaintofficer.council AS 'council', tblcomplaintofficer.forwardedSub AS 'sub', tblcomplaintofficer.forwardedDate AS 'subDate', tblcomplaintofficer.forwardedTime AS 'subTime', tblstaff.staffName AS 'subBy', tblcomplaintofficer.status AS 'status', tblcomplaintofficer.statusDate AS 'statusDate', tblcomplaintofficer.statusTime AS 'statusTime', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.logsImg AS 'logsImg', tblcomplaintofficer.custAction AS 'custAction', tblcomplaintofficer.customerDate AS 'custDate', tblcomplaintofficer.customerTime AS 'custTime', tblcomplaintofficer.customerBy AS 'custBy' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.forwardedBy = tblstaff.staffID WHERE coID = '" + req.body.coID + "'";
+    var sql="SELECT tblcomplaintofficer.under AS 'area', tblcomplaintofficer.council AS 'council', tblcomplaintofficer.forwardedSub AS 'sub', tblcomplaintofficer.forwardedDate AS 'subDate', tblcomplaintofficer.forwardedTime AS 'subTime', tblstaff.staffName AS 'subBy', tblcomplaintofficer.status AS 'status', tblcomplaintofficer.statusDate AS 'statusDate', tblcomplaintofficer.statusTime AS 'statusTime', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.logsImg AS 'logsImg', tblcomplaintofficer.custStatus AS 'custStatus', tblcomplaintofficer.customerDate AS 'custDate', tblcomplaintofficer.customerTime AS 'custTime', tblcomplaintofficer.customerBy AS 'custBy', tblcomplaintofficer.contactStatus AS 'contactStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.forwardedBy = tblstaff.staffID WHERE coID = '" + req.body.coID + "'";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -268,7 +288,7 @@ app.post('/submitLogisticsComplaint', function (req,res){
 app.post('/updateCustInformation',function (req,res){
     'use strict';
     
-    var sql = "UPDATE tblcomplaintofficer SET customerDate = '" + req.body.custDate + "', customerTime = '" + req.body.custTime+ "', customerBy = '" + req.body.custBy + "', step = 3, custAction = '" + req.body.action + "' WHERE coID = '" + req.body.coID + "' ";
+    var sql = "UPDATE tblcomplaintofficer SET customerDate = '" + req.body.custDate + "', customerTime = '" + req.body.custTime+ "', customerBy = '" + req.body.custBy + "', step = 3, custStatus = '" + req.body.custStatus + "', contactStatus = '" + req.body.contactStatus + "', cmsStatus = '" + req.body.cmsStatus + "' WHERE coID = '" + req.body.coID + "' ";
     
     database.query(sql, function (err, result) {
         if (err) {

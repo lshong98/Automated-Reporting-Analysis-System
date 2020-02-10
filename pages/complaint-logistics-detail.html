@@ -106,8 +106,9 @@
 <div data-ng-show="showForm">
     <h2>Action Taken By Logistics</h2>
 
+    <!--original area  under-->
     <div class="form-group row">
-        <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Under</label>
+        <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Code</label>
         <div class="col-md-9">
             <select class="form-control mx-sm-3 selectpicker" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
                   <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
@@ -129,8 +130,9 @@
         </div>
     </div>
 
+    <!--original forwarded to sub-contractor-->
     <div class="form-group row">
-        <label for="inputSub" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor:</label>
+        <label for="inputSub" class="col-xs-3 col-form-label form-label-width">Area Under:</label>
         <div class="col-md-9">
             <input type="text" id="inputSub" placeholder="Sub-Contractor" class="form-control mx-sm-3" data-ng-model="logistics.sub" />
         </div>
@@ -207,9 +209,9 @@
 
     <h4>Action Taken By Logistics</h4>
 
-    
+    <!--original area  under-->
     <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Area Under:</strong>
+        <strong class="col-xs-3 form-label-width">Area Code:</strong>
         <p class="mx-sm-3">{{areaCode}}</p>
     </div>
     
@@ -218,8 +220,9 @@
         <p class="mx-sm-3">{{fullComplaintDetail.council}}</p>
     </div>
 
+    <!--original forwarded to sub-contractor-->
     <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor:</strong>
+        <strong class="col-xs-3 form-label-width">Area Under:</strong>
         <p  class="mx-sm-3">{{fullComplaintDetail.sub}}</p>
     </div>
     <div class="form-group row">
@@ -280,9 +283,16 @@
     
     <br/>
     <hr/>
+    <h4>Action Taken By BD</h4> 
+    <br/>
+    
     <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Customer Service Action:</strong>
-        <p  class="mx-sm-3">{{fullComplaintDetail.custAction}}</p>
+        <strong class="col-xs-3 form-label-width">Status:</strong>
+        <div class="col-md-3">
+            <p data-ng-if="fullComplaintDetail.custStatus == 'open'">Open</p>
+            <p data-ng-if="fullComplaintDetail.custStatus == 'pending'">Pending</p>
+            <p data-ng-if="fullComplaintDetail.custStatus == 'closed'">Closed</p>
+        </div>
     </div>
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Customer Informed Date:</strong>
@@ -298,6 +308,26 @@
         <strong class="col-xs-3 form-label-width">Customer Informed By:</strong>
         <p  class="mx-sm-3">{{informCustStaffName}}</p>
     </div>
+    
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Customer Not Contactable:</strong>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '0'">N/A</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '1'">Customer cannot be contacted after 3 times calling</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '2'">Contact number given was wrong</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '3'">No contact number was given</p>
+    </div>
+    
+    <br/>
+    <hr/>
+    <h4>Action Taken By CBMS Comittee</h4> 
+    <br/>
+    
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">CBMS Status:</strong>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '1'">Valid</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '2'">Invalid</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '3'">Pending</p>
+    </div>     
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>

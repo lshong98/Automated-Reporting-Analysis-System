@@ -7753,7 +7753,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterWebComplaintList = angular.copy($scope.complaintOfficerList);
 
         $scope.searchWebComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.customerDateTime + complaint.logisticsDateTime + complaint.name + complaint.company).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.customerDateTime + complaint.logisticsDateTime + complaint.name + complaint.company + complaint.serviceType + complaint.department + complaint.status ).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.webComptotalItems = $scope.filterWebComplaintList.length;
@@ -7832,16 +7832,26 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 //                if(j < (splitType.length - 1)){
 //                    $scope.complaintList[i]detailType += ", ";
 //                }
+                
+                if($scope.complaintList[i].type == 1){
+                    $scope.complaintList[i].serviceType = "Compactor";
+                }else if($scope.complaintList[i].type == 2){
+                    $scope.complaintList[i].serviceType = "Hooklift";
+                }else if($scope.complaintList[i].type == 3){
+                    $scope.complaintList[i].serviceType = "Hazardous waste";
+                }                  
             }
+            
+          
          
         }
 
         $scope.filterComplaintList = angular.copy($scope.complaintList);
 
         $scope.searchComplaint = function (complaint) {
-            return (complaint.date + complaint.title + complaint.customer + complaint.type + complaint.code).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.date + complaint.detailType + complaint.customer + complaint.serviceType + complaint.code + complaint.status).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
         }
-
+        
         $scope.appComptotalItems = $scope.filterComplaintList.length;
 
         $scope.getData = function () {
@@ -7895,7 +7905,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterLogComplaintList = angular.copy($scope.logisticsComplaintList);
 
         $scope.searchLogComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.name + complaint.company).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.name + complaint.company + complaint.serviceType + complaint.staff +  complaint.department + complaint.status).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.logComptotalItems = $scope.filterLogComplaintList.length;
@@ -8499,6 +8509,8 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                         $scope.informCustStaffName = response.data[0].staffName;
                     });                    
                     
+                    console.log($scope.fullComplaintDetail);
+                    
                     $scope.updateStatus = function(){
 
                         $scope.status={
@@ -8886,15 +8898,21 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         'custDate': "",
         'custTime': "",
         'custBy' : "",
-        'action': "",
+        'custStatus': "",
+        'contactStatus': "",
+        'cmsStatus': "",
         'coID' : $routeParams.coID
     };
-    $scope.status = {
+    $scope.custStatus = {
         'status': "",
         'statusDate': "",
         'statusTime': "",
         'coID' : $routeParams.coID
     };
+    $scope.checkCustContactStatus = false;
+    $scope.custContactableStatus = "0";
+    $scope.cmsStatus = "1";
+    
     $scope.showSubCustBtn = true;
     $scope.showCompImg = true;
     $scope.showLogsImg = true;
@@ -8926,10 +8944,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         $http.post('/getStaffName', staffID).then(function(response){
             $scope.staffName = response.data[0].staffName;
         });
-        
-        $scope.status.status = $scope.detailObj.status;
-        $scope.status.statusTime = $scope.detailObj.statusTime;
-      
+
         //date reformat
         $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
@@ -8940,7 +8955,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
         $scope.detailObj.forwardedDate = $filter('date')($scope.detailObj.forwardedDate, 'yyyy-MM-dd');
 
-        $scope.status.statusDate = $filter('date')($scope.detailObj.statusDate, 'yyyy-MM-dd');
+        $scope.detailObj.statusDate = $filter('date')($scope.detailObj.statusDate, 'yyyy-MM-dd');
         
         splitType = $scope.detailObj.type.split(":,:");
         for(var i = 0; i<splitType.length; i++){
@@ -9005,27 +9020,48 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             
             $http.post('/getStaffName', logisticsStaffID).then(function(response){
                 $scope.logsStaffName = response.data[0].staffName;
-            });  
+            }); 
+            
+
+
             
             if($scope.viewControl >= 3){
                 $http.post('/getStaffName', informCustStaffID).then(function(response){
                     $scope.informCustStaffName = response.data[0].staffName;
-                });                
+                }); 
+                
+                $scope.custStatus.status = $scope.detailObj.custStatus; 
+                $scope.custStatus.statusDate = $filter('date')($scope.detailObj.customerDate, 'yyyy-MM-dd');
+                $scope.custStatus.statusTime = $scope.detailObj.customerTime;
+                
+                console.log($scope.detailObj.contactStatus);
+                console.log($scope.detailObj.cmsStatus);
+                
             }
         }
     });
       
     
     $scope.updateCust = function() {
+     
+        if($scope.checkCustContactStatus == false){
+            $scope.custContactableStatus = "0";
+        }
         
         $scope.showSubCustBtn = false;
-        
+        $scope.cust.custStatus = $scope.custStatus.status;
         $scope.cust.custDate = $filter('date')($scope.custDate, 'yyyy-MM-dd'); 
         $scope.cust.custTime = $filter('date')($scope.custTime, 'HH:mm:ss');
         $scope.cust.custBy = window.sessionStorage.getItem('owner');
+        $scope.cust.contactStatus = $scope.custContactableStatus;
+        $scope.cust.cmsStatus = $scope.cmsStatus;
         
 
-        if($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == '' || $scope.cust.action == ''){
+
+        
+
+        
+        if($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == '' || $scope.cust.custStatus == ''){
             $scope.notify("error", "There has some blank column");
             $scope.showSubCustBtn = true;    
         }else{
@@ -9043,11 +9079,11 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     
     $scope.updateStatus = function(){
         
-        $scope.status.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
+        $scope.custStatus.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
         var time = new Date();
-        $scope.status.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
-        
-        $http.post('/updateComplaintDetailsStatus', $scope.status).then(function(response){
+        $scope.custStatus.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+
+        $http.post('/updateComplaintDetailsCustStatus', $scope.custStatus).then(function(response){
             if(response.data.status == "success"){
                 $scope.notify(response.data.status, "Status has been updated");
                 $route.reload();
