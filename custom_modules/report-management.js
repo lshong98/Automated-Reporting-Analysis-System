@@ -186,7 +186,7 @@ app.post('/editReport', function (req, res) {
         operation_end = req.body.format_endTime,
         tonnage = req.body.ton,
         status = req.body.status,
-        truck_id = trq.body.truckID,
+        truck_id = req.body.truckID,
         driver_id = req.body.driverID,
         remark = req.body.remark;
     
@@ -194,9 +194,12 @@ app.post('/editReport', function (req, res) {
         fs.mkdirSync(local_directory);
     }
     
-    if (image !== '') {
+    if (image !== '' && image.search('googleapis') >= 0) {
+        image = req.body.ifleet;
+    } else if (image !== '' && image.search('googleapis') === -1) {
         let base64Image = image.split(';base64,').pop();
         var extension = image.split(';base64,')[0].split('/')[1];
+        console.log(image);
         var image_path = '/' + report_id + '.' + extension;
         var local_store_path = 'images/daily-report' + image_path,
             public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
