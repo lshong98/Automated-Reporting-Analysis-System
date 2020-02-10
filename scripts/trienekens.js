@@ -3938,7 +3938,7 @@ app.controller('overallReportController', function ($scope, $http, $filter, $win
     }
   }]
 });
-    }, 800);
+    }, 1200);
     
     
     
@@ -8506,7 +8506,11 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                     $scope.fullComplaintDetail.custDate = $filter('date')($scope.fullComplaintDetail.custDate, 'yyyy-MM-dd');
                     
                     $http.post('/getStaffName', {'id': $scope.fullComplaintDetail.custBy}).then(function(response){
-                        $scope.informCustStaffName = response.data[0].staffName;
+                        if(response.data.length > 0){
+                            $scope.informCustStaffName = response.data[0].staffName;
+                        }else{
+                            $scope.informCustStaffName = '';
+                        }
                     });                    
                     
                     console.log($scope.fullComplaintDetail);

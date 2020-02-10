@@ -4,6 +4,16 @@ var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 //var variable = require('../variable');
+var fs = require('fs');
+const {Storage} = require('@google-cloud/storage');
+const storage = new Storage({
+    keyFilename: './trienekens-management-9f941010219d.json',
+    projectId: 'trienekens-management'
+});
+const bucketName = 'trienekens-management-images';
+const local_directory = './images/complaintOfficer';
+const local_lg_directory = './images/complaintOfficer/lg-images';
+const local_bd_directory = './images/complaintOfficer/bd-images';
 
 app.post('/updateComplaintStatus', function (req, res) {
     'use strict';
@@ -163,8 +173,42 @@ app.post('/getReportForComplaint', function (req, res) {
 
 app.post('/submitOfficeMadeComplaint', function (req, res) {
     'use strict';
+    
+    var image = req.body.compImg;
+    
+    if (!fs.existsSync(local_directory)) {
+        fs.mkdirSync(local_directory);
+    }
+    if (!fs.existsSync(local_lg_directory)) {
+        fs.mkdirSync(local_lg_directory);
+    }
+    
     f.makeID("complaint", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services) VALUE ('" + ID + "', '" + req.body.compDate + "', '" + req.body.compTime + "', '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + req.body.compName + "', '" + req.body.compCompany + "', '" + req.body.compPhone + "', '" + req.body.compAddress + "','" + req.body.compType + "', '" + req.body.compLogDate + "', '" + req.body.compLogTime + "', '" + req.body.compLogBy + "', '" + req.body.creationDate + "', '" + req.body.compImg + "', 1, '" + req.body.services + "')";
+        if (image !== '') {
+            let base64Image = image.split(';base64,').pop();
+            var extension = image.split(';base64,')[0].split('/')[1];
+            var image_path = '/' + ID + '.' + extension;
+            var local_store_path = 'images/complaintOfficer/lg-images' + image_path,
+                public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+            
+            fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+                if (err) throw err;
+                
+                await storage.bucket(bucketName).upload('./' + local_store_path, {
+                    gzip: true,
+                    metadata: {
+                        cacheControl: 'public, no-cache',
+                    },
+                    public: true,
+                    destination: local_store_path
+                });
+            });
+            image = public_url;
+        } else {
+            image = '';
+        }
+        
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services) VALUE ('" + ID + "', '" + req.body.compDate + "', '" + req.body.compTime + "', '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + req.body.compName + "', '" + req.body.compCompany + "', '" + req.body.compPhone + "', '" + req.body.compAddress + "','" + req.body.compType + "', '" + req.body.compLogDate + "', '" + req.body.compLogTime + "', '" + req.body.compLogBy + "', '" + req.body.creationDate + "', '" + image + "', 1, '" + req.body.services + "')";
         
         database.query(sql, function (err, result) {
             if (err) {
@@ -269,10 +313,42 @@ app.post('/getLogisticsFullComplaintDetail', function (req,res){
 app.post('/submitLogisticsComplaint', function (req,res){
     'use strict';
     
+    var image = req.body.logsImg;
+    
+    if (!fs.existsSync(local_directory)) {
+        fs.mkdirSync(local_directory);
+    }
+    if (!fs.existsSync(local_bd_directory)) {
+        fs.mkdirSync(local_bd_directory);
+    }
+    
+    if (image !== '') {
+        let base64Image = image.split(';base64,').pop();
+        var extension = image.split(';base64,')[0].split('/')[1];
+        var image_path = '/' + req.body.coID + '.' + extension;
+        var local_store_path = 'images/complaintOfficer/bd-images' + image_path,
+            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+
+        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+            if (err) throw err;
+
+            await storage.bucket(bucketName).upload('./' + local_store_path, {
+                gzip: true,
+                metadata: {
+                    cacheControl: 'public, no-cache',
+                },
+                public: true,
+                destination: local_store_path
+            });
+        });
+        image = public_url;
+    } else {
+        image = '';
+    }
     
     var remarkFormatted = req.body.remark.replace("'","\\'");
 
-    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate+ "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + req.body.logsImg + "', step = 2 WHERE coID = '" + req.body.coID+ "' ";
+    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate+ "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + image + "', step = 2 WHERE coID = '" + req.body.coID+ "' ";
 
     database.query(sql, function (err, result) {
         if (err) {
