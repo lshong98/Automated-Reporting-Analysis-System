@@ -98,6 +98,10 @@ io.sockets.on('connection', function (socket) {
         emitter.removeAllListeners('create new zone', this);
         emitter.removeAllListeners('create new area', this);
         emitter.removeAllListeners('create new bin', this);
+        emitter.removeAllListeners('satisfaction form', this);
+        emitter.removeAllListeners('enquiry', this);
+        emitter.removeAllListeners('binrequest', this);
+        emitter.removeAllListeners('complaint', this);
         socket.removeAllListeners();
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
@@ -190,6 +194,7 @@ io.sockets.on('connection', function (socket) {
     emitter.on('enquiry', function () {
         var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
+            console.log("enquiry emitter fired from cust-app");
             io.sockets.in(roomManager).emit('new enquiry', {
                 "unread": result[0].unread
             });
@@ -238,6 +243,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('enquiry', function () {
         var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
+            console.log("enquiry emitter fired from trienekensjs");
             io.sockets.in(roomManager).emit('new enquiry', {
                 "unread": result[0].unread
             });
@@ -293,6 +299,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('enquiry read', function () {
         var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
+            console.log("enquiry tab clicked");
             io.sockets.in(roomManager).emit('read enquiry', {
                 "unread": result[0].unread
             });
