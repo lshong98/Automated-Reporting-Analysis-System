@@ -1434,6 +1434,30 @@ app.get('/getCount', function(req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS complaint FROM tblcomplaint WHERE status != 'c'");
     }).then(function(complaint) {
         results.complaint = complaint.complaint;
+        return f.waterfallQuery("SELECT COUNT(*) AS lgTotal FROM tblcomplaintofficer WHERE step = 2 AND DATE(logisticsDate) = CURRENT_DATE");
+    }).then(function(complaint) {
+        results.lgTotal = complaint.lgTotal;
+        return f.waterfallQuery("SELECT COUNT(*) AS lgOpen FROM tblcomplaintofficer WHERE step = 2 AND status = 'open'");
+    }).then(function(complaint) {
+        results.lgOpen = complaint.lgOpen;
+        return f.waterfallQuery("SELECT COUNT(*) AS lgPending FROM tblcomplaintofficer WHERE step = 2 AND status = 'pending'");
+    }).then(function(complaint) {
+        results.lgPending = complaint.lgPending;
+        return f.waterfallQuery("SELECT COUNT(*) AS lgClosed FROM tblcomplaintofficer WHERE step = 2 AND status = 'closed' AND DATE(logisticsDate) = CURRENT_DATE");
+    }).then(function(complaint) {
+        results.lgClosed = complaint.lgClosed;
+        return f.waterfallQuery("SELECT COUNT(*) AS bdTotal FROM tblcomplaintofficer WHERE step = 3 AND DATE(logisticsDate) = CURRENT_DATE");
+    }).then(function(complaint) {
+        results.bdTotal = complaint.bdTotal;
+        return f.waterfallQuery("SELECT COUNT(*) AS bdOpen FROM tblcomplaintofficer WHERE step = 3 AND status = 'open'");
+    }).then(function(complaint) {
+        results.bdOpen = complaint.bdOpen;
+        return f.waterfallQuery("SELECT COUNT(*) AS bdPending FROM tblcomplaintofficer WHERE step = 3 AND status = 'pending'");
+    }).then(function(complaint) {
+        results.bdPending = complaint.bdPending;
+        return f.waterfallQuery("SELECT COUNT(*) AS bdClosed FROM tblcomplaintofficer WHERE step = 3 AND status = 'closed' AND DATE(logisticsDate) = CURRENT_DATE");
+    }).then(function(complaint) {
+        results.bdClosed = complaint.bdClosed;
         return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'N' AND DATE(reportCollectionDate)= CURRENT_DATE");
     }).then(function(completeReport) {
         results.completeReport = completeReport.completeReport;

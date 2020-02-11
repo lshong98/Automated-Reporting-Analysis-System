@@ -2954,6 +2954,15 @@ app.controller('managerController', function ($scope, $http, $filter) {
         $scope.truckCount = data.truck;
         $scope.userCount = data.staff - 1;
         $scope.complaintCount = data.complaint;
+        $scope.lgTotal = data.lgTotal;
+        $scope.lgOpen = data.lgOpen;
+        $scope.lgPending = data.lgPending;
+        $scope.lgClosed = data.lgClosed;
+        $scope.bdTotal = data.bdTotal;
+        $scope.bdOpen = data.bdOpen;
+        $scope.bdPending = data.bdPending;
+        $scope.bdClosed = data.bdClosed;
+        $scope.complaintCount = data.complaint;
         $scope.reportCompleteCount = data.completeReport;
         $scope.reportIncompleteCount = data.incompleteReport;
         $scope.unsubmittedCount = $scope.todayAreaCount - ($scope.reportCompleteCount + $scope.reportIncompleteCount);
