@@ -8417,7 +8417,7 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         'subDate':null,
         'subTime':null,
         'by':$window.sessionStorage.getItem('owner'),
-        'status':'',
+        'status':'open',
         'statusDate':'',
         'statusTime':'',
         'remark':'',
@@ -8946,7 +8946,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         'coID' : $routeParams.coID
     };
     $scope.custStatus = {
-        'status': "",
+        'status': "open",
         'statusDate': "",
         'statusTime': "",
         'coID' : $routeParams.coID
