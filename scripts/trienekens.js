@@ -7876,7 +7876,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
             return vm;
         }, true);
         
-        $scope.showbadge = "{'badge badge-danger': c.status == 'Pending', 'badge badge-warning': c.status == 'In progress', 'badge badge-primary': c.status == 'Confirmation', 'badge badge-success': c.status == 'Done'}";
+        $scope.showbadge = "{'badge badge-danger': c.status == 'Invalid', 'badge badge-warning': c.status == 'Pending', 'badge badge-primary': c.status == 'Open', 'badge badge-success': c.status == 'Closed'}";
     });
     
     //get logistics complaint list
@@ -8214,6 +8214,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         }
 
         $scope.verifyComp = function(){
+
             $http.post('/verifyAppComp', $scope.verify).then(function(response){
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
@@ -8654,8 +8655,8 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
     }, false);  
     
     $scope.submit = function(){
-        $scope.logistics.statusDate = $filter('date')($scope.statusDate, 'yyyy-MM-dd');
-        $scope.logistics.statusTime = $filter('date')($scope.logistics.statusTime, 'HH:mm:ss');
+        $scope.logistics.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd');
+        $scope.logistics.statusTime = $filter('date')(Date.now(), 'HH:mm:ss');
         
         if($scope.logistics.sub == "Mega Power" || $scope.logistics.sub == "TAK"){
             if($scope.logsSubDate == null || $scope.logsSubTime == null){
