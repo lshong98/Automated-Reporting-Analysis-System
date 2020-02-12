@@ -74,6 +74,47 @@ app.post('/updateComplaintDetailsCustStatus', function (req, res) {
     });
 });
 
+app.post('/logsOfficerUpdateRemarks', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblcomplaintofficer SET remarks = '" + req.body.recordremarks + "' WHERE coID = '" + req.body.coID + "' ";
+    
+        var status = {
+            "status": ""
+        };
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            
+            status.status = "error";
+            res.json(status);
+            throw err;
+        } else {
+            status.status = "success";
+            res.json(status);
+        }
+    });
+});
+
+app.post('/updateCMSStatus', function (req, res) {
+    'use strict';
+    var sql = "UPDATE tblcomplaintofficer SET cmsStatus = '" + req.body.cmsstatus + "' WHERE coID = '" + req.body.coID + "' ";
+    
+        var status = {
+            "status": ""
+        };
+    database.query(sql, function (err, result) {
+        if (err) {
+            
+            status.status = "error";
+            res.json(status);
+            throw err;
+        } else {
+            status.status = "success";
+            res.json(status);
+        }
+    });
+});
+
 //complaint module
 app.get('/getComplaintList', function (req, res) {
     'use strict';
@@ -240,6 +281,7 @@ app.get('/getComplaintOfficerList', function (req, res) {
     var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.forwardedDate,' ',tblcomplaintofficer.forwardedTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus' FROM tblcomplaintofficer ORDER BY tblcomplaintofficer.creationDateTime DESC";
     
     database.query(sql, function (err, result) {
+
         if (err) {
             throw err;
         }
@@ -348,8 +390,12 @@ app.post('/submitLogisticsComplaint', function (req,res){
     
     var remarkFormatted = req.body.remark.replace("'","\\'");
 
-    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate+ "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + image + "', step = 2 WHERE coID = '" + req.body.coID+ "' ";
-
+    if(req.body.subDate == null || req.body.subTime == null){
+        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = " + req.body.subDate + ", forwardedTime = " + req.body.subTime + ", forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate+ "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + image + "', step = 2 WHERE coID = '" + req.body.coID+ "' ";
+    }else{
+        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate+ "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + image + "', step = 2 WHERE coID = '" + req.body.coID+ "' ";        
+    }
+    
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -383,12 +429,13 @@ app.post('/verifyAppComp',function (req,res){
     f.makeID("complaint", req.body.creationDate).then(function (ID) {
         var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services) VALUE ('" + ID + "', '" + req.body.date + "', '" + req.body.time + "', '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.telNo + "', '" + req.body.address + "','" + req.body.type + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "')";
 
-        database.query(sql, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            res.json({"status": "success", "message": "Complaint Sent to Logistics"});
-        });
+        console.log(req.body);
+//        database.query(sql, function (err, result) {
+//            if (err) {
+//                throw err;
+//            }
+//            res.json({"status": "success", "message": "Complaint Sent to Logistics"});
+//        });
     });
 });
 
