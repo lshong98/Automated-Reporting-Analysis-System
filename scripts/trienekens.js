@@ -8528,6 +8528,12 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                         }
                     });                    
 
+                    $scope.checkCMSStatus = function(){
+                        //set cms status to closed if lg and bd status are closed
+                        if($scope.fullComplaintDetail.status == 'closed' && $scope.fullComplaintDetail.custStatus == 'closed'){
+                            $scope.fullComplaintDetail.cmsStatus = "3";
+                        }
+                    }
                     
                     $scope.updateStatus = function(){
 
@@ -8542,6 +8548,14 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                         var time = new Date();
                         $scope.status.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
 
+                        $http.post('/updateCMSStatus', {'cmsstatus': $scope.fullComplaintDetail.cmsStatus, 'coID':$routeParams.complaintCode}).then(function(response){
+                            if(response.data.status == "success"){
+//                                $scope.notify(response.data.status, "CMS Status has been updated");
+                            }else{
+                                $scope.notify("error", "There are some ERROR!");
+                            }
+                        });
+                        
                         $http.post('/updateComplaintDetailsStatus', $scope.status).then(function(response){
                             if(response.data.status == "success"){
                                 $scope.notify(response.data.status, "Status has been updated");
@@ -8550,6 +8564,8 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                                 $scope.notify("error", "There has some ERROR!");
                             }
                         });
+                        
+                        
                     } 
                     
                 }else{
@@ -8953,7 +8969,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     };
     $scope.checkCustContactStatus = false;
     $scope.custContactableStatus = "0";
-    $scope.cmsStatus = "1";
+    $scope.cmsStatus = "";
     
     $scope.showSubCustBtn = true;
     $scope.showCompImg = true;
@@ -9077,14 +9093,24 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                 $scope.custStatus.status = $scope.detailObj.custStatus; 
                 $scope.custStatus.statusDate = $filter('date')($scope.detailObj.customerDate, 'yyyy-MM-dd');
                 $scope.custStatus.statusTime = $scope.detailObj.customerTime;
-                
-                console.log($scope.detailObj.contactStatus);
-                console.log($scope.detailObj.cmsStatus);
-                
             }
         }
     });
-      
+    $scope.setCMSStatus = function(){
+        //set cms status to closed if lg and bd status are closed
+        if($scope.detailObj.status == 'closed' && $scope.custStatus.status == 'closed'){
+            $scope.cmsStatus = "3";
+        }else{
+            $scope.cmsStatus = "";
+        }
+    }
+    
+    $scope.checkCMSStatus = function(){
+        //set cms status to closed if lg and bd status are closed
+        if($scope.detailObj.status == 'closed' && $scope.custStatus.status == 'closed'){
+            $scope.cmsUpdateStatus = "3";
+        }
+    }
     
     $scope.updateCust = function() {
      
@@ -9099,9 +9125,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         $scope.cust.custBy = window.sessionStorage.getItem('owner');
         $scope.cust.contactStatus = $scope.custContactableStatus;
         $scope.cust.cmsStatus = $scope.cmsStatus;
-        
-
-
         
 
         
@@ -9127,6 +9150,14 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         var time = new Date();
         $scope.custStatus.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
 
+        $http.post('/updateCMSStatus', {'cmsstatus': $scope.cmsUpdateStatus, 'coID':$routeParams.coID}).then(function(response){
+            if(response.data.status == "success"){
+//                $scope.notify(response.data.status, "CMS Status has been updated");
+            }else{
+                $scope.notify("error", "There are some ERROR!");
+            }
+        });
+        
         $http.post('/updateComplaintDetailsCustStatus', $scope.custStatus).then(function(response){
             if(response.data.status == "success"){
                 $scope.notify(response.data.status, "Status has been updated");
