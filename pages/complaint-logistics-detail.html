@@ -428,6 +428,7 @@
         <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '1'">Customer cannot be contacted after 3 times calling</p>
         <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '2'">Contact number given was wrong</p>
         <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '3'">No contact number was given</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus.split(':')[0] == '4'">Others: <span data-ng-if="fullComplaintDetail.contactStatus.split(':')[0] == '4'">{{fullComplaintDetail.contactStatus.split(':')[1]}}</span></p>
     </div>
     
     <br/>

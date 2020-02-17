@@ -36,7 +36,7 @@ app.post('/updateComplaintStatus', function (req, res) {
 
 app.post('/updateComplaintDetailsStatus', function (req, res) {
     'use strict';
-    var sql = "UPDATE tblcomplaintofficer SET status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "' WHERE coID = '" + req.body.coID + "' ";
+    var sql = "UPDATE tblcomplaintofficer SET status = '" + req.body.status + "' WHERE coID = '" + req.body.coID + "' ";
     
         var status = {
             "status": ""

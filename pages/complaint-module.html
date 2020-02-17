@@ -50,8 +50,8 @@
                                         <thead>
                                             <tr>
                                                 <th width="9%" data-ng-click="webOrderBy('date');">CMS Date <i class="fas fa-sort-down"></i></th>
-                                                <th width="8%" data-ng-click="webOrderBy('customerDateTime');">BD Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('logisticsDateTime');">LG Time <i class="fas fa-sort-down"></i></th>
+                                                <th width="8%" data-ng-click="webOrderBy('customerDateTime');">BD Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="webOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
                                                 <th width="9%" data-ng-click="webOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
                                                 <th width="12%" data-ng-click="webOrderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
@@ -64,8 +64,8 @@
                                         <tbody>               
                                             <tr data-ng-repeat="c in complaintOfficerList | filter:searchWebComplaint | offset: (paginationWebComp.currentPage - 1) * paginationWebComp.itemsPerPage | limitTo: paginationWebComp.itemsPerPage" data-ng-click="viewComp(c.coID)">
                                                 <td data-ng-bind="c.complaintDate"></td>
-                                                <td data-ng-bind="c.customerDateTime"></td>
                                                 <td data-ng-bind="c.logisticsDateTime"></td>
+                                                <td data-ng-bind="c.customerDateTime"></td>
                                                 <td data-ng-bind="c.name"></td>
                                                 <td data-ng-bind="c.serviceType"></td>
                                                 <td data-ng-bind="c.company"></td>
