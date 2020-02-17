@@ -8043,8 +8043,8 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'img': '', //$scope.comDetail.img, //incomplete
             'type': $scope.comDetail.ctype,
             'services': $scope.comDetail.title, 
-            'date': $filter('date')(complaint[0].complaintDate,'yyyy-MM-dd'),
-            'time': $filter('date')(complaint[0].complaintDate,'HH:mm:ss'),
+            'date': $filter('date')(new Date(),'yyyy-MM-dd'),
+            'time': $filter('date')(new Date(),'HH:mm:ss'),
             "forwardLogisticsDate": $filter("date")(new Date(), 'yyyy-MM-dd'),
             "forwardLogisticsTime": $filter('date')(new Date(), 'HH:mm:ss'),
             "forwardLogisticsBy": $window.sessionStorage.getItem('owner'),
@@ -8533,14 +8533,12 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
 
                         $scope.status={
                             'status': $scope.fullComplaintDetail.status,
-                            'statusDate': '',
-                            'statusTime': '',
                             'coID': $routeParams.complaintCode
                         }
                         
-                        $scope.status.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
-                        var time = new Date();
-                        $scope.status.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+//                        $scope.status.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
+//                        var time = new Date();
+//                        $scope.status.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
 
                         $http.post('/updateComplaintDetailsStatus', $scope.status).then(function(response){
                             if(response.data.status == "success"){
@@ -8954,6 +8952,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $scope.checkCustContactStatus = false;
     $scope.custContactableStatus = "0";
     $scope.cmsStatus = "1";
+    $scope.custContactableStatusOthers = "";
     
     $scope.showSubCustBtn = true;
     $scope.showCompImg = true;
@@ -9078,9 +9077,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                 $scope.custStatus.statusDate = $filter('date')($scope.detailObj.customerDate, 'yyyy-MM-dd');
                 $scope.custStatus.statusTime = $scope.detailObj.customerTime;
                 
-                console.log($scope.detailObj.contactStatus);
-                console.log($scope.detailObj.cmsStatus);
-                
             }
         }
     });
@@ -9092,6 +9088,10 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             $scope.custContactableStatus = "0";
         }
         
+        if($scope.custContactableStatus  == '4'){
+            $scope.custContactableStatus += ":" + $scope.custContactableStatusOthers;            
+        }
+        
         $scope.showSubCustBtn = false;
         $scope.cust.custStatus = $scope.custStatus.status;
         $scope.cust.custDate = $filter('date')($scope.custDate, 'yyyy-MM-dd'); 
@@ -9100,10 +9100,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         $scope.cust.contactStatus = $scope.custContactableStatus;
         $scope.cust.cmsStatus = $scope.cmsStatus;
         
-
-
-        
-
         
         if($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == '' || $scope.cust.custStatus == ''){
             $scope.notify("error", "There has some blank column");

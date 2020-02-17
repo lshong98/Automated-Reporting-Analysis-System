@@ -294,18 +294,22 @@
         
         <div class="form-group row">
             <label for="checkCustContactStatus" class="col-xs-3 col-form-label form-label-width">Customer Not Contactable <input id="checkCustContactStatus" type="checkbox" data-ng-model="checkCustContactStatus"/></label>
-            <div class="col-md-9">      
+            <div class="col-md-3">      
                 <select class="form-control mx-sm-3" data-ng-show="checkCustContactStatus" data-ng-model="custContactableStatus" data-width="100%">
                     <option value="1">Customer cannot be contacted after 3 times calling</option>
                     <option value="2">Contact number given was wrong</option>
                     <option value="3">No contact number was given</option>
+                    <option value="4">Others</option>
                 </select>            
+            </div>
+            <div class="col-md-3">
+                <input type="text" data-ng-model="custContactableStatusOthers" data-ng-show="custContactableStatus == '4'" />
             </div>
         </div>
         
         <br/>
         <hr/>
-        <h4>Action Taken By CBMS Committee</h4>
+        <h4>Action Taken By CMS Committee</h4>
         <br/>
         
         <div class="form-group row">
@@ -371,15 +375,16 @@
         <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '1'">Customer cannot be contacted after 3 times calling</p>
         <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '2'">Contact number given was wrong</p>
         <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '3'">No contact number was given</p>
+        <p class="mx-sm-3" data-ng-if="detailObj.contactStatus.split(':')[0] == '4'">Others: <span data-ng-if="detailObj.contactStatus.split(':')[0] == '4'">{{detailObj.contactStatus.split(':')[1]}}</span></p>
     </div>
     
     <br/>
     <hr/>
-    <h4>Action Taken By CBMS Comittee</h4> 
+    <h4>Action Taken By CMS Comittee</h4> 
     <br/>
     
     <div class="form-group row">
-        <label for="cmsStatus2" class="col-xs-3 col-form-label form-label-width">CBMS Status:</label>
+        <label for="cmsStatus2" class="col-xs-3 col-form-label form-label-width">CMS Status:</label>
         <div class="col-md-3">
             <select class="form-control mx-sm-3" id="cmsStatus2" data-ng-model="cmsUpdateStatus" data-width="100%" data-live-search="true">
                 <option value="1">Valid</option>
