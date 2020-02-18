@@ -342,7 +342,7 @@
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Status:</strong>
         <div class="col-md-3">
-            <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="fullComplaintDetail.status" data-live-search="true" data-width="100%">
+            <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="fullComplaintDetail.status" data-ng-change="checkCMSStatus()" data-live-search="true" data-width="100%">
                 <option value="open">Open</option>
                 <option value="pending">Pending</option>
                 <option value="closed">Closed</option>
