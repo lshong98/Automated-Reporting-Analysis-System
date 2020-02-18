@@ -229,7 +229,7 @@ app.post('/getChats', function (req, resp) {
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var sql = "SELECT * FROM tblcomplaint WHERE userID = '" + userID + "' ORDER BY complaintID DESC, complaintDate DESC";
+                var sql = "SELECT complaintID,userID,staffID, DATE_FORMAT(complaintDate, '%Y-%m-%d %r') AS date,premiseType,complaint,days,remarks,status,status,complaintAddress,readStat FROM tblcomplaint WHERE userID = '" + userID + "' ORDER BY complaintID DESC, complaintDate DESC";
                 database.query(sql, function (err, res) {
                     if (err) {
                         resp.send("Error");
@@ -245,6 +245,8 @@ app.post('/getChats', function (req, resp) {
                     }
                     resp.json(info);
                     resp.end();
+                    console.log(sql);
+                    console.log(info);
                 });
             } else {
                 resp.send("error getting user id");
