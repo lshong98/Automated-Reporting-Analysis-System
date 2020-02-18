@@ -16,24 +16,26 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="txtZoneCode form-label">COMING SOON</label>
-<!--                    <input type="text" class="form-control" id="txtZoneCode" data-ng-model="" />-->
+                    <label for="txtEmail form-label">Email</label>
+                    <input type="text" class="form-control" id="txtEmail" data-ng-model="emailSettings.receivers" />
                 </div>
 <!--
                 <div class="form-group">
-                    <label for="txtZoneName form-label">Zone Name</label>
-                    <input type="text" class="form-control" id="txtZoneName" data-ng-model="zone.name" />
+                    <label for="txtTime form-label">Time</label>
+                    <input type="time" class="form-control" id="txtTime" data-ng-model="emailSettings.time" disabled/>
                 </div>
 -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-<!--                <button type="button" class="btn btn-primary" data-ng-click="addZone();" data-ng-show="showCreateBtn">Create</button>-->
+                <button type="button" class="btn btn-primary" data-ng-click="saveSettings();">Save Settings</button>
+                <button type="button" class="btn btn-danger" data-ng-click="sendEmail();"><i class="fa fa-paper-plane"></i> Send</button>
             </div>
         </div>
     </div>
 </div>
 
+<div id="exportPDF">
 <div class="row">
     <div class="col-md-12">
         <h4>Overall Report</h4>
@@ -44,7 +46,7 @@
         <h5>{{todayDate | date:'fullDate'}}</h5>
     </div>
     <div class="col-md-1">
-        <button class="btn btn-info" data-toggle="modal" data-target="#emailSettings"><i class="fa fa-cog"></i> Settings</button>
+        <button class="btn btn-info" data-toggle="modal" data-target="#emailSettings"><i class="fa fa-envelope"></i> Email</button>
     </div>
 </div>
 <br />
@@ -83,7 +85,7 @@
 <br />
 <div class="row">
     <div class="col-md-8">
-        <div class="table-responsive" style="overflow-y: scroll; height: 650px">
+        <div class="table-responsive">
             <table class="table table-hover table-striped">
                 <thead>
                     <tr class="text-center">
@@ -115,7 +117,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="table-responsive" style="overflow-y: scroll; height: 650px">
+        <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
                     <tr class="text-center">
@@ -136,60 +138,7 @@
         </div>
     </div>
 </div>
+</div>
 <script src="https://rawgit.com/highcharts/rounded-corners/master/rounded-corners.js"></script>
-<!--
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped table-clickable">
-                        <thead>
-                            <tr>
-                                <th width="10%" data-ng-click="orderBy('id');">Zone Code <i class="fas fa-sort-down"></i></th>
-                                <th width="35%" data-ng-click="orderBy('name');">Zone Name <i class="fas fa-sort-down"></i></th>
-                                <th width="15%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                                <th data-ng-show="show.edit == 'A'" width="15%">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-ng-repeat="z in zoneList | filter: searchZone | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
-                                <td>
-                                   <div editable>
-                                      <input type="text" class="form-control" data-ng-model="z.code" data-ng-show="!showZone" />
-                                      <span data-ng-show="showZone" data-ng-bind="z.code"></span>   
-                                   </div>
-                                </td>
-                                <td>
-                                    <div editable>
-                                        <input type="text" class="form-control" data-ng-model="z.name" data-ng-show="!showZone" />
-                                        <span data-ng-show="showZone" data-ng-bind="z.name"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div editable>
-                                        <select class="form-control" data-ng-model="z.status" data-ng-show="!showZone">
-                                            <option>ACTIVE</option>
-                                            <option>INACTIVE</option>
-                                        </select>
-                                        <span data-ng-show="showZone" data-ng-bind="z.status"></span>
-                                    </div>
-                                </td>
-                                <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showZone" data-ng-click="editZone(z.id, z.code, z.name, z.status);"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-warning" data-ng-show="!showZone" data-ng-click="saveZone();"><i class="fa fa-save"></i></button>
-                                    <button class="btn btn-sm btn-default" data-ng-show="!showZone" data-ng-click="cancelZone();"><i class="fa fa-times"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-            <div class="col-md-12">
-                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-            </div>
-        </div>
-    </div>
-</div>-->
+<script src="/scripts/html2canvas.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2.3.2/dist/email.min.js"></script>

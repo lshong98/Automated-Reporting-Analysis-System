@@ -9,8 +9,8 @@
 // var database = require('./custom_modules/database-management');
 
 var variable = require('../variable');
-var EventEmitter = require('events');
-var emitter = new EventEmitter();
+//var EventEmitter = require('events');
+//var emitter = new EventEmitter();
 var emitter = variable.emitter;
 var express = variable.express;
 var app = express();
@@ -1946,28 +1946,32 @@ app.post('/resetPassword', function (req, resp) {
             }
             else 
             {
-                var userID = res[0].userID;
-                var sql2 = "UPDATE tbluser SET password = '" + newPass + "' WHERE userID = '" + userID + "'";
-    
-                database.query(sql2, function (err, res) {
-                    if (err) 
-                    {
-                        resp.send("Update Password Failed");
-                        console.log(err);
-                        throw err;
-                    }
-                    else 
-                    {
-                        smtpTransport.sendMail(mailOptions, function (error, info) {
-                            if (error) {
-                                resp.send("Mail Failed");
-                                console.log(error);
-                            } else {
-                                resp.send("Mail Sent");
-                            }
-                        });
-                    }
-                });
+                if(res[0] != undefined){
+                    var userID = res[0].userID;
+                    var sql2 = "UPDATE tbluser SET password = '" + newPass + "' WHERE userID = '" + userID + "'";
+        
+                    database.query(sql2, function (err, res) {
+                        if (err) 
+                        {
+                            resp.send("Update Password Failed");
+                            console.log(err);
+                            throw err;
+                        }
+                        else 
+                        {
+                            smtpTransport.sendMail(mailOptions, function (error, info) {
+                                if (error) {
+                                    resp.send("Mail Failed");
+                                    console.log(error);
+                                } else {
+                                    resp.send("Mail Sent");
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    resp.send("User does not exist");
+                }
             }
         });
     });

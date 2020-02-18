@@ -223,10 +223,11 @@
     <div class="col-md-3">
         <label for="statusUpdate" >Status</label>
         <select id="statusUpdate" data-ng-model="comDetail.status" data-live-search="true">
+            <option value="Open">Open</option>
             <option value="Pending">Pending</option>
-            <option value="In progress">In Progress</option>
-            <option value="Confirmation">Confirmation</option>
-            <option value="Done">Done</option>
+            <option value="Closed">Closed</option>
+            <option value="Invalid">Invalid</option>
+            
         </select>
         <button class="btn btn-sm btn-primary" data-ng-show="showUpdateBtn" data-ng-click="updateStatus()">Update</button>
     </div>
@@ -241,12 +242,11 @@
 </div>
 <div class="row">
     <div class="col-md-6 detailBox">
-        <p><strong>Premise Type: </strong>{{comDetail.ctype}}</p>
-        <p><strong>Complaint Title: </strong> {{comDetail.title}}</p>
+        <p><strong>Premise Type: </strong>{{title}}</p>
+        <p><strong>Complaint Title: </strong> {{detailType}}</p>
         <p><strong>Date Time: </strong>{{comDetail.date}}</p>
         <p><strong>Customer: </strong>{{comDetail.customer}}</p>
-        <p><strong>Area Code: </strong>{{comDetail.code}}</p>
-        <p><strong>Area Name: </strong>{{comDetail.area}}</p>
+        <p><strong>Contact Number: </strong>{{comDetail.contactNumber}}</p>
         <p><strong>Address:</strong></p>
         <p>{{comDetail.address}}</p>
         <p><strong>Content: </strong></p>
@@ -262,7 +262,7 @@
         </a>
         <p data-ng-show="comDetail.img == '' || comDetail.img == null">No image attached</p> -->
         <a href="{{comDetail.img}}" class="thumbnail" data-fancybox data-width="2048">
-            <img data-ng-src="{{comDetail.img}}" data-ng-show="comDetail.img != null">
+            <img data-ng-src="{{comDetail.img}}" data-ng-show="comDetail.img != null" class="complaint-img">
         </a>
         <p data-ng-show="comDetail.img == '' || comDetail.img == null">No image attached</p>
     </div>

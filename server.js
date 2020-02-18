@@ -1,4 +1,5 @@
 /*jslint node:true*/
+/*jslint esversion: 8*/ 
 var variable = require('./variable');
 var express = variable.express;
 var app = variable.app;
@@ -38,7 +39,6 @@ var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
 var custApp = require('./custom_modules/cust-app');
 var general = require('./custom_modules/general');
-
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json({
@@ -1358,6 +1358,57 @@ app.post('/getDataVisualizationGroupByDate', function(req, res) {
     });
 });
 
+app.post('/saveExternalEmailSettings', function(req, res) {
+    'use strict';
+    var jsonData = JSON.stringify(req.body);
+    fs.writeFile("./external/email_settings.json", jsonData, function(err){
+        if(err){
+            console.log(err);
+        }else{
+            res.json(jsonData);
+        }
+    });
+});
+app.post('/sendEmailImageToBucket', function(req, res) {
+    'use strict';
+    
+    var {Storage} = require('@google-cloud/storage');
+    var storage = new Storage({
+        keyFilename: './trienekens-management-9f941010219d.json',
+        projectId: 'trienekens-management'
+    });
+    var bucketName = 'trienekens-management-images';
+    var local_directory = './images/overall-report';
+    
+    if (!fs.existsSync(local_directory)) {
+        fs.mkdirSync(local_directory);
+    }
+    
+    var base64Image = (req.body.imgSrc).split(';base64,').pop();
+    var extension = (req.body.imgSrc).split(';base64,')[0].split('/')[1];
+    
+    var dt = new Date();
+    var imageID = dt.getTime();
+    
+    var image_path = '/' + imageID + '.' + extension;
+    var local_store_path = 'images/overall-report' + image_path,
+        public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+
+    fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+        if (err) throw err;
+
+        await storage.bucket(bucketName).upload('./' + local_store_path, {
+            gzip: true,
+            metadata: {
+                cacheControl: 'public, no-cache',
+            },
+            public: true,
+            destination: local_store_path
+        });
+    });
+    res.json(public_url);
+});
+
 //get count
 app.get('/getCount', function(req, res) {
     'use strict';
@@ -1380,19 +1431,43 @@ app.get('/getCount', function(req, res) {
         return f.waterfallQuery("SELECT COUNT(*) AS staff FROM tblstaff WHERE staffStatus = 'A'");
     }).then(function(staff) {
         results.staff = staff.staff;
-        return f.waterfallQuery("SELECT COUNT(*) AS complaint FROM tblcomplaint WHERE status != 'c'");
+        return f.waterfallQuery("SELECT COUNT(*) AS complaint FROM tblcomplaintofficer WHERE step = 1 AND DATE(logisticsDate) = CURRENT_DATE");
     }).then(function(complaint) {
         results.complaint = complaint.complaint;
+        return f.waterfallQuery("SELECT COUNT(*) AS lgTotal FROM tblcomplaintofficer WHERE step = 2 AND DATE(logisticsDate) = CURRENT_DATE");
+    }).then(function(complaint) {
+        results.lgTotal = complaint.lgTotal;
+        return f.waterfallQuery("SELECT COUNT(*) AS lgOpen FROM tblcomplaintofficer WHERE step = 2 AND status = 'open'");
+    }).then(function(complaint) {
+        results.lgOpen = complaint.lgOpen;
+        return f.waterfallQuery("SELECT COUNT(*) AS lgPending FROM tblcomplaintofficer WHERE step = 2 AND status = 'pending'");
+    }).then(function(complaint) {
+        results.lgPending = complaint.lgPending;
+        return f.waterfallQuery("SELECT COUNT(*) AS lgClosed FROM tblcomplaintofficer WHERE step = 2 AND status = 'closed' AND DATE(logisticsDate) = CURRENT_DATE");
+    }).then(function(complaint) {
+        results.lgClosed = complaint.lgClosed;
+        return f.waterfallQuery("SELECT COUNT(*) AS bdTotal FROM tblcomplaintofficer WHERE step = 3 AND DATE(logisticsDate) = CURRENT_DATE");
+    }).then(function(complaint) {
+        results.bdTotal = complaint.bdTotal;
+        return f.waterfallQuery("SELECT COUNT(*) AS bdOpen FROM tblcomplaintofficer WHERE step = 3 AND status = 'open'");
+    }).then(function(complaint) {
+        results.bdOpen = complaint.bdOpen;
+        return f.waterfallQuery("SELECT COUNT(*) AS bdPending FROM tblcomplaintofficer WHERE step = 3 AND status = 'pending'");
+    }).then(function(complaint) {
+        results.bdPending = complaint.bdPending;
+        return f.waterfallQuery("SELECT COUNT(*) AS bdClosed FROM tblcomplaintofficer WHERE step = 3 AND status = 'closed' AND DATE(logisticsDate) = CURRENT_DATE");
+    }).then(function(complaint) {
+        results.bdClosed = complaint.bdClosed;
         return f.waterfallQuery("SELECT COUNT(*) AS completeReport FROM tblreport WHERE completionStatus = 'N' AND DATE(reportCollectionDate)= CURRENT_DATE");
     }).then(function(completeReport) {
         results.completeReport = completeReport.completeReport;
         return f.waterfallQuery("SELECT COUNT(*) AS incompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(reportCollectionDate)= CURRENT_DATE");
     }).then(function(incompleteReport) {
         results.incompleteReport = incompleteReport.incompleteReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS ytdCompleteReport FROM tblreport WHERE completionStatus = 'N' AND DATE(reportCollectionDate)= (CURRENT_DATE - 1)");
+        return f.waterfallQuery("SELECT COUNT(*) AS ytdCompleteReport FROM tblreport WHERE completionStatus = 'N' AND DATE_FORMAT(reportCollectionDate, '%Y-%m-%d') = SUBDATE(CURDATE(), 1)");
     }).then(function(ytdCompleteReport) {
         results.ytdCompleteReport = ytdCompleteReport.ytdCompleteReport;
-        return f.waterfallQuery("SELECT COUNT(*) AS ytdIncompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE(reportCollectionDate)= (CURRENT_DATE - 1)");
+        return f.waterfallQuery("SELECT COUNT(*) AS ytdIncompleteReport FROM tblreport WHERE completionStatus = 'A' AND DATE_FORMAT(reportCollectionDate, '%Y-%m-%d') = SUBDATE(CURDATE(), 1)");
     }).then(function(ytdIncompleteReport) {
         results.ytdIncompleteReport = ytdIncompleteReport.ytdIncompleteReport;
         res.json(results);
@@ -1454,7 +1529,7 @@ app.post('/historyDetail', function (req, res) {
 app.post('/getUnsubmittedToday', function(req, res) {
     'use strict';
     
-    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%'";
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area, tblstaff.staffName AS staff FROM tblarea INNER JOIN tblstaff ON tblarea.staffID = tblstaff.staffID JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND tblarea.areaStatus = 'A'";
     
     database.query(sql, function(err, result) {
         if (err) {

@@ -98,6 +98,10 @@ io.sockets.on('connection', function (socket) {
         emitter.removeAllListeners('create new zone', this);
         emitter.removeAllListeners('create new area', this);
         emitter.removeAllListeners('create new bin', this);
+        emitter.removeAllListeners('satisfaction form', this);
+        emitter.removeAllListeners('enquiry', this);
+        emitter.removeAllListeners('binrequest', this);
+        emitter.removeAllListeners('complaint', this);
         socket.removeAllListeners();
         users.splice(users.indexOf(socket.username), 1);
         updateUsernames();
@@ -180,7 +184,7 @@ io.sockets.on('connection', function (socket) {
                     scheduledUnread = result[0].unread;
                     totalUnread = parseInt(municipalUnread, 10) + parseInt(commercialUnread, 10) + parseInt(scheduledUnread, 10);
                     io.sockets.in(roomManager).emit('new satisfaction', {
-                        unread: totalUnread
+                        "unread": totalUnread
                     });
                 });
             });
@@ -190,8 +194,9 @@ io.sockets.on('connection', function (socket) {
     emitter.on('enquiry', function () {
         var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
+            console.log("enquiry emitter fired from cust-app");
             io.sockets.in(roomManager).emit('new enquiry', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
      });
@@ -200,7 +205,7 @@ io.sockets.on('connection', function (socket) {
          var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
          database.query(sql, function (err, result) {
              io.sockets.in(roomManager).emit('new binrequest', {
-                 unread: result[0].unread
+                 "unread": result[0].unread
              });
          });
      });
@@ -209,7 +214,7 @@ io.sockets.on('connection', function (socket) {
         var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('new complaint', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
     });
@@ -228,7 +233,7 @@ io.sockets.on('connection', function (socket) {
                     scheduledUnread = result[0].unread;
                     totalUnread = parseInt(municipalUnread, 10) + parseInt(commercialUnread, 10) + parseInt(scheduledUnread, 10);
                     io.sockets.in(roomManager).emit('new satisfaction', {
-                        unread: totalUnread
+                        "unread": totalUnread
                     });
                 });
             });
@@ -238,8 +243,9 @@ io.sockets.on('connection', function (socket) {
     socket.on('enquiry', function () {
         var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
+            console.log("enquiry emitter fired from trienekensjs");
             io.sockets.in(roomManager).emit('new enquiry', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
      });
@@ -248,7 +254,7 @@ io.sockets.on('connection', function (socket) {
          var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
          database.query(sql, function (err, result) {
              io.sockets.in(roomManager).emit('new binrequest', {
-                 unread: result[0].unread
+                 "unread": result[0].unread
              });
          });
      });
@@ -257,7 +263,7 @@ io.sockets.on('connection', function (socket) {
         var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('new complaint', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
     });
@@ -267,7 +273,7 @@ io.sockets.on('connection', function (socket) {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read municipal', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
     });
@@ -276,7 +282,7 @@ io.sockets.on('connection', function (socket) {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read commercial', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
     });
@@ -285,7 +291,7 @@ io.sockets.on('connection', function (socket) {
         var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read scheduled', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
     });
@@ -293,8 +299,9 @@ io.sockets.on('connection', function (socket) {
     socket.on('enquiry read', function () {
         var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
+            console.log("enquiry tab clicked");
             io.sockets.in(roomManager).emit('read enquiry', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
     });
@@ -303,7 +310,7 @@ io.sockets.on('connection', function (socket) {
         var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read binrequest', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
     });
@@ -312,7 +319,7 @@ io.sockets.on('connection', function (socket) {
         var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read complaint', {
-                unread: result[0].unread
+                "unread": result[0].unread
             });
         });
     });
