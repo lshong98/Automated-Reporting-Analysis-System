@@ -440,8 +440,11 @@ app.post('/verifyAppComp',function (req,res){
 
 app.post('/setIncharge', function(req,res){
     'use strict';
-    
-    var sql = "UPDATE tblcomplaint SET staffID = '" + req.body.staffID + "'";
+    if(req.body.staffID == null){
+        var sql = "UPDATE tblcomplaint SET staffID = " + req.body.staffID;
+    }else{
+        var sql = "UPDATE tblcomplaint SET staffID = '" + req.body.staffID + "'";
+    }
     
     database.query(sql, function (err, result) {
         if (err) {

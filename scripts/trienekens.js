@@ -7996,6 +7996,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 app.controller('complaintDetailController', function ($scope, $http, $filter, $window, $routeParams, $route) {
     'use strict';
     $scope.showInchargeBtn = true;
+    $scope.showUninchargeBtn  = false;
     $scope.showUpdateBtn = true;
     $scope.req = {
         'id': $routeParams.complaintCode
@@ -8184,12 +8185,15 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             });
         }
 
-        if ($scope.comDetail.staffID == window.sessionStorage.getItem('owner') || $scope.comDetail.staffID == null ) {
+        if($scope.comDetail.staffID == null){
             $scope.showInchargeBtn = true;
+            $scope.showUninchargeBtn = false;
+        }else if ($scope.comDetail.staffID == window.sessionStorage.getItem('owner') || $scope.comDetail.staffID == null || window.sessionStorage.getItem('position') == "Administrator") {
+            $scope.showInchargeBtn = false;
+            $scope.showUninchargeBtn = true;
         } else {
             $scope.showInchargeBtn = false;
         }
-
 
         $scope.inchargeChat = function () {
             var staffID = {
@@ -8206,8 +8210,24 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                 }
             });
         }
-
-        if ($scope.comDetail.staffID == window.sessionStorage.getItem('owner') || window.sessionStorage.getItem('position') == "Manager") {
+        
+        $scope.uninchargeChat = function () {
+            var staffID = {
+                "staffID": null
+            };
+            $http.post('/setIncharge', staffID).then(function (response) {
+                if (response.data.status = "success") {
+                    $scope.notify("success", "Updated Incharged Staff");
+                    $scope.showInchargeBtn = true;
+                    $route.reload();
+                } else {
+                    $scope.notify("error", "Update Status Error");
+                    $scope.showInchargeBtn = true;
+                }
+            });
+        }        
+        
+        if ($scope.comDetail.staffID == window.sessionStorage.getItem('owner')) {
             $scope.allowChat = true;
         } else {
             $scope.allowChat = false;
