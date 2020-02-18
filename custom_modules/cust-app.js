@@ -828,7 +828,7 @@ app.post('/complaint', function (req, resp) {
     'use strict';
     var data;
     var userID;
-    var date = dateTime.create().format('Y-m-d H:M:S');
+//    var date = dateTime.create().format('Y-m-d H:M:S');
     var complaintID = 0;
     var sqlComplaintID = "SELECT MAX(complaintID) AS max FROM tblcomplaint";
     var dateID = dateTime.create().format('YmdHMS');
@@ -854,9 +854,9 @@ app.post('/complaint', function (req, resp) {
                     // }
                     complaintID = "COM"+userID+dateID;
                     if (data.compRemarks == null || data.compRemarks == "") {
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + NOW() + "','" + data.compAdd + "', 'u')";
                     } else {
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + NOW() + "','" + data.compAdd + "', 'u')";
                     }
                     database.query(sql, function (err, res) {
                         if (!err) {
