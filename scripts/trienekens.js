@@ -8832,44 +8832,55 @@ app.controller('complaintOfficercreateController', function($scope, $http, $filt
             }
         }
     }
+    var img01, img02, img03;
+    $(".target").on("click", function() {
+        $scope.imgPasteID = $(this).attr("id");
+        window.addEventListener("paste", function(e) {
+            
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById($scope.imgPasteID);
+                    var ctx = canvas.getContext('2d');
 
-    window.addEventListener("paste", function(e) {
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
 
-        // Handle the event
-        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
-            // If there's an image, display it in the canvas
-            if (imageBlob) {
-                var canvas = document.getElementById("uploadImg");
-                var ctx = canvas.getContext('2d');
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
 
-                // Create an image to render the blob on the canvas
-                var img = new Image();
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
 
-                // Once the image loads, render the img on the canvas
-                img.onload = function() {
-                    // Update dimensions of the canvas with the dimensions of the image
-                    canvas.width = this.width;
-                    canvas.height = this.height;
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
 
-                    // Draw the image
-                    ctx.drawImage(img, 0, 0);
-                };
-
-                // Crossbrowser support for URL
-                var URLObj = window.URL || window.webkitURL;
-
-                // Creates a DOMString containing a URL representing the object given in the parameter
-                // namely the original Blob
-                img.src = URLObj.createObjectURL(imageBlob);
-                var reader = new FileReader();
-                reader.readAsDataURL(imageBlob);
-                reader.onloadend = function() {
-                    var base64data = reader.result;
-                    $scope.comp.compImg = base64data;
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        if($scope.imgPasteID == "uploadImg01"){
+                            img01 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg02"){
+                            img02 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg03"){
+                            img03 = base64data;
+                        }
+                        $scope.comp.compImg = img01 + "|" + img02 + "|" + img03;
+                        
+                    }
                 }
-            }
-        });
-    }, false);
+            });
+        }, false);
+    });
 
     $scope.addComp = function() {
         $scope.showSubmitBtn = false;
@@ -8984,6 +8995,16 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
         'statusTime': "",
         'coID': $routeParams.coID
     };
+    $scope.complaintImages = {
+        'image01': "",
+        'image02': "",
+        'image03': ""
+    }
+    $scope.showComplaintImages = {
+        'image01': false,
+        'image02': false,
+        'image03': false
+    }
     $scope.checkCustContactStatus = false;
     $scope.custContactableStatus = "0";
     $scope.cmsStatus = "";
@@ -8998,8 +9019,20 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
     var areaSplit = "";
 
     $http.post('/getComplaintOfficerDetail', $scope.coIDobj).then(function(response) {
-
         $scope.detailObj = response.data.data[0];
+        
+        //init images
+        $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
+        $scope.complaintImages.image02 = $scope.detailObj.compImg.split("|")[1];
+        $scope.complaintImages.image03 = $scope.detailObj.compImg.split("|")[2];
+        
+        if($scope.complaintImages.image01 !== 'undefined'){
+            $scope.showComplaintImages.image01 = true;
+        }else if($scope.complaintImages.image02 !== 'undefined'){
+            $scope.showComplaintImages.image02 = true;
+        }else if($scope.complaintImages.image03 !== 'undefined'){
+            $scope.showComplaintImages.image03 = true;
+        }
 
         //initialize staff
         var staffID = {

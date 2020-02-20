@@ -215,7 +215,7 @@ app.post('/getReportForComplaint', function (req, res) {
 app.post('/submitOfficeMadeComplaint', function (req, res) {
     'use strict';
     
-    var image = req.body.compImg;
+    var images = req.body.compImg.split("|");
     
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
@@ -225,31 +225,37 @@ app.post('/submitOfficeMadeComplaint', function (req, res) {
     }
     
     f.makeID("complaint", req.body.creationDate).then(function (ID) {
-        if (image !== '') {
-            let base64Image = image.split(';base64,').pop();
-            var extension = image.split(';base64,')[0].split('/')[1];
-            var image_path = '/' + ID + '.' + extension;
-            var local_store_path = 'images/complaintOfficer/lg-images' + image_path,
-                public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
-            
-            fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
-                if (err) throw err;
-                
-                await storage.bucket(bucketName).upload('./' + local_store_path, {
-                    gzip: true,
-                    metadata: {
-                        cacheControl: 'public, no-cache',
-                    },
-                    public: true,
-                    destination: local_store_path
-                });
-            });
-            image = public_url;
-        } else {
-            image = '';
-        }
         
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services) VALUE ('" + ID + "', '" + req.body.compDate + "', '" + req.body.compTime + "', '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + req.body.compName + "', '" + req.body.compCompany + "', '" + req.body.compPhone + "', '" + req.body.compAddress + "','" + req.body.compType + "', '" + req.body.compLogDate + "', '" + req.body.compLogTime + "', '" + req.body.compLogBy + "', '" + req.body.creationDate + "', '" + image + "', 1, '" + req.body.services + "')";
+        images.forEach(function(image, index){
+            if (image !== 'undefined') {
+                let base64Image = image.split(';base64,').pop();
+                var extension = image.split(';base64,')[0].split('/')[1];
+                var image_path = '/' + ID + '(' + index + ')' + '.' + extension;
+                var local_store_path = 'images/complaintOfficer/lg-images' + image_path,
+                    public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+
+                fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+                    if (err) throw err;
+
+                    await storage.bucket(bucketName).upload('./' + local_store_path, {
+                        gzip: true,
+                        metadata: {
+                            cacheControl: 'public, no-cache',
+                        },
+                        public: true,
+                        destination: local_store_path
+                    });
+                });
+                images[index] = public_url;
+            } else {
+                images[index] = 'undefined';
+            }
+        });
+        
+        
+        images = images[0] + "|" + images[1] + "|" + images[2];
+        
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services) VALUE ('" + ID + "', '" + req.body.compDate + "', '" + req.body.compTime + "', '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + req.body.compName + "', '" + req.body.compCompany + "', '" + req.body.compPhone + "', '" + req.body.compAddress + "','" + req.body.compType + "', '" + req.body.compLogDate + "', '" + req.body.compLogTime + "', '" + req.body.compLogBy + "', '" + req.body.creationDate + "', '" + images + "', 1, '" + req.body.services + "')";
         
         database.query(sql, function (err, result) {
             if (err) {
