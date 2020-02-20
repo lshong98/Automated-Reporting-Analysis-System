@@ -16,13 +16,26 @@
         width: 250px;
     }
     /* Style the Image Used to Trigger the Modal */
-    #myCompImage {
+    #myCompImage01 {
       border-radius: 5px;
       cursor: pointer;
       transition: 0.3s;
     }
-
-    #myLogsImage:hover {opacity: 0.7;}
+    #myCompImage01:hover {opacity: 0.7;}
+    
+    #myCompImage02 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myCompImage02:hover {opacity: 0.7;}
+    
+    #myCompImage03 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myCompImage03:hover {opacity: 0.7;}
     
     #myLogsImg {
       border-radius: 5px;
@@ -165,14 +178,14 @@
 
     <div class="form-group row" data-ng-show="showCompImg">
         <strong class="col-xs-3 form-label-width">Image:</strong>
-        <div class="mx-sm-3" style="width: 400px;height: 350px;" data-ng-show="showComplaintImages.image01">
-            <img id="myCompImage" src="{{complaintImages.image01}}" alt="{{detailObj.compImg}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image01">
+            <img id="myCompImage01" src="{{complaintImages.image01}}" alt="{{complaintImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
         </div>
-        <div class="mx-sm-3" style="width: 400px;height: 350px;" data-ng-show="showComplaintImages.image02">
-            <img id="myCompImage" src="{{complaintImages.image02}}" alt="{{detailObj.compImg}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image02">
+            <img id="myCompImage02" src="{{complaintImages.image02}}" alt="{{complaintImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
         </div>
-        <div class="mx-sm-3" style="width: 400px;height: 350px;" data-ng-show="showComplaintImages.image03">
-            <img id="myCompImage" src="{{complaintImages.image03}}" alt="{{detailObj.compImg}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image03">
+            <img id="myCompImage03" src="{{complaintImages.image03}}" alt="{{complaintImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
         </div>
     </div>
 
@@ -428,10 +441,23 @@
     var modal = document.getElementById("myModal");
 
     // Get the image and insert it inside the modal - use its "alt" text as a caption
-    var img = document.getElementById("myCompImage");
+    var img01 = document.getElementById("myCompImage01");
     var modalImg = document.getElementById("img01");
     var captionText = document.getElementById("caption");
-    img.onclick = function(){
+    img01.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    
+    var img02 = document.getElementById("myCompImage02");
+    img02.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    var img03 = document.getElementById("myCompImage03");
+    img03.onclick = function(){
       modal.style.display = "block";
       modalImg.src = this.src;
       captionText.innerHTML = this.alt;

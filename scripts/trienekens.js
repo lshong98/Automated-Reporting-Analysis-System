@@ -8468,6 +8468,16 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         'logsImg': '',
         'coID': $routeParams.complaintCode
     };
+    $scope.complaintImages = {
+        'image01': "",
+        'image02': "",
+        'image03': ""
+    }
+    $scope.showComplaintImages = {
+        'image01': false,
+        'image02': false,
+        'image03': false
+    }
     $scope.showSubmitBtn = true;
     $scope.showCompImg = true;
     $scope.showForm = false;
@@ -8482,6 +8492,27 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         var splitTypeContent = "";
         var splitTypeSpecialContent = "";
 
+        //init images
+        $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
+        $scope.complaintImages.image02 = $scope.detailObj.compImg.split("|")[1];
+        $scope.complaintImages.image03 = $scope.detailObj.compImg.split("|")[2];
+        
+        if($scope.complaintImages.image01 !== 'undefined'){
+            $scope.showComplaintImages.image01 = true;
+        }else{
+            $scope.complaintImages.image01 = "";
+        }
+        if($scope.complaintImages.image02 !== 'undefined'){
+            $scope.showComplaintImages.image02 = true;
+        }else{
+            $scope.complaintImages.image02 = "";
+        }
+        if($scope.complaintImages.image03 !== 'undefined'){
+            $scope.showComplaintImages.image03 = true;
+        }else{
+            $scope.complaintImages.image03 = "";
+        }
+        
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
         $scope.detailObj.logisticsDate = $filter('date')($scope.detailObj.logisticsDate, 'yyyy-MM-dd');
 
@@ -9060,10 +9091,18 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
         
         if($scope.complaintImages.image01 !== 'undefined'){
             $scope.showComplaintImages.image01 = true;
-        }else if($scope.complaintImages.image02 !== 'undefined'){
+        }else{
+            $scope.complaintImages.image01 = "";
+        }
+        if($scope.complaintImages.image02 !== 'undefined'){
             $scope.showComplaintImages.image02 = true;
-        }else if($scope.complaintImages.image03 !== 'undefined'){
+        }else{
+            $scope.complaintImages.image02 = "";
+        }
+        if($scope.complaintImages.image03 !== 'undefined'){
             $scope.showComplaintImages.image03 = true;
+        }else{
+            $scope.complaintImages.image03 = "";
         }
 
         //initialize staff
