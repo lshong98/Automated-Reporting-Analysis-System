@@ -7721,6 +7721,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     $scope.complaintOfficerList = [];
     $scope.logisticsComplaintList = [];
     $scope.nowModule = 'web';
+    
+    $scope.unreadWebComplaintCount = 0;
+    $scope.unreadAppComplaintCount = 0;
+    $scope.unreadLogComplaintCount = 0;
+    
     //pagination
     $scope.paginationWebComp = angular.copy(storeDataService.pagination);
     $scope.paginationAppComp = angular.copy(storeDataService.pagination);
@@ -7737,6 +7742,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         $scope.filterWebComplaintList = [];
 
         for (var i = 0; i < $scope.complaintOfficerList.length; i++) {
+            
+            if($scope.complaintOfficerList[i].readState == 'u'){
+                $scope.unreadWebComplaintCount++;
+            }
+            
             $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
 
             if ($scope.complaintOfficerList[i].step == 1) {
@@ -7778,7 +7788,9 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
             }
             return vm;
         }, true);
-
+        
+        $scope.unreadWebRowControl = "{'table-active': c.readState == 'u'}";        
+        
     });
 
     //get app complaint list
@@ -7790,8 +7802,12 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         var splitTypeContent = "";
         var splitTypeSpecialContent = "";
 
-
         for (var i = 0; i < $scope.complaintList.length; i++) {
+            
+            if($scope.complaintList[i].readStat == 'u'){
+                $scope.unreadAppComplaintCount++;
+            }
+            
             $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
 
             var splitType = $scope.complaintList[i].title.split(":,:");
@@ -7876,6 +7892,8 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         }, true);
 
         $scope.showbadge = "{'badge badge-danger': c.status == 'Invalid', 'badge badge-warning': c.status == 'Pending', 'badge badge-primary': c.status == 'Open', 'badge badge-success': c.status == 'Closed'}";
+        
+        $scope.unreadAppRowControl = "{'table-active': c.readStat == 'u'}";
     });
 
     //get logistics complaint list
@@ -7888,6 +7906,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
 
         if ($scope.logisticsComplaintList.length != 0) {
             for (var i = 0; i < $scope.logisticsComplaintList.length; i++) {
+                
+                if($scope.logisticsComplaintList[i].logsReadState == 'u'){
+                    $scope.unreadLogComplaintCount++;
+                }  
+                
                 $scope.logisticsComplaintList[i].complaintDate = $filter('date')($scope.logisticsComplaintList[i].complaintDate, 'yyyy-MM-dd');
 
                 if ($scope.logisticsComplaintList[i].services == 1) {
@@ -7909,6 +7932,7 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
                 }
             }
         }
+        
 
         $scope.filterLogComplaintList = angular.copy($scope.logisticsComplaintList);
 
@@ -7930,17 +7954,19 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
             }
             return vm;
         }, true);
+        
+        $scope.unreadLogRowControl = "{'table-active': l.logsReadState == 'u'}";
     });
 
-    $scope.readComplaint = function() {
-        $http.post('/readComplaint').then(function(response) {
-            if (response.data == "Complaint Read") {
-                socket.emit('complaint read');
-            }
-        }, function(err) {
-            console.log(err);
-        });
-    };
+//    $scope.readComplaint = function() {
+//        $http.post('/readComplaint').then(function(response) {
+//            if (response.data == "Complaint Read") {
+//                socket.emit('complaint read');
+//            }
+//        }, function(err) {
+//            console.log(err);
+//        });
+//    };
 
     //view app complaint
     $scope.complaintDetail = function(complaintCode) {
@@ -8015,7 +8041,6 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function(response) {
         var complaint = response.data;
-
         $scope.comDetail = {
             'ctype': complaint[0].complaint,
             'title': complaint[0].premiseType,
@@ -8447,6 +8472,7 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
     $scope.showCompImg = true;
     $scope.showForm = false;
     $scope.showInfo = false;
+    $scope.showBDInfo = false;
 
     $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function(response) {
         $scope.detailObj = response.data.data[0];
@@ -8471,9 +8497,15 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         if ($scope.detailObj.step == 1) {
             $scope.showForm = true;
             $scope.showInfo = false;
-        } else if ($scope.detailObj.step >= 2) {
+            $scope.showBDInfo = false;
+        } else if ($scope.detailObj.step == 2) {
             $scope.showForm = false;
             $scope.showInfo = true;
+            $scope.showBDInfo = false;
+        } else if($scope.detailObj.step == 3){
+            $scope.showForm = false;
+            $scope.showInfo = true;
+            $scope.showBDInfo = true;                  
         }
 
         splitType = $scope.detailObj.type.split(":,:");
