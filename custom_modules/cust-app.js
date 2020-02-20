@@ -23,16 +23,20 @@ var nodemailer = variable.nodemailer;
 var path = variable.path;
 var fs = variable.fs;
 var io = variable.io;
-var stream =  require('stream');
+var stream = require('stream');
 
-const {Storage} = require('@google-cloud/storage');
+const {
+    Storage
+} = require('@google-cloud/storage');
 const storage = new Storage({
     keyFilename: './trienekens-management-9f941010219d.json',
     projectId: 'trienekens-management'
 });
 const bucket = storage.bucket('trienekens-management-images');
 
-const { google } = require("googleapis");
+const {
+    google
+} = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const mailer_cred = require('../custapp-mailer-credentials.json');
 const mailer_id = mailer_cred.client_id;
@@ -40,27 +44,27 @@ const mailer_sec = mailer_cred.client_secret;
 const mailer_ref_tkn = mailer_cred.refresh_token;
 
 const oauth2Client = new OAuth2(
-	mailer_id,
-	mailer_sec,
-	"https://developers.google.com/oauthplayground"
+    mailer_id,
+    mailer_sec,
+    "https://developers.google.com/oauthplayground"
 );
 
 oauth2Client.setCredentials({
-	refresh_token: mailer_ref_tkn
+    refresh_token: mailer_ref_tkn
 });
 
 const accessToken = oauth2Client.getAccessToken();
 
 const smtpTransport = nodemailer.createTransport({
-     service: "gmail",
-     auth: {
-          type: "OAuth2",
-          user: "trienekensmobileapp@gmail.com", 
-          clientId: mailer_id,
-          clientSecret: mailer_sec,
-          refreshToken: mailer_ref_tkn,
-          accessToken: accessToken
-     }
+    service: "gmail",
+    auth: {
+        type: "OAuth2",
+        user: "trienekensmobileapp@gmail.com",
+        clientId: mailer_id,
+        clientSecret: mailer_sec,
+        refreshToken: mailer_ref_tkn,
+        accessToken: accessToken
+    }
 });
 
 //const transporter = nodemailer.createTransport({
@@ -267,7 +271,7 @@ app.post('/getNotifs', function (req, resp) {
 
     req.addListener('end', function () {
         console.log(data);
-        var sql = "SELECT *, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '"+data.email+"' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '"+data.email+"' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
+        var sql = "SELECT *, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '" + data.email + "' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
         var sql2 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
 
         database.query(sql, function (err, res) {
@@ -291,7 +295,7 @@ app.post('/getNotifs', function (req, resp) {
                                 "unread": res[i].unread
                             });
                         }
-                        if(data.areaID != ""){
+                        if (data.areaID != "") {
                             var sql3 = "SELECT *, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = '" + data.areaID + "' ORDER BY announceDate DESC";
                             database.query(sql3, function (err, res) {
                                 if (!err) {
@@ -307,7 +311,7 @@ app.post('/getNotifs', function (req, resp) {
                                     resp.json(results);
                                 }
                             });
-                        }else{
+                        } else {
                             console.log(results);
                             resp.json(results);
                         }
@@ -318,14 +322,14 @@ app.post('/getNotifs', function (req, resp) {
     });
 });
 
-app.post('/getNotifUrl', function(req, resp){
+app.post('/getNotifUrl', function (req, resp) {
     'use strict';
     var data;
-    req.addListener('data', function(postDataChunk){
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
+    req.addListener('end', function () {
         var sqlUser = "SELECT announceLink FROM tblannouncement WHERE announcement ='" + data.title + "'";
         database.query(sqlUser, function (err, res) {
             if (!err) {
@@ -337,23 +341,23 @@ app.post('/getNotifUrl', function(req, resp){
     });
 });
 
-app.post('/updateNotifStat', function(req, resp){
+app.post('/updateNotifStat', function (req, resp) {
     'use strict';
 
     var data, userID;
 
-    req.addListener('data', function(postDataChunk){
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
+    req.addListener('end', function () {
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.email + "'";
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var readStat = "UPDATE tblnotif SET readStat = 'r' WHERE userID = '"+userID+"'";
-                database.query(readStat, function(err, res){
-                    if(!err){
+                var readStat = "UPDATE tblnotif SET readStat = 'r' WHERE userID = '" + userID + "'";
+                database.query(readStat, function (err, res) {
+                    if (!err) {
                         resp.send("Notif read");
                     }
                 });
@@ -402,7 +406,7 @@ app.post('/binRequest', function (req, resp) {
     'use strict';
     var data;
     var userID, name, contactNumber, companyName, date;
-	var reqID = 0;
+    var reqID = 0;
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
@@ -415,18 +419,18 @@ app.post('/binRequest', function (req, resp) {
                 userID = res[0].userID;
                 name = res[0].name;
                 contactNumber = res[0].contactNumber;
-                if(res[0].companyName != null || res[0].companyName != undefined || res[0].companyName != ""){
+                if (res[0].companyName != null || res[0].companyName != undefined || res[0].companyName != "") {
                     companyName = res[0].companyName;
-                }else{
+                } else {
                     companyName = "";
                 }
                 console.log("user id: " + userID);
-                if(data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != ""){
+                if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != "") {
                     var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "','" + date + "','" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
-                }else{
+                } else {
                     var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "','" + date + "','" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
                 }
-                
+
                 database.query(insertSql, function (err, res) {
                     if (!err) {
                         var sqlRequestID = "SELECT MAX(reqID) AS max FROM tblbinrequest";
@@ -436,7 +440,7 @@ app.post('/binRequest', function (req, resp) {
                             emitter.emit('binrequest');
                         });
                     } else {
-                        resp.send("Failed to Submit Request"+err);
+                        resp.send("Failed to Submit Request" + err);
                     }
                 });
             } else {
@@ -448,141 +452,141 @@ app.post('/binRequest', function (req, resp) {
 
 app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 
-	'use strict';
-	var data, sql, userID;
+    'use strict';
+    var data, sql, userID;
     data = JSON.parse(req.rawBody);
     var urlArray = [];
-    
-	//console.log(data.BinRequestICLost);
 
-	if (typeof data.BinRequestICLost !== 'undefined') {
-		console.log(req.rawBody);
-		var async = require('async');
-		if (typeof data.BinRequestAssessment !== 'undefined') {
+    //console.log(data.BinRequestICLost);
+
+    if (typeof data.BinRequestICLost !== 'undefined') {
+        console.log(req.rawBody);
+        var async = require('async');
+        if (typeof data.BinRequestAssessment !== 'undefined') {
             // sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
-			async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
+            async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
-                var fileName = "images/BinReqImg/"+file+"_"+data.cID+".jpg";
+                var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                 var bufferFile = Buffer.from(data[file], 'base64');
                 var bufferStream = new stream.PassThrough();
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/'+fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
-                    metadata: {
-                        contentType: 'image/jpeg',
                         metadata: {
-                            custom: 'metadata'
-                        }
-                    },
-                    public: true,
-                    validation: 'md5'
-                }))
-                .on('error', function(err){
-                    console.log(err);
-                })
-                .on('finish', function(){
-                    console.log("image uploaded to cloud storage");
-                    callback();
-                });
+                            contentType: 'image/jpeg',
+                            metadata: {
+                                custom: 'metadata'
+                            }
+                        },
+                        public: true,
+                        validation: 'md5'
+                    }))
+                    .on('error', function (err) {
+                        console.log(err);
+                    })
+                    .on('finish', function () {
+                        console.log("image uploaded to cloud storage");
+                        callback();
+                    });
 
                 //save file to local folder
-				// fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
-				// 	if (err) {
-				// 		console.log(err);
-				// 	} else {
-				// 		console.log(file + '.json was updated.');
-				// 	}
+                // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+                // 	if (err) {
+                // 		console.log(err);
+                // 	} else {
+                // 		console.log(file + '.json was updated.');
+                // 	}
 
-				// 	callback();
-				// });
+                // 	callback();
+                // });
 
-			}, function (err) {
-				if (err) {
-					console.log(err);
-				} else {
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
                     sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[2] + "',assessmentImg ='" + urlArray[3] + "',policeImg ='" + urlArray[1] + "'  WHERE reqID =" + data.cID + "";
-					database.query(sql, function (err, res) {
-						if (!err) {
+                    database.query(sql, function (err, res) {
+                        if (!err) {
                             console.log(urlArray);
-							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-						} else {
-							resp.send("Please Try Again");
-						}
-					});
-					console.log("success");
-				}
-			});
-		} else {
+                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+                        } else {
+                            resp.send("Please Try Again");
+                        }
+                    });
+                    console.log("success");
+                }
+            });
+        } else {
             //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
-			async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility"], function (file, callback) {
+            async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility"], function (file, callback) {
 
-                var fileName = "images/BinReqImg/"+file+"_"+data.cID+".jpg";
+                var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                 var bufferFile = Buffer.from(data[file], 'base64');
                 var bufferStream = new stream.PassThrough();
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/'+fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
-                    metadata: {
-                        contentType: 'image/jpeg',
                         metadata: {
-                            custom: 'metadata'
-                        }
-                    },
-                    public: true,
-                    validation: 'md5'
-                }))
-                .on('error', function(err){
-                    console.log(err);
-                })
-                .on('finish', function(){
-                    console.log("image uploaded to cloud storage");
-                    callback();
-                });
+                            contentType: 'image/jpeg',
+                            metadata: {
+                                custom: 'metadata'
+                            }
+                        },
+                        public: true,
+                        validation: 'md5'
+                    }))
+                    .on('error', function (err) {
+                        console.log(err);
+                    })
+                    .on('finish', function () {
+                        console.log("image uploaded to cloud storage");
+                        callback();
+                    });
 
                 //save to  local folder
-				// fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
-				// 	if (err) {
-				// 		console.log(err);
-				// 	} else {
-				// 		console.log(file + '.json was updated.');
-				// 	}
+                // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+                // 	if (err) {
+                // 		console.log(err);
+                // 	} else {
+                // 		console.log(file + '.json was updated.');
+                // 	}
 
-				// 	callback();
-				// });
+                // 	callback();
+                // });
 
-			}, function (err) {
-				if (err) {
-					console.log(err);
-				} else {
-					sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[2] + "',policeImg ='" + urlArray[1] + "'  WHERE reqID =" + data.cID + "";
-					database.query(sql, function (err, res) {
-						if (!err) {
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[2] + "',policeImg ='" + urlArray[1] + "'  WHERE reqID =" + data.cID + "";
+                    database.query(sql, function (err, res) {
+                        if (!err) {
                             console.log(urlArray);
-							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-						} else {
-							resp.send("Please Try Again");
-						}
-					});
-					console.log("success");
-				}
-			});
-		}
-	} else if (typeof data.BinRequestBin !== 'undefined') {
-		//sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
-		console.log(sql);
-		console.log(req.rawBody);
+                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+                        } else {
+                            resp.send("Please Try Again");
+                        }
+                    });
+                    console.log("success");
+                }
+            });
+        }
+    } else if (typeof data.BinRequestBin !== 'undefined') {
+        //sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+        console.log(sql);
+        console.log(req.rawBody);
         //console.log(data);
-        
+
         //refer to complaint upload img. remember to delete service key json file
-        var fileName = "images/BinReqImg/BinRequestBin_"+data.cID+".jpg";
+        var fileName = "images/BinReqImg/BinRequestBin_" + data.cID + ".jpg";
         var bufferFile = Buffer.from(data.BinRequestBin, 'base64');
         var bufferStream = new stream.PassThrough();
         bufferStream.end(bufferFile);
@@ -591,172 +595,172 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
         // urlArray.push(publicUrl);
 
         bufferStream.pipe(imgFile.createWriteStream({
-            metadata: {
-                contentType: 'image/jpeg',
                 metadata: {
-                    custom: 'metadata'
-                }
-            },
-            public: true,
-            validation: 'md5'
-        }))
-        .on('error', function(err){
-            console.log(err);
-        })
-        .on('finish', function(){
-            var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/'+fileName;
-            sql = "UPDATE tblbinrequest SET binImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
-            database.query(sql, function (err, res) {
-                if (!err) {
-                    resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-                    console.log("image uploaded to cloud storage");
-                } else {
-                    resp.send("Please Try Again");
+                    contentType: 'image/jpeg',
+                    metadata: {
+                        custom: 'metadata'
+                    }
+                },
+                public: true,
+                validation: 'md5'
+            }))
+            .on('error', function (err) {
+                console.log(err);
+            })
+            .on('finish', function () {
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                sql = "UPDATE tblbinrequest SET binImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
+                database.query(sql, function (err, res) {
+                    if (!err) {
+                        resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+                        console.log("image uploaded to cloud storage");
+                    } else {
+                        resp.send("Please Try Again");
+                        console.log(err);
+                    }
+                });
+                //console.log("image uploaded to cloud storage");
+                //callback();
+            });
+
+        // fs.writeFile(__dirname + '/../images/BinReqImg/BinRequestBin_' + data.cID + '.jpg', Buffer.from(data.BinRequestBin, 'base64'), function (err) {
+        // 	if (err) {
+        // 		console.log(err);
+        // 	} else {
+        // database.query(sql, function (err, res) {
+        // 	if (!err) {
+        // 		resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+        // 	} else {
+        // 		resp.send("Please Try Again");
+        // 	}
+        // });
+        // 		console.log("success");
+        // 	}
+        // });
+    } else {
+        //console.log(sql);
+        console.log(req.rawBody);
+
+        var async = require('async');
+        if (typeof data.BinRequestTrading !== 'undefined') {
+            //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
+            async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
+
+                var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
+                var bufferFile = Buffer.from(data[file], 'base64');
+                var bufferStream = new stream.PassThrough();
+                bufferStream.end(bufferFile);
+                var imgFile = bucket.file(fileName);
+
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                urlArray.push(publicUrl);
+
+                bufferStream.pipe(imgFile.createWriteStream({
+                        metadata: {
+                            contentType: 'image/jpeg',
+                            metadata: {
+                                custom: 'metadata'
+                            }
+                        },
+                        public: true,
+                        validation: 'md5'
+                    }))
+                    .on('error', function (err) {
+                        console.log(err);
+                    })
+                    .on('finish', function () {
+                        console.log("image uploaded to cloud storage");
+                        callback();
+                    });
+
+                //save to local folder
+                // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+                // 	if (err) {
+                // 		console.log(err);
+                // 	} else {
+                // 		console.log(file + '.json was updated.');
+                // 	}
+
+                // 	callback();
+                // });
+
+            }, function (err) {
+                if (err) {
                     console.log(err);
+                } else {
+                    sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[1] + "',assessmentImg ='" + urlArray[2] + "',tradingImg ='" + urlArray[3] + "'  WHERE reqID =" + data.cID + "";
+                    database.query(sql, function (err, res) {
+                        if (!err) {
+                            console.log(urlArray);
+                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+                        } else {
+                            resp.send("Please Try Again");
+                        }
+                    });
+                    console.log("success");
                 }
             });
-            //console.log("image uploaded to cloud storage");
-            //callback();
-        });
-
-		// fs.writeFile(__dirname + '/../images/BinReqImg/BinRequestBin_' + data.cID + '.jpg', Buffer.from(data.BinRequestBin, 'base64'), function (err) {
-		// 	if (err) {
-		// 		console.log(err);
-		// 	} else {
-				// database.query(sql, function (err, res) {
-				// 	if (!err) {
-				// 		resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-				// 	} else {
-				// 		resp.send("Please Try Again");
-				// 	}
-				// });
-		// 		console.log("success");
-		// 	}
-		// });
-	} else {
-		//console.log(sql);
-		console.log(req.rawBody);
-
-		var async = require('async');
-		if (typeof data.BinRequestTrading !== 'undefined') {
-            //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
-			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
-
-                var fileName = "images/BinReqImg/"+file+"_"+data.cID+".jpg";
-                var bufferFile = Buffer.from(data[file], 'base64');
-                var bufferStream = new stream.PassThrough();
-                bufferStream.end(bufferFile);
-                var imgFile = bucket.file(fileName);
-
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/'+fileName;
-                urlArray.push(publicUrl);
-
-                bufferStream.pipe(imgFile.createWriteStream({
-                    metadata: {
-                        contentType: 'image/jpeg',
-                        metadata: {
-                            custom: 'metadata'
-                        }
-                    },
-                    public: true,
-                    validation: 'md5'
-                }))
-                .on('error', function(err){
-                    console.log(err);
-                })
-                .on('finish', function(){
-                    console.log("image uploaded to cloud storage");
-                    callback();
-                });
-
-                //save to local folder
-				// fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
-				// 	if (err) {
-				// 		console.log(err);
-				// 	} else {
-				// 		console.log(file + '.json was updated.');
-				// 	}
-
-				// 	callback();
-				// });
-
-			}, function (err) {
-				if (err) {
-					console.log(err);
-				} else {
-					sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[1] + "',assessmentImg ='" + urlArray[2] + "',tradingImg ='" + urlArray[3] + "'  WHERE reqID =" + data.cID + "";
-					database.query(sql, function (err, res) {
-						if (!err) {
-                            console.log(urlArray);
-							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-						} else {
-							resp.send("Please Try Again");
-						}
-					});
-					console.log("success");
-				}
-			});
-		} else {
+        } else {
             //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
-			async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
+            async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
-                var fileName = "images/BinReqImg/"+file+"_"+data.cID+".jpg";
+                var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                 var bufferFile = Buffer.from(data[file], 'base64');
                 var bufferStream = new stream.PassThrough();
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/'+fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
-                    metadata: {
-                        contentType: 'image/jpeg',
                         metadata: {
-                            custom: 'metadata'
-                        }
-                    },
-                    public: true,
-                    validation: 'md5'
-                }))
-                .on('error', function(err){
-                    console.log(err);
-                })
-                .on('finish', function(){
-                    console.log("image uploaded to cloud storage");
-                    callback();
-                });
+                            contentType: 'image/jpeg',
+                            metadata: {
+                                custom: 'metadata'
+                            }
+                        },
+                        public: true,
+                        validation: 'md5'
+                    }))
+                    .on('error', function (err) {
+                        console.log(err);
+                    })
+                    .on('finish', function () {
+                        console.log("image uploaded to cloud storage");
+                        callback();
+                    });
 
                 //save to local folder
-				// fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
-				// 	if (err) {
-				// 		console.log(err);
-				// 	} else {
-				// 		console.log(file + '.json was updated.');
-				// 	}
+                // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+                // 	if (err) {
+                // 		console.log(err);
+                // 	} else {
+                // 		console.log(file + '.json was updated.');
+                // 	}
 
-				// 	callback();
-				// });
+                // 	callback();
+                // });
 
-			}, function (err) {
-				if (err) {
-					console.log(err);
-				} else {
-					sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[1] + "',assessmentImg ='" + urlArray[2] + "'  WHERE reqID =" + data.cID + "";
-					database.query(sql, function (err, res) {
-						if (!err) {
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[1] + "',assessmentImg ='" + urlArray[2] + "'  WHERE reqID =" + data.cID + "";
+                    database.query(sql, function (err, res) {
+                        if (!err) {
                             console.log(urlArray);
-							resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-						} else {
-							resp.send("Please Try Again");
-						}
-					});
-					console.log("success");
-				}
-			});
-		}
+                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+                        } else {
+                            resp.send("Please Try Again");
+                        }
+                    });
+                    console.log("success");
+                }
+            });
+        }
 
-	}
+    }
 });
 
 app.post('/getSchedule', function (req, resp) {
@@ -776,8 +780,8 @@ app.post('/getSchedule', function (req, resp) {
         var sqlTaman = "SELECT tamanID FROM tbluser WHERE userEmail ='" + data.email + "'";
         database.query(sqlTaman, function (err, res) {
             if (res[0] != undefined) {
-                if (res[0].tamanID != null) {  
-                    tamanID = res[0].tamanID;                  
+                if (res[0].tamanID != null) {
+                    tamanID = res[0].tamanID;
                     var sqlarea = "SELECT areaID FROM tbltaman WHERE tamanID = '" + tamanID + "'";
                     database.query(sqlarea, function (err, res) {
                         var areaID = res[0].areaID;
@@ -813,8 +817,8 @@ app.post('/getSchedule', function (req, resp) {
                                 resp.json(json);
                             }
                         });
-                    });                    
-                }else{
+                    });
+                } else {
                     resp.send("");
                 }
             } else {
@@ -852,12 +856,15 @@ app.post('/complaint', function (req, resp) {
                     //     complaintID = res[0].max;
                     //     complaintID = parseInt(complaintID) + 1;
                     // }
-                    complaintID = "COM"+userID+dateID;
+                    complaintID = "COM" + userID + dateID;
                     if (data.compRemarks == null || data.compRemarks == "") {
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u')";
+                        //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "', NOW(),'" + data.compAdd + "', 'u')";
+                        //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
+                    console.log(sql);
                     database.query(sql, function (err, res) {
                         if (!err) {
                             emitter.emit('complaint');
@@ -888,44 +895,35 @@ app.post('/satisfaction', function (req, resp) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function () 
-	{
-		var satisfactionType = data.satisfactionType;
+    req.addListener('end', function () {
+        var satisfactionType = data.satisfactionType;
         var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
-		
-        database.query(sqlUser, function (err, res) 
-		{
-            if (!err) 
-			{
+
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
                 userID = res[0].userID;
                 name = res[0].name;
                 company = res[0].companyName;
                 number = res[0].contactNumber;
-				var sql;
-				
-				if(satisfactionType == "municipal") 
-				{
-					sql = "INSERT INTO tblsatisfaction_municipal (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat, name, company, number) VALUES ('" +
-						userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
-						"','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
-						data.extraComment + "','" + date + "','" + "u','"+name+"','"+company+"','"+number+"')";
-				} 
-				else if(satisfactionType == "commercial") 
-				{
-					sql = "INSERT INTO tblsatisfaction_commercial (userID, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate, readStat, name, company, number) VALUES ('" +
-                    userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
-                    "','" + parseInt(data.cleanliness) + "','" + parseInt(data.physicalCondition) + "','" + parseInt(data.queryResponse) + "','" +
-                    data.extraComment + "','" + date + "','" + "u','"+name+"','"+company+"','"+number+"')";
-				} 
-				else if(satisfactionType == "scheduled") 
-				{
-					sql = "INSERT INTO tblsatisfaction_scheduled (userID, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, submissionDate, readStat, name, company, number) VALUES ('" +
-                    userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.healthAdherence) + "','" + parseInt(data.regulationsAdherence) + "','" + parseInt(data.queryResponse) + "','" +
-                    data.extraComment + "','" + date + "','" + "u','"+name+"','"+company+"','"+number+"')";
-				}
+                var sql;
 
-                database.query(sql, function (err, res) 
-				{
+                if (satisfactionType == "municipal") {
+                    sql = "INSERT INTO tblsatisfaction_municipal (userID, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat, name, company, number) VALUES ('" +
+                        userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                        "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
+                        data.extraComment + "','" + date + "','" + "u','" + name + "','" + company + "','" + number + "')";
+                } else if (satisfactionType == "commercial") {
+                    sql = "INSERT INTO tblsatisfaction_commercial (userID, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate, readStat, name, company, number) VALUES ('" +
+                        userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                        "','" + parseInt(data.cleanliness) + "','" + parseInt(data.physicalCondition) + "','" + parseInt(data.queryResponse) + "','" +
+                        data.extraComment + "','" + date + "','" + "u','" + name + "','" + company + "','" + number + "')";
+                } else if (satisfactionType == "scheduled") {
+                    sql = "INSERT INTO tblsatisfaction_scheduled (userID, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, submissionDate, readStat, name, company, number) VALUES ('" +
+                        userID + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.healthAdherence) + "','" + parseInt(data.regulationsAdherence) + "','" + parseInt(data.queryResponse) + "','" +
+                        data.extraComment + "','" + date + "','" + "u','" + name + "','" + company + "','" + number + "')";
+                }
+
+                database.query(sql, function (err, res) {
                     if (!err) {
                         emitter.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
@@ -933,14 +931,12 @@ app.post('/satisfaction', function (req, resp) {
                         resp.send("Failed to Submit");
                     }
                 });
-            } 
-			else 
-			{
+            } else {
                 resp.send("error getting user id");
             }
         });
     });
-}); 
+});
 
 app.post('/enquiry', function (req, resp) {
     'use strict';
@@ -952,23 +948,19 @@ app.post('/enquiry', function (req, resp) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function () 
-	{
-		var satisfactionType = data.satisfactionType;
+    req.addListener('end', function () {
+        var satisfactionType = data.satisfactionType;
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
-		
-        database.query(sqlUser, function (err, res) 
-		{
-            if (!err) 
-			{
-                userID = res[0].userID;
-				var sql;
-				
-				sql = "INSERT INTO tblenquiry (userID, enquiry, enqStatus, submissionDate, readStat) VALUES ('" +
-						userID + "','" + data.enquiry + "','New', '" + date + "','u')";
 
-                database.query(sql, function (err, res) 
-				{
+        database.query(sqlUser, function (err, res) {
+            if (!err) {
+                userID = res[0].userID;
+                var sql;
+
+                sql = "INSERT INTO tblenquiry (userID, enquiry, enqStatus, submissionDate, readStat) VALUES ('" +
+                    userID + "','" + data.enquiry + "','New', '" + date + "','u')";
+
+                database.query(sql, function (err, res) {
                     if (!err) {
                         emitter.emit('enquiry');
                         resp.send("Enquiry Submitted");
@@ -976,9 +968,7 @@ app.post('/enquiry', function (req, resp) {
                         resp.send("Failed to Submit");
                     }
                 });
-            } 
-			else 
-			{
+            } else {
                 resp.send("error getting user id");
             }
         });
@@ -1055,7 +1045,7 @@ app.post('/enquiry', function (req, resp) {
 //                         //     for(var x = 0; x<res.length; x++){
 //                         //         msgs.push(res[x]);
 //                         //     }
-                            
+
 //                         // });
 //                     }
 //                 });
@@ -1284,17 +1274,17 @@ app.post('/NewRegister', function (req, resp) {
         database.query(sql, function (err, res) {
             userID = res[0].max;
             userID = parseInt(userID) + 1;
-            
-            if(data.add1 != "" && data.add2 != ""){
+
+            if (data.add1 != "" && data.add2 != "") {
                 address = data.add1 + " " + data.add2;
             } else if (data.add1 != "" && data.add2 == "") {
-                address = data.add1;                
+                address = data.add1;
             }
-            
+
             console.log("ADDRESS: " + address);
 
-            if(address == undefined){
-                
+            if (address == undefined) {
+
                 var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + vCode + "','" + date + "')";
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
@@ -1308,15 +1298,15 @@ app.post('/NewRegister', function (req, resp) {
                             resp.send(err);
                             console.log(err);
                             throw err;
-                        }else{
+                        } else {
                             //console.log("Registered");
                             resp.send("Registered");
                         }
                     });
                 });
-                
+
             } else {
-                
+
                 var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, address, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + address + "','" + vCode + "','" + date + "')";
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
@@ -1330,15 +1320,15 @@ app.post('/NewRegister', function (req, resp) {
                             resp.send(err);
                             console.log(err);
                             throw err;
-                        }else{
+                        } else {
                             //console.log("Registered");
                             resp.send("Registered");
                         }
                     });
                 });
-                
+
             }
-            
+
         });
     });
 });
@@ -1501,7 +1491,7 @@ app.post('/getInfo', function (req, resp) {
         console.log(data.user);
         database.query(sql, function (err, res) {
             console.log(res);
-            if(res[0] != undefined){
+            if (res[0] != undefined) {
                 if (res[0].address == undefined) {
                     info["pno"] = res[0].contactNumber;
                     resp.json(info);
@@ -1585,19 +1575,19 @@ app.post('/checkUpdate', function (req, resp) {
                 } else {
                     passError = false;
                 }
-                
+
                 if (mailMatch) {
                     error = error + "Mail";
                 }
-                
+
                 if (pnoMatch) {
                     error = error + "Phone";
                 }
-                
+
                 if (passError) {
                     error = error + "Pass";
                 }
-                
+
                 console.log(error);
                 resp.send(error);
 
@@ -1628,22 +1618,22 @@ app.post('/updateAcc', function (req, resp) {
         } else {
             pass = data.oldp;
         }
-        
-//  console.log("TAMAN VALUE: " + data.tmn);
-        
-        if(data.add != undefined){
+
+        //  console.log("TAMAN VALUE: " + data.tmn);
+
+        if (data.add != undefined) {
             var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "',address='" + data.add + "' WHERE userEmail = '" + data.oriemail + "'";
-            database.query(sqlUpdate, function(err, res){
-                if(err){
+            database.query(sqlUpdate, function (err, res) {
+                if (err) {
                     throw err;
                 }
                 resp.send("Updated");
             });
         } else {
-    //      console.log("ENETER NO TAMAN UPDATE");
+            //      console.log("ENETER NO TAMAN UPDATE");
             var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "' WHERE userEmail = '" + data.oriemail + "'";
-            database.query(sqlUpdate, function(err, res){
-                if(err){
+            database.query(sqlUpdate, function (err, res) {
+                if (err) {
                     throw err;
                 }
                 resp.send("Updated");
@@ -1865,32 +1855,32 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
     var file = bucket.file(fileName);
 
     bufferStream.pipe(file.createWriteStream({
-        metadata: {
-            contentType: 'image/jpeg',
             metadata: {
-                custom: 'metadata'
-            }
-        },
-        public: true,
-        validation: 'md5'
-    }))
-    .on('error', function(err){
-        console.log(err);
-    })
-    .on('finish', function(){
-        var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/'+fileName;
-        console.log(publicUrl);
-        sql = "UPDATE tblcomplaint SET complaintImg ='" + publicUrl + "' WHERE complaintID ='" + data.cID + "'";
-        database.query(sql, function(err, res){
-            if (!err) {
-                resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
-                console.log("image uploaded to cloud storage");
-            } else {
-                resp.send("Please Try Again");
-                console.log(err);
-            }
+                contentType: 'image/jpeg',
+                metadata: {
+                    custom: 'metadata'
+                }
+            },
+            public: true,
+            validation: 'md5'
+        }))
+        .on('error', function (err) {
+            console.log(err);
+        })
+        .on('finish', function () {
+            var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+            console.log(publicUrl);
+            sql = "UPDATE tblcomplaint SET complaintImg ='" + publicUrl + "' WHERE complaintID ='" + data.cID + "'";
+            database.query(sql, function (err, res) {
+                if (!err) {
+                    resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
+                    console.log("image uploaded to cloud storage");
+                } else {
+                    resp.send("Please Try Again");
+                    console.log(err);
+                }
+            });
         });
-    });
 
     //save images to local folder
     // fs.writeFile(__dirname + '/../images/complaintImg/complaintcase_' + data.cID + '.jpg', Buffer.from(data.complaintImage, 'base64'), function (err) {
@@ -1898,12 +1888,12 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
     //         console.log(err);
     //     } else {
     //         database.query(sql, function (err, res) {
-                // if (!err) {
-                //     resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
-                // } else {
-                //     resp.send("Please Try Again");
-                //     console.log(err);
-                // }
+    // if (!err) {
+    //     resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
+    // } else {
+    //     resp.send("Please Try Again");
+    //     console.log(err);
+    // }
     //         });
     //         console.log("success");
     //     }
@@ -1936,29 +1926,23 @@ app.post('/resetPassword', function (req, resp) {
         console.log("New Password: " + newPass);
 
         var sql = "SELECT userID from tbluser WHERE userEmail = '" + data.email + "'";
-        
+
         database.query(sql, function (err, res) {
-            if (err) 
-            {
+            if (err) {
                 resp.send("Get userID Failed");
                 console.log(err);
                 throw err;
-            }
-            else 
-            {
-                if(res[0] != undefined){
+            } else {
+                if (res[0] != undefined) {
                     var userID = res[0].userID;
                     var sql2 = "UPDATE tbluser SET password = '" + newPass + "' WHERE userID = '" + userID + "'";
-        
+
                     database.query(sql2, function (err, res) {
-                        if (err) 
-                        {
+                        if (err) {
                             resp.send("Update Password Failed");
                             console.log(err);
                             throw err;
-                        }
-                        else 
-                        {
+                        } else {
                             smtpTransport.sendMail(mailOptions, function (error, info) {
                                 if (error) {
                                     resp.send("Mail Failed");
@@ -1969,7 +1953,7 @@ app.post('/resetPassword', function (req, resp) {
                             });
                         }
                     });
-                }else{
+                } else {
                     resp.send("User does not exist");
                 }
             }
@@ -1977,31 +1961,31 @@ app.post('/resetPassword', function (req, resp) {
     });
 });
 
-app.post('/getComplaintIDs', function(req, res){
+app.post('/getComplaintIDs', function (req, res) {
     'use strict';
     var data,
-    IDs = {};
+        IDs = {};
     IDs["ids"] = [];
-    req.addListener('data', function(postDataChunk){
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
+    req.addListener('end', function () {
         console.log(data.email);
-        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
-        database.query(sqlUser, function(err, result){
-            if(err){
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '" + data.email + "'";
+        database.query(sqlUser, function (err, result) {
+            if (err) {
                 throw err;
             }
             var userID = result[0].userID;
-            var sql = "SELECT complaintID FROM tblcomplaint WHERE userID = '"+userID+"'";
-            database.query(sql, function(err, result){
-                if(err){
+            var sql = "SELECT complaintID FROM tblcomplaint WHERE userID = '" + userID + "'";
+            database.query(sql, function (err, result) {
+                if (err) {
                     throw err;
                 }
-                for(var i = 0; i<result.length; i++){
+                for (var i = 0; i < result.length; i++) {
                     IDs["ids"].push({
-                        "id":result[i].complaintID
+                        "id": result[i].complaintID
                     });
                 }
                 res.send(IDs);
@@ -2010,31 +1994,31 @@ app.post('/getComplaintIDs', function(req, res){
     });
 });
 
-app.post('/getBinReqIDs', function(req, res){
+app.post('/getBinReqIDs', function (req, res) {
     'use strict';
     var data,
-    IDs = {};
+        IDs = {};
     IDs["ids"] = [];
-    req.addListener('data', function(postDataChunk){
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
+    req.addListener('end', function () {
         console.log(data.email);
-        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
-        database.query(sqlUser, function(err, result){
-            if(err){
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '" + data.email + "'";
+        database.query(sqlUser, function (err, result) {
+            if (err) {
                 throw err;
             }
             var userID = result[0].userID;
-            var sql = "SELECT reqID FROM tblbinrequest WHERE userID = '"+userID+"'";
-            database.query(sql, function(err, result){
-                if(err){
+            var sql = "SELECT reqID FROM tblbinrequest WHERE userID = '" + userID + "'";
+            database.query(sql, function (err, result) {
+                if (err) {
                     throw err;
                 }
-                for(var i = 0; i<result.length; i++){
+                for (var i = 0; i < result.length; i++) {
                     IDs["ids"].push({
-                        "id":result[i].reqID
+                        "id": result[i].reqID
                     });
                 }
                 res.send(IDs);
@@ -2043,34 +2027,35 @@ app.post('/getBinReqIDs', function(req, res){
     });
 });
 
-app.post('/getUnreadMsg', function(req, res){
+app.post('/getUnreadMsg', function (req, res) {
     'use strict';
-    var data, results = {}, userID;
+    var data, results = {},
+        userID;
     results["unread"] = [];
-    req.addListener('data', function(postDataChunk){
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
-        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
-        database.query(sqlUser, function(err, result){
-            if(err){
+    req.addListener('end', function () {
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '" + data.email + "'";
+        database.query(sqlUser, function (err, result) {
+            if (err) {
                 throw err;
             }
-            if(result[0]!=undefined){
+            if (result[0] != undefined) {
                 userID = result[0].userID;
-                var sql = "SELECT complaintID, COUNT(readStat) as unread FROM tblchat WHERE readStat = 'u' AND recipient = '"+userID+"' GROUP BY complaintID ORDER BY complaintID ASC";
-                database.query(sql, function(err, result){
-                    if(err){
+                var sql = "SELECT complaintID, COUNT(readStat) as unread FROM tblchat WHERE readStat = 'u' AND recipient = '" + userID + "' GROUP BY complaintID ORDER BY complaintID ASC";
+                database.query(sql, function (err, result) {
+                    if (err) {
                         throw err;
                     }
-                    for(var i=0; i< result.length; i++){
+                    for (var i = 0; i < result.length; i++) {
                         results["unread"].push({
-                            "id":result[i].complaintID,
+                            "id": result[i].complaintID,
                             "value": result[i].unread
                         });
                     }
-    
+
                     res.json(results);
                 });
             }
@@ -2078,23 +2063,23 @@ app.post('/getUnreadMsg', function(req, res){
     });
 });
 
-app.post('/updateReadStat', function(req, res){
+app.post('/updateReadStat', function (req, res) {
     'use strict';
     var data, userID;
-    req.addListener('data', function(postDataChunk){
+    req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
-    req.addListener('end', function(){
-        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '"+data.email+"'";
-        database.query(sqlUser, function(err, result){
-            if(err){
+    req.addListener('end', function () {
+        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '" + data.email + "'";
+        database.query(sqlUser, function (err, result) {
+            if (err) {
                 throw err;
             }
             userID = result[0].userID;
-            var sql = "UPDATE tblchat SET readStat = 'r' WHERE complaintID = '"+data.compID+"' AND recipient = '"+userID+"' AND readStat = 'u'";
-            database.query(sql, function(err, result){
-                if(err){
+            var sql = "UPDATE tblchat SET readStat = 'r' WHERE complaintID = '" + data.compID + "' AND recipient = '" + userID + "' AND readStat = 'u'";
+            database.query(sql, function (err, result) {
+                if (err) {
                     throw err;
                 }
                 res.send("Message read");
@@ -2103,11 +2088,11 @@ app.post('/updateReadStat', function(req, res){
     });
 });
 
-app.get('/getBoundaryIDs', function(req, res){
+app.get('/getBoundaryIDs', function (req, res) {
     'use strict';
     var sql = "SELECT * FROM tblboundary";
-    database.query(sql, function(error, result){
-        if(error){
+    database.query(sql, function (error, result) {
+        if (error) {
             res.end();
             throw error;
         }
@@ -2116,11 +2101,11 @@ app.get('/getBoundaryIDs', function(req, res){
     });
 });
 
-app.get('/getBoundaryLatLng', function(req, res){
+app.get('/getBoundaryLatLng', function (req, res) {
     'use strict';
     var sql = "SELECT tblboundaryplot.boundaryID AS id, tblboundary.color, tblboundaryplot.lat, tblboundaryplot.lng, tblarea.areaCode AS area, tblzone.zoneCode AS zone, tblboundary.areaID, tblarea.collection_frequency FROM tblboundaryplot JOIN tblboundary ON tblboundaryplot.boundaryID = tblboundary.boundaryID JOIN tblarea ON tblarea.areaID = tblboundary.areaID JOIN tblzone ON tblzone.zoneID = tblarea.zoneID WHERE tblboundary.status = 'A' ORDER BY tblboundaryplot.boundaryID ASC, tblboundaryplot.ordering ASC";
-    database.query(sql, function(error, result){
-        if(error){
+    database.query(sql, function (error, result) {
+        if (error) {
             res.end();
             throw error;
         }
