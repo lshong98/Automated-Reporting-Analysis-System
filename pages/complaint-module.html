@@ -24,13 +24,13 @@
     <div class="col-md-12">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="webComplaint-tab" data-toggle="tab" data-target="#webComplaint" role="tab" aria-controls="webComplaint" aria-selected="true" data-ng-click="tabClick('web')">Complaint Management</a>
+                <a class="nav-link active" id="webComplaint-tab" data-toggle="tab" data-target="#webComplaint" role="tab" aria-controls="webComplaint" aria-selected="true" data-ng-click="tabClick('web')">Complaint Management <span class="badge badge-danger">{{unreadWebComplaintCount}}</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="appComplaint-tab" data-toggle="tab" data-target="#appComplaint" role="tab" aria-controls="appComplaint" aria-selected="false" data-ng-click="tabClick('app')">App Complaint</a>
+                <a class="nav-link" id="appComplaint-tab" data-toggle="tab" data-target="#appComplaint" role="tab" aria-controls="appComplaint" aria-selected="false" data-ng-click="tabClick('app')">App Complaint <span class="badge badge-danger">{{unreadAppComplaintCount}}</span></a>
             </li>            
             <li class="nav-item">
-                <a class="nav-link" id="logistics-tab" data-toggle="tab" data-target="#logistics" role="tab" aria-controls="logistics" aria-selected="false" data-ng-click="tabClick('log')">Logistics</a>
+                <a class="nav-link" id="logistics-tab" data-toggle="tab" data-target="#logistics" role="tab" aria-controls="logistics" aria-selected="false" data-ng-click="tabClick('log')">Logistics <span class="badge badge-danger">{{unreadLogComplaintCount}}</span></a>
             </li>
         </ul>
         
@@ -46,7 +46,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-striped">
+                                    <table class="table table-hover">
                                         <thead>
                                             <tr>
                                                 <th width="9%" data-ng-click="webOrderBy('date');">CMS Date <i class="fas fa-sort-down"></i></th>
@@ -62,7 +62,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>               
-                                            <tr data-ng-repeat="c in complaintOfficerList | filter:searchWebComplaint | offset: (paginationWebComp.currentPage - 1) * paginationWebComp.itemsPerPage | limitTo: paginationWebComp.itemsPerPage" data-ng-click="viewComp(c.coID)">
+                                            <tr data-ng-repeat="c in complaintOfficerList | filter:searchWebComplaint | offset: (paginationWebComp.currentPage - 1) * paginationWebComp.itemsPerPage | limitTo: paginationWebComp.itemsPerPage" data-ng-click="viewComp(c.coID)" data-ng-class="{{unreadWebRowControl}}">
                                                 <td data-ng-bind="c.complaintDate"></td>
                                                 <td data-ng-bind="c.logisticsDateTime"></td>
                                                 <td data-ng-bind="c.customerDateTime"></td>
@@ -103,7 +103,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-striped table-clickable" data-ng-init="readComplaint()">
+                                    <table class="table table-hover table-clickable">
                                         <thead>
                                             <tr>
                                                 <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
@@ -115,7 +115,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>                                         
-                                            <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (paginationAppComp.currentPage - 1) * paginationAppComp.itemsPerPage | limitTo: paginationAppComp.itemsPerPage" data-ng-click="complaintDetail(c.complaintID)">
+                                            <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (paginationAppComp.currentPage - 1) * paginationAppComp.itemsPerPage | limitTo: paginationAppComp.itemsPerPage" data-ng-click="complaintDetail(c.complaintID)" data-ng-class="{{unreadAppRowControl}}">
                                                 <td data-ng-bind="c.date"></td>
                                                 <td data-ng-bind="c.detailType"></td>
                                                 <td data-ng-bind="c.customer"></td>
@@ -147,7 +147,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-striped">
+                                    <table class="table table-hover">
                                         <thead>
                                             <tr>
                                                 <th width="15%" data-ng-click="logsOrderBy('date');">Date <i class="fas fa-sort-down"></i></th>
@@ -160,7 +160,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>               
-                                            <tr data-ng-repeat="l in logisticsComplaintList | filter: searchLogComplaint | offset: (paginationLogComp.currentPage - 1) * paginationLogComp.itemsPerPage | limitTo: paginationLogComp.itemsPerPage" class="clickable-row" data-ng-click="viewLogComp(l.coID)">
+                                            <tr data-ng-repeat="l in logisticsComplaintList | filter: searchLogComplaint | offset: (paginationLogComp.currentPage - 1) * paginationLogComp.itemsPerPage | limitTo: paginationLogComp.itemsPerPage" class="clickable-row" data-ng-click="viewLogComp(l.coID)" data-ng-class="{{unreadLogRowControl}}">
                                                 <td data-ng-bind="l.complaintDate"></td>
                                                 <td data-ng-bind="l.name"></td>
                                                 <td data-ng-bind="l.serviceType"></td>
