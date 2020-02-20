@@ -22,7 +22,6 @@
       cursor: pointer;
       transition: 0.3s;
     }
-
     #myCompImg01:hover {opacity: 0.7;}
     
     #myCompImg02 {
@@ -30,7 +29,6 @@
       cursor: pointer;
       transition: 0.3s;
     }
-
     #myCompImg02:hover {opacity: 0.7;}
     
     #myCompImg03 {
@@ -38,9 +36,29 @@
       cursor: pointer;
       transition: 0.3s;
     }
-
     #myCompImg03:hover {opacity: 0.7;}
 
+    #myLogsImg01 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myLogsImg01:hover {opacity: 0.7;}
+    
+    #myLogsImg02 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myLogsImg02:hover {opacity: 0.7;}
+    
+    #myLogsImg03 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myLogsImg03:hover {opacity: 0.7;}
+    
     /* The Modal (background) */
     .modal {
       display: none; /* Hidden by default */
@@ -315,8 +333,14 @@
 
     <div class="form-group row">
         <label for="uploadImg" class="col-xs-3 col-form-label form-label-width">Image:</label>
-        <div class="col-md-9">
-            <canvas style="border:1px solid grey; width: 400px; height: 300px; margin: 15px;" id="uploadImg"></canvas>
+        <div class="col-md-3">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg01"></canvas>
+        </div>
+        <div class="col-md-3">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 70px;" id="uploadImg02"></canvas>
+        </div>
+        <div class="col-md-3">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 125px;" id="uploadImg03"></canvas>
         </div>
     </div>
 
@@ -389,9 +413,15 @@
 
     <div class="form-group row" data-ng-show="showLogsImg">
         <strong class="col-xs-3 form-label-width">Image from Logistics:</strong>
-        <div class="mx-sm-3" style="width: 400px;height: 350px;">
-            <img src="{{fullComplaintDetail.logsImg}}" style="width: 100%;height: 100%;object-fit: contain;" />
-        </div>    
+        <div class="mx-sm-3" style="width: 400px;height: 350px;" data-ng-show="showLogsImages.image01">
+            <img id="myLogsImg01" src="{{logsImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
+        <div class="mx-sm-3" style="width: 400px;height: 350px;" data-ng-show="showLogsImages.image02">
+            <img id="myLogsImg02" src="{{logsImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
+        <div class="mx-sm-3" style="width: 400px;height: 350px;" data-ng-show="showLogsImages.image03">
+            <img id="myLogsImg03" src="{{logsImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
     </div>    
 
     <div class="form-group row">
@@ -515,7 +545,28 @@
       modalImg.src = this.src;
       captionText.innerHTML = this.alt;
     }
+    
+    var logs01 = document.getElementById("myLogsImg01");
+    logs01.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
 
+    var logs02 = document.getElementById("myLogsImg02");
+    logs02.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    
+    var logs03 = document.getElementById("myLogsImg03");
+    logs03.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 

@@ -8483,6 +8483,8 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
     $scope.showForm = false;
     $scope.showInfo = false;
     $scope.showBDInfo = false;
+    $scope.showCompImg = true;
+    $scope.showLogsImg = true;
 
     $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function(response) {
         $scope.detailObj = response.data.data[0];
@@ -8589,9 +8591,20 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         }
 
         if ($scope.showInfo == true) {
+            $scope.logsImages = {
+                'image01': "",
+                'image02': "",
+                'image03': ""
+            }
+            $scope.showLogsImages = {
+                'image01': false,
+                'image02': false,
+                'image03': false
+            }
             $http.post('/getLogisticsFullComplaintDetail', $scope.coIDobj).then(function(response) {
                 if (response.data.status == "success") {
                     $scope.fullComplaintDetail = response.data.data[0];
+                    
                     $scope.areaCode = $scope.fullComplaintDetail.area.split(",")[1];
                     $scope.fullComplaintDetail.subDate = $filter('date')($scope.fullComplaintDetail.subDate, 'yyyy-MM-dd');
                     $scope.fullComplaintDetail.statusDate = $filter('date')($scope.fullComplaintDetail.statusDate, 'yyyy-MM-dd');
@@ -8602,6 +8615,35 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                     $scope.remarksUpdateCancelBtn = false;
                     $scope.recordremarks = $scope.fullComplaintDetail.remarks;
 
+                    //init images
+                    $scope.logsImages.image01 = $scope.fullComplaintDetail.logsImg.split("|")[0];
+                    $scope.logsImages.image02 = $scope.fullComplaintDetail.logsImg.split("|")[1];
+                    $scope.logsImages.image03 = $scope.fullComplaintDetail.logsImg.split("|")[2];
+
+                    if($scope.logsImages.image01 !== 'undefined'){
+                        $scope.showLogsImages.image01 = true;
+                    }else{
+                        $scope.logsImages.image01 = "";
+                    }
+                    if($scope.logsImages.image02 !== 'undefined'){
+                        $scope.showLogsImages.image02 = true;
+                    }else{
+                        $scope.logsImages.image02 = "";
+                    }
+                    if($scope.logsImages.image03 !== 'undefined'){
+                        $scope.showLogsImages.image03 = true;
+                    }else{
+                        $scope.logsImages.image03 = "";
+                    }
+                    
+                    if ($scope.detailObj.compImg == "undefined|undefined|undefined") {
+                        $scope.showCompImg = false;
+                    }
+
+                    if ($scope.detailObj.logsImg === "undefined|undefined|undefined") {
+                        $scope.showLogsImg = false;
+                    }
+                    
                     $http.post('/getStaffName', { 'id': $scope.fullComplaintDetail.custBy }).then(function(response) {
                         if (response.data.length > 0) {
                             $scope.informCustStaffName = response.data[0].staffName;
@@ -8712,43 +8754,54 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         }
     }
 
-    window.addEventListener("paste", function(e) {
+    var img01, img02, img03;
+    $(".target").on("click", function() {
+        $scope.imgPasteID = $(this).attr("id");
+        window.addEventListener("paste", function(e) {
 
-        // Handle the event
-        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
-            // If there's an image, display it in the canvas
-            if (imageBlob) {
-                var canvas = document.getElementById("uploadImg");
-                var ctx = canvas.getContext('2d');
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById($scope.imgPasteID);
+                    var ctx = canvas.getContext('2d');
 
-                // Create an image to render the blob on the canvas
-                var img = new Image();
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
 
-                // Once the image loads, render the img on the canvas
-                img.onload = function() {
-                    // Update dimensions of the canvas with the dimensions of the image
-                    canvas.width = this.width;
-                    canvas.height = this.height;
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
 
-                    // Draw the image
-                    ctx.drawImage(img, 0, 0);
-                };
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
 
-                // Crossbrowser support for URL
-                var URLObj = window.URL || window.webkitURL;
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
 
-                // Creates a DOMString containing a URL representing the object given in the parameter
-                // namely the original Blob
-                img.src = URLObj.createObjectURL(imageBlob);
-                var reader = new FileReader();
-                reader.readAsDataURL(imageBlob);
-                reader.onloadend = function() {
-                    var base64data = reader.result;
-                    $scope.logistics.logsImg = base64data;
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        if($scope.imgPasteID == "uploadImg01"){
+                            img01 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg02"){
+                            img02 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg03"){
+                            img03 = base64data;
+                        }
+                        $scope.logistics.logsImg = img01 + "|" + img02 + "|" + img03;
+                    }
                 }
-            }
-        });
-    }, false);
+            });
+        }, false);
+    });
 
     $scope.submit = function() {
         $scope.logistics.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd');
@@ -9068,6 +9121,16 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
         'image02': false,
         'image03': false
     }
+    $scope.logsImages = {
+        'image01': "",
+        'image02': "",
+        'image03': ""
+    }
+    $scope.showLogsImages = {
+        'image01': false,
+        'image02': false,
+        'image03': false
+    }
     $scope.checkCustContactStatus = false;
     $scope.custContactableStatus = "0";
     $scope.cmsStatus = "";
@@ -9103,6 +9166,29 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
             $scope.showComplaintImages.image03 = true;
         }else{
             $scope.complaintImages.image03 = "";
+        }
+        
+        if($scope.detailObj.logsImg !== null){
+            //init images
+            $scope.logsImages.image01 = $scope.detailObj.logsImg.split("|")[0];
+            $scope.logsImages.image02 = $scope.detailObj.logsImg.split("|")[1];
+            $scope.logsImages.image03 = $scope.detailObj.logsImg.split("|")[2];
+
+            if($scope.logsImages.image01 !== 'undefined'){
+                $scope.showLogsImages.image01 = true;
+            }else{
+                $scope.logsImages.image01 = "";
+            }
+            if($scope.logsImages.image02 !== 'undefined'){
+                $scope.showLogsImages.image02 = true;
+            }else{
+                $scope.logsImages.image02 = "";
+            }
+            if($scope.logsImages.image03 !== 'undefined'){
+                $scope.showLogsImages.image03 = true;
+            }else{
+                $scope.logsImages.image03 = "";
+            }
         }
 
         //initialize staff
@@ -9183,11 +9269,11 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
 
         }
 
-        if ($scope.detailObj.compImg == "" || $scope.detailObj.compImg == null) {
+        if ($scope.detailObj.compImg === "undefined|undefined|undefined") {
             $scope.showCompImg = false;
         }
 
-        if ($scope.detailObj.logsImg == "" || $scope.detailObj.logsImg == null) {
+        if ($scope.detailObj.logsImg == "undefined|undefined|undefined") {
             $scope.showLogsImg = false;
         }
 

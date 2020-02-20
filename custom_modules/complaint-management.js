@@ -382,7 +382,7 @@ app.post('/getLogisticsFullComplaintDetail', function(req, res) {
 app.post('/submitLogisticsComplaint', function(req, res) {
     'use strict';
 
-    var image = req.body.logsImg;
+    var images = req.body.logsImg.split("|");
 
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
@@ -391,36 +391,41 @@ app.post('/submitLogisticsComplaint', function(req, res) {
         fs.mkdirSync(local_bd_directory);
     }
 
-    if (image !== '') {
-        let base64Image = image.split(';base64,').pop();
-        var extension = image.split(';base64,')[0].split('/')[1];
-        var image_path = '/' + req.body.coID + '.' + extension;
-        var local_store_path = 'images/complaintOfficer/bd-images' + image_path,
-            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+    images.forEach(function(image, index){
+        if (image !== 'undefined') {
+            let base64Image = image.split(';base64,').pop();
+            var extension = image.split(';base64,')[0].split('/')[1];
+            var image_path = '/' + req.body.coID + '(' + index + ')' + '.' + extension;
+            var local_store_path = 'images/complaintOfficer/bd-images' + image_path,
+                public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
 
-        fs.writeFile(local_store_path, base64Image, { encoding: 'base64' }, async function(err) {
-            if (err) throw err;
+            fs.writeFile(local_store_path, base64Image, { encoding: 'base64' }, async function(err) {
+                if (err) throw err;
 
-            await storage.bucket(bucketName).upload('./' + local_store_path, {
-                gzip: true,
-                metadata: {
-                    cacheControl: 'public, no-cache',
-                },
-                public: true,
-                destination: local_store_path
+                await storage.bucket(bucketName).upload('./' + local_store_path, {
+                    gzip: true,
+                    metadata: {
+                        cacheControl: 'public, no-cache',
+                    },
+                    public: true,
+                    destination: local_store_path
+                });
             });
-        });
-        image = public_url;
-    } else {
-        image = '';
-    }
+            images[index] = public_url;
+        } else {
+            images[index] = 'undefined';
+        }
+    });
+    
+    images = images[0] + "|" + images[1] + "|" + images[2];
+    
 
     var remarkFormatted = req.body.remark.replace("'", "\\'");
 
     if (req.body.subDate == null || req.body.subTime == null) {
-        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = " + req.body.subDate + ", forwardedTime = " + req.body.subTime + ", forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + image + "', step = 2, readState = 'u', logsReadState = 'r' WHERE coID = '" + req.body.coID + "' ";
+        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = " + req.body.subDate + ", forwardedTime = " + req.body.subTime + ", forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + images + "', step = 2, readState = 'u', logsReadState = 'r' WHERE coID = '" + req.body.coID + "' ";
     } else {
-        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + image + "', step = 2, readState = 'u', logsReadState = 'r' WHERE coID = '" + req.body.coID + "' ";
+        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + images + "', step = 2, readState = 'u', logsReadState = 'r' WHERE coID = '" + req.body.coID + "' ";
     }
 
     database.query(sql, function(err, result) {
