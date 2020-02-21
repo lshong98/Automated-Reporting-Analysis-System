@@ -112,7 +112,7 @@ app.post('/sendMessage', function (req, resp) {
                 staffID = result[0].staffID;
                 f.makeID('chat', date).then(function (ID) {
                     console.log(date);
-                    sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + result[0].userID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', '" + date + "', 'A','u')";
+                    sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + result[0].userID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', NOW()," + "'A','u')";
                     database.query(sql, function (err, result) {
                         if (err) {
                             resp.send("Error Sending Message");
@@ -124,7 +124,7 @@ app.post('/sendMessage', function (req, resp) {
                             if (currentTime <= startTime || currentTime >= endTime || today.getDay() == 6 || today.getDay() == 0) {
                                 console.log("Enter Automated Function");
                                 f.makeID('chat', date).then(function (ID) {
-                                    var sql2 = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime) VALUE ('" + ID + "', '" + staffID + "','" + userID + "','" + "Thank You for your message. However, we are currently closed as our regular business hours are from 8:30 am to 5:30 pm, Monday through Friday. We will get back to you as soon as possible. Thank you and have a nice day." + "','" + data.id + "','" + date + "')";
+                                    var sql2 = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime) VALUE ('" + ID + "', '" + staffID + "','" + userID + "','" + "Thank You for your message. However, we are currently closed as our regular business hours are from 8:30 am to 5:30 pm, Monday through Friday. We will get back to you as soon as possible. Thank you and have a nice day." + "','" + data.id + "', NOW())";
                                     
                                     database.query(sql2, function (err, res) {
                                         if (err) {
