@@ -7721,6 +7721,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     $scope.complaintOfficerList = [];
     $scope.logisticsComplaintList = [];
     $scope.nowModule = 'web';
+    
+    $scope.unreadWebComplaintCount = 0;
+    $scope.unreadAppComplaintCount = 0;
+    $scope.unreadLogComplaintCount = 0;
+    
     //pagination
     $scope.paginationWebComp = angular.copy(storeDataService.pagination);
     $scope.paginationAppComp = angular.copy(storeDataService.pagination);
@@ -7737,6 +7742,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         $scope.filterWebComplaintList = [];
 
         for (var i = 0; i < $scope.complaintOfficerList.length; i++) {
+            
+            if($scope.complaintOfficerList[i].readState == 'u'){
+                $scope.unreadWebComplaintCount++;
+            }
+            
             $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
 
             if ($scope.complaintOfficerList[i].step == 1) {
@@ -7778,7 +7788,9 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
             }
             return vm;
         }, true);
-
+        
+        $scope.unreadWebRowControl = "{'table-active': c.readState == 'u'}";        
+        
     });
 
     //get app complaint list
@@ -7790,8 +7802,12 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         var splitTypeContent = "";
         var splitTypeSpecialContent = "";
 
-
         for (var i = 0; i < $scope.complaintList.length; i++) {
+            
+            if($scope.complaintList[i].readStat == 'u'){
+                $scope.unreadAppComplaintCount++;
+            }
+            
             $scope.complaintList[i].date = $filter('date')($scope.complaintList[i].date, 'yyyy-MM-dd');
 
             var splitType = $scope.complaintList[i].title.split(":,:");
@@ -7876,6 +7892,8 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         }, true);
 
         $scope.showbadge = "{'badge badge-danger': c.status == 'Invalid', 'badge badge-warning': c.status == 'Pending', 'badge badge-primary': c.status == 'Open', 'badge badge-success': c.status == 'Closed'}";
+        
+        $scope.unreadAppRowControl = "{'table-active': c.readStat == 'u'}";
     });
 
     //get logistics complaint list
@@ -7888,6 +7906,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
 
         if ($scope.logisticsComplaintList.length != 0) {
             for (var i = 0; i < $scope.logisticsComplaintList.length; i++) {
+                
+                if($scope.logisticsComplaintList[i].logsReadState == 'u'){
+                    $scope.unreadLogComplaintCount++;
+                }  
+                
                 $scope.logisticsComplaintList[i].complaintDate = $filter('date')($scope.logisticsComplaintList[i].complaintDate, 'yyyy-MM-dd');
 
                 if ($scope.logisticsComplaintList[i].services == 1) {
@@ -7909,6 +7932,7 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
                 }
             }
         }
+        
 
         $scope.filterLogComplaintList = angular.copy($scope.logisticsComplaintList);
 
@@ -7930,17 +7954,19 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
             }
             return vm;
         }, true);
+        
+        $scope.unreadLogRowControl = "{'table-active': l.logsReadState == 'u'}";
     });
 
-    $scope.readComplaint = function() {
-        $http.post('/readComplaint').then(function(response) {
-            if (response.data == "Complaint Read") {
-                socket.emit('complaint read');
-            }
-        }, function(err) {
-            console.log(err);
-        });
-    };
+//    $scope.readComplaint = function() {
+//        $http.post('/readComplaint').then(function(response) {
+//            if (response.data == "Complaint Read") {
+//                socket.emit('complaint read');
+//            }
+//        }, function(err) {
+//            console.log(err);
+//        });
+//    };
 
     //view app complaint
     $scope.complaintDetail = function(complaintCode) {
@@ -8015,7 +8041,6 @@ app.controller('complaintDetailController', function($scope, $http, $filter, $wi
     //get complaint detail refers on complaint id
     $http.post('/getComplaintDetail', $scope.req).then(function(response) {
         var complaint = response.data;
-
         $scope.comDetail = {
             'ctype': complaint[0].complaint,
             'title': complaint[0].premiseType,
@@ -8443,10 +8468,23 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         'logsImg': '',
         'coID': $routeParams.complaintCode
     };
+    $scope.complaintImages = {
+        'image01': "",
+        'image02': "",
+        'image03': ""
+    }
+    $scope.showComplaintImages = {
+        'image01': false,
+        'image02': false,
+        'image03': false
+    }
     $scope.showSubmitBtn = true;
     $scope.showCompImg = true;
     $scope.showForm = false;
     $scope.showInfo = false;
+    $scope.showBDInfo = false;
+    $scope.showCompImg = true;
+    $scope.showLogsImg = true;
 
     $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function(response) {
         $scope.detailObj = response.data.data[0];
@@ -8456,6 +8494,27 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         var splitTypeContent = "";
         var splitTypeSpecialContent = "";
 
+        //init images
+        $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
+        $scope.complaintImages.image02 = $scope.detailObj.compImg.split("|")[1];
+        $scope.complaintImages.image03 = $scope.detailObj.compImg.split("|")[2];
+        
+        if($scope.complaintImages.image01 !== 'undefined'){
+            $scope.showComplaintImages.image01 = true;
+        }else{
+            $scope.complaintImages.image01 = "";
+        }
+        if($scope.complaintImages.image02 !== 'undefined'){
+            $scope.showComplaintImages.image02 = true;
+        }else{
+            $scope.complaintImages.image02 = "";
+        }
+        if($scope.complaintImages.image03 !== 'undefined'){
+            $scope.showComplaintImages.image03 = true;
+        }else{
+            $scope.complaintImages.image03 = "";
+        }
+        
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
         $scope.detailObj.logisticsDate = $filter('date')($scope.detailObj.logisticsDate, 'yyyy-MM-dd');
 
@@ -8471,9 +8530,15 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         if ($scope.detailObj.step == 1) {
             $scope.showForm = true;
             $scope.showInfo = false;
-        } else if ($scope.detailObj.step >= 2) {
+            $scope.showBDInfo = false;
+        } else if ($scope.detailObj.step == 2) {
             $scope.showForm = false;
             $scope.showInfo = true;
+            $scope.showBDInfo = false;
+        } else if($scope.detailObj.step == 3){
+            $scope.showForm = false;
+            $scope.showInfo = true;
+            $scope.showBDInfo = true;                  
         }
 
         splitType = $scope.detailObj.type.split(":,:");
@@ -8526,9 +8591,20 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         }
 
         if ($scope.showInfo == true) {
+            $scope.logsImages = {
+                'image01': "",
+                'image02': "",
+                'image03': ""
+            }
+            $scope.showLogsImages = {
+                'image01': false,
+                'image02': false,
+                'image03': false
+            }
             $http.post('/getLogisticsFullComplaintDetail', $scope.coIDobj).then(function(response) {
                 if (response.data.status == "success") {
                     $scope.fullComplaintDetail = response.data.data[0];
+                    
                     $scope.areaCode = $scope.fullComplaintDetail.area.split(",")[1];
                     $scope.fullComplaintDetail.subDate = $filter('date')($scope.fullComplaintDetail.subDate, 'yyyy-MM-dd');
                     $scope.fullComplaintDetail.statusDate = $filter('date')($scope.fullComplaintDetail.statusDate, 'yyyy-MM-dd');
@@ -8539,6 +8615,35 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                     $scope.remarksUpdateCancelBtn = false;
                     $scope.recordremarks = $scope.fullComplaintDetail.remarks;
 
+                    //init images
+                    $scope.logsImages.image01 = $scope.fullComplaintDetail.logsImg.split("|")[0];
+                    $scope.logsImages.image02 = $scope.fullComplaintDetail.logsImg.split("|")[1];
+                    $scope.logsImages.image03 = $scope.fullComplaintDetail.logsImg.split("|")[2];
+
+                    if($scope.logsImages.image01 !== 'undefined'){
+                        $scope.showLogsImages.image01 = true;
+                    }else{
+                        $scope.logsImages.image01 = "";
+                    }
+                    if($scope.logsImages.image02 !== 'undefined'){
+                        $scope.showLogsImages.image02 = true;
+                    }else{
+                        $scope.logsImages.image02 = "";
+                    }
+                    if($scope.logsImages.image03 !== 'undefined'){
+                        $scope.showLogsImages.image03 = true;
+                    }else{
+                        $scope.logsImages.image03 = "";
+                    }
+                    
+                    if ($scope.detailObj.compImg == "undefined|undefined|undefined") {
+                        $scope.showCompImg = false;
+                    }
+
+                    if ($scope.detailObj.logsImg === "undefined|undefined|undefined") {
+                        $scope.showLogsImg = false;
+                    }
+                    
                     $http.post('/getStaffName', { 'id': $scope.fullComplaintDetail.custBy }).then(function(response) {
                         if (response.data.length > 0) {
                             $scope.informCustStaffName = response.data[0].staffName;
@@ -8649,43 +8754,57 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         }
     }
 
-    window.addEventListener("paste", function(e) {
+    var img01, img02, img03;
+    $(".target").on("click", function() {
+        var $this = $(this);
+        $scope.imgPasteID = $this.attr("id");
+        $(".active").removeClass("active");
+		$this.addClass("active");
+        window.addEventListener("paste", function(e) {
 
-        // Handle the event
-        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
-            // If there's an image, display it in the canvas
-            if (imageBlob) {
-                var canvas = document.getElementById("uploadImg");
-                var ctx = canvas.getContext('2d');
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById($scope.imgPasteID);
+                    var ctx = canvas.getContext('2d');
 
-                // Create an image to render the blob on the canvas
-                var img = new Image();
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
 
-                // Once the image loads, render the img on the canvas
-                img.onload = function() {
-                    // Update dimensions of the canvas with the dimensions of the image
-                    canvas.width = this.width;
-                    canvas.height = this.height;
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
 
-                    // Draw the image
-                    ctx.drawImage(img, 0, 0);
-                };
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
 
-                // Crossbrowser support for URL
-                var URLObj = window.URL || window.webkitURL;
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
 
-                // Creates a DOMString containing a URL representing the object given in the parameter
-                // namely the original Blob
-                img.src = URLObj.createObjectURL(imageBlob);
-                var reader = new FileReader();
-                reader.readAsDataURL(imageBlob);
-                reader.onloadend = function() {
-                    var base64data = reader.result;
-                    $scope.logistics.logsImg = base64data;
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        if($scope.imgPasteID == "uploadImg01"){
+                            img01 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg02"){
+                            img02 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg03"){
+                            img03 = base64data;
+                        }
+                        $scope.logistics.logsImg = img01 + "|" + img02 + "|" + img03;
+                    }
                 }
-            }
-        });
-    }, false);
+            });
+        }, false);
+    });
 
     $scope.submit = function() {
         $scope.logistics.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd');
@@ -8832,44 +8951,58 @@ app.controller('complaintOfficercreateController', function($scope, $http, $filt
             }
         }
     }
+    var img01, img02, img03;
+    $(".target").on("click", function() {
+        var $this = $(this);
+        $scope.imgPasteID = $this.attr("id");
+        $(".active").removeClass("active");
+		$this.addClass("active");
+        window.addEventListener("paste", function(e) {
+            
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById($scope.imgPasteID);
+                    var ctx = canvas.getContext('2d');
 
-    window.addEventListener("paste", function(e) {
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
 
-        // Handle the event
-        retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
-            // If there's an image, display it in the canvas
-            if (imageBlob) {
-                var canvas = document.getElementById("uploadImg");
-                var ctx = canvas.getContext('2d');
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
 
-                // Create an image to render the blob on the canvas
-                var img = new Image();
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
 
-                // Once the image loads, render the img on the canvas
-                img.onload = function() {
-                    // Update dimensions of the canvas with the dimensions of the image
-                    canvas.width = this.width;
-                    canvas.height = this.height;
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
 
-                    // Draw the image
-                    ctx.drawImage(img, 0, 0);
-                };
-
-                // Crossbrowser support for URL
-                var URLObj = window.URL || window.webkitURL;
-
-                // Creates a DOMString containing a URL representing the object given in the parameter
-                // namely the original Blob
-                img.src = URLObj.createObjectURL(imageBlob);
-                var reader = new FileReader();
-                reader.readAsDataURL(imageBlob);
-                reader.onloadend = function() {
-                    var base64data = reader.result;
-                    $scope.comp.compImg = base64data;
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        if($scope.imgPasteID == "uploadImg01"){
+                            img01 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg02"){
+                            img02 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg03"){
+                            img03 = base64data;
+                        }
+                        $scope.comp.compImg = img01 + "|" + img02 + "|" + img03;
+                        
+                    }
                 }
-            }
-        });
-    }, false);
+            });
+        }, false);
+    });
 
     $scope.addComp = function() {
         $scope.showSubmitBtn = false;
@@ -8984,6 +9117,26 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
         'statusTime': "",
         'coID': $routeParams.coID
     };
+    $scope.complaintImages = {
+        'image01': "",
+        'image02': "",
+        'image03': ""
+    }
+    $scope.showComplaintImages = {
+        'image01': false,
+        'image02': false,
+        'image03': false
+    }
+    $scope.logsImages = {
+        'image01': "",
+        'image02': "",
+        'image03': ""
+    }
+    $scope.showLogsImages = {
+        'image01': false,
+        'image02': false,
+        'image03': false
+    }
     $scope.checkCustContactStatus = false;
     $scope.custContactableStatus = "0";
     $scope.cmsStatus = "";
@@ -8998,8 +9151,51 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
     var areaSplit = "";
 
     $http.post('/getComplaintOfficerDetail', $scope.coIDobj).then(function(response) {
-
         $scope.detailObj = response.data.data[0];
+        
+        //init images
+        $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
+        $scope.complaintImages.image02 = $scope.detailObj.compImg.split("|")[1];
+        $scope.complaintImages.image03 = $scope.detailObj.compImg.split("|")[2];
+        
+        if($scope.complaintImages.image01 !== 'undefined'){
+            $scope.showComplaintImages.image01 = true;
+        }else{
+            $scope.complaintImages.image01 = "";
+        }
+        if($scope.complaintImages.image02 !== 'undefined'){
+            $scope.showComplaintImages.image02 = true;
+        }else{
+            $scope.complaintImages.image02 = "";
+        }
+        if($scope.complaintImages.image03 !== 'undefined'){
+            $scope.showComplaintImages.image03 = true;
+        }else{
+            $scope.complaintImages.image03 = "";
+        }
+        
+        if($scope.detailObj.logsImg !== null){
+            //init images
+            $scope.logsImages.image01 = $scope.detailObj.logsImg.split("|")[0];
+            $scope.logsImages.image02 = $scope.detailObj.logsImg.split("|")[1];
+            $scope.logsImages.image03 = $scope.detailObj.logsImg.split("|")[2];
+
+            if($scope.logsImages.image01 !== 'undefined'){
+                $scope.showLogsImages.image01 = true;
+            }else{
+                $scope.logsImages.image01 = "";
+            }
+            if($scope.logsImages.image02 !== 'undefined'){
+                $scope.showLogsImages.image02 = true;
+            }else{
+                $scope.logsImages.image02 = "";
+            }
+            if($scope.logsImages.image03 !== 'undefined'){
+                $scope.showLogsImages.image03 = true;
+            }else{
+                $scope.logsImages.image03 = "";
+            }
+        }
 
         //initialize staff
         var staffID = {
@@ -9079,11 +9275,11 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
 
         }
 
-        if ($scope.detailObj.compImg == "" || $scope.detailObj.compImg == null) {
+        if ($scope.detailObj.compImg === "undefined|undefined|undefined") {
             $scope.showCompImg = false;
         }
 
-        if ($scope.detailObj.logsImg == "" || $scope.detailObj.logsImg == null) {
+        if ($scope.detailObj.logsImg == "undefined|undefined|undefined") {
             $scope.showLogsImg = false;
         }
 

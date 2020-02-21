@@ -2,6 +2,10 @@
     .form-label-width {
         width: 110px;
     }
+    
+    .active {
+      box-shadow: 0px 0px 10px 10px rgba(0,0,255,.4);
+    }
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -110,8 +114,14 @@
 
 <div class="form-group row">
     <label for="uploadImg" class="col-xs-3 col-form-label form-label-width">Image:</label>
-    <div class="col-md-9">
-        <canvas style="border:1px solid grey; width: 400px; height: 300px; margin: 15px;" id="uploadImg"></canvas>
+    <div class="col-md-3">
+        <canvas class="target" style="border:1px solid grey; width: 400px; height: 300px; margin: 15px;" id="uploadImg01"></canvas>
+    </div>
+    <div class="col-md-3">
+        <canvas class="target" style="border:1px solid grey; width: 400px; height: 300px; margin: 15px; margin-left: 90px;" id="uploadImg02"></canvas>
+    </div>
+    <div class="col-md-3">
+        <canvas class="target" style="border:1px solid grey; width: 400px; height: 300px; margin: 15px; margin-left: 165px;" id="uploadImg03"></canvas>
     </div>
 </div>
 
