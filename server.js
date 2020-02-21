@@ -210,7 +210,7 @@ app.get('/getPendingBinRequest', function(req, res) {
         output = [],
         i = 0;
 
-    sql = "SELECT * FROM tblbinrequest ORDER BY dateRequest DESC";
+    sql = "SELECT * FROM tblbinrequest ORDER BY dateRequest DESC, reqID DESC";
     database.query(sql, function(err, result) {
         if (result != undefined) {
             for (i = 0; i < result.length; i += 1) {
@@ -460,7 +460,7 @@ app.post('/editCollectionSchedule', function(req, res) {
 app.post('/customerFeedbackMunicipal', function(req, res) {
     'use strict';
     var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_municipal GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_municipal GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_municipal GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_municipal GROUP BY binHandling, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_municipal GROUP BY spillageControl, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_municipal GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined'";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, binHandS, spillCtrlS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
@@ -665,7 +665,7 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 app.post('/customerFeedbackCommercial', function(req, res) {
     'use strict';
     var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_commercial GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_commercial GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_commercial GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_commercial GROUP BY cleanliness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_commercial GROUP BY physicalCondition, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_commercial GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined'";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
@@ -867,7 +867,7 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 app.post('/customerFeedbackScheduled', function(req, res) {
     'use strict';
     var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined'";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS;
     var compRateS, teamEffS, healthAdhS, regAdhS, qryRespS;
     var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
