@@ -8756,7 +8756,10 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
 
     var img01, img02, img03;
     $(".target").on("click", function() {
-        $scope.imgPasteID = $(this).attr("id");
+        var $this = $(this);
+        $scope.imgPasteID = $this.attr("id");
+        $(".active").removeClass("active");
+		$this.addClass("active");
         window.addEventListener("paste", function(e) {
 
             // Handle the event
@@ -8950,7 +8953,10 @@ app.controller('complaintOfficercreateController', function($scope, $http, $filt
     }
     var img01, img02, img03;
     $(".target").on("click", function() {
-        $scope.imgPasteID = $(this).attr("id");
+        var $this = $(this);
+        $scope.imgPasteID = $this.attr("id");
+        $(".active").removeClass("active");
+		$this.addClass("active");
         window.addEventListener("paste", function(e) {
             
             // Handle the event
