@@ -9137,6 +9137,7 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
         'image02': false,
         'image03': false
     }
+    $scope.editImages = false;
     $scope.checkCustContactStatus = false;
     $scope.custContactableStatus = "0";
     $scope.cmsStatus = "";
@@ -9394,6 +9395,151 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
                 $scope.notify("error", "There has some ERROR!");
             }
         });
+    }
+    //edit images by handsome felix, yeyyyy
+    $scope.editCompImages = function(){
+        $scope.editImages = true;
+        var images = [$scope.complaintImages.image01, $scope.complaintImages.image02, $scope.complaintImages.image03];
+        
+        images.forEach(function(image, index){
+            var isEmpty = true;
+            if(image !== "" && index === 0){
+                var canvas = document.getElementById("uploadImg01");
+                isEmpty = false;
+            }else if(image !== "" && index === 1){
+                var canvas = document.getElementById("uploadImg02");
+                isEmpty = false;
+            }else if(image !== "" && index === 2){
+                var canvas = document.getElementById("uploadImg03");
+                isEmpty = false;
+            }
+            
+            if(!isEmpty){
+                var ctx = canvas.getContext('2d');
+                var img = new Image();
+                img.src = image;
+
+                // Once the image loads, render the img on the canvas
+                img.onload = function() {
+                    // Update dimensions of the canvas with the dimensions of the image
+                    canvas.width = this.width;
+                    canvas.height = this.height;
+
+                    // Draw the image
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        });
+    }
+    
+    function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
+        if (pasteEvent.clipboardData == false) {
+            if (typeof(callback) == "function") {
+                callback(undefined);
+            }
+        };
+
+        var items = pasteEvent.clipboardData.items;
+
+        if (items == undefined) {
+            if (typeof(callback) == "function") {
+                callback(undefined);
+            }
+        };
+
+        for (var i = 0; i < items.length; i++) {
+            // Skip content if not image
+            if (items[i].type.indexOf("image") == -1) continue;
+            // Retrieve image on clipboard as blob
+            var blob = items[i].getAsFile();
+
+            if (typeof(callback) == "function") {
+                callback(blob);
+            }
+        }
+    }
+    
+    $(".target").on("click", function() {
+        var $this = $(this);
+        $scope.imgPasteID = $this.attr("id");
+        $(".active").removeClass("active");
+		$this.addClass("active");
+        window.addEventListener("paste", function(e) {
+            
+            // Handle the event
+            retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
+                // If there's an image, display it in the canvas
+                if (imageBlob) {
+                    var canvas = document.getElementById($scope.imgPasteID);
+                    var ctx = canvas.getContext('2d');
+
+                    // Create an image to render the blob on the canvas
+                    var img = new Image();
+
+                    // Once the image loads, render the img on the canvas
+                    img.onload = function() {
+                        // Update dimensions of the canvas with the dimensions of the image
+                        canvas.width = this.width;
+                        canvas.height = this.height;
+
+                        // Draw the image
+                        ctx.drawImage(img, 0, 0);
+                    };
+
+                    // Crossbrowser support for URL
+                    var URLObj = window.URL || window.webkitURL;
+
+                    // Creates a DOMString containing a URL representing the object given in the parameter
+                    // namely the original Blob
+                    img.src = URLObj.createObjectURL(imageBlob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imageBlob);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        if($scope.imgPasteID == "uploadImg01"){
+                            $scope.complaintImages.image01 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg02"){
+                            $scope.complaintImages.image02 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg03"){
+                            $scope.complaintImages.image03 = base64data;
+                        }
+                    }
+                }
+            });
+        }, false);
+    });
+    
+    $scope.clearImage = function(imgID){
+        if(imgID === "uploadImg01"){
+            $scope.complaintImages.image01 = "";
+        }else if(imgID === "uploadImg02"){
+            $scope.complaintImages.image02 = "";
+        }else if(imgID === "uploadImg03"){
+            $scope.complaintImages.image03 = "";
+        }
+        var canvas = document.getElementById(imgID);
+        var ctx = canvas.getContext('2d');        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    $scope.updateCompImages = function(){
+        $scope.editImages = false;
+        
+        var updateImages = {
+            'coID': $routeParams.coID,
+            'department': "LG",
+            'images': $scope.complaintImages.image01 + "|" + $scope.complaintImages.image02 + "|" + $scope.complaintImages.image03
+        }
+        
+        $http.post('/updateComplaintImages', updateImages).then(function(response) {
+            if (response.data.status == "success") {
+                $scope.notify(response.data.status, response.data.message);
+                $route.reload();
+            } else {
+                $scope.notify("error", "There are some ERROR updating the images");
+            }
+        });
+            
     }
 
     //    $scope.editComp = function (coID) {

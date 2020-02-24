@@ -439,6 +439,59 @@ app.post('/submitLogisticsComplaint', function(req, res) {
     });
 });
 
+app.post('/updateComplaintImages', function(req, res) {
+    'use strict';
+    
+    var images = req.body.images.split("|");
+    
+    images.forEach(function(image, index){
+        if (image !== '' && image.search('googleapis') >= 0) {
+            images[index] = image;
+        }else if(image !== '' && image.search('googleapis') === -1){
+            let base64Image = image.split(';base64,').pop();
+            var extension = image.split(';base64,')[0].split('/')[1];
+            var image_path = '/' + req.body.coID + '(' + index + ')' + '.' + extension;
+            var local_store_path = 'images/complaintOfficer/bd-images' + image_path,
+                public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+
+            fs.writeFile(local_store_path, base64Image, { encoding: 'base64' }, async function(err) {
+                if (err) throw err;
+
+                await storage.bucket(bucketName).upload('./' + local_store_path, {
+                    gzip: true,
+                    metadata: {
+                        cacheControl: 'public, no-cache',
+                    },
+                    public: true,
+                    destination: local_store_path
+                });
+            });
+            images[index] = public_url;
+        } else {
+            images[index] = 'undefined';
+        }
+    });
+    
+    images = images[0] + "|" + images[1] + "|" + images[2];
+    
+    if(req.body.department === "LG"){
+        var sql = "UPDATE tblcomplaintofficer SET compImg = '" + images + "' WHERE coID = '" + req.body.coID + "'";
+    }else if(req.body.department === "BD"){
+        var sql = "UPDATE tblcomplaintofficer SET logsImg = '" + images + "' WHERE coID = '" + req.body.coID + "'";
+    }
+    
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({
+            "message": "Images Updated",
+            "status": "success"
+        });
+    });
+    
+});
+
 app.post('/updateCustInformation', function(req, res) {
     'use strict';
 
