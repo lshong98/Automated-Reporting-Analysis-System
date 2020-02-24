@@ -8478,6 +8478,7 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         'image02': false,
         'image03': false
     }
+    $scope.editImages = false;
     $scope.showSubmitBtn = true;
     $scope.showCompImg = true;
     $scope.showForm = false;
@@ -8798,6 +8799,12 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                             img02 = base64data;
                         }else if($scope.imgPasteID == "uploadImg03"){
                             img03 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg04"){
+                            $scope.logsImages.image01 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg05"){
+                            $scope.logsImages.image02 = base64data;
+                        }else if($scope.imgPasteID == "uploadImg06"){
+                            $scope.logsImages.image03 = base64data;
                         }
                         $scope.logistics.logsImg = img01 + "|" + img02 + "|" + img03;
                     }
@@ -8805,6 +8812,72 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
             });
         }, false);
     });
+    
+    $scope.editLogsImages = function(){
+        $scope.editImages = true;
+        var images = [$scope.logsImages.image01, $scope.logsImages.image02, $scope.logsImages.image03];
+        images.forEach(function(image, index){
+            var isEmpty = true;
+            if(image !== "" && index === 0){
+                var canvas = document.getElementById("uploadImg04")
+                isEmpty = false;
+            }else if(image !== "" && index === 1){
+                var canvas = document.getElementById("uploadImg05")
+                isEmpty = false;
+            }else if(image !== "" && index === 2){
+                var canvas = document.getElementById("uploadImg06")
+                isEmpty = false;
+            }
+            
+            if(!isEmpty){
+                var ctx = canvas.getContext('2d');
+                var img = new Image();
+                img.src = image;
+
+                // Once the image loads, render the img on the canvas
+                img.onload = function() {
+                    // Update dimensions of the canvas with the dimensions of the image
+                    canvas.width = this.width;
+                    canvas.height = this.height;
+
+                    // Draw the image
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        });
+    }
+    
+    $scope.clearImage = function(imgID){
+        if(imgID === "uploadImg04"){
+            $scope.logsImages.image01 = "";
+        }else if(imgID === "uploadImg05"){
+            $scope.logsImages.image02 = "";
+        }else if(imgID === "uploadImg06"){
+            $scope.logsImages.image03 = "";
+        }
+        var canvas = document.getElementById(imgID);
+        var ctx = canvas.getContext('2d');        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    $scope.updateLogsImages = function(){
+        $scope.editImages = false;
+        
+        var updateImages = {
+            'coID': $routeParams.complaintCode,
+            'department': "BD",
+            'images': $scope.logsImages.image01 + "|" + $scope.logsImages.image02 + "|" + $scope.logsImages.image03
+        }
+        
+        $http.post('/updateComplaintImages', updateImages).then(function(response) {
+            if (response.data.status == "success") {
+                $scope.notify(response.data.status, response.data.message);
+                $route.reload();
+            } else {
+                $scope.notify("error", "There are some ERROR updating the images");
+            }
+        });
+    }
 
     $scope.submit = function() {
         $scope.logistics.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd');
