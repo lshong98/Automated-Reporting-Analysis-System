@@ -386,9 +386,6 @@ app.service('storeDataService', function() {
                 "checkView": 'I',
                 "verifyView": 'I'
             },
-            "complaintapp": {
-                "view": 'I'
-            },
             "transactionLog": {
                 "view": 'I'
             },
@@ -497,10 +494,16 @@ app.service('storeDataService', function() {
                 "edit": 'I',
                 "create": 'I'
             },
+            "complaintapp": {
+                "view": 'I'
+            },            
             "complaintweb": {
                 "view": 'I',
-                "edit": 'I',
-                "create": 'I'
+                "create": 'I',
+                "hist": 'I'
+            },
+            "complaintlogs":{
+                "view": 'I'
             }
         },
         "pagination": {
@@ -2813,6 +2816,7 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
     $http.post('/loadMenu', {
         "position": position
     }).then(function(response) {
+
         //        console.log(response.data);
         $('ul.menu__level').html(response.data.content);
     });
@@ -4539,9 +4543,6 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "checkView": 'I',
             "verifyView": 'I'
         },
-        "complaintapp": {
-            "view": 'I'
-        },
         "transactionLog": {
             "view": 'I'
         },
@@ -4645,15 +4646,21 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
             "edit": 'I',
             "create": 'I'
         },
+        "complaintapp": {
+            "view": 'I'
+        },            
         "complaintweb": {
             "view": 'I',
-            "edit": 'I',
-            "create": 'I'
+            "create": 'I',
+            "hist": 'I'
+        },
+        "complaintlogs":{
+            "view": 'I'
         }
     };
 
     $http.post('/getAllAuth', $scope.role).then(function(response) {
-        console.log(response.data);
+
         var splitName, flag = false,
             key;
 
@@ -4809,9 +4816,6 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "checkView": 'A',
                             "verifyView": 'A'
                         },
-                        "complaintapp": {
-                            "view": 'A'
-                        },
                         "transactionLog": {
                             "view": 'A'
                         },
@@ -4910,10 +4914,16 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "edit": 'A',
                             "create": 'A'
                         },
+                        "complaintapp": {
+                            "view": 'A'
+                        },            
                         "complaintweb": {
                             "view": 'A',
-                            "edit": 'A',
-                            "create": 'A'
+                            "create": 'A',
+                            "hist": 'A'
+                        },
+                        "complaintlogs":{
+                            "view": 'A'
                         }
                     };
                 }
@@ -4990,9 +5000,6 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "view": 'I',
                             "checkView": 'I',
                             "verifyView": 'I'
-                        },
-                        "complaintapp": {
-                            "view": 'I'
                         },
                         "transactionLog": {
                             "view": 'I'
@@ -5086,10 +5093,16 @@ app.controller('specificAuthController', function($scope, $http, $routeParams, s
                             "edit": 'I',
                             "create": 'I'
                         },
+                        "complaintapp": {
+                            "view": 'I'
+                        },            
                         "complaintweb": {
                             "view": 'I',
-                            "edit": 'I',
-                            "create": 'I'
+                            "create": 'I',
+                            "hist": 'I'
+                        },
+                        "complaintlogs":{
+                            "view": 'I'
                         }
                     };
                 }
@@ -7721,6 +7734,11 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     $scope.complaintOfficerList = [];
     $scope.logisticsComplaintList = [];
     $scope.nowModule = 'web';
+    
+    //show control
+    $scope.showweb = angular.copy(storeDataService.show.complaintweb);
+    $scope.showapp = angular.copy(storeDataService.show.complaintapp);
+    $scope.showlogs = angular.copy(storeDataService.show.complaintlogs);
     
     $scope.unreadWebComplaintCount = 0;
     $scope.unreadAppComplaintCount = 0;
