@@ -414,14 +414,13 @@
         <strong class="col-xs-3 form-label-width">Status Time:</strong>
         <p  class="mx-sm-3">{{fullComplaintDetail.statusTime}}</p>
     </div>
-
+    <div class="row">
+        <button data-ng-click="editLogsImages()" type="button" class="btn btn-info" style="margin-top: 10px;" data-ng-show="!editImages"><i class="fas fa-pencil-alt"></i> Edit Images</button>
+    </div>
     <div class="form-group row" data-ng-show="showLogsImg">
         <div class="col-xs-3 form-label-width">
-            <strong>Image from Logistics:</strong>
-            <br />
-            <button data-ng-click="editLogsImages()" type="button" class="btn btn-info" style="margin-top: 10px;" data-ng-show="!editImages"><i class="fas fa-pencil-alt"></i> Edit Images</button>
+            <strong>Image from Logistics:</strong>            
         </div>
-        
         <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image01 && !editImages">
             <img id="myLogsImg01" src="{{logsImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
         </div>
@@ -431,7 +430,9 @@
         <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image03 && !editImages">
             <img id="myLogsImg03" src="{{logsImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
         </div>
-        
+    </div>
+    <div class="row">
+        <div class="col-xs-3 form-label-width"></div>
         <div class="col-md-3" data-ng-show="editImages">
             <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg04"></canvas>
         </div>
