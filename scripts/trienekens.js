@@ -8465,7 +8465,7 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         'statusDate': '',
         'statusTime': '',
         'remark': '',
-        'logsImg': '',
+        'logsImg': 'undefined|undefined|undefined',
         'coID': $routeParams.complaintCode
     };
     $scope.complaintImages = {
@@ -8970,7 +8970,7 @@ app.controller('complaintOfficercreateController', function($scope, $http, $filt
         "compCompany": '',
         "compPhone": '',
         "compAddress": '',
-        "compImg": '',
+        "compImg": 'undefined|undefined|undefined',
         "compType": '',
         "compLogDate": '',
         "compLogTime": '',
@@ -9154,7 +9154,7 @@ app.controller('complaintOfficercreateController', function($scope, $http, $filt
             $scope.notify("error", "There has some blank column");
             $scope.showSubmitBtn = true;
             $scope.comp.compType = '';
-        } else {
+        } else {            
             $http.post('/submitOfficeMadeComplaint', $scope.comp).then(function(response) {
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
