@@ -2806,13 +2806,13 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
         storeDataService.show = angular.copy($scope.show);
     });
     socket.emit('authorize request');
-    socket.emit('satisfaction form');
+    // socket.emit('satisfaction form');
 
-    socket.emit('binrequest');
+    // socket.emit('binrequest');
 
-    socket.emit('enquiry');
+    // socket.emit('enquiry');
 
-    socket.emit('complaint');
+    // socket.emit('complaint');
 
     $http.post('/loadMenu', {
         "position": position
@@ -2820,6 +2820,34 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
 
         //        console.log(response.data);
         $('ul.menu__level').html(response.data.content);
+    });
+
+    $http.get('/unreadCustFeedbackCount').then(function(response){
+        console.log(response);
+        if(response.data != 0){
+            $('.satisfaction').addClass("badge badge-danger").html(response.data);
+        }
+    });
+
+    $http.get('/unreadEnquiryCount').then(function(response){
+        console.log(response);
+        if(response.data != 0){
+            $('.enquiry').addClass("badge badge-danger").html(response.data);
+        }
+    });
+
+    $http.get('/unreadBinRequestCount').then(function(response){
+        console.log(response);
+        if(response.data != 0){
+            $('.binrequest').addClass("badge badge-danger").html(response.data);   
+        }
+    });
+
+    $http.get('/unreadComplaintCount').then(function(response){
+        console.log(response);
+        if(response.data != 0){
+            $('.complaint').addClass("badge badge-danger").html(response.data);   
+        }
     });
 });
 

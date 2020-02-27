@@ -2114,4 +2114,65 @@ app.get('/getBoundaryLatLng', function (req, res) {
     });
 });
 
+//retrieve unread records for web portal
+
+app.get('/unreadCustFeedbackCount', function(req, res){
+    'use strict';
+    var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+    var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+    var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
+    var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
+    database.query(sql, function (err, result) {
+        municipalUnread = result[0].unread;
+        database.query(sql2, function (err, result) {
+            commercialUnread = result[0].unread;
+            database.query(sql3, function (err, result) {
+                scheduledUnread = result[0].unread;
+                totalUnread = parseInt(municipalUnread, 10) + parseInt(commercialUnread, 10) + parseInt(scheduledUnread, 10);
+                // io.sockets.in(roomManager).emit('new satisfaction', {
+                //     "unread": totalUnread
+                // });
+                res.send(totalUnread.toString());
+            });
+        });
+    });
+});
+
+app.get('/unreadEnquiryCount', function(req, res){
+    'use strict';
+    var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            console.log("enquiry emitter fired from trienekensjs");
+            // io.sockets.in(roomManager).emit('new enquiry', {
+            //     "unread": result[0].unread
+            // });
+            var unread = result[0].unread
+            res.send(unread.toString());
+        });
+});
+
+app.get('/unreadBinRequestCount', function(req, res){
+    'use strict';
+    var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
+         database.query(sql, function (err, result) {
+            // io.sockets.in(roomManager).emit('new enquiry', {
+            //     "unread": result[0].unread
+            // });
+            var unread = result[0].unread
+            res.send(unread.toString());
+         });
+});
+
+app.get('/unreadComplaintCount', function(req, res){
+    'use strict';
+    var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
+        database.query(sql, function (err, result) {
+            // io.sockets.in(roomManager).emit('new enquiry', {
+            //     "unread": result[0].unread
+            // });
+            var unread = result[0].unread
+            res.send(unread.toString());
+        });
+});
+
 module.exports = app;
