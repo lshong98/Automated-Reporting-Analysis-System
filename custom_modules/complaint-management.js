@@ -36,43 +36,104 @@ app.post('/updateComplaintStatus', function(req, res) {
 
 app.post('/updateComplaintDetailsStatus', function(req, res) {
     'use strict';
-    var sql = "UPDATE tblcomplaintofficer SET status = '" + req.body.status + "', readState = 'u', logsReadState = 'r' WHERE coID = '" + req.body.coID + "' ";
-
-    var status = {
-        "status": ""
-    };
-    database.query(sql, function(err, result) {
-        if (err) {
-
-            status.status = "error";
-            res.json(status);
+    
+    database.query("SELECT histUpdateList FROM tblcomplaintofficer WHERE coID = '" + req.body.coID + "'", function(err, histdata){
+        if (err){
             throw err;
-        } else {
-            status.status = "success";
-            res.json(status);
+        }else{
+            if(histdata[0].histUpdateList == null){
+                histdata[0].histUpdateList = "";
+            }
+            var histUpdateList = histdata[0].histUpdateList + "Logistics update status on: " + req.body.statusdate + ", " + req.body.statustime + " - " + req.body.status +  "\n";
+
+            var sql = "UPDATE tblcomplaintofficer SET status = '" + req.body.status + "', readState = 'u', logsReadState = 'r', histUpdateList = '" + histUpdateList + "' WHERE coID = '" + req.body.coID + "' ";
+
+            var status = {
+                "status": ""
+            };
+            database.query(sql, function(err, result) {
+                if (err) {
+
+                    status.status = "error";
+                    res.json(status);
+                    throw err;
+                } else {
+                    status.status = "success";
+                    res.json(status);
+                }
+            });
         }
     });
 });
 
 app.post('/updateComplaintDetailsCustStatus', function(req, res) {
     'use strict';
-    var sql = "UPDATE tblcomplaintofficer SET custStatus = '" + req.body.status + "', customerDate = '" + req.body.statusDate + "', customerTime = '" + req.body.statusTime + "', readState = 'r', logsReadState = 'u' WHERE coID = '" + req.body.coID + "' ";
-
-    var status = {
-        "status": ""
-    };
-    database.query(sql, function(err, result) {
-        if (err) {
-
-            status.status = "error";
-            res.json(status);
+    
+    database.query("SELECT histUpdateList FROM tblcomplaintofficer WHERE coID = '" + req.body.coID + "'", function(err, histdata){
+        if (err){
             throw err;
-        } else {
-            status.status = "success";
-            res.json(status);
+        }else{    
+            if(histdata[0].histUpdateList == null){
+                histdata[0].histUpdateList = "";
+            }            
+            var histUpdateList = histdata[0].histUpdateList + "BD update status on: " + req.body.statusDate + ", " + req.body.statusTime + " - " + req.body.status + "\n";
+            
+            var sql = "UPDATE tblcomplaintofficer SET custStatus = '" + req.body.status + "', readState = 'r', logsReadState = 'u', histUpdateList = '" + histUpdateList + "' WHERE coID = '" + req.body.coID + "' ";
+
+            var status = {
+                "status": ""
+            };
+            database.query(sql, function(err, result) {
+                if (err) {
+
+                    status.status = "error";
+                    res.json(status);
+                    throw err;
+                } else {
+                    status.status = "success";
+                    res.json(status);
+                }
+            });
         }
     });
 });
+
+app.post('/updateCMSStatus', function(req, res) {
+    'use strict';
+    
+    database.query("SELECT histUpdateList FROM tblcomplaintofficer WHERE coID = '" + req.body.coID + "'", function(err, histdata){
+        if (err){
+            throw err;
+        }else{
+            if(histdata[0].histUpdateList == null){
+                histdata[0].histUpdateList = "";
+            }            
+            var histUpdateList = histdata[0].histUpdateList + "CMS status update on: " + req.body.cmsdate + ", " + req.body.cmstime + " - " + req.body.cmsstatus + "\n";
+
+            var sql = "UPDATE tblcomplaintofficer SET cmsStatus = '" + req.body.cmsstatus + "', histUpdateList = '" + histUpdateList + "' WHERE coID = '" + req.body.coID + "' ";
+
+            var status = {
+                "status": ""
+            };
+            database.query(sql, function(err, result) {
+                if (err) {
+
+                    status.status = "error";
+                    res.json(status);
+                    throw err;
+                } else {
+                    status.status = "success";
+                    res.json(status);
+                }
+            });            
+        }
+    });
+    
+    
+    
+
+});
+
 
 app.post('/logsOfficerUpdateRemarks', function(req, res) {
     'use strict';
@@ -95,25 +156,6 @@ app.post('/logsOfficerUpdateRemarks', function(req, res) {
     });
 });
 
-app.post('/updateCMSStatus', function(req, res) {
-    'use strict';
-    var sql = "UPDATE tblcomplaintofficer SET cmsStatus = '" + req.body.cmsstatus + "' WHERE coID = '" + req.body.coID + "' ";
-
-    var status = {
-        "status": ""
-    };
-    database.query(sql, function(err, result) {
-        if (err) {
-
-            status.status = "error";
-            res.json(status);
-            throw err;
-        } else {
-            status.status = "success";
-            res.json(status);
-        }
-    });
-});
 
 //complaint module
 app.get('/getComplaintList', function(req, res) {

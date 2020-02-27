@@ -1277,7 +1277,7 @@ app.post('/loadMenu', function(req, res) {
         }
 
         content += '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>';
-console.log(content);
+
         res.json({
             "content": content
         });
