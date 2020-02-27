@@ -14,7 +14,7 @@
 
 <div class="row" data-ng-show="nowModule=='web'">
     <div class="col-md-12">
-        <button class="btn btn-success" data-ng-click="createComp()"><i class="fa fa-plus"></i> New</button>            
+        <button class="btn btn-success" data-ng-show="showweb.create == 'A'" data-ng-click="createComp()"><i class="fa fa-plus"></i> New</button>            
     </div>
 </div>
 
@@ -24,18 +24,18 @@
     <div class="col-md-12">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="webComplaint-tab" data-toggle="tab" data-target="#webComplaint" role="tab" aria-controls="webComplaint" aria-selected="true" data-ng-click="tabClick('web')">Complaint Management <span class="badge badge-danger">{{unreadWebComplaintCount}}</span></a>
+                <a class="nav-link active" id="webComplaint-tab" data-toggle="tab" data-target="#webComplaint" role="tab" aria-controls="webComplaint" aria-selected="true" data-ng-show="showweb.view == 'A'" data-ng-click="tabClick('web')">Complaint Management <span class="badge badge-danger">{{unreadWebComplaintCount}}</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="appComplaint-tab" data-toggle="tab" data-target="#appComplaint" role="tab" aria-controls="appComplaint" aria-selected="false" data-ng-click="tabClick('app')">App Complaint <span class="badge badge-danger">{{unreadAppComplaintCount}}</span></a>
+                <a class="nav-link" id="appComplaint-tab" data-toggle="tab" data-target="#appComplaint" role="tab" aria-controls="appComplaint" aria-selected="false" data-ng-show="showapp.view == 'A'" data-ng-click="tabClick('app')">App Complaint <span class="badge badge-danger">{{unreadAppComplaintCount}}</span></a>
             </li>            
             <li class="nav-item">
-                <a class="nav-link" id="logistics-tab" data-toggle="tab" data-target="#logistics" role="tab" aria-controls="logistics" aria-selected="false" data-ng-click="tabClick('log')">Logistics <span class="badge badge-danger">{{unreadLogComplaintCount}}</span></a>
+                <a class="nav-link" id="logistics-tab" data-toggle="tab" data-target="#logistics" role="tab" aria-controls="logistics" aria-selected="false" data-ng-show="showlogs.view == 'A'" data-ng-click="tabClick('log')">Logistics <span class="badge badge-danger">{{unreadLogComplaintCount}}</span></a>
             </li>
         </ul>
         
         <div class="tab-content" id="myTab">
-            <div class="tab-pane fade show active" id="webComplaint" role="tabpanel" aria-labelledby="webComplaint-tab">
+            <div class="tab-pane fade show active" data-ng-show="showweb.view == 'A'" id="webComplaint" role="tabpanel" aria-labelledby="webComplaint-tab">
                 <div class="row">
                     <div class="col-md-12">
                         <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchWebComplaintFilter"/>
@@ -92,7 +92,7 @@
                 </div>                        
             </div>
             
-            <div class="tab-pane fade" id="appComplaint" role="tabpanel" aria-labelledby="appComplaint-tab">
+            <div class="tab-pane fade" data-ng-show="showapp.view == 'A'" id="appComplaint" role="tabpanel" aria-labelledby="appComplaint-tab">
                 <div class="row">
                     <div class="col-md-12">
                         <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchComplaintFilter"/>
@@ -136,7 +136,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="logistics" role="tabpanel" aria-labelledby="logistics-tab">
+            <div class="tab-pane fade" data-ng-show="showlogs.view == 'A'" id="logistics" role="tabpanel" aria-labelledby="logistics-tab">
                 <div class="row">
                     <div class="col-md-12">
                         <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchLogComplaintFilter"/>

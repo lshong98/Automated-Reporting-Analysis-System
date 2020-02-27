@@ -1230,7 +1230,10 @@ app.post('/loadMenu', function(req, res) {
     'use strict';
     var content = '',
         sql = "",
-        first_text = "";
+        first_text = "",
+        second_text = "",
+        complaint_flags = 0;
+        
 
     //    if (req.body.position === "Manager") {
     //        content += '<li data-ng-show="navigation.manager" class="menu__item" role="menuitem"><a class="menu__link" href="#/dashboard-manager"><i class="fa fa-tachometer-alt"></i> Manager Dashboard</a></li>';
@@ -1245,6 +1248,7 @@ app.post('/loadMenu', function(req, res) {
 
         //check for manager dashboard
         result.forEach(function(key, value) {
+
             first_text = (key.mgmtName).split(" ")[1];
 
             if (first_text === "managerDashboard" || key.mgmtName === "create reporting") {
@@ -1253,16 +1257,27 @@ app.post('/loadMenu', function(req, res) {
         });
 
         result.forEach(function(key, value) {
-            first_text = (key.mgmtName).split(" ")[0];
 
-            if (first_text === "view" || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
+            first_text = (key.mgmtName).split(" ")[0];
+            second_text = (key.mgmtName).split(" ")[1];
+            
+            if(second_text === "complaintweb" || second_text === "complaintapp" || second_text === "complaintlogs"){
+                complaint_flags += 1;
+            }else if (first_text === "view" || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
+                
+                
+                
                 // || (key.mgmtName).indexOf("lgview") !== -1 || (key.mgmtName).indexOf("bdview") !== -1
                 content += f.menuItem(key.mgmtName, key.status);
             }
         });
+        
+        if(complaint_flags > 0){
+            content += f.menuItem("view complaintmodule", "A");
+        }
 
         content += '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/logout"><i class="fa fa-power-off"></i> Logout</a></li>';
-
+console.log(content);
         res.json({
             "content": content
         });
