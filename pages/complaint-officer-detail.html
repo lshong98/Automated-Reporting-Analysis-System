@@ -241,6 +241,15 @@
     </div>
     <br />
 
+   <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Type of Service:</strong>
+        <div class="mx-sm-3">
+            <p data-ng-if="detailObj.services == '1'">Compactor</p>
+            <p data-ng-if="detailObj.services == '2'">Hooklift</p>
+            <p data-ng-if="detailObj.services == '3'">Hazardous Waste</p>
+        </div>
+    </div>
+    
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Type of Complaint:</strong>
         <p  class="mx-sm-3">{{detailType}}</p>
@@ -403,8 +412,9 @@
         
         
         <div class="row">
-            <div class="col-md-11"></div>
-            <div class="col-md-1">
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+               <button class="btn btn-danger"data-ng-click="cancelCreate()" >Cancel</button>
                 <button class="btn btn-success" data-ng-click="updateCust()" >Submit</button>
             </div>
         </div>

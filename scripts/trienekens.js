@@ -8536,6 +8536,7 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
     $scope.showBDInfo = false;
     $scope.showCompImg = true;
     $scope.showLogsImg = true;
+    $scope.showAreaLogistics = false;
 
     $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function(response) {
         $scope.detailObj = response.data.data[0];
@@ -8564,6 +8565,17 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
             $scope.showComplaintImages.image03 = true;
         }else{
             $scope.complaintImages.image03 = "";
+        }
+        
+        if($scope.detailObj.services === "1"){ //Compactor
+            $scope.showAreaLogistics = true;
+            $scope.areaUnderList = ["Trienekens", "Mega Power", "TAK"];
+        }else if($scope.detailObj.services === "2"){ //Hooklift
+            $scope.showAreaLogistics = false;
+            $scope.areaUnderList = ["Trienekens", "Mega Power", "TAK"];
+        }else if($scope.detailObj.services === "3"){ //Hazardous Waste
+            $scope.showAreaLogistics = false;
+            $scope.areaUnderList = ["Trienekens", "Inna Tech", "Petro Jadi", "Others"];
         }
         
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
@@ -8723,12 +8735,12 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                             'statustime': time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
                         }
                         
-                        $scope.cmsUpdateRequest = {
-                            "cmsstatus" : $scope.fullComplaintDetail.cmsStatus,
-                            "coID" : $routeParams.complaintCode,
-                            "cmsdate" : $filter('date')(Date.now(), 'yyyy-MM-dd'),
-                            "cmstime": time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
-                        };                         
+//                        $scope.cmsUpdateRequest = {
+//                            "cmsstatus" : $scope.fullComplaintDetail.cmsStatus,
+//                            "coID" : $routeParams.complaintCode,
+//                            "cmsdate" : $filter('date')(Date.now(), 'yyyy-MM-dd'),
+//                            "cmstime": time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
+//                        };                         
 
                         //                        $scope.status.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
                         //                        var time = new Date();
@@ -8737,18 +8749,19 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
               
                         $http.post('/updateComplaintDetailsStatus', $scope.status).then(function(response) {
                             if (response.data.status == "success") {
-                                
-                                $http.post('/updateCMSStatus', $scope.cmsUpdateRequest).then(function(response) {
-                                    if (response.data.status == "success") {
-                                        $scope.notify(response.data.status, "Status has been updated");
-                                        $route.reload();
-                                    } else {
-                                        $scope.notify("error", "There are some ERROR!");
-                                    }
-                                });                                 
+                                $scope.notify(response.data.status, "Status has been updated");
+                                $route.reload();
+//                                $http.post('/updateCMSStatus', $scope.cmsUpdateRequest).then(function(response) {
+//                                    if (response.data.status == "success") {
+//                                        $scope.notify(response.data.status, "Status has been updated");
+//                                        $route.reload();
+//                                    } else {
+//                                        $scope.notify("error", "There are some ERROR!");
+//                                    }
+//                                });                                 
                                 
                             } else {
-                                $scope.notify("error", "There has some ERROR!");
+                                $scope.notify("error", "There are some ERROR!");
                             }
                         });                        
 
@@ -8941,6 +8954,10 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
             }
         });
     }
+    
+    $scope.cancelCreate = function(){
+        window.history.back();
+    }
 
     $scope.submit = function() {
         $scope.logistics.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd');
@@ -8962,7 +8979,7 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
 
 
 
-        if ($scope.logistics.areaUnder == "" || $scope.logistics.areaCouncil == "" || $scope.logistics.sub == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "") {
+        if ($scope.logistics.sub == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "") {
 
             $scope.notify("error", "There has some blank column");
             $scope.showSubmitBtn = true;
@@ -9139,6 +9156,10 @@ app.controller('complaintOfficercreateController', function($scope, $http, $filt
             });
         }, false);
     });
+    
+    $scope.cancelCreate = function(){
+        window.history.back();
+    }
 
     $scope.addComp = function() {
         $scope.showSubmitBtn = false;
@@ -9503,7 +9524,6 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
         $scope.cust.custTime = $filter('date')($scope.custTime, 'HH:mm:ss');
         $scope.cust.custBy = window.sessionStorage.getItem('owner');
         $scope.cust.contactStatus = $scope.custContactableStatus;
-        $scope.cust.cmsStatus = $scope.cmsStatus;
 
 
         if ($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == '' || $scope.cust.custStatus == '') {
@@ -9528,24 +9548,25 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
         var time = new Date();
         $scope.custStatus.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
 
-        $scope.cmsUpdateRequest = {
-            "cmsstatus" : $scope.cmsUpdateStatus,
-            "coID" : $routeParams.coID,
-            "cmsdate" : $filter('date')(Date.now(), 'yyyy-MM-dd'),
-            "cmstime": time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
-        };    
+//        $scope.cmsUpdateRequest = {
+//            "cmsstatus" : $scope.cmsUpdateStatus,
+//            "coID" : $routeParams.coID,
+//            "cmsdate" : $filter('date')(Date.now(), 'yyyy-MM-dd'),
+//            "cmstime": time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
+//        };    
 
 
         $http.post('/updateComplaintDetailsCustStatus', $scope.custStatus).then(function(response) {
             if (response.data.status == "success") {
-                $http.post('/updateCMSStatus', $scope.cmsUpdateRequest).then(function(response) {
-                    if (response.data.status == "success") {
-                        $scope.notify(response.data.status, "Status has been updated");
-                        $route.reload();
-                    } else {
-                        $scope.notify("error", "There are some ERROR!");
-                    }
-                });                 
+                $scope.notify(response.data.status, "Status has been updated");
+                $route.reload();
+//                $http.post('/updateCMSStatus', $scope.cmsUpdateRequest).then(function(response) {
+//                    if (response.data.status == "success") {
+//                        
+//                    } else {
+//                        $scope.notify("error", "There are some ERROR!");
+//                    }
+//                });                 
             } else {
                 $scope.notify("error", "There has some ERROR!");
             }
@@ -9573,6 +9594,11 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
             }
         });
     }
+    
+    $scope.cancelCreate = function(){
+        window.history.back();
+    }
+    
     //edit images by handsome felix, yeyyyy
     $scope.editCompImages = function(){
         $scope.editImages = true;
