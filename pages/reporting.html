@@ -126,6 +126,7 @@
                                 <th width="6%" data-ng-click="orderBy('ton');">Ton <i class="fas fa-sort-down"></i></th>
                                 <th width="5%">Read</th>
                                 <th width="*" data-ng-click="orderBy('remark');">Remark <i class="fas fa-sort-down"></i></th>
+                                <th width="*" data-ng-click="orderBy('feedback');">Feedback <i class="fas fa-sort-down"></i></th>
                                 
                             </tr>
                         </thead>
@@ -139,6 +140,7 @@
                                 <td data-ng-bind="d.ton"></td>
                                 <td><i data-ng-if="d.readStatus == 'C'" class="fas fa-check"></i><i data-ng-if="d.readStatus == 'I'" class="fas fa-times"></i></td>
                                 <td data-ng-bind="d.remark"></td>
+                                <td data-ng-bind="d.feedback"></td>
                             </tr>
                         </tbody>
                     </table>

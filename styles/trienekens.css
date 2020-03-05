@@ -79,7 +79,7 @@ html, body {
 /*count today report*/
 .card-counter .count-today-area{
     position: absolute;
-    right: 380px;
+    right: 370px;
     top: 15px;
     font-size: 13px;
     display: block;
@@ -134,6 +134,68 @@ html, body {
     position: absolute;
     right: 35px;
     top: 45px;
+    font-size: 13px;
+    display: block;
+}
+
+/*count complaint LG*/
+.card-counter .count-lg-total{
+    position: absolute;
+    right: 255px;
+    top: 15px;
+    font-size: 13px;
+    display: block;
+}
+.card-counter .count-lg-open{
+    position: absolute;
+    right: 255px;
+    top: 30px;
+    font-size: 13px;
+    display: block;
+}
+.card-counter .count-lg-pending{
+    position: absolute;
+    right: 255px;
+    top: 45px;
+    font-size: 13px;
+    display: block;
+}
+
+.card-counter .count-lg-closed{
+    position: absolute;
+    right: 255px;
+    top: 60px;
+    font-size: 13px;
+    display: block;
+}
+
+/*count complaint BD*/
+.card-counter .count-bd-total{
+    position: absolute;
+    right: 150px;
+    top: 15px;
+    font-size: 13px;
+    display: block;
+}
+.card-counter .count-bd-open{
+    position: absolute;
+    right: 150px;
+    top: 30px;
+    font-size: 13px;
+    display: block;
+}
+.card-counter .count-bd-pending{
+    position: absolute;
+    right: 150px;
+    top: 45px;
+    font-size: 13px;
+    display: block;
+}
+
+.card-counter .count-bd-closed{
+    position: absolute;
+    right: 150px;
+    top: 60px;
     font-size: 13px;
     display: block;
 }
@@ -402,3 +464,9 @@ td[colspan] {
     border: 1px solid #DADADA;
     text-align: right;
 }
+
+/*Complaint detail image*/
+.complaint-img{
+    max-width: 100%;
+}
+/*Complaint detail image*/

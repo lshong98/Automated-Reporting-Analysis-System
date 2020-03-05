@@ -112,7 +112,7 @@ app.post('/sendMessage', function (req, resp) {
                 staffID = result[0].staffID;
                 f.makeID('chat', date).then(function (ID) {
                     console.log(date);
-                    sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + result[0].userID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', '" + date + "', 'A','u')";
+                    sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + result[0].userID + "', '" + result[0].staffID + "', '" + data.message + "', '" + data.id + "', NOW()," + "'A','u')";
                     database.query(sql, function (err, result) {
                         if (err) {
                             resp.send("Error Sending Message");
@@ -124,7 +124,7 @@ app.post('/sendMessage', function (req, resp) {
                             if (currentTime <= startTime || currentTime >= endTime || today.getDay() == 6 || today.getDay() == 0) {
                                 console.log("Enter Automated Function");
                                 f.makeID('chat', date).then(function (ID) {
-                                    var sql2 = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime) VALUE ('" + ID + "', '" + staffID + "','" + userID + "','" + "Thank You for your message. However, we are currently closed as our regular business hours are from 8:30 am to 5:30 pm, Monday through Friday. We will get back to you as soon as possible. Thank you and have a nice day." + "','" + data.id + "','" + date + "')";
+                                    var sql2 = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime) VALUE ('" + ID + "', '" + staffID + "','" + userID + "','" + "Thank You for your message. However, we are currently closed as our regular business hours are from 8:30 am to 5:30 pm, Monday through Friday. We will get back to you as soon as possible. Thank you and have a nice day." + "','" + data.id + "', NOW())";
                                     
                                     database.query(sql2, function (err, res) {
                                         if (err) {
@@ -187,7 +187,7 @@ app.post('/getMessage', function (req, resp) {
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var sql = "SELECT content, creationDateTime, CASE WHEN sender = '" + userID + "' THEN 'me' ELSE 'officer' END AS sender FROM tblchat WHERE complaintID = '" + data.id + "' ORDER BY creationDateTime ASC";
+                var sql = "SELECT content, DATE_FORMAT(creationDateTime, '%Y-%m-%d %T') AS creationDateTime, CASE WHEN sender = '" + userID + "' THEN 'me' ELSE 'officer' END AS sender FROM tblchat WHERE complaintID = '" + data.id + "' ORDER BY creationDateTime ASC";
                 //var sql2 = "SELECT message as offmsg, createdAt as offtime from tblchat WHERE complaintID ='"+data.id+"' AND sender!='"+userID+"' ORDER BY createdAt ASC";
                 database.query(sql, function (err, res) {
                     if (res != undefined) {
@@ -229,7 +229,7 @@ app.post('/getChats', function (req, resp) {
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var sql = "SELECT * FROM tblcomplaint WHERE userID = '" + userID + "' ORDER BY complaintID DESC, complaintDate DESC";
+                var sql = "SELECT complaintID,userID,staffID, DATE_FORMAT(complaintDate, '%Y-%m-%d %T') AS date,premiseType,complaint,days,remarks,status,status,complaintAddress,readStat FROM tblcomplaint WHERE userID = '" + userID + "' ORDER BY complaintID DESC, complaintDate DESC";
                 database.query(sql, function (err, res) {
                     if (err) {
                         resp.send("Error");
@@ -245,6 +245,8 @@ app.post('/getChats', function (req, resp) {
                     }
                     resp.json(info);
                     resp.end();
+                    console.log(sql);
+                    console.log(info);
                 });
             } else {
                 resp.send("error getting user id");

@@ -1,6 +1,137 @@
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- The Close Button -->
+  <span class="close">&times;</span>
+
+  <!-- Modal Content (The Image) -->
+  <img class="modal-content" id="img01">
+
+  <!-- Modal Caption (Image Text) -->
+  <div id="caption"></div>
+</div>
+  
 <style>
     .form-label-width {
         width: 250px;
+    }
+    
+    .active {
+      box-shadow: 0px 0px 10px 10px rgba(0,0,255,.4);
+    }
+    
+    /* Style the Image Used to Trigger the Modal */
+    #myCompImg01 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myCompImg01:hover {opacity: 0.7;}
+    
+    #myCompImg02 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myCompImg02:hover {opacity: 0.7;}
+    
+    #myCompImg03 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myCompImg03:hover {opacity: 0.7;}
+
+    #myLogsImg01 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myLogsImg01:hover {opacity: 0.7;}
+    
+    #myLogsImg02 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myLogsImg02:hover {opacity: 0.7;}
+    
+    #myLogsImg03 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myLogsImg03:hover {opacity: 0.7;}
+    
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (Image) */
+    .modal-content {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+    }
+
+    /* Caption of Modal Image (Image Text) - Same Width as the Image */
+    #caption {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+      text-align: center;
+      color: #ccc;
+      padding: 10px 0;
+      height: 150px;
+    }
+
+    /* Add Animation - Zoom in the Modal */
+    .modal-content, #caption {
+      animation-name: zoom;
+      animation-duration: 0.6s;
+    }
+
+    @keyframes zoom {
+      from {transform:scale(0)}
+      to {transform:scale(1)}
+    }
+
+    /* The Close Button */
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* 100% Image Width on Smaller Screens */
+    @media only screen and (max-width: 700px){
+      .modal-content {
+        width: 100%;
+      }
     }
 </style>
 
@@ -67,11 +198,26 @@
 
     <div class="form-group row " data-ng-show="showCompImg">
         <strong class="col-xs-3 form-label-width">Image:</strong>
-        <div class="mx-sm-3" style="width: 400px;height: 350px;">
-            <img src="{{detailObj.compImg}}" style="width: 100%;height: 100%;object-fit: contain;" />
-        </div>    
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image01">
+            <img id="myCompImg01" src="{{complaintImages.image01}}" alt="{{complaintImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image02">
+            <img id="myCompImg02" src="{{complaintImages.image02}}" alt="{{complaintImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image03">
+            <img id="myCompImg03" src="{{complaintImages.image03}}" alt="{{complaintImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
     </div>
 
+   <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Type of Service:</strong>
+        <div class="mx-sm-3">
+            <p data-ng-if="detailObj.services == '1'">Compactor</p>
+            <p data-ng-if="detailObj.services == '2'">Hooklift</p>
+            <p data-ng-if="detailObj.services == '3'">Hazardous Waste</p>
+        </div>
+    </div>
+    
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Type of Complaint:</strong>
         <p  class="mx-sm-3">{{detailType}}</p>
@@ -103,104 +249,303 @@
 <br/>
 <hr/>
 <br/>
+<div data-ng-show="showForm">
+    <h2>Action Taken By Logistics</h2>
 
-<h2>Action Taken By Logistics</h2>
+    <!--original area  under-->
+    <div class="form-group row" data-ng-show="showAreaLogistics">
+        <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Code</label>
+        <div class="col-md-9">
+            <select class="form-control mx-sm-3 selectpicker" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
+                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                      <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+                  </optgroup>
+            </select>
+        </div>
+    </div>
 
-<div class="form-group row">
-    <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Under</label>
-    <div class="col-md-9">
-        <select class="form-control mx-sm-3 selectpicker" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
-              <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
-                  <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
-              </optgroup>
-        </select>
+    <div class="form-group row" data-ng-show="showAreaLogistics">
+        <label for="inputCouncil" class="col-xs-3 col-form-label form-label-width">Area by Council</label>
+        <div class="col-md-9">
+            <select class="form-control mx-sm-3" id="inputCouncil" data-ng-model="logistics.areaCouncil" data-live-search="true" data-width="100%">
+                <option value="DBKU">DBKU</option>            
+                <option value="MBKS">MBKS</option>
+                <option value="MPP">MPP</option>
+                <option value="MDS">MDS</option>
+            </select>
+        </div>
+    </div>
+
+    <!--original forwarded to sub-contractor-->
+    <div class="form-group row">
+        <label for="inputSub" class="col-xs-3 col-form-label form-label-width">Area Under:</label>
+        <div class="col-md-9">
+            <select class="form-control mx-sm-3" id="inputSub" data-ng-model="logistics.sub" data-live-search="true" data-width="100%">
+                <option data-ng-repeat="x in areaUnderList" value="{{x}}">{{x}}</option>
+            </select>
+        </div>
+    </div>
+    
+    <div data-ng-show="logistics.sub == 'Mega Power' || logistics.sub == 'TAK'">
+        <div class="form-group row">
+            <label for="inputSubDate" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Date</label>
+            <div class="col-md-9">
+                <input type="date" id="inputSubDate" class="form-control mx-sm-3" data-ng-model="logsSubDate" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="inputSubTime" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Time</label>
+            <div class="col-md-9">
+                <input type="time" id="inputSubTime" class="form-control mx-sm-3" data-ng-model="logsSubTime" data-ng-change="subTimeChange(logsSubTime)" str-to-time="" />
+            </div>
+        </div>
+    </div>        
+
+    <hr/>
+    <div class="form-group row">
+        <label for="inputStatus" class="col-xs-3 col-form-label form-label-width">Status:</label>
+        <div class="col-md-9">
+            <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="logistics.status" data-live-search="true" data-width="100%">
+                    <option value="open">Open</option>
+                    <option value="pending">Pending</option>
+                    <option value="closed">Closed</option>
+            </select>
+        </div>
+    </div>
+
+
+<!--
+    <div class="form-group row">
+        <label for="inputSDate" class="col-xs-3 col-form-label form-label-width">Status Date</label>
+        <div class="col-md-9">
+            <input type="date" id="inputSDate" class="form-control mx-sm-3" data-ng-model="statusDate" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputSTime" class="col-xs-3 col-form-label form-label-width">Status Time</label>
+        <div class="col-md-9">
+            <input type="time" id="inputSTime" class="form-control mx-sm-3" data-ng-model="logistics.statusTime" data-ng-change="sTimeChange(logistics.statusTime)" str-to-time="" />
+        </div>
+    </div>
+-->
+
+    <hr/>
+
+    <div class="form-group row">
+        <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
+        <div class="col-md-9">
+            <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="logistics.remark"></textarea>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="form-group row">
+        <label for="uploadImg" class="col-xs-3 col-form-label form-label-width">Image:</label>
+        <div class="col-md-3">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg01"></canvas>
+        </div>
+        <div class="col-md-3">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 70px;" id="uploadImg02"></canvas>
+        </div>
+        <div class="col-md-3">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 125px;" id="uploadImg03"></canvas>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2">
+           <button class="btn btn-danger"data-ng-click="cancelCreate()" >Cancel</button>
+            <button class="btn btn-primary success" data-ng-show="showSubmitBtn == true" data-ng-click="submit()" >Submit</button>
+        </div>
     </div>
 </div>
 
-<div class="form-group row">
-    <label for="inputCouncil" class="col-xs-3 col-form-label form-label-width">Area by Council</label>
-    <div class="col-md-9">
-        <select class="form-control mx-sm-3" id="inputCouncil" data-ng-model="logistics.areaCouncil" data-live-search="true" data-width="100%">
-            <option value="DBKU">DBKU</option>            
-            <option value="MBKS">MBKS</option>
-            <option value="MPP">MPP</option>
-            <option value="MDS">MDS</option>
-        </select>
-    </div>
-</div>
+<div data-ng-show="showInfo">
 
-<div class="form-group row">
-    <label for="inputSub" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor:</label>
-    <div class="col-md-9">
-        <input type="text" id="inputSub" placeholder="Sub-Contractor" class="form-control mx-sm-3" data-ng-model="logistics.sub" />
-    </div>
-</div>
-<div class="form-group row">
-    <label for="inputSubDate" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Date</label>
-    <div class="col-md-9">
-        <input type="date" id="inputSubDate" class="form-control mx-sm-3" data-ng-model="logsSubDate" />
-    </div>
-</div>
+    <h4>Action Taken By Logistics</h4>
 
-<div class="form-group row">
-    <label for="inputSubTime" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Time</label>
-    <div class="col-md-9">
-        <input type="time" id="inputSubTime" class="form-control mx-sm-3" data-ng-model="logistics.subTime" data-ng-change="subTimeChange(logistics.subTime)" str-to-time="" />
+    <!--original area  under-->
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Area Code:</strong>
+        <p class="mx-sm-3">{{areaCode}}</p>
     </div>
-</div>
+    
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Area by Council:</strong>
+        <p class="mx-sm-3">{{fullComplaintDetail.council}}</p>
+    </div>
 
-<hr/>
-<div class="form-group row">
-    <label for="inputStatus" class="col-xs-3 col-form-label form-label-width">Status:</label>
-    <div class="col-md-9">
-        <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="logistics.status" data-live-search="true" data-width="100%">
+    <!--original forwarded to sub-contractor-->
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Area Under:</strong>
+        <p  class="mx-sm-3">{{fullComplaintDetail.sub}}</p>
+    </div>
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Date:</strong>
+        <p  class="mx-sm-3">{{fullComplaintDetail.subDate}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Time:</strong>
+        <p  class="mx-sm-3">{{fullComplaintDetail.subTime}}</p>
+    </div>
+
+
+    <hr/>
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Status:</strong>
+        <div class="col-md-3">
+            <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="fullComplaintDetail.status" data-ng-change="checkCMSStatus()" data-live-search="true" data-width="100%">
                 <option value="open">Open</option>
                 <option value="pending">Pending</option>
                 <option value="closed">Closed</option>
-        </select>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-success" data-ng-click="updateStatus()" >Update</button>
+        </div>
     </div>
-</div>
-
-
-<div class="form-group row">
-    <label for="inputSDate" class="col-xs-3 col-form-label form-label-width">Status Date</label>
-    <div class="col-md-9">
-        <input type="date" id="inputSDate" class="form-control mx-sm-3" data-ng-model="statusDate" />
-    </div>
-</div>
-
-<div class="form-group row">
-    <label for="inputSTime" class="col-xs-3 col-form-label form-label-width">Status Time</label>
-    <div class="col-md-9">
-        <input type="time" id="inputSTime" class="form-control mx-sm-3" data-ng-model="logistics.statusTime" data-ng-change="sTimeChange(logistics.statusTime)" str-to-time="" />
-    </div>
-</div>
     
-<hr/>
 
-<div class="form-group row">
-    <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
-    <div class="col-md-9">
-        <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="logistics.remark"></textarea>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Status Date:</strong>
+        <p  class="mx-sm-3">{{fullComplaintDetail.statusDate}}</p>
     </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Status Time:</strong>
+        <p  class="mx-sm-3">{{fullComplaintDetail.statusTime}}</p>
+    </div>
+    <div class="row">
+        <button data-ng-click="editLogsImages()" type="button" class="btn btn-info" style="margin-top: 10px;" data-ng-show="!editImages"><i class="fas fa-pencil-alt"></i> Edit Images</button>
+    </div>
+    <div class="form-group row" data-ng-show="showLogsImg">
+        <div class="col-xs-3 form-label-width">
+            <strong>Image from Logistics:</strong>            
+        </div>
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image01 && !editImages">
+            <img id="myLogsImg01" src="{{logsImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image02 && !editImages">
+            <img id="myLogsImg02" src="{{logsImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
+        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image03 && !editImages">
+            <img id="myLogsImg03" src="{{logsImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3 form-label-width"></div>
+        <div class="col-md-3" data-ng-show="editImages">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg04"></canvas>
+        </div>
+        <div class="col-md-3" data-ng-show="editImages">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 70px;" id="uploadImg05"></canvas>
+        </div>
+        <div class="col-md-3" data-ng-show="editImages">
+            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 125px;" id="uploadImg06"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-3 form-label-width"></div>
+        <div class="col-md-3">
+            <button data-ng-click="clearImage('uploadImg04')" type="button" class="btn btn-danger" style="margin-left: 15px; width: 120%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+        </div>
+        <div class="col-md-3">
+            <button data-ng-click="clearImage('uploadImg05')" type="button" class="btn btn-danger" style="margin-left: 70px; width: 120%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+        </div>
+        <div class="col-md-3">
+            <button data-ng-click="clearImage('uploadImg06')" type="button" class="btn btn-danger" style="margin-left: 125px; width: 120%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-3 form-label-width"></div>
+        <div class="col-md-9">
+            <button data-ng-click="updateLogsImages()" type="button" class="btn btn-success" style="width: 120%; padding: 7px;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Save Images</button>
+        </div>
+    </div>    
+    <br/>
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Remark:</strong>
+        <div class="col-md-3"  >
+            <p  class="mx-sm-3" data-ng-show="remarksEditBtn == true;">{{fullComplaintDetail.remarks}}</p>
+            <textarea rows="4" cols="50" data-ng-show="remarksEditBtn == false;" class="form-control mx-sm-3" data-ng-model="recordremarks"></textarea>
+        </div>
+        
+        <div class="col-md-3">
+            <button class="btn btn-primary" data-ng-show="remarksEditBtn == true" data-ng-click="remarksEditBtn = false; remarksUpdateCancelBtn  = true" >Edit</button>
+            <button class="btn btn-success" data-ng-show="remarksEditBtn == false" data-ng-click="logsOfficerUpdateRemarks()" >Update</button>
+            <button class="btn btn-danger" data-ng-show="remarksEditBtn == false" data-ng-click="remarksEditBtn = true; remarksUpdateCancelBtn  = false" >Cancel</button>
+        </div>
+        
+        
+    </div>
+    
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Responded By:</strong>
+        <p  class="mx-sm-3">{{fullComplaintDetail.subBy}}</p>
+    </div>  
+
+    
+    <br/>
 </div>
 
-<br/>
+<div data-ng-show="showBDInfo">
+    <hr/>
+    <h4>Action Taken By BD</h4> 
+    <br/>
 
-<div class="form-group row">
-    <label for="uploadImg" class="col-xs-3 col-form-label form-label-width">Image:</label>
-    <div class="col-md-9">
-        <canvas style="border:1px solid grey; width: 400px; height: 300px; margin: 15px;" id="uploadImg"></canvas>
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Status:</strong>
+        <div class="col-md-3">
+            <p data-ng-if="fullComplaintDetail.custStatus == 'open'">Open</p>
+            <p data-ng-if="fullComplaintDetail.custStatus == 'pending'">Pending</p>
+            <p data-ng-if="fullComplaintDetail.custStatus == 'closed'">Closed</p>
+        </div>
     </div>
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Customer Informed Date:</strong>
+        <p  class="mx-sm-3">{{fullComplaintDetail.custDate}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Customer Informed Time:</strong>
+        <p  class="mx-sm-3">{{fullComplaintDetail.custTime}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Customer Informed By:</strong>
+        <p  class="mx-sm-3">{{informCustStaffName}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Customer Not Contactable:</strong>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '0'">N/A</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '1'">Customer cannot be contacted after 3 times calling</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '2'">Contact number given was wrong</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus == '3'">No contact number was given</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.contactStatus.split(':')[0] == '4'">Others: <span data-ng-if="fullComplaintDetail.contactStatus.split(':')[0] == '4'">{{fullComplaintDetail.contactStatus.split(':')[1]}}</span></p>
+    </div>
+
+    <br/>
+    <hr/>
+    <h4>Action Taken By CMS Comittee</h4> 
+    <br/>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">CMS Status:</strong>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '1'">Valid</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '2'">Invalid</p>
+        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '3'">Pending</p>
+    </div>   
 </div>
 
-
-<div class="row">
-    <div class="col-md-11"></div>
-    <div class="col-md-1">
-        <button class="btn btn-primary success" data-ng-show="showSubmitBtn == true" data-ng-click="submit()" >Submit</button>
-    </div>
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 <script src="/scripts/html2canvas.min.js"></script>
@@ -221,4 +566,60 @@
             pdf.save(filename);
         });
     }
+    
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the image and insert it inside the modal - use its "alt" text as a caption
+    var img01 = document.getElementById("myCompImg01");
+    var modalImg = document.getElementById("img01");
+    var captionText = document.getElementById("caption");
+    img01.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    
+    var img02 = document.getElementById("myCompImg02");
+    img02.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    var img03 = document.getElementById("myCompImg03");
+    img03.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    
+    var logs01 = document.getElementById("myLogsImg01");
+    logs01.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+
+    var logs02 = document.getElementById("myLogsImg02");
+    logs02.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    
+    var logs03 = document.getElementById("myLogsImg03");
+    logs03.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
 </script>

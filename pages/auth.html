@@ -588,7 +588,16 @@
         <div class="card">
             <!-- Default panel contents -->
             <div class="card-header">Complaint Module</div>
-            <ul class="list-group list-group-flush">
+            <ul class="list-group list-group-flush">               
+                <li class="list-group-item">
+                    Complaint from Web
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintweb.view"
+                            data-ng-change="changeValue(auth.complaintweb.view, 'view complaintweb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>                  
                 <li class="list-group-item">
                     Complaint from App
                     <label class="switch">
@@ -599,14 +608,14 @@
                     </label>
                 </li>
                 <li class="list-group-item">
-                    Complaint List
+                    Complaint from Logistics
                     <label class="switch">
-                        <input type="checkbox" class="primary" data-ng-model="auth.complaintweb.view"
-                            data-ng-change="changeValue(auth.complaintweb.view, 'view complaintweb');"
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintlogs.view"
+                            data-ng-change="changeValue(auth.complaintlogs.view, 'view complaintlogs');"
                             data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
-                </li>                
+                </li>     
                 <li class="list-group-item">
                     Create Complaint
                     <label class="switch">
@@ -616,7 +625,26 @@
                         <span class="slider"></span>
                     </label>
                 </li>
+                <li class="list-group-item">
+                    History Updated Status Time
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintweb.hist"
+                            data-ng-change="changeValue(auth.complaintweb.hist, 'hist complaintweb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Update CMS Status
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintweb.editcms"
+                            data-ng-change="changeValue(auth.complaintweb.editcms, 'editcms complaintweb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>                
 
+<!--
                 <li class="list-group-item">
                     Edit Complaint
                     <label class="switch">
@@ -626,6 +654,7 @@
                         <span class="slider"></span>
                     </label>
                 </li>                
+-->
             </ul>
         </div>
     </div>

@@ -8,6 +8,7 @@
                         <th>No.</th>
                         <th>Requested By</th>
                         <th>Contact Number</th>
+                        <th>Reason for Request</th>
                         <th>Bin Type</th>
                         <th>Request Date</th>
                         <th>Status</th>
@@ -18,6 +19,7 @@
                         <td>{{$index+1}}</td>
                         <td>{{pReq.name}}</td>
                         <td>{{pReq.contactNumber}}</td>
+                        <td>{{pReq.reason}}</td>
                         <td>{{pReq.type}}</td>
                         <td>{{pReq.dateRequest | date: "dd-MM-y"}}</td>
                         <td>

@@ -2,6 +2,10 @@
     .form-label-width {
         width: 110px;
     }
+    
+    .active {
+      box-shadow: 0px 0px 10px 10px rgba(0,0,255,.4);
+    }
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -110,8 +114,14 @@
 
 <div class="form-group row">
     <label for="uploadImg" class="col-xs-3 col-form-label form-label-width">Image:</label>
-    <div class="col-md-9">
-        <canvas style="border:1px solid grey; width: 400px; height: 300px; margin: 15px;" id="uploadImg"></canvas>
+    <div class="col-md-3">
+        <canvas class="target" style="border:1px solid grey; width: 400px; height: 300px; margin: 15px;" id="uploadImg01"></canvas>
+    </div>
+    <div class="col-md-3">
+        <canvas class="target" style="border:1px solid grey; width: 400px; height: 300px; margin: 15px; margin-left: 90px;" id="uploadImg02"></canvas>
+    </div>
+    <div class="col-md-3">
+        <canvas class="target" style="border:1px solid grey; width: 400px; height: 300px; margin: 15px; margin-left: 165px;" id="uploadImg03"></canvas>
     </div>
 </div>
 
@@ -140,16 +150,32 @@
 
 <div class="form-group row">
     <label class="col-xs-3 col-form-label form-label-width">Type of Complaint:</label>
-    <div class="col-md-9">
-        <label for="tc1">Waste not collected <input id="tc1" type="checkbox" data-ng-model="tc1"> <input type="text" placeholder="Specify days" data-ng-show="tc1 == true" data-ng-model="tc1days"/></label><br/>
-        <label for="tc2">Bin not pushed back to its original location <input id="tc2" type="checkbox" data-ng-model="tc2"></label><br/>
-        <label for="tc3">Spillage of waste <input id="tc3" type="checkbox" data-ng-model="tc3"></label><br/>
-        <label for="tc4">Spillage of leachate water <input id="tc4" type="checkbox" data-ng-model="tc4"></label><br/>
-        <label for="tc5">RoRo not send <input id="tc5" type="checkbox" data-ng-model="tc5"></label><br/>
-        <label for="tc6">RoRo not exchanged <input id="tc6" type="checkbox" data-ng-model="tc6"></label><br/>
-        <label for="tc7">RoRo not pulled <input id="tc7" type="checkbox" data-ng-model="tc7"></label><br/>
-        <label for="tc8">RoRo not emptied <input id="tc8" type="checkbox" data-ng-model="tc8"></label><br/>
-        <label for="tc9">Others <input id="tc9" type="checkbox" data-ng-model="tc9"> <input type="text" placeholder="Specify others" data-ng-show="tc9 == true" data-ng-model="tc9others"/></label>
+    <div class="col-md-9" >
+        <select class="form-control" data-ng-model="typeOption" data-width="50%">
+            <option value="1">Compactor</option>
+            <option value="2">Hooklift</option>
+            <option value="3">Hazardous waste</option>
+        </select>
+        <div data-ng-show = "typeOption==1">
+            <label for="tc1">Waste not collected <input id="tc1" type="checkbox" data-ng-model="tc1"/> <input type="text" placeholder="Specify days" data-ng-show="tc1 == true" data-ng-model="tc1days"/></label><br/>
+            <label for="tc2">Bin not pushed back to its original location <input id="tc2" type="checkbox" data-ng-model="tc2"/></label><br/>
+            <label for="tc3">Spillage of waste <input id="tc3" type="checkbox" data-ng-model="tc3"/></label><br/>
+            <label for="tc4">Spillage of leachate water <input id="tc4" type="checkbox" data-ng-model="tc4"/></label><br/>
+            <label for="tc12">Others <input id="tc12" type="checkbox" data-ng-model="tc12"/> <input type="text" placeholder="Specify others" data-ng-show="tc12 == true" data-ng-model="tc12others"/></label>
+        </div>
+        <div data-ng-show="typeOption==2">
+            <label for="tc5">RoRo not send <input id="tc5" type="checkbox" data-ng-model="tc5"/></label><br/>
+            <label for="tc6">RoRo not exchanged <input id="tc6" type="checkbox" data-ng-model="tc6"/></label><br/>
+            <label for="tc7">RoRo not pulled <input id="tc7" type="checkbox" data-ng-model="tc7"/></label><br/>
+            <label for="tc8">RoRo not emptied <input id="tc8" type="checkbox" data-ng-model="tc8"/></label><br/> 
+            <label for="tc13">Others <input id="tc13" type="checkbox" data-ng-model="tc13"/> <input type="text" placeholder="Specify others" data-ng-show="tc13 == true" data-ng-model="tc13others"/></label>            
+        </div>
+        <div data-ng-show="typeOption==3">
+            <label for="tc9">Waste not collected on time<input id="tc9" type="checkbox" data-ng-model="tc9"/></label><br/>
+            <label for="tc10">Spillage during collection<input id="tc10" type="checkbox" data-ng-model="tc10"/></label><br/>
+            <label for="tc11">Incomplete documents<input id="tc11" type="checkbox" data-ng-model="tc11"/></label><br/>
+            <label for="tc14">Others <input id="tc14" type="checkbox" data-ng-model="tc14"/> <input type="text" placeholder="Specify others" data-ng-show="tc14 == true" data-ng-model="tc14others"/></label>            
+        </div>
         
     </div>
 </div>
@@ -311,8 +337,9 @@
 -->
 
 <div class="row">
-    <div class="col-md-11"></div>
-    <div class="col-md-1">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+        <button class="btn btn-danger" data-ng-click="cancelCreate()" >Cancel</button>
         <button class="btn btn-primary success" data-ng-show="showSubmitBtn == true" data-ng-click="addComp()" >Submit</button>
     </div>
 </div>
