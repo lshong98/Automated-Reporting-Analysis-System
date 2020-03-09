@@ -332,6 +332,15 @@
 -->
 
     <hr/>
+    
+    <div class="form-group row">
+        <label for="inputDriver" class="col-xs-3 col-form-label form-label-width">Driver</label>
+        <div class="col-md-9">
+            <select class="form-control mx-sm-3" id="inputDriver" data-ng-model="logistics.driver" data-live-search="true" data-width="100%">
+                <option value="{{d.id}}" data-ng-repeat="d in driverList">{{d.name}}</option>
+            </select>
+        </div>
+    </div>
 
     <div class="form-group row">
         <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
@@ -471,6 +480,12 @@
         </div>
     </div>    
     <br/>
+    
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Driver:</strong>
+        <p class="mx-sm-3">{{driverName}}</p>
+    </div>    
+    
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Remark:</strong>
         <div class="col-md-3"  >
