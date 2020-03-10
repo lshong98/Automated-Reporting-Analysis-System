@@ -534,7 +534,7 @@
                             <h4>Comments</h4><br />
                             <div class="card" data-ng-repeat="comment in reviews.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
                                 <div class="card-body">
-                                    <h6>{{comment.user}} <span data-ng-show="comment.company != 'undefined'">| {{comment.company}}</span></h6>
+                                    <h6>{{comment.user}} <span data-ng-if="comment.company != 'undefined' && comment.company != ''">| {{comment.company}}</span></h6>
                                     <h6>{{comment.address}} | {{comment.number}}</h6>
                                     <span>{{comment.comments}}</span>
                                 </div>
@@ -756,7 +756,7 @@
                             <h4>Comments</h4><br />
                             <div class="card" data-ng-repeat="comment in reviewsCommercial.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
                                 <div class="card-body">
-                                    <h6>{{comment.user}} <span data-ng-show="comment.company != 'undefined'">| {{comment.company}}</span></h6>
+                                    <h6>{{comment.user}} <span data-ng-if="comment.company != 'undefined' && comment.company != ''">| {{comment.company}}</span></h6>
                                     <h6>{{comment.address}} | {{comment.number}}</h6>
                                     <span>{{comment.comments}}</span>
                                 </div>
@@ -965,7 +965,7 @@
                             <h4>Comments</h4><br />
                             <div class="card" data-ng-repeat="comment in reviewsScheduled.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
                                 <div class="card-body">
-                                    <h6>{{comment.user}} <span data-ng-show="comment.company != 'undefined'">| {{comment.company}}</span></h6>
+                                    <h6>{{comment.user}} <span data-ng-if="comment.company != 'undefined' && comment.company != ''">| {{comment.company}}</span></h6>
                                     <h6>{{comment.address}} | {{comment.number}}</h6>
                                     <span>{{comment.comments}}</span>
                                 </div>

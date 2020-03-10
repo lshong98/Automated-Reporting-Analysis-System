@@ -459,8 +459,8 @@ app.post('/editCollectionSchedule', function(req, res) {
 
 app.post('/customerFeedbackMunicipal', function(req, res) {
     'use strict';
-    var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_municipal GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_municipal GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_municipal GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_municipal GROUP BY binHandling, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_municipal GROUP BY spillageControl, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_municipal GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, company, address, number, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_compactor GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_compactor GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_compactor GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_compactor GROUP BY binHandling, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_compactor GROUP BY spillageControl, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_compactor GROUP BY queryResponse, year, month";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_compactor WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, binHandS, spillCtrlS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
@@ -607,7 +607,7 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
                             "user": result[i].name,
                             "address": result[i].address,
                             "number": result[i].number,
-                            "company": result[i].company
+                            "company": result[i].companyName
                         });
                         //}
                     }
@@ -667,8 +667,8 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
 app.post('/customerFeedbackCommercial', function(req, res) {
     'use strict';
-    var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_commercial GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_commercial GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_commercial GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_commercial GROUP BY cleanliness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_commercial GROUP BY physicalCondition, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_commercial GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, company, address, number, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro GROUP BY cleanliness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro GROUP BY physicalCondition, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro GROUP BY queryResponse, year, month";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_roro WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
@@ -813,7 +813,7 @@ app.post('/customerFeedbackCommercial', function(req, res) {
                             "user": result[i].name,
                             "address": result[i].address,
                             "number": result[i].number,
-                            "company": result[i].company
+                            "company": result[i].companyName
                         });
                         //}
                     }
@@ -873,7 +873,7 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 app.post('/customerFeedbackScheduled', function(req, res) {
     'use strict';
     var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, company, address, number, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS;
     var compRateS, teamEffS, healthAdhS, regAdhS, qryRespS;
     var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
@@ -1000,7 +1000,7 @@ app.post('/customerFeedbackScheduled', function(req, res) {
                             "user": result[i].name,
                             "address": result[i].address,
                             "number": result[i].number,
-                            "company": result[i].company
+                            "company": result[i].companyName
                         });
                         //}
                     }
@@ -1037,7 +1037,7 @@ app.post('/countSatisfaction', function(req, res) {
     var countMunicipal, countCommercial, countScheduled, json = {};
 
     if (req.body.month == undefined && req.body.year != undefined) {
-        var countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_commercial WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countCommercial FROM tblsatisfaction_municipal WHERE YEAR(submissionDate) = '" + req.body.year.value + "'";
+        var countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "'";
         database.query(countWOmonth, function(err, result) {
             if (result != undefined) {
                 countMunicipal = result[0].countMunicipal;
@@ -1066,7 +1066,7 @@ app.post('/countSatisfaction', function(req, res) {
     }
 
     if (req.body.month != undefined && req.body.year != undefined) {
-        var countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_commercial WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countCommercial FROM tblsatisfaction_municipal WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "'";
+        var countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "'";
         database.query(countWmonth, function(err, result) {
             if (result != undefined) {
                 countMunicipal = result[0].countMunicipal;
@@ -1088,7 +1088,7 @@ app.post('/countSatisfaction', function(req, res) {
 
 app.get('/readSatisfactionMunicipal', function(req, res) {
     'use strict';
-    var sql = "UPDATE tblsatisfaction_municipal SET readStat = 'r'";
+    var sql = "UPDATE tblsatisfaction_compactor SET readStat = 'r'";
     database.query(sql, function(err, result) {
         res.send("New Satisfaction Read");
         res.end();
@@ -1097,7 +1097,7 @@ app.get('/readSatisfactionMunicipal', function(req, res) {
 
 app.get('/readSatisfactionCommercial', function(req, res) {
     'use strict';
-    var sql = "UPDATE tblsatisfaction_commercial SET readStat = 'r'";
+    var sql = "UPDATE tblsatisfaction_roro SET readStat = 'r'";
     database.query(sql, function(err, result) {
         res.send("New Satisfaction Read");
         res.end();
@@ -1134,7 +1134,7 @@ app.post('/readBinRequest', function(req, res) {
 app.post('/addMunicipal', function(req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_municipal(submissionDate, name, company, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_compactor(submissionDate, name, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -1148,7 +1148,7 @@ app.post('/addMunicipal', function(req, res) {
 app.post('/addCommercial', function(req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_commercial(submissionDate, name, company, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.cleanliness + "','" + req.body.physicalCond + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_roro(submissionDate, name, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.cleanliness + "','" + req.body.physicalCond + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -1162,7 +1162,7 @@ app.post('/addCommercial', function(req, res) {
 app.post('/addScheduled', function(req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "INSERT INTO tblsatisfaction_scheduled(submissionDate, name, company, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.healthAdh + "','" + req.body.regAdh + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
+    var sql = "INSERT INTO tblsatisfaction_scheduled(submissionDate, name, companyName, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.healthAdh + "','" + req.body.regAdh + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function(err, result) {
         if (err) {
