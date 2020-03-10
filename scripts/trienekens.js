@@ -2823,28 +2823,24 @@ app.controller('navigationController', function($scope, $http, $window, storeDat
     });
 
     $http.get('/unreadCustFeedbackCount').then(function(response){
-        console.log(response);
         if(response.data != 0){
             $('.satisfaction').addClass("badge badge-danger").html(response.data);
         }
     });
 
     $http.get('/unreadEnquiryCount').then(function(response){
-        console.log(response);
         if(response.data != 0){
             $('.enquiry').addClass("badge badge-danger").html(response.data);
         }
     });
 
     $http.get('/unreadBinRequestCount').then(function(response){
-        console.log(response);
         if(response.data != 0){
             $('.binrequest').addClass("badge badge-danger").html(response.data);   
         }
     });
 
     $http.get('/unreadComplaintCount').then(function(response){
-        console.log(response);
         if(response.data != 0){
             $('.complaint').addClass("badge badge-danger").html(response.data);   
         }
@@ -8516,7 +8512,8 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         'statusTime': '',
         'remark': '',
         'logsImg': 'undefined|undefined|undefined',
-        'coID': $routeParams.complaintCode
+        'coID': $routeParams.complaintCode,
+        'driver': ''
     };
     $scope.complaintImages = {
         'image01': "",
@@ -8707,11 +8704,29 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                         $scope.showLogsImg = false;
                     }
                     
-                    $http.post('/getStaffName', { 'id': $scope.fullComplaintDetail.custBy }).then(function(response) {
+                    
+                    var custByID = {
+                        'id': $scope.fullComplaintDetail.custBy
+                    };
+                    
+                    var driverID = {
+                        'id': $scope.fullComplaintDetail.driver
+                    };
+                    
+                    $http.post('/getStaffName', custByID).then(function(response) {
                         if (response.data.length > 0) {
                             $scope.informCustStaffName = response.data[0].staffName;
                         } else {
                             $scope.informCustStaffName = '';
+                        }
+                    }); 
+                    
+                    
+                    $http.post('/getStaffName', driverID).then(function(response) {
+                        if (response.data.length > 0) {
+                            $scope.driverName = response.data[0].staffName;
+                        } else {
+                            $scope.driverName = '';
                         }
                     });
 
@@ -8801,6 +8816,10 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
         $('.selectpicker').on('change', function() {
             $scope.renderSltPicker();
         });
+    });
+    
+    $http.get('/getDriverList').then(function(response){
+        $scope.driverList = response.data;
     });
 
 
@@ -8993,6 +9012,7 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
                     $scope.notify("error", "There has some ERROR!");
                 }
             });
+            console.log($scope.logistics);
         }
     };
 
@@ -9370,15 +9390,25 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
 
         var informCustStaffID = {
             'id': $scope.detailObj.customerBy
-        }
+        };
 
+        var driverID = {
+            id: $scope.detailObj.driver
+        };
+        
         $scope.cmsUpdateStatus = $scope.detailObj.cmsStatus;
 
         $scope.staffName = '';
         $scope.logsStaffName = '';
+        $scope.driverName = '';
+        
         $http.post('/getStaffName', staffID).then(function(response) {
             $scope.staffName = response.data[0].staffName;
         });
+        
+        $http.post('/getStaffName', driverID).then(function (response){
+            $scope.driverName = response.data[0].staffName;
+        })
 
         //date reformat
         $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
