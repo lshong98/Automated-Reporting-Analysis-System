@@ -38,120 +38,120 @@
 <!--Municipal form modal-->
 <div class="modal fade" id="municipal-form" tabindex="-1" role="dialog" aria-labelledby="municipal-form" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">New Municipal Feedback</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="name form-label">Date</label>
-                <input type="date" class="form-control" id="date" data-ng-model="m.date">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">New Municipal Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="form-group">
-                <label for="name form-label">Name</label>
-                <input type="text" class="form-control" id="name" data-ng-model="m.name">
-            </div>
-            <div class="form-group">
-                <label for="company form-label">Company</label>
-                <input type="text" class="form-control" id="company" data-ng-model="m.company">
-            </div>
-            <div class="form-group">
-                <label for="address form-label">Address</label>
-                <input type="text" class="form-control" id="address" data-ng-model="m.address">
-            </div>
-            <div class="form-group">
-                <label for="number form-label">Phone Number</label>
-                <input type="text" class="form-control" id="number" data-ng-model="m.number">
-            </div>
-            <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
-            <div class="form-group">
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="m.compRate"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="m.compRate"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="m.compRate"> Very Satisfied
-                </label>
-            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name form-label">Date</label>
+                    <input type="date" class="form-control" id="date" data-ng-model="m.date">
+                </div>
+                <div class="form-group">
+                    <label for="name form-label">Name</label>
+                    <input type="text" class="form-control" id="name" data-ng-model="m.name">
+                </div>
+                <div class="form-group">
+                    <label for="company form-label">Company</label>
+                    <input type="text" class="form-control" id="company" data-ng-model="m.company">
+                </div>
+                <div class="form-group">
+                    <label for="address form-label">Address</label>
+                    <input type="text" class="form-control" id="address" data-ng-model="m.address">
+                </div>
+                <div class="form-group">
+                    <label for="number form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="number" data-ng-model="m.number">
+                </div>
+                <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="m.compRate"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="m.compRate"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="m.compRate"> Very Satisfied
+                    </label>
+                </div>
 
-            <label for="form-label"><b>2. Quality of Services</b></label>
-            <div class="form-group">
-                <label for="form-label"><b>Efficiency of our service team</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="m.teamEff"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="m.teamEff"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="m.teamEff"> Very Satisfied
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="form-label"><b>Promptness of collection according to schedule</b></label>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="m.collPrompt"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="m.collPrompt"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="m.collPrompt"> Very Satisfied
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="form-label"><b>Bin handling</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2c" data-ng-value="1" data-ng-model="m.binHand"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2c" data-ng-value="2" data-ng-model="m.binHand"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2c" data-ng-value="3" data-ng-model="m.binHand"> Very Satisfied
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="form-label"><b>Spillage control</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2d" data-ng-value="1" data-ng-model="m.spillCtrl"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2d" data-ng-value="2" data-ng-model="m.spillCtrl"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2d" data-ng-value="3" data-ng-model="m.spillCtrl"> Very Satisfied
-                </label>
-            </div>
+                <label for="form-label"><b>2. Quality of Services</b></label>
+                <div class="form-group">
+                    <label for="form-label"><b>Efficiency of our service team</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="m.teamEff"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="m.teamEff"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="m.teamEff"> Very Satisfied
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="form-label"><b>Promptness of collection according to schedule</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="m.collPrompt"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="m.collPrompt"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="m.collPrompt"> Very Satisfied
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="form-label"><b>Bin handling</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2c" data-ng-value="1" data-ng-model="m.binHand"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2c" data-ng-value="2" data-ng-model="m.binHand"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2c" data-ng-value="3" data-ng-model="m.binHand"> Very Satisfied
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="form-label"><b>Spillage control</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2d" data-ng-value="1" data-ng-model="m.spillCtrl"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2d" data-ng-value="2" data-ng-model="m.spillCtrl"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2d" data-ng-value="3" data-ng-model="m.spillCtrl"> Very Satisfied
+                    </label>
+                </div>
 
-            <label for="form-label"><b>3. Our response/feedback to your queries</b></label>
-            <div class="form-group">
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied3" data-ng-value="1" data-ng-model="m.qryResp"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied3" data-ng-value="2" data-ng-model="m.qryResp"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied3" data-ng-value="3" data-ng-model="m.qryResp"> Very Satisfied
-                </label>
-            </div>
+                <label for="form-label"><b>3. Our response/feedback to your queries</b></label>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied3" data-ng-value="1" data-ng-model="m.qryResp"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied3" data-ng-value="2" data-ng-model="m.qryResp"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied3" data-ng-value="3" data-ng-model="m.qryResp"> Very Satisfied
+                    </label>
+                </div>
 
-            <div class="form-group">
-                <label for="extraComment form-label"><b>4. How can we serve you better?</b></label>
-                <textarea id="extraComment" class="form-control" data-ng-model="m.extraComment"></textarea>
+                <div class="form-group">
+                    <label for="extraComment form-label"><b>4. How can we serve you better?</b></label>
+                    <textarea id="extraComment" class="form-control" data-ng-model="m.extraComment"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addFeedback('municipal')">Add</button>
             </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-ng-click="addFeedback('municipal')">Add</button>
-        </div>
-      </div>
     </div>
 </div>
 <!--form end-->
@@ -159,122 +159,122 @@
 <!--Commercial form modal-->
 <div class="modal fade" id="commercial-form" tabindex="-1" role="dialog" aria-labelledby="commercial-form" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">New Commercial Feedback</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">New Commercial Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name form-label">Date</label>
+                    <input type="date" class="form-control" id="date" data-ng-model="c.date">
+                </div>
+                <div class="form-group">
+                    <label for="name form-label">Name</label>
+                    <input type="text" class="form-control" id="name" data-ng-model="c.name">
+                </div>
+                <div class="form-group">
+                    <label for="company form-label">Company</label>
+                    <input type="text" class="form-control" id="company" data-ng-model="c.company">
+                </div>
+                <div class="form-group">
+                    <label for="address form-label">Address</label>
+                    <input type="text" class="form-control" id="address" data-ng-model="c.address">
+                </div>
+                <div class="form-group">
+                    <label for="number form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="number" data-ng-model="c.number">
+                </div>
+                <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="c.compRate"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="c.compRate"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="c.compRate"> Very Satisfied
+                    </label>
+                </div>
+
+                <label for="form-label"><b>2. Quality of Services</b></label>
+                <div class="form-group">
+                    <label for="form-label"><b>Efficiency of our service team</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="c.teamEff"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="c.teamEff"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="c.teamEff"> Very Satisfied
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="form-label"><b>Promptness of collection according to schedule</b></label>
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="c.collPrompt"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="c.collPrompt"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="c.collPrompt"> Very Satisfied
+                    </label>
+                </div>
+
+                <label for="form-label"><b>3. Condition of container</b></label>
+                <div class="form-group">
+                    <label for="form-label"><b>Cleanliness</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied3a" data-ng-value="1" data-ng-model="c.cleanliness"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied3a" data-ng-value="2" data-ng-model="c.cleanliness"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied3a" data-ng-value="3" data-ng-model="c.cleanliness"> Very Satisfied
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="form-label"><b>Physical working condition</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied3b" data-ng-value="1" data-ng-model="c.physicalCond"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied3b" data-ng-value="2" data-ng-model="c.physicalCond"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied3b" data-ng-value="3" data-ng-model="c.physicalCond"> Very Satisfied
+                    </label>
+                </div>
+
+                <label for="form-label"><b>4. Our response/feedback to your queries</b></label>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied4" data-ng-value="1" data-ng-model="c.qryResp"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied4" data-ng-value="2" data-ng-model="c.qryResp"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied4" data-ng-value="3" data-ng-model="c.qryResp"> Very Satisfied
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="extraComment form-label"><b>5. How can we serve you better?</b></label>
+                    <textarea id="extraComment" class="form-control" data-ng-model="c.extraComment"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addFeedback('commercial')">Add</button>
+            </div>
         </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="name form-label">Date</label>
-                <input type="date" class="form-control" id="date" data-ng-model="c.date">
-            </div>
-            <div class="form-group">
-                <label for="name form-label">Name</label>
-                <input type="text" class="form-control" id="name" data-ng-model="c.name">
-            </div>
-            <div class="form-group">
-                <label for="company form-label">Company</label>
-                <input type="text" class="form-control" id="company" data-ng-model="c.company">
-            </div>
-            <div class="form-group">
-                <label for="address form-label">Address</label>
-                <input type="text" class="form-control" id="address" data-ng-model="c.address">
-            </div>
-            <div class="form-group">
-                <label for="number form-label">Phone Number</label>
-                <input type="text" class="form-control" id="number" data-ng-model="c.number">
-            </div>
-            <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
-            <div class="form-group">
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="c.compRate"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="c.compRate"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="c.compRate"> Very Satisfied
-                </label>
-            </div>
-
-            <label for="form-label"><b>2. Quality of Services</b></label>
-            <div class="form-group">
-                <label for="form-label"><b>Efficiency of our service team</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="c.teamEff"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="c.teamEff"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="c.teamEff"> Very Satisfied
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="form-label"><b>Promptness of collection according to schedule</b></label>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="c.collPrompt"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="c.collPrompt"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="c.collPrompt"> Very Satisfied
-                </label>
-            </div>
-
-            <label for="form-label"><b>3. Condition of container</b></label>
-            <div class="form-group">
-                <label for="form-label"><b>Cleanliness</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied3a" data-ng-value="1" data-ng-model="c.cleanliness"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied3a" data-ng-value="2" data-ng-model="c.cleanliness"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied3a" data-ng-value="3" data-ng-model="c.cleanliness"> Very Satisfied
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="form-label"><b>Physical working condition</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied3b" data-ng-value="1" data-ng-model="c.physicalCond"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied3b" data-ng-value="2" data-ng-model="c.physicalCond"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied3b" data-ng-value="3" data-ng-model="c.physicalCond"> Very Satisfied
-                </label>
-            </div>
-
-            <label for="form-label"><b>4. Our response/feedback to your queries</b></label>
-            <div class="form-group">
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied4" data-ng-value="1" data-ng-model="c.qryResp"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied4" data-ng-value="2" data-ng-model="c.qryResp"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied4" data-ng-value="3" data-ng-model="c.qryResp"> Very Satisfied
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label for="extraComment form-label"><b>5. How can we serve you better?</b></label>
-                <textarea id="extraComment" class="form-control" data-ng-model="c.extraComment"></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-ng-click="addFeedback('commercial')">Add</button>
-        </div>
-      </div>
     </div>
 </div>
 <!--form end-->
@@ -282,108 +282,108 @@
 <!--Scheduled form modal-->
 <div class="modal fade" id="scheduled-form" tabindex="-1" role="dialog" aria-labelledby="scheduled-form" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">New Scheduled Feedback</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="name form-label">Date</label>
-                <input type="date" class="form-control" id="date" data-ng-model="s.date">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">New Scheduled Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="form-group">
-                <label for="name form-label">Name</label>
-                <input type="text" class="form-control" id="name" data-ng-model="s.name">
-            </div>
-            <div class="form-group">
-                <label for="company form-label">Company</label>
-                <input type="text" class="form-control" id="company" data-ng-model="s.company">
-            </div>
-            <div class="form-group">
-                <label for="address form-label">Address</label>
-                <input type="text" class="form-control" id="address" data-ng-model="s.address">
-            </div>
-            <div class="form-group">
-                <label for="number form-label">Phone Number</label>
-                <input type="text" class="form-control" id="number" data-ng-model="s.number">
-            </div>
-            <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
-            <div class="form-group">
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="s.compRate"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="s.compRate"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="s.compRate"> Very Satisfied
-                </label>
-            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name form-label">Date</label>
+                    <input type="date" class="form-control" id="date" data-ng-model="s.date">
+                </div>
+                <div class="form-group">
+                    <label for="name form-label">Name</label>
+                    <input type="text" class="form-control" id="name" data-ng-model="s.name">
+                </div>
+                <div class="form-group">
+                    <label for="company form-label">Company</label>
+                    <input type="text" class="form-control" id="company" data-ng-model="s.company">
+                </div>
+                <div class="form-group">
+                    <label for="address form-label">Address</label>
+                    <input type="text" class="form-control" id="address" data-ng-model="s.address">
+                </div>
+                <div class="form-group">
+                    <label for="number form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="number" data-ng-model="s.number">
+                </div>
+                <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied1" data-ng-value="1" data-ng-model="s.compRate"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied1" data-ng-value="2" data-ng-model="s.compRate"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied1" data-ng-value="3" data-ng-model="s.compRate"> Very Satisfied
+                    </label>
+                </div>
 
-            <label for="form-label"><b>2. Quality of Services</b></label>
-            <div class="form-group">
-                <label for="form-label"><b>Efficiency of our service team</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="s.teamEff"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="s.teamEff"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="s.teamEff"> Very Satisfied
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="form-label"><b>Adherence to health, safety, security and environmental standards</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="s.healthAdh"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="s.healthAdh"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="s.healthAdh"> Very Satisfied
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="form-label"><b>Adherence to regulations</b></label><br/>
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied2c" data-ng-value="1" data-ng-model="s.regAdh"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied2c" data-ng-value="2" data-ng-model="s.regAdh"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied2c" data-ng-value="3" data-ng-model="s.regAdh"> Very Satisfied
-                </label>
-            </div>
+                <label for="form-label"><b>2. Quality of Services</b></label>
+                <div class="form-group">
+                    <label for="form-label"><b>Efficiency of our service team</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2a" data-ng-value="1" data-ng-model="s.teamEff"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2a" data-ng-value="2" data-ng-model="s.teamEff"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2a" data-ng-value="3" data-ng-model="s.teamEff"> Very Satisfied
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="form-label"><b>Adherence to health, safety, security and environmental standards</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="s.healthAdh"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2b" data-ng-value="2" data-ng-model="s.healthAdh"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2b" data-ng-value="3" data-ng-model="s.healthAdh"> Very Satisfied
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="form-label"><b>Adherence to regulations</b></label><br />
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied2c" data-ng-value="1" data-ng-model="s.regAdh"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied2c" data-ng-value="2" data-ng-model="s.regAdh"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied2c" data-ng-value="3" data-ng-model="s.regAdh"> Very Satisfied
+                    </label>
+                </div>
 
-            <label for="form-label"><b>3. Our response/feedback to your queries</b></label>
-            <div class="form-group">
-                <label class="radio-inline">
-                    <input type="radio" name="notSatisfied3" data-ng-value="1" data-ng-model="s.qryResp"> Not Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="satisfied3" data-ng-value="2" data-ng-model="s.qryResp"> Satisfied
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="verySatisfied3" data-ng-value="3" data-ng-model="s.qryResp"> Very Satisfied
-                </label>
-            </div>
+                <label for="form-label"><b>3. Our response/feedback to your queries</b></label>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="notSatisfied3" data-ng-value="1" data-ng-model="s.qryResp"> Not Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="satisfied3" data-ng-value="2" data-ng-model="s.qryResp"> Satisfied
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="verySatisfied3" data-ng-value="3" data-ng-model="s.qryResp"> Very Satisfied
+                    </label>
+                </div>
 
-            <div class="form-group">
-                <label for="extraComment form-label"><b>4. How can we serve you better?</b></label>
-                <textarea id="extraComment" class="form-control" data-ng-model="s.extraComment"></textarea>
+                <div class="form-group">
+                    <label for="extraComment form-label"><b>4. How can we serve you better?</b></label>
+                    <textarea id="extraComment" class="form-control" data-ng-model="s.extraComment"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-ng-click="addFeedback('scheduled')">Add</button>
             </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-ng-click="addFeedback('scheduled')">Add</button>
-        </div>
-      </div>
     </div>
 </div>
 <!--form end-->
@@ -407,10 +407,11 @@
                 <div role="tabpanel" class="tab-pane fade show active" id="municipalFeedback"><br />
                     <div class="row" id="createButton">
                         <div class="col-md-3">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#municipal-form" ng-click="resetFormM();"><i class="fa fa-plus"></i> New Municipal Feedback</button>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#municipal-form" ng-click="resetFormM()"><i class="fa fa-plus"></i> New Municipal Feedback</button>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-danger" ng-csv="municipalData" csv-header="getDataHeaderMunicipal()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button>       
+                            <!-- <button class="btn btn-danger" ng-csv="municipalData" csv-header="getDataHeaderMunicipal()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button>        -->
+                            <button class="btn btn-danger" data-ng-click="downloadxls()">Download Excel File</button>
                         </div>
                     </div><br />
 
@@ -439,7 +440,7 @@
                                 <option data-ng-value="12">December</option>
                             </select>
                         </div>
-                    </div><br/>
+                    </div><br />
 
                     <div class="row">
                         <div class="col-md-6">
@@ -468,7 +469,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <br />
                     <div class="row">
                         <div class="col-md-6">
@@ -533,12 +534,89 @@
                             <h4>Comments</h4><br />
                             <div class="card" data-ng-repeat="comment in reviews.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
                                 <div class="card-body">
-                                    <h6>{{comment.user}}</h6>
+                                    <h6>{{comment.user}} <span data-ng-show="comment.company != 'undefined'">| {{comment.company}}</span></h6>
+                                    <h6>{{comment.address}} | {{comment.number}}</h6>
                                     <span>{{comment.comments}}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!--Table for pdf download-->
+                    <div class="row" hidden>
+                        <div class="col-md-12 chart-download" id="feedback-summary">
+                            <table class="table feedback-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Classification of Feedback</th>
+                                        <th>Not Satisfied</th>
+                                        <th>Satisfied</th>
+                                        <th>Very Satisfied</th>
+                                        <th>No Response</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Quality of Services: </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Company Rating</td>
+                                        <td>{{reviews.compRateUS}}</td>
+                                        <td>{{reviews.compRateAvg}}</td>
+                                        <td>{{reviews.compRateS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Efficiency of Our Team</td>
+                                        <td>{{reviews.teamEffUS}}</td>
+                                        <td>{{reviews.teamEffAvg}}</td>
+                                        <td>{{reviews.teamEffS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Promptness of Collection According to the Requested Date & Time</td>
+                                        <td>{{reviews.collPromptUS}}</td>
+                                        <td>{{reviews.collPromptAvg}}</td>
+                                        <td>{{reviews.collPromptS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bin Handling</td>
+                                        <td>{{reviews.binHandUS}}</td>
+                                        <td>{{reviews.binHandAvg}}</td>
+                                        <td>{{reviews.binHandS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Spillage Control</td>
+                                        <td>{{reviews.spillCtrlUS}}</td>
+                                        <td>{{reviews.spillCtrlAvg}}</td>
+                                        <td>{{reviews.spillCtrlS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Our response/feedback to your queries</td>
+                                        <td>{{reviews.qryRespUS}}</td>
+                                        <td>{{reviews.qryRespAvg}}</td>
+                                        <td>{{reviews.qryRespS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>{{totalUnsatisfied}}</td>
+                                        <td>{{totalSatisfied}}</td>
+                                        <td>{{totalVSatisfied}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
                         <div class="col-md-12">
                             <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
@@ -554,36 +632,37 @@
                             <button class="btn btn-success" data-toggle="modal" data-target="#commercial-form" ng-click="resetFormC();"><i class="fa fa-plus"></i> New Commercial Feedback</button>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-danger" ng-csv="commercialData" csv-header="getDataHeaderCommercial()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button>       
+                            <!-- <button class="btn btn-danger" ng-csv="commercialData" csv-header="getDataHeaderCommercial()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button> -->
+                            <button class="btn btn-danger" data-ng-click="downloadxlsCommercial()">Download Excel File</button>
                         </div>
                     </div><br />
 
                     <div class="row">
-                            <div class="col-md-12">
-                                <p>Select results from:</p>
-                                <span>Year: </span>
-                                <select id="year" data-ng-options="y.name for y in yearOptions track by y.value" data-ng-model="filters.year" data-ng-change="getCommercialFeedback()">
-                                    <option value="">Select year</option>
-                                </select>
-    
-                                <span>Month: </span>
-                                <select id="month" data-ng-model="filters.month" data-ng-change="getCommercialFeedback()">
-                                    <option data-ng-value="SelectMonth">All Months</option>
-                                    <option data-ng-value="01">January</option>
-                                    <option data-ng-value="02">February</option>
-                                    <option data-ng-value="03">March</option>
-                                    <option data-ng-value="04">April</option>
-                                    <option data-ng-value="05">May</option>
-                                    <option data-ng-value="06">June</option>
-                                    <option data-ng-value="07">July</option>
-                                    <option data-ng-value="08">August</option>
-                                    <option data-ng-value="09">September</option>
-                                    <option data-ng-value="10">October</option>
-                                    <option data-ng-value="11">November</option>
-                                    <option data-ng-value="12">December</option>
-                                </select>
-                            </div>
-                        </div><br/>
+                        <div class="col-md-12">
+                            <p>Select results from:</p>
+                            <span>Year: </span>
+                            <select id="year" data-ng-options="y.name for y in yearOptions track by y.value" data-ng-model="filters.year" data-ng-change="getCommercialFeedback()">
+                                <option value="">Select year</option>
+                            </select>
+
+                            <span>Month: </span>
+                            <select id="month" data-ng-model="filters.month" data-ng-change="getCommercialFeedback()">
+                                <option data-ng-value="SelectMonth">All Months</option>
+                                <option data-ng-value="01">January</option>
+                                <option data-ng-value="02">February</option>
+                                <option data-ng-value="03">March</option>
+                                <option data-ng-value="04">April</option>
+                                <option data-ng-value="05">May</option>
+                                <option data-ng-value="06">June</option>
+                                <option data-ng-value="07">July</option>
+                                <option data-ng-value="08">August</option>
+                                <option data-ng-value="09">September</option>
+                                <option data-ng-value="10">October</option>
+                                <option data-ng-value="11">November</option>
+                                <option data-ng-value="12">December</option>
+                            </select>
+                        </div>
+                    </div><br />
 
                     <div class="row">
                         <div class="col-md-6">
@@ -615,34 +694,34 @@
                     </div>
                     <br />
                     <div class="row">
-                            <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5>Collection Promptness</h5><br />
-                                            <!-- <div easypiechart options="options" percent="collPromptCommercial" class="chart">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Collection Promptness</h5><br />
+                                    <!-- <div easypiechart options="options" percent="collPromptCommercial" class="chart">
                                                 {{reviewsCommercial.collPrompt | number:1}}
                                             </div>
                                             <span class="overall">Out of 3</span> -->
-                                            <div id="commercial-coll-prompt" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                                            <br />
-                                        </div>
-                                    </div>
+                                    <div id="commercial-coll-prompt" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    <br />
                                 </div>
-                                <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h5>Cleanliness</h5><br />
-                                                <!-- <div easypiechart options="options" percent="cleanliness" class="chart">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Cleanliness</h5><br />
+                                    <!-- <div easypiechart options="options" percent="cleanliness" class="chart">
                                                     {{reviewsCommercial.cleanliness | number:1}}
                                                 </div>
                                                 <span class="overall">Out of 3</span> -->
-                                                <div id="commercial-cleanliness" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                                                <br />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <div id="commercial-cleanliness" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <br/>
+                    <br />
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card">
@@ -677,12 +756,89 @@
                             <h4>Comments</h4><br />
                             <div class="card" data-ng-repeat="comment in reviewsCommercial.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
                                 <div class="card-body">
-                                    <h6>{{comment.user}}</h6>
+                                    <h6>{{comment.user}} <span data-ng-show="comment.company != 'undefined'">| {{comment.company}}</span></h6>
+                                    <h6>{{comment.address}} | {{comment.number}}</h6>
                                     <span>{{comment.comments}}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!--Table for pdf download-->
+                    <div class="row" hidden>
+                        <div class="col-md-12 chart-download" id="feedback-summary-commercial">
+                            <table class="table feedback-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Classification of Feedback</th>
+                                        <th>Not Satisfied</th>
+                                        <th>Satisfied</th>
+                                        <th>Very Satisfied</th>
+                                        <th>No Response</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Quality of Services: </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Company Rating</td>
+                                        <td>{{reviewsCommercial.compRateUS}}</td>
+                                        <td>{{reviewsCommercial.compRateAvg}}</td>
+                                        <td>{{reviewsCommercial.compRateS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Efficiency of Our Team</td>
+                                        <td>{{reviewsCommercial.teamEffUS}}</td>
+                                        <td>{{reviewsCommercial.teamEffAvg}}</td>
+                                        <td>{{reviewsCommercial.teamEffS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Promptness of Collection According to the Requested Date & Time</td>
+                                        <td>{{reviewsCommercial.collPromptUS}}</td>
+                                        <td>{{reviewsCommercial.collPromptAvg}}</td>
+                                        <td>{{reviewsCommercial.collPromptS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cleanliness</td>
+                                        <td>{{reviewsCommercial.cleanlinessUS}}</td>
+                                        <td>{{reviewsCommercial.cleanlinessAvg}}</td>
+                                        <td>{{reviewsCommercial.cleanlinessS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Physical Condition</td>
+                                        <td>{{reviewsCommercial.physicalCondUS}}</td>
+                                        <td>{{reviewsCommercial.physicalCondAvg}}</td>
+                                        <td>{{reviewsCommercial.physicalCondS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Our response/feedback to your queries</td>
+                                        <td>{{reviewsCommercial.qryRespUS}}</td>
+                                        <td>{{reviewsCommercial.qryRespAvg}}</td>
+                                        <td>{{reviewsCommercial.qryRespS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>{{totalUnsatisfiedCom}}</td>
+                                        <td>{{totalSatisfiedCom}}</td>
+                                        <td>{{totalVSatisfiedCom}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
                         <div class="col-md-12">
                             <ul uib-pagination boundary-links="true" total-items="totalItemsCommercial" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
@@ -698,128 +854,199 @@
                             <button class="btn btn-success" data-toggle="modal" data-target="#scheduled-form" ng-click="resetFormS();"><i class="fa fa-plus"></i> New Scheduled Feedback</button>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-danger" ng-csv="scheduledData" csv-header="getDataHeaderScheduled()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button>       
+                            <!-- <button class="btn btn-danger" ng-csv="scheduledData" csv-header="getDataHeaderScheduled()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button> -->
+                            <button class="btn btn-danger" data-ng-click="downloadxlsScheduled()">Download Excel File</button>
                         </div>
                     </div><br />
 
                     <div class="row">
-                            <div class="col-md-12">
-                                <p>Select results from:</p>
-                                <span>Year: </span>
-                                <select id="year" data-ng-options="y.name for y in yearOptions track by y.value" data-ng-model="filters.year" data-ng-change="getScheduledFeedback()">
-                                    <option value="">Select year</option>
-                                </select>
-    
-                                <span>Month: </span>
-                                <select id="month" data-ng-model="filters.month" data-ng-change="getScheduledFeedback()">
-                                    <option data-ng-value="SelectMonth">All Months</option>
-                                    <option data-ng-value="01">January</option>
-                                    <option data-ng-value="02">February</option>
-                                    <option data-ng-value="03">March</option>
-                                    <option data-ng-value="04">April</option>
-                                    <option data-ng-value="05">May</option>
-                                    <option data-ng-value="06">June</option>
-                                    <option data-ng-value="07">July</option>
-                                    <option data-ng-value="08">August</option>
-                                    <option data-ng-value="09">September</option>
-                                    <option data-ng-value="10">October</option>
-                                    <option data-ng-value="11">November</option>
-                                    <option data-ng-value="12">December</option>
-                                </select>
-                            </div>
-                        </div><br/>
+                        <div class="col-md-12">
+                            <p>Select results from:</p>
+                            <span>Year: </span>
+                            <select id="year" data-ng-options="y.name for y in yearOptions track by y.value" data-ng-model="filters.year" data-ng-change="getScheduledFeedback()">
+                                <option value="">Select year</option>
+                            </select>
+
+                            <span>Month: </span>
+                            <select id="month" data-ng-model="filters.month" data-ng-change="getScheduledFeedback()">
+                                <option data-ng-value="SelectMonth">All Months</option>
+                                <option data-ng-value="01">January</option>
+                                <option data-ng-value="02">February</option>
+                                <option data-ng-value="03">March</option>
+                                <option data-ng-value="04">April</option>
+                                <option data-ng-value="05">May</option>
+                                <option data-ng-value="06">June</option>
+                                <option data-ng-value="07">July</option>
+                                <option data-ng-value="08">August</option>
+                                <option data-ng-value="09">September</option>
+                                <option data-ng-value="10">October</option>
+                                <option data-ng-value="11">November</option>
+                                <option data-ng-value="12">December</option>
+                            </select>
+                        </div>
+                    </div><br />
 
                     <div class="row">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5>Company Rating</h5><br />
-                                        <!-- <div easypiechart options="options" percent="compRateScheduled" class="chart">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Company Rating</h5><br />
+                                    <!-- <div easypiechart options="options" percent="compRateScheduled" class="chart">
                                             {{reviewsScheduled.compRate | number:1}}
                                         </div>
                                         <span class="overall">Out of 3</span> -->
-                                        <div id="scheduled-comp-rate" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                                        <br />
-                                    </div>
+                                    <div id="scheduled-comp-rate" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    <br />
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5>Team Efficiency</h5><br />
-                                        <!-- <div easypiechart options="options" percent="teamEffScheduled" class="chart">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Team Efficiency</h5><br />
+                                    <!-- <div easypiechart options="options" percent="teamEffScheduled" class="chart">
                                             {{reviewsScheduled.teamEff | number:1}}
                                         </div>
                                         <span class="overall">Out of 3</span> -->
-                                        <div id="scheduled-team-eff" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                                        <br />
-                                    </div>
+                                    <div id="scheduled-team-eff" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    <br />
                                 </div>
                             </div>
                         </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5>Regulations Adherence</h5><br />
-                                        <!-- <div easypiechart options="options" percent="regAdh" class="chart">
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Regulations Adherence</h5><br />
+                                    <!-- <div easypiechart options="options" percent="regAdh" class="chart">
                                             {{reviewsScheduled.regAdh | number:1}}
                                         </div>
                                         <span class="overall">Out of 3</span> -->
-                                        <div id="scheduled-reg-adh" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                                        <br />
-                                    </div>
+                                    <div id="scheduled-reg-adh" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    <br />
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5>Health Adherence</h5><br />
-                                            <!-- <div easypiechart options="options" percent="healthAdh" class="chart">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Health Adherence</h5><br />
+                                    <!-- <div easypiechart options="options" percent="healthAdh" class="chart">
                                                 {{reviewsScheduled.healthAdh | number:1}}
                                             </div>
                                             <span class="overall">Out of 3</span> -->
-                                            <div id="scheduled-health-adh" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                                            <br />
-                                        </div>
-                                    </div>
+                                    <div id="scheduled-health-adh" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    <br />
                                 </div>
+                            </div>
                         </div>
-                        <br/>
-                        <div class="row">
-                                <div class="col-md-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h5>Query Response</h5><br />
-                                                <!-- <div easypiechart options="options" percent="qryRespScheduled" class="chart">
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Query Response</h5><br />
+                                    <!-- <div easypiechart options="options" percent="qryRespScheduled" class="chart">
                                                     {{reviewsScheduled.qryResp | number:1}}
                                                 </div>
                                                 <span class="overall">Out of 3</span> -->
-                                                <div id="scheduled-qry-resp" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                                                <br />
-                                            </div>
-                                        </div>
-                                    </div>
-                        </div>
-                        <br /><br />
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h4>Comments</h4><br />
-                                <div class="card" data-ng-repeat="comment in reviewsScheduled.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
-                                    <div class="card-body">
-                                        <h6>{{comment.user}}</h6>
-                                        <span>{{comment.comments}}</span>
-                                    </div>
+                                    <div id="scheduled-qry-resp" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                    <br />
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
-                            <div class="col-md-12">
-                                <ul uib-pagination boundary-links="true" total-items="totalItemsScheduled" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                    </div>
+                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Comments</h4><br />
+                            <div class="card" data-ng-repeat="comment in reviewsScheduled.comments | offset: (currentPage - 1) * itemsPerPage | limitTo: itemsPerPage track by $index" style="margin-bottom: 3%">
+                                <div class="card-body">
+                                    <h6>{{comment.user}} <span data-ng-show="comment.company != 'undefined'">| {{comment.company}}</span></h6>
+                                    <h6>{{comment.address}} | {{comment.number}}</h6>
+                                    <span>{{comment.comments}}</span>
+                                </div>
                             </div>
                         </div>
-                        <br /><br />
+                    </div>
+
+                    <!--Table for pdf download-->
+                    <div class="row" hidden>
+                        <div class="col-md-12 chart-download" id="feedback-summary-scheduled">
+                            <table class="table feedback-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Classification of Feedback</th>
+                                        <th>Not Satisfied</th>
+                                        <th>Satisfied</th>
+                                        <th>Very Satisfied</th>
+                                        <th>No Response</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Quality of Services: </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Company Rating</td>
+                                        <td>{{reviewsScheduled.compRateUS}}</td>
+                                        <td>{{reviewsScheduled.compRateAvg}}</td>
+                                        <td>{{reviewsScheduled.compRateS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Efficiency of Our Team</td>
+                                        <td>{{reviewsScheduled.teamEffUS}}</td>
+                                        <td>{{reviewsScheduled.teamEffAvg}}</td>
+                                        <td>{{reviewsScheduled.teamEffS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Regulations Adherence</td>
+                                        <td>{{reviewsScheduled.regAdhUS}}</td>
+                                        <td>{{reviewsScheduled.regAdhAvg}}</td>
+                                        <td>{{reviewsScheduled.regAdhS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Health Adherence</td>
+                                        <td>{{reviewsScheduled.healthAdhUS}}</td>
+                                        <td>{{reviewsScheduled.healthAdhAvg}}</td>
+                                        <td>{{reviewsScheduled.healthAdhS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Our response/feedback to your queries</td>
+                                        <td>{{reviewsScheduled.qryRespUS}}</td>
+                                        <td>{{reviewsScheduled.qryRespAvg}}</td>
+                                        <td>{{reviewsScheduled.qryRespS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>{{totalUnsatisfiedS}}</td>
+                                        <td>{{totalSatisfiedS}}</td>
+                                        <td>{{totalVSatisfiedS}}</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
+                        <div class="col-md-12">
+                            <ul uib-pagination boundary-links="true" total-items="totalItemsScheduled" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                        </div>
+                    </div>
+                    <br /><br />
                 </div>
             </div>
         </div>

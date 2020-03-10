@@ -1983,18 +1983,31 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(response.data);
             $scope.reviews = response.data;
             $scope.totalItems = response.data.comments.length;
+            $scope.totalUnsatisfied = $scope.reviews.compRateUS + $scope.reviews.teamEffUS + $scope.reviews.collPromptUS + $scope.reviews.binHandUS + $scope.reviews.spillCtrlUS + $scope.reviews.qryRespUS;
+            $scope.totalSatisfied = $scope.reviews.compRateAvg + $scope.reviews.teamEffAvg + $scope.reviews.collPromptAvg + $scope.reviews.binHandAvg + $scope.reviews.spillCtrlAvg + $scope.reviews.qryRespAvg;
+            $scope.totalVSatisfied = $scope.reviews.compRateS + $scope.reviews.teamEffS + $scope.reviews.collPromptS + $scope.reviews.binHandS + $scope.reviews.spillCtrlS + $scope.reviews.qryRespS;
 
             var data = {...response.data };
             delete data.comments;
             $scope.municipalData = [];
             $scope.municipalData.push(data);
+            console.log($scope.municipalData);
 
             //ng-csv filename
             if ($scope.filters.month == undefined) {
-                $scope.filename = $scope.filters.year.value + "_custsatisfaction_municipal.csv";
+                $scope.filename = $scope.filters.year.value + "_custsatisfaction_municipal.xls";
             } else {
-                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_municipal.csv";
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_municipal.xls";
             }
+
+            console.log(document.getElementById('feedback-summary').innerHTML);
+            $scope.downloadxls = function () {
+                var blob = new Blob([document.getElementById('feedback-summary').innerHTML], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+                });
+                saveAs(blob, $scope.filename);
+            };
+            
 
             var collPromptUS = parseInt(response.data.collPromptUS);
             var collPromptAvg = parseInt(response.data.collPromptAvg);
@@ -2203,7 +2216,19 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(response.data);
             $scope.reviewsCommercial = response.data;
             $scope.totalItemsCommercial = response.data.comments.length;
-
+            $scope.totalUnsatisfiedCom = $scope.reviewsCommercial.compRateUS + $scope.reviewsCommercial.teamEffUS + $scope.reviewsCommercial.collPromptUS + $scope.reviewsCommercial.cleanlinessUS + $scope.reviewsCommercial.physicalCondUS + $scope.reviewsCommercial.qryRespUS;
+            $scope.totalSatisfiedCom = $scope.reviewsCommercial.compRateAvg + $scope.reviewsCommercial.teamEffAvg + $scope.reviewsCommercial.collPromptAvg + $scope.reviewsCommercial.cleanlinessAvg + $scope.reviewsCommercial.physicalCondAvg + $scope.reviewsCommercial.qryRespAvg;
+            // $scope.totalSatisfiedCom = function(cr,te,cp,c,pc,qr){
+            //     // console.log(cr);
+            //     // console.log(te);
+            //     // console.log(cp);
+            //     // console.log(c);
+            //     // console.log(pc);
+            //     // console.log(qr);
+            //     return cr+te+cp+c+pc+qr;
+            // };
+            $scope.totalVSatisfiedCom = $scope.reviewsCommercial.compRateS + $scope.reviewsCommercial.teamEffS + $scope.reviewsCommercial.collPromptS + $scope.reviewsCommercial.cleanlinessS + $scope.reviewsCommercial.physicalCondS + $scope.reviewsCommercial.qryRespS;
+            
             var data = {...response.data };
             delete data.comments;
             $scope.commercialData = [];
@@ -2211,10 +2236,17 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
             //ng-csv filename
             if ($scope.filters.month == undefined) {
-                $scope.filename = $scope.filters.year.value + "_custsatisfaction_commercial.csv";
+                $scope.filename = $scope.filters.year.value + "_custsatisfaction_commercial.xls";
             } else {
-                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_commercial.csv";
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_commercial.xls";
             }
+
+            $scope.downloadxlsCommercial = function () {
+                var blob = new Blob([document.getElementById('feedback-summary-commercial').innerHTML], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+                });
+                saveAs(blob, $scope.filename);
+            };
 
             var collPromptUS = parseInt(response.data.collPromptUS);
             var collPromptAvg = parseInt(response.data.collPromptAvg);
@@ -2422,6 +2454,9 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(response.data);
             $scope.reviewsScheduled = response.data;
             $scope.totalItemsScheduled = response.data.comments.length;
+            $scope.totalUnsatisfiedS = $scope.reviewsScheduled.compRateUS + $scope.reviewsScheduled.teamEffUS + $scope.reviewsScheduled.regAdhUS + $scope.reviewsScheduled.healthAdhUS + $scope.reviewsScheduled.qryRespUS;
+            $scope.totalSatisfiedS = $scope.reviewsScheduled.compRateAvg + $scope.reviewsScheduled.teamEffAvg + $scope.reviewsScheduled.regAdhAvg + $scope.reviewsScheduled.healthAdhAvg + $scope.reviewsScheduled.qryRespAvg;
+            $scope.totalVSatisfiedS = $scope.reviewsScheduled.compRateS + $scope.reviewsScheduled.teamEffS + $scope.reviewsScheduled.regAdhS + $scope.reviewsScheduled.healthAdhS + $scope.reviewsScheduled.qryRespS;
 
             var data = {...response.data };
             delete data.comments;
@@ -2430,10 +2465,17 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
             //ng-csv filename
             if ($scope.filters.month == undefined) {
-                $scope.filename = $scope.filters.year.value + "_custsatisfaction_scheduled.csv";
+                $scope.filename = $scope.filters.year.value + "_custsatisfaction_scheduled.xls";
             } else {
-                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_scheduled.csv";
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_scheduled.xls";
             }
+
+            $scope.downloadxlsScheduled = function () {
+                var blob = new Blob([document.getElementById('feedback-summary-scheduled').innerHTML], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+                });
+                saveAs(blob, $scope.filename);
+            };
 
             var compRateUS = parseInt(response.data.compRateUS);
             var compRateAvg = parseInt(response.data.compRateAvg);

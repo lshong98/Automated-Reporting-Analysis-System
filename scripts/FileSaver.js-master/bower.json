@@ -1,0 +1,8 @@
+{
+  "name": "FileSaver.js",
+  "version": "0.1.0",
+  "main": "./FileSaver.js",
+  "dependencies": {
+    "Blobjs": "git@github.com:yrezgui/Blob.js.git"
+  }
+}

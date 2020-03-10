@@ -460,7 +460,7 @@ app.post('/editCollectionSchedule', function(req, res) {
 app.post('/customerFeedbackMunicipal', function(req, res) {
     'use strict';
     var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_municipal GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_municipal GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_municipal GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_municipal GROUP BY binHandling, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_municipal GROUP BY spillageControl, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_municipal GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, company, address, number, extraComment FROM tblsatisfaction_municipal WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, binHandS, spillCtrlS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
@@ -495,9 +495,9 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
                         if (compRateUS == undefined) {
                             compRateUS = 0;
-                        } else if (compRateAvg == undefined) {
+                        } if (compRateAvg == undefined) {
                             compRateAvg = 0;
-                        } else if (compRateS == undefined) {
+                        } if (compRateS == undefined) {
                             compRateS = 0;
                         }
                     }
@@ -513,9 +513,9 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
                         if (teamEffUS == undefined) {
                             teamEffUS = 0;
-                        } else if (teamEffAvg == undefined) {
+                        } if (teamEffAvg == undefined) {
                             teamEffAvg = 0;
-                        } else if (teamEffS == undefined) {
+                        } if (teamEffS == undefined) {
                             teamEffS = 0;
                         }
                     }
@@ -531,9 +531,9 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
                         if (collPromptUS == undefined) {
                             collPromptUS = 0;
-                        } else if (collPromptAvg == undefined) {
+                        } if (collPromptAvg == undefined) {
                             collPromptAvg = 0;
-                        } else if (collPromptS == undefined) {
+                        } if (collPromptS == undefined) {
                             collPromptS = 0;
                         }
                     }
@@ -549,9 +549,9 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
                         if (binHandUS == undefined) {
                             binHandUS = 0;
-                        } else if (binHandAvg == undefined) {
+                        } if (binHandAvg == undefined) {
                             binHandAvg = 0;
-                        } else if (binHandS == undefined) {
+                        } if (binHandS == undefined) {
                             binHandS = 0;
                         }
                     }
@@ -567,9 +567,9 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
                         if (spillCtrlUS == undefined) {
                             spillCtrlUS = 0;
-                        } else if (spillCtrlAvg == undefined) {
+                        } if (spillCtrlAvg == undefined) {
                             spillCtrlAvg = 0;
-                        } else if (spillCtrlS == undefined) {
+                        } if (spillCtrlS == undefined) {
                             spillCtrlS = 0;
                         }
                     }
@@ -585,9 +585,9 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
                         if (qryRespUS == undefined) {
                             qryRespUS = 0;
-                        } else if (qryRespAvg == undefined) {
+                        } if (qryRespAvg == undefined) {
                             qryRespAvg = 0;
-                        } else if (qryRespS == undefined) {
+                        } if (qryRespS == undefined) {
                             qryRespS = 0;
                         }
                     }
@@ -604,7 +604,10 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
                         //if(result[i].year == year){
                         data.data.push({
                             "comments": result[i].extraComment,
-                            "user": result[i].name
+                            "user": result[i].name,
+                            "address": result[i].address,
+                            "number": result[i].number,
+                            "company": result[i].company
                         });
                         //}
                     }
@@ -665,7 +668,7 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 app.post('/customerFeedbackCommercial', function(req, res) {
     'use strict';
     var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_commercial GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_commercial GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_commercial GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_commercial GROUP BY cleanliness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_commercial GROUP BY physicalCondition, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_commercial GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, company, address, number, extraComment FROM tblsatisfaction_commercial WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
@@ -698,9 +701,9 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
                         if (compRateUS == undefined) {
                             compRateUS = 0;
-                        } else if (compRateAvg == undefined) {
+                        } if (compRateAvg == undefined) {
                             compRateAvg = 0;
-                        } else if (compRateS == undefined) {
+                        } if (compRateS == undefined) {
                             compRateS = 0;
                         }
                     }
@@ -716,9 +719,9 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
                         if (teamEffUS == undefined) {
                             teamEffUS = 0;
-                        } else if (teamEffAvg == undefined) {
+                        } if (teamEffAvg == undefined) {
                             teamEffAvg = 0;
-                        } else if (teamEffS == undefined) {
+                        } if (teamEffS == undefined) {
                             teamEffS = 0;
                         }
                     }
@@ -734,9 +737,9 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
                         if (collPromptUS == undefined) {
                             collPromptUS = 0;
-                        } else if (collPromptAvg == undefined) {
+                        } if (collPromptAvg == undefined) {
                             collPromptAvg = 0;
-                        } else if (collPromptS == undefined) {
+                        } if (collPromptS == undefined) {
                             collPromptS = 0;
                         }
                     }
@@ -752,9 +755,9 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
                         if (cleanlinessUS == undefined) {
                             cleanlinessUS = 0;
-                        } else if (cleanlinessAvg == undefined) {
+                        } if (cleanlinessAvg == undefined) {
                             cleanlinessAvg = 0;
-                        } else if (cleanlinessS == undefined) {
+                        } if (cleanlinessS == undefined) {
                             cleanlinessS = 0;
                         }
                     }
@@ -770,9 +773,9 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
                         if (physicalCondUS == undefined) {
                             physicalCondUS = 0;
-                        } else if (physicalCondAvg == undefined) {
+                        } if (physicalCondAvg == undefined) {
                             physicalCondAvg = 0;
-                        } else if (physicalCondS == undefined) {
+                        } if (physicalCondS == undefined) {
                             physicalCondS = 0;
                         }
                     }
@@ -788,9 +791,9 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
                         if (qryRespUS == undefined) {
                             qryRespUS = 0;
-                        } else if (qryRespAvg == undefined) {
+                        } if (qryRespAvg == undefined) {
                             qryRespAvg = 0;
-                        } else if (qryRespS == undefined) {
+                        } if (qryRespS == undefined) {
                             qryRespS = 0;
                         }
                     }
@@ -807,7 +810,10 @@ app.post('/customerFeedbackCommercial', function(req, res) {
                         //if(result[i].year == year){
                         data.data.push({
                             "comments": result[i].extraComment,
-                            "user": result[i].name
+                            "user": result[i].name,
+                            "address": result[i].address,
+                            "number": result[i].number,
+                            "company": result[i].company
                         });
                         //}
                     }
@@ -867,7 +873,7 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 app.post('/customerFeedbackScheduled', function(req, res) {
     'use strict';
     var sql = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse, year, month";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, company, address, number, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS;
     var compRateS, teamEffS, healthAdhS, regAdhS, qryRespS;
     var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
@@ -900,9 +906,9 @@ app.post('/customerFeedbackScheduled', function(req, res) {
 
                         if (compRateUS == undefined) {
                             compRateUS = 0;
-                        } else if (compRateAvg == undefined) {
+                        } if (compRateAvg == undefined) {
                             compRateAvg = 0;
-                        } else if (compRateS == undefined) {
+                        } if (compRateS == undefined) {
                             compRateS = 0;
                         }
                     }
@@ -918,9 +924,9 @@ app.post('/customerFeedbackScheduled', function(req, res) {
 
                         if (teamEffUS == undefined) {
                             teamEffUS = 0;
-                        } else if (teamEffAvg == undefined) {
+                        } if (teamEffAvg == undefined) {
                             teamEffAvg = 0;
-                        } else if (teamEffS == undefined) {
+                        } if (teamEffS == undefined) {
                             teamEffS = 0;
                         }
                     }
@@ -936,9 +942,9 @@ app.post('/customerFeedbackScheduled', function(req, res) {
 
                         if (healthAdhUS == undefined) {
                             healthAdhUS = 0;
-                        } else if (healthAdhAvg == undefined) {
+                        } if (healthAdhAvg == undefined) {
                             healthAdhAvg = 0;
-                        } else if (healthAdhS == undefined) {
+                        } if (healthAdhS == undefined) {
                             healthAdhS = 0;
                         }
                     }
@@ -954,9 +960,9 @@ app.post('/customerFeedbackScheduled', function(req, res) {
 
                         if (regAdhUS == undefined) {
                             regAdhUS = 0;
-                        } else if (regAdhAvg == undefined) {
+                        } if (regAdhAvg == undefined) {
                             regAdhAvg = 0;
-                        } else if (regAdhS == undefined) {
+                        } if (regAdhS == undefined) {
                             regAdhS = 0;
                         }
                     }
@@ -972,9 +978,9 @@ app.post('/customerFeedbackScheduled', function(req, res) {
 
                         if (qryRespUS == undefined) {
                             qryRespUS = 0;
-                        } else if (qryRespAvg == undefined) {
+                        } if (qryRespAvg == undefined) {
                             qryRespAvg = 0;
-                        } else if (qryRespS == undefined) {
+                        } if (qryRespS == undefined) {
                             qryRespS = 0;
                         }
                     }
@@ -991,7 +997,10 @@ app.post('/customerFeedbackScheduled', function(req, res) {
                         //if(result[i].year == year){
                         data.data.push({
                             "comments": result[i].extraComment,
-                            "user": result[i].name
+                            "user": result[i].name,
+                            "address": result[i].address,
+                            "number": result[i].number,
+                            "company": result[i].company
                         });
                         //}
                     }
