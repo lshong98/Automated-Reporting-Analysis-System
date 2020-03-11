@@ -8079,7 +8079,6 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
         setTimeout(function() {
             window.location.href = '#/complaint-logistics-detail/' + coID;
         }, 500);
-        console.log(coID)
     }
 
     $scope.orderBy = function(property) {
@@ -8706,7 +8705,7 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
             $http.post('/getLogisticsFullComplaintDetail', $scope.coIDobj).then(function(response) {
                 if (response.data.status == "success") {
                     $scope.fullComplaintDetail = response.data.data[0];
-                    
+                
                     $scope.areaCode = $scope.fullComplaintDetail.area.split(",")[1];
                     $scope.fullComplaintDetail.subDate = $filter('date')($scope.fullComplaintDetail.subDate, 'yyyy-MM-dd');
                     $scope.fullComplaintDetail.statusDate = $filter('date')($scope.fullComplaintDetail.statusDate, 'yyyy-MM-dd');
@@ -8744,6 +8743,16 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
 
                     if ($scope.detailObj.logsImg === "undefined|undefined|undefined") {
                         $scope.showLogsImg = false;
+                    }
+                    
+//                    review
+                    if($scope.fullComplaintDetail.logisticsReview !== null){
+                        var staffID = {
+                            'id': $scope.fullComplaintDetail.logisticsReview
+                        };
+                        $http.post('/getStaffName', staffID).then(function(response) {
+                            $scope.complaintReview = "LG Reviewed by " + response.data[0].staffName;
+                        });
                     }
                     
                     
@@ -9072,6 +9081,25 @@ app.controller('complaintLogisticsDetailController', function($scope, $http, $fi
     $scope.backList = function() {
         window.location.href = '#/complaint-module';
     };
+    
+    $scope.reviewComplaintLG = function(){
+        if (confirm("Are you sure you want to review this complaint?")) {
+            var reviewComplaint = {
+                'coID': $routeParams.complaintCode,
+                'department': "LG",
+                'staffID': window.sessionStorage.getItem('owner')
+            }
+
+            $http.post('/updateComplaintReview', reviewComplaint).then(function(response) {
+                if (response.data.status == "success") {
+                    $scope.notify(response.data.status, response.data.message);
+                    $route.reload();
+                } else {
+                    $scope.notify("error", "There are some ERROR reviewing the complaint");
+                }
+            });
+        }
+    }
 
 });
 //
@@ -9419,6 +9447,16 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
             }else{
                 $scope.logsImages.image03 = "";
             }
+        }
+        
+        //review
+        if($scope.detailObj.customerReview !== null){
+            var staffID = {
+                'id': $scope.detailObj.customerReview
+            };
+            $http.post('/getStaffName', staffID).then(function(response) {
+                $scope.complaintReview = "BD Reviewed by " + response.data[0].staffName;
+            });
         }
 
         //initialize staff
@@ -9825,6 +9863,26 @@ app.controller('complaintOfficerdetailController', function($scope, $http, $rout
 
     $scope.backList = function() {
         window.location.href = '#/complaint-module';
+    }
+    
+    $scope.reviewComplaintBD = function(){
+        if (confirm("Are you sure you want to review this complaint?")) {
+            var reviewComplaint = {
+                'coID': $routeParams.coID,
+                'department': "BD",
+                'staffID': window.sessionStorage.getItem('owner')
+            }
+
+            $http.post('/updateComplaintReview', reviewComplaint).then(function(response) {
+                if (response.data.status == "success") {
+                    $scope.notify(response.data.status, response.data.message);
+                    $route.reload();
+                } else {
+                    $scope.notify("error", "There are some ERROR reviewing the complaint");
+                }
+            });
+        }
+        
     }
 });
 app.controller('complaintOfficereditController', function($scope, $http, $routeParams, $filter) {

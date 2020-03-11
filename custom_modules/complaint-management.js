@@ -411,7 +411,7 @@ app.post('/getLogisticsComplaintDetail', function(req, res) {
 app.post('/getLogisticsFullComplaintDetail', function(req, res) {
     'use strict';
 
-    var sql = "SELECT tblcomplaintofficer.under AS 'area', tblcomplaintofficer.council AS 'council', tblcomplaintofficer.forwardedSub AS 'sub', tblcomplaintofficer.forwardedDate AS 'subDate', tblcomplaintofficer.forwardedTime AS 'subTime', tblstaff.staffName AS 'subBy', tblcomplaintofficer.status AS 'status', tblcomplaintofficer.statusDate AS 'statusDate', tblcomplaintofficer.statusTime AS 'statusTime', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.logsImg AS 'logsImg', tblcomplaintofficer.custStatus AS 'custStatus', tblcomplaintofficer.customerDate AS 'custDate', tblcomplaintofficer.customerTime AS 'custTime', tblcomplaintofficer.customerBy AS 'custBy', tblcomplaintofficer.contactStatus AS 'contactStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.driver AS 'driver' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.forwardedBy = tblstaff.staffID WHERE coID = '" + req.body.coID + "'";
+    var sql = "SELECT tblcomplaintofficer.under AS 'area', tblcomplaintofficer.council AS 'council', tblcomplaintofficer.forwardedSub AS 'sub', tblcomplaintofficer.forwardedDate AS 'subDate', tblcomplaintofficer.forwardedTime AS 'subTime', tblstaff.staffName AS 'subBy', tblcomplaintofficer.status AS 'status', tblcomplaintofficer.statusDate AS 'statusDate', tblcomplaintofficer.statusTime AS 'statusTime', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.logsImg AS 'logsImg', tblcomplaintofficer.custStatus AS 'custStatus', tblcomplaintofficer.customerDate AS 'custDate', tblcomplaintofficer.customerTime AS 'custTime', tblcomplaintofficer.customerBy AS 'custBy', tblcomplaintofficer.contactStatus AS 'contactStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.driver AS 'driver', tblcomplaintofficer.logisticsReview AS 'logisticsReview' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.forwardedBy = tblstaff.staffID WHERE coID = '" + req.body.coID + "'";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -548,6 +548,26 @@ app.post('/updateCustInformation', function(req, res) {
         }
         res.json({
             "message": "Information updated",
+            "status": "success"
+        });
+    });
+});
+
+app.post('/updateComplaintReview', function(req, res) {
+    'use strict';
+
+    if(req.body.department === "LG"){
+        var sql = "UPDATE tblcomplaintofficer SET logisticsReview = '" + req.body.staffID + "' WHERE coID = '" + req.body.coID + "'";
+    }else if(req.body.department === "BD"){
+        var sql = "UPDATE tblcomplaintofficer SET customerReview = '" + req.body.staffID + "' WHERE coID = '" + req.body.coID + "'";
+    }
+
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({
+            "message": "Complaint is Reviewed",
             "status": "success"
         });
     });
