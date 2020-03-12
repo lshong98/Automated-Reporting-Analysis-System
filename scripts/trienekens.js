@@ -8023,7 +8023,12 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
     //create verified complaint
     $scope.createComp = function() {
         window.location.href = '#/complaint-officer-create';
-    }
+    };
+    
+    //route to export complaint
+    $scope.exportComp = function() {
+        window.location.href = '#/complaint-export';
+    };
 
     //view verified complaint
     $scope.viewComp = function(coID) {
@@ -8063,6 +8068,141 @@ app.controller('complaintController', function($scope, $http, $filter, $window, 
 
 
 });
+
+//complaint export controller
+app.controller('complaintExportController', function($scope, $http, $window){
+    'use strict';
+    
+    var datevar = new Date();
+    $scope.startDate = new Date(datevar.getFullYear(),datevar.getMonth(), 1);
+    $scope.endDate = new Date(datevar.getFullYear(),datevar.getMonth() + 1, 0);
+    
+    $scope.complaintExportList = [];
+    $scope.filterComplaintExportList = [];
+    
+    $http.get('/getComplaintExportList').then(function(response){
+        $scope.complaintExportList = response.data;
+        
+        var filterAddCount = 0;
+        
+        for(var i = 0; i < response.data.length; i++){
+        
+            //calculation for lg kpi
+            if($scope.complaintExportList[i].logisticsDateTime != null && $scope.complaintExportList[i].customerDateTime != null){
+
+                var lgDateFormat = new Date($scope.complaintExportList[i].logisticsDateTime.split(" ")[0]);
+                var complaintDateFormat = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
+
+                var lkBetweenDay = lgDateFormat - complaintDateFormat;
+                lkBetweenDay = lkBetweenDay / 60 / 60 / 24 / 1000;
+
+                var lkBetweenTime = "";
+
+                var lgTimeFormat =  new Date(2000,0,1,$scope.complaintExportList[i].logisticsDateTime.split(" ")[1].split(":")[0],$scope.complaintExportList[i].logisticsDateTime.split(" ")[1].split(":")[1]);
+
+                var complaintTimeFormat = new Date(2000,0,1,$scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[0],$scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[1]);
+
+                var operationStartTime = new Date(2000,0,1, 8, 30);
+                var operationEndTime = new Date(2000,0,1, 17, 30);
+
+                if(lkBetweenDay == 0){
+                    lkBetweenTime = lgTimeFormat - complaintTimeFormat;
+
+                    lkBetweenTime = lkBetweenTime / 60 / 60 / 1000;
+                    lkBetweenTime = lkBetweenTime.toFixed(2);
+
+                }else if(lkBetweenDay >= 1){
+
+                    lkBetweenTime = (operationEndTime - complaintTimeFormat) + (lgTimeFormat - operationStartTime);
+                    lkBetweenTime = lkBetweenTime / 60 / 60 / 1000;
+
+                    for(var dayCounter =  1; dayCounter < lkBetweenDay; dayCounter++){
+                        lkBetweenTime += 9;
+                    }
+                    lkBetweenTime = lkBetweenTime.toFixed(2);
+                }else{
+                    lkBetweenTime = "Error Data";
+                }
+                
+                $scope.complaintExportList[i].lgkpi = lkBetweenTime;
+            }
+            
+            
+            //calculation for bd kpi
+            if($scope.complaintExportList[i].customerDateTime != null && $scope.complaintExportList[i].complaintDate != null){
+
+                var bdDateFormat = new Date($scope.complaintExportList[i].customerDateTime.split(" ")[0]);
+                var complaintDateFormat = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
+
+                var bkBetweenDay = bdDateFormat - complaintDateFormat;
+                bkBetweenDay = bkBetweenDay / 60 / 60 / 24 / 1000;
+
+                var bkBetweenTime = "";
+
+                var bdTimeFormat =  new Date(2000,0,1,$scope.complaintExportList[i].customerDateTime.split(" ")[1].split(":")[0],$scope.complaintExportList[i].customerDateTime.split(" ")[1].split(":")[1]);
+
+                var complaintTimeFormat = new Date(2000,0,1,$scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[0],$scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[1]);
+
+                var operationStartTime = new Date(2000,0,1, 8, 30);
+                var operationEndTime = new Date(2000,0,1, 17, 30);
+
+                if(bkBetweenDay == 0){
+                    bkBetweenTime = bdTimeFormat - complaintTimeFormat;
+
+                    bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
+                    bkBetweenTime = bkBetweenTime.toFixed(2);
+                    
+                }else if(bkBetweenDay >= 1){
+
+                    bkBetweenTime = (operationEndTime - complaintTimeFormat) + (bdTimeFormat - operationStartTime);
+                    bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
+
+                    for(var dayCounter =  1; dayCounter < bkBetweenDay; dayCounter++){
+                        bkBetweenTime += 9;
+                    }
+                    bkBetweenTime = bkBetweenTime.toFixed(2);
+                }else{
+                    bkBetweenTime = "Error Data";
+                }
+                
+                $scope.complaintExportList[i].bdkpi = bkBetweenTime;
+            }   
+            
+            var compDate = new Date($scope.complaintExportList[i].complaintDate);
+
+            if(compDate >= $scope.startDate && compDate <= $scope.endDate){
+                $scope.filterComplaintExportList[filterAddCount] = $scope.complaintExportList[i];
+                filterAddCount += 1;
+
+            }
+        }
+    
+
+    });
+    
+    $scope.dateRangeChange = function(){
+        if($scope.startDate != undefined && $scope.endDate != undefined && $scope.startDate <= $scope.endDate ){
+
+            var filterAddCount = 0;
+            $scope.filterComplaintExportList = [];
+            for(var n=0; n<$scope.complaintExportList.length; n++){
+                var compDate = new Date($scope.complaintExportList[n].complaintDate);
+                if(compDate >= $scope.startDate && compDate <= $scope.endDate){
+                    $scope.filterComplaintExportList[filterAddCount] = $scope.complaintExportList[n];
+                    filterAddCount += 1;
+                }                
+            }
+        }
+        
+    }
+    
+    $scope.exportCompReport = function(module){
+        console.log($scope.startDate);
+        console.log($scope.endDate);
+    }
+    
+});
+
 //complaint detail controller
 app.controller('complaintDetailController', function($scope, $http, $filter, $window, $routeParams, $route) {
     'use strict';

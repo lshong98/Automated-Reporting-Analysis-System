@@ -2121,18 +2121,20 @@ app.get('/unreadCustFeedbackCount', function(req, res){
     var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
     var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
     database.query(sql, function (err, result) {
-        municipalUnread = result[0].unread;
-        database.query(sql2, function (err, result) {
-            commercialUnread = result[0].unread;
-            database.query(sql3, function (err, result) {
-                scheduledUnread = result[0].unread;
-                totalUnread = parseInt(municipalUnread, 10) + parseInt(commercialUnread, 10) + parseInt(scheduledUnread, 10);
-                // io.sockets.in(roomManager).emit('new satisfaction', {
-                //     "unread": totalUnread
-                // });
-                res.send(totalUnread.toString());
+        if(result != undefined){
+            municipalUnread = result[0].unread;
+            database.query(sql2, function (err, result) {
+                commercialUnread = result[0].unread;
+                database.query(sql3, function (err, result) {
+                    scheduledUnread = result[0].unread;
+                    totalUnread = parseInt(municipalUnread, 10) + parseInt(commercialUnread, 10) + parseInt(scheduledUnread, 10);
+                    // io.sockets.in(roomManager).emit('new satisfaction', {
+                    //     "unread": totalUnread
+                    // });
+                    res.send(totalUnread.toString());
+                });
             });
-        });
+        }
     });
 });
 
