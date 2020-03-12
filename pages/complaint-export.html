@@ -1,0 +1,115 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Export Complaint Report</h1>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="startDate" class="col-md-1 col-form-label form-label-width">Start Date</label>
+    <div class="col-md-3">
+        <input type="date" id="startDate" class="form-control mx-sm-2" data-ng-model="startDate" data-ng-change="dateRangeChange()"/>
+    </div>
+</div>    
+
+<div class="form-group row">
+    <label for="endDate" class="col-md-1 col-form-label form-label-width">End Date</label>
+    <div class="col-md-3">
+        <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="endDate" data-ng-change="dateRangeChange()"/>
+    </div>
+    <div class="col-md-3 offset-md-5">
+        <a href="javascript:exportTableToExcel('complaintExport')" class="btn btn-md btn-primary clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
+<!--        <button class="btn btn-primary" data-ng-click="exportCompReport()"><i class="fa fa-plus"></i> Export</button>-->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table"  id="complaintExport">
+                <thead>
+                    <tr>
+                        <th>CMS Date Time</th>
+                        <th>LG Date Time</th>
+                        <th>LG KPI Response Time</th>
+                        <th>BD Date Time</th>
+                        <th>BD KPI Response Time</th>
+                        <th>Type of Complaint</th>
+                        <th>Service Provider</th>
+                        <th>Complaint Name</th>
+                        <th>Source of Complaint</th>
+                        <th>Company Name</th>
+                        <th>Address</th>
+                        <th>LG Status</th>
+                        <th>BD Status</th>
+                        <th>CMS Review Status</th>
+                        <th>Area Code</th>
+                        <th>Driver</th>
+                        <th>Remarks</th>
+                        <th>Respondent</th>
+                        <th>LG Reviewed By</th>
+                        <th>BD Reviewed By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="c in filterComplaintExportList">
+                        <td data-ng-bind="c.complaintDate"></td>
+                        <td data-ng-bind="c.logisticsDateTime"></td>
+                        <td data-ng-bind="c.lgkpi"></td>
+                        <td data-ng-bind="c.customerDateTime"></td>
+                        <td data-ng-bind="c.bdkpi"></td>
+                        <td data-ng-bind="c.services"></td>
+                        <td data-ng-bind="c.forwardedSub"></td>
+                        <td data-ng-bind="c.name"></td>
+                        <td data-ng-bind="c.source"></td>
+                        <td data-ng-bind="c.company"></td>
+                        <td data-ng-bind="c.address"></td>
+                        <td data-ng-bind="c.lgStatus"></td>
+                        <td data-ng-bind="c.bdStatus"></td>
+                        <td data-ng-bind="c.cmsStatus"></td>
+                        <td data-ng-bind="c.area"></td>
+                        <td data-ng-bind="c.driver"></td>
+                        <td data-ng-bind="c.remarks"></td>
+                        <td data-ng-bind="c.respondent"></td>
+                        <td ></td>
+                        <td ></td>
+                    </tr>                
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="/scripts/html2canvas.min.js"></script>
+<script>
+
+function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'complaintReport.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+}
+</script>     

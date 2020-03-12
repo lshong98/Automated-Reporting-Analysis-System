@@ -158,6 +158,10 @@ app.get('/complaint-module', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-module.html', {root: __dirname});
 });
+app.get('/complaint-export',function (req, res){
+    'use strict';
+    res.sendFile('pages/complaint-export.html', {root: __dirname});
+});
 app.get('/complaint-officer', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-officer.html', {root: __dirname});
