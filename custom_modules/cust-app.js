@@ -2118,8 +2118,8 @@ app.get('/getBoundaryLatLng', function (req, res) {
 
 app.get('/unreadCustFeedbackCount', function(req, res){
     'use strict';
-    var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
-    var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+    var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_compactor WHERE readStat = 'u'";
+    var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_roro WHERE readStat = 'u'";
     var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
     var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
     database.query(sql, function (err, result) {
