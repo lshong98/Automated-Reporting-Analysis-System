@@ -898,6 +898,7 @@ app.post('/satisfaction', function (req, resp) {
     req.addListener('end', function () {
         var satisfactionType = data.satisfactionType;
         var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
+        console.log(data);
 
         database.query(sqlUser, function (err, res) {
             if (!err) {
@@ -907,18 +908,18 @@ app.post('/satisfaction', function (req, resp) {
                 var sql;
 
                 if (satisfactionType == "compactor") {
-                    sql = "INSERT INTO tblsatisfaction_compactor (survey_type, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" + 
-						data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                    sql = "INSERT INTO tblsatisfaction_compactor (surveyType, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" + 
+						data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                         "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
                         data.extraComment + "','" + date + "', 'u')";
                 } else if (satisfactionType == "roro") {
-                    sql = "INSERT INTO tblsatisfaction_roro (survey_type, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate, readStat) VALUES ('" + 
-						data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                    sql = "INSERT INTO tblsatisfaction_roro (surveyType, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate, readStat) VALUES ('" + 
+						data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                         "','" + parseInt(data.cleanliness) + "','" + parseInt(data.physicalCondition) + "','" + parseInt(data.queryResponse) + "','" +
                         data.extraComment + "','" + date + "', 'u')";
                 } else if (satisfactionType == "scheduled") {
                     sql = "INSERT INTO tblsatisfaction_scheduled (userID, name, location, companyName, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
-                        userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.healthAdherence) + "','" + parseInt(data.regulationsAdherence) + "','" + parseInt(data.queryResponse) + "','" + data.extraComment + "','" + date + "', 'u')";
+                        userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.healthAdherence) + "','" + parseInt(data.regulationsAdherence) + "','" + parseInt(data.queryResponse) + "','" + data.extraComment + "','" + date + "', 'u')";
                 }
 
                 database.query(sql, function (err, res) {
@@ -926,6 +927,7 @@ app.post('/satisfaction', function (req, resp) {
                         emitter.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
                     } else {
+                        console.log(err);
                         resp.send("Failed to Submit");
                     }
                 });

@@ -470,3 +470,8 @@ td[colspan] {
     max-width: 100%;
 }
 /*Complaint detail image*/
+
+/*Feedback summary*/
+table.feedback-summary, table.feedback-summary th, table.feedback-summary td{
+    border: 1px solid black;
+}
