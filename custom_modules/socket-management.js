@@ -172,8 +172,8 @@ io.sockets.on('connection', function (socket) {
 
     //to update notification badge everytime app user submits form
     emitter.on('satisfaction form', function () {
-        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
-        var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_compactor WHERE readStat = 'u'";
+        var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_roro WHERE readStat = 'u'";
         var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
         var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
         database.query(sql, function (err, result) {
@@ -270,7 +270,7 @@ io.sockets.on('connection', function (socket) {
 
     //Update notif badge count after it is read
     socket.on('municipal satisfaction', function () {
-        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_municipal WHERE readStat = 'u'";
+        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_compactor WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read municipal', {
                 "unread": result[0].unread
@@ -279,7 +279,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('commercial satisfaction', function () {
-        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
+        var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_roro WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
             io.sockets.in(roomManager).emit('read commercial', {
                 "unread": result[0].unread

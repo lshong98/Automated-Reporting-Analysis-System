@@ -417,6 +417,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintController',
         controllerAs:'complaint'
     })
+    .when('/complaint-export',{
+        resolve: {
+            "check": function (routingService, $window, $location){
+                return routingService.auth($window, $location, '/complaint-export');
+            }
+        },
+        templateUrl: '/complaint-export',
+        controller: 'complaintExportController',
+        controllerAs: 'complaintexport'
+    })
     .when('/complaint-officer', {
         resolve: {
             "check": function (routingService, $window, $location) {

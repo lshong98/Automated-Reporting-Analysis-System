@@ -136,8 +136,10 @@
 </style>
 
 <div class="row">
-    <div class="col-md-10"></div>
+    <div class="col-md-8"></div>
+    <div class="col-md-2" style="padding: 5px;">{{complaintReview}}</div>
     <div class="col-md-2">
+       <button class="btn btn-primary" data-ng-click="reviewComplaintLG()" >Review</button>
         <button class="btn btn-danger" data-ng-click="backList()" >Back</button>
         <a href="javascript:exportPdf()" class="btn btn-md btn-success ">Print</a>
 <!--        <button class="btn btn-success" data-ng-click="editComp(detailObj.coID)"><i class="fa fa-plus"></i> Edit</button>            -->
