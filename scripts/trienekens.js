@@ -2628,6 +2628,8 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     $scope.resetFormM = function() {
         $scope.m.date = today;
         $scope.m.name = '';
+        $scope.m.location = 'Kuching';
+        $scope.m.surveyType = 'Household'
         $scope.m.company = '';
         $scope.m.address = '';
         $scope.m.number = '';
