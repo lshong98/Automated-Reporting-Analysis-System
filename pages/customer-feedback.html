@@ -449,7 +449,7 @@
                         </div>
                         <div class="col-md-6">
                             <!-- <button class="btn btn-danger" ng-csv="municipalData" csv-header="getDataHeaderMunicipal()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button>        -->
-                            <button class="btn btn-danger" data-ng-click="downloadxls()">Download Excel File</button>
+                            <button class="btn btn-danger" data-ng-click="downloadxls('feedback-summary')">Download Excel File</button>
                         </div>
                     </div><br />
 
@@ -582,8 +582,8 @@
 
                     <!--Table for pdf download-->
                     <div class="row" hidden>
-                        <div class="col-md-12 chart-download" id="feedback-summary">
-                            <table class="table feedback-summary">
+                        <div class="col-md-12 chart-download" >
+                            <table class="table" id="feedback-summary">
                                 <thead>
                                     <tr>
                                         <th>Classification of Feedback</th>
@@ -671,7 +671,7 @@
                         </div>
                         <div class="col-md-6">
                             <!-- <button class="btn btn-danger" ng-csv="commercialData" csv-header="getDataHeaderCommercial()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button> -->
-                            <button class="btn btn-danger" data-ng-click="downloadxlsCommercial()">Download Excel File</button>
+                            <button class="btn btn-danger" data-ng-click="downloadxlsCommercial('feedback-summary-commercial')">Download Excel File</button>
                         </div>
                     </div><br />
 
@@ -804,8 +804,8 @@
 
                     <!--Table for pdf download-->
                     <div class="row" hidden>
-                        <div class="col-md-12 chart-download" id="feedback-summary-commercial">
-                            <table class="table feedback-summary">
+                        <div class="col-md-12 chart-download">
+                            <table class="table feedback-summary" id="feedback-summary-commercial">
                                 <thead>
                                     <tr>
                                         <th>Classification of Feedback</th>
@@ -893,7 +893,7 @@
                         </div>
                         <div class="col-md-6">
                             <!-- <button class="btn btn-danger" ng-csv="scheduledData" csv-header="getDataHeaderScheduled()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button> -->
-                            <button class="btn btn-danger" data-ng-click="downloadxlsScheduled()">Download Excel File</button>
+                            <button class="btn btn-danger" data-ng-click="downloadxlsScheduled('feedback-summary-scheduled')">Download Excel File</button>
                         </div>
                     </div><br />
 
@@ -1013,8 +1013,8 @@
 
                     <!--Table for pdf download-->
                     <div class="row" hidden>
-                        <div class="col-md-12 chart-download" id="feedback-summary-scheduled">
-                            <table class="table feedback-summary">
+                        <div class="col-md-12 chart-download">
+                            <table class="table feedback-summary" id="feedback-summary-scheduled">
                                 <thead>
                                     <tr>
                                         <th>Classification of Feedback</th>
