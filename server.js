@@ -478,11 +478,12 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
     if (req.body.month != undefined) {
         month = req.body.month;
     }
+    var sql = "";
 
     if(month == undefined){
-        var sql = sqlWOMonth;
+        sql = sqlWOMonth;
     }else{
-        var sql = sqlWMonth;
+        sql = sqlWMonth;
     }
 
     database.query(sql, function(err, result) {
@@ -693,11 +694,13 @@ app.post('/customerFeedbackCommercial', function(req, res) {
     if (req.body.month != undefined) {
         month = req.body.month;
     }
+    
+    var sql = "";
 
     if(month == undefined){
-        var sql = sqlWOMonth;
+        sql = sqlWOMonth;
     }else{
-        var sql = sqlWMonth;
+        sql = sqlWMonth;
     }
 
     database.query(sql, function(err, result) {
@@ -907,10 +910,12 @@ app.post('/customerFeedbackScheduled', function(req, res) {
         month = req.body.month;
     }
 
+    var sql = "";
+    
     if(month == undefined){
-        var sql = sqlWOMonth;
+        sql = sqlWOMonth;
     }else{
-        var sql = sqlWMonth;
+        sql = sqlWMonth;
     }
 
     database.query(sql, function(err, result) {
