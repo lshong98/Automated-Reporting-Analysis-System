@@ -47,8 +47,22 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="name form-label">Date</label>
+                    <label for="date form-label">Date</label>
                     <input type="date" class="form-control" id="date" data-ng-model="m.date">
+                </div>
+                <div class="form-group">
+                    <label for="survey-type form-label">Survey Type</label>
+                    <select name="survey-type" id="survey-type" data-ng-model="m.surveyType">
+                        <option value="Household">Household</option>
+                        <option value="Commercial">Commercial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location form-label">Location</label>
+                    <select name="location" id="location" data-ng-model="m.location">
+                        <option value="Kuching">Kuching</option>
+                        <option value="Bintulu">Bintulu</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="name form-label">Name</label>
@@ -168,8 +182,22 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="name form-label">Date</label>
+                    <label for="date form-label">Date</label>
                     <input type="date" class="form-control" id="date" data-ng-model="c.date">
+                </div>
+                <div class="form-group">
+                    <label for="survey-type form-label">Survey Type</label>
+                    <select id="survey-type" data-ng-model="c.surveyType">
+                        <option value="Household">Household</option>
+                        <option value="Commercial">Commercial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location form-label">Location</label>
+                    <select id="location" data-ng-model="c.location">
+                        <option value="Kuching">Kuching</option>
+                        <option value="Bintulu">Bintulu</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="name form-label">Name</label>
@@ -214,7 +242,7 @@
                     </label>
                 </div>
                 <div class="form-group">
-                    <label for="form-label"><b>Promptness of collection according to schedule</b></label>
+                    <label for="form-label"><b>Promptness of collection according to schedule</b></label><br/>
                     <label class="radio-inline">
                         <input type="radio" name="notSatisfied2b" data-ng-value="1" data-ng-model="c.collPrompt"> Not Satisfied
                     </label>
@@ -291,8 +319,18 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="name form-label">Date</label>
+                    <label for="date form-label">Date</label>
                     <input type="date" class="form-control" id="date" data-ng-model="s.date">
+                </div>
+                <div class="form-group">
+                    <label for="location form-label">Location</label>
+                    <select id="location" data-ng-model="s.location">
+                        <option value="Kuching">Kuching</option>
+                        <option value="Bintulu">Bintulu</option>
+                        <option value="Labuan">Labuan</option>
+                        <option value="Sabah">Sabah</option>
+                        <option value="Others">Others</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="name form-label">Name</label>
@@ -411,7 +449,7 @@
                         </div>
                         <div class="col-md-6">
                             <!-- <button class="btn btn-danger" ng-csv="municipalData" csv-header="getDataHeaderMunicipal()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button>        -->
-                            <button class="btn btn-danger" data-ng-click="downloadxls()">Download Excel File</button>
+                            <button class="btn btn-danger" data-ng-click="downloadxls('feedback-summary')">Download Excel File</button>
                         </div>
                     </div><br />
 
@@ -544,8 +582,8 @@
 
                     <!--Table for pdf download-->
                     <div class="row" hidden>
-                        <div class="col-md-12 chart-download" id="feedback-summary">
-                            <table class="table feedback-summary">
+                        <div class="col-md-12 chart-download" >
+                            <table class="table" id="feedback-summary">
                                 <thead>
                                     <tr>
                                         <th>Classification of Feedback</th>
@@ -564,7 +602,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Company Rating</td>
+                                        <td>How do you rate us as a company that promotes sustainable living?</td>
                                         <td>{{reviews.compRateUS}}</td>
                                         <td>{{reviews.compRateAvg}}</td>
                                         <td>{{reviews.compRateS}}</td>
@@ -585,14 +623,14 @@
                                         <td>0</td>
                                     </tr>
                                     <tr>
-                                        <td>Bin Handling</td>
+                                        <td>Bin Handling (e.g bin returned to its original location)</td>
                                         <td>{{reviews.binHandUS}}</td>
                                         <td>{{reviews.binHandAvg}}</td>
                                         <td>{{reviews.binHandS}}</td>
                                         <td>0</td>
                                     </tr>
                                     <tr>
-                                        <td>Spillage Control</td>
+                                        <td>Spillage Control (e.g spillage of waste, spillage of leachate water)</td>
                                         <td>{{reviews.spillCtrlUS}}</td>
                                         <td>{{reviews.spillCtrlAvg}}</td>
                                         <td>{{reviews.spillCtrlS}}</td>
@@ -633,7 +671,7 @@
                         </div>
                         <div class="col-md-6">
                             <!-- <button class="btn btn-danger" ng-csv="commercialData" csv-header="getDataHeaderCommercial()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button> -->
-                            <button class="btn btn-danger" data-ng-click="downloadxlsCommercial()">Download Excel File</button>
+                            <button class="btn btn-danger" data-ng-click="downloadxlsCommercial('feedback-summary-commercial')">Download Excel File</button>
                         </div>
                     </div><br />
 
@@ -766,8 +804,8 @@
 
                     <!--Table for pdf download-->
                     <div class="row" hidden>
-                        <div class="col-md-12 chart-download" id="feedback-summary-commercial">
-                            <table class="table feedback-summary">
+                        <div class="col-md-12 chart-download">
+                            <table class="table feedback-summary" id="feedback-summary-commercial">
                                 <thead>
                                     <tr>
                                         <th>Classification of Feedback</th>
@@ -786,7 +824,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Company Rating</td>
+                                        <td>How do you rate us as a company that promotes sustainable living?</td>
                                         <td>{{reviewsCommercial.compRateUS}}</td>
                                         <td>{{reviewsCommercial.compRateAvg}}</td>
                                         <td>{{reviewsCommercial.compRateS}}</td>
@@ -807,14 +845,14 @@
                                         <td>0</td>
                                     </tr>
                                     <tr>
-                                        <td>Cleanliness</td>
+                                        <td>Cleanliness (e.g visual, smell)</td>
                                         <td>{{reviewsCommercial.cleanlinessUS}}</td>
                                         <td>{{reviewsCommercial.cleanlinessAvg}}</td>
                                         <td>{{reviewsCommercial.cleanlinessS}}</td>
                                         <td>0</td>
                                     </tr>
                                     <tr>
-                                        <td>Physical Condition</td>
+                                        <td>Physical Working Condition</td>
                                         <td>{{reviewsCommercial.physicalCondUS}}</td>
                                         <td>{{reviewsCommercial.physicalCondAvg}}</td>
                                         <td>{{reviewsCommercial.physicalCondS}}</td>
@@ -855,7 +893,7 @@
                         </div>
                         <div class="col-md-6">
                             <!-- <button class="btn btn-danger" ng-csv="scheduledData" csv-header="getDataHeaderScheduled()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button> -->
-                            <button class="btn btn-danger" data-ng-click="downloadxlsScheduled()">Download Excel File</button>
+                            <button class="btn btn-danger" data-ng-click="downloadxlsScheduled('feedback-summary-scheduled')">Download Excel File</button>
                         </div>
                     </div><br />
 
@@ -975,8 +1013,8 @@
 
                     <!--Table for pdf download-->
                     <div class="row" hidden>
-                        <div class="col-md-12 chart-download" id="feedback-summary-scheduled">
-                            <table class="table feedback-summary">
+                        <div class="col-md-12 chart-download">
+                            <table class="table feedback-summary" id="feedback-summary-scheduled">
                                 <thead>
                                     <tr>
                                         <th>Classification of Feedback</th>
@@ -995,28 +1033,28 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Company Rating</td>
+                                        <td>How do you rate us as a company that promotes sustainable living?</td>
                                         <td>{{reviewsScheduled.compRateUS}}</td>
                                         <td>{{reviewsScheduled.compRateAvg}}</td>
                                         <td>{{reviewsScheduled.compRateS}}</td>
                                         <td>0</td>
                                     </tr>
                                     <tr>
-                                        <td>Efficiency of Our Team</td>
+                                        <td>Efficiency of Our Service Team</td>
                                         <td>{{reviewsScheduled.teamEffUS}}</td>
                                         <td>{{reviewsScheduled.teamEffAvg}}</td>
                                         <td>{{reviewsScheduled.teamEffS}}</td>
                                         <td>0</td>
                                     </tr>
                                     <tr>
-                                        <td>Regulations Adherence</td>
+                                        <td>Adherence to Regulations</td>
                                         <td>{{reviewsScheduled.regAdhUS}}</td>
                                         <td>{{reviewsScheduled.regAdhAvg}}</td>
                                         <td>{{reviewsScheduled.regAdhS}}</td>
                                         <td>0</td>
                                     </tr>
                                     <tr>
-                                        <td>Health Adherence</td>
+                                        <td>Adherence to health, safety, security and environmental standards</td>
                                         <td>{{reviewsScheduled.healthAdhUS}}</td>
                                         <td>{{reviewsScheduled.healthAdhAvg}}</td>
                                         <td>{{reviewsScheduled.healthAdhS}}</td>
