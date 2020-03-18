@@ -1976,8 +1976,12 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         var month = document.getElementById("month");
         var selectedMonth = month.options[month.selectedIndex].value;
 
+        var location = document.getElementById("locationFilter");
+        var selectedLocation = location.options[location.selectedIndex].value;
+        console.log(selectedLocation);
         $scope.filters.year = selectedYear.value;
         $scope.filters.month = selectedMonth.value;
+        $scope.filters.location = selectedLocation.value;
     }
 
     $scope.getMunicipalFeedback = function () {
@@ -2000,14 +2004,18 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             $scope.municipalData.push(data);
             console.log($scope.municipalData);
 
-            //ng-csv filename
-            if ($scope.filters.month == undefined) {
+            //excel filename
+            if ($scope.filters.month == undefined && $scope.filters.location == undefined) {
                 $scope.filename = $scope.filters.year.value + "_custsatisfaction_municipal.xls";
-            } else {
+            } else if ($scope.filters.month != undefined && $scope.filters.location == undefined){
                 $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_municipal.xls";
+            } else if ($scope.filters.month != undefined && $scope.filters.location != undefined){
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_" + $scope.filters.location + "_custsatisfaction_municipal.xls";
+            } else if ($scope.filters.month == undefined && $scope.filters.location != undefined){
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.location + "_custsatisfaction_municipal.xls";
             }
-
-            console.log(document.getElementById('feedback-summary').innerHTML);
+            console.log($scope.filters.location);
+            //console.log(document.getElementById('feedback-summary').innerHTML);
             $scope.downloadxls = function (tableid) {
                 // var blob = new Blob([document.getElementById('feedback-summary').innerHTML], {
                 //     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
@@ -2253,15 +2261,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             $scope.totalItemsCommercial = response.data.comments.length;
             $scope.totalUnsatisfiedCom = $scope.reviewsCommercial.compRateUS + $scope.reviewsCommercial.teamEffUS + $scope.reviewsCommercial.collPromptUS + $scope.reviewsCommercial.cleanlinessUS + $scope.reviewsCommercial.physicalCondUS + $scope.reviewsCommercial.qryRespUS;
             $scope.totalSatisfiedCom = $scope.reviewsCommercial.compRateAvg + $scope.reviewsCommercial.teamEffAvg + $scope.reviewsCommercial.collPromptAvg + $scope.reviewsCommercial.cleanlinessAvg + $scope.reviewsCommercial.physicalCondAvg + $scope.reviewsCommercial.qryRespAvg;
-            // $scope.totalSatisfiedCom = function(cr,te,cp,c,pc,qr){
-            //     // console.log(cr);
-            //     // console.log(te);
-            //     // console.log(cp);
-            //     // console.log(c);
-            //     // console.log(pc);
-            //     // console.log(qr);
-            //     return cr+te+cp+c+pc+qr;
-            // };
             $scope.totalVSatisfiedCom = $scope.reviewsCommercial.compRateS + $scope.reviewsCommercial.teamEffS + $scope.reviewsCommercial.collPromptS + $scope.reviewsCommercial.cleanlinessS + $scope.reviewsCommercial.physicalCondS + $scope.reviewsCommercial.qryRespS;
 
             var data = {
@@ -2271,11 +2270,15 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             $scope.commercialData = [];
             $scope.commercialData.push(data);
 
-            //ng-csv filename
-            if ($scope.filters.month == undefined) {
+            //excel filename
+            if ($scope.filters.month == undefined && $scope.filters.location == undefined) {
                 $scope.filename = $scope.filters.year.value + "_custsatisfaction_commercial.xls";
-            } else {
+            } else if ($scope.filters.month != undefined && $scope.filters.location == undefined){
                 $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_commercial.xls";
+            } else if ($scope.filters.month != undefined && $scope.filters.location != undefined){
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_" + $scope.filters.location + "_custsatisfaction_commercial.xls";
+            } else if ($scope.filters.month == undefined && $scope.filters.location != undefined){
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.location + "_custsatisfaction_commercial.xls";
             }
 
             $scope.downloadxlsCommercial = function (tableid) {
@@ -2530,11 +2533,15 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             $scope.scheduledData = [];
             $scope.scheduledData.push(data);
 
-            //ng-csv filename
-            if ($scope.filters.month == undefined) {
+            //excel filename
+            if ($scope.filters.month == undefined && $scope.filters.location == undefined) {
                 $scope.filename = $scope.filters.year.value + "_custsatisfaction_scheduled.xls";
-            } else {
+            } else if ($scope.filters.month != undefined && $scope.filters.location == undefined){
                 $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_custsatisfaction_scheduled.xls";
+            } else if ($scope.filters.month != undefined && $scope.filters.location != undefined){
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.month.toString() + "_" + $scope.filters.location + "_custsatisfaction_scheduled.xls";
+            } else if ($scope.filters.month == undefined && $scope.filters.location != undefined){
+                $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.location + "_custsatisfaction_scheduled.xls";
             }
 
             $scope.downloadxlsScheduled = function (tableid) {

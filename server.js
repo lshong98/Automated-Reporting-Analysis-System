@@ -459,18 +459,7 @@ app.post('/editCollectionSchedule', function(req, res) {
 
 app.post('/customerFeedbackMunicipal', function(req, res) {
     'use strict';
-    var sqlWMonth = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_compactor GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_compactor GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_compactor GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_compactor GROUP BY binHandling, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_compactor GROUP BY spillageControl, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_compactor GROUP BY queryResponse, year, month";
-    var sqlWOMonth = "SELECT YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_compactor GROUP BY companyRating, year UNION SELECT YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_compactor GROUP BY teamEfficiency, year UNION SELECT YEAR(submissionDate) as year, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_compactor GROUP BY collectionPromptness, year UNION SELECT YEAR(submissionDate) as year, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_compactor GROUP BY binHandling, year UNION SELECT YEAR(submissionDate) as year, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_compactor GROUP BY spillageControl, year UNION SELECT YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_compactor GROUP BY queryResponse, year";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_compactor WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
-    var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS;
-    var compRateS, teamEffS, collPromptS, binHandS, spillCtrlS, qryRespS;
-    var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
-    var year, month;
-    var json = {};
-    var data = {};
-    data.data = [];
-    //console.log(req);
-
+    var year, month, location;
     if (req.body.year != undefined) {
         year = req.body.year.value;
     }
@@ -479,10 +468,36 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
         month = req.body.month;
     }
 
-    if(month == undefined){
-        var sql = sqlWOMonth;
-    }else{
+    if (req.body.location != undefined) {
+        location = req.body.location;
+    }
+
+    var sqlWMonth = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_compactor GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_compactor GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_compactor GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_compactor GROUP BY binHandling, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_compactor GROUP BY spillageControl, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_compactor GROUP BY queryResponse, year, month";
+    var sqlWOMonthAndLoc = "SELECT YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_compactor GROUP BY companyRating, year UNION SELECT YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_compactor GROUP BY teamEfficiency, year UNION SELECT YEAR(submissionDate) as year, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_compactor GROUP BY collectionPromptness, year UNION SELECT YEAR(submissionDate) as year, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_compactor GROUP BY binHandling, year UNION SELECT YEAR(submissionDate) as year, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_compactor GROUP BY spillageControl, year UNION SELECT YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_compactor GROUP BY queryResponse, year";
+    var sqlWLocWOMonth = "SELECT location, YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY companyRating, year UNION SELECT location, YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY teamEfficiency, year UNION SELECT location, YEAR(submissionDate) as year, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY collectionPromptness, year UNION SELECT location, YEAR(submissionDate) as year, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY binHandling, year UNION SELECT location, YEAR(submissionDate) as year, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY spillageControl, year UNION SELECT location, YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY queryResponse, year";
+    var sqlWLocAndMonth = "SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY companyRating, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY teamEfficiency, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY collectionPromptness, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'binHandling' as source, binHandling AS category, COUNT(binHandling) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY binHandling, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'spillageControl' as source, spillageControl AS category, COUNT(spillageControl) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY spillageControl, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_compactor WHERE location = '"+location+"' GROUP BY queryResponse, year, month";
+    var sqlCommentsWOLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_compactor WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sqlCommentsWLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_compactor WHERE extraComment != 'undefined' AND location = '"+location+"' ORDER BY submissionDate DESC";
+    var compRateUS, teamEffUS, collPromptUS, binHandUS, spillCtrlUS, qryRespUS;
+    var compRateS, teamEffS, collPromptS, binHandS, spillCtrlS, qryRespS;
+    var compRateAvg, teamEffAvg, collPromptAvg, binHandAvg, spillCtrlAvg, qryRespAvg;
+    var json = {};
+    var data = {};
+    data.data = [];
+    //console.log(req);
+    
+    if (month == undefined && location == undefined){
+        var sql = sqlWOMonthAndLoc;
+        var sqlComments = sqlCommentsWOLoc
+    } else if (location == undefined && month != undefined){
         var sql = sqlWMonth;
+        var sqlComments = sqlCommentsWOLoc;
+    } else if (location != undefined && month != undefined){
+        var sql = sqlWLocAndMonth;
+        var sqlComments = sqlCommentsWLoc;
+    } else if (location != undefined && month == undefined){
+        var sql = sqlWLocWOMonth;
+        var sqlComments = sqlCommentsWLoc;
     }
 
     database.query(sql, function(err, result) {
@@ -490,7 +505,7 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
                 //Filter by year only or by year and month
-                if ((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)) {
+                if ((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month) || (month != undefined && result[i].year == year && result[i].month == month && location != undefined && result[i].location == location) || (month == undefined && result[i].year == year && location != undefined && result[i].location == location)) {
                     //if(result[i].year == year){
                     if (result[i].source == "companyRating") {
                         if (result[i].category == "1") {
@@ -675,17 +690,7 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
 app.post('/customerFeedbackCommercial', function(req, res) {
     'use strict';
-    var sqlWMonth = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro GROUP BY cleanliness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro GROUP BY physicalCondition, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro GROUP BY queryResponse, year, month";
-    var sqlWOMonth = "SELECT YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro GROUP BY companyRating, year UNION SELECT YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro GROUP BY teamEfficiency, year UNION SELECT YEAR(submissionDate) as year, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro GROUP BY collectionPromptness, year UNION SELECT YEAR(submissionDate) as year, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro GROUP BY cleanliness, year UNION SELECT YEAR(submissionDate) as year, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro GROUP BY physicalCondition, year UNION SELECT YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro GROUP BY queryResponse, year";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_roro WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
-    var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
-    var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
-    var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
-    var year, month;
-    var json = {};
-    var data = {};
-    data.data = [];
-
+    var year, month, location;
     if (req.body.year != undefined) {
         year = req.body.year.value;
     }
@@ -694,17 +699,42 @@ app.post('/customerFeedbackCommercial', function(req, res) {
         month = req.body.month;
     }
 
-    if(month == undefined){
-        var sql = sqlWOMonth;
-    }else{
+    if (req.body.location != undefined) {
+        location = req.body.location;
+    }
+
+    var sqlWMonth = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro GROUP BY collectionPromptness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro GROUP BY cleanliness, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro GROUP BY physicalCondition, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro GROUP BY queryResponse, year, month";
+    var sqlWOMonthAndLoc = "SELECT YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro GROUP BY companyRating, year UNION SELECT YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro GROUP BY teamEfficiency, year UNION SELECT YEAR(submissionDate) as year, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro GROUP BY collectionPromptness, year UNION SELECT YEAR(submissionDate) as year, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro GROUP BY cleanliness, year UNION SELECT YEAR(submissionDate) as year, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro GROUP BY physicalCondition, year UNION SELECT YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro GROUP BY queryResponse, year";
+    var sqlWLocWOMonth = "SELECT location, YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY companyRating, year UNION SELECT location, YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY teamEfficiency, year UNION SELECT location, YEAR(submissionDate) as year, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY collectionPromptness, year UNION SELECT location, YEAR(submissionDate) as year, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY cleanliness, year UNION SELECT location, YEAR(submissionDate) as year, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY physicalCondition, year UNION SELECT location, YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY queryResponse, year";
+    var sqlWLocAndMonth = "SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY companyRating, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY teamEfficiency, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY collectionPromptness, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY cleanliness, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY physicalCondition, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY queryResponse, year, month";
+    var sqlCommentsWOLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_roro WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sqlCommentsWLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_roro WHERE extraComment != 'undefined' AND location = '"+location+"' ORDER BY submissionDate DESC"
+    var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
+    var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
+    var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
+    var json = {};
+    var data = {};
+    data.data = [];
+
+    if (month == undefined && location == undefined){
+        var sql = sqlWOMonthAndLoc;
+        var sqlComments = sqlCommentsWOLoc
+    } else if (location == undefined && month != undefined){
         var sql = sqlWMonth;
+        var sqlComments = sqlCommentsWOLoc;
+    } else if (location != undefined && month != undefined){
+        var sql = sqlWLocAndMonth;
+        var sqlComments = sqlCommentsWLoc;
+    } else if (location != undefined && month == undefined){
+        var sql = sqlWLocWOMonth;
+        var sqlComments = sqlCommentsWLoc;
     }
 
     database.query(sql, function(err, result) {
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
                 //Filter by year only or by year and month
-                if ((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)) {
+                if ((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month) || (month != undefined && result[i].year == year && result[i].month == month && location != undefined && result[i].location == location) || (month == undefined && result[i].year == year && location != undefined && result[i].location == location)) {
                     //if(result[i].year == year){
                     if (result[i].source == "companyRating") {
                         if (result[i].category == "1") {
@@ -888,17 +918,7 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
 app.post('/customerFeedbackScheduled', function(req, res) {
     'use strict';
-    var sqlWMonth = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse, year, month";
-    var sqlWOMonth = "SELECT YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating, year UNION SELECT YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency, year UNION SELECT YEAR(submissionDate) as year, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence, year UNION SELECT YEAR(submissionDate) as year, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence, year UNION SELECT YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse, year";
-    var sqlComments = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
-    var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS;
-    var compRateS, teamEffS, healthAdhS, regAdhS, qryRespS;
-    var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
-    var year, month;
-    var json = {};
-    var data = {};
-    data.data = [];
-
+    var year, month, location;
     if (req.body.year != undefined) {
         year = req.body.year.value;
     }
@@ -907,17 +927,42 @@ app.post('/customerFeedbackScheduled', function(req, res) {
         month = req.body.month;
     }
 
-    if(month == undefined){
-        var sql = sqlWOMonth;
-    }else{
+    if (req.body.location != undefined) {
+        location = req.body.location;
+    }
+
+    var sqlWMonth = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence, year, month UNION SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse, year, month";
+    var sqlWOMonthAndLoc = "SELECT YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled GROUP BY companyRating, year UNION SELECT YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled GROUP BY teamEfficiency, year UNION SELECT YEAR(submissionDate) as year, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY healthAdherence, year UNION SELECT YEAR(submissionDate) as year, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled GROUP BY regulationsAdherence, year UNION SELECT YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled GROUP BY queryResponse, year";
+    var sqlWLocWOMonth = "SELECT location, YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY companyRating, year UNION SELECT location, YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY teamEfficiency, year UNION SELECT location, YEAR(submissionDate) as year, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY healthAdherence, year UNION SELECT location, YEAR(submissionDate) as year, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY regulationsAdherence, year UNION SELECT location, YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY queryResponse, year";
+    var sqlWLocAndMonth = "SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY companyRating, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY teamEfficiency, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'healthAdherence' as source, healthAdherence AS category, COUNT(healthAdherence) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY healthAdherence, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'regulationsAdherence' as source, regulationsAdherence AS category, COUNT(regulationsAdherence) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY regulationsAdherence, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_scheduled WHERE location = '"+location+"' GROUP BY queryResponse, year, month";
+    var sqlCommentsWOLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
+    var sqlCommentsWLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_scheduled WHERE extraComment != 'undefined' AND location = '"+location+"' ORDER BY submissionDate DESC";
+    var compRateUS, teamEffUS, healthAdhUS, regAdhUS, qryRespUS;
+    var compRateS, teamEffS, healthAdhS, regAdhS, qryRespS;
+    var compRateAvg, teamEffAvg, healthAdhAvg, regAdhAvg, qryRespAvg;
+    var json = {};
+    var data = {};
+    data.data = [];
+
+    if (month == undefined && location == undefined){
+        var sql = sqlWOMonthAndLoc;
+        var sqlComments = sqlCommentsWOLoc
+    } else if (location == undefined && month != undefined){
         var sql = sqlWMonth;
+        var sqlComments = sqlCommentsWOLoc;
+    } else if (location != undefined && month != undefined){
+        var sql = sqlWLocAndMonth;
+        var sqlComments = sqlCommentsWLoc;
+    } else if (location != undefined && month == undefined){
+        var sql = sqlWLocWOMonth;
+        var sqlComments = sqlCommentsWLoc;
     }
 
     database.query(sql, function(err, result) {
         if (result != undefined) {
             for (var i = 0; i < result.length; i++) {
                 //Filter by year only or by year and month
-                if ((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month)) {
+                if ((month == undefined && result[i].year == year) || (month != undefined && result[i].year == year && result[i].month == month) || (month != undefined && result[i].year == year && result[i].month == month && location != undefined && result[i].location == location) || (month == undefined && result[i].year == year && location != undefined && result[i].location == location)) {
                     //if(result[i].year == year){
                     if (result[i].source == "companyRating") {
                         if (result[i].category == "1") {
@@ -1062,6 +1107,9 @@ app.post('/countSatisfaction', function(req, res) {
 
     if (req.body.month == undefined && req.body.year != undefined) {
         var countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "'";
+        if (req.body.location != undefined){
+            var countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"'";
+        }
         database.query(countWOmonth, function(err, result) {
             if (result != undefined) {
                 countMunicipal = result[0].countMunicipal;
@@ -1091,6 +1139,9 @@ app.post('/countSatisfaction', function(req, res) {
 
     if (req.body.month != undefined && req.body.year != undefined) {
         var countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "'";
+        if(req.body.location != undefined){
+            var countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"'";
+        }
         database.query(countWmonth, function(err, result) {
             if (result != undefined) {
                 countMunicipal = result[0].countMunicipal;
