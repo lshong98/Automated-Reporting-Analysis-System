@@ -30,9 +30,9 @@
                     <tr>
                         <th>CMS Date Time</th>
                         <th>LG Date Time</th>
-                        <th>LG KPI Response Time</th>
+                        <th>LG KPI Response Time (hours)</th>
                         <th>BD Date Time</th>
-                        <th>BD KPI Response Time</th>
+                        <th>BD KPI Response Time (hours)</th>
                         <th>Type of Complaint</th>
                         <th>Service Provider</th>
                         <th>Complaint Name</th>
@@ -70,8 +70,8 @@
                         <td data-ng-bind="c.driver"></td>
                         <td data-ng-bind="c.remarks"></td>
                         <td data-ng-bind="c.respondent"></td>
-                        <td ></td>
-                        <td ></td>
+                        <td data-ng-bind="c.logisticsReview"></td>
+                        <td data-ng-bind="c.customerReview"></td>
                     </tr>                
                 </tbody>
             </table>

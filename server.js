@@ -459,7 +459,7 @@ app.post('/editCollectionSchedule', function(req, res) {
 
 app.post('/customerFeedbackMunicipal', function(req, res) {
     'use strict';
-    var year, month, location;
+    var year, month, location, sql="", sqlComments="";
     if (req.body.year != undefined) {
         year = req.body.year.value;
     }
@@ -467,7 +467,7 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
     if (req.body.month != undefined) {
         month = req.body.month;
     }
-
+    
     if (req.body.location != undefined) {
         location = req.body.location;
     }
@@ -487,17 +487,17 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
     //console.log(req);
     
     if (month == undefined && location == undefined){
-        var sql = sqlWOMonthAndLoc;
-        var sqlComments = sqlCommentsWOLoc
+        sql = sqlWOMonthAndLoc;
+        sqlComments = sqlCommentsWOLoc
     } else if (location == undefined && month != undefined){
-        var sql = sqlWMonth;
-        var sqlComments = sqlCommentsWOLoc;
+        sql = sqlWMonth;
+        sqlComments = sqlCommentsWOLoc;
     } else if (location != undefined && month != undefined){
-        var sql = sqlWLocAndMonth;
-        var sqlComments = sqlCommentsWLoc;
+        sql = sqlWLocAndMonth;
+        sqlComments = sqlCommentsWLoc;
     } else if (location != undefined && month == undefined){
-        var sql = sqlWLocWOMonth;
-        var sqlComments = sqlCommentsWLoc;
+        sql = sqlWLocWOMonth;
+        sqlComments = sqlCommentsWLoc;
     }
 
     database.query(sql, function(err, result) {
@@ -690,7 +690,7 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
 
 app.post('/customerFeedbackCommercial', function(req, res) {
     'use strict';
-    var year, month, location;
+    var year, month, location, sql="", sqlComments = "";
     if (req.body.year != undefined) {
         year = req.body.year.value;
     }
@@ -717,17 +717,17 @@ app.post('/customerFeedbackCommercial', function(req, res) {
     data.data = [];
 
     if (month == undefined && location == undefined){
-        var sql = sqlWOMonthAndLoc;
-        var sqlComments = sqlCommentsWOLoc
+        sql = sqlWOMonthAndLoc;
+        sqlComments = sqlCommentsWOLoc
     } else if (location == undefined && month != undefined){
-        var sql = sqlWMonth;
-        var sqlComments = sqlCommentsWOLoc;
+        sql = sqlWMonth;
+        sqlComments = sqlCommentsWOLoc;
     } else if (location != undefined && month != undefined){
-        var sql = sqlWLocAndMonth;
-        var sqlComments = sqlCommentsWLoc;
+        sql = sqlWLocAndMonth;
+        sqlComments = sqlCommentsWLoc;
     } else if (location != undefined && month == undefined){
-        var sql = sqlWLocWOMonth;
-        var sqlComments = sqlCommentsWLoc;
+        sql = sqlWLocWOMonth;
+        sqlComments = sqlCommentsWLoc;
     }
 
     database.query(sql, function(err, result) {
@@ -918,7 +918,7 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
 app.post('/customerFeedbackScheduled', function(req, res) {
     'use strict';
-    var year, month, location;
+    var year, month, location, sql="", sqlComments="";
     if (req.body.year != undefined) {
         year = req.body.year.value;
     }
@@ -945,17 +945,17 @@ app.post('/customerFeedbackScheduled', function(req, res) {
     data.data = [];
 
     if (month == undefined && location == undefined){
-        var sql = sqlWOMonthAndLoc;
-        var sqlComments = sqlCommentsWOLoc
+        sql = sqlWOMonthAndLoc;
+        sqlComments = sqlCommentsWOLoc
     } else if (location == undefined && month != undefined){
-        var sql = sqlWMonth;
-        var sqlComments = sqlCommentsWOLoc;
+        sql = sqlWMonth;
+        sqlComments = sqlCommentsWOLoc;
     } else if (location != undefined && month != undefined){
-        var sql = sqlWLocAndMonth;
-        var sqlComments = sqlCommentsWLoc;
+        sql = sqlWLocAndMonth;
+        sqlComments = sqlCommentsWLoc;
     } else if (location != undefined && month == undefined){
-        var sql = sqlWLocWOMonth;
-        var sqlComments = sqlCommentsWLoc;
+        sql = sqlWLocWOMonth;
+        sqlComments = sqlCommentsWLoc;
     }
 
     database.query(sql, function(err, result) {

@@ -8280,7 +8280,8 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
 
                 var bdDateFormat = new Date($scope.complaintExportList[i].customerDateTime.split(" ")[0]);
                 var complaintDateFormat = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
-
+                var dateFlag = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
+                
                 var bkBetweenDay = bdDateFormat - complaintDateFormat;
                 bkBetweenDay = bkBetweenDay / 60 / 60 / 24 / 1000;
 
@@ -8306,7 +8307,18 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
 
                     for (var dayCounter = 1; dayCounter < bkBetweenDay; dayCounter++) {
                         bkBetweenTime += 9;
+//                        console.log("daycounter" + dayCounter);
+//                        console.log("bkbetweenDay" + bkBetweenDay);
+
+//                        console.log(dateFlag);
+//                        console.log(dateFlag.getDay());
+//                        if(dateFlag.getDay() == 0){
+//                            bkBetweenTime -= 9;
+//                        }
+//                        dateFlag.setDate(dateFlag.getDate() + 1);
+//                        console.log(dateFlag);
                     }
+
                     bkBetweenTime = bkBetweenTime.toFixed(2);
                 } else {
                     bkBetweenTime = "Error Data";
