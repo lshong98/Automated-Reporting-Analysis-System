@@ -8,7 +8,7 @@ var emitter = new EventEmitter();
 var DB_HOST = process.env.DATABASE_HOST || '';
 var DB_USER = process.env.DATABASE_USER || '';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || 'dbtrienekens';
+var DB_NAME = process.env.DATABASE_NAME || '';
  
 var config = {
     user: DB_USER,
