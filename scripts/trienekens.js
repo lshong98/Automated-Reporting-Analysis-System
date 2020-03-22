@@ -1833,8 +1833,66 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         $http.get('/getPendingBinRequest').then(function (response) {
             console.log(response.data);
             $scope.pendingBinRequests = response.data;
-            $scope.totalItemsBinReq = response.data.length;
-            $scope.searchRequestFilter = '';
+            $scope.roroEnquiry = [];
+            $scope.nonRoroEnquiry = [];
+            $scope.searchBinReqFilter = '';
+            $scope.searchRoroEnqFilter = '';
+            $scope.filterBinReqList = [];
+            $scope.filterRoroEnqList = [];
+
+            for (var i=0; i<$scope.pendingBinRequests.length; i++){
+                if (($scope.pendingBinRequests[i].reason).toLowerCase().includes("roro")){
+                    $scope.roroEnquiry.push($scope.pendingBinRequests[i]);
+                } else {
+                    $scope.nonRoroEnquiry.push($scope.pendingBinRequests[i]);
+                }
+            }
+
+            $scope.totalItemsBinReq = $scope.nonRoroEnquiry.length;
+            $scope.totalItemsBinReqRoro = $scope.roroEnquiry.length;
+
+            //search non roro request
+            $scope.searchBinReq = function (br) {
+                return (br.name + br.contactNumber).toUpperCase().indexOf($scope.searchBinReqFilter.toUpperCase()) >= 0;
+            }
+
+            //$scope.totalItemsEnquiry = $scope.filterEnquiryList.length;
+
+            $scope.getBinReq = function () {
+                return $filter('filter')($scope.filterBinReqList, $scope.searchBinReqFilter);
+            }
+    
+            // $scope.$watch('searchBinReqFilter', function (newVal, oldVal) {
+            //     var vm = this;
+            //     if (oldVal !== newVal) {
+            //         $scope.currentPage = 1;
+            //         $scope.totalItemsBinReq = $scope.getBinReq().length;
+            //     }
+            //     return vm;
+            // }, true);
+
+            //search roro enquiries
+            $scope.searchRoroEnq = function (br) {
+                return (br.name + br.contactNumber).toUpperCase().indexOf($scope.searchRoroEnqFilter.toUpperCase()) >= 0;
+            }
+
+            //$scope.totalItemsEnquiry = $scope.filterEnquiryList.length;
+
+            $scope.getRoroEnq = function () {
+                return $filter('filter')($scope.filterRoroEnqList, $scope.searchRoroEnqFilter);
+            }
+    
+            // $scope.$watch('searchRoroEnqFilter', function (newVal, oldVal) {
+            //     var vm = this;
+            //     if (oldVal !== newVal) {
+            //         $scope.currentPage = 1;
+            //         $scope.totalItemsBinReqRoro = $scope.getRoroEnq().length;
+            //     }
+            //     return vm;
+            // }, true);
+
+            console.log($scope.roroEnquiry);
+            console.log($scope.nonRoroEnquiry);
         }, function (error) {
             console.log(error);
         });
@@ -1891,7 +1949,27 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(response.data);
             $scope.enquiry = response.data;
             $scope.totalItemsEnquiry = response.data.length;
-            $scope.searchRequestFilter = '';
+            $scope.searchEnquiryFilter = '';
+            $scope.filterEnquiryList = [];
+
+            $scope.searchEnquiry = function (enquiry) {
+                return (enquiry.name + enquiry.contactNumber).toUpperCase().indexOf($scope.searchEnquiryFilter.toUpperCase()) >= 0;
+            }
+
+            //$scope.totalItemsEnquiry = $scope.filterEnquiryList.length;
+
+            $scope.getWebData = function () {
+                return $filter('filter')($scope.filterEnquiryList, $scope.searchEnquiryFilter);
+            }
+    
+            // $scope.$watch('searchEnquiryFilter', function (newVal, oldVal) {
+            //     var vm = this;
+            //     if (oldVal !== newVal) {
+            //         $scope.currentPage = 1;
+            //         $scope.totalItemsEnquiry = $scope.getWebData().length;
+            //     }
+            //     return vm;
+            // }, true);
         }, function (error) {
             console.log(error);
         });
