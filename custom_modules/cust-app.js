@@ -458,6 +458,8 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
     var urlArray = [];
 
     //console.log(data.BinRequestICLost);
+    console.log("upload bin img data: (see below): ");
+    console.log(data);
 
     if (typeof data.BinRequestICLost !== 'undefined') {
         console.log(req.rawBody);
