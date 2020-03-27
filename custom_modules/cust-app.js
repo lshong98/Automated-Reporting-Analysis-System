@@ -669,7 +669,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
             })
             .on('finish', function () {
                 var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
-                sql = "UPDATE tblbinrequest SET binImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
+                sql = "UPDATE tblbinrequest SET policeImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
                         resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
