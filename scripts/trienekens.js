@@ -3072,7 +3072,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     $http.get('/unreadBinRequestCount').then(function (response) {
         console.log(response.data);
         if (response.data.unread != 0) {
-            $('.binrequest').addClass("badge badge-danger").html(response.data);
+            $('.binrequest').addClass("badge badge-danger").html(response.data.unread);
         }
     });
 
