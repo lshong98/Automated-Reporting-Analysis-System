@@ -1199,7 +1199,13 @@ app.post('/readEnquiry', function(req, res) {
 
 app.post('/readBinRequest', function(req, res) {
     'use strict';
-    var sql = "UPDATE tblbinrequest SET readStat = 'r'";
+    var sql = "";
+    if (req.body.category == 'nonroro') {
+        var sql = "UPDATE tblbinrequest SET readStat = 'r' WHERE reason LIKE 'Lost%' OR reason LIKE 'Damaged%' OR reason LIKE 'New%'";
+    } else {
+        var sql = "UPDATE tblbinrequest SET readStat = 'r' WHERE reason LIKE 'Roro%'";
+    }
+    
     database.query(sql, function(err, result) {
         res.send("Binrequest Read");
         res.end();

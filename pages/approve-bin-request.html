@@ -7,8 +7,8 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item"><a class="nav-link active" role="tab" href="#manage-bin-request" data-target="#bin-request" data-toggle="tab" data-ng-click="">Bin Requests</a></li>
-                <li class="nav-item"><a class="nav-link" role="tab" href="#manage-bin-request" data-target="#roro-enquiries" data-toggle="tab" data-ng-click="">Roro Enquiries</a></li>
+                <li class="nav-item"><a class="nav-link active" role="tab" href="#manage-bin-request" data-target="#bin-request" data-toggle="tab" data-ng-click="readBinReq('nonroro')">Bin Requests <span class="badge badge-danger nonrorotab">{{unreadNonRoro}}</span></a></li>
+                <li class="nav-item"><a class="nav-link" role="tab" href="#manage-bin-request" data-target="#roro-enquiries" data-toggle="tab" data-ng-click="readBinReq('roro')">Roro Enquiries <span class="badge badge-danger rorotab">{{unreadRoro}}</span></a></li>
             </ul>
 
             <div class="tab-content">
