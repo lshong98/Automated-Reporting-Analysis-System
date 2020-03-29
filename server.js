@@ -488,7 +488,7 @@ app.post('/customerFeedbackMunicipal', function(req, res) {
     
     if (month == undefined && location == undefined){
         sql = sqlWOMonthAndLoc;
-        sqlComments = sqlCommentsWOLoc
+        sqlComments = sqlCommentsWOLoc;
     } else if (location == undefined && month != undefined){
         sql = sqlWMonth;
         sqlComments = sqlCommentsWOLoc;
@@ -708,7 +708,7 @@ app.post('/customerFeedbackCommercial', function(req, res) {
     var sqlWLocWOMonth = "SELECT location, YEAR(submissionDate) as year, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY companyRating, year UNION SELECT location, YEAR(submissionDate) as year, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY teamEfficiency, year UNION SELECT location, YEAR(submissionDate) as year, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY collectionPromptness, year UNION SELECT location, YEAR(submissionDate) as year, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY cleanliness, year UNION SELECT location, YEAR(submissionDate) as year, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY physicalCondition, year UNION SELECT location, YEAR(submissionDate) as year, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY queryResponse, year";
     var sqlWLocAndMonth = "SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'companyRating' as source, companyRating AS category, COUNT(companyRating) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY companyRating, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'teamEfficiency' as source, teamEfficiency AS category, COUNT(teamEfficiency) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY teamEfficiency, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'collectionPromptness' as source, collectionPromptness AS category, COUNT(collectionPromptness) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY collectionPromptness, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'cleanliness' as source, cleanliness AS category, COUNT(cleanliness) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY cleanliness, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'physicalCondition' as source, physicalCondition AS category, COUNT(physicalCondition) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY physicalCondition, year, month UNION SELECT location, YEAR(submissionDate) as year, MONTH(submissionDate) as month, 'queryResponse' as source, queryResponse AS category, COUNT(queryResponse) AS value FROM tblsatisfaction_roro WHERE location = '"+location+"' GROUP BY queryResponse, year, month";
     var sqlCommentsWOLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_roro WHERE extraComment != 'undefined' ORDER BY submissionDate DESC";
-    var sqlCommentsWLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_roro WHERE extraComment != 'undefined' AND location = '"+location+"' ORDER BY submissionDate DESC"
+    var sqlCommentsWLoc = "SELECT YEAR(submissionDate) as year, MONTH(submissionDate) as month, name, companyName, address, number, extraComment FROM tblsatisfaction_roro WHERE extraComment != 'undefined' AND location = '"+location+"' ORDER BY submissionDate DESC";
     var compRateUS, teamEffUS, collPromptUS, cleanlinessUS, physicalCondUS, qryRespUS;
     var compRateS, teamEffS, collPromptS, cleanlinessS, physicalCondS, qryRespS;
     var compRateAvg, teamEffAvg, collPromptAvg, cleanlinessAvg, physicalCondAvg, qryRespAvg;
@@ -718,7 +718,7 @@ app.post('/customerFeedbackCommercial', function(req, res) {
 
     if (month == undefined && location == undefined){
         sql = sqlWOMonthAndLoc;
-        sqlComments = sqlCommentsWOLoc
+        sqlComments = sqlCommentsWOLoc;
     } else if (location == undefined && month != undefined){
         sql = sqlWMonth;
         sqlComments = sqlCommentsWOLoc;
@@ -946,7 +946,7 @@ app.post('/customerFeedbackScheduled', function(req, res) {
 
     if (month == undefined && location == undefined){
         sql = sqlWOMonthAndLoc;
-        sqlComments = sqlCommentsWOLoc
+        sqlComments = sqlCommentsWOLoc;
     } else if (location == undefined && month != undefined){
         sql = sqlWMonth;
         sqlComments = sqlCommentsWOLoc;
@@ -1104,11 +1104,11 @@ app.post('/countSatisfaction', function(req, res) {
     //var commercial = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
     //var scheduled = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
     var countMunicipal, countCommercial, countScheduled, json = {};
-
+    var countWOmonth = "";
     if (req.body.month == undefined && req.body.year != undefined) {
-        var countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "'";
+         countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "'";
         if (req.body.location != undefined){
-            var countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"'";
+             countWOmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND location = '"+req.body.location+"'";
         }
         database.query(countWOmonth, function(err, result) {
             if (result != undefined) {
@@ -1136,11 +1136,11 @@ app.post('/countSatisfaction', function(req, res) {
             // });
         });
     }
-
+    var countWmonth = "";
     if (req.body.month != undefined && req.body.year != undefined) {
-        var countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "'";
+        countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "'";
         if(req.body.location != undefined){
-            var countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"'";
+            countWmonth = "SELECT COUNT(readStat) as countMunicipal, (SELECT COUNT(readStat) FROM tblsatisfaction_scheduled WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"') as countScheduled, (SELECT COUNT(readStat) from tblsatisfaction_roro WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"') as countCommercial FROM tblsatisfaction_compactor WHERE YEAR(submissionDate) = '" + req.body.year.value + "' AND MONTH(submissionDate) = '" + req.body.month + "' AND location = '"+req.body.location+"'";
         }
         database.query(countWmonth, function(err, result) {
             if (result != undefined) {
