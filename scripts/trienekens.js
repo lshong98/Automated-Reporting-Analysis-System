@@ -8263,10 +8263,17 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
                 } else {
                     lkBetweenTime = "Error Data";
                 }
+                
+                
+                var splitHrsLK = "";
+                var splitMinLK = "";
 
-                $scope.complaintExportList[i].lgkpi = lkBetweenTime;
+                var splitHrsLK = lkBetweenTime.split(".")[0];
+                var splitMinLK = lkBetweenTime.split(".")[1] / 100 * 60;
+                
+                $scope.complaintExportList[i].lgkpi = splitHrsLK + ":" + splitMinLK;
+
             }
-
 
             //calculation for bd kpi
             if ($scope.complaintExportList[i].customerDateTime != null && $scope.complaintExportList[i].complaintDate != null) {
@@ -8313,11 +8320,18 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
                     }
 
                     bkBetweenTime = bkBetweenTime.toFixed(2);
-                } else {
-                    bkBetweenTime = "Error Data";
-                }
+                    var splitHrsBK = "";
+                    var splitMinBK = "";
 
-                $scope.complaintExportList[i].bdkpi = bkBetweenTime;
+                    var splitHrsBK = bkBetweenTime.split(".")[0];
+                    var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
+
+                    $scope.complaintExportList[i].bdkpi = splitHrsBK + ":" + splitMinBK;                    
+                } else {
+                    $scope.complaintExportList[i].bdkpi = "Error Data";
+                }
+                
+
             }
 
             var compDate = new Date($scope.complaintExportList[i].complaintDate);
