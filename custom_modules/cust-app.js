@@ -2195,20 +2195,27 @@ app.get('/unreadEnquiryCount', function(req, res){
             // io.sockets.in(roomManager).emit('new enquiry', {
             //     "unread": result[0].unread
             // });
-            var unread = result[0].unread
+            var unread = result[0].unread;
             res.send(unread.toString());
         });
 });
 
 app.get('/unreadBinRequestCount', function(req, res){
     'use strict';
-    var sql = "SELECT count(readStat) as unread FROM tblbinrequest WHERE readStat = 'u'";
+    var sql = "SELECT count(readStat) as unread, (SELECT count(readStat) FROM tblbinrequest WHERE readStat = 'u' AND reason LIKE 'Roro%') as unreadRoro FROM tblbinrequest WHERE readStat = 'u'";
          database.query(sql, function (err, result) {
             // io.sockets.in(roomManager).emit('new enquiry', {
             //     "unread": result[0].unread
             // });
-            var unread = result[0].unread
-            res.send(unread.toString());
+            var unread = result[0].unread;
+            var unreadRoro = result[0].unreadRoro;
+            var unreadNonRoro = unread - unreadRoro;
+            var json = {
+                'unread':unread,
+                'unreadRoro':unreadRoro,
+                'unreadNonRoro':unreadNonRoro
+            };
+            res.json(json);
          });
 });
 
@@ -2219,7 +2226,7 @@ app.get('/unreadComplaintCount', function(req, res){
             // io.sockets.in(roomManager).emit('new enquiry', {
             //     "unread": result[0].unread
             // });
-            var unread = result[0].unread
+            var unread = result[0].unread;
             res.send(unread.toString());
         });
 });

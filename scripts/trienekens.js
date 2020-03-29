@@ -1851,6 +1851,11 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             $scope.totalItemsBinReq = $scope.nonRoroEnquiry.length;
             $scope.totalItemsBinReqRoro = $scope.roroEnquiry.length;
 
+            $http.get('/unreadBinRequestCount').then(function (response) {
+                $scope.unreadRoro = response.data.unreadRoro;
+                $scope.unreadNonRoro = response.data.unreadNonRoro;
+            });
+
             //search non roro request
             $scope.searchBinReq = function (br) {
                 return (br.name + br.contactNumber).toUpperCase().indexOf($scope.searchBinReqFilter.toUpperCase()) >= 0;
@@ -1891,18 +1896,24 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             //     return vm;
             // }, true);
 
-            console.log($scope.roroEnquiry);
-            console.log($scope.nonRoroEnquiry);
+            $scope.readBinReq = function(category){
+                $http.post('/readBinRequest', {'category':category}).then(function (response) {
+                    console.log(response.data);
+                    if (response.data == "Binrequest Read") {
+                        if (category == 'nonroro') {
+                            $('.nonrorotab').html('0');
+                        } else {
+                            $('.rorotab').html('0');
+                        }
+                        
+                        socket.emit('binrequest read');
+                    }
+                }, function (err) {
+                    console.log(err);
+                });
+            }
         }, function (error) {
             console.log(error);
-        });
-        $http.post('/readBinRequest').then(function (response) {
-            console.log(response.data);
-            if (response.data == "Binrequest Read") {
-                socket.emit('binrequest read');
-            }
-        }, function (err) {
-            console.log(err);
         });
     };
 
@@ -3059,8 +3070,9 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     });
 
     $http.get('/unreadBinRequestCount').then(function (response) {
-        if (response.data != 0) {
-            $('.binrequest').addClass("badge badge-danger").html(response.data);
+        console.log(response.data);
+        if (response.data.unread != 0) {
+            $('.binrequest').addClass("badge badge-danger").html(response.data.unread);
         }
     });
 
