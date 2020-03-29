@@ -4,7 +4,8 @@ global angular, document, google, Highcharts
 */
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv', 'easypiechart']);
 
-var socket = io.connect();
+//var socket = io.connect();
+var socket = io({transports: ['websocket'], 'force new connection': true});
 var flag = false;
 
 function lobi_notify(type, title, content, avatar) {
@@ -33,7 +34,6 @@ window.setInterval(function () {
     isOpen(socket);
 }, 10000);
 
-//var socket = io.connect('wss://trienekens.appspot.com:3000', {transports: ['websocket'], 'force new connection': true});
 socket.on('connect', function () {
     if (flag === true) {
         angular.element('body').overhang({
