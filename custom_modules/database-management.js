@@ -5,16 +5,16 @@ var dateTime = require('node-datetime');
 var EventEmitter = require('events');
 var emitter = new EventEmitter();
 
-var DB_HOST = process.env.DATABASE_HOST || 'localhost';
-var DB_USER = process.env.DATABASE_USER || 'root';
+var DB_HOST = process.env.DATABASE_HOST || '';
+var DB_USER = process.env.DATABASE_USER || '';
 var DB_PASS = process.env.DATABASE_PASSWORD || '';
-var DB_NAME = process.env.DATABASE_NAME || 'dbtrienekens';
+var DB_NAME = process.env.DATABASE_NAME || '';
  
 var config = {
     user: DB_USER,
     password: DB_PASS,
     host: DB_HOST,
-    port: 3307,
+    port: 3306,
     timezone: 'UTC+08:00'
 };
 
@@ -136,7 +136,7 @@ emitter.on('createTable', function () {
         "CREATE TABLE tblsatisfaction_scheduled ( satisfactionScheduledID int(11) auto_increment, userID varchar(15), name varchar(200), location varchar(7), companyName varchar(200), address mediumtext, number varchar(13), companyRating char(1), teamEfficiency char(1), healthAdherence char(1), regulationsAdherence char(1), queryResponse char(1), extraComment varchar(300), submissionDate datetime, readStat varchar(1), PRIMARY KEY(satisfactionScheduledID))",
         "CREATE TABLE tblhistory (historyID VARCHAR(15), title TINYTEXT, content MEDIUMTEXT, staffID VARCHAR(15), creationDateTime DATETIME, status CHAR(1), FOREIGN KEY(staffID) REFERENCES tblstaff(staffID), PRIMARY KEY (historyID))",
         "CREATE TABLE tblwaste (chartID int, userID varchar(15), monthYear varchar(11), waste int, PRIMARY KEY(chartID))",
-        "CREATE TABLE tblenquiry (enquiryID int, userID varchar(15), enquiry varchar(300), enqStatus varchar(30), submissionDate datetime, readStat varchar(1), PRIMARY KEY(enquiryID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
+        "CREATE TABLE tblenquiry (enquiryID int auto_increment, userID varchar(15), enquiry varchar(300), enqStatus varchar(30), submissionDate datetime, readStat varchar(1), PRIMARY KEY(enquiryID), FOREIGN KEY(userID) REFERENCES tbluser(userID))",
         "CREATE TABLE tblcomplaintofficer( coID varchar(15), complaintDate date,complaintTime time, sorce varchar(50), refNo varchar(100), name varchar(200), company varchar(200), telNo varchar(20), address varchar(300), under varchar(100), council varchar(100), type varchar(100), logisticsDate date, logisticsTime time, logisticsBy varchar(100), customerDate date, customerTime time, customerBy varchar(100), forwardedSub varchar(100), forwardedDate date, forwardedTime time, forwardedBy varchar(100), status varchar(50), statusDate date, statusTime time, remarks longtext, creationDateTime DATETIME, step int(1), compImg mediumText, logsImg mediumText, services varchar(3), custAction varchar(200), PRIMARY KEY (coID))",
         "CREATE TABLE `tbldbr` (`dbrID` varchar(15) NOT NULL,`creationDateTime` datetime DEFAULT NULL,`companyName` varchar(50) DEFAULT NULL,`address` mediumtext,`council` varchar(15) DEFAULT NULL,`contactPerson` varchar(50) DEFAULT NULL,`phoneNo` varchar(15) DEFAULT NULL,`comment` mediumtext,`repairBin` varchar(15) DEFAULT NULL,`replaceBin` varchar(15) DEFAULT NULL,`preparedBy` varchar(15) DEFAULT NULL,`authorizedBy` varchar(15) DEFAULT NULL,`authorizedDate` datetime DEFAULT NULL,`verifiedBy` varchar(15) DEFAULT NULL,`verifiedDate` datetime DEFAULT NULL,`rectifiedDate` datetime DEFAULT NULL,`cost` decimal(5,2) DEFAULT NULL,`status` char(1) DEFAULT NULL,`feedback` mediumtext,`remarks` mediumtext,`alternativeAction` mediumtext,PRIMARY KEY (`dbrID`))"
     ];

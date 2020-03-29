@@ -477,6 +477,13 @@
                                 <option data-ng-value="11">November</option>
                                 <option data-ng-value="12">December</option>
                             </select>
+
+                            <span>Location: </span>
+                            <select id="locationFilter" data-ng-model="filters.location" data-ng-change="getMunicipalFeedback()">
+                                <option data-ng-value="SelectLocation">All Locations</option>
+                                <option value="Kuching">Kuching</option>
+                                <option value="Bintulu">Bintulu</option>
+                            </select>
                         </div>
                     </div><br />
 
@@ -699,6 +706,13 @@
                                 <option data-ng-value="11">November</option>
                                 <option data-ng-value="12">December</option>
                             </select>
+
+                            <span>Location: </span>
+                            <select id="locationFilter" data-ng-model="filters.location" data-ng-change="getCommercialFeedback()">
+                                <option data-ng-value="SelectLocation">All Locations</option>
+                                <option value="Kuching">Kuching</option>
+                                <option value="Bintulu">Bintulu</option>
+                            </select>
                         </div>
                     </div><br />
 
@@ -920,6 +934,16 @@
                                 <option data-ng-value="10">October</option>
                                 <option data-ng-value="11">November</option>
                                 <option data-ng-value="12">December</option>
+                            </select>
+
+                            <span>Location: </span>
+                            <select id="locationFilter" data-ng-model="filters.location" data-ng-change="getScheduledFeedback()">
+                                <option data-ng-value="SelectLocation">All Locations</option>
+                                <option value="Kuching">Kuching</option>
+                                <option value="Bintulu">Bintulu</option>
+                                <option value="Labuan">Labuan</option>
+                                <option value="Sabah">Sabah</option>
+                                <option value="Others">Others</option>
                             </select>
                         </div>
                     </div><br />

@@ -111,12 +111,12 @@
             </p>
             <p><strong>Request Date: </strong>{{reqDetail.reqDate}}</p>
             <p><strong>Requested By: </strong>{{reqDetail.name}}</p>
-            <p><strong>Company Name (if any): </strong>{{reqDetail.companyName}}</p>
-            <p><strong>Contact Number: </strong>{{reqDetail.contactNumber}}</p>
-            <p><strong>Address: </strong>
-                <span data-ng-show="reqDetail.type != 'Commercial'">{{reqDetail.address}}</span>
-                <span data-ng-show="reqDetail.type == 'Commercial'">{{reqDetail.companyAddress}}</span>
+            <p><strong>Company Name (if any): </strong>
+                <span data-ng-show="reqDetail.companyName != 'null' && reqDetail.companyName != null">{{reqDetail.companyName}}</span>
+                <span data-ng-show="reqDetail.companyName == 'null' || reqDetail.companyName == null">-</span>
             </p>
+            <p><strong>Contact Number: </strong>{{reqDetail.contactNumber}}</p>
+            <p><strong>Address: </strong>{{reqDetail.address}}{{reqDetail.companyAddress}}</p>
             <p><strong>Bin Type: </strong>{{reqDetail.type}}</p>
             <p><strong>Reason for Request: </strong>{{reqDetail.reason}}</p>
             <p><strong>Remarks: </strong>{{reqDetail.remarks}}</p>

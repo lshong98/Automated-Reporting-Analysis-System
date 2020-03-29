@@ -458,6 +458,8 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
     var urlArray = [];
 
     //console.log(data.BinRequestICLost);
+    console.log("upload bin img data: (see below): ");
+    console.log(data);
 
     if (typeof data.BinRequestICLost !== 'undefined') {
         console.log(req.rawBody);
@@ -637,6 +639,51 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
         // 		console.log("success");
         // 	}
         // });
+    }else if (typeof data.BinRequestICLost == 'undefined' && typeof data.BinRequestPolice !== 'undefined') {
+        //sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+        console.log(sql);
+        console.log(req.rawBody);
+        //console.log(data);
+
+        //refer to complaint upload img. remember to delete service key json file
+        var fileName = "images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg";
+        var bufferFile = Buffer.from(data.BinRequestPolice, 'base64');
+        var bufferStream = new stream.PassThrough();
+        bufferStream.end(bufferFile);
+        var imgFile = bucket.file(fileName);
+
+        // urlArray.push(publicUrl);
+
+        bufferStream.pipe(imgFile.createWriteStream({
+                metadata: {
+                    contentType: 'image/jpeg',
+                    metadata: {
+                        custom: 'metadata'
+                    }
+                },
+                public: true,
+                validation: 'md5'
+            }))
+            .on('error', function (err) {
+                console.log(err);
+            })
+            .on('finish', function () {
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                sql = "UPDATE tblbinrequest SET policeImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
+                database.query(sql, function (err, res) {
+                    if (!err) {
+                        resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+                        console.log("image uploaded to cloud storage");
+                    } else {
+                        resp.send("Please Try Again");
+                        console.log(err);
+                    }
+                });
+                //console.log("image uploaded to cloud storage");
+                //callback();
+            });
+
+        
     } else {
         //console.log(sql);
         console.log(req.rawBody);
