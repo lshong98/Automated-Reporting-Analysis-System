@@ -402,6 +402,10 @@ app.post('/insertNotif', function (req, resp) {
     });
 });
 
+// emitter.on('binrequest', function(){
+//     console.log('new bin request from cust-app');
+// });
+
 app.post('/binRequest', function (req, resp) {
     'use strict';
     var data;
@@ -436,8 +440,8 @@ app.post('/binRequest', function (req, resp) {
                         var sqlRequestID = "SELECT MAX(reqID) AS max FROM tblbinrequest";
                         database.query(sqlRequestID, function (err, res) {
                             reqID = res[0].max;
-                            resp.send("Submit Request Successfully " + reqID);
                             emitter.emit('binrequest');
+                            resp.send("Submit Request Successfully " + reqID);
                         });
                     } else {
                         resp.send("Failed to Submit Request" + err);
@@ -971,7 +975,7 @@ app.post('/satisfaction', function (req, resp) {
 
                 database.query(sql, function (err, res) {
                     if (!err) {
-                        emitter.emit('satisfaction form');
+                        //emitter.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
                     } else {
                         console.log(err);
@@ -2191,7 +2195,7 @@ app.get('/unreadEnquiryCount', function(req, res){
     'use strict';
     var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
         database.query(sql, function (err, result) {
-            console.log("enquiry emitter fired from trienekensjs");
+            //console.log("enquiry emitter fired from trienekensjs");
             // io.sockets.in(roomManager).emit('new enquiry', {
             //     "unread": result[0].unread
             // });

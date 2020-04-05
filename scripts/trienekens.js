@@ -52,7 +52,7 @@ socket.on('connect', function () {
 
     //    socket.emit('room', window.sessionStorage.getItem('owner'));
 
-    if (window.sessionStorage.getItem('position') == "Manager" || window.sessionStorage.getItem('position') == "Administrator" || window.sessionStorage.getItem('position') == "Developer") {
+    if (window.sessionStorage.getItem('position') == "Manager" || window.sessionStorage.getItem('position') == "Administrator" || window.sessionStorage.getItem('position') == "Developer" || window.sessionStorage.getItem('position') == "DEVELOPER") {
         socket.emit('room', "manager");
     }
 });
@@ -69,11 +69,11 @@ socket.on('receive form authorize action', function (data) {
     }
 });
 
-socket.on('new satisfaction', function (data) {
-    if (data.unread > 0) {
-        $('.satisfaction').addClass("badge badge-danger").html(data.unread);
-    }
-});
+// socket.on('new satisfaction', function (data) {
+//     if (data.unread > 0) {
+//         $('.satisfaction').addClass("badge badge-danger").html(data.unread);
+//     }
+// });
 
 socket.on('new enquiry', function (data) {
     if (data.unread > 0) {
@@ -82,44 +82,57 @@ socket.on('new enquiry', function (data) {
 });
 
 socket.on('new binrequest', function (data) {
+    console.log(data);
     if (data.unread > 0) {
         $('.binrequest').addClass("badge badge-danger").html(data.unread);
     }
+
+    lobi_notify('info', 'New Bin Request', 'New Bin Request Received', '');
 });
 
-socket.on('read municipal', function (data) {
-    if (data.unread > 0) {
-        var unread = $('.satisfaction').html();
-        console.log(unread);
-        if (unread > 0) {
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            console.log(remaining);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
-        }
-    }
+socket.on('new message', function (data) {
+    var content = data.content,
+        sender = data.sender,
+        recipient = data.recipient,
+        date = data.date,
+        complaintID = data.complaintID;
+
+    lobi_notify('info', 'You received a new message.', 'From complaint ID: '+complaintID, '');
 });
 
-socket.on('read commercial', function (data) {
-    if (data.unread > 0) {
-        var unread = $('.satisfaction').html();
-        if (unread > 0) {
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            console.log(remaining);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
-        }
-    }
-});
+// socket.on('read municipal', function (data) {
+//     if (data.unread > 0) {
+//         var unread = $('.satisfaction').html();
+//         console.log(unread);
+//         if (unread > 0) {
+//             var remaining = parseInt(unread) - parseInt(data.unread);
+//             console.log(remaining);
+//             $('.satisfaction').addClass("badge badge-danger").html(remaining);
+//         }
+//     }
+// });
 
-socket.on('read scheduled', function (data) {
-    if (data.unread > 0) {
-        var unread = $('.satisfaction').html();
-        if (unread > 0) {
-            var remaining = parseInt(unread) - parseInt(data.unread);
-            console.log(remaining);
-            $('.satisfaction').addClass("badge badge-danger").html(remaining);
-        }
-    }
-});
+// socket.on('read commercial', function (data) {
+//     if (data.unread > 0) {
+//         var unread = $('.satisfaction').html();
+//         if (unread > 0) {
+//             var remaining = parseInt(unread) - parseInt(data.unread);
+//             console.log(remaining);
+//             $('.satisfaction').addClass("badge badge-danger").html(remaining);
+//         }
+//     }
+// });
+
+// socket.on('read scheduled', function (data) {
+//     if (data.unread > 0) {
+//         var unread = $('.satisfaction').html();
+//         if (unread > 0) {
+//             var remaining = parseInt(unread) - parseInt(data.unread);
+//             console.log(remaining);
+//             $('.satisfaction').addClass("badge badge-danger").html(remaining);
+//         }
+//     }
+// });
 
 socket.on('read enquiry', function (data) {
     $('.enquiry').addClass("badge badge-danger").html(data.unread);
@@ -133,6 +146,7 @@ socket.on('new complaint', function (data) {
     if (data.unread != 0) {
         $('.complaint').addClass("badge badge-danger").html(data.unread);
     }
+    lobi_notify('info', 'New App Complaint', 'New App Complaint Received', '');
 });
 
 socket.on('read complaint', function (data) {
@@ -2074,7 +2088,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     }
 
     $scope.getMunicipalFeedback = function () {
-        socket.emit('municipal satisfaction');
+        //socket.emit('municipal satisfaction');
 
         console.log($scope.filters);
         $http.post('/customerFeedbackMunicipal', $scope.filters).then(function (response) {
@@ -2343,7 +2357,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     // };
 
     $scope.getCommercialFeedback = function () {
-        socket.emit('commercial satisfaction');
+        //socket.emit('commercial satisfaction');
         $http.post('/customerFeedbackCommercial', $scope.filters).then(function (response) {
             console.log(response.data);
             $scope.reviewsCommercial = response.data;
@@ -2606,7 +2620,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     // };
 
     $scope.getScheduledFeedback = function () {
-        socket.emit('scheduled satisfaction');
+        //socket.emit('scheduled satisfaction');
         $http.post('/customerFeedbackScheduled', $scope.filters).then(function (response) {
             console.log(response.data);
             $scope.reviewsScheduled = response.data;
@@ -2806,7 +2820,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     };
 
     //auto-fill satisfaction form date
-    console.log(today);
+    //console.log(today);
     var today = new Date();
     $scope.m.date = today;
     $scope.c.date = today;
@@ -2820,7 +2834,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         $scope.m.date = today;
         $scope.m.name = '';
         $scope.m.location = 'Kuching';
-        $scope.m.surveyType = 'Household'
+        $scope.m.surveyType = 'Household';
         $scope.m.company = '';
         $scope.m.address = '';
         $scope.m.number = '';
@@ -2836,6 +2850,8 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     $scope.resetFormC = function () {
         $scope.c.date = today;
         $scope.c.name = '';
+        $scope.c.location = 'Kuching';
+        $scope.c.surveyType = 'Household';
         $scope.c.company = '';
         $scope.c.address = '';
         $scope.c.number = '';
@@ -2851,6 +2867,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     $scope.resetFormS = function () {
         $scope.s.date = today;
         $scope.s.name = '';
+        $scope.s.location = 'Kuching';
         $scope.s.company = '';
         $scope.s.address = '';
         $scope.s.number = '';
@@ -2879,6 +2896,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
                     angular.element('#municipal-form').modal('toggle');
                 }
             });
+            $scope.resetFormM();
         } else if (type == "commercial") {
             $http.post('/addCommercial', $scope.c).then(function (response) {
                 var returnedData = response.data;
@@ -2894,6 +2912,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
                     angular.element('#commercial-form').modal('toggle');
                 }
             });
+            $scope.resetFormM();
         } else {
             $http.post('/addScheduled', $scope.s).then(function (response) {
                 var returnedData = response.data;
@@ -2909,6 +2928,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
                     angular.element('#scheduled-form').modal('toggle');
                 }
             });
+            $scope.resetFormS();
         }
     };
 });
@@ -2939,13 +2959,14 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             'tradingImg': request[0].tradingImg,
             'policeImg': request[0].policeImg,
             'reqDate': request[0].dateRequest,
-            'reqID': request[0].reqID
+            'reqID': request[0].reqID,
+            'rejectReason': request[0].rejectReason
         };
 
         $scope.entry.acrBin = 'no';
     });
 
-    $scope.saveBinRequestStatus = function (status, id) {
+    $scope.saveBinRequestStatus = function (status, id, rejectReason) {
         //scope.showBinRequest = !scope.showBinRequest;
 
         $scope.thisBinRequest = {
@@ -2955,9 +2976,28 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
 
         if (status == 'Approved') {
             angular.element('#confirmStatus').modal('toggle');
+        } else if (status == 'Rejected'){
+            $scope.thisBinRequest.from = $filter('date')($scope.thisBinRequest.from, 'yyyy-MM-dd');
+            $scope.thisBinRequest.to = $filter('date')($scope.thisBinRequest.to, 'yyyy-MM-dd');
+            $scope.thisBinRequest.rejectReason = rejectReason;
+
+            console.log($scope.thisBinRequest);
+            $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
+                var data = response.data;
+                angular.element('body').overhang({
+                    type: 'success',
+                    message: 'Status Updated!'
+                });
+
+
+                console.log(data);
+            }, function (error) {
+                console.log(error);
+            });
         } else {
             $scope.thisBinRequest.from = $filter('date')($scope.thisBinRequest.from, 'yyyy-MM-dd');
             $scope.thisBinRequest.to = $filter('date')($scope.thisBinRequest.to, 'yyyy-MM-dd');
+            $scope.thisBinRequest.rejectReason = '';
 
             console.log($scope.thisBinRequest);
             $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
@@ -3057,11 +3097,11 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         $('ul.menu__level').html(response.data.content);
     });
 
-    $http.get('/unreadCustFeedbackCount').then(function (response) {
-        if (response.data != 0) {
-            $('.satisfaction').addClass("badge badge-danger").html(response.data);
-        }
-    });
+    // $http.get('/unreadCustFeedbackCount').then(function (response) {
+    //     if (response.data != 0) {
+    //         $('.satisfaction').addClass("badge badge-danger").html(response.data);
+    //     }
+    // });
 
     $http.get('/unreadEnquiryCount').then(function (response) {
         if (response.data != 0) {
@@ -8242,18 +8282,17 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.unreadLogRowControl = "{'table-active': l.logsReadState == 'u'}";
     });
 
-    //    $scope.readComplaint = function() {
-    //        $http.post('/readComplaint').then(function(response) {
-    //            if (response.data == "Complaint Read") {
-    //                socket.emit('complaint read');
-    //            }
-    //        }, function(err) {
-    //            console.log(err);
-    //        });
-    //    };
-
     //view app complaint
     $scope.complaintDetail = function (complaintCode) {
+        console.log('complaint clicked');
+        $http.post('/readComplaint', {"id":complaintCode}).then(function(response) {
+            console.log(response.data);
+            if (response.data == "Complaint Read") {
+                socket.emit('complaint read');
+            }
+        }, function(err) {
+            console.log(err);
+        });
         window.location.href = '#/complaint-detail/' + complaintCode;
 
     };
@@ -8619,14 +8658,15 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             var content = data.content,
                 sender = data.sender,
                 recipient = data.recipient,
-                date = data.date;
+                date = data.date,
+                complaintID = data.complaintID;
 
             chatContent += '<div class="message left"><div class="message-text">' + content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + $filter('date')(new Date(), 'HH:mm') + '</small></div></div></div>';
             angular.element('.chat-box').html(chatContent);
             $('.chat-box').animate({
                 scrollTop: $('.chat-box')[0].scrollHeight
             }, 1000);
-            lobi_notify('info', 'You received a new message.', 'from complaint', '');
+            //lobi_notify('info', 'You received a new message.', 'From '+sender+'. Complaint ID: '+complaintID, '');
         });
 
         //        //initialize email subject and text
