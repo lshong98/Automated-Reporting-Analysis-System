@@ -992,35 +992,39 @@ app.post('/satisfaction', function (req, resp) {
 app.post('/enquiry', function (req, resp) {
     'use strict';
     var data;
-    var userID;
-    var date = dateTime.create().format('Y-m-d H:M:S');
+    var name, phone;
 
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
 
     req.addListener('end', function () {
-        var satisfactionType = data.satisfactionType;
-        var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
+	    
+        var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
 
         database.query(sqlUser, function (err, res) {
             if (!err) {
-                userID = res[0].userID;
-                var sql;
+                name = res[0].name;
+		phone = res[0].contactNumber;
 
-                sql = "INSERT INTO tblenquiry (userID, enquiry, enqStatus, submissionDate, readStat) VALUES ('" +
-                    userID + "','" + data.enquiry + "','New', '" + date + "','u')";
+		var mailOptions = {
+			from: "trienekensmobileapp@gmail.com",
+			to: "customercare@trienekens.com.my",
+			subject: data.subject,
+			generateTextFromHTML: true,
+			html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App. [TEST]</p>"
+		};
 
-                database.query(sql, function (err, res) {
-                    if (!err) {
-                        emitter.emit('enquiry');
-                        resp.send("Enquiry Submitted");
-                    } else {
+                smtpTransport.sendMail(mailOptions, function (error, info) {
+                    if (error) {
                         resp.send("Failed to Submit");
+			console.log(error);
+                    } else {
+                        resp.send("Enquiry Submitted");
                     }
                 });
             } else {
-                resp.send("error getting user id");
+                resp.send("error getting user email");
             }
         });
     });
