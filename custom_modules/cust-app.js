@@ -402,6 +402,10 @@ app.post('/insertNotif', function (req, resp) {
     });
 });
 
+// emitter.on('binrequest', function(){
+//     console.log('new bin request from cust-app');
+// });
+
 app.post('/binRequest', function (req, resp) {
     'use strict';
     var data;
@@ -436,8 +440,8 @@ app.post('/binRequest', function (req, resp) {
                         var sqlRequestID = "SELECT MAX(reqID) AS max FROM tblbinrequest";
                         database.query(sqlRequestID, function (err, res) {
                             reqID = res[0].max;
-                            resp.send("Submit Request Successfully " + reqID);
                             emitter.emit('binrequest');
+                            resp.send("Submit Request Successfully " + reqID);
                         });
                     } else {
                         resp.send("Failed to Submit Request" + err);
@@ -639,7 +643,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
         // 		console.log("success");
         // 	}
         // });
-    }else if (typeof data.BinRequestICLost == 'undefined' && typeof data.BinRequestPolice !== 'undefined') {
+    } else if (typeof data.BinRequestICLost == 'undefined' && typeof data.BinRequestPolice !== 'undefined') {
         //sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
         console.log(sql);
         console.log(req.rawBody);
@@ -683,7 +687,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 //callback();
             });
 
-        
+
     } else {
         //console.log(sql);
         console.log(req.rawBody);
@@ -955,13 +959,13 @@ app.post('/satisfaction', function (req, resp) {
                 var sql;
 
                 if (satisfactionType == "compactor") {
-                    sql = "INSERT INTO tblsatisfaction_compactor (surveyType, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" + 
-						data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                    sql = "INSERT INTO tblsatisfaction_compactor (surveyType, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
+                        data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                         "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
                         data.extraComment + "','" + date + "', 'u')";
                 } else if (satisfactionType == "roro") {
-                    sql = "INSERT INTO tblsatisfaction_roro (surveyType, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate, readStat) VALUES ('" + 
-						data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                    sql = "INSERT INTO tblsatisfaction_roro (surveyType, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
+                        data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                         "','" + parseInt(data.cleanliness) + "','" + parseInt(data.physicalCondition) + "','" + parseInt(data.queryResponse) + "','" +
                         data.extraComment + "','" + date + "', 'u')";
                 } else if (satisfactionType == "scheduled") {
@@ -971,7 +975,7 @@ app.post('/satisfaction', function (req, resp) {
 
                 database.query(sql, function (err, res) {
                     if (!err) {
-                        emitter.emit('satisfaction form');
+                        //emitter.emit('satisfaction form');
                         resp.send("Satisfaction Survey Submitted");
                     } else {
                         console.log(err);
@@ -995,26 +999,26 @@ app.post('/enquiry', function (req, resp) {
     });
 
     req.addListener('end', function () {
-	    
+
         var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
 
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 name = res[0].name;
-		phone = res[0].contactNumber;
+                phone = res[0].contactNumber;
 
-		var mailOptions = {
-			from: "trienekensmobileapp@gmail.com",
-			to: "customercare@trienekens.com.my",
-			subject: data.subject,
-			generateTextFromHTML: true,
-			html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App. [TEST]</p>"
-		};
+                var mailOptions = {
+                    from: "trienekensmobileapp@gmail.com",
+                    to: "customercare@trienekens.com.my",
+                    subject: data.subject,
+                    generateTextFromHTML: true,
+                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App. [TEST]</p>"
+                };
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         resp.send("Failed to Submit");
-			console.log(error);
+                        console.log(error);
                     } else {
                         resp.send("Enquiry Submitted");
                     }
@@ -1657,8 +1661,9 @@ app.post('/checkUpdate', function (req, resp) {
 app.post('/updateAcc', function (req, resp) {
     'use strict';
     var data;
-    var pass;;
-    var taman = []
+    var pass;
+    var taman = [];
+    var changes = [];
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
@@ -1671,6 +1676,45 @@ app.post('/updateAcc', function (req, resp) {
         }
 
         //  console.log("TAMAN VALUE: " + data.tmn);
+        console.log("Changes Made: " + data.changes);
+
+        if (data.changes.includes("Mail")) {
+            changes.push("Email Address");
+        }
+
+        if (data.changes.includes("Phone")) {
+            changes.push("Phone Number");
+        }
+
+        if (data.changes.includes("Add")) {
+            changes.push("Address");
+        }
+
+        if (data.changes.includes("Pass")) {
+            changes.push("Password");
+        }
+        
+        var changesText = "";
+        
+        for (var i = 0; i < changes.length; i++) {
+            changesText = changesText + (i+1) + ". " + changes[i] + "<br>";
+        }
+        
+//        console.log("CHANGES TEXT:::::" + changesText);
+
+        var mailOptions = {
+            from: "trienekensmobileapp@gmail.com",
+            to: data.email,
+            subject: "Trienekens Customer App Account Details Updated",
+            generateTextFromHTML: true,
+            html: "<p>Your Trienekens Customer App Account details has been updated. Changes were made to your: </p> </br>" + changesText
+        };
+
+        smtpTransport.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            }
+        });
 
         if (data.add != undefined) {
             var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "',address='" + data.add + "' WHERE userEmail = '" + data.oriemail + "'";
@@ -2167,14 +2211,14 @@ app.get('/getBoundaryLatLng', function (req, res) {
 
 //retrieve unread records for web portal
 
-app.get('/unreadCustFeedbackCount', function(req, res){
+app.get('/unreadCustFeedbackCount', function (req, res) {
     'use strict';
     var sql = "SELECT count(readStat) as unread FROM tblsatisfaction_compactor WHERE readStat = 'u'";
     var sql2 = "SELECT count(readStat) as unread FROM tblsatisfaction_roro WHERE readStat = 'u'";
     var sql3 = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
     var municipalUnread, commercialUnread, scheduledUnread, totalUnread;
     database.query(sql, function (err, result) {
-        if(result != undefined){
+        if (result != undefined) {
             municipalUnread = result[0].unread;
             database.query(sql2, function (err, result) {
                 commercialUnread = result[0].unread;
@@ -2191,48 +2235,59 @@ app.get('/unreadCustFeedbackCount', function(req, res){
     });
 });
 
-app.get('/unreadEnquiryCount', function(req, res){
+app.get('/unreadEnquiryCount', function (req, res) {
     'use strict';
     var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
+<<<<<<< HEAD
+    database.query(sql, function (err, result) {
+        console.log("enquiry emitter fired from trienekensjs");
+        // io.sockets.in(roomManager).emit('new enquiry', {
+        //     "unread": result[0].unread
+        // });
+        var unread = result[0].unread;
+        res.send(unread.toString());
+    });
+=======
         database.query(sql, function (err, result) {
-            console.log("enquiry emitter fired from trienekensjs");
+            //console.log("enquiry emitter fired from trienekensjs");
             // io.sockets.in(roomManager).emit('new enquiry', {
             //     "unread": result[0].unread
             // });
             var unread = result[0].unread;
             res.send(unread.toString());
         });
+>>>>>>> 5fc6bbacde33cec5fa458a88dd194fdb9b821f26
 });
 
-app.get('/unreadBinRequestCount', function(req, res){
+app.get('/unreadBinRequestCount', function (req, res) {
     'use strict';
     var sql = "SELECT count(readStat) as unread, (SELECT count(readStat) FROM tblbinrequest WHERE readStat = 'u' AND reason LIKE 'Roro%') as unreadRoro FROM tblbinrequest WHERE readStat = 'u'";
-         database.query(sql, function (err, result) {
-            // io.sockets.in(roomManager).emit('new enquiry', {
-            //     "unread": result[0].unread
-            // });
-            var unread = result[0].unread;
-            var unreadRoro = result[0].unreadRoro;
-            var unreadNonRoro = unread - unreadRoro;
-            var json = {
-                'unread':unread,
-                'unreadRoro':unreadRoro,
-                'unreadNonRoro':unreadNonRoro
-            };
-            res.json(json);
-         });
+    database.query(sql, function (err, result) {
+        // io.sockets.in(roomManager).emit('new enquiry', {
+        //     "unread": result[0].unread
+        // });
+        var unread = result[0].unread;
+        var unreadRoro = result[0].unreadRoro;
+        var unreadNonRoro = unread - unreadRoro;
+        var json = {
+            'unread': unread,
+            'unreadRoro': unreadRoro,
+            'unreadNonRoro': unreadNonRoro
+        };
+        res.json(json);
+    });
 });
 
-app.get('/unreadComplaintCount', function(req, res){
+app.get('/unreadComplaintCount', function (req, res) {
     'use strict';
     var sql = "SELECT count(readStat) as unread FROM tblcomplaint WHERE readStat = 'u'";
-        database.query(sql, function (err, result) {
-            // io.sockets.in(roomManager).emit('new enquiry', {
-            //     "unread": result[0].unread
-            // });
-            var unread = result[0].unread;
-            res.send(unread.toString());
-        });
+    database.query(sql, function (err, result) {
+        // io.sockets.in(roomManager).emit('new enquiry', {
+        //     "unread": result[0].unread
+        // });
+        var unread = result[0].unread;
+        res.send(unread.toString());
+    });
 });
 
 module.exports = app;

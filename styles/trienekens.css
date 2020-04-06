@@ -475,3 +475,8 @@ td[colspan] {
 table.feedback-summary, table.feedback-summary th, table.feedback-summary td{
     border: 1px solid black;
 }
+
+/*Hide rejection reason for bin request*/
+#binReqRejectReason{
+    display: none;
+}

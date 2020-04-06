@@ -292,9 +292,12 @@ app.post('/updatePendingUser', function(req, res) {
 app.post('/updateBinRequest', function(req, res) {
     'use strict';
     console.log(req.body);
-    var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "' WHERE reqID = '" + req.body.id + "'";
+    var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "', rejectReason = '"+req.body.rejectReason+"' WHERE reqID = '" + req.body.id + "'";
     console.log(sql);
     var msg = "The status of your bin request with the ID " + req.body.id + " has been updated to " + req.body.status + ". Please go to the View My Requests tab for information on any necessary actions.";
+    if (req.body.status == "Rejected"){
+        msg = "The status of your bin request with the ID " + req.body.id + " is rejected because "+req.body.rejectReason+" Please go to the View My Requests tab for information on any necessary actions.";
+    }
     var getUserID = "SELECT userID FROM tblbinrequest WHERE reqID = '" + req.body.id + "'";
     var userID, date = dateTime.create().format('Y-m-d H:M:S');
     var topic = "TriBinReq" + req.body.id;
@@ -1211,6 +1214,15 @@ app.post('/readBinRequest', function(req, res) {
         res.end();
     });
 });
+
+app.post('/readComplaint', function(req,res){
+    'use strict';
+    var sql = "UPDATE tblcomplaint SET readStat = 'r' WHERE complaintID = '"+req.body.id+"'";
+    database.query(sql, function(err, result){
+        res.send("Complaint Read");
+        res.end();
+    })
+})
 
 app.post('/addMunicipal', function(req, res) {
     'use strict';
