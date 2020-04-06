@@ -1701,14 +1701,14 @@ app.post('/updateAcc', function (req, resp) {
         if (data.changes.includes("Pass")) {
             changes.push("Password");
         }
-        
+
         var changesText = "";
-        
+
         for (var i = 0; i < changes.length; i++) {
-            changesText = changesText + (i+1) + ". " + changes[i] + "<br>";
+            changesText = changesText + (i + 1) + ". " + changes[i] + "<br>";
         }
-        
-//        console.log("CHANGES TEXT:::::" + changesText);
+
+        //        console.log("CHANGES TEXT:::::" + changesText);
 
         var mailOptions = {
             from: "trienekensmobileapp@gmail.com",
