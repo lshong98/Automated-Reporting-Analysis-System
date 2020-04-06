@@ -1693,14 +1693,14 @@ app.post('/updateAcc', function (req, resp) {
         if (data.changes.includes("Pass")) {
             changes.push("Password");
         }
-        
+
         var changesText = "";
-        
+
         for (var i = 0; i < changes.length; i++) {
-            changesText = changesText + (i+1) + ". " + changes[i] + "<br>";
+            changesText = changesText + (i + 1) + ". " + changes[i] + "<br>";
         }
-        
-//        console.log("CHANGES TEXT:::::" + changesText);
+
+        //        console.log("CHANGES TEXT:::::" + changesText);
 
         var mailOptions = {
             from: "trienekensmobileapp@gmail.com",
@@ -2238,25 +2238,15 @@ app.get('/unreadCustFeedbackCount', function (req, res) {
 app.get('/unreadEnquiryCount', function (req, res) {
     'use strict';
     var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
-<<<<<<< HEAD
+
     database.query(sql, function (err, result) {
-        console.log("enquiry emitter fired from trienekensjs");
+        //console.log("enquiry emitter fired from trienekensjs");
         // io.sockets.in(roomManager).emit('new enquiry', {
         //     "unread": result[0].unread
         // });
         var unread = result[0].unread;
         res.send(unread.toString());
     });
-=======
-        database.query(sql, function (err, result) {
-            //console.log("enquiry emitter fired from trienekensjs");
-            // io.sockets.in(roomManager).emit('new enquiry', {
-            //     "unread": result[0].unread
-            // });
-            var unread = result[0].unread;
-            res.send(unread.toString());
-        });
->>>>>>> 5fc6bbacde33cec5fa458a88dd194fdb9b821f26
 });
 
 app.get('/unreadBinRequestCount', function (req, res) {
