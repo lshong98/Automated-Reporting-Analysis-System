@@ -440,7 +440,9 @@ app.post('/binRequest', function (req, resp) {
                         var sqlRequestID = "SELECT MAX(reqID) AS max FROM tblbinrequest";
                         database.query(sqlRequestID, function (err, res) {
                             reqID = res[0].max;
-                            emitter.emit('binrequest');
+                            if((data.reason).includes('Roro')){
+                                emitter.emit('binrequest');
+                            }
                             resp.send("Submit Request Successfully " + reqID);
                         });
                     } else {
@@ -495,6 +497,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
+                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -553,6 +556,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
+                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -618,6 +622,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 sql = "UPDATE tblbinrequest SET binImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
+                        emitter.emit('binrequest');
                         resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         console.log("image uploaded to cloud storage");
                     } else {
@@ -676,6 +681,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 sql = "UPDATE tblbinrequest SET policeImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
+                        emitter.emit('binrequest');
                         resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         console.log("image uploaded to cloud storage");
                     } else {
@@ -720,6 +726,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
+                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -778,6 +785,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
+                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -2066,8 +2074,10 @@ app.post('/getComplaintIDs', function (req, res) {
     });
 
     req.addListener('end', function () {
-        console.log(data.email);
+        console.log('line2077 '+data);
+        console.log('line2078 email: '+data.email);
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '" + data.email + "'";
+        console.log('line2080: '+sqlUser);
         database.query(sqlUser, function (err, result) {
             if (err) {
                 throw err;
@@ -2099,7 +2109,7 @@ app.post('/getBinReqIDs', function (req, res) {
     });
 
     req.addListener('end', function () {
-        console.log(data.email);
+        console.log('line2112: '+data.email);
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '" + data.email + "'";
         database.query(sqlUser, function (err, result) {
             if (err) {
@@ -2238,16 +2248,6 @@ app.get('/unreadCustFeedbackCount', function (req, res) {
 app.get('/unreadEnquiryCount', function (req, res) {
     'use strict';
     var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
-<<<<<<< HEAD
-    database.query(sql, function (err, result) {
-        console.log("enquiry emitter fired from trienekensjs");
-        // io.sockets.in(roomManager).emit('new enquiry', {
-        //     "unread": result[0].unread
-        // });
-        var unread = result[0].unread;
-        res.send(unread.toString());
-    });
-=======
         database.query(sql, function (err, result) {
             //console.log("enquiry emitter fired from trienekensjs");
             // io.sockets.in(roomManager).emit('new enquiry', {
@@ -2256,7 +2256,6 @@ app.get('/unreadEnquiryCount', function (req, res) {
             var unread = result[0].unread;
             res.send(unread.toString());
         });
->>>>>>> 5fc6bbacde33cec5fa458a88dd194fdb9b821f26
 });
 
 app.get('/unreadBinRequestCount', function (req, res) {
