@@ -65,7 +65,7 @@ app.post('/addReport', function (req, res) {
         complete_status = req.body.status,
         truck_id = req.body.truck,
         driver_id = req.body.driver,
-        remark = req.body.remark,
+        remark = req.body.remark.replace("'", "\\'"),
         created_on = req.body.creationDate,
         staff_id = req.body.staffID;
     
@@ -188,7 +188,7 @@ app.post('/editReport', function (req, res) {
         status = req.body.status,
         truck_id = req.body.truckID,
         driver_id = req.body.driverID,
-        remark = req.body.remark;
+        remark = req.body.remark.replace("'", "\\'");;
     
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);

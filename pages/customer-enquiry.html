@@ -1,8 +1,9 @@
 <div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getEnquiry()">
     <div class="row">
-        <div class="col-md-12 table-responsive">
+        <div class="col-md-12">
             <h1>Customer General Enquiry</h1><br/><br/>
-            <table class="table table-striped">
+            <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchEnquiryFilter"/>
+            <table class="table table-striped table-responsive">
                 <thead>
                     <tr>
                         <th>No.</th>
@@ -15,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="e in enquiry | offset: (currentPage - 1) * itemsPerPageEnquiry | limitTo: itemsPerPageEnquiry track by $index">
+                    <tr data-ng-repeat="e in enquiry | filter:searchEnquiry | offset: (currentPage - 1) * itemsPerPageEnquiry | limitTo: itemsPerPageEnquiry track by $index">
                         <td>{{$index+1}}</td>
                         <td>{{e.submissionDate | date: "dd-MM-y"}}</td>
                         <td>{{e.name}}</td>
@@ -42,7 +43,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div><br/><br/><br/>
     <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
         <div class="col-md-12">
             <ul uib-pagination boundary-links="true" total-items="totalItemsEnquiry" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPageEnquiry" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>

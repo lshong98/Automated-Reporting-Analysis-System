@@ -189,14 +189,14 @@ app.get('/getComplaintLoc', function(req, res) {
 });
 
 //read complaint
-app.post('/readComplaint', function(req, res) {
-    'use strict';
-    var sql = "UPDATE tblcomplaint SET readStat = 'r'";
-    database.query(sql, function(err, result) {
-        res.send("Complaint Read");
-        res.end();
-    });
-});
+// app.post('/readComplaint', function(req, res) {
+//     'use strict';
+//     var sql = "UPDATE tblcomplaint SET readStat = 'r'";
+//     database.query(sql, function(err, result) {
+//         res.send("Complaint Read");
+//         res.end();
+//     });
+// });
 
 //get complaint detail by id
 app.post('/getComplaintDetail', function(req, res) {
@@ -361,7 +361,7 @@ app.get('/getLogisticsComplaintList', function(req, res) {
 app.get('/getComplaintExportList', function(req, res){
     'use strict';
     
-    var sql="SELECT CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDate',  CONCAT(tblcomplaintofficer.statusDate,' ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' ',tblcomplaintofficer.customerTime) AS customerDateTime, (CASE WHEN tblcomplaintofficer.services = '1' THEN 'Compactor' WHEN tblcomplaintofficer.services = '2' THEN 'Hooklift' WHEN tblcomplaintofficer.services = '3' THEN 'Hazardous Waste' END) AS 'services', tblcomplaintofficer.forwardedSub AS 'forwardedSub', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.sorce AS 'source', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', (CASE WHEN tblcomplaintofficer.cmsStatus = '1' THEN 'Valid' WHEN tblcomplaintofficer.cmsStatus = '2' THEN 'Invalid' WHEN tblcomplaintofficer.cmsStatus = '3' THEN 'Pending Review' END) AS 'cmsStatus', SUBSTRING_INDEX(tblcomplaintofficer.under, ',' , -1) AS 'area', (SELECT tblstaff.staffName FROM tblstaff WHERE staffID = tblcomplaintofficer.driver) AS 'driver', tblcomplaintofficer.remarks AS 'remarks', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.forwardedBy) AS   'respondent' from tblcomplaintofficer ORDER BY creationDateTime DESC";
+    var sql="SELECT CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDate',  CONCAT(tblcomplaintofficer.statusDate,' ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' ',tblcomplaintofficer.customerTime) AS customerDateTime, (CASE WHEN tblcomplaintofficer.services = '1' THEN 'Compactor' WHEN tblcomplaintofficer.services = '2' THEN 'Hooklift' WHEN tblcomplaintofficer.services = '3' THEN 'Hazardous Waste' END) AS 'services', tblcomplaintofficer.forwardedSub AS 'forwardedSub', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.sorce AS 'source', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', (CASE WHEN tblcomplaintofficer.cmsStatus = '1' THEN 'Valid' WHEN tblcomplaintofficer.cmsStatus = '2' THEN 'Invalid' WHEN tblcomplaintofficer.cmsStatus = '3' THEN 'Pending Review' END) AS 'cmsStatus', SUBSTRING_INDEX(tblcomplaintofficer.under, ',' , -1) AS 'area', (SELECT tblstaff.staffName FROM tblstaff WHERE staffID = tblcomplaintofficer.driver) AS 'driver', tblcomplaintofficer.remarks AS 'remarks', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.forwardedBy) AS 'respondent', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logisticsReview', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.customerReview) AS 'customerReview' from tblcomplaintofficer ORDER BY creationDateTime DESC";
     
     database.query(sql, function(err, result){
         if(err){

@@ -98,25 +98,35 @@
         <div class="col-md-6">
             <h1>Request Detail</h1><br /><br />
             <p><strong>Status of Request: </strong>
-                <select name="binReqStatus" data-ng-model="reqDetail.status" class="form-control" style="width: 150px;">
+                <select name="binReqStatus" data-ng-model="reqDetail.status" class="form-control" style="width: 150px;" onchange="showRejectReasonSelect(this)">
                     <option value="PENDING">Pending</option>
                     <option value="Approved">Approved</option>
-                    <option value="Settled">Settled</option>
+                    <option value="Completed">Completed</option>
                     <option value="In Progress">In Progress</option>
-                    <option value="No Response">No Response</option>
+                    <option value="Rejected">Rejected</option>
                 </select>
+                <div  id="binReqRejectReason">
+                    <p>Reason for rejection</p>
+                    <select name="binReqRejectReason" data-ng-model="reqDetail.rejectReason" class="form-control" style="width: 150px;">
+                        <option value="Image not clear">Image not clear</option>
+                        <option value="More documents needed">More documents needed</option>
+                        <option value="Invalid address">Invalid address</option>
+                    </select>
+                </div>
+                
                 <br />
                 <button class="btn btn-sm btn-primary"
-                    data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID)">Update</button>
+                    data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason)">Update</button>
             </p>
+            <p data-ng-show="reqDetail.rejectReason != '' && reqDetail.rejectReason != undefined"><strong>Reason of rejection: {{reqDetail.rejectReason}}</strong></p>
             <p><strong>Request Date: </strong>{{reqDetail.reqDate}}</p>
             <p><strong>Requested By: </strong>{{reqDetail.name}}</p>
-            <p><strong>Company Name (if any): </strong>{{reqDetail.companyName}}</p>
-            <p><strong>Contact Number: </strong>{{reqDetail.contactNumber}}</p>
-            <p><strong>Address: </strong>
-                <span data-ng-show="reqDetail.type != 'Commercial'">{{reqDetail.address}}</span>
-                <span data-ng-show="reqDetail.type == 'Commercial'">{{reqDetail.companyAddress}}</span>
+            <p><strong>Company Name (if any): </strong>
+                <span data-ng-show="reqDetail.companyName != 'null' && reqDetail.companyName != null">{{reqDetail.companyName}}</span>
+                <span data-ng-show="reqDetail.companyName == 'null' || reqDetail.companyName == null">-</span>
             </p>
+            <p><strong>Contact Number: </strong>{{reqDetail.contactNumber}}</p>
+            <p><strong>Address: </strong>{{reqDetail.address}}{{reqDetail.companyAddress}}</p>
             <p><strong>Bin Type: </strong>{{reqDetail.type}}</p>
             <p><strong>Reason for Request: </strong>{{reqDetail.reason}}</p>
             <p><strong>Remarks: </strong>{{reqDetail.remarks}}</p>
@@ -204,3 +214,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    function showRejectReasonSelect(element){
+        document.getElementById('binReqRejectReason').style.display = element.value == "Rejected" ? 'block' : 'none';
+    }
+</script>
