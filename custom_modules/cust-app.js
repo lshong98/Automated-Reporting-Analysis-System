@@ -443,7 +443,15 @@ app.post('/binRequest', function (req, resp) {
                             if((data.reason).includes('Roro')){
                                 emitter.emit('binrequest');
                             }
-                            resp.send("Submit Request Successfully " + reqID);
+                            var jsonResp = {"msg":"Submit Request Successfully",
+                                            "reqID": reqID};
+                            if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != ""){
+                                jsonResp.name = data.name;
+                            } else {
+                                jsonResp.name = name;
+                            }
+                            resp.json(jsonResp);
+                            //resp.send("Submit Request Successfully " + reqID);
                         });
                     } else {
                         resp.send("Failed to Submit Request" + err);
