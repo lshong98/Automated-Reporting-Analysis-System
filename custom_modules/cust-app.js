@@ -1984,7 +1984,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
             sql = "UPDATE tblcomplaint SET complaintImg ='" + publicUrl + "' WHERE complaintID ='" + data.cID + "'";
             database.query(sql, function (err, res) {
                 if (!err) {
-                    emitter.emit('complaint');
+                    //emitter.emit('complaint');
                     resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
                     console.log("image uploaded to cloud storage");
                 } else {

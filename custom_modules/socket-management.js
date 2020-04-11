@@ -427,7 +427,7 @@ io.sockets.on('connection', function (socket) {
                 
                 for (i = 0; i < connectedUserList.length; i += 1) {
                     if (connectedUserList[i].socketID === socket.id) {
-                        if (connectedUserList[i].position == "Manager" || connectedUserList[i].position == "DEVELOPER") {
+                        if (connectedUserList[i].position == "Manager" || connectedUserList[i].position == "DEVELOPER" || connectedUserList[i].position == "Developer") {
                             flag = true;
                         }
                     }
