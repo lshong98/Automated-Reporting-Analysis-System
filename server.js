@@ -1218,11 +1218,15 @@ app.post('/readBinRequest', function(req, res) {
 app.post('/readComplaint', function(req,res){
     'use strict';
     var sql = "UPDATE tblcomplaint SET readStat = 'r' WHERE complaintID = '"+req.body.id+"'";
+    var readChat = "UPDATE tblchat SET readStat = 'r' WHERE complaintID = '"+req.body.id+"'";
     database.query(sql, function(err, result){
         res.send("Complaint Read");
         res.end();
-    })
-})
+    });
+    database.query(readChat, function(err, result){
+        console.log("chat read");
+    });
+});
 
 app.post('/addMunicipal', function(req, res) {
     'use strict';
