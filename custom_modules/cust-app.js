@@ -430,9 +430,9 @@ app.post('/binRequest', function (req, resp) {
                 }
                 console.log("user id: " + userID);
                 if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != "") {
-                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "','" + date + "','" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID +"', NOW(), '" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
                 } else {
-                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "','" + date + "','" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "', NOW(), '" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
                 }
 
                 database.query(insertSql, function (err, res) {
@@ -440,8 +440,18 @@ app.post('/binRequest', function (req, resp) {
                         var sqlRequestID = "SELECT MAX(reqID) AS max FROM tblbinrequest";
                         database.query(sqlRequestID, function (err, res) {
                             reqID = res[0].max;
-                            emitter.emit('binrequest');
-                            resp.send("Submit Request Successfully " + reqID);
+                            if((data.reason).includes('Roro')){
+                                emitter.emit('binrequest');
+                            }
+                            var jsonResp = {"msg":"Submit Request Successfully",
+                                            "reqID": reqID};
+                            if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != ""){
+                                jsonResp.name = data.name;
+                            } else {
+                                jsonResp.name = name;
+                            }
+                            resp.json(jsonResp);
+                            //resp.send("Submit Request Successfully " + reqID);
                         });
                     } else {
                         resp.send("Failed to Submit Request" + err);
@@ -518,6 +528,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -576,6 +587,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -618,6 +630,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 sql = "UPDATE tblbinrequest SET binImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
+                        emitter.emit('binrequest');
                         resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         console.log("image uploaded to cloud storage");
                     } else {
@@ -676,6 +689,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 sql = "UPDATE tblbinrequest SET policeImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
+                        emitter.emit('binrequest');
                         resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         console.log("image uploaded to cloud storage");
                     } else {
@@ -743,6 +757,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -801,6 +816,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -1968,6 +1984,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
             sql = "UPDATE tblcomplaint SET complaintImg ='" + publicUrl + "' WHERE complaintID ='" + data.cID + "'";
             database.query(sql, function (err, res) {
                 if (!err) {
+                    //emitter.emit('complaint');
                     resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
                     console.log("image uploaded to cloud storage");
                 } else {
@@ -2066,8 +2083,10 @@ app.post('/getComplaintIDs', function (req, res) {
     });
 
     req.addListener('end', function () {
-        console.log(data.email);
+        console.log('line2077 '+data);
+        console.log('line2078 email: '+data.email);
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '" + data.email + "'";
+        console.log('line2080: '+sqlUser);
         database.query(sqlUser, function (err, result) {
             if (err) {
                 throw err;
@@ -2099,7 +2118,7 @@ app.post('/getBinReqIDs', function (req, res) {
     });
 
     req.addListener('end', function () {
-        console.log(data.email);
+        console.log('line2112: '+data.email);
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail = '" + data.email + "'";
         database.query(sqlUser, function (err, result) {
             if (err) {
@@ -2238,15 +2257,14 @@ app.get('/unreadCustFeedbackCount', function (req, res) {
 app.get('/unreadEnquiryCount', function (req, res) {
     'use strict';
     var sql = "SELECT count(readStat) as unread FROM tblenquiry WHERE readStat = 'u'";
-
-    database.query(sql, function (err, result) {
-        //console.log("enquiry emitter fired from trienekensjs");
-        // io.sockets.in(roomManager).emit('new enquiry', {
-        //     "unread": result[0].unread
-        // });
-        var unread = result[0].unread;
-        res.send(unread.toString());
-    });
+        database.query(sql, function (err, result) {
+            //console.log("enquiry emitter fired from trienekensjs");
+            // io.sockets.in(roomManager).emit('new enquiry', {
+            //     "unread": result[0].unread
+            // });
+            var unread = result[0].unread;
+            res.send(unread.toString());
+        });
 });
 
 app.get('/unreadBinRequestCount', function (req, res) {

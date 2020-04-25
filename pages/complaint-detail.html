@@ -434,7 +434,8 @@
 <!--        <div class="row ">-->
             <div data-ng-show="allowChat" class="chat-input">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" data-ng-model="mymsg" placeholder="Enter your message" aria-label="Enter your message">
+                    <!-- <input type="text" class="form-control" data-ng-model="mymsg" placeholder="Enter your message" aria-label="Enter your message"> -->
+                    <textarea class="form-control chat-msg" data-ng-model="mymsg" placeholder="Enter your message" aria-label="Enter your message"></textarea>
                     <div class="input-group-append">
                         <button class="btn btn-outline-primary" type="button" data-ng-click="sendMessage();"><i class="fa fa-paper-plane"></i> Send</button>
                     </div>

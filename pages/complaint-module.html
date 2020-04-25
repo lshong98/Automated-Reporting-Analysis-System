@@ -126,6 +126,7 @@
                                                 <td data-ng-bind="c.serviceType"></td>
                                                 <td data-ng-bind="c.code"></td>
                                                 <td><span data-ng-bind="c.status" data-ng-class="{{showbadge}}"></span></td>
+                                                <td><span data-ng-show="c.unread != null" class="badge badge-danger">{{c.unread}}</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
