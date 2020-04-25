@@ -505,7 +505,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
-                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -529,6 +528,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -564,7 +564,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
-                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -588,6 +587,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -734,7 +734,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
-                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -758,6 +757,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -793,7 +793,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
-                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -817,6 +816,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
