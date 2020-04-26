@@ -29,10 +29,10 @@ const {
     Storage
 } = require('@google-cloud/storage');
 const storage = new Storage({
-    keyFilename: './trienekens-management-9f941010219d.json',
-    projectId: 'trienekens-management'
+    keyFilename: './trienekens-management-portal-5c3ad8aa7ee2.json',
+    projectId: 'trienekens-management-portal'
 });
-const bucket = storage.bucket('trienekens-management-images');
+const bucket = storage.bucket('trienekens-management-portal-images');
 
 const {
     google
@@ -488,7 +488,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -547,7 +547,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -626,7 +626,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 console.log(err);
             })
             .on('finish', function () {
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 sql = "UPDATE tblbinrequest SET binImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
@@ -685,7 +685,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 console.log(err);
             })
             .on('finish', function () {
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 sql = "UPDATE tblbinrequest SET policeImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
@@ -717,7 +717,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -776,7 +776,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -1979,7 +1979,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
             console.log(err);
         })
         .on('finish', function () {
-            var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+            var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
             console.log(publicUrl);
             sql = "UPDATE tblcomplaint SET complaintImg ='" + publicUrl + "' WHERE complaintID ='" + data.cID + "'";
             database.query(sql, function (err, res) {

@@ -17,7 +17,7 @@ var path = require('path');
 var sanitizer = require('sanitizer');
 var upload = require('express-fileupload');
 
-var SVR_PORT = process.env.SERVER_PORT || 3000;
+var SVR_PORT = process.env.SERVER_PORT || 8080;
 
 exports.app = app;
 exports.bcrypt = bcrypt;
