@@ -1562,7 +1562,7 @@ app.post('/getInfo', function (req, resp) {
         console.log(data.user);
         database.query(sql, function (err, res) {
             console.log(res);
-            if (res[0] != undefined) {
+            if (res != undefined) {
                 if (res[0].address == undefined) {
                     info["pno"] = res[0].contactNumber;
                     resp.json(info);
