@@ -271,8 +271,8 @@ app.post('/getNotifs', function (req, resp) {
 
     req.addListener('end', function () {
         console.log(data);
-        var sql = "SELECT notifText, notifDate, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '" + data.email + "' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
-        var sql2 = "SELECT announcement, announceDate, announceLink, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
+        var sql = "SELECT notifID, notifText, notifDate, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '" + data.email + "' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
+        var sql2 = "SELECT id, announcement, announceDate, announceLink, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
 
         database.query(sql, function (err, res) {
             if (!err) {
@@ -1028,7 +1028,7 @@ app.post('/enquiry', function (req, resp) {
                     to: "customercare@trienekens.com.my",
                     subject: data.subject,
                     generateTextFromHTML: true,
-                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App. [TEST]</p>"
+                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App.</p>"
                 };
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
