@@ -29,10 +29,10 @@ const {
     Storage
 } = require('@google-cloud/storage');
 const storage = new Storage({
-    keyFilename: './trienekens-management-9f941010219d.json',
-    projectId: 'trienekens-management'
+    keyFilename: './trienekens-management-portal-5c3ad8aa7ee2.json',
+    projectId: 'trienekens-management-portal'
 });
-const bucket = storage.bucket('trienekens-management-images');
+const bucket = storage.bucket('trienekens-management-portal-images');
 
 const {
     google
@@ -271,8 +271,8 @@ app.post('/getNotifs', function (req, resp) {
 
     req.addListener('end', function () {
         console.log(data);
-        var sql = "SELECT notifText, notifDate, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '" + data.email + "' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
-        var sql2 = "SELECT announcement, announceDate, announceLink, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
+        var sql = "SELECT notifID, notifText, notifDate, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '" + data.email + "' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
+        var sql2 = "SELECT id, announcement, announceDate, announceLink, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
 
         database.query(sql, function (err, res) {
             if (!err) {
@@ -430,9 +430,9 @@ app.post('/binRequest', function (req, resp) {
                 }
                 console.log("user id: " + userID);
                 if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != "") {
-                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "','" + date + "','" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID +"', NOW(), '" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
                 } else {
-                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "','" + date + "','" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "', NOW(), '" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
                 }
 
                 database.query(insertSql, function (err, res) {
@@ -443,7 +443,15 @@ app.post('/binRequest', function (req, resp) {
                             if((data.reason).includes('Roro')){
                                 emitter.emit('binrequest');
                             }
-                            resp.send("Submit Request Successfully " + reqID);
+                            var jsonResp = {"msg":"Submit Request Successfully",
+                                            "reqID": reqID};
+                            if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != ""){
+                                jsonResp.name = data.name;
+                            } else {
+                                jsonResp.name = name;
+                            }
+                            resp.json(jsonResp);
+                            //resp.send("Submit Request Successfully " + reqID);
                         });
                     } else {
                         resp.send("Failed to Submit Request" + err);
@@ -480,7 +488,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -497,7 +505,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
-                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -521,6 +528,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -539,7 +547,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -556,7 +564,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
-                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -580,6 +587,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -618,7 +626,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 console.log(err);
             })
             .on('finish', function () {
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 sql = "UPDATE tblbinrequest SET binImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
@@ -677,7 +685,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 console.log(err);
             })
             .on('finish', function () {
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 sql = "UPDATE tblbinrequest SET policeImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
@@ -709,7 +717,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -726,7 +734,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
-                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -750,6 +757,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -768,7 +776,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -785,7 +793,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     })
                     .on('finish', function () {
-                        emitter.emit('binrequest');
                         console.log("image uploaded to cloud storage");
                         callback();
                     });
@@ -809,6 +816,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     database.query(sql, function (err, res) {
                         if (!err) {
                             console.log(urlArray);
+                            emitter.emit('binrequest');
                             resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                         } else {
                             resp.send("Please Try Again");
@@ -1020,7 +1028,7 @@ app.post('/enquiry', function (req, resp) {
                     to: "customercare@trienekens.com.my",
                     subject: data.subject,
                     generateTextFromHTML: true,
-                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App. [TEST]</p>"
+                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App.</p>"
                 };
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
@@ -1554,7 +1562,7 @@ app.post('/getInfo', function (req, resp) {
         console.log(data.user);
         database.query(sql, function (err, res) {
             console.log(res);
-            if (res[0] != undefined) {
+            if (res != undefined) {
                 if (res[0].address == undefined) {
                     info["pno"] = res[0].contactNumber;
                     resp.json(info);
@@ -1971,11 +1979,12 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
             console.log(err);
         })
         .on('finish', function () {
-            var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+            var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
             console.log(publicUrl);
             sql = "UPDATE tblcomplaint SET complaintImg ='" + publicUrl + "' WHERE complaintID ='" + data.cID + "'";
             database.query(sql, function (err, res) {
                 if (!err) {
+                    //emitter.emit('complaint');
                     resp.send("Complaint has been submitted. We will review the complaint and take any necessary actions.");
                     console.log("image uploaded to cloud storage");
                 } else {

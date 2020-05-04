@@ -6,10 +6,10 @@ var f = require('./function-management');
 var fs = require('fs');
 const {Storage} = require('@google-cloud/storage');
 const storage = new Storage({
-    keyFilename: './trienekens-management-9f941010219d.json',
-    projectId: 'trienekens-management'
+    keyFilename: './trienekens-management-portal-5c3ad8aa7ee2.json',
+    projectId: 'trienekens-management-portal'
 });
-const bucketName = 'trienekens-management-images';
+const bucketName = 'trienekens-management-portal-images';
 const local_directory = './images/daily-report';
 
 app.post('/convertreport', function (req, res) {

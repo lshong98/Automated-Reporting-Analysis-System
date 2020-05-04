@@ -309,10 +309,10 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback <span class="satisfaction"></span></a></li>';
             }
-        case "view enquiry":
-            if (status == 'A') {
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-enquiry"><i class="fa fa-file"></i> Customer Enquiry <span class="enquiry"></span></a></li>';
-            }
+        // case "view enquiry":
+        //     if (status == 'A') {
+        //         return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-enquiry"><i class="fa fa-file"></i> Customer Enquiry <span class="enquiry"></span></a></li>';
+        //     }
     }
 }
 

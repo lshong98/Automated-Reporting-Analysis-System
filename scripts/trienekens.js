@@ -8652,6 +8652,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                     scrollTop: $('.chat-box')[0].scrollHeight
                 }, 1000);
             });
+            $scope.mymsg = '';
         };
 
         socket.on('new message', function (data) {

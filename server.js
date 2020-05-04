@@ -1204,9 +1204,9 @@ app.post('/readBinRequest', function(req, res) {
     'use strict';
     var sql = "";
     if (req.body.category == 'nonroro') {
-        var sql = "UPDATE tblbinrequest SET readStat = 'r' WHERE reason LIKE 'Lost%' OR reason LIKE 'Damaged%' OR reason LIKE 'New%'";
+        sql = "UPDATE tblbinrequest SET readStat = 'r' WHERE reason LIKE 'Lost%' OR reason LIKE 'Damaged%' OR reason LIKE 'New%'";
     } else {
-        var sql = "UPDATE tblbinrequest SET readStat = 'r' WHERE reason LIKE 'Roro%'";
+        sql = "UPDATE tblbinrequest SET readStat = 'r' WHERE reason LIKE 'Roro%'";
     }
     
     database.query(sql, function(err, result) {
@@ -1218,11 +1218,15 @@ app.post('/readBinRequest', function(req, res) {
 app.post('/readComplaint', function(req,res){
     'use strict';
     var sql = "UPDATE tblcomplaint SET readStat = 'r' WHERE complaintID = '"+req.body.id+"'";
+    var readChat = "UPDATE tblchat SET readStat = 'r' WHERE complaintID = '"+req.body.id+"'";
     database.query(sql, function(err, result){
         res.send("Complaint Read");
         res.end();
-    })
-})
+    });
+    database.query(readChat, function(err, result){
+        console.log("chat read");
+    });
+});
 
 app.post('/addMunicipal', function(req, res) {
     'use strict';
@@ -1491,10 +1495,10 @@ app.post('/sendEmailImageToBucket', function(req, res) {
     
     var {Storage} = require('@google-cloud/storage');
     var storage = new Storage({
-        keyFilename: './trienekens-management-9f941010219d.json',
-        projectId: 'trienekens-management'
+        keyFilename: './trienekens-management-portal-5c3ad8aa7ee2.json',
+        projectId: 'trienekens-management-portal'
     });
-    var bucketName = 'trienekens-management-images';
+    var bucketName = 'trienekens-management-portal-images';
     var local_directory = './images/overall-report';
     
     if (!fs.existsSync(local_directory)) {
