@@ -189,7 +189,7 @@ app.post('/loadSpecificAccount', function (req, res) {
 // Used in comboBox - Reporting Officer
 app.get('/getStaffList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffStatus = 'A' AND tblposition.positionName = 'Reporting Officer'";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID JOIN tblaccess ON tblposition.positionID = tblaccess.positionID JOIN tblmanagement ON tblaccess.mgmtID = tblmanagement.mgmtID WHERE tblmanagement.mgmtName = 'create reporting' AND tblaccess.status = 'A' AND tblstaff.staffStatus = 'A' AND tblstaff.positionID != 'ATH202001210001'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
