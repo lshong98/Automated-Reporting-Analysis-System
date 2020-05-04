@@ -480,3 +480,7 @@ table.feedback-summary, table.feedback-summary th, table.feedback-summary td{
 #binReqRejectReason{
     display: none;
 }
+
+#binReqRejectReasonRoro{
+    display: none;
+}
