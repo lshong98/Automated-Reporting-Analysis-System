@@ -18,7 +18,7 @@ var config = {
     timezone: 'UTC+08:00'
 };
 
-var db; 
+var db, pool; 
 if (process.env.INSTANCE_CONNECTION_NAME && process.env.NODE_ENV === 'production') {
     config.socketPath = '/cloudsql/' + process.env.INSTANCE_CONNECTION_NAME;
 } 
@@ -84,6 +84,23 @@ function create_table(sql) {
 }
 
 handleDisconnect();
+
+//create pool
+config.connectionLimit = 1000;
+config.database = DB_NAME;
+pool = mysql.createPool(config);
+pool.on('connection', function (connection) {
+    console.log('DB Connection established');
+
+    connection.on('error', function (err) {
+        console.error(new Date(), 'MySQL error', err.code);
+        handleDisconnect();
+    });
+    connection.on('close', function (err) {
+        console.error(new Date(), 'MySQL close', err);
+        handleDisconnect();
+    });
+});
 
 /* Emitter Registered */
 // Create Database Tables
@@ -324,4 +341,4 @@ emitter.on('defaultUser', function () {
 //    console.log('Event Scheduler created...');
 //}); // Complete
 
-module.exports = db;
+module.exports = pool;

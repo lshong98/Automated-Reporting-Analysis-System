@@ -330,7 +330,7 @@ app.post('/getNotifUrl', function (req, resp) {
     });
 
     req.addListener('end', function () {
-        var sqlUser = "SELECT announceLink FROM tblannouncement WHERE announcement ='" + data.title + "'";
+        var sqlUser = "SELECT announceLink FROM tblannouncement WHERE id ='" + data.title + "'";
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 resp.send(res[0].announceLink);
