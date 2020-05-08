@@ -83,7 +83,7 @@ function create_table(sql) {
     });
 }
 
-handleDisconnect();
+//handleDisconnect();
 
 //create pool
 config.connectionLimit = 1000;
@@ -94,11 +94,11 @@ pool.on('connection', function (connection) {
 
     connection.on('error', function (err) {
         console.error(new Date(), 'MySQL error', err.code);
-        handleDisconnect();
+        //handleDisconnect();
     });
     connection.on('close', function (err) {
         console.error(new Date(), 'MySQL close', err);
-        handleDisconnect();
+        //handleDisconnect();
     });
 });
 

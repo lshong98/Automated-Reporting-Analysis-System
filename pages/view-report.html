@@ -55,21 +55,6 @@
         </div>
     </div>
     <br /><br />
-    <div class="row border border-secondary">
-        <div class="col-md-12">
-            <div class="row border-bottom border-secondary pl-3 pt-2">
-                <div class="col-md-12">
-                    <h5>Report Feedback</h5>
-                </div>
-            </div>
-            <div class="row pl-3 pt-2">
-                <div class="col-md-12">
-                    <span data-ng-bind-html="thisReport.feedback | trustHtml"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br /><br />
     <div class="row">
         <div class="col-md-12 text-center">
             <div style="width: 1000px;height: 800px;">
@@ -77,6 +62,22 @@
             </div>
         </div>
     </div>
+    <br /><br />
+    <div class="row border border-secondary mr-1 ml-1">
+        <div class="col-md-12">
+            <div class="row border-bottom border-secondary pl-3 pt-2">
+                <div class="col-md-12">
+                    <h5>Report Feedback</h5>
+                </div>
+            </div>
+            <div class="row pl-3 pt-2">
+                <div class="col-md-12" style="min-height: 50px;">
+                    <span data-ng-bind-html="thisReport.feedback | trustHtml"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br /><br />
     <div class="row" data-ng-show="show.feedback == 'A'">
         <div class="col-md-12">
             <div class="row">
