@@ -1221,30 +1221,32 @@ app.post('/checkValidity', function (req, resp) {
         database.query(sqlEmail, function (err, res) {
             console.log("hello from Register NameCheck(email)");
             console.log(res);
+            if (res!=undefined){
+                for (var i = 0; i < res.length; i++) {
 
-            for (var i = 0; i < res.length; i++) {
-
-                if (res[i].userEmail == data.email) {
-                    mailMatch = true;
+                    if (res[i].userEmail == data.email) {
+                        mailMatch = true;
+                    }
+    
+                    if (res[i].contactNumber == data.pno) {
+                        pnoMatch = true;
+                    }
+    
                 }
-
-                if (res[i].contactNumber == data.pno) {
-                    pnoMatch = true;
+    
+                if (pnoMatch == true && mailMatch == true) {
+                    resp.send("2 Errors");
+                } else if (pnoMatch == true && mailMatch == false) {
+                    resp.send("Pno Taken");
+                } else if (pnoMatch == false && mailMatch == true) {
+                    resp.send("Email Taken");
+                } else {
+                    resp.send("Valid Info");
                 }
-
-            }
-
-            if (pnoMatch == true && mailMatch == true) {
-                resp.send("2 Errors");
-            } else if (pnoMatch == true && mailMatch == false) {
-                resp.send("Pno Taken");
-            } else if (pnoMatch == false && mailMatch == true) {
-                resp.send("Email Taken");
-            } else {
-                resp.send("Valid Info");
             }
 
             if (err) {
+                resp.send("Error");
                 throw err;
             }
         });
