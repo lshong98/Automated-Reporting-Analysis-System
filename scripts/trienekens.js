@@ -8748,7 +8748,6 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         }
 
         $scope.verifyComp = function () {
-
             $http.post('/verifyAppComp', $scope.verify).then(function (response) {
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
@@ -8957,17 +8956,20 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         'remark': '',
         'logsImg': 'undefined|undefined|undefined',
         'coID': $routeParams.complaintCode,
-        'driver': ''
+        'driver': '',
+        'klgStatus': ''
     };
     $scope.complaintImages = {
         'image01': "",
         'image02': "",
-        'image03': ""
+        'image03': "",
+        'image04': ""
     }
     $scope.showComplaintImages = {
         'image01': false,
         'image02': false,
-        'image03': false
+        'image03': false,
+        'image04': false
     }
     $scope.editImages = false;
     $scope.showSubmitBtn = true;
@@ -8991,6 +8993,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
         $scope.complaintImages.image02 = $scope.detailObj.compImg.split("|")[1];
         $scope.complaintImages.image03 = $scope.detailObj.compImg.split("|")[2];
+        $scope.complaintImages.image04 = $scope.detailObj.compImg.split("|")[3];
 
         if ($scope.complaintImages.image01 !== 'undefined') {
             $scope.showComplaintImages.image01 = true;
@@ -9007,6 +9010,11 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         } else {
             $scope.complaintImages.image03 = "";
         }
+        if ($scope.complaintImages.image04 !== 'undefined') {
+            $scope.showComplaintImages.image04 = true;
+        } else {
+            $scope.complaintImages.image04 = "";
+        }        
 
         if ($scope.detailObj.services === "1") { //Compactor
             $scope.showAreaLogistics = true;
@@ -9204,36 +9212,34 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                             'statustime': time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
                         }
 
-                        //                        $scope.cmsUpdateRequest = {
-                        //                            "cmsstatus" : $scope.fullComplaintDetail.cmsStatus,
-                        //                            "coID" : $routeParams.complaintCode,
-                        //                            "cmsdate" : $filter('date')(Date.now(), 'yyyy-MM-dd'),
-                        //                            "cmstime": time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
-                        //                        };                         
-
-                        //                        $scope.status.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
-                        //                        var time = new Date();
-                        //                        $scope.status.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
-
 
                         $http.post('/updateComplaintDetailsStatus', $scope.status).then(function (response) {
                             if (response.data.status == "success") {
                                 $scope.notify(response.data.status, "Status has been updated");
-                                $route.reload();
-                                //                                $http.post('/updateCMSStatus', $scope.cmsUpdateRequest).then(function(response) {
-                                //                                    if (response.data.status == "success") {
-                                //                                        $scope.notify(response.data.status, "Status has been updated");
-                                //                                        $route.reload();
-                                //                                    } else {
-                                //                                        $scope.notify("error", "There are some ERROR!");
-                                //                                    }
-                                //                                });                                 
+                                $route.reload();                              
 
                             } else {
                                 $scope.notify("error", "There are some ERROR!");
                             }
                         });
 
+                    }
+                    
+                    $scope.updateKLGStatus = function () {
+                        $scope.klgStatus = {
+                            'status': $scope.fullComplaintDetail.klgStatus,
+                            'coID': $routeParams.complaintCode
+                        };
+                        $http.post('/updateKLGStatus', $scope.klgStatus).then(function(response){
+                            console.log(response.data.status);
+                            if (response.data.status == "success") {
+                                $scope.notify(response.data.status, "KLG Status has been updated");
+                                $route.reload();                              
+
+                            } else {
+                                $scope.notify("error", "There are some ERROR!");
+                            }
+                        });
                     }
 
                 } else {
@@ -9508,32 +9514,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     }
 
 });
-//
-//app.controller('complaintOfficerController', function ($scope, $http, $filter) {
-//    $scope.currentPage = 1; //Initial current page to 1
-//    $scope.itemsPerPage = 8; //Record number each page
-//    $scope.maxSize = 10; //Show the number in page
-//
-//    $http.get('/getComplaintOfficerList').then(function (response) {
-//        $scope.complaintOfficerList = response.data;
-//        for (var i = 0; i < $scope.complaintOfficerList.length; i++) {
-//            $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
-//        }
-//
-//        $scope.totalItems = $scope.complaintOfficerList.length;
-//    });
-//
-//    $scope.createComp = function () {
-//        window.location.href = '#/complaint-officer-create';
-//    }
-//
-//    $scope.viewComp = function (coID) {
-//        setTimeout(function () {
-//            window.location.href = '#/complaint-officer-detail/' + coID;
-//        }, 500);
-//    };
-//
-//});
+
 app.controller('complaintOfficercreateController', function ($scope, $http, $filter, $window) {
     $scope.showSubmitBtn = true;
     $scope.showTypeOption = 0;
@@ -9600,7 +9581,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             }
         }
     }
-    var img01, img02, img03;
+    var img01, img02, img03, img04;
     $(".target").on("click", function () {
         var $this = $(this);
         $scope.imgPasteID = $this.attr("id");
@@ -9644,8 +9625,10 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
                             img02 = base64data;
                         } else if ($scope.imgPasteID == "uploadImg03") {
                             img03 = base64data;
+                        }else if ($scope.imgPasteID == "uploadImg04") {
+                            img04 = base64data;
                         }
-                        $scope.comp.compImg = img01 + "|" + img02 + "|" + img03;
+                        $scope.comp.compImg = img01 + "|" + img02 + "|" + img03 + "|" + img04;
 
                     }
                 }
@@ -9735,6 +9718,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             $scope.showSubmitBtn = true;
             $scope.comp.compType = '';
         } else {
+
             $http.post('/submitOfficeMadeComplaint', $scope.comp).then(function (response) {
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
@@ -9777,12 +9761,14 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $scope.complaintImages = {
         'image01': "",
         'image02': "",
-        'image03': ""
+        'image03': "",
+        'image04': ""
     }
     $scope.showComplaintImages = {
         'image01': false,
         'image02': false,
-        'image03': false
+        'image03': false,
+        'image04': false 
     }
     $scope.logsImages = {
         'image01': "",
@@ -9815,6 +9801,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
         $scope.complaintImages.image02 = $scope.detailObj.compImg.split("|")[1];
         $scope.complaintImages.image03 = $scope.detailObj.compImg.split("|")[2];
+        $scope.complaintImages.image04 = $scope.detailObj.compImg.split("|")[3];
 
         if ($scope.complaintImages.image01 !== 'undefined') {
             $scope.showComplaintImages.image01 = true;
@@ -9831,6 +9818,11 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         } else {
             $scope.complaintImages.image03 = "";
         }
+        if ($scope.complaintImages.image04 !== 'undefined') {
+            $scope.showComplaintImages.image04 = true;
+        } else {
+            $scope.complaintImages.image04 = "";
+        }        
 
         if ($scope.detailObj.logsImg !== null) {
             //init images
@@ -9881,7 +9873,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         var driverID = {
             id: $scope.detailObj.driver
         };
-
         $scope.cmsUpdateStatus = $scope.detailObj.cmsStatus;
 
         $scope.staffName = '';
@@ -9893,7 +9884,9 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         });
 
         $http.post('/getStaffName', driverID).then(function (response) {
-            $scope.driverName = response.data[0].staffName;
+            if(response.data.length != 0){
+                $scope.driverName = response.data[0].staffName;
+            }
         })
 
         //date reformat
@@ -9998,7 +9991,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                     } else if ($scope.histUpdateList[n].split(" ")[7] == 2) {
                         $scope.histUpdateList[n] = $scope.histUpdateList[n].substring(0, $scope.histUpdateList[n].length - 1);
                         $scope.histUpdateList[n] += "Invalid";
-                        console.log($scope.histUpdateList[n]);
                     } else if ($scope.histUpdateList[n].split(" ")[7] == 3) {
                         $scope.histUpdateList[n] = $scope.histUpdateList[n].substring(0, $scope.histUpdateList[n].length - 1);
                         $scope.histUpdateList[n] += "Pending Review";
@@ -10118,7 +10110,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     //edit images by handsome felix, yeyyyy
     $scope.editCompImages = function () {
         $scope.editImages = true;
-        var images = [$scope.complaintImages.image01, $scope.complaintImages.image02, $scope.complaintImages.image03];
+        var images = [$scope.complaintImages.image01, $scope.complaintImages.image02, $scope.complaintImages.image03, $scope.complaintImages.image04];
 
         images.forEach(function (image, index) {
             var isEmpty = true;
@@ -10235,6 +10227,8 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             $scope.complaintImages.image02 = "";
         } else if (imgID === "uploadImg03") {
             $scope.complaintImages.image03 = "";
+        } else if (imgID === "uploadImg04") {
+            $scope.complaintImages.image04 = "";
         }
         var canvas = document.getElementById(imgID);
         var ctx = canvas.getContext('2d');
@@ -10247,7 +10241,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         var updateImages = {
             'coID': $routeParams.coID,
             'department': "LG",
-            'images': $scope.complaintImages.image01 + "|" + $scope.complaintImages.image02 + "|" + $scope.complaintImages.image03
+            'images': $scope.complaintImages.image01 + "|" + $scope.complaintImages.image02 + "|" + $scope.complaintImages.image03 + "|" + $scope.complaintImages.image04
         }
 
         $http.post('/updateComplaintImages', updateImages).then(function (response) {

@@ -66,6 +66,28 @@ app.post('/updateComplaintDetailsStatus', function(req, res) {
     });
 });
 
+app.post('/updateKLGStatus', function(req, res) {
+    'use strict';
+    
+
+    var sql = "UPDATE tblcomplaintofficer SET klgStatus = '" + req.body.status + "' WHERE coID = '" + req.body.coID + "' ";
+
+    var status = {
+        "status": ""
+    };
+    database.query(sql, function(err, result) {
+        if (err) {
+
+            status.status = "error";
+            res.json(status);
+            throw err;
+        } else {
+            status.status = "success";
+            res.json(status);
+        }
+    });
+});
+
 app.post('/updateComplaintDetailsCustStatus', function(req, res) {
     'use strict';
     
@@ -300,13 +322,13 @@ app.post('/submitOfficeMadeComplaint', function(req, res) {
         });
 
 
-        images = images[0] + "|" + images[1] + "|" + images[2];
+        images = images[0] + "|" + images[1] + "|" + images[2] + "|" + images[3];
         var nameFormatted = req.body.compName.replace("'", "\\'");
         var companyFormatted = req.body.compCompany.replace("'", "\\'");
         var addressFormatted = req.body.compAddress.replace("'", "\\'");
 
         var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, status, custStatus, cmsStatus) VALUE ('" + ID + "', '" + req.body.compDate + "', '" + req.body.compTime + "', '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + nameFormatted + "', '" + companyFormatted + "', '" + req.body.compPhone + "', '" + addressFormatted + "','" + req.body.compType + "', '" + req.body.compLogDate + "', '" + req.body.compLogTime + "', '" + req.body.compLogBy + "', '" + req.body.creationDate + "', '" + images + "', 1, '" + req.body.services + "', 'r', 'u', 'open', 'open', 3)";
-console.log(sql);
+
         database.query(sql, function(err, result) {
             if (err) {
                 throw err;
@@ -426,7 +448,7 @@ app.post('/getLogisticsComplaintDetail', function(req, res) {
 app.post('/getLogisticsFullComplaintDetail', function(req, res) {
     'use strict';
 
-    var sql = "SELECT tblcomplaintofficer.under AS 'area', tblcomplaintofficer.council AS 'council', tblcomplaintofficer.forwardedSub AS 'sub', tblcomplaintofficer.forwardedDate AS 'subDate', tblcomplaintofficer.forwardedTime AS 'subTime', tblstaff.staffName AS 'subBy', tblcomplaintofficer.status AS 'status', tblcomplaintofficer.statusDate AS 'statusDate', tblcomplaintofficer.statusTime AS 'statusTime', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.logsImg AS 'logsImg', tblcomplaintofficer.custStatus AS 'custStatus', tblcomplaintofficer.customerDate AS 'custDate', tblcomplaintofficer.customerTime AS 'custTime', tblcomplaintofficer.customerBy AS 'custBy', tblcomplaintofficer.contactStatus AS 'contactStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.driver AS 'driver', tblcomplaintofficer.logisticsReview AS 'logisticsReview' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.forwardedBy = tblstaff.staffID WHERE coID = '" + req.body.coID + "'";
+    var sql = "SELECT tblcomplaintofficer.under AS 'area', tblcomplaintofficer.council AS 'council', tblcomplaintofficer.forwardedSub AS 'sub', tblcomplaintofficer.forwardedDate AS 'subDate', tblcomplaintofficer.forwardedTime AS 'subTime', tblstaff.staffName AS 'subBy', tblcomplaintofficer.status AS 'status', tblcomplaintofficer.statusDate AS 'statusDate', tblcomplaintofficer.statusTime AS 'statusTime', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.logsImg AS 'logsImg', tblcomplaintofficer.custStatus AS 'custStatus', tblcomplaintofficer.customerDate AS 'custDate', tblcomplaintofficer.customerTime AS 'custTime', tblcomplaintofficer.customerBy AS 'custBy', tblcomplaintofficer.contactStatus AS 'contactStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.driver AS 'driver', tblcomplaintofficer.logisticsReview AS 'logisticsReview', tblcomplaintofficer.klgStatus AS 'klgStatus' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.forwardedBy = tblstaff.staffID WHERE coID = '" + req.body.coID + "'";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -481,9 +503,11 @@ app.post('/submitLogisticsComplaint', function(req, res) {
     
 
     var remarkFormatted = req.body.remark.replace("'", "\\'");
+console.log(req.body.subDate);
+console.log(req.body.subTime);
 
     if (req.body.subDate == null || req.body.subTime == null) {
-        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = " + req.body.subDate + ", forwardedTime = " + req.body.subTime + ", forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + images + "', step = 2, readState = 'u', logsReadState = 'r', driver = '" + req.body.driver + "' WHERE coID = '" + req.body.coID + "' ";
+        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = " + req.body.subDate + ", forwardedTime = " + req.body.subTime + ", forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + images + "', step = 2, readState = 'u', logsReadState = 'r', driver = '" + req.body.driver + "' , klgStatus = '" + req.body.klgStatus + "' WHERE coID = '" + req.body.coID + "' ";
     } else {
         var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = '" + req.body.statusDate + "', statusTime = '" + req.body.statusTime + "', remarks = '" + remarkFormatted + "', logsImg = '" + images + "', step = 2, readState = 'u', logsReadState = 'r', driver = '" + req.body.driver + "'  WHERE coID = '" + req.body.coID + "' ";
     }
@@ -532,11 +556,13 @@ app.post('/updateComplaintImages', function(req, res) {
         }
     });
     
-    images = images[0] + "|" + images[1] + "|" + images[2];
-    
     if(req.body.department === "LG"){
+        images = images[0] + "|" + images[1] + "|" + images[2] + "|" + images[3];
+        console.log(images[2]);
+        console.log(images[3]);
         var sql = "UPDATE tblcomplaintofficer SET compImg = '" + images + "' WHERE coID = '" + req.body.coID + "'";
     }else if(req.body.department === "BD"){
+        images = images[0] + "|" + images[1] + "|" + images[2];
         var sql = "UPDATE tblcomplaintofficer SET logsImg = '" + images + "' WHERE coID = '" + req.body.coID + "'";
     }
     
