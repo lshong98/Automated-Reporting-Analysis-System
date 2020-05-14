@@ -70,6 +70,13 @@
     }
     #myLogsImg03:hover {opacity: 0.7;}
     
+    #myLogsImg04 {
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myLogsImg04:hover {opacity: 0.7;}    
+    
     /* The Modal (background) */
     .modal {
       display: none; /* Hidden by default */
@@ -396,6 +403,9 @@
                 <div class="col-md-6">
                     <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg03"></canvas>
                 </div>
+                <div class="col-md-6">
+                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 50px;" id="uploadImg04"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -486,38 +496,49 @@
         <div class="col-xs-3 form-label-width">
             <strong>Image from Logistics:</strong>            
         </div>
-        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image01 && !editImages">
-            <img id="myLogsImg01" src="{{logsImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image01 && !editImages">
+                    <img id="myLogsImg01" src="{{logsImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
+                </div>
+                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image02 && !editImages">
+                    <img id="myLogsImg02" src="{{logsImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
+                </div>            
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image03 && !editImages">
+                    <img id="myLogsImg03" src="{{logsImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
+                </div>
+                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image04 && !editImages">
+                    <img id="myLogsImg04" src="{{logsImages.image04}}" style="width: 100%;height: 100%;object-fit: contain;" />
+                </div>        
+            </div>
         </div>
-        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image02 && !editImages">
-            <img id="myLogsImg02" src="{{logsImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
-        </div>
-        <div class="mx-sm-3" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image03 && !editImages">
-            <img id="myLogsImg03" src="{{logsImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
-        </div>
+
     </div>
     <div class="row">
         <div class="col-xs-3 form-label-width"></div>
-        <div class="col-md-3" data-ng-show="editImages">
-            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg04"></canvas>
-        </div>
-        <div class="col-md-3" data-ng-show="editImages">
-            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 70px;" id="uploadImg05"></canvas>
-        </div>
-        <div class="col-md-3" data-ng-show="editImages">
-            <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 125px;" id="uploadImg06"></canvas>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-3 form-label-width"></div>
-        <div class="col-md-3">
-            <button data-ng-click="clearImage('uploadImg04')" type="button" class="btn btn-danger" style="margin-left: 15px; width: 120%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
-        </div>
-        <div class="col-md-3">
-            <button data-ng-click="clearImage('uploadImg05')" type="button" class="btn btn-danger" style="margin-left: 70px; width: 120%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
-        </div>
-        <div class="col-md-3">
-            <button data-ng-click="clearImage('uploadImg06')" type="button" class="btn btn-danger" style="margin-left: 125px; width: 120%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-6" data-ng-show="editImages">
+                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg05"></canvas>
+                    <button data-ng-click="clearImage('uploadImg05')" type="button" class="btn btn-danger" style="margin-left:25% ; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+                </div>
+                <div class="col-md-6" data-ng-show="editImages">
+                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 50px;" id="uploadImg06"></canvas>
+                    <button data-ng-click="clearImage('uploadImg06')" type="button" class="btn btn-danger" style="margin-left:30% ; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" data-ng-show="editImages">
+                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg07"></canvas>
+                    <button data-ng-click="clearImage('uploadImg07')" type="button" class="btn btn-danger" style="margin-left:25% ; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+                </div>
+                <div class="col-md-6" data-ng-show="editImages">
+                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 50px;" id="uploadImg08"></canvas>
+                    <button data-ng-click="clearImage('uploadImg08')" type="button" class="btn btn-danger" style="margin-left:30% ; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+                </div>
+            </div> 
         </div>
     </div>
     <br/>
@@ -698,6 +719,13 @@
       modalImg.src = this.src;
       captionText.innerHTML = this.alt;
     }
+    
+    var logs04 = document.getElementById("myLogsImg04");
+    logs04.onclick = function(){
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      captionText.innerHTML = this.alt;
+    }    
     
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];

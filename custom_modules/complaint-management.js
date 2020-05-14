@@ -499,7 +499,7 @@ app.post('/submitLogisticsComplaint', function(req, res) {
         }
     });
     
-    images = images[0] + "|" + images[1] + "|" + images[2];
+    images = images[0] + "|" + images[1] + "|" + images[2] + "|" +images[3];
     
 
     var remarkFormatted = req.body.remark.replace("'", "\\'");
@@ -558,11 +558,9 @@ app.post('/updateComplaintImages', function(req, res) {
     
     if(req.body.department === "LG"){
         images = images[0] + "|" + images[1] + "|" + images[2] + "|" + images[3];
-        console.log(images[2]);
-        console.log(images[3]);
         var sql = "UPDATE tblcomplaintofficer SET compImg = '" + images + "' WHERE coID = '" + req.body.coID + "'";
     }else if(req.body.department === "BD"){
-        images = images[0] + "|" + images[1] + "|" + images[2];
+        images = images[0] + "|" + images[1] + "|" + images[2] + "|" + images[3];
         var sql = "UPDATE tblcomplaintofficer SET logsImg = '" + images + "' WHERE coID = '" + req.body.coID + "'";
     }
     
