@@ -517,7 +517,8 @@ app.service('storeDataService', function () {
                 "view": 'I',
                 "create": 'I',
                 "hist": 'I',
-                "editcms": 'I'
+                "editcms": 'I',
+                "delete": 'I'
             },
             "complaintlogs": {
                 "view": 'I'
@@ -4954,7 +4955,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "view": 'I',
             "create": 'I',
             "hist": 'I',
-            "editcms": 'I'
+            "editcms": 'I',
+            "delete": 'I'
         },
         "complaintlogs": {
             "view": 'I'
@@ -5223,7 +5225,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'A',
                             "create": 'A',
                             "hist": 'A',
-                            "editcms": 'A'
+                            "editcms": 'A',
+                            "delete": 'A'
                         },
                         "complaintlogs": {
                             "view": 'A'
@@ -5403,7 +5406,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'I',
                             "create": 'I',
                             "hist": 'I',
-                            "editcms": 'I'
+                            "editcms": 'I',
+                            "delete": 'I'
                         },
                         "complaintlogs": {
                             "view": 'I'
@@ -9768,6 +9772,8 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
     $scope.showcmsupdatebtn = angular.copy(storeDataService.show.complaintweb.editcms);
     $scope.showhiststatuslist = angular.copy(storeDataService.show.complaintweb.hist);
+    $scope.showDelete = angular.copy(storeDataService.show.complaintweb.delete);
+    console.log($scope.showDelete);
 
     $scope.custStatus = {
         'status': "open",
@@ -10308,6 +10314,15 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             });
         }
 
+    }
+    
+    $scope.deleteComplaint = function() {
+        if(confirm("Do you want to Delete the complaint?")){
+            $http.post('/deleteComplaint',$scope.coIDobj).then(function(response){
+                $scope.notify(response.data.status,response.data.message);
+                window.location.href = '#/complaint-module/';
+            });
+        }
     }
 });
 app.controller('complaintOfficereditController', function ($scope, $http, $routeParams, $filter) {

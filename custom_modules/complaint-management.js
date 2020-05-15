@@ -356,7 +356,7 @@ app.post('/editOfficeMadeComplaint', function(req, res) {
 
 app.get('/getComplaintOfficerList', function(req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaintofficer.coID AS 'coID', CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState' FROM tblcomplaintofficer ORDER BY tblcomplaintofficer.creationDateTime DESC";
+    var sql = "SELECT tblcomplaintofficer.coID AS 'coID', CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState' FROM tblcomplaintofficer WHERE tblcomplaintofficer.activeStatus != '0' ORDER BY tblcomplaintofficer.creationDateTime DESC";
 
     database.query(sql, function(err, result) {
 
@@ -370,7 +370,7 @@ app.get('/getComplaintOfficerList', function(req, res) {
 
 app.get('/getLogisticsComplaintList', function(req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.status = 'status', tblstaff.staffName AS 'staff', tblcomplaintofficer.logsReadState AS 'logsReadState' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.logisticsBy = tblstaff.staffID WHERE step >= 1 ORDER BY tblcomplaintofficer.complaintDate DESC";
+    var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.status = 'status', tblstaff.staffName AS 'staff', tblcomplaintofficer.logsReadState AS 'logsReadState' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.logisticsBy = tblstaff.staffID WHERE step >= 1 AND tblcomplaintofficer.activeStatus != '0' ORDER BY tblcomplaintofficer.complaintDate DESC";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -640,6 +640,20 @@ app.post('/setIncharge', function(req, res) {
             throw err;
         }
         res.json(result);
+    });
+});
+
+app.post('/deleteComplaint', function(req,res){
+   'use strict';
+    var sql = "UPDATE tblcomplaintofficer SET activeStatus = 0 WHERE coID = '" + req.body.coID+ "';";
+    
+    database.query(sql,function(err,result){
+        if(err){
+            throw err;
+        }else{
+            res.json({"status":"success", "message":"Complaint has been deleted."});
+        }
+        
     });
 });
 
