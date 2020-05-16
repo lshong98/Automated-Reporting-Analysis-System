@@ -278,6 +278,7 @@ app.post('/getNotifs', function (req, resp) {
             if (!err) {
                 for (var i = 0; i < res.length; i++) {
                     results["response"].push({
+                        "notifID": res[i].notifID,
                         "notif": res[i].notifText,
                         "notifDate": res[i].notifDate,
                         "unread": res[i].unread
@@ -289,6 +290,7 @@ app.post('/getNotifs', function (req, resp) {
                     if (!err) {
                         for (var i = 0; i < res.length; i++) {
                             results["announcements"].push({
+                                "id": res[i].id,
                                 "announce": res[i].announcement,
                                 "announceDate": res[i].announceDate,
                                 "announceLink": res[i].announceLink,
@@ -301,6 +303,7 @@ app.post('/getNotifs', function (req, resp) {
                                 if (!err) {
                                     for (var i = 0; i < res.length; i++) {
                                         results["announcements"].push({
+                                            "id": res[i].id,
                                             "announce": res[i].announcement,
                                             "announceDate": res[i].announceDate,
                                             "announceLink": res[i].announceLink,
@@ -331,6 +334,7 @@ app.post('/getNotifUrl', function (req, resp) {
 
     req.addListener('end', function () {
         var sqlUser = "SELECT announceLink FROM tblannouncement WHERE id ='" + data.title + "'";
+        console.log(data.title);
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 resp.send(res[0].announceLink);
