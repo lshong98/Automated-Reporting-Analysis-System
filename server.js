@@ -109,7 +109,7 @@ app.post('/sendNotifToDevice', function(req, res) {
 app.post('/insertAnnouncement', function(req, res) {
     'use strict';
     var target = req.body.target;
-    var message = req.body.message;
+    var message = req.body.message.replace("'", "\\'");
     var link = req.body.link;
     var date = dateTime.create().format('Y-m-d H:M:S');
     var sql = "INSERT INTO tblannouncement(announcement, announceDate, announceLink, target, readStat) VALUES('" + message + "','" + date + "','" + link + "','" + target + "','r')";
