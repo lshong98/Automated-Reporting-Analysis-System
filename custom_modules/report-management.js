@@ -67,7 +67,8 @@ app.post('/addReport', function (req, res) {
         driver_id = req.body.driver,
         remark = req.body.remark.replace("'", "\\'"),
         created_on = req.body.creationDate,
-        staff_id = req.body.staffID;
+        staff_id = req.body.staffID,
+        colDay = req.body.colDay;
     
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
@@ -110,7 +111,7 @@ app.post('/addReport', function (req, res) {
 //                destination: 'images/daily-report' + image_path
 //            });
             
-            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + image + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "')",
+            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID, colDay) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + image + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "', '" + colDay + "')",
                 reportID = ID;
             
             database.query(sql, function (err, result) {
@@ -188,7 +189,8 @@ app.post('/editReport', function (req, res) {
         status = req.body.status,
         truck_id = req.body.truckID,
         driver_id = req.body.driverID,
-        remark = req.body.remark.replace("'", "\\'");;
+        remark = req.body.remark.replace("'", "\\'"),
+        colDay = req.body.colDay;
     
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
@@ -221,7 +223,7 @@ app.post('/editReport', function (req, res) {
         image = '';
     }
     
-    var sql = "UPDATE tblreport SET reportCollectionDate = '" + collection_date + "', operationTimeStart = '" + operation_start + "', operationTimeEnd = '" + operation_end + "', garbageAmount = '" + tonnage + "', iFleetMap = '" + image + "', completionStatus = '" + status + "', truckID = '" + truck_id + "', driverID = '" + driver_id + "', remark = '" + remark + "' WHERE reportID = '" + report_id + "'",
+    var sql = "UPDATE tblreport SET reportCollectionDate = '" + collection_date + "', operationTimeStart = '" + operation_start + "', operationTimeEnd = '" + operation_end + "', garbageAmount = '" + tonnage + "', iFleetMap = '" + image + "', completionStatus = '" + status + "', truckID = '" + truck_id + "', driverID = '" + driver_id + "', remark = '" + remark + "', colDay = '" + colDay + "' WHERE reportID = '" + report_id + "'",
         i = 0,
         j = 0;
     
