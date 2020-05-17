@@ -589,7 +589,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         "day2": $filter('date')(passdate2, 'EEE').toLowerCase(),
         "date2": $filter('date')(passdate2, 'yyyy-MM-dd').toLowerCase()
     }
-
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
@@ -638,7 +637,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
                 ($scope.normalReport).push(value);
             }
         });
-        console.log($scope.reportList);
         
 
         $scope.searchReport = function(report) {
