@@ -282,7 +282,36 @@
     
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Type of Complaint:</strong>
-        <p  class="mx-sm-3">{{detailType}}</p>
+        <div class="col-md-8">
+            <p data-ng-show="showEditTOC == false">{{detailType}}</p>
+            <div data-ng-show="showEditTOC == true">
+                <div data-ng-show = "typeOption==1">
+                    <label for="tc1">Waste not collected <input id="tc1" type="checkbox" data-ng-model="tc1"/> <input type="text" placeholder="Specify days" data-ng-show="tc1 == true" data-ng-model="tc1days"/></label><br/>
+                    <label for="tc2">Bin not pushed back to its original location <input id="tc2" type="checkbox" data-ng-model="tc2"/></label><br/>
+                    <label for="tc3">Spillage of waste <input id="tc3" type="checkbox" data-ng-model="tc3"/></label><br/>
+                    <label for="tc4">Spillage of leachate water <input id="tc4" type="checkbox" data-ng-model="tc4"/></label><br/>
+                    <label for="tc12">Others <input id="tc12" type="checkbox" data-ng-model="tc12"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc12 == true" data-ng-model="tc12others" rows="5" cols="100"></textarea></label>
+                </div>
+                <div data-ng-show="typeOption==2">
+                    <label for="tc5">RoRo not send <input id="tc5" type="checkbox" data-ng-model="tc5"/></label><br/>
+                    <label for="tc6">RoRo not exchanged <input id="tc6" type="checkbox" data-ng-model="tc6"/></label><br/>
+                    <label for="tc7">RoRo not pulled <input id="tc7" type="checkbox" data-ng-model="tc7"/></label><br/>
+                    <label for="tc8">RoRo not emptied <input id="tc8" type="checkbox" data-ng-model="tc8"/></label><br/> 
+                    <label for="tc13">Others <input id="tc13" type="checkbox" data-ng-model="tc13"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc13 == true" data-ng-model="tc13others" rows="5" cols="100"></textarea></label>            
+                </div>
+                <div data-ng-show="typeOption==3">
+                    <label for="tc9">Waste not collected on time<input id="tc9" type="checkbox" data-ng-model="tc9"/></label><br/>
+                    <label for="tc10">Spillage during collection<input id="tc10" type="checkbox" data-ng-model="tc10"/></label><br/>
+                    <label for="tc11">Incomplete documents<input id="tc11" type="checkbox" data-ng-model="tc11"/></label><br/>
+                    <label for="tc14">Others <input id="tc14" type="checkbox" data-ng-model="tc14"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc14 == true" data-ng-model="tc14others" rows="5" cols="100"></textarea></label>            
+                </div>    
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-primary" data-ng-show="showEditTOC == false" data-ng-click="editTypeOfComplaint()" >Edit</button>
+            <button class="btn btn-success" data-ng-show="showEditTOC == true" data-ng-click="submitEditTOC()" >Submit</button>
+            <button class="btn btn-danger" data-ng-show="showEditTOC == true"data-ng-click="editTypeOfComplaint()" >Cancel</button>
+        </div>
     </div>
 
     <br/>
@@ -391,6 +420,11 @@
         <strong class="col-xs-3 form-label-width">Responded By:</strong>
         <p  class="mx-sm-3">{{logsStaffName}}</p>
     </div>  
+    
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Waste Collected On:</strong>
+        <div class="mx-sm-3"><span data-ng-repeat="w in wasteData">{{w.date}} - {{w.reporter}}<br/></span></div>
+    </div>
     
     <br/>
     <hr/>

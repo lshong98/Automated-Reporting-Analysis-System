@@ -17,7 +17,7 @@
         <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="endDate" data-ng-change="dateRangeChange()"/>
     </div>
     <div class="col-md-3 offset-md-5">
-        <a href="javascript:exportTableToExcel('complaintExport')" class="btn btn-md btn-primary clearfix"><span class="fa fa-file-pdf-o"></span> Export to PDF</a>
+        <a href="javascript:exportTableToExcel('complaintExport')" class="btn btn-md btn-primary clearfix"><span class="fa fa-file-pdf-o"></span> Export to Excel</a>
 <!--        <button class="btn btn-primary" data-ng-click="exportCompReport()"><i class="fa fa-plus"></i> Export</button>-->
     </div>
 </div>
@@ -33,6 +33,7 @@
                         <th>LG KPI Response Time (hours:minute)</th>
                         <th>BD Date Time</th>
                         <th>BD KPI Response Time (hours:minute)</th>
+                        <th>Type of Services</th>
                         <th>Type of Complaint</th>
                         <th>Service Provider</th>
                         <th>Complaint Name</th>
@@ -45,6 +46,7 @@
                         <th>Area Code</th>
                         <th>Driver</th>
                         <th>Remarks</th>
+                        <th>Waste Collected On</th>
                         <th>Respondent</th>
                         <th>LG Reviewed By</th>
                         <th>BD Reviewed By</th>
@@ -58,6 +60,7 @@
                         <td data-ng-bind="c.customerDateTime"></td>
                         <td data-ng-bind="c.bdkpi"></td>
                         <td data-ng-bind="c.services"></td>
+                        <td data-ng-bind="c.complaintTypeFormatted"></td>
                         <td data-ng-bind="c.forwardedSub"></td>
                         <td data-ng-bind="c.name"></td>
                         <td data-ng-bind="c.source"></td>
@@ -69,6 +72,7 @@
                         <td data-ng-bind="c.area"></td>
                         <td data-ng-bind="c.driver"></td>
                         <td data-ng-bind="c.remarks"></td>
+                        <td data-ng-bind="c.wcdSentences"></td>
                         <td data-ng-bind="c.respondent"></td>
                         <td data-ng-bind="c.logisticsReview"></td>
                         <td data-ng-bind="c.customerReview"></td>

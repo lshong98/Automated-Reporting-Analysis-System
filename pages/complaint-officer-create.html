@@ -99,14 +99,19 @@
 <br/>
 
 <div class="form-group row">
-    <label class="col-xs-3 col-form-label form-label-width">Type of Complaint:</label>
+    <label class="col-xs-3 col-form-label form-label-width">Type of Services:</label>
     <div class="col-md-9" >
         <select class="form-control" data-ng-model="typeOption" data-width="50%">
             <option value="1">Compactor</option>
             <option value="2">Hooklift</option>
             <option value="3">Hazardous waste</option>
         </select>
-        <div data-ng-show = "typeOption==1">
+    </div>
+</div>
+<div class="form-group row" data-ng-show = "typeOption==1 || typeOption==2 || typeOption==3">
+    <label class="col-xs-3 col-form-label form-label-width">Type of Complaint:</label>
+    <div class="col-md-9">
+            <div data-ng-show = "typeOption==1">
             <label for="tc1">Waste not collected <input id="tc1" type="checkbox" data-ng-model="tc1"/> <input type="text" placeholder="Specify days" data-ng-show="tc1 == true" data-ng-model="tc1days"/></label><br/>
             <label for="tc2">Bin not pushed back to its original location <input id="tc2" type="checkbox" data-ng-model="tc2"/></label><br/>
             <label for="tc3">Spillage of waste <input id="tc3" type="checkbox" data-ng-model="tc3"/></label><br/>
@@ -126,7 +131,6 @@
             <label for="tc11">Incomplete documents<input id="tc11" type="checkbox" data-ng-model="tc11"/></label><br/>
             <label for="tc14">Others <input id="tc14" type="checkbox" data-ng-model="tc14"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc14 == true" data-ng-model="tc14others" rows="5" cols="100"></textarea></label>            
         </div>
-        
     </div>
 </div>
 
