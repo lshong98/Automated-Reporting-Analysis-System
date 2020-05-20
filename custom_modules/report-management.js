@@ -10,7 +10,7 @@ const storage = new Storage({
     projectId: 'trienekens-management-portal'
 });
 const bucketName = 'trienekens-management-portal-images';
-const local_directory = './images/daily-report-test';
+const local_directory = './images/daily-report';
 const lh_directory = local_directory + '/lh';
 const rttb_directory = local_directory + '/rttb';
 const wt_directory = local_directory + '/wt';
@@ -98,7 +98,7 @@ app.post('/addReport', function (req, res) {
         var base64Image = image.split(';base64,').pop();
         var extension = image.split(';base64,')[0].split('/')[1];
         var image_path = '/' + ID + '.' + extension;
-        var local_store_path = 'images/daily-report-test/'+ directory + image_path,
+        var local_store_path = 'images/daily-report/'+ directory + image_path,
             public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
         
         fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
