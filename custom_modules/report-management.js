@@ -10,7 +10,11 @@ const storage = new Storage({
     projectId: 'trienekens-management-portal'
 });
 const bucketName = 'trienekens-management-portal-images';
-const local_directory = './images/daily-report';
+const local_directory = './images/daily-report-test';
+const lh_directory = local_directory + '/lh';
+const rttb_directory = local_directory + '/rttb';
+const wt_directory = local_directory + '/wt';
+const gpswox_directory = local_directory + '/gpswox';
 
 app.post('/convertreport', function (req, res) {
     var sql = "SELECT reportID AS id, iFleetMap AS image FROM tblreport WHERE iFleetMap != '' AND iFleetMap LIKE '%;base64,%' ORDER BY creationDateTime DESC LIMIT 0, 1";
@@ -60,7 +64,11 @@ app.post('/addReport', function (req, res) {
         operation_start = req.body.format_startTime,
         operation_end = req.body.format_endTime,
         tonnage = req.body.ton,
-        image = req.body.ifleetImg,
+        lh = req.body.lh,
+        rttb = req.body.rttb,
+        wt = req.body.wt,
+        gpswox = req.body.gpswox,
+        //image = req.body.ifleetImg,
         read_status = 'I',
         complete_status = req.body.status,
         truck_id = req.body.truck,
@@ -72,47 +80,66 @@ app.post('/addReport', function (req, res) {
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
     }
+    if (!fs.existsSync(lh_directory)) {
+        fs.mkdirSync(lh_directory);
+    }
+    if (!fs.existsSync(rttb_directory)) {
+        fs.mkdirSync(rttb_directory);
+    }
+    if (!fs.existsSync(wt_directory)) {
+        fs.mkdirSync(wt_directory);
+    }
+    if (!fs.existsSync(gpswox_directory)) {
+        fs.mkdirSync(gpswox_directory);
+    }
+    
+    function makeImage (image, directory, ID) {
+        var base64Image = image.split(';base64,').pop();
+        var extension = image.split(';base64,')[0].split('/')[1];
+        var image_path = '/' + ID + '.' + extension;
+        var local_store_path = 'images/daily-report-test/'+ directory + image_path,
+            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+        
+        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+            if (err) throw err;
+
+            await storage.bucket(bucketName).upload('./' + local_store_path, {
+                gzip: true,
+                metadata: {
+                    cacheControl: 'public, no-cache',
+                },
+                public: true,
+                destination: local_store_path
+            });
+        });
+        return public_url;
+    }
     
     f.makeID('report', created_on).then(function (ID) {
-        if (image !== '') {
-            let base64Image = image.split(';base64,').pop();
-            var extension = image.split(';base64,')[0].split('/')[1];
-            var image_path = '/' + ID + '.' + extension;
-            var local_store_path = 'images/daily-report' + image_path,
-                public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
-            
-            fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
-                if (err) throw err;
-                
-                await storage.bucket(bucketName).upload('./' + local_store_path, {
-                    gzip: true,
-                    metadata: {
-                        cacheControl: 'public, no-cache',
-                    },
-                    public: true,
-                    destination: local_store_path
-                });
-            });
-            image = public_url;
+        if (lh !== '') {
+            lh = makeImage(lh, "lh", ID);
         } else {
-            image = '';
+            lh = '';
         }
-
-        //fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
-            //if (err) throw err;
-
-//            await storage.bucket(bucketName).upload('./' + local_store_path, {
-//                gzip: true,
-//                metadata: {
-//                    cacheControl: 'public, no-cache',
-//                },
-//                public: true,
-//                destination: 'images/daily-report' + image_path
-//            });
+        if (rttb !== '') {
+            rttb = makeImage(rttb, "rttb", ID);
+        } else {
+            rttb = '';
+        }
+        if (wt !== '') {
+            wt = makeImage(wt, "wt", ID);
+        } else {
+            wt = '';
+        }
+        if (gpswox !== '') {
+            gpswox = makeImage(gpswox, "gpswox", ID);
+        } else {
+            gpswox = '';
+        }
             
-            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, iFleetMap, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + image + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "')",
+            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, lh, rttb, wt, gpswox, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + lh + "', '" + rttb + "', '" + wt + "', '" + gpswox + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "')",
                 reportID = ID;
-            
+            console.log(sql);
             database.query(sql, function (err, result) {
                 if (err) {
                     throw err;
@@ -277,7 +304,7 @@ app.post('/editReport', function (req, res) {
 });
 app.post('/getReport', function (req, res) {
     'use strict';
-    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.reportFeedback AS feedback, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.iFleetMap AS ifleet, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(tbltaman.tamanName) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN tblarea ON tblarea.areaID = tblreport.areaID JOIN tbltaman ON tbltaman.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
+    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.reportFeedback AS feedback, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.lh AS lh, tblreport.rttb AS rttb, tblreport.wt AS wt, tblreport.gpswox AS gpswox, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(tbltaman.tamanName) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN tblarea ON tblarea.areaID = tblreport.areaID JOIN tbltaman ON tbltaman.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

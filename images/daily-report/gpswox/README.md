@@ -1,0 +1,1 @@
+This directory to save report images.

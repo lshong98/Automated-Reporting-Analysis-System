@@ -1,67 +1,3 @@
-//app.directive('appFilereader', function($q) {
-//    'use strict';
-//    var slice = Array.prototype.slice;
-//
-//    return {
-//        restrict: 'A',
-//        require: '?ngModel',
-//        link: function(scope, element, attrs, ngModel) {
-//                if (!ngModel) { return; }
-//
-//                ngModel.$render = function() {};
-//
-//                element.bind('change', function(e) {
-//                    var element;
-//                    element = e.target;
-//
-//                    function readFile(file) {
-//                        var deferred = $q.defer(),
-//                            reader = new FileReader();
-//
-//                        reader.onload = function(e) {
-//                            deferred.resolve(e.target.result);
-//                        };
-//                        reader.onerror = function(e) {
-//                            deferred.reject(e);
-//                        };
-//                        reader.readAsDataURL(file);
-//
-//                        return deferred.promise;
-//                    }
-//
-//                    $q.all(slice.call(element.files, 0).map(readFile))
-//                        .then(function(values) {
-//                            if (element.multiple) { ngModel.$setViewValue(values); } else { ngModel.$setViewValue(values.length ? values[0] : null); }
-//                        });
-//
-//                }); //change
-//
-//            } //link
-//    }; //return
-//});
-//app.directive("strToTime", function() {
-//    return {
-//        require: 'ngModel',
-//        link: function(scope, element, attrs, ngModelController) {
-//            ngModelController.$parsers.push(function(data) {
-//                if (!data)
-//                    return "";
-//                return ("0" + data.getHours().toString()).slice(-2) + ":" + ("0" + data.getMinutes().toString()).slice(-2);
-//            });
-//
-//            ngModelController.$formatters.push(function(data) {
-//                if (!data) {
-//                    return null;
-//                }
-//                var d = new Date(1970, 1, 1);
-//                var splitted = data.split(":");
-//                d.setHours(splitted[0]);
-//                d.setMinutes(splitted[1]);
-//                return d;
-//            });
-//        }
-//    };
-//});
 app.controller('dailyController', function($scope, $window, $routeParams, $http, $filter) {
     $scope.showSubmitBtn = true;
     'use strict';
@@ -84,6 +20,10 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "ton": '',
         "remark": '',
         "ifleetImg": '',
+        "lh": '',
+        "rttb": '',
+        "wt": '',
+        "gpswox": '',
         "lng": '',
         "lat": '',
         "address": '',
@@ -521,6 +461,15 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             }
         }
     }
+    
+    $('canvas').on('click', function (e) {
+        var $canvas = e.target.id;
+        
+        if ($scope.report[$canvas] !== "") {
+            $('#image_previewer #this_image').attr('src', $scope.report[$canvas]);
+            $('#image_previewer').modal('show');
+        }
+    });
 
     
     window.addEventListener("paste", function(e) {
@@ -528,8 +477,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
                 // If there's an image, display it in the canvas
                 if (imageBlob) {
-                    var canvas = document.getElementById("ifleetcol");
-                    var ctx = canvas.getContext('2d');
+                    var canvas_id_name = e.target.children[1].id,
+                        canvas = document.getElementById(canvas_id_name),
+                        ctx = canvas.getContext('2d');
 
                     // Create an image to render the blob on the canvas
                     var img = new Image();
@@ -554,7 +504,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
                     reader.readAsDataURL(imageBlob);
                     reader.onloadend = function() {
                         var base64data = reader.result;
-                        $scope.report.ifleetImg = base64data;
+                        $scope.report[canvas_id_name] = base64data;
                     }
                 }
             });
@@ -760,6 +710,14 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         "date": ""
     };
     
+    $('.frame').on('click', function () {
+        var src = $(this).children().attr("src");
+        if (src !== "") {
+            $('#image_previewer').modal('show');
+            $('#image_previewer #this_image').attr('src', src);
+        }
+    });
+    
     $('button[name="submit_feedback"]').on('click', function () {
         $http.post('/report_feedback', {"id": $scope.reportID, "feedback": $('textarea[name="report_feedback"]').val()}).then(function (response) {
             $scope.notify(response.data.status, response.data.message);
@@ -768,6 +726,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
 
     $http.post('/getReport', $scope.report).then(function(response) {
         $scope.thisReport = response.data[0];
+        console.log($scope.thisReport);
         $("#summernote").summernote("code", $scope.thisReport.feedback);
         $scope.thisReport.date = $filter('date')($scope.thisReport.date, 'yyyy-MM-dd');
         $scope.area = {
@@ -777,7 +736,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         $scope.report = {
             "reportID": $routeParams.reportCode
         };
-
+{
 //        $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
 //        if(response.data.length != 0 ){    
 //            var sumOfCoLat = 0;
@@ -867,7 +826,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
 //                map = new google.maps.Map($googleMap, visualizeMap);
 //            }               
 //        });
-
+    }
         $http.post('/getReportBinCenter', $scope.area).then(function(response) {
             $scope.thisReport.bin = response.data;
             $scope.row = Object.keys($scope.thisReport.bin).length;
