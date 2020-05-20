@@ -517,7 +517,8 @@ app.service('storeDataService', function () {
                 "view": 'I',
                 "create": 'I',
                 "hist": 'I',
-                "editcms": 'I'
+                "editcms": 'I',
+                "delete": 'I'
             },
             "complaintlogs": {
                 "view": 'I'
@@ -3110,7 +3111,6 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     });
 
     $http.get('/unreadBinRequestCount').then(function (response) {
-        console.log(response.data);
         if (response.data.unread != 0) {
             $('.binrequest').addClass("badge badge-danger").html(response.data.unread);
         }
@@ -4954,7 +4954,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "view": 'I',
             "create": 'I',
             "hist": 'I',
-            "editcms": 'I'
+            "editcms": 'I',
+            "delete": 'I'
         },
         "complaintlogs": {
             "view": 'I'
@@ -5223,7 +5224,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'A',
                             "create": 'A',
                             "hist": 'A',
-                            "editcms": 'A'
+                            "editcms": 'A',
+                            "delete": 'A'
                         },
                         "complaintlogs": {
                             "view": 'A'
@@ -5403,7 +5405,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "view": 'I',
                             "create": 'I',
                             "hist": 'I',
-                            "editcms": 'I'
+                            "editcms": 'I',
+                            "delete": 'I'
                         },
                         "complaintlogs": {
                             "view": 'I'
@@ -8355,13 +8358,62 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
 
     $scope.complaintExportList = [];
     $scope.filterComplaintExportList = [];
+    
+  
 
     $http.get('/getComplaintExportList').then(function (response) {
         $scope.complaintExportList = response.data;
-
+        
         var filterAddCount = 0;
+        var splitType = "";
+        var splitTypeContent = "";
+        var splitTypeSpecialContent = ""; 
+        
 
         for (var i = 0; i < response.data.length; i++) {
+            $scope.detailType = "";
+            //formulate value for type of complaint
+            splitType = $scope.complaintExportList[i].type.split(":,:");
+            for (var n = 0; n < splitType.length; n++) {
+                if (splitType[n].length > 3) {
+                    splitTypeSpecialContent = splitType[n].split(":::::");
+                    if (splitTypeSpecialContent[0] == '1') {
+                        splitTypeSpecialContent[2] = "Waste not collected";
+                    } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
+                        splitTypeSpecialContent[2] = "Others";
+                    }
+                    $scope.detailType += splitTypeSpecialContent[2];
+                } else {
+                    if (splitType[n] == '2') {
+                        splitTypeContent = "Bin not pushed back to its original location";
+                    } else if (splitType[n] == '3') {
+                        splitTypeContent = "Spillage of waste";
+                    } else if (splitType[n] == '4') {
+                        splitTypeContent = "Spillage of leachate water";
+                    } else if (splitType[n] == '5') {
+                        splitTypeContent = "RoRo not send";
+                    } else if (splitType[n] == '6') {
+                        splitTypeContent = "RoRo not exchanged";
+                    } else if (splitType[n] == '7') {
+                        splitTypeContent = "RoRo not pulled";
+                    } else if (splitType[n] == '8') {
+                        splitTypeContent = "RoRo not emptied";
+                    } else if (splitType[n] == '9') {
+                        splitTypeContent = "Waste not collected on time";
+                    } else if (splitType[n] == '10') {
+                        splitTypeContent = "Spillage during collection";
+                    } else if (splitType[n] == '11') {
+                        splitTypeContent = "Incomplete documents";
+                    }
+                    $scope.detailType += splitTypeContent;
+                }
+
+                if (i < (splitType.length - 1)) {
+                    $scope.detailType += ", ";
+                }
+
+            }  
+            $scope.complaintExportList[i].complaintTypeFormatted = $scope.detailType;            
 
             //calculation for lg kpi
             if ($scope.complaintExportList[i].logisticsDateTime != null && $scope.complaintExportList[i].customerDateTime != null) {
@@ -8477,6 +8529,16 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
                 filterAddCount += 1;
 
             }
+            
+            
+            //formulate waste collected on\
+            var wasteArray = $scope.complaintExportList[i].wasteColDT.split(";");
+            $scope.complaintExportList[i].wcdSentences = "";
+            for(var c=0; c < wasteArray.length - 1; c++){
+                $scope.complaintExportList[i].wcdSentences += wasteArray[c].split(",")[0] + " - " + wasteArray[c].split(",")[1] + ".\n";
+            }  
+
+
         }
 
 
@@ -8511,6 +8573,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
     $scope.showInchargeBtn = true;
     $scope.showUninchargeBtn = false;
     $scope.showUpdateBtn = true;
+
     $scope.req = {
         'id': $routeParams.complaintCode
     };
@@ -8566,9 +8629,11 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
 
         if ($scope.comDetail.title == 1) {
             $scope.title = "Compactor";
-        } else if ($scope.comDetail.title == 2) {
+        } 
+        else if ($scope.comDetail.title == 2) {
             $scope.title = "Hooklift";
-        } else if ($scope.comDetail.title == 3) {
+        } 
+        else if ($scope.comDetail.title == 3) {
             $scope.title = "Hazardous waste";
         }
 
@@ -8748,7 +8813,6 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         }
 
         $scope.verifyComp = function () {
-
             $http.post('/verifyAppComp', $scope.verify).then(function (response) {
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
@@ -8957,17 +9021,21 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         'remark': '',
         'logsImg': 'undefined|undefined|undefined',
         'coID': $routeParams.complaintCode,
-        'driver': ''
+        'driver': '',
+        'wasteColDT': '',
+        'klgStatus': ''
     };
     $scope.complaintImages = {
         'image01': "",
         'image02': "",
-        'image03': ""
+        'image03': "",
+        'image04': ""
     }
     $scope.showComplaintImages = {
         'image01': false,
         'image02': false,
-        'image03': false
+        'image03': false,
+        'image04': false
     }
     $scope.editImages = false;
     $scope.showSubmitBtn = true;
@@ -8978,6 +9046,11 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     $scope.showCompImg = true;
     $scope.showLogsImg = true;
     $scope.showAreaLogistics = false;
+    $scope.wasteColDT = "";
+
+    $http.post('/getStaffName', {'id': $window.sessionStorage.getItem('owner')}).then(function (response) {
+        $scope.lgStaff = response.data[0].staffName;
+    });    
 
     $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function (response) {
         $scope.detailObj = response.data.data[0];
@@ -8991,6 +9064,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
         $scope.complaintImages.image02 = $scope.detailObj.compImg.split("|")[1];
         $scope.complaintImages.image03 = $scope.detailObj.compImg.split("|")[2];
+        $scope.complaintImages.image04 = $scope.detailObj.compImg.split("|")[3];
 
         if ($scope.complaintImages.image01 !== 'undefined') {
             $scope.showComplaintImages.image01 = true;
@@ -9007,6 +9081,11 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         } else {
             $scope.complaintImages.image03 = "";
         }
+        if ($scope.complaintImages.image04 !== 'undefined') {
+            $scope.showComplaintImages.image04 = true;
+        } else {
+            $scope.complaintImages.image04 = "";
+        }        
 
         if ($scope.detailObj.services === "1") { //Compactor
             $scope.showAreaLogistics = true;
@@ -9098,12 +9177,14 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.logsImages = {
                 'image01': "",
                 'image02': "",
-                'image03': ""
+                'image03': "",
+                'image04': ""
             }
             $scope.showLogsImages = {
                 'image01': false,
                 'image02': false,
-                'image03': false
+                'image03': false,
+                'image04': false
             }
             $http.post('/getLogisticsFullComplaintDetail', $scope.coIDobj).then(function (response) {
                 if (response.data.status == "success") {
@@ -9118,11 +9199,14 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.remarksEditBtn = true;
                     $scope.remarksUpdateCancelBtn = false;
                     $scope.recordremarks = $scope.fullComplaintDetail.remarks;
+                    
+                    $scope.wcdEditBtn = false;
 
                     //init images
                     $scope.logsImages.image01 = $scope.fullComplaintDetail.logsImg.split("|")[0];
                     $scope.logsImages.image02 = $scope.fullComplaintDetail.logsImg.split("|")[1];
                     $scope.logsImages.image03 = $scope.fullComplaintDetail.logsImg.split("|")[2];
+                    $scope.logsImages.image04 = $scope.fullComplaintDetail.logsImg.split("|")[3];
 
                     if ($scope.logsImages.image01 !== 'undefined') {
                         $scope.showLogsImages.image01 = true;
@@ -9139,14 +9223,30 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     } else {
                         $scope.logsImages.image03 = "";
                     }
+                    if ($scope.logsImages.image04 !== 'undefined') {
+                        $scope.showLogsImages.image04 = true;
+                    } else {
+                        $scope.logsImages.image04 = "";
+                    }                    
 
-                    if ($scope.detailObj.compImg == "undefined|undefined|undefined") {
+                    if ($scope.detailObj.compImg == "undefined|undefined|undefined|undefined") {
                         $scope.showCompImg = false;
                     }
 
-                    if ($scope.detailObj.logsImg === "undefined|undefined|undefined") {
+                    if ($scope.detailObj.logsImg === "undefined|undefined|undefined|undefined") {
                         $scope.showLogsImg = false;
                     }
+                    
+                    //formulate waste collected on
+                    $scope.wasteData = [];
+                    var wasteArray = $scope.fullComplaintDetail.wasteColDT.split(";");
+                    for(var i=0; i < wasteArray.length - 1; i++){
+                        $scope.wasteData.push({
+                            "date": wasteArray[i].split(",")[0],
+                            "reporter": wasteArray[i].split(",")[1]
+                        });
+                    }
+                    
 
                     //                    review
                     if ($scope.fullComplaintDetail.logisticsReview !== null) {
@@ -9204,36 +9304,34 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                             'statustime': time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
                         }
 
-                        //                        $scope.cmsUpdateRequest = {
-                        //                            "cmsstatus" : $scope.fullComplaintDetail.cmsStatus,
-                        //                            "coID" : $routeParams.complaintCode,
-                        //                            "cmsdate" : $filter('date')(Date.now(), 'yyyy-MM-dd'),
-                        //                            "cmstime": time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
-                        //                        };                         
-
-                        //                        $scope.status.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd'); 
-                        //                        var time = new Date();
-                        //                        $scope.status.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
-
 
                         $http.post('/updateComplaintDetailsStatus', $scope.status).then(function (response) {
                             if (response.data.status == "success") {
                                 $scope.notify(response.data.status, "Status has been updated");
-                                $route.reload();
-                                //                                $http.post('/updateCMSStatus', $scope.cmsUpdateRequest).then(function(response) {
-                                //                                    if (response.data.status == "success") {
-                                //                                        $scope.notify(response.data.status, "Status has been updated");
-                                //                                        $route.reload();
-                                //                                    } else {
-                                //                                        $scope.notify("error", "There are some ERROR!");
-                                //                                    }
-                                //                                });                                 
+                                $route.reload();                              
 
                             } else {
                                 $scope.notify("error", "There are some ERROR!");
                             }
                         });
 
+                    }
+                    
+                    $scope.updateKLGStatus = function () {
+                        $scope.klgStatus = {
+                            'status': $scope.fullComplaintDetail.klgStatus,
+                            'coID': $routeParams.complaintCode
+                        };
+                        $http.post('/updateKLGStatus', $scope.klgStatus).then(function(response){
+                            console.log(response.data.status);
+                            if (response.data.status == "success") {
+                                $scope.notify(response.data.status, "KLG Status has been updated");
+                                $route.reload();                              
+
+                            } else {
+                                $scope.notify("error", "There are some ERROR!");
+                            }
+                        });
                     }
 
                 } else {
@@ -9304,7 +9402,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         }
     }
 
-    var img01, img02, img03;
+    var img01, img02, img03, img04;
     $(".target").on("click", function () {
         var $this = $(this);
         $scope.imgPasteID = $this.attr("id");
@@ -9349,13 +9447,17 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                         } else if ($scope.imgPasteID == "uploadImg03") {
                             img03 = base64data;
                         } else if ($scope.imgPasteID == "uploadImg04") {
-                            $scope.logsImages.image01 = base64data;
+                            img04 = base64data;
                         } else if ($scope.imgPasteID == "uploadImg05") {
-                            $scope.logsImages.image02 = base64data;
+                            $scope.logsImages.image01 = base64data;
                         } else if ($scope.imgPasteID == "uploadImg06") {
+                            $scope.logsImages.image02 = base64data;
+                        } else if ($scope.imgPasteID == "uploadImg07") {
                             $scope.logsImages.image03 = base64data;
+                        } else if ($scope.imgPasteID == "uploadImg08") {
+                            $scope.logsImages.image04 = base64data;
                         }
-                        $scope.logistics.logsImg = img01 + "|" + img02 + "|" + img03;
+                        $scope.logistics.logsImg = img01 + "|" + img02 + "|" + img03 + "|" + img04;
                     }
                 }
             });
@@ -9364,17 +9466,20 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
     $scope.editLogsImages = function () {
         $scope.editImages = true;
-        var images = [$scope.logsImages.image01, $scope.logsImages.image02, $scope.logsImages.image03];
+        var images = [$scope.logsImages.image01, $scope.logsImages.image02, $scope.logsImages.image03, $scope.logsImages.image04];
         images.forEach(function (image, index) {
             var isEmpty = true;
             if (image !== "" && index === 0) {
-                var canvas = document.getElementById("uploadImg04")
-                isEmpty = false;
-            } else if (image !== "" && index === 1) {
                 var canvas = document.getElementById("uploadImg05")
                 isEmpty = false;
-            } else if (image !== "" && index === 2) {
+            } else if (image !== "" && index === 1) {
                 var canvas = document.getElementById("uploadImg06")
+                isEmpty = false;
+            } else if (image !== "" && index === 2) {
+                var canvas = document.getElementById("uploadImg07")
+                isEmpty = false;
+            } else if (image !== "" && index === 3) {
+                var canvas = document.getElementById("uploadImg08")
                 isEmpty = false;
             }
 
@@ -9397,12 +9502,14 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     }
 
     $scope.clearImage = function (imgID) {
-        if (imgID === "uploadImg04") {
+        if (imgID === "uploadImg05") {
             $scope.logsImages.image01 = "";
-        } else if (imgID === "uploadImg05") {
-            $scope.logsImages.image02 = "";
         } else if (imgID === "uploadImg06") {
+            $scope.logsImages.image02 = "";
+        } else if (imgID === "uploadImg07") {
             $scope.logsImages.image03 = "";
+        } else if (imgID === "uploadImg08") {
+            $scope.logsImages.image04 = "";
         }
         var canvas = document.getElementById(imgID);
         var ctx = canvas.getContext('2d');
@@ -9415,7 +9522,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         var updateImages = {
             'coID': $routeParams.complaintCode,
             'department': "BD",
-            'images': $scope.logsImages.image01 + "|" + $scope.logsImages.image02 + "|" + $scope.logsImages.image03
+            'images': $scope.logsImages.image01 + "|" + $scope.logsImages.image02 + "|" + $scope.logsImages.image03 + "|" + $scope.logsImages.image04
         }
 
         $http.post('/updateComplaintImages', updateImages).then(function (response) {
@@ -9435,6 +9542,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     $scope.submit = function () {
         $scope.logistics.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd');
         $scope.logistics.statusTime = $filter('date')(Date.now(), 'HH:mm:ss');
+        
 
         if ($scope.logistics.sub == "Mega Power" || $scope.logistics.sub == "TAK") {
             if ($scope.logsSubDate == null || $scope.logsSubTime == null) {
@@ -9449,16 +9557,19 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.logistics.subTime = null;
         }
 
-
-
-
-        if ($scope.logistics.sub == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "") {
+        if ($scope.logistics.sub == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "" ) {
 
             $scope.notify("error", "There has some blank column");
             $scope.showSubmitBtn = true;
         } else {
-
+            if($scope.wasteColDT != ""){
+                $scope.logistics.wasteColDT = $filter('date')($scope.wasteColDT, 'yyyy-MM-dd HH:mm:ss') + "," + $scope.lgStaff + ";";
+            }else{
+                $scope.logistics.wasteColDT = ""
+            }
+            
             $http.post('/submitLogisticsComplaint', $scope.logistics).then(function (response) {
+                $scope.showSubmitBtn = true;
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
                     window.location.href = '#/complaint-module';
@@ -9466,7 +9577,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.notify("error", "There has some ERROR!");
                 }
             });
-            console.log($scope.logistics);
         }
     };
 
@@ -9506,34 +9616,34 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             });
         }
     }
+    
+    $scope.updateWCD = function(){
+        if($scope.wcdEditData != ""){
+            $scope.wcdEditData = $scope.fullComplaintDetail.wasteColDT + $filter('date')($scope.wcdEditData, 'yyyy-MM-dd HH:mm:ss') + "," + $scope.lgStaff + ";";
+            
+            var wcdPostData = {
+                "data": $scope.wcdEditData,
+                "coID" : $routeParams.complaintCode
+            };
+            
+            $http.post('/updateWCD', wcdPostData).then(function(response){
+                if (response.data.status == "success") {
+                    $scope.notify(response.data.status, response.data.message);
+                    $route.reload();
+                } else {
+                    $scope.notify("error", "There has some ERROR!");
+                    $route.reload();
+                }                
+            });
+            
+        }else{
+            $scope.notify("error", "The Column is blank!");
+            $scope.wcdEditBtn = true;
+        }        
+    }
 
 });
-//
-//app.controller('complaintOfficerController', function ($scope, $http, $filter) {
-//    $scope.currentPage = 1; //Initial current page to 1
-//    $scope.itemsPerPage = 8; //Record number each page
-//    $scope.maxSize = 10; //Show the number in page
-//
-//    $http.get('/getComplaintOfficerList').then(function (response) {
-//        $scope.complaintOfficerList = response.data;
-//        for (var i = 0; i < $scope.complaintOfficerList.length; i++) {
-//            $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
-//        }
-//
-//        $scope.totalItems = $scope.complaintOfficerList.length;
-//    });
-//
-//    $scope.createComp = function () {
-//        window.location.href = '#/complaint-officer-create';
-//    }
-//
-//    $scope.viewComp = function (coID) {
-//        setTimeout(function () {
-//            window.location.href = '#/complaint-officer-detail/' + coID;
-//        }, 500);
-//    };
-//
-//});
+
 app.controller('complaintOfficercreateController', function ($scope, $http, $filter, $window) {
     $scope.showSubmitBtn = true;
     $scope.showTypeOption = 0;
@@ -9600,7 +9710,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             }
         }
     }
-    var img01, img02, img03;
+    var img01, img02, img03, img04;
     $(".target").on("click", function () {
         var $this = $(this);
         $scope.imgPasteID = $this.attr("id");
@@ -9644,8 +9754,10 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
                             img02 = base64data;
                         } else if ($scope.imgPasteID == "uploadImg03") {
                             img03 = base64data;
+                        }else if ($scope.imgPasteID == "uploadImg04") {
+                            img04 = base64data;
                         }
-                        $scope.comp.compImg = img01 + "|" + img02 + "|" + img03;
+                        $scope.comp.compImg = img01 + "|" + img02 + "|" + img03 + "|" + img04;
 
                     }
                 }
@@ -9735,6 +9847,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             $scope.showSubmitBtn = true;
             $scope.comp.compType = '';
         } else {
+
             $http.post('/submitOfficeMadeComplaint', $scope.comp).then(function (response) {
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
@@ -9747,6 +9860,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
 
     }
 });
+
 app.controller('complaintOfficerdetailController', function ($scope, $http, $routeParams, $filter, $route, storeDataService) {
     $scope.coIDobj = {
         'coID': $routeParams.coID
@@ -9767,6 +9881,8 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
     $scope.showcmsupdatebtn = angular.copy(storeDataService.show.complaintweb.editcms);
     $scope.showhiststatuslist = angular.copy(storeDataService.show.complaintweb.hist);
+    $scope.showDelete = angular.copy(storeDataService.show.complaintweb.delete);
+    $scope.showEditTOC = false;
 
     $scope.custStatus = {
         'status': "open",
@@ -9777,22 +9893,26 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $scope.complaintImages = {
         'image01': "",
         'image02': "",
-        'image03': ""
+        'image03': "",
+        'image04': ""
     }
     $scope.showComplaintImages = {
         'image01': false,
         'image02': false,
-        'image03': false
+        'image03': false,
+        'image04': false 
     }
     $scope.logsImages = {
         'image01': "",
         'image02': "",
-        'image03': ""
+        'image03': "",
+        'image04': ""
     }
     $scope.showLogsImages = {
         'image01': false,
         'image02': false,
-        'image03': false
+        'image03': false,
+        'image04': false
     }
     $scope.editImages = false;
     $scope.checkCustContactStatus = false;
@@ -9810,33 +9930,45 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
     $http.post('/getComplaintOfficerDetail', $scope.coIDobj).then(function (response) {
         $scope.detailObj = response.data.data[0];
+        $scope.typeOption = $scope.detailObj.services;
 
         //init images
         $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
         $scope.complaintImages.image02 = $scope.detailObj.compImg.split("|")[1];
         $scope.complaintImages.image03 = $scope.detailObj.compImg.split("|")[2];
+        $scope.complaintImages.image04 = $scope.detailObj.compImg.split("|")[3];
 
         if ($scope.complaintImages.image01 !== 'undefined') {
             $scope.showComplaintImages.image01 = true;
-        } else {
+        } 
+        else {
             $scope.complaintImages.image01 = "";
         }
         if ($scope.complaintImages.image02 !== 'undefined') {
             $scope.showComplaintImages.image02 = true;
-        } else {
+        } 
+        else {
             $scope.complaintImages.image02 = "";
         }
         if ($scope.complaintImages.image03 !== 'undefined') {
             $scope.showComplaintImages.image03 = true;
-        } else {
+        } 
+        else {
             $scope.complaintImages.image03 = "";
         }
+        if ($scope.complaintImages.image04 !== 'undefined') {
+            $scope.showComplaintImages.image04 = true;
+        } 
+        else {
+            $scope.complaintImages.image04 = "";
+        }        
 
         if ($scope.detailObj.logsImg !== null) {
             //init images
             $scope.logsImages.image01 = $scope.detailObj.logsImg.split("|")[0];
             $scope.logsImages.image02 = $scope.detailObj.logsImg.split("|")[1];
             $scope.logsImages.image03 = $scope.detailObj.logsImg.split("|")[2];
+            $scope.logsImages.image04 = $scope.detailObj.logsImg.split("|")[3];
 
             if ($scope.logsImages.image01 !== 'undefined') {
                 $scope.showLogsImages.image01 = true;
@@ -9853,6 +9985,11 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             } else {
                 $scope.logsImages.image03 = "";
             }
+            if ($scope.logsImages.image04 !== 'undefined') {
+                $scope.showLogsImages.image04 = true;
+            } else {
+                $scope.logsImages.image04 = "";
+            }            
         }
 
         //review
@@ -9881,7 +10018,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         var driverID = {
             id: $scope.detailObj.driver
         };
-
         $scope.cmsUpdateStatus = $scope.detailObj.cmsStatus;
 
         $scope.staffName = '';
@@ -9893,8 +10029,23 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         });
 
         $http.post('/getStaffName', driverID).then(function (response) {
-            $scope.driverName = response.data[0].staffName;
+            if(response.data.length != 0){
+                $scope.driverName = response.data[0].staffName;
+            }
         })
+        
+
+        if($scope.detailObj.wasteColDT != undefined){
+            //formulate waste collected on
+            $scope.wasteData = [];
+            var wasteArray = $scope.detailObj.wasteColDT.split(";");
+            for(var i=0; i < wasteArray.length - 1; i++){
+                $scope.wasteData.push({
+                    "date": wasteArray[i].split(",")[0],
+                    "reporter": wasteArray[i].split(",")[1]
+                });
+            }  
+        }
 
         //date reformat
         $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
@@ -9914,35 +10065,53 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                 splitTypeSpecialContent = splitType[i].split(":::::");
                 if (splitTypeSpecialContent[0] == '1') {
                     splitTypeSpecialContent[2] = "Waste not collected (days)";
+                    $scope.tc1 = true;
+                    $scope.tc1days = splitTypeSpecialContent[1];
                 } else if (splitTypeSpecialContent[0] == '12') {
                     splitTypeSpecialContent[2] = "Others(compactor)";
+                    $scope.tc12 = true;
+                    $scope.tc12others = splitTypeSpecialContent[1];
                 } else if (splitTypeSpecialContent[0] == '13') {
                     splitTypeSpecialContent[2] = "Others(hooklift)";
+                    $scope.tc13 = true;
+                    $scope.tc13others = splitTypeSpecialContent[1];
                 } else if (splitTypeSpecialContent[0] == '14') {
                     splitTypeSpecialContent[2] = "Others(hazardous waste)";
+                    $scope.tc14 = true;
+                    $scope.tc14others = splitTypeSpecialContent[1];
                 }
                 $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
             } else {
                 if (splitType[i] == '2') {
                     splitTypeContent = "Bin not pushed back to its original location";
+                    $scope.tc2 = true;
                 } else if (splitType[i] == '3') {
                     splitTypeContent = "Spillage of waste";
+                    $scope.tc3 = true;
                 } else if (splitType[i] == '4') {
                     splitTypeContent = "Spillage of leachate water";
+                    $scope.tc4 = true;
                 } else if (splitType[i] == '5') {
                     splitTypeContent = "RoRo not send";
+                    $scope.tc5 = true;
                 } else if (splitType[i] == '6') {
                     splitTypeContent = "RoRo not exchanged";
+                    $scope.tc6 = true;
                 } else if (splitType[i] == '7') {
                     splitTypeContent = "RoRo not pulled";
+                    $scope.tc7 = true;
                 } else if (splitType[i] == '8') {
                     splitTypeContent = "RoRo not emptied";
+                    $scope.tc8 = true;
                 } else if (splitType[i] == '9') {
                     splitTypeContent = "Waste not collected on time";
+                    $scope.tc9 = true;
                 } else if (splitType[i] == '10') {
                     splitTypeContent = "Spillage during collection";
+                    $scope.tc10 = true;
                 } else if (splitType[i] == '11') {
                     splitTypeContent = "Incomplete documents";
+                    $scope.tc11 = true;
                 }
                 $scope.detailType += splitTypeContent;
             }
@@ -9951,6 +10120,93 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                 $scope.detailType += ", ";
             }
 
+        }
+        
+        
+        
+        //edit complaint
+        $scope.editTypeOfComplaint = function(){
+            if($scope.showEditTOC == false){
+                $scope.showEditTOC = true;
+            }else{
+                $scope.showEditTOC = false;
+                $route.reload();
+            } 
+        }  
+        
+        $scope.submitEditTOC = function(){
+            $scope.editTypeString = "";
+            if ($scope.tc1 == true) {
+                if ($scope.tc1days == undefined || $scope.tc1days == "") {
+                    $scope.tc1days = "0";
+                }
+                $scope.editTypeString += '1:::::';
+                $scope.editTypeString += $scope.tc1days + ':,:';
+            }
+            if ($scope.tc2 == true) {
+                $scope.editTypeString += '2:,:';
+            }
+            if ($scope.tc3 == true) {
+                $scope.editTypeString += '3:,:';
+            }
+            if ($scope.tc4 == true) {
+                $scope.editTypeString += '4:,:';
+            }
+            if ($scope.tc5 == true) {
+                $scope.editTypeString += '5:,:';
+            }
+            if ($scope.tc6 == true) {
+                $scope.editTypeString += '6:,:';
+            }
+            if ($scope.tc7 == true) {
+                $scope.editTypeString += '7:,:';
+            }
+            if ($scope.tc8 == true) {
+                $scope.editTypeString += '8:,:';
+            }
+            if ($scope.tc9 == true) {
+                $scope.editTypeString += '9:,:';
+            }
+            if ($scope.tc10 == true) {
+                $scope.editTypeString += '10:,:';
+            }
+            if ($scope.tc11 == true) {
+                $scope.editTypeString += '11:,:';
+            }
+            if ($scope.tc12 == true) {
+                if ($scope.tc12others == undefined) {
+                    $scope.tc12others = "";
+                }
+                $scope.editTypeString += '12:::::';
+                $scope.editTypeString += $scope.tc12others + ':,:';
+            }
+            if ($scope.tc13 == true) {
+                if ($scope.tc13others == undefined) {
+                    $scope.tc13others = "";
+                }
+                $scope.editTypeString += '13:::::';
+                $scope.editTypeString += $scope.tc13others + ':,:';
+            }
+            if ($scope.tc14 == true) {
+                if ($scope.tc14others == undefined) {
+                    $scope.tc14others = "";
+                }
+                $scope.editTypeString += '14:::::';
+                $scope.editTypeString += $scope.tc14others + ':,:';
+            }
+
+
+            $scope.editTypeString = $scope.editTypeString.substring(0, $scope.editTypeString.length - 3);
+            
+            $http.post('/submitEditTOC',{"type": $scope.editTypeString, "coID" : $routeParams.coID}).then(function(response){
+                if (response.data.status == "success") {
+                    $scope.notify(response.data.status, response.data.message);
+                    $route.reload();
+                } else {
+                    $scope.notify("error", "There has some ERROR!");
+                    $route.reload();
+                }                
+            })
         }
 
         if ($scope.detailObj.compImg === "undefined|undefined|undefined") {
@@ -9998,7 +10254,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                     } else if ($scope.histUpdateList[n].split(" ")[7] == 2) {
                         $scope.histUpdateList[n] = $scope.histUpdateList[n].substring(0, $scope.histUpdateList[n].length - 1);
                         $scope.histUpdateList[n] += "Invalid";
-                        console.log($scope.histUpdateList[n]);
                     } else if ($scope.histUpdateList[n].split(" ")[7] == 3) {
                         $scope.histUpdateList[n] = $scope.histUpdateList[n].substring(0, $scope.histUpdateList[n].length - 1);
                         $scope.histUpdateList[n] += "Pending Review";
@@ -10114,11 +10369,13 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $scope.cancelCreate = function () {
         window.history.back();
     }
+    
+
 
     //edit images by handsome felix, yeyyyy
     $scope.editCompImages = function () {
         $scope.editImages = true;
-        var images = [$scope.complaintImages.image01, $scope.complaintImages.image02, $scope.complaintImages.image03];
+        var images = [$scope.complaintImages.image01, $scope.complaintImages.image02, $scope.complaintImages.image03, $scope.complaintImages.image04];
 
         images.forEach(function (image, index) {
             var isEmpty = true;
@@ -10235,6 +10492,8 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             $scope.complaintImages.image02 = "";
         } else if (imgID === "uploadImg03") {
             $scope.complaintImages.image03 = "";
+        } else if (imgID === "uploadImg04") {
+            $scope.complaintImages.image04 = "";
         }
         var canvas = document.getElementById(imgID);
         var ctx = canvas.getContext('2d');
@@ -10247,7 +10506,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         var updateImages = {
             'coID': $routeParams.coID,
             'department': "LG",
-            'images': $scope.complaintImages.image01 + "|" + $scope.complaintImages.image02 + "|" + $scope.complaintImages.image03
+            'images': $scope.complaintImages.image01 + "|" + $scope.complaintImages.image02 + "|" + $scope.complaintImages.image03 + "|" + $scope.complaintImages.image04
         }
 
         $http.post('/updateComplaintImages', updateImages).then(function (response) {
@@ -10290,7 +10549,17 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         }
 
     }
+    
+    $scope.deleteComplaint = function() {
+        if(confirm("Do you want to Delete the complaint?")){
+            $http.post('/deleteComplaint',$scope.coIDobj).then(function(response){
+                $scope.notify(response.data.status,response.data.message);
+                window.location.href = '#/complaint-module/';
+            });
+        }
+    }
 });
+
 app.controller('complaintOfficereditController', function ($scope, $http, $routeParams, $filter) {
 
     $scope.showEditBtn = true;
@@ -10468,42 +10737,6 @@ app.controller('complaintOfficereditController', function ($scope, $http, $route
 
 
 });
-// //LOG TASk
-// var logTask = function(action, description, rowId) {
-
-//     var today = new Date();
-//     var staffId = window.sessionStorage.getItem('owner');
-//     var authorizedBy = window.sessionStorage.getItem('owner');
-
-//     var logVar = {
-//         "taskID": null,
-//         "date": today,
-//         "staffId": 'ACC201906260002',
-//         "action": action,
-//         "description": description,
-//         "authroizedBy": null,
-//         tblName: '',
-//         "rowID": rowId
-//     }
-
-//     $.ajax({
-//         method: 'POST',
-//         url: '/addLog',
-//         data: $.param(logVar)
-//     }).then(function (response) {
-//             console.log(response.data);
-//     });
-
-//         // $http.post('/addLog', logVar).then(function (response) {
-//         //     var returnedData = response.data;
-
-//         //     console.log(returnedData);
-//         // }).catch(function (response) {
-//         //     console.error('error');
-//         // });
-
-//     console.log("test");
-// };
 
 app.controller('transactionLogController', function ($scope, $http, $filter, storeDataService) {
     'use strict';

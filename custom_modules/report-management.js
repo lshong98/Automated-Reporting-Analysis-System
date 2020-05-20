@@ -75,7 +75,8 @@ app.post('/addReport', function (req, res) {
         driver_id = req.body.driver,
         remark = req.body.remark.replace("'", "\\'"),
         created_on = req.body.creationDate,
-        staff_id = req.body.staffID;
+        staff_id = req.body.staffID,
+        colDay = req.body.colDay;
     
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
@@ -215,7 +216,8 @@ app.post('/editReport', function (req, res) {
         status = req.body.status,
         truck_id = req.body.truckID,
         driver_id = req.body.driverID,
-        remark = req.body.remark.replace("'", "\\'");;
+        remark = req.body.remark.replace("'", "\\'"),
+        colDay = req.body.colDay;
     
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
@@ -248,7 +250,7 @@ app.post('/editReport', function (req, res) {
         image = '';
     }
     
-    var sql = "UPDATE tblreport SET reportCollectionDate = '" + collection_date + "', operationTimeStart = '" + operation_start + "', operationTimeEnd = '" + operation_end + "', garbageAmount = '" + tonnage + "', iFleetMap = '" + image + "', completionStatus = '" + status + "', truckID = '" + truck_id + "', driverID = '" + driver_id + "', remark = '" + remark + "' WHERE reportID = '" + report_id + "'",
+    var sql = "UPDATE tblreport SET reportCollectionDate = '" + collection_date + "', operationTimeStart = '" + operation_start + "', operationTimeEnd = '" + operation_end + "', garbageAmount = '" + tonnage + "', iFleetMap = '" + image + "', completionStatus = '" + status + "', truckID = '" + truck_id + "', driverID = '" + driver_id + "', remark = '" + remark + "', colDay = '" + colDay + "' WHERE reportID = '" + report_id + "'",
         i = 0,
         j = 0;
     
@@ -340,7 +342,10 @@ app.post('/getReportingAreaList', function (req, res) {
 app.post('/getPassReportingAreaList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS areaCode FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND (tblarea.collection_frequency LIKE '%" + req.body.day1 + "%' OR tblarea.collection_frequency LIKE '%" + req.body.day2 + "%') AND tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE tblreport.creationDateTime BETWEEN '" + req.body.date2 + "' AND CURDATE() + 1 )GROUP BY tblzone.zoneID";
+//    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS areaCode FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND (tblarea.collection_frequency LIKE '%" + req.body.day1 + "%' OR tblarea.collection_frequency LIKE '%" + req.body.day2 + "%') AND tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE tblreport.creationDateTime BETWEEN '" + req.body.date2 + "' AND CURDATE() + 1 )GROUP BY tblzone.zoneID";
+    
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS areaCode FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND (tblarea.collection_frequency LIKE '%" + req.body.day1 + "%' OR tblarea.collection_frequency LIKE '%" + req.body.day2 + "%') AND tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE tblreport.colDay LIKE '%" + req.body.day1 + "%' OR tblreport.colDay LIKE '%" + req.body.day2 + "%' AND tblreport.creationDateTime BETWEEN '" + req.body.date2 + "' AND CURDATE() + 1)GROUP BY tblzone.zoneID";    
+    console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

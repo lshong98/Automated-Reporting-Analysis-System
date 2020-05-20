@@ -642,7 +642,16 @@
                             data-ng-true-value="'A'" data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
-                </li>                
+                </li> 
+                <li class="list-group-item">
+                    Delete Complaint
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.complaintweb.delete"
+                            data-ng-change="changeValue(auth.complaintweb.delete, 'delete complaintweb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>                  
 
 <!--
                 <li class="list-group-item">

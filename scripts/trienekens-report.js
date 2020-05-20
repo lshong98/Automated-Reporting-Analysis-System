@@ -31,6 +31,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "rectangle": rectArray,
         "creationDate": '',
         "status": '',
+        "colDay": '',
         "staffID" : $window.sessionStorage.getItem('owner')
     };
 
@@ -271,6 +272,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         $scope.report.collectionDate = $filter('date')($scope.colDate, 'yyyy-MM-dd');
         $scope.report.format_startTime = $filter('date')($scope.report.startTime, 'HH:mm:ss');
         $scope.report.format_endTime = $filter('date')($scope.report.endTime, 'HH:mm:ss');
+        $scope.report.colDay = $filter('date')($scope.colDate, 'EEE').toLowerCase();
 
         if ($scope.report.collectionDate == "" || $scope.report.collectionDate == null) {
             $scope.notify("error", "Collection Date Cannot Be Blank");
@@ -539,7 +541,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         "day2": $filter('date')(passdate2, 'EEE').toLowerCase(),
         "date2": $filter('date')(passdate2, 'yyyy-MM-dd').toLowerCase()
     }
-
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
@@ -588,7 +589,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
                 ($scope.normalReport).push(value);
             }
         });
-        console.log($scope.reportList);
         
 
         $scope.searchReport = function(report) {
@@ -1292,6 +1292,7 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             $scope.showEditBtn = true;
         } else{
             $scope.editField.date = $filter('date')($scope.editField.date, 'yyyy-MM-dd');
+            $scope.editField.colDay = $filter('date')($scope.editField.date, 'EEE').toLowerCase();
             $scope.editField.format_startTime = $filter('date')($scope.editField.startTime, 'HH:mm:ss');
             $scope.editField.format_endTime = $filter('date')($scope.editField.endTime, 'HH:mm:ss');
             if ($scope.editField.ton == "" || $scope.editField.ton == null) {
