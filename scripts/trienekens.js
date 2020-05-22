@@ -3480,26 +3480,26 @@ app.controller('managerController', function ($scope, $http, $filter) {
         });
     }
 
+//
+//    var $googleMap, visualizeMap, map;
+//    //    var src = '../KUCHING_COLLECTION_ZONE DIGITAL_MAP.kml',
+//    //        kmlLayer;
+//    //    var src = '../split.kml', kmlLayer;
+//
+//    $googleMap = document.getElementById('googleMap');
+//    visualizeMap = {
+//        center: new google.maps.LatLng(1.5503052, 110.3394602),
+//        mapTypeId: google.maps.MapTypeId.ROADMAP,
+//        mapTypeControl: false,
+//        panControl: false,
+//        zoomControl: false,
+//        streetViewControl: false,
+//        disableDefaultUI: true,
+//        editable: false,
+//        zoom: 13
+//    };
 
-    var $googleMap, visualizeMap, map;
-    //    var src = '../KUCHING_COLLECTION_ZONE DIGITAL_MAP.kml',
-    //        kmlLayer;
-    //    var src = '../split.kml', kmlLayer;
-
-    $googleMap = document.getElementById('googleMap');
-    visualizeMap = {
-        center: new google.maps.LatLng(1.5503052, 110.3394602),
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: false,
-        panControl: false,
-        zoomControl: false,
-        streetViewControl: false,
-        disableDefaultUI: true,
-        editable: false,
-        zoom: 13
-    };
-
-    map = new google.maps.Map($googleMap, visualizeMap);
+//    map = new google.maps.Map($googleMap, visualizeMap);
 
     //    var myParser = new geoXML3.parser({
     //        map: map
@@ -3581,61 +3581,61 @@ app.controller('managerController', function ($scope, $http, $filter) {
     //    });
     //--------------------------------------------------------
 
-    $http.get('/livemap').then(function (response) {
-        var data = response.data,
-            coordinate = {
-                "lat": '',
-                "lng": ''
-            },
-            dot = {
-                "url": ''
-            },
-            marker;
-
-        $.each(data, function (key, value) {
-            coordinate.lat = value.latitude;
-            coordinate.lng = value.longitude;
-            dot.url = value.status === "NOT COLLECTED" ? '../styles/mapmarkers/rd.png' : '../styles/mapmarkers/gd.png';
-
-            marker = new google.maps.Marker({
-                id: value.serialNo,
-                position: coordinate,
-                icon: dot
-            });
-            marker.setMap(map);
-            $scope.markerList.push(marker);
-        });
-
-        diff_hour = (daily_time[0] - parseInt(cur_time_in_arr[0], 10));
-        diff_min = (daily_time[1] - parseInt(cur_time_in_arr[1], 10));
-        diff_sec = (daily_time[2] - parseInt(cur_time_in_arr[2], 10));
-
-        seconds = (+diff_hour) * 60 * 60 + (+diff_min) * 60 + (+diff_sec);
-        mili_sec = (seconds * 1000);
-
-        var noti_mili_sec = (mili_sec - 30000);
-
-        setTimeout(function () {
-            lobi_notify('info', 'Reset Live Map', 'Live Map Indicator is going to reset after 30 seconds.', '');
-        }, noti_mili_sec);
-
-        setTimeout(function () {
-            $.each(data, function (key, value) {
-                coordinate.lat = value.latitude;
-                coordinate.lng = value.longitude;
-                dot.url = '../styles/mapmarkers/rd.png';
-
-                marker = new google.maps.Marker({
-                    id: value.serialNo,
-                    position: coordinate,
-                    icon: dot
-                });
-                marker.setMap(map);
-                $scope.markerList.push(marker);
-            });
-        }, mili_sec);
-
-    });
+//    $http.get('/livemap').then(function (response) {
+//        var data = response.data,
+//            coordinate = {
+//                "lat": '',
+//                "lng": ''
+//            },
+//            dot = {
+//                "url": ''
+//            },
+//            marker;
+//
+//        $.each(data, function (key, value) {
+//            coordinate.lat = value.latitude;
+//            coordinate.lng = value.longitude;
+//            dot.url = value.status === "NOT COLLECTED" ? '../styles/mapmarkers/rd.png' : '../styles/mapmarkers/gd.png';
+//
+//            marker = new google.maps.Marker({
+//                id: value.serialNo,
+//                position: coordinate,
+//                icon: dot
+//            });
+//            marker.setMap(map);
+//            $scope.markerList.push(marker);
+//        });
+//
+//        diff_hour = (daily_time[0] - parseInt(cur_time_in_arr[0], 10));
+//        diff_min = (daily_time[1] - parseInt(cur_time_in_arr[1], 10));
+//        diff_sec = (daily_time[2] - parseInt(cur_time_in_arr[2], 10));
+//
+//        seconds = (+diff_hour) * 60 * 60 + (+diff_min) * 60 + (+diff_sec);
+//        mili_sec = (seconds * 1000);
+//
+//        var noti_mili_sec = (mili_sec - 30000);
+//
+//        setTimeout(function () {
+//            lobi_notify('info', 'Reset Live Map', 'Live Map Indicator is going to reset after 30 seconds.', '');
+//        }, noti_mili_sec);
+//
+//        setTimeout(function () {
+//            $.each(data, function (key, value) {
+//                coordinate.lat = value.latitude;
+//                coordinate.lng = value.longitude;
+//                dot.url = '../styles/mapmarkers/rd.png';
+//
+//                marker = new google.maps.Marker({
+//                    id: value.serialNo,
+//                    position: coordinate,
+//                    icon: dot
+//                });
+//                marker.setMap(map);
+//                $scope.markerList.push(marker);
+//            });
+//        }, mili_sec);
+//
+//    });
 
     socket.on('synchronize map', function (data) {
         $.each($scope.markerList, function (key, value) {
@@ -8531,12 +8531,14 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
             }
             
             
-            //formulate waste collected on\
-            var wasteArray = $scope.complaintExportList[i].wasteColDT.split(";");
-            $scope.complaintExportList[i].wcdSentences = "";
-            for(var c=0; c < wasteArray.length - 1; c++){
-                $scope.complaintExportList[i].wcdSentences += wasteArray[c].split(",")[0] + " - " + wasteArray[c].split(",")[1] + ".\n";
-            }  
+            //formulate waste collected on
+            if($scope.complaintExportList[i].wasteColDT != null){
+                var wasteArray = $scope.complaintExportList[i].wasteColDT.split(";");
+                $scope.complaintExportList[i].wcdSentences = "";
+                for(var c=0; c < wasteArray.length - 1; c++){
+                    $scope.complaintExportList[i].wcdSentences += wasteArray[c].split(",")[0] + " - " + wasteArray[c].split(",")[1] + ".\n";
+                }  
+            }
 
 
         }
