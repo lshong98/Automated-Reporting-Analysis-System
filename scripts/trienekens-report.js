@@ -464,14 +464,15 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         }
     }
     
-    $('canvas').on('click', function (e) {
-        var $canvas = e.target.id;
-        
-        if ($scope.report[$canvas] !== "") {
-            $('#image_previewer #this_image').attr('src', $scope.report[$canvas]);
-            $('#image_previewer').modal('show');
-        }
-    });
+    // Enlarge Image
+//    $('canvas').on('click', function (e) {
+//        var $canvas = e.target.id;
+//        
+//        if ($scope.report[$canvas] !== "") {
+//            $('#image_previewer #this_image').attr('src', $scope.report[$canvas]);
+//            $('#image_previewer').modal('show');
+//        }
+//    });
 
     
     window.addEventListener("paste", function(e) {
