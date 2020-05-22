@@ -217,22 +217,19 @@ app.post('/editReport', function (req, res) {
         truck_id = req.body.truckID,
         driver_id = req.body.driverID,
         remark = req.body.remark.replace("'", "\\'"),
-        colDay = req.body.colDay;
+        colDay = req.body.colDay,
+        lh = req.body.lh,
+        rttb = req.body.rttb,
+        wt = req.body.wt,
+        gpswox = req.body.gpswox;
     
-    if (!fs.existsSync(local_directory)) {
-        fs.mkdirSync(local_directory);
-    }
-    
-    if (image !== '' && image.search('googleapis') >= 0) {
-        image = req.body.ifleet;
-    } else if (image !== '' && image.search('googleapis') === -1) {
-        let base64Image = image.split(';base64,').pop();
+    function makeImage (image, directory, ID) {
+        var base64Image = image.split(';base64,').pop();
         var extension = image.split(';base64,')[0].split('/')[1];
-        console.log(image);
-        var image_path = '/' + report_id + '.' + extension;
-        var local_store_path = 'images/daily-report' + image_path,
+        var image_path = '/' + ID + '.' + extension;
+        var local_store_path = 'images/daily-report/'+ directory + image_path,
             public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
-            
+        
         fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
             if (err) throw err;
 
@@ -245,12 +242,73 @@ app.post('/editReport', function (req, res) {
                 destination: local_store_path
             });
         });
-        image = public_url;
-    } else {
-        image = '';
+        return public_url;
     }
     
-    var sql = "UPDATE tblreport SET reportCollectionDate = '" + collection_date + "', operationTimeStart = '" + operation_start + "', operationTimeEnd = '" + operation_end + "', garbageAmount = '" + tonnage + "', iFleetMap = '" + image + "', completionStatus = '" + status + "', truckID = '" + truck_id + "', driverID = '" + driver_id + "', remark = '" + remark + "', colDay = '" + colDay + "' WHERE reportID = '" + report_id + "'",
+    if (!fs.existsSync(local_directory)) {
+        fs.mkdirSync(local_directory);
+    }
+    
+    if (lh !== '' && lh.search('googleapis') >= 0) {
+        lh = req.body.lh;
+    } else if (lh !== '' && lh.search('googleapis') === -1) {
+        lh = makeImage(lh, "lh", report_id);
+    } else {
+        lh = '';
+    }
+    
+    if (rttb !== '' && rttb.search('googleapis') >= 0) {
+        rttb = req.body.rttb;
+    } else if (rttb !== '' && rttb.search('googleapis') === -1) {
+        rttb = makeImage(rttb, "rttb", report_id);
+    } else {
+        rttb = '';
+    }
+    
+    if (wt !== '' && wt.search('googleapis') >= 0) {
+        wt = req.body.wt;
+    } else if (wt !== '' && wt.search('googleapis') === -1) {
+        wt = makeImage(wt, "wt", report_id);
+    } else {
+        wt = '';
+    }
+    
+    if (gpswox !== '' && gpswox.search('googleapis') >= 0) {
+        gpswox = req.body.gpswox;
+    } else if (gpswox !== '' && gpswox.search('googleapis') === -1) {
+        gpswox = makeImage(gpswox, "gpswox", report_id);
+    } else {
+        gpswox = '';
+    }
+    
+    
+//    if (image !== '' && image.search('googleapis') >= 0) {
+//        image = req.body.ifleet;
+//    } else if (image !== '' && image.search('googleapis') === -1) {
+//        let base64Image = image.split(';base64,').pop();
+//        var extension = image.split(';base64,')[0].split('/')[1];
+//        var image_path = '/' + report_id + '.' + extension;
+//        var local_store_path = 'images/daily-report' + image_path,
+//            public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
+//            
+//        fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
+//            if (err) throw err;
+//
+//            await storage.bucket(bucketName).upload('./' + local_store_path, {
+//                gzip: true,
+//                metadata: {
+//                    cacheControl: 'public, no-cache',
+//                },
+//                public: true,
+//                destination: local_store_path
+//            });
+//        });
+//        image = public_url;
+//    } else {
+//        image = '';
+//    }
+//    
+    var sql = "UPDATE tblreport SET reportCollectionDate = '" + collection_date + "', operationTimeStart = '" + operation_start + "', operationTimeEnd = '" + operation_end + "', garbageAmount = '" + tonnage + "', lh = '" + lh + "', rttb = '" + rttb + "', wt = '" + wt + "', gpswox = '" + gpswox + "', completionStatus = '" + status + "', truckID = '" + truck_id + "', driverID = '" + driver_id + "', remark = '" + remark + "', colDay = '" + colDay + "' WHERE reportID = '" + report_id + "'",
         i = 0,
         j = 0;
     

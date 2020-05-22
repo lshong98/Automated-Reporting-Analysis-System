@@ -464,14 +464,15 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         }
     }
     
-    $('canvas').on('click', function (e) {
-        var $canvas = e.target.id;
-        
-        if ($scope.report[$canvas] !== "") {
-            $('#image_previewer #this_image').attr('src', $scope.report[$canvas]);
-            $('#image_previewer').modal('show');
-        }
-    });
+    // Enlarge Image
+//    $('canvas').on('click', function (e) {
+//        var $canvas = e.target.id;
+//        
+//        if ($scope.report[$canvas] !== "") {
+//            $('#image_previewer #this_image').attr('src', $scope.report[$canvas]);
+//            $('#image_previewer').modal('show');
+//        }
+//    });
 
     
     window.addEventListener("paste", function(e) {
@@ -1235,28 +1236,43 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
 //            }  
 //        });
         
-        
-        var c = document.getElementById("ifleetcol");
-        var ctx = c.getContext("2d");
-        var ifleetImgShow = new Image();
-        ifleetImgShow.onload = function() {
-//            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
-            // step 1
-            const oc = document.getElementById('ifleetcol');
-            const octx = oc.getContext('2d');
-            oc.width = this.width;
-            oc.height = this.height;
-
-            // steo 2: pre-filter image using steps as radius
-            const steps = (oc.width / c.width)>>1;
-            octx.filter = `blur(${steps}px)`;
-            octx.drawImage(this, 0, 0);
-
-            // step 3, draw scaled
-            ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, c.width, c.height);
-            
-        };
-        ifleetImgShow.src = $scope.editField.ifleet;
+        var canvas_array = ["lh", "rttb", "wt", "gpswox"],
+            c,
+            ctx,
+            img_show,
+            oc,
+            octx,
+            steps;
+        for (var i = 0; i < canvas_array.length; i++) {
+            c = document.getElementById(canvas_array[i]);
+            ctx = c.getContext('2d');
+            img_show = new Image();
+            img_show.id = canvas_array[i];
+            img_show.onload = function (_that) {
+                oc = document.getElementById(this.id);
+                octx = oc.getContext('2d');
+                oc.width = this.width;
+                oc.height = this.height;
+                
+                steps = (oc.width / c.width)>>1;
+                octx.filter = `blur(${steps}px)`;
+                octx.drawImage(this, 0, 0);
+                ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, c.width, c.height);
+            }
+            img_show.src = $scope.editField[canvas_array[i]];
+        }
+//        ifleetImgShow.onload = function() {
+//
+//            // steo 2: pre-filter image using steps as radius
+//            const steps = (oc.width / c.width)>>1;
+//            octx.filter = `blur(${steps}px)`;
+//            octx.drawImage(this, 0, 0);
+//
+//            // step 3, draw scaled
+//            ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, c.width, c.height);
+//            
+//        };
+//        ifleetImgShow.src = $scope.editField.ifleet;
                
     });
 
@@ -1346,7 +1362,8 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
             // If there's an image, display it in the canvas
             if (imageBlob) {
-                var canvas = document.getElementById("ifleetcol");
+                var canvas_id = e.target.children[1].id;
+                var canvas = document.getElementById(canvas_id);
                 var ctx = canvas.getContext('2d');
                 //                ctx.drawImage($scope.editField.ifleet)
 
@@ -1373,7 +1390,7 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                 reader.readAsDataURL(imageBlob);
                 reader.onloadend = function() {
                     var base64data = reader.result;
-                    $scope.editField.ifleet = base64data;
+                    $scope.editField[canvas_id] = base64data;
                 }
             }
         });

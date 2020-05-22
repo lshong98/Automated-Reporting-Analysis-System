@@ -125,17 +125,47 @@ textarea {
   box-shadow: 0px 0px 10px 10px rgb(50, 205, 50);
 }
 </style>
+
+<div class="row">
+    <div class="col-md-6">
+        <span style="padding-left: 15px;">Laporan Harian (Pemandu)</span>
+        <canvas style="border:1px solid grey; margin: 15px;width: 100%;height: 100%;object-fit: contain;" id="lh"></canvas>
+<!--        <div style="display: none;" class= col-md-6><input type="file" data-ng-model="editField.lh" accept="image/*" app-filereader></div>-->
+    </div>
+    <div class="col-md-6">
+        <span style="padding-left: 15px;">Rekod Taklimat Tool Box</span>
+        <canvas style="border:1px solid grey; margin: 15px;width: 100%;height: 100%;object-fit: contain;" id="rttb"></canvas>
+<!--        <div style="display: none;" class= col-md-6><input type="file" data-ng-model="editField.rttb" accept="image/*" app-filereader></div>-->
+    </div>
+</div>
+<br /><br /><br />
+<div class="row">
+    <div class="col-md-6">
+        <span style="padding-left: 15px;">Welghbridge Ticket</span>
+        <canvas style="border:1px solid grey; margin: 15px;width: 100%;height: 100%;object-fit: contain;" id="wt"></canvas>
+<!--        <div style="display: none;" class= col-md-6><input type="file" data-ng-model="editField.wt" accept="image/*" app-filereader></div>-->
+    </div>
+    <div class="col-md-6">
+        <span style="padding-left: 15px;">GPSWOX (Historycal Route)</span>
+        <canvas style="border:1px solid grey; margin: 15px;width: 100%;height: 100%;object-fit: contain;" id="gpswox"></canvas>
+<!--        <div style="display: none;" class= col-md-6><input type="file" data-ng-model="editField.gpswox" accept="image/*" app-filereader></div>-->
+    </div>
+</div>
+
+
 <div class="row">
 <!--
         <div class="col-md-6" style="width: 50%">
             <img id="myImg" src="{{editField.ifleet}}" style="width:650px; height: 650px;" />
         </div>
 -->
+<!--
         <div class="col-md-1"></div>
         <div class="col-md-10">
             <canvas style="border:1px solid grey; width: 900px; height: 700px; margin: 15px;" id="ifleetcol"></canvas>
         </div>
         <div class="col-md-1"></div>
+-->
 <!--
         <div class="col-md-6" data-html2canvas-ignore="true">
             <div id="googleMap" style="min-height: 500px;"></div>
