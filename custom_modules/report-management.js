@@ -10,7 +10,7 @@ const storage = new Storage({
     projectId: 'trienekens-management-portal'
 });
 const bucketName = 'trienekens-management-portal-images';
-const local_directory = './images/daily-report-test';
+const local_directory = './images/daily-report';
 const lh_directory = local_directory + '/lh';
 const rttb_directory = local_directory + '/rttb';
 const wt_directory = local_directory + '/wt';
@@ -43,7 +43,7 @@ app.post('/convertreport', function (req, res) {
                     });
                 });
                 var update_sql = "UPDATE tblreport SET iFleetMap = '" + public_url + "' WHERE reportID = '" + result[i].id + "'";
-                
+
                 database.query(update_sql, function (err, result) {
                     if (err) {
                         throw err;
@@ -138,9 +138,9 @@ app.post('/addReport', function (req, res) {
             gpswox = '';
         }
             
-            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, lh, rttb, wt, gpswox, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + lh + "', '" + rttb + "', '" + wt + "', '" + gpswox + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "')",
+            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, lh, rttb, wt, gpswox, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID, colDay) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + lh + "', '" + rttb + "', '" + wt + "', '" + gpswox + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "', '" + colDay + "')",
                 reportID = ID;
-            
+
             database.query(sql, function (err, result) {
                 if (err) {
                     throw err;
@@ -227,7 +227,7 @@ app.post('/editReport', function (req, res) {
         var base64Image = image.split(';base64,').pop();
         var extension = image.split(';base64,')[0].split('/')[1];
         var image_path = '/' + ID + '.' + extension;
-        var local_store_path = 'images/daily-report-test/'+ directory + image_path,
+        var local_store_path = 'images/daily-report/'+ directory + image_path,
             public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
         
         fs.writeFile(local_store_path, base64Image, {encoding: 'base64'}, async function (err) {
@@ -417,8 +417,7 @@ app.post('/getPassReportingAreaList', function (req, res) {
     
 //    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS areaCode FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND (tblarea.collection_frequency LIKE '%" + req.body.day1 + "%' OR tblarea.collection_frequency LIKE '%" + req.body.day2 + "%') AND tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE tblreport.creationDateTime BETWEEN '" + req.body.date2 + "' AND CURDATE() + 1 )GROUP BY tblzone.zoneID";
     
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS areaCode FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND (tblarea.collection_frequency LIKE '%" + req.body.day1 + "%' OR tblarea.collection_frequency LIKE '%" + req.body.day2 + "%') AND tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE tblreport.colDay LIKE '%" + req.body.day1 + "%' OR tblreport.colDay LIKE '%" + req.body.day2 + "%' AND tblreport.creationDateTime BETWEEN '" + req.body.date2 + "' AND CURDATE() + 1)GROUP BY tblzone.zoneID";    
-    
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS areaCode FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.staffID = '" + req.body.officerid + "' AND (tblarea.collection_frequency LIKE '%" + req.body.day1 + "%' OR tblarea.collection_frequency LIKE '%" + req.body.day2 + "%') AND tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE tblreport.colDay LIKE '%" + req.body.day1 + "%' OR tblreport.colDay LIKE '%" + req.body.day2 + "%' AND tblreport.creationDateTime BETWEEN '" + req.body.date2 + "' AND CURDATE() + 1)GROUP BY tblzone.zoneID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
