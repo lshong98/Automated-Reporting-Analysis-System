@@ -8618,7 +8618,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'name': $scope.comDetail.customer,
             'telNo': $scope.comDetail.telNo,
             'address': $scope.comDetail.address,
-            'img': '', //$scope.comDetail.img, //incomplete
+            'img': $scope.comDetail.img,
             'type': $scope.comDetail.ctype,
             'services': $scope.comDetail.title,
             'date': $filter('date')(new Date(), 'yyyy-MM-dd'),

@@ -638,6 +638,10 @@ app.post('/updateComplaintReview', function(req, res) {
 
 app.post('/verifyAppComp', function(req, res) {
     'use strict';
+    if(req.body.img == null){
+        req.body.img = "";
+    }
+    
 
     f.makeID("complaint", req.body.creationDate).then(function(ID) {
         var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, activeStatus) VALUE ('" + ID + "', '" + req.body.date + "', '" + req.body.time + "', '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.telNo + "', '" + req.body.address + "','" + req.body.type + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '1')";
