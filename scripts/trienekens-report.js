@@ -591,9 +591,24 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
             }
         });
         
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'right'
+        }, function(start, end, label) {
+            $scope.filterStartDate = start.format('YYYY-MM-DD');
+            $scope.filterEndDate = end.format('YYYY-MM-DD');
+            $scope.filterDateReportList = [];
+            
+            for(var i=0; i<$scope.filterReportList.length; i++){
+                if($scope.filterReportList[i].date >= $scope.filterStartDate && $scope.filterReportList[i].date <= $scope.filterEndDate){
+                  $scope.filterDateReportList.push($scope.filterReportList[i]);  
+                }
+            }
+            $scope.filterReportList = $scope.filterDateReportList;
+        });           
+        
 
         $scope.searchReport = function(report) {
-            return (report.area + report.date + report.truck + report.ton + report.remark + report.staffName).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+            return (report.area + report.truck + report.ton + report.remark + report.staffName).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
         }
 
         //all reports
@@ -657,7 +672,8 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
     $scope.orderBy = function(property) {
         $scope.reportList = $filter('orderBy')($scope.reportList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
-    };
+    };   
+    
 });
 
 app.controller('viewReportController', function($scope, $http, $routeParams, $window, $filter, storeDataService) {
