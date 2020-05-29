@@ -114,6 +114,10 @@ app.get('/edit-report/:reportCode', function (req, res) {
     'use strict';
     res.sendFile('pages/edit-report.html', {root: __dirname});
 });
+app.get('/export-report-list',function(req, res){
+    'use strict';
+    res.sendFile('pages/export-report-list.html', {root: __dirname});
+});
 app.get('/dcs-details/:dcsID', function (req, res) {
     'use strict';
     res.sendFile('pages/dcs-details.html', {root: __dirname});

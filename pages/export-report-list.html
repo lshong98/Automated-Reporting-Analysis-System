@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-md-12">
+        <h5>Export Report List</h5>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Filter: </h3>
+        <input type="text" name="daterange"/>
+      <select class="selectpicker" data-ng-model="filterArea" data-live-search="true" data-width="100%">
+          <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+              <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+          </optgroup>
+      </select>        
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="checkList()">Check</button>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="exportFile('exportTable')">Export</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table id="exportTable" class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th width="11%">Collection Date <i class="fas fa-sort-down"></i></th>
+                        <th width="16%">Submission Date <i class="fas fa-sort-down"></i></th>
+                        <th width="10%">Area Code <i class="fas fa-sort-down"></i></th>
+                        <th width="12%">Staff <i class="fas fa-sort-down"></i></th>
+                        <th width="8%">Truck <i class="fas fa-sort-down"></i></th>
+                        <th width="6%">Ton <i class="fas fa-sort-down"></i></th>
+                        <th width="5%">Read</th>
+                        <th width="*">Remark <i class="fas fa-sort-down"></i></th>
+                        <th width="*">Feedback <i class="fas fa-sort-down"></i></th>
+                    </tr>
+                </thead>
+                <tbody>               
+                    <tr data-ng-repeat="d in reportList " class="clickable-row">
+                        <td data-ng-bind="d.date"></td>
+                        <td data-ng-bind="d.sdate"></td>
+                        <td data-ng-bind="d.area"></td>
+                        <td data-ng-bind="d.staffName"></td>
+                        <td data-ng-bind="d.truck"></td>
+                        <td data-ng-bind="d.ton"></td>
+                        <td><i data-ng-if="d.readStatus == 'C'" class="fas fa-check"></i><i data-ng-if="d.readStatus == 'I'" class="fas fa-times"></i></td>
+                        <td data-ng-bind="d.remark"></td>
+                        <td data-ng-bind-html="d.feedback | trustHtml"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function() {
+        $('.clickable').click(function() {
+            $(this).children().find('i').toggleClass("fa-chevron-circle-right fa-chevron-circle-down");
+            $('html, body').animate({
+                scrollTop: $(this).offset().top - 20
+            }, 'slow');
+        });
+    });
+    //$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+    //    window.location.href = $(this).data('href');
+    //});
+
+</script>

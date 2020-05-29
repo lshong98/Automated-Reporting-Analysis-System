@@ -589,26 +589,11 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
             } else {
                 ($scope.normalReport).push(value);
             }
-        });
-        
-        $('input[name="daterange"]').daterangepicker({
-            opens: 'right'
-        }, function(start, end, label) {
-            $scope.filterStartDate = start.format('YYYY-MM-DD');
-            $scope.filterEndDate = end.format('YYYY-MM-DD');
-            $scope.filterDateReportList = [];
-            
-            for(var i=0; i<$scope.filterReportList.length; i++){
-                if($scope.filterReportList[i].date >= $scope.filterStartDate && $scope.filterReportList[i].date <= $scope.filterEndDate){
-                  $scope.filterDateReportList.push($scope.filterReportList[i]);  
-                }
-            }
-            $scope.filterReportList = $scope.filterDateReportList;
-        });           
+        });        
         
 
         $scope.searchReport = function(report) {
-            return (report.area + report.truck + report.ton + report.remark + report.staffName).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
+            return (report.area + report.date + report.truck + report.ton + report.remark + report.staffName).toUpperCase().indexOf($scope.searchReportFilter.toUpperCase()) >= 0;
         }
 
         //all reports
@@ -654,6 +639,12 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
             window.location.href = '#/view-report/' + reportCode; // +"+"+ name
         }, 500);
     };
+    
+    $scope.exportReportListPage = function(){
+        setTimeout(function(){
+            window.location.href = '#/export-report-list';
+        }, 500);
+    }
 
     $scope.thisArea = function(id, name, modalfrom) {
         if(modalfrom == "today"){
@@ -674,6 +665,132 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         asc == true ? asc = false : asc = true;
     };   
     
+});
+
+app.controller('exportReportListController', function($scope, $http, $window, $filter, storeDataService){
+    'use strict';
+    
+    $scope.renderSltPicker = function () {
+        angular.element('.selectpicker').selectpicker('refresh');
+        angular.element('.selectpicker').selectpicker('render');
+    };
+    
+    $scope.areaList = [];
+    $scope.filterArea = "";
+    $scope.filterStartDate = "";
+    $scope.filterEndDate = "";
+    $scope.reportList = [];
+    
+    $http.get('/getAreaList').then(function (response) {
+        console.log(response.data);
+        $scope.renderSltPicker();
+        $.each(response.data, function (index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var code = value.code.split(",");
+            var area = [];
+            $.each(areaID, function (index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index],
+                    "code": code[index]
+                });
+            });
+            $scope.areaList.push({
+                "zone": {
+                    "id": value.zoneID,
+                    "name": value.zoneName
+                },
+                "area": area
+            });
+        });
+        $('.selectpicker').on('change', function () {
+            $scope.renderSltPicker();
+        });        
+    });
+
+        
+  $('input[name="daterange"]').daterangepicker({
+      autoUpdateInput: false,
+      locale: {
+          cancelLabel: 'Clear'
+      }
+  });
+
+  $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+      
+      $scope.filterStartDate = new Date(picker.startDate.format('YYYY-MM-DD'));
+      $scope.filterEndDate = new Date(picker.endDate.format('YYYY-MM-DD'));
+      
+      $scope.filterStartDate.setDate($scope.filterStartDate.getDate() + 1);
+      $scope.filterEndDate.setDate($scope.filterEndDate.getDate() + 1);
+      
+      $scope.filterStartDate =  $filter('date')($scope.filterStartDate, 'yyyy-MM-dd');
+      $scope.filterEndDate =  $filter('date')($scope.filterEndDate, 'yyyy-MM-dd');
+  });
+
+  $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+      $scope.filterStartDate = "";
+      $scope.filterEndDate = "";
+  });      
+    
+    
+    $scope.checkList = function(){
+        if($scope.filterArea == "" || $scope.filterStartDate == "" || $scope.filterEndDate == ""){
+            console.log($scope.filterArea);
+            console.log($scope.filterStartDate);
+            console.log($scope.filterEndDate);
+        }
+        else{
+            var reqObj = {
+                "area": $scope.filterArea,
+                "startDate": $scope.filterStartDate,
+                "endDate": $scope.filterEndDate
+            };
+            
+            $http.post("/getFilterExportReport", reqObj).then(function(response){
+                $scope.reportList = response.data;
+                $.each($scope.reportList, function(index, value) {
+                    $scope.reportList[index].date = $filter('date')(value.date, 'yyyy-MM-dd');
+                });                  
+            });
+        }
+        
+        
+    }
+     
+    $scope.exportFile = function(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name
+        filename = filename?filename+'.xls':'complaintReport.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
 });
 
 app.controller('viewReportController', function($scope, $http, $routeParams, $window, $filter, storeDataService) {

@@ -400,6 +400,17 @@ app.post('/getReport', function (req, res) {
         
     });
 }); // Wait for area_collection
+app.post('/getFilterExportReport',function(req, res){
+    'use strict';
+    var sql="SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, DATE_FORMAT(tblreport.creationDateTime, '%Y-%m-%d') AS sdate, tblstaff.staffName AS staffName, tbltruck.truckNum AS truck, tblreport.garbageAmount AS ton, tblreport.completionStatus AS status, tblreport.remark AS remark, tblreport.reportFeedback AS feedback, tblreport.readStatus AS readStatus FROM tblreport JOIN tblstaff ON tblstaff.staffID = tblreport.staffID  JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID WHERE tblreport.areaID = '" + req.body.area + "' AND (reportCollectionDate BETWEEN '" + req.body.startDate +"' AND '" + req.body.endDate + "') ORDER BY reportCollectionDate"
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
 app.post('/getReportingAreaList', function (req, res) {
     'use strict';
     
