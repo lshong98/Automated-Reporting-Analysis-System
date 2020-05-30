@@ -676,7 +676,6 @@ app.controller('exportReportListController', function($scope, $http, $window, $f
     };
     
     $scope.areaList = [];
-    $scope.filterArea = "";
     $scope.filterStartDate = "";
     $scope.filterEndDate = "";
     $scope.reportList = [];
@@ -738,14 +737,11 @@ app.controller('exportReportListController', function($scope, $http, $window, $f
     
     
     $scope.checkList = function(){
-        if($scope.filterArea == "" || $scope.filterStartDate == "" || $scope.filterEndDate == ""){
-            console.log($scope.filterArea);
-            console.log($scope.filterStartDate);
-            console.log($scope.filterEndDate);
+        if($scope.filterStartDate == "" || $scope.filterEndDate == ""){
+             $scope.notify("error", "Please Fill in the Date Range");
         }
         else{
             var reqObj = {
-                "area": $scope.filterArea,
                 "startDate": $scope.filterStartDate,
                 "endDate": $scope.filterEndDate
             };
@@ -754,6 +750,9 @@ app.controller('exportReportListController', function($scope, $http, $window, $f
                 $scope.reportList = response.data;
                 $.each($scope.reportList, function(index, value) {
                     $scope.reportList[index].date = $filter('date')(value.date, 'yyyy-MM-dd');
+                    $http.post('/getStaffName', {'id': $scope.reportList[index].reportingStaffId}).then(function (response) {
+                        $scope.reportList[index].staffName = response.data[0].staffName;
+                    });                    
                 });                  
             });
         }
