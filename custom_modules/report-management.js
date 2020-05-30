@@ -190,10 +190,12 @@ app.post('/addReport', function (req, res) {
 app.post('/report_feedback', function (req, res) {
     'use strict';
     
-    var feedback = req.body.feedback,
-        report_id = req.body.id;
+    var feedback = sanitizeHtml(req.body.feedback),
+        report_id = sanitizeHtml(req.body.id);
     
+    feedback = feedback.replace(/'/g, "\\'");
     var sql = "UPDATE tblreport SET reportFeedback = '" + feedback + "' WHERE reportID = '" + report_id + "'";
+    
     database.query(sql, function (err, result) {
         if (err) {
             res.end();
