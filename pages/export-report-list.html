@@ -59,7 +59,7 @@
                         <td data-ng-bind="d.driverName"></td>
                         <td data-ng-bind="d.truck"></td>
                         <td data-ng-bind="d.ton"></td>
-                        <td><i data-ng-if="d.readStatus == 'C'" class="fas fa-check"></i><i data-ng-if="d.readStatus == 'I'" class="fas fa-times"></i></td>
+                        <td><p data-ng-if="d.readStatus == 'C'">Yes</p><p data-ng-if="d.readStatus == 'I'">No</p></td>
                         <td data-ng-bind="d.remark"></td>
                         <td data-ng-bind-html="d.feedback | trustHtml"></td>
                     </tr>
