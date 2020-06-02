@@ -767,7 +767,7 @@ app.controller('exportReportListController', function($scope, $http, $window, $f
         var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
 
         // Specify file name
-        filename = filename?filename+'.xls':'complaintReport.xls';
+        filename = filename?filename+'.xls':'Reporting Summary.xls';
 
         // Create download link element
         downloadLink = document.createElement("a");
