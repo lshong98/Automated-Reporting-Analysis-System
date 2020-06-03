@@ -722,8 +722,8 @@ app.controller('exportReportListController', function($scope, $http, $window, $f
       $scope.filterStartDate = new Date(picker.startDate.format('YYYY-MM-DD'));
       $scope.filterEndDate = new Date(picker.endDate.format('YYYY-MM-DD'));
       
-      $scope.filterStartDate.setDate($scope.filterStartDate.getDate() + 1);
-      $scope.filterEndDate.setDate($scope.filterEndDate.getDate() + 1);
+//      $scope.filterStartDate.setDate($scope.filterStartDate.getDate() + 1);
+//      $scope.filterEndDate.setDate($scope.filterEndDate.getDate() + 1);
       
       $scope.filterStartDate =  $filter('date')($scope.filterStartDate, 'yyyy-MM-dd');
       $scope.filterEndDate =  $filter('date')($scope.filterEndDate, 'yyyy-MM-dd');

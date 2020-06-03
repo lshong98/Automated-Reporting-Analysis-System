@@ -42,6 +42,7 @@
                         <th width="5%">Driver</th>
                         <th width="8%">Truck</th>
                         <th width="6%">Ton</th>
+                        <th width="*">Status</th>
                         <th width="5%">Read</th>
                         <th width="*">Remark</th>
                         <th width="*">Feedback</th>
@@ -59,6 +60,7 @@
                         <td data-ng-bind="d.driverName"></td>
                         <td data-ng-bind="d.truck"></td>
                         <td data-ng-bind="d.ton"></td>
+                        <td><p data-ng-if="d.status=='N'">Normal</p><p data-ng-if="d.status=='A'">Abnormal</p></td>
                         <td><p data-ng-if="d.readStatus == 'C'">Yes</p><p data-ng-if="d.readStatus == 'I'">No</p></td>
                         <td data-ng-bind="d.remark"></td>
                         <td data-ng-bind-html="d.feedback | trustHtml"></td>
