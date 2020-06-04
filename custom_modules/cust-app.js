@@ -11,6 +11,7 @@
 var variable = require('../variable');
 //var EventEmitter = require('events');
 //var emitter = new EventEmitter();
+var bcrypt = variable.bcrypt;
 var emitter = variable.emitter;
 var express = variable.express;
 var app = express();
@@ -25,6 +26,7 @@ var fs = variable.fs;
 var io = variable.io;
 var stream = require('stream');
 
+const saltRounds = 10;
 const {
     Storage
 } = require('@google-cloud/storage');
@@ -117,7 +119,57 @@ app.post('/loginCustServiceApp', function (req, resp) {
                 resp.send("User undefined");
             } else {
                 var transporter, subject, text, email, mailOptions, vCode;
-                if (result[0].userEmail == data.email && result[0].password == data.pass) {
+
+                bcrypt.compare(data.pass, result[0].password, function(err, compRes) {
+                    if (compRes) {
+                        if (result[0].status == 1) {
+                            resp.send("Login Success");
+                        } else {
+                            // transporter = nodemailer.createTransport({
+                            //     service: 'gmail',
+                            //     auth: {
+                            //         user: 'trienekensmobileapp@gmail.com',
+                            //         pass: 'trienekens321'
+                            //     }
+                            // });
+                            vCode = Math.floor(Math.random() * 90000) + 10000;
+                            subject = "Trienekens App Verification Code";
+                            text = "Your Verification Code is: " + vCode;
+                            email = data.email;
+                            console.log("vCode: " + vCode);
+                            mailOptions = {
+                                from: 'trienekensmobileapp@gmail.com',
+                                to: email,
+                                subject: subject,
+                                text: text
+                            };
+    
+    
+                            var updateCode = "UPDATE tbluser SET vCode ='" + vCode + "' WHERE userEmail ='" + data.email + "'";
+    
+                            smtpTransport.sendMail(mailOptions, function (error, info) {
+                                if (error) {
+                                    console.log(error);
+                                    resp.send("Mail Failed");
+                                }
+                                //console.log("Email sent: " + info.response);
+                                database.query(updateCode, function (err, res) {
+                                    if (err) {
+                                        throw err;
+                                    } else {
+                                        //console.log("Registered");
+                                        resp.send("Activate Acc " + data.email);
+                                    }
+                                });
+                            });
+                        }
+                    } else {
+                        console.log("login failed");
+                        resp.send("Failed");
+                    }
+                });
+                /*
+                if ((result[0].userEmail == data.email) && (isPassMatch)) {
                     if (result[0].status == 1) {
                         resp.send("Login Success");
                     } else {
@@ -162,7 +214,7 @@ app.post('/loginCustServiceApp', function (req, resp) {
                 } else {
                     console.log("login failed");
                     resp.send("Failed");
-                }
+                }*/
             }
             console.log(result[0]);
         });
@@ -1363,31 +1415,15 @@ app.post('/NewRegister', function (req, resp) {
 
             console.log("ADDRESS: " + address);
 
-            if (address == undefined) {
+            bcrypt.hash(data.pass, saltRounds, function(err, hash) {
 
-                var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + vCode + "','" + date + "')";
+                var sql3;
 
-                smtpTransport.sendMail(mailOptions, function (error, info) {
-                    if (error) {
-                        console.log(error);
-                        resp.send("Mail Failed");
-                    }
-                    //console.log("Email sent: " + info.response);
-                    database.query(sql3, function (err, res) {
-                        if (err) {
-                            resp.send(err);
-                            console.log(err);
-                            throw err;
-                        } else {
-                            //console.log("Registered");
-                            resp.send("Registered");
-                        }
-                    });
-                });
-
-            } else {
-
-                var sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, address, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + data.pass + "','" + data.pno + "','" + address + "','" + vCode + "','" + date + "')";
+                if (address == undefined) {                
+                    sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + hash + "','" + data.pno + "','" + vCode + "','" + date + "')";
+                } else {
+                    sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, address, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + hash + "','" + data.pno + "','" + address + "','" + vCode + "','" + date + "')";
+                }
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
                     if (error) {
@@ -1406,9 +1442,7 @@ app.post('/NewRegister', function (req, resp) {
                         }
                     });
                 });
-
-            }
-
+            });
         });
     });
 });
@@ -1647,14 +1681,20 @@ app.post('/checkUpdate', function (req, resp) {
             }
 
             var sqlCheckPass = "SELECT password FROM tbluser WHERE userEmail = '" + data.oriemail + "'";
+            
             database.query(sqlCheckPass, function (err, res) {
+                
                 console.log(res);
-                if (data.oldp != res[0].password) {
-                    passError = true;
-                    error = "";
-                } else {
-                    passError = false;
-                }
+
+                bcrypt.compare(data.oldp, res[0].password, function(err, compRes) {
+                    
+                    if (!(compRes)) {
+                        passError = true;
+                        error = "";
+                    } else {
+                        passError = false;
+                    }
+                });
 
                 if (mailMatch) {
                     error = error + "Mail";
@@ -1741,24 +1781,23 @@ app.post('/updateAcc', function (req, resp) {
             }
         });
 
-        if (data.add != undefined) {
-            var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "',address='" + data.add + "' WHERE userEmail = '" + data.oriemail + "'";
+        bcrypt.hash(pass, saltRounds, function(err, hash) {
+            
+            var sqlUpdate;
+
+            if (data.add != undefined) {
+                sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + hash + "',contactNumber='" + data.pno + "',address='" + data.add + "' WHERE userEmail = '" + data.oriemail + "'";
+            } else {
+                sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + hash + "',contactNumber='" + data.pno + "' WHERE userEmail = '" + data.oriemail + "'";
+            }
+
             database.query(sqlUpdate, function (err, res) {
                 if (err) {
                     throw err;
                 }
                 resp.send("Updated");
             });
-        } else {
-            //      console.log("ENETER NO TAMAN UPDATE");
-            var sqlUpdate = "UPDATE tbluser SET userEmail = '" + data.email + "',password='" + pass + "',contactNumber='" + data.pno + "' WHERE userEmail = '" + data.oriemail + "'";
-            database.query(sqlUpdate, function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                resp.send("Updated");
-            });
-        }
+        });
     });
 });
 
@@ -2056,23 +2095,26 @@ app.post('/resetPassword', function (req, resp) {
             } else {
                 if (res[0] != undefined) {
                     var userID = res[0].userID;
-                    var sql2 = "UPDATE tbluser SET password = '" + newPass + "' WHERE userID = '" + userID + "'";
 
-                    database.query(sql2, function (err, res) {
-                        if (err) {
-                            resp.send("Update Password Failed");
-                            console.log(err);
-                            throw err;
-                        } else {
-                            smtpTransport.sendMail(mailOptions, function (error, info) {
-                                if (error) {
-                                    resp.send("Mail Failed");
-                                    console.log(error);
-                                } else {
-                                    resp.send("Mail Sent");
-                                }
-                            });
-                        }
+                    bcrypt.hash((newPass.toString()), saltRounds, function(err, hash) {
+                        var sql2 = "UPDATE tbluser SET password = '" + hash + "' WHERE userID = '" + userID + "'";
+
+                        database.query(sql2, function (err, res) {
+                            if (err) {
+                                resp.send("Update Password Failed");
+                                console.log(err);
+                                throw err;
+                            } else {
+                                smtpTransport.sendMail(mailOptions, function (error, info) {
+                                    if (error) {
+                                        resp.send("Mail Failed");
+                                        console.log(error);
+                                    } else {
+                                        resp.send("Mail Sent");
+                                    }
+                                });
+                            }
+                        });
                     });
                 } else {
                     resp.send("User does not exist");
