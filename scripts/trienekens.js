@@ -8416,7 +8416,7 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
             $scope.complaintExportList[i].complaintTypeFormatted = $scope.detailType;            
 
             //calculation for lg kpi
-            if ($scope.complaintExportList[i].logisticsDateTime != null && $scope.complaintExportList[i].customerDateTime != null) {
+            if ($scope.complaintExportList[i].logisticsDateTime != null && $scope.complaintExportList[i].complaintDate != null) {
 
                 var lgDateFormat = new Date($scope.complaintExportList[i].logisticsDateTime.split(" ")[0]);
                 var complaintDateFormat = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
@@ -8486,7 +8486,14 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
                     bkBetweenTime = bdTimeFormat - complaintTimeFormat;
 
                     bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
-                    bkBetweenTime = bkBetweenTime.toFixed(2);
+                    bkBetweenTime = bkBetweenTime.toFixed(2); 
+                    var splitHrsBK = "";
+                    var splitMinBK = "";
+
+                    var splitHrsBK = bkBetweenTime.split(".")[0];
+                    var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
+
+                    $scope.complaintExportList[i].bdkpi = splitHrsBK + ":" + splitMinBK; 
 
                 } else if (bkBetweenDay >= 1) {
 
@@ -8517,8 +8524,7 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
                     $scope.complaintExportList[i].bdkpi = splitHrsBK + ":" + splitMinBK;                    
                 } else {
                     $scope.complaintExportList[i].bdkpi = "Error Data";
-                }
-                
+                }              
 
             }
 
@@ -8559,6 +8565,7 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
                 }
             }
         }
+        console.log($scope.filterComplaintExportList);
 
     }
 
