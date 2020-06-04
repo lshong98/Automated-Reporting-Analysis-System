@@ -109,7 +109,7 @@ app.post('/sendNotifToDevice', function(req, res) {
 app.post('/insertAnnouncement', function(req, res) {
     'use strict';
     var target = req.body.target;
-    var message = req.body.message;
+    var message = req.body.message.replace("'", "\\'");
     var link = req.body.link;
     var date = dateTime.create().format('Y-m-d H:M:S');
     var sql = "INSERT INTO tblannouncement(announcement, announceDate, announceLink, target, readStat) VALUES('" + message + "','" + date + "','" + link + "','" + target + "','r')";
@@ -1495,10 +1495,10 @@ app.post('/sendEmailImageToBucket', function(req, res) {
     
     var {Storage} = require('@google-cloud/storage');
     var storage = new Storage({
-        keyFilename: './trienekens-management-9f941010219d.json',
-        projectId: 'trienekens-management'
+        keyFilename: './trienekens-management-portal-5c3ad8aa7ee2.json',
+        projectId: 'trienekens-management-portal'
     });
-    var bucketName = 'trienekens-management-images';
+    var bucketName = 'trienekens-management-portal-images';
     var local_directory = './images/overall-report';
     
     if (!fs.existsSync(local_directory)) {

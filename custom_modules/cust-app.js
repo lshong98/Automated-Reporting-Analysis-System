@@ -29,10 +29,10 @@ const {
     Storage
 } = require('@google-cloud/storage');
 const storage = new Storage({
-    keyFilename: './trienekens-management-9f941010219d.json',
-    projectId: 'trienekens-management'
+    keyFilename: './trienekens-management-portal-5c3ad8aa7ee2.json',
+    projectId: 'trienekens-management-portal'
 });
-const bucket = storage.bucket('trienekens-management-images');
+const bucket = storage.bucket('trienekens-management-portal-images');
 
 const {
     google
@@ -271,13 +271,14 @@ app.post('/getNotifs', function (req, resp) {
 
     req.addListener('end', function () {
         console.log(data);
-        var sql = "SELECT notifText, notifDate, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '" + data.email + "' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
-        var sql2 = "SELECT announcement, announceDate, announceLink, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
+        var sql = "SELECT notifID, notifText, notifDate, (SELECT COUNT(readStat) FROM tblnotif WHERE tbluser.userEmail = '" + data.email + "' AND readStat = 'u' AND tblnotif.userID = tbluser.userID) as unread FROM tblnotif JOIN tbluser WHERE tbluser.userEmail = '" + data.email + "' AND tbluser.userID = tblnotif.userID ORDER BY notifID DESC, notifDate DESC";
+        var sql2 = "SELECT id, announcement, announceDate, announceLink, (SELECT COUNT(readStat) FROM tblannouncement WHERE readStat = 'u') as unread FROM tblannouncement WHERE target = 'TriAllUsers' ORDER BY announceDate DESC";
 
         database.query(sql, function (err, res) {
             if (!err) {
                 for (var i = 0; i < res.length; i++) {
                     results["response"].push({
+                        "notifID": res[i].notifID,
                         "notif": res[i].notifText,
                         "notifDate": res[i].notifDate,
                         "unread": res[i].unread
@@ -289,6 +290,7 @@ app.post('/getNotifs', function (req, resp) {
                     if (!err) {
                         for (var i = 0; i < res.length; i++) {
                             results["announcements"].push({
+                                "id": res[i].id,
                                 "announce": res[i].announcement,
                                 "announceDate": res[i].announceDate,
                                 "announceLink": res[i].announceLink,
@@ -301,6 +303,7 @@ app.post('/getNotifs', function (req, resp) {
                                 if (!err) {
                                     for (var i = 0; i < res.length; i++) {
                                         results["announcements"].push({
+                                            "id": res[i].id,
                                             "announce": res[i].announcement,
                                             "announceDate": res[i].announceDate,
                                             "announceLink": res[i].announceLink,
@@ -330,7 +333,8 @@ app.post('/getNotifUrl', function (req, resp) {
     });
 
     req.addListener('end', function () {
-        var sqlUser = "SELECT announceLink FROM tblannouncement WHERE announcement ='" + data.title + "'";
+        var sqlUser = "SELECT announceLink FROM tblannouncement WHERE id ='" + data.title + "'";
+        console.log(data.title);
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 resp.send(res[0].announceLink);
@@ -409,7 +413,7 @@ app.post('/insertNotif', function (req, resp) {
 app.post('/binRequest', function (req, resp) {
     'use strict';
     var data;
-    var userID, name, contactNumber, companyName, date;
+    var userID, name, contactNumber, companyName, date, remarks;
     var reqID = 0;
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
@@ -418,21 +422,21 @@ app.post('/binRequest', function (req, resp) {
     req.addListener('end', function () {
         var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
         date = data.date;
+        companyName = "";
+        remarks = data.remarks.replace("'", "\\'");
+
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
                 name = res[0].name;
                 contactNumber = res[0].contactNumber;
-                if (res[0].companyName != null || res[0].companyName != undefined || res[0].companyName != "") {
-                    companyName = res[0].companyName;
-                } else {
-                    companyName = "";
-                }
+
                 console.log("user id: " + userID);
                 if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != "") {
-                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID +"', NOW(), '" + data.name + "','" + data.companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
+                    companyName = data.companyName.replace("'", "\\'");
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID +"', NOW(), '" + data.name + "','" + companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + remarks + "','" + data.status + "', 'u')";
                 } else {
-                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "', NOW(), '" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + data.remarks + "','" + data.status + "', 'u')";
+                    var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat) VALUES('" + userID + "', NOW(), '" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + remarks + "','" + data.status + "', 'u')";
                 }
 
                 database.query(insertSql, function (err, res) {
@@ -488,7 +492,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -547,7 +551,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -626,7 +630,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 console.log(err);
             })
             .on('finish', function () {
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 sql = "UPDATE tblbinrequest SET binImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
@@ -685,7 +689,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 console.log(err);
             })
             .on('finish', function () {
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 sql = "UPDATE tblbinrequest SET policeImg ='" + publicUrl + "' WHERE reqID =" + data.cID + "";
                 database.query(sql, function (err, res) {
                     if (!err) {
@@ -717,7 +721,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -776,7 +780,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 bufferStream.end(bufferFile);
                 var imgFile = bucket.file(fileName);
 
-                var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
                 urlArray.push(publicUrl);
 
                 bufferStream.pipe(imgFile.createWriteStream({
@@ -928,7 +932,8 @@ app.post('/complaint', function (req, resp) {
                         var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "', NOW(),'" + data.compAdd + "', 'u')";
+                        var remarks = data.compRemarks.replace("'", "\\'");
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
                     console.log(sql);
@@ -955,7 +960,7 @@ app.post('/complaint', function (req, resp) {
 app.post('/satisfaction', function (req, resp) {
     'use strict';
     var data;
-    var userID, name, company, number;
+    var userID, name, company, number, extraComment;
     var date = dateTime.create().format('Y-m-d H:M:S');
 
     req.addListener('data', function (postDataChunk) {
@@ -966,6 +971,8 @@ app.post('/satisfaction', function (req, resp) {
         var satisfactionType = data.satisfactionType;
         var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
         console.log(data);
+        company = data.companyName.replace("'", "\\'");
+        extraComment = data.extraComment.replace("'", "\\'");
 
         database.query(sqlUser, function (err, res) {
             if (!err) {
@@ -976,17 +983,17 @@ app.post('/satisfaction', function (req, resp) {
 
                 if (satisfactionType == "compactor") {
                     sql = "INSERT INTO tblsatisfaction_compactor (surveyType, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
-                        data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                        data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + company + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                         "','" + parseInt(data.binHandling) + "','" + parseInt(data.spillageControl) + "','" + parseInt(data.queryResponse) + "','" +
-                        data.extraComment + "','" + date + "', 'u')";
+                        extraComment + "','" + date + "', 'u')";
                 } else if (satisfactionType == "roro") {
                     sql = "INSERT INTO tblsatisfaction_roro (surveyType, userID, name, location, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
-                        data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
+                        data.surveyType + "','" + userID + "','" + name + "','" + data.location + "','" + company + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.collectionPromptness) +
                         "','" + parseInt(data.cleanliness) + "','" + parseInt(data.physicalCondition) + "','" + parseInt(data.queryResponse) + "','" +
-                        data.extraComment + "','" + date + "', 'u')";
+                        extraComment + "','" + date + "', 'u')";
                 } else if (satisfactionType == "scheduled") {
                     sql = "INSERT INTO tblsatisfaction_scheduled (userID, name, location, companyName, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, submissionDate, readStat) VALUES ('" +
-                        userID + "','" + name + "','" + data.location + "','" + data.companyName + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.healthAdherence) + "','" + parseInt(data.regulationsAdherence) + "','" + parseInt(data.queryResponse) + "','" + data.extraComment + "','" + date + "', 'u')";
+                        userID + "','" + name + "','" + data.location + "','" + company + "','" + data.address + "','" + number + "','" + parseInt(data.companyRating) + "','" + parseInt(data.teamEfficiency) + "','" + parseInt(data.healthAdherence) + "','" + parseInt(data.regulationsAdherence) + "','" + parseInt(data.queryResponse) + "','" + extraComment + "','" + date + "', 'u')";
                 }
 
                 database.query(sql, function (err, res) {
@@ -1028,7 +1035,7 @@ app.post('/enquiry', function (req, resp) {
                     to: "customercare@trienekens.com.my",
                     subject: data.subject,
                     generateTextFromHTML: true,
-                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App. [TEST]</p>"
+                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App.</p>"
                 };
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
@@ -1221,30 +1228,32 @@ app.post('/checkValidity', function (req, resp) {
         database.query(sqlEmail, function (err, res) {
             console.log("hello from Register NameCheck(email)");
             console.log(res);
+            if (res!=undefined){
+                for (var i = 0; i < res.length; i++) {
 
-            for (var i = 0; i < res.length; i++) {
-
-                if (res[i].userEmail == data.email) {
-                    mailMatch = true;
+                    if (res[i].userEmail == data.email) {
+                        mailMatch = true;
+                    }
+    
+                    if (res[i].contactNumber == data.pno) {
+                        pnoMatch = true;
+                    }
+    
                 }
-
-                if (res[i].contactNumber == data.pno) {
-                    pnoMatch = true;
+    
+                if (pnoMatch == true && mailMatch == true) {
+                    resp.send("2 Errors");
+                } else if (pnoMatch == true && mailMatch == false) {
+                    resp.send("Pno Taken");
+                } else if (pnoMatch == false && mailMatch == true) {
+                    resp.send("Email Taken");
+                } else {
+                    resp.send("Valid Info");
                 }
-
-            }
-
-            if (pnoMatch == true && mailMatch == true) {
-                resp.send("2 Errors");
-            } else if (pnoMatch == true && mailMatch == false) {
-                resp.send("Pno Taken");
-            } else if (pnoMatch == false && mailMatch == true) {
-                resp.send("Email Taken");
-            } else {
-                resp.send("Valid Info");
             }
 
             if (err) {
+                resp.send("Error");
                 throw err;
             }
         });
@@ -1562,7 +1571,7 @@ app.post('/getInfo', function (req, resp) {
         console.log(data.user);
         database.query(sql, function (err, res) {
             console.log(res);
-            if (res[0] != undefined) {
+            if (res != undefined) {
                 if (res[0].address == undefined) {
                     info["pno"] = res[0].contactNumber;
                     resp.json(info);
@@ -1979,7 +1988,7 @@ app.post('/uploadComplaintImage', rawBody, function (req, resp) {
             console.log(err);
         })
         .on('finish', function () {
-            var publicUrl = 'https://storage.googleapis.com/trienekens-management-images/' + fileName;
+            var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
             console.log(publicUrl);
             sql = "UPDATE tblcomplaint SET complaintImg ='" + publicUrl + "' WHERE complaintID ='" + data.cID + "'";
             database.query(sql, function (err, res) {

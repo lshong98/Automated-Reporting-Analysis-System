@@ -1,67 +1,3 @@
-//app.directive('appFilereader', function($q) {
-//    'use strict';
-//    var slice = Array.prototype.slice;
-//
-//    return {
-//        restrict: 'A',
-//        require: '?ngModel',
-//        link: function(scope, element, attrs, ngModel) {
-//                if (!ngModel) { return; }
-//
-//                ngModel.$render = function() {};
-//
-//                element.bind('change', function(e) {
-//                    var element;
-//                    element = e.target;
-//
-//                    function readFile(file) {
-//                        var deferred = $q.defer(),
-//                            reader = new FileReader();
-//
-//                        reader.onload = function(e) {
-//                            deferred.resolve(e.target.result);
-//                        };
-//                        reader.onerror = function(e) {
-//                            deferred.reject(e);
-//                        };
-//                        reader.readAsDataURL(file);
-//
-//                        return deferred.promise;
-//                    }
-//
-//                    $q.all(slice.call(element.files, 0).map(readFile))
-//                        .then(function(values) {
-//                            if (element.multiple) { ngModel.$setViewValue(values); } else { ngModel.$setViewValue(values.length ? values[0] : null); }
-//                        });
-//
-//                }); //change
-//
-//            } //link
-//    }; //return
-//});
-//app.directive("strToTime", function() {
-//    return {
-//        require: 'ngModel',
-//        link: function(scope, element, attrs, ngModelController) {
-//            ngModelController.$parsers.push(function(data) {
-//                if (!data)
-//                    return "";
-//                return ("0" + data.getHours().toString()).slice(-2) + ":" + ("0" + data.getMinutes().toString()).slice(-2);
-//            });
-//
-//            ngModelController.$formatters.push(function(data) {
-//                if (!data) {
-//                    return null;
-//                }
-//                var d = new Date(1970, 1, 1);
-//                var splitted = data.split(":");
-//                d.setHours(splitted[0]);
-//                d.setMinutes(splitted[1]);
-//                return d;
-//            });
-//        }
-//    };
-//});
 app.controller('dailyController', function($scope, $window, $routeParams, $http, $filter) {
     $scope.showSubmitBtn = true;
     'use strict';
@@ -84,6 +20,10 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "ton": '',
         "remark": '',
         "ifleetImg": '',
+        "lh": '',
+        "rttb": '',
+        "wt": '',
+        "gpswox": '',
         "lng": '',
         "lat": '',
         "address": '',
@@ -91,6 +31,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         "rectangle": rectArray,
         "creationDate": '',
         "status": '',
+        "colDay": '',
         "staffID" : $window.sessionStorage.getItem('owner')
     };
 
@@ -331,6 +272,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
         $scope.report.collectionDate = $filter('date')($scope.colDate, 'yyyy-MM-dd');
         $scope.report.format_startTime = $filter('date')($scope.report.startTime, 'HH:mm:ss');
         $scope.report.format_endTime = $filter('date')($scope.report.endTime, 'HH:mm:ss');
+        $scope.report.colDay = $filter('date')($scope.colDate, 'EEE').toLowerCase();
 
         if ($scope.report.collectionDate == "" || $scope.report.collectionDate == null) {
             $scope.notify("error", "Collection Date Cannot Be Blank");
@@ -521,6 +463,16 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             }
         }
     }
+    
+    // Enlarge Image
+//    $('canvas').on('click', function (e) {
+//        var $canvas = e.target.id;
+//        
+//        if ($scope.report[$canvas] !== "") {
+//            $('#image_previewer #this_image').attr('src', $scope.report[$canvas]);
+//            $('#image_previewer').modal('show');
+//        }
+//    });
 
     
     window.addEventListener("paste", function(e) {
@@ -528,8 +480,9 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
                 // If there's an image, display it in the canvas
                 if (imageBlob) {
-                    var canvas = document.getElementById("ifleetcol");
-                    var ctx = canvas.getContext('2d');
+                    var canvas_id_name = e.target.children[1].id,
+                        canvas = document.getElementById(canvas_id_name),
+                        ctx = canvas.getContext('2d');
 
                     // Create an image to render the blob on the canvas
                     var img = new Image();
@@ -554,7 +507,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
                     reader.readAsDataURL(imageBlob);
                     reader.onloadend = function() {
                         var base64data = reader.result;
-                        $scope.report.ifleetImg = base64data;
+                        $scope.report[canvas_id_name] = base64data;
                     }
                 }
             });
@@ -589,7 +542,6 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
         "day2": $filter('date')(passdate2, 'EEE').toLowerCase(),
         "date2": $filter('date')(passdate2, 'yyyy-MM-dd').toLowerCase()
     }
-
     $http.post('/getReportingAreaList', $scope.reportingOfficerId).then(function(response) {
         $.each(response.data, function(index, value) {
             var areaID = value.id.split(",");
@@ -637,8 +589,7 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
             } else {
                 ($scope.normalReport).push(value);
             }
-        });
-        console.log($scope.reportList);
+        });        
         
 
         $scope.searchReport = function(report) {
@@ -688,6 +639,12 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
             window.location.href = '#/view-report/' + reportCode; // +"+"+ name
         }, 500);
     };
+    
+    $scope.exportReportListPage = function(){
+        setTimeout(function(){
+            window.location.href = '#/export-report-list';
+        }, 500);
+    }
 
     $scope.thisArea = function(id, name, modalfrom) {
         if(modalfrom == "today"){
@@ -706,7 +663,133 @@ app.controller('reportingController', function($scope, $http, $filter, $window, 
     $scope.orderBy = function(property) {
         $scope.reportList = $filter('orderBy')($scope.reportList, ['' + property + ''], asc);
         asc == true ? asc = false : asc = true;
+    };   
+    
+});
+
+app.controller('exportReportListController', function($scope, $http, $window, $filter, storeDataService){
+    'use strict';
+    
+    $scope.renderSltPicker = function () {
+        angular.element('.selectpicker').selectpicker('refresh');
+        angular.element('.selectpicker').selectpicker('render');
     };
+    
+    $scope.areaList = [];
+    $scope.filterStartDate = "";
+    $scope.filterEndDate = "";
+    $scope.reportList = [];
+    
+    $http.get('/getAreaList').then(function (response) {
+        console.log(response.data);
+        $scope.renderSltPicker();
+        $.each(response.data, function (index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var code = value.code.split(",");
+            var area = [];
+            $.each(areaID, function (index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index],
+                    "code": code[index]
+                });
+            });
+            $scope.areaList.push({
+                "zone": {
+                    "id": value.zoneID,
+                    "name": value.zoneName
+                },
+                "area": area
+            });
+        });
+        $('.selectpicker').on('change', function () {
+            $scope.renderSltPicker();
+        });        
+    });
+
+        
+  $('input[name="daterange"]').daterangepicker({
+      autoUpdateInput: false,
+      locale: {
+          cancelLabel: 'Clear'
+      }
+  });
+
+  $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+      
+      $scope.filterStartDate = new Date(picker.startDate.format('YYYY-MM-DD'));
+      $scope.filterEndDate = new Date(picker.endDate.format('YYYY-MM-DD'));
+      
+//      $scope.filterStartDate.setDate($scope.filterStartDate.getDate() + 1);
+//      $scope.filterEndDate.setDate($scope.filterEndDate.getDate() + 1);
+      
+      $scope.filterStartDate =  $filter('date')($scope.filterStartDate, 'yyyy-MM-dd');
+      $scope.filterEndDate =  $filter('date')($scope.filterEndDate, 'yyyy-MM-dd');
+  });
+
+  $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+      $scope.filterStartDate = "";
+      $scope.filterEndDate = "";
+  });      
+    
+    
+    $scope.checkList = function(){
+        if($scope.filterStartDate == "" || $scope.filterEndDate == ""){
+             $scope.notify("error", "Please Fill in the Date Range");
+        }
+        else{
+            var reqObj = {
+                "startDate": $scope.filterStartDate,
+                "endDate": $scope.filterEndDate
+            };
+            
+            $http.post("/getFilterExportReport", reqObj).then(function(response){
+                $scope.reportList = response.data;
+                $.each($scope.reportList, function(index, value) {
+                    $scope.reportList[index].date = $filter('date')(value.date, 'yyyy-MM-dd');
+                    $http.post('/getStaffName', {'id': $scope.reportList[index].reportingStaffId}).then(function (response) {
+                        $scope.reportList[index].staffName = response.data[0].staffName;
+                    });                    
+                });                  
+            });
+        }
+        
+        
+    }
+     
+    $scope.exportFile = function(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name
+        filename = filename?filename+'.xls':'Reporting Summary.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
 });
 
 app.controller('viewReportController', function($scope, $http, $routeParams, $window, $filter, storeDataService) {
@@ -760,6 +843,14 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         "date": ""
     };
     
+    $('.frame').on('click', function () {
+        var src = $(this).children().attr("src");
+        if (src !== "") {
+            $('#image_previewer').modal('show');
+            $('#image_previewer #this_image').attr('src', src);
+        }
+    });
+    
     $('button[name="submit_feedback"]').on('click', function () {
         $http.post('/report_feedback', {"id": $scope.reportID, "feedback": $('textarea[name="report_feedback"]').val()}).then(function (response) {
             $scope.notify(response.data.status, response.data.message);
@@ -768,6 +859,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
 
     $http.post('/getReport', $scope.report).then(function(response) {
         $scope.thisReport = response.data[0];
+        console.log($scope.thisReport);
         $("#summernote").summernote("code", $scope.thisReport.feedback);
         $scope.thisReport.date = $filter('date')($scope.thisReport.date, 'yyyy-MM-dd');
         $scope.area = {
@@ -777,7 +869,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         $scope.report = {
             "reportID": $routeParams.reportCode
         };
-
+{
 //        $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
 //        if(response.data.length != 0 ){    
 //            var sumOfCoLat = 0;
@@ -867,7 +959,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
 //                map = new google.maps.Map($googleMap, visualizeMap);
 //            }               
 //        });
-
+    }
         $http.post('/getReportBinCenter', $scope.area).then(function(response) {
             $scope.thisReport.bin = response.data;
             $scope.row = Object.keys($scope.thisReport.bin).length;
@@ -1276,28 +1368,43 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
 //            }  
 //        });
         
-        
-        var c = document.getElementById("ifleetcol");
-        var ctx = c.getContext("2d");
-        var ifleetImgShow = new Image();
-        ifleetImgShow.onload = function() {
-//            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, c.width, c.height);
-            // step 1
-            const oc = document.getElementById('ifleetcol');
-            const octx = oc.getContext('2d');
-            oc.width = this.width;
-            oc.height = this.height;
-
-            // steo 2: pre-filter image using steps as radius
-            const steps = (oc.width / c.width)>>1;
-            octx.filter = `blur(${steps}px)`;
-            octx.drawImage(this, 0, 0);
-
-            // step 3, draw scaled
-            ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, c.width, c.height);
-            
-        };
-        ifleetImgShow.src = $scope.editField.ifleet;
+        var canvas_array = ["lh", "rttb", "wt", "gpswox"],
+            c,
+            ctx,
+            img_show,
+            oc,
+            octx,
+            steps;
+        for (var i = 0; i < canvas_array.length; i++) {
+            c = document.getElementById(canvas_array[i]);
+            ctx = c.getContext('2d');
+            img_show = new Image();
+            img_show.id = canvas_array[i];
+            img_show.onload = function (_that) {
+                oc = document.getElementById(this.id);
+                octx = oc.getContext('2d');
+                oc.width = this.width;
+                oc.height = this.height;
+                
+                steps = (oc.width / c.width)>>1;
+                octx.filter = `blur(${steps}px)`;
+                octx.drawImage(this, 0, 0);
+                ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, c.width, c.height);
+            }
+            img_show.src = $scope.editField[canvas_array[i]];
+        }
+//        ifleetImgShow.onload = function() {
+//
+//            // steo 2: pre-filter image using steps as radius
+//            const steps = (oc.width / c.width)>>1;
+//            octx.filter = `blur(${steps}px)`;
+//            octx.drawImage(this, 0, 0);
+//
+//            // step 3, draw scaled
+//            ctx.drawImage(oc, 0, 0, oc.width, oc.height, 0, 0, c.width, c.height);
+//            
+//        };
+//        ifleetImgShow.src = $scope.editField.ifleet;
                
     });
 
@@ -1333,6 +1440,7 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
             $scope.showEditBtn = true;
         } else{
             $scope.editField.date = $filter('date')($scope.editField.date, 'yyyy-MM-dd');
+            $scope.editField.colDay = $filter('date')($scope.editField.date, 'EEE').toLowerCase();
             $scope.editField.format_startTime = $filter('date')($scope.editField.startTime, 'HH:mm:ss');
             $scope.editField.format_endTime = $filter('date')($scope.editField.endTime, 'HH:mm:ss');
             if ($scope.editField.ton == "" || $scope.editField.ton == null) {
@@ -1386,7 +1494,8 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
         retrieveImageFromClipboardAsBlob(e, function(imageBlob) {
             // If there's an image, display it in the canvas
             if (imageBlob) {
-                var canvas = document.getElementById("ifleetcol");
+                var canvas_id = e.target.children[1].id;
+                var canvas = document.getElementById(canvas_id);
                 var ctx = canvas.getContext('2d');
                 //                ctx.drawImage($scope.editField.ifleet)
 
@@ -1413,7 +1522,7 @@ app.controller('editReportController', function($scope, $http, $routeParams, $wi
                 reader.readAsDataURL(imageBlob);
                 reader.onloadend = function() {
                     var base64data = reader.result;
-                    $scope.editField.ifleet = base64data;
+                    $scope.editField[canvas_id] = base64data;
                 }
             }
         });

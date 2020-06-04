@@ -82,6 +82,7 @@
         <h5>Reporting</h5>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchReportFilter"/>
@@ -94,6 +95,9 @@
     </div>
     <div class="col-md-2" data-ng-show="show.create == 'A'">
         <button class="btn btn-success" data-toggle="modal" data-target="#choosePassArea"><i class="fa fa-plus"></i> Pass Report</button>
+    </div>
+    <div class="col-md-2 offset-md-6">
+        <button class="btn btn-primary" data-ng-click="exportReportListPage()">Export</button>
     </div>
 </div>
 <br />
@@ -140,7 +144,7 @@
                                 <td data-ng-bind="d.ton"></td>
                                 <td><i data-ng-if="d.readStatus == 'C'" class="fas fa-check"></i><i data-ng-if="d.readStatus == 'I'" class="fas fa-times"></i></td>
                                 <td data-ng-bind="d.remark"></td>
-                                <td data-ng-bind="d.feedback"></td>
+                                <td data-ng-bind-html="d.feedback | trustHtml"></td>
                             </tr>
                         </tbody>
                     </table>

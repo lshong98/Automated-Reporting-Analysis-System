@@ -307,6 +307,16 @@ app.config(function($routeProvider, $locationProvider){
         controller:'editReportController',
         controllerAs:'editReport'
     })
+    .when('/export-report-list',{
+        resolve:{
+            "check": function(routingService, $window, $location){
+                 return routingService.auth($window, $location, '/export-report-list');
+            }
+        },
+        templateUrl: '/export-report-list',
+        controller: 'exportReportListController',
+        controllerAs: 'exportReportList'
+    })
     .when('/dcs-details/:dcsID', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {
