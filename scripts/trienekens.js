@@ -172,12 +172,6 @@ socket.on('disconnect', function () {
     flag = true;
 });
 
-//app.run(function($rootScope, $templateCache) {
-//   $rootScope.$on('$viewContentLoaded', function() {
-//      $templateCache.removeAll();
-//   });
-//});
-
 /*
     -Pagination
 */

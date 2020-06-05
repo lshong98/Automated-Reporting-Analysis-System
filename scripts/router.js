@@ -290,7 +290,7 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: function (params) {
-            return '/view-report/' + params.reportCode;
+            return '/view-report/' + params.reportCode + '?d=' + new Date();
         },
         controller:'viewReportController',
         controllerAs:'report'
@@ -302,7 +302,7 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: function (params) {
-            return '/edit-report/' + params.reportCode;
+            return '/edit-report/' + params.reportCode + '?d=' + new Date();
         },
         controller:'editReportController',
         controllerAs:'editReport'
