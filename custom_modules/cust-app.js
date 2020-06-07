@@ -1087,7 +1087,7 @@ app.post('/enquiry', function (req, resp) {
                     to: "customercare@trienekens.com.my",
                     subject: data.subject,
                     generateTextFromHTML: true,
-                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trinekens Customer Service App.</p>"
+                    html: "<p><b>Name: </b>" + name + "</p>" + "<p><b>Contact Number: </b>" + phone + "<p><b>Email: </b>" + data.user + "</p><p><b>Enquiry:</b></p><p>" + data.enquiry + "</p><br/><p>This enquiry is sent via the Trienekens Customer Service App.</p>"
                 };
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
