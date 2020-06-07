@@ -71,10 +71,13 @@
 </div>
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
-    <div class="col-md-11">
+    <div class="col-md-1">
         <button class="btn btn-success" data-toggle="modal" data-target="#createArea"><i class="fa fa-plus"></i> New</button>
     </div>
-    <div class="col-md-1" style="padding-top: 10px" >
+    <div class="col-md-1">
+        <button class="btn btn-primary" data-ng-click="exportFile('exportArea')">Export</button>
+    </div>    
+    <div class="col-md-1 offset-md-10" style="padding-top: 10px" >
         <label style="cursor: pointer;"><input type="checkbox" data-ng-model="statusList" data-ng-click="updateStatusList()"> Active</label>
     </div>
 </div>
@@ -116,6 +119,26 @@
             </div>
         </div>
     </div>
+</div>
+<div data-ng-hide=true>
+    <table id="exportArea">
+        <thead>
+            <tr>
+                <th width="10%">Area Code <i class="fas fa-sort-down"></i></th>
+                <th width="25%">Area Name <i class="fas fa-sort-down"></i></th>
+                <th width="20%">Staff <i class="fas fa-sort-down"></i></th>
+                <th width="10%">Status <i class="fas fa-sort-down"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="a in areaList | filter: searchArea">
+                <td data-ng-bind="(a.code)"></td>
+                <td data-ng-bind="a.name"></td>
+                <td data-ng-bind="a.staffName"></td>
+                <td data-ng-bind="a.status"></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <script>

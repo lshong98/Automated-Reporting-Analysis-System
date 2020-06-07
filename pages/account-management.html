@@ -51,10 +51,13 @@
 </div>
 <br />
 <div class="row" data-ng-show="show.create == 'A'">
-    <div class="col-md-11">
+    <div class="col-md-1">
         <button class="btn btn-success" data-toggle="modal" data-target="#createAccount"><i class="fa fa-plus"></i> New</button>
     </div>
-    <div class="col-md-1" style="padding-top: 10px">
+    <div class="col-md-1">
+        <button class="btn btn-primary" data-ng-click="exportFile('exportAccount')">Export</button>
+    </div>    
+    <div class="col-md-1 offset-md-9" style="padding-top: 10px">
         <label style="cursor: pointer;"><input type="checkbox" data-ng-model="statusList" data-ng-click="updateStatusList()"> Active</label>
     </div>
 </div>
@@ -92,5 +95,27 @@
                 <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
             </div>
         </div>
+        <div data-ng-hide=true>
+            <table id="exportAccount">
+                <thead>
+                    <tr>
+                        <th width="20%">Staff Code <i class="fas fa-sort-down"></i></th>
+                        <th width="35%">Name <i class="fas fa-sort-down"></i></th>
+                        <th width="15%">Username <i class="fas fa-sort-down"></i></th>
+                        <th width="20%">Position <i class="fas fa-sort-down"></i></th>
+                        <th width="10%">Status <i class="fas fa-sort-down"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="s in staffList | filter: searchStaff" >
+                        <td data-ng-bind="s.id"></td>
+                        <td data-ng-bind="s.name"></td>
+                        <td data-ng-bind="s.username"></td>
+                        <td data-ng-bind="s.position"></td>
+                        <td data-ng-bind="s.status"></td>
+                    </tr>
+                </tbody>
+            </table>              
+        </div>      
     </div>
 </div>
