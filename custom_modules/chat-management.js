@@ -71,7 +71,7 @@ app.post('/messageSend', function (req, res) {
 app.post('/chatList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT content, sender, recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date FROM tblchat WHERE complaintID = '" + req.body.id + "'";
+    var sql = "SELECT content, sender, recipient, TIME_FORMAT(creationDateTime, '%H:%i') AS date, DATE_FORMAT(creationDateTime, '%Y-%m-%d %T') AS creationDateTime FROM tblchat WHERE complaintID = '" + req.body.id + "' ORDER BY creationDateTime ASC";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
