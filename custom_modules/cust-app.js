@@ -531,10 +531,10 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
     console.log("upload bin img data: (see below): ");
     console.log(data);
 
-    if (typeof data.BinRequestICLost !== 'undefined') {
+    if (typeof data.BinRequestICLost !== 'undefined') { //Lost bin
         console.log(req.rawBody);
         var async = require('async');
-        if (typeof data.BinRequestAssessment !== 'undefined') {
+        if (typeof data.BinRequestAssessment !== 'undefined') { // lost residential with Assessment bill image
             // sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
             async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
@@ -593,7 +593,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     console.log("success");
                 }
             });
-        } else {
+        } else { // lost residential without assessment bill image
             //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
             async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility"], function (file, callback) {
 
@@ -624,17 +624,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         callback();
                     });
 
-                //save to  local folder
-                // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
-                // 	if (err) {
-                // 		console.log(err);
-                // 	} else {
-                // 		console.log(file + '.json was updated.');
-                // 	}
-
-                // 	callback();
-                // });
-
             }, function (err) {
                 if (err) {
                     console.log(err);
@@ -653,7 +642,7 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 }
             });
         }
-    } else if (typeof data.BinRequestBin !== 'undefined') {
+    } else if (typeof data.BinRequestBin !== 'undefined') { //Damaged bin
         //sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
         console.log(sql);
         console.log(req.rawBody);
@@ -694,31 +683,14 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                         console.log(err);
                     }
                 });
-                //console.log("image uploaded to cloud storage");
-                //callback();
             });
-
-        // fs.writeFile(__dirname + '/../images/BinReqImg/BinRequestBin_' + data.cID + '.jpg', Buffer.from(data.BinRequestBin, 'base64'), function (err) {
-        // 	if (err) {
-        // 		console.log(err);
-        // 	} else {
-        // database.query(sql, function (err, res) {
-        // 	if (!err) {
-        // 		resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
-        // 	} else {
-        // 		resp.send("Please Try Again");
-        // 	}
-        // });
-        // 		console.log("success");
-        // 	}
-        // });
-    } else if (typeof data.BinRequestICLost == 'undefined' && typeof data.BinRequestPolice !== 'undefined') {
+    } else if (typeof data.BinRequestICLost == 'undefined' && typeof data.BinRequestPolice !== 'undefined') { //Lost commercial
         //sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
         console.log(sql);
         console.log(req.rawBody);
         //console.log(data);
 
-        //refer to complaint upload img. remember to delete service key json file
+        //refer to complaint upload img.
         var fileName = "images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg";
         var bufferFile = Buffer.from(data.BinRequestPolice, 'base64');
         var bufferStream = new stream.PassThrough();
@@ -758,12 +730,11 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
             });
 
 
-    } else {
-        //console.log(sql);
+    } else { //newbin
         console.log(req.rawBody);
 
         var async = require('async');
-        if (typeof data.BinRequestTrading !== 'undefined') {
+        if (typeof data.BinRequestTrading !== 'undefined' && typeof data.BinRequestAssessment !== 'undefined') { //new bin commercial with assessment image
             //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
             async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
 
@@ -822,7 +793,65 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     console.log("success");
                 }
             });
-        } else {
+        } else if(typeof data.BinRequestTrading !== 'undefined' && typeof data.BinRequestAssessment == 'undefined'){ //new bin commercial without assessment bill image
+            async.each(["BinRequestIC", "BinRequestUtility", "BinRequestTrading"], function (file, callback) {
+
+                var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
+                var bufferFile = Buffer.from(data[file], 'base64');
+                var bufferStream = new stream.PassThrough();
+                bufferStream.end(bufferFile);
+                var imgFile = bucket.file(fileName);
+
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
+                urlArray.push(publicUrl);
+
+                bufferStream.pipe(imgFile.createWriteStream({
+                        metadata: {
+                            contentType: 'image/jpeg',
+                            metadata: {
+                                custom: 'metadata'
+                            }
+                        },
+                        public: true,
+                        validation: 'md5'
+                    }))
+                    .on('error', function (err) {
+                        console.log(err);
+                    })
+                    .on('finish', function () {
+                        console.log("image uploaded to cloud storage");
+                        callback();
+                    });
+
+                //save to local folder
+                // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+                // 	if (err) {
+                // 		console.log(err);
+                // 	} else {
+                // 		console.log(file + '.json was updated.');
+                // 	}
+
+                // 	callback();
+                // });
+
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[1] + "',tradingImg ='" + urlArray[2] + "'  WHERE reqID =" + data.cID + "";
+                    database.query(sql, function (err, res) {
+                        if (!err) {
+                            console.log(urlArray);
+                            emitter.emit('binrequest');
+                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+                        } else {
+                            resp.send("Please Try Again");
+                        }
+                    });
+                    console.log("success");
+                }
+            });
+        } else if(typeof data.BinRequestTrading == 'undefined' && typeof data.BinRequestAssessment !== 'undefined'){ //new bin residential with assessment bill image
             //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
             async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
@@ -881,8 +910,54 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                     console.log("success");
                 }
             });
-        }
+        } else if(typeof data.BinRequestTrading == 'undefined' && typeof data.BinRequestAssessment == 'undefined'){ //new bin residential without assessment bill image
+            async.each(["BinRequestIC", "BinRequestUtility"], function (file, callback) {
 
+                var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
+                var bufferFile = Buffer.from(data[file], 'base64');
+                var bufferStream = new stream.PassThrough();
+                bufferStream.end(bufferFile);
+                var imgFile = bucket.file(fileName);
+
+                var publicUrl = 'https://storage.googleapis.com/trienekens-management-portal-images/' + fileName;
+                urlArray.push(publicUrl);
+
+                bufferStream.pipe(imgFile.createWriteStream({
+                        metadata: {
+                            contentType: 'image/jpeg',
+                            metadata: {
+                                custom: 'metadata'
+                            }
+                        },
+                        public: true,
+                        validation: 'md5'
+                    }))
+                    .on('error', function (err) {
+                        console.log(err);
+                    })
+                    .on('finish', function () {
+                        console.log("image uploaded to cloud storage");
+                        callback();
+                    });
+
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[1] + "' WHERE reqID =" + data.cID + "";
+                    database.query(sql, function (err, res) {
+                        if (!err) {
+                            console.log(urlArray);
+                            emitter.emit('binrequest');
+                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
+                        } else {
+                            resp.send("Please Try Again");
+                        }
+                    });
+                    console.log("success");
+                }
+            });
+        }
     }
 });
 
