@@ -854,6 +854,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     $('button[name="submit_feedback"]').on('click', function () {
         $http.post('/report_feedback', {"id": $scope.reportID, "feedback": $('textarea[name="report_feedback"]').val()}).then(function (response) {
             $scope.notify(response.data.status, response.data.message);
+            window.location.href = '#/reporting';
         });
     });
 

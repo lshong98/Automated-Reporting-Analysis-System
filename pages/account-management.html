@@ -18,8 +18,30 @@
               <label for="sltStaffPosition form-label">Staff Position</label>
               <select id="sltStaffPosition" class="form-control" data-ng-model="staff.position"
                 data-ng-options="position as position.name for position in positionList">
-            </select>
+              </select>
           </div>
+          
+          <div class="form-group">
+              <label for="sltTransporter form-label">Transporter ID</label>
+              <select id="sltTransporter" class="form-control" data-ng-model="staff.transporter">
+                  <option value="0" selected>N/A</option>
+                  <option value="1">TS</option>
+                  <option value="2">TAK</option>
+                  <option value="3">MP</option>
+              </select>
+          </div>
+          
+          <div class="form-group">
+              <label for="sltType form-label">Type</label>
+              <select id="sltType" class="form-control" data-ng-model="staff.type">
+                  <option value="0" selected>N/A</option>
+                  <option value="1">Compactor</option>
+                  <option value="2">Hooklift</option>
+                  <option value="3">Prime Mover</option>
+                  <option value="4">Service Truck</option>
+                  <option value="5">Box Van</option>
+              </select>
+          </div>         
           
           <div class="form-group" data-ng-hide="staff.position.name == 'Driver'">
               <label for="txtLoginUsername form-label">Login Username</label>
@@ -103,6 +125,8 @@
                         <th width="35%">Name <i class="fas fa-sort-down"></i></th>
                         <th width="15%">Username <i class="fas fa-sort-down"></i></th>
                         <th width="20%">Position <i class="fas fa-sort-down"></i></th>
+                        <td width="15%">Transporter ID</td>
+                        <td width="15%">Type</td>
                         <th width="10%">Status <i class="fas fa-sort-down"></i></th>
                     </tr>
                 </thead>
@@ -112,6 +136,20 @@
                         <td data-ng-bind="s.name"></td>
                         <td data-ng-bind="s.username"></td>
                         <td data-ng-bind="s.position"></td>
+                        <td>
+                            <span data-ng-if="s.transporter == '0'">N/A</span>
+                            <span data-ng-if="s.transporter == '1'">TS</span>
+                            <span data-ng-if="s.transporter == '2'">TAK</span>
+                            <span data-ng-if="s.transporter == '3'">MP</span>                      
+                        </td>
+                        <td>
+                            <span data-ng-if="s.type == '0'">N/A</span>
+                            <span data-ng-if="s.type == '1'">Compactor</span>
+                            <span data-ng-if="s.type == '2'">Hooklift</span>
+                            <span data-ng-if="s.type == '3'">Prime Mover</span>
+                            <span data-ng-if="s.type == '4'">Service Truck</span>
+                            <span data-ng-if="s.type == '5'">Box Van</span>                            
+                        </td>
                         <td data-ng-bind="s.status"></td>
                     </tr>
                 </tbody>

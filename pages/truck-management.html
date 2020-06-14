@@ -19,7 +19,17 @@
               <label for="txtTransporterID form-label">Transporter ID</label>
               <input type="text" class="form-control" id="txtTransporterID " data-ng-model="truck.transporter" />
           </div>
-          
+          <div class="form-group">
+              <label for="sltType form-label">Type</label>
+              <select id="sltType" class="form-control" data-ng-model="truck.type">
+                  <option value="0" selected>N/A</option>
+                  <option value="1">Compactor</option>
+                  <option value="2">Hooklift</option>
+                  <option value="3">Prime Mover</option>
+                  <option value="4">Service Truck</option>
+                  <option value="5">Box Van</option>
+              </select>
+          </div>       
           <div class="form-group">
               <label for="txtTon form-label">Collection Ton</label>
               <input type="text" class="form-control" id="txtTon " data-ng-model="truck.ton" />
@@ -120,7 +130,7 @@
                                 <th width="15%" data-ng-click="orderBy('id');">Truck Code <i class="fas fa-sort-down"></i></th>
                                 <th width="10%" data-ng-click="orderBy('no');">Truck NO <i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('transporter');">Transporter ID <i class="fas fa-sort-down"></i></th>
-                                <!--<th>Driver</th>-->
+                                <th width="15%">Type</th>
                                 <!--<th>Collect Area</th>--> <!-- Truck area -->
                                 <th width="15%" data-ng-click="orderBy('ton');">Available Collection Ton <i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('roadtax');">Road Tax Expiry <i class="fas fa-sort-down"></i></th>
@@ -143,6 +153,24 @@
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="t.transporter" data-ng-show="!showTruck" />
                                         <span data-ng-show="showTruck" data-ng-bind="t.transporter"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
+                                        <select data-ng-show="!showTruck" id="sltType" class="form-control" data-ng-model="t.type">
+                                          <option value="0" selected>N/A</option>
+                                          <option value="1">Compactor</option>
+                                          <option value="2">Hooklift</option>
+                                          <option value="3">Prime Mover</option>
+                                          <option value="4">Service Truck</option>
+                                          <option value="5">Box Van</option>
+                                        </select> 
+                                        <span data-ng-show="showTruck" data-ng-if="t.type == '0'">N/A</span>
+                                        <span data-ng-show="showTruck" data-ng-if="t.type == '1'">Compactor</span>
+                                        <span data-ng-show="showTruck" data-ng-if="t.type == '2'">Hooklift</span>
+                                        <span data-ng-show="showTruck" data-ng-if="t.type == '3'">Prime Mover</span>
+                                        <span data-ng-show="showTruck" data-ng-if="t.type == '4'">Service Truck</span>
+                                        <span data-ng-show="showTruck" data-ng-if="t.type == '5'">Box Van</span>                                        
                                     </div>
                                 </td>
                                 <!--<td data-ng-bing="t.driver"></td>-->
@@ -168,7 +196,7 @@
                                     </div>
                                 </td>
                                 <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showTruck" data-ng-click="editTruck(t.id, t.no, t.transporter, t.ton, t.roadtax, t.status);"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showTruck" data-ng-click="editTruck(t.id, t.no, t.transporter, t.type, t.ton, t.roadtax, t.status);"><i class="fa fa-pencil-alt"></i></button>
                                     
                                     <button class="btn btn-sm btn-warning" data-ng-show="!showTruck" data-ng-click="saveTruck();"><i class="fa fa-save"></i></button>
                                     
@@ -193,9 +221,8 @@
             <tr>
                 <th width="15%">Truck Code</th>
                 <th width="10%">Truck NO</th>
+                <th width="15%">Type</th>
                 <th width="15%">Transporter ID</th>
-                <th width="15%">Available Collection Ton</th>
-                <th width="15%">Road Tax Expiry</th>
                 <th width="5%">Status</th>
             </tr>
         </thead>
@@ -203,9 +230,15 @@
             <tr data-ng-repeat="t in truckList | filter: searchTruck">
                 <td data-ng-bind="t.id"></td>
                 <td data-ng-bind="t.no"></td>
+                <td>
+                    <span data-ng-if="t.type == '0'">N/A</span>
+                    <span data-ng-if="t.type == '1'">Compactor</span>
+                    <span data-ng-if="t.type == '2'">Hooklift</span>
+                    <span data-ng-if="t.type == '3'">Prime Mover</span>
+                    <span data-ng-if="t.type == '4'">Service Truck</span>
+                    <span data-ng-if="t.type == '5'">Box Van</span>                   
+                </td>
                 <td data-ng-bind="t.transporter"></td>
-                <td data-ng-bind="t.ton"></td>
-                <td data-ng-bind="t.roadtax"></td>
                 <td data-ng-bind="t.status"></td>
             </tr>
         </tbody>

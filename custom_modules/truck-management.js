@@ -13,7 +13,7 @@ app.post('/addTruck', function (req, res) {
     var log = [];
     
     f.makeID("truck", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tbltruck (truckID, transporter, truckTon, truckNum, truckExpiryStatus, creationDateTime, truckStatus) VALUE ('" + ID + "', '" + req.body.transporter + "', '" + req.body.ton + "', '" + req.body.no + "', '" + req.body.roadtax + "', '" + req.body.creationDate + "', 'A')";
+        var sql = "INSERT INTO tbltruck (truckID, transporter, type, truckTon, truckNum, truckExpiryStatus, creationDateTime, truckStatus) VALUE ('" + ID + "', '" + req.body.transporter + "', '" + req.body.type + "', '" + req.body.ton + "', '" + req.body.no + "', '" + req.body.roadtax + "', '" + req.body.creationDate + "', 'A')";
         
         f.sendForAuthorization(req.body.creationDate, req.body.iam, "add", "Create new truck", ID, "tbltruck", "\"" + sql + "\"");
         f.logTransaction(req.body.creationDate, req.body.iam, "add", "Request to Create New truck", ID, "tbltruck");
@@ -28,6 +28,7 @@ app.post('/addTruck', function (req, res) {
             content += 'Truck Number: ' + req.body.no + '\n';
             content += 'Truck Volume: ' + req.body.ton + '\n';
             content += 'Transporter: ' + req.body.transporter + '\n';
+            content += 'Type: ' + req.body.type + '\n';
             content += 'Road Tax Expiry Date: ' + req.body.roadtax + '\n';
             
             f.log(req.body.creationDate, "Request to create new truck.", content, req.body.iam);
@@ -47,6 +48,7 @@ app.post('/editTruck', function (req, res) {
     
     var truck_id = req.body.id,
         transporter = req.body.transporter,
+        type = req.body.type,
         ton = req.body.ton,
         truck_number = req.body.no,
         road_tax = req.body.roadtax,
@@ -54,7 +56,7 @@ app.post('/editTruck', function (req, res) {
         staff_id = req.body.iam,
         log = [];
     
-    sql = "UPDATE tbltruck SET transporter = '" + transporter + "', truckTon = '" + ton + "', truckNum = '" + truck_number + "', truckExpiryStatus = '" + road_tax + "', truckStatus = '" + truck_status + "' WHERE truckID = '" + truck_id + "'";
+    sql = "UPDATE tbltruck SET transporter = '" + transporter + "', type = '" + type + "', truckTon = '" + ton + "', truckNum = '" + truck_number + "', truckExpiryStatus = '" + road_tax + "', truckStatus = '" + truck_status + "' WHERE truckID = '" + truck_id + "'";
     
     f.sendForAuthorization(dt, staff_id, "update", "Update truck", truck_id, "tbltruck", "\"" + sql + "\"");
     
@@ -70,6 +72,7 @@ app.post('/editTruck', function (req, res) {
         content = "" + log.staff_name + " would like to update truck details. The changes shown below:\n";
         content += 'Truck Number: <s>' + log.original.truckNum + '</s> to ' + truck_number + '\n';
         content += 'Transporter: <s>' + log.original.transporter + '</s> to ' + transporter + '\n';
+        content += 'Type: <s>' + log.original.type + '</s> to ' + type + '\n';
         content += 'Truck Volume: <s>' + log.original.truckTon + '</s> to ' + ton + '\n';
         content += 'Road Tax Expiry Date: <s>' + log.original.truckExpiryStatus + '</s> to ' + road_tax + '\n';
         content += 'Truck Status: <s>' + log.original.truckStatus + '</s> to ' + truck_status + '\n';
@@ -99,7 +102,7 @@ app.get('/getTruckList', function (req, res) {
 app.get('/getAllTruck', function (req, res) {
     'use strict';
     
-    var sql = "SELECT truckID AS id, transporter, truckTon AS ton, truckNum AS no, truckExpiryStatus AS roadtax, (CASE WHEN truckStatus = 'A' THEN 'ACTIVE' WHEN truckStatus = 'I' THEN 'INACTIVE' END) AS status FROM tbltruck ORDER BY truckID DESC";
+    var sql = "SELECT truckID AS id, transporter, type AS type, truckTon AS ton, truckNum AS no, truckExpiryStatus AS roadtax, (CASE WHEN truckStatus = 'A' THEN 'ACTIVE' WHEN truckStatus = 'I' THEN 'INACTIVE' END) AS status FROM tbltruck ORDER BY truckID DESC";
     
     database.query(sql, function (err, result) {
         if (err) {

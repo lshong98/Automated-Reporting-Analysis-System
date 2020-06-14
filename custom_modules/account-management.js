@@ -39,7 +39,7 @@ app.post('/addUser', function (req, res) {
         if (status === 'A') {
             f.makeID("account", req.body.creationDate).then(function (ID) {
                 var thePassword = bcrypt.hashSync(req.body.password, 10),
-                    sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, creationDateTime, staffStatus) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.creationDate + "', 'A')";
+                    sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, transporter, type, creationDateTime, staffStatus) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.transporter + "', '" + req.body.type + "', '" + req.body.creationDate + "', 'A')";
                 
                 // Authorize
                 f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", ID, "tblstaff", "\"" + sql + "\"");
@@ -122,7 +122,7 @@ app.post('/updateProfile', function (req, res) {
             throw err;
         }
         req.body.position = result[0].id;
-        var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', staffStatus = '" + req.body.status + "', staffPic = '" + req.body.avatar + "' WHERE staffID = '" + req.body.id + "'";
+        var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', transporter = '" + req.body.transporter + "', type = '" + req.body.type + "', staffStatus = '" + req.body.status + "', staffPic = '" + req.body.avatar + "' WHERE staffID = '" + req.body.id + "'";
         
         f.sendForAuthorization(cdt, req.body.iam, "update", "Update Account Details", req.body.id, "tblstaff", "\"" + sql + "\"");
         
@@ -145,6 +145,8 @@ app.post('/updateProfile', function (req, res) {
             content += 'Home Phone: <s>' + log.original.phone + '</s> to ' + req.body.phone + '\n';
             content += 'Email: <s>' + log.original.email + '</s> to ' + req.body.email + '\n';
             content += 'Position: <s>' + log.original.positionID + '</s> to ' + log.position_name + '\n';
+            content += 'Transporter: <s>' + log.original.transporter + '</s> to ' + req.body.transporter + '\n';
+            content += 'Type: <s>' + log.original.type + '</s> to ' + req.body.type + '\n';
             content += 'Account Status: <s>' + log.original.staffStatus + '</s> to ' + req.body.status + '\n';
             
             f.log(cdt, "Request to update account details.", content, req.body.iam);
@@ -160,7 +162,7 @@ app.post('/updateProfile', function (req, res) {
 app.get('/getAllUser', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status, tblposition.positionName AS position FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID AND tblposition.positionName != 'DEVELOPER'";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status, tblposition.positionName AS position, tblstaff.transporter AS 'transporter', tblstaff.type AS type FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID AND tblposition.positionName != 'DEVELOPER'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -172,7 +174,7 @@ app.get('/getAllUser', function (req, res) {
 // Load specific account
 app.post('/loadSpecificAccount', function (req, res) {
     'use strict';
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'I' THEN 'Inactive' END) AS status, tblstaff.handphone, tblstaff.phone, tblstaff.email, tblposition.positionName AS position, tblstaff.staffPic AS avatar FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'I' THEN 'Inactive' END) AS status, tblstaff.transporter AS 'transporter', tblstaff.type AS 'type', tblstaff.handphone, tblstaff.phone, tblstaff.email, tblposition.positionName AS position, tblstaff.staffPic AS avatar FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
     
     database.query(sql, function (err, result) {
         if (err) {

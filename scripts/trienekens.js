@@ -903,12 +903,13 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
 
         }
 
-        scope.editTruck = function (id, no, transporter, ton, tax, status) {
+        scope.editTruck = function (id, no, transporter, type, ton, tax, status) {
             scope.showTruck = !scope.showTruck;
             scope.thisTruck = {
                 "id": id,
                 "no": no,
                 "transporter": transporter,
+                "type": type,
                 "ton": ton,
                 "roadtax": tax,
                 "status": status
@@ -3758,15 +3759,14 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
     'use strict';
     $scope.showCreateBtn = true;
     var asc = true;
-    $scope.newArea = {
-        "areaCode": ''
-    };
-
-    $scope.area = {
-        "zone": '',
-        "staff": '',
-        "iam": ''
-    };
+    $scope.initializeStaff = function () {
+        $scope.area = {
+            "zone": '',
+            "staff": '',
+            "iam": '',
+            "transporter": '0'
+        };
+    }
 
     $scope.pagination = angular.copy(storeDataService.pagination);
     $scope.show = angular.copy(storeDataService.show.area);
@@ -3782,6 +3782,7 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
     }
 
     $http.get('/getAllArea').then(function (response) {
+        $scope.initializeStaff();
         $scope.searchAreaFilter = '';
         $scope.areaList = response.data;
         $scope.filterAreaList = [];
@@ -3931,6 +3932,7 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
         "zone": '',
         "staff": '',
         "driver": '',
+        "transporter": '',
         "status": '',
         "days": {
             "mon": '',
@@ -4305,7 +4307,9 @@ app.controller('accountController', function ($scope, $http, $filter, $window, s
             "name": '',
             "position": $scope.positionList[0],
             "username": '',
-            "password": ''
+            "password": '',
+            "transporter": '0',
+            "type": '0'
         };
     };
 
@@ -4535,10 +4539,11 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             "no": '',
             "driver": '',
             "area": '',
+            "transporter": '',
+            "type": '0',
             "iam": window.sessionStorage.getItem('owner')
         };
     };
-    $scope.initializeTruck();
     $scope.showCreateBtn = true;
 
     $scope.pagination = angular.copy(storeDataService.pagination);
@@ -4557,6 +4562,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
     }
 
     $http.get('/getAllTruck').then(function (response) {
+        $scope.initializeTruck();
         $scope.searchTruckFilter = '';
         $scope.truckList = response.data;
         $.each($scope.truckList, function (index, value) {
@@ -4597,39 +4603,39 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             return vm;
         }, true);
     });
-
-    $http.get('/getDriverList').then(function (response) {
-        $scope.driverList = response.data;
-        $scope.truck.driver = $scope.driverList[0];
-    });
-    $http.get('/getAreaList').then(function (response) {
-        $scope.renderSltPicker();
-        $.each(response.data, function (index, value) {
-            var areaID = value.id.split(",");
-            var areaName = value.name.split(",");
-            var area = [];
-            $.each(areaID, function (index, value) {
-                area.push({
-                    "id": areaID[index],
-                    "name": areaName[index]
-                });
-            });
-            $scope.areaList.push({
-                "zone": {
-                    "id": value.zoneID,
-                    "name": value.zoneName
-                },
-                "area": area
-            });
-        });
-        $('.selectpicker').on('change', function () {
-            $scope.renderSltPicker();
-        });
-    });
+//
+//    $http.get('/getDriverList').then(function (response) {
+//        $scope.driverList = response.data;
+//        $scope.truck.driver = $scope.driverList[0];
+//    });
+//    $http.get('/getAreaList').then(function (response) {
+//        $scope.renderSltPicker();
+//        $.each(response.data, function (index, value) {
+//            var areaID = value.id.split(",");
+//            var areaName = value.name.split(",");
+//            var area = [];
+//            $.each(areaID, function (index, value) {
+//                area.push({
+//                    "id": areaID[index],
+//                    "name": areaName[index]
+//                });
+//            });
+//            $scope.areaList.push({
+//                "zone": {
+//                    "id": value.zoneID,
+//                    "name": value.zoneName
+//                },
+//                "area": area
+//            });
+//        });
+//        $('.selectpicker').on('change', function () {
+//            $scope.renderSltPicker();
+//        });
+//    });
 
     $scope.addTruck = function () {
         $scope.showCreateBtn = false;
-        if ($scope.truck.no == null || $scope.truck.transporter == null || $scope.truck.ton == null || $scope.truck.roadtax == null || $scope.truck.no == "" || $scope.truck.transporter == "" || $scope.truck.ton == "" || $scope.truck.roadtax == "") {
+        if ($scope.truck.no == null || $scope.truck.transporter == null || $scope.truck.ton == null || $scope.truck.roadtax == null || $scope.truck.no == "" || $scope.truck.transporter == "" || $scope.truck.type == "" || $scope.truck.ton == "" || $scope.truck.roadtax == "") {
             $scope.notify("error", "There Has Blank Column");
             $scope.showCreateBtn = true;
         } else {

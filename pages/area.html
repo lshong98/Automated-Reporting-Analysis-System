@@ -99,7 +99,21 @@
             <select id="editAreaDriverName" class="form-control" data-ng-model="area.driver" data-ng-options="driver.id as driver.name for driver in driverList"></select>
         </div>
     </div>
-</div>          
+</div>  
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label for="editAreaTransporter" class="form-label">Transporter</label>
+            <select id="editAreaTransporter" class="form-control" data-ng-model="area.transporter">
+                <option value="0" selected>N/A</option>
+                <option value="1">TS</option>
+                <option value="2">TAK</option>
+                <option value="3">MP</option>                                        
+            </select>            
+        </div>
+    </div>
+</div>
   
 <div class="row">
     <div class="col-md-12">

@@ -44,6 +44,15 @@
               <label for="sltDriverName form-label">Driver</label>
               <select id="sltDriverName" class="form-control" data-ng-model="area.driver" data-ng-options="driver as driver.driveridname for driver in driverList"></select>
           </div>
+          <div class="form-group">
+              <label for="sltTransporter form-label">Transporter ID</label>
+              <select id="sltTransporter" class="form-control" data-ng-model="area.transporter">
+                  <option value="0" selected>N/A</option>
+                  <option value="1">TS</option>
+                  <option value="2">TAK</option>
+                  <option value="3">MP</option>
+              </select>
+          </div>          
 <!--
           <div class="form-group">
               <label for="sltBoundaries form-label">Boundaries</label>
@@ -92,7 +101,7 @@
                             <tr>
                                 <th width="10%" data-ng-click="orderBy('zoneCode', 'code');">Area Code <i class="fas fa-sort-down"></i></th>
                                 <th width="25%" data-ng-click="orderBy('name', '');">Area Name <i class="fas fa-sort-down"></i></th>
-<!--                                <th width = "5%">Collection Day</th>-->
+                                <th width = "15%">Transporter</th>
                                 <th width="20%" data-ng-click="orderBy('staffName', '');">Staff <i class="fas fa-sort-down"></i></th>
                                 <th width="10%" data-ng-click="orderBy('id', '');">Status <i class="fas fa-sort-down"></i></th>
                                 <th data-ng-show="show.edit == 'A'" width="10%">Action</th>
@@ -102,6 +111,12 @@
                             <tr data-ng-repeat="a in areaList | filter: searchArea | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage">
                                 <td data-ng-bind="(a.code)"></td>
                                 <td data-ng-bind="a.name"></td>
+                                <td>
+                                    <span data-ng-if="a.transporter == '0'">N/A</span>
+                                    <span data-ng-if="a.transporter == '1'">TS</span>
+                                    <span data-ng-if="a.transporter == '2'">TAK</span>
+                                    <span data-ng-if="a.transporter == '3'">MP</span>                                    
+                                </td>
                                 <td data-ng-bind="a.staffName"></td>
                                 <td data-ng-bind="a.status"></td>
                                 <td data-ng-show="show.edit == 'A'">
@@ -126,6 +141,7 @@
             <tr>
                 <th width="10%">Area Code <i class="fas fa-sort-down"></i></th>
                 <th width="25%">Area Name <i class="fas fa-sort-down"></i></th>
+                <th width = "15%">Transporter</th>
                 <th width="20%">Staff <i class="fas fa-sort-down"></i></th>
                 <th width="10%">Status <i class="fas fa-sort-down"></i></th>
             </tr>
@@ -134,6 +150,12 @@
             <tr data-ng-repeat="a in areaList | filter: searchArea">
                 <td data-ng-bind="(a.code)"></td>
                 <td data-ng-bind="a.name"></td>
+                <td>
+                    <span data-ng-if="a.transporter == '0'">N/A</span>
+                    <span data-ng-if="a.transporter == '1'">TS</span>
+                    <span data-ng-if="a.transporter == '2'">TAK</span>
+                    <span data-ng-if="a.transporter == '3'">MP</span>                                    
+                </td>                
                 <td data-ng-bind="a.staffName"></td>
                 <td data-ng-bind="a.status"></td>
             </tr>

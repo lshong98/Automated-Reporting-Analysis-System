@@ -16,11 +16,12 @@ app.post('/addArea', function (req, res) {
         driver_id = req.body.driver.id,
         area_name = req.body.name,
         area_code = req.body.code,
+        transporter = req.body.transporter,
         created_on = req.body.creationDate,
         staff_id = req.body.iam;
     
     f.makeID("area", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, driverID, areaName, areaCode, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + zone_id + "', '" + in_charge_staff_id + "', '" + driver_id + "', '" + area_name + "', '" + area_code + "','" + created_on + "', 'A')";
+        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, driverID, areaName, areaCode, transporter, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + zone_id + "', '" + in_charge_staff_id + "', '" + driver_id + "', '" + area_name + "', '" + area_code + "','" + transporter + "', '" + created_on + "', 'A')";
         
         f.sendForAuthorization(created_on, staff_id, "add", "Create new area", ID, "tblarea", "\"" + sql + "\"");
         
@@ -35,6 +36,7 @@ app.post('/addArea', function (req, res) {
             content += 'Area Name: ' + area_name + '\n';
             content += 'Belonging to: ' + zone_id + '\n';
             content += 'Driver: ' + driver_id + '\n';
+            content += 'Transporter: ' + transporter + '\n';
             content += 'Reporting Officer: ' + in_charge_staff_id + '\n';
             
             f.log(created_on, "Request to create new area.", content, staff_id);
@@ -47,7 +49,7 @@ app.post('/addArea', function (req, res) {
 // Load all area in management
 app.get('/getAllArea', function (req, res) {
     'use strict';
-    var sql = "SELECT a.areaID AS id, a.areaCode AS code, a.areaName AS name, z.zoneID as zone, z.zoneCode as zoneCode, z.zoneName as zoneName, s.staffID as staff, s.staffName as staffName, collection_frequency as collectionFrequency, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea a INNER JOIN tblzone z ON a.zoneID = z.zoneID INNER JOIN tblstaff s ON a.staffID = s.staffID ORDER BY areaID DESC";
+    var sql = "SELECT a.areaID AS id, a.areaCode AS code, a.areaName AS name, z.zoneID as zone, z.zoneCode as zoneCode, z.zoneName as zoneName, s.staffID as staff, s.staffName as staffName, collection_frequency as collectionFrequency, a.transporter as transporter, (CASE WHEN areaStatus = 'A' THEN 'ACTIVE' WHEN areaStatus = 'I' THEN 'INACTIVE' END) as status FROM tblarea a INNER JOIN tblzone z ON a.zoneID = z.zoneID INNER JOIN tblstaff s ON a.staffID = s.staffID ORDER BY areaID DESC";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -112,6 +114,7 @@ app.post('/updateArea', function (req, res) {
         area_name = req.body.name,
         area_code = req.body.code,
         driver_id = req.body.driver,
+        transporter = req.body.transporter,
         collection_frequency = req.body.frequency,
         area_status = req.body.status === "Active" ? 'A' : 'I',
         staff_id = req.body.iam;
@@ -127,7 +130,7 @@ app.post('/updateArea', function (req, res) {
         information.staff_name = staff_info.name;
         information.position_name = staff_info.position;
         
-        var sql = "UPDATE tblarea SET areaName = '" + area_name + "', areaCode = '" + area_code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + driver_id + "', collection_frequency = '" + collection_frequency + "', areaStatus = '" + area_status + "' WHERE areaID = '" + area_id + "'",
+        var sql = "UPDATE tblarea SET areaName = '" + area_name + "', areaCode = '" + area_code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + driver_id + "', transporter = '" + transporter + "', collection_frequency = '" + collection_frequency + "', areaStatus = '" + area_status + "' WHERE areaID = '" + area_id + "'",
             content = "";
 
         content = "" + information.staff_name + " would like to update area details. The changes shown below:\n";
@@ -136,6 +139,7 @@ app.post('/updateArea', function (req, res) {
         content += 'Belonging to: <s>' + information.original.zoneID + '</s> to ' + information.zoneID + '\n';
         content += 'Collection Frequency: <s>' + information.original.collection_frequency + '</s> to ' + collection_frequency + '\n';
         content += 'Driver: <s>' + information.original.driverID + '</s> to ' + driver_id + '\n';
+        content += 'Driver: <s>' + information.original.transporter + '</s> to ' + transporter + '\n';
         content += 'Reporting Officer: <s>' + information.original.staffID + '</s> to ' + information.staffID + '\n';
         content += 'Area Status: <s>' + information.original.areaStatus + '</s> to ' + area_status + '\n';
 
@@ -179,7 +183,7 @@ app.post('/updateArea', function (req, res) {
 app.post('/thisArea', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblarea.areaID AS id, tblarea.areaCode AS code, tblarea.areaName AS name, tblarea.driverID AS driver, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
+    var sql = "SELECT tblarea.areaID AS id, tblarea.areaCode AS code, tblarea.areaName AS name, tblarea.driverID AS driver, tblarea.transporter AS transporter, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

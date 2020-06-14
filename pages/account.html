@@ -137,6 +137,52 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
+                                <label>Transporter ID</label>
+                            </div>
+                            <div class="col-md-6">
+                                <div editable>
+                                    <select class="form-control" data-ng-model="thisAccount.transporter" data-ng-show="!showProfile">
+                                        <option value="0" selected>N/A</option>
+                                        <option value="1">TS</option>
+                                        <option value="2">TAK</option>
+                                        <option value="3">MP</option>                                        
+                                    </select>
+                                    <p data-ng-show="showProfile">
+                                        <span data-ng-if="thisAccount.transporter == '0'">N/A</span>
+                                        <span data-ng-if="thisAccount.transporter == '1'">TS</span>
+                                        <span data-ng-if="thisAccount.transporter == '2'">TAK</span>
+                                        <span data-ng-if="thisAccount.transporter == '3'">MP</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Type</label>
+                            </div>
+                            <div class="col-md-6">
+                                <div editable>
+                                    <select class="form-control" data-ng-model="thisAccount.type" data-ng-show="!showProfile">
+                                        <option value="0" selected>N/A</option>
+                                        <option value="1">Compactor</option>
+                                        <option value="2">Hooklift</option>
+                                        <option value="3">Prime Mover</option>
+                                        <option value="4">Service Truck</option>
+                                        <option value="5">Box Van</option>                                    
+                                    </select>
+                                    <p data-ng-show="showProfile">
+                                        <span data-ng-if="thisAccount.type == '0'">N/A</span>
+                                        <span data-ng-if="thisAccount.type == '1'">Compactor</span>
+                                        <span data-ng-if="thisAccount.type == '2'">Hooklift</span>
+                                        <span data-ng-if="thisAccount.type == '3'">Prime Mover</span>
+                                        <span data-ng-if="thisAccount.type == '4'">Service Truck</span>
+                                        <span data-ng-if="thisAccount.type == '5'">Box Van</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="row">
+                            <div class="col-md-6">
                                 <label>Account Status</label>
                             </div>
                             <div class="col-md-6">
