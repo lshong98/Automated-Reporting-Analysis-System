@@ -131,9 +131,11 @@
                                 <th width="10%" data-ng-click="orderBy('no');">Truck NO <i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('transporter');">Transporter ID <i class="fas fa-sort-down"></i></th>
                                 <th width="15%">Type</th>
-                                <!--<th>Collect Area</th>--> <!-- Truck area -->
+<!--
+                                <th>Collect Area</th>
                                 <th width="15%" data-ng-click="orderBy('ton');">Available Collection Ton <i class="fas fa-sort-down"></i></th>
                                 <th width="15%" data-ng-click="orderBy('roadtax');">Road Tax Expiry <i class="fas fa-sort-down"></i></th>
+-->
                                 <th width="5%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                 <th data-ng-show="show.edit == 'A'" width="5%">Action</th>
                             </tr>
@@ -174,6 +176,7 @@
                                     </div>
                                 </td>
                                 <!--<td data-ng-bing="t.driver"></td>-->
+<!--
                                 <td>
                                     <div editable>
                                         <input type="text" class="form-control" data-ng-model="t.ton" data-ng-show="!showTruck" />
@@ -186,6 +189,7 @@
                                         <span data-ng-show="showTruck" data-ng-bind="t.roadtax"></span>
                                     </div>
                                 </td>
+-->
                                 <td>
                                     <div editable>
                                         <select class="form-control" data-ng-model="t.status" data-ng-show="!showTruck">
