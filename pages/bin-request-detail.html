@@ -13,16 +13,16 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="txtRemarks form-label">Bin Size</label>
-                            <input type="text" class="form-control" id="txtRemarks" data-ng-model="entry.binSize" />
+                            <label for="binSize form-label">Bin Size</label>
+                            <input type="text" class="form-control" id="binSize" data-ng-model="entry.binSize" />
                         </div>
 
                     </div>
                     <p style="padding-top: 40px;">X</p>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="txtRemarks form-label">No. of Bins</label>
-                            <input type="text" class="form-control" id="txtRemarks" data-ng-model="entry.unit" />
+                            <label for="noOfBin form-label">No. of Bins</label>
+                            <input type="text" class="form-control" id="noOfBin" data-ng-model="entry.unit" />
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="txtRemarks form-label">ACR Bin</label>
+                    <label for="acrBin form-label">ACR Bin</label>
                     <div class="radio">
                         <label style="padding-right: 20px;" class="radio-inline"><input type="radio"
                                 ng-model="entry.acrBin" value="yes"> Yes</label>
@@ -42,15 +42,15 @@
                     </div>
                 </div>
                 <div class="form-group" data-ng-show="entry.acrBin == 'yes'">
-                    <label for="txtBeBins form-label">ACRF Number</label>
-                    <input type="text" class="form-control" id="txtBeBins" data-ng-model="entry.acrfNumber" />
+                    <label for="txtACRF form-label">ACRF Number</label>
+                    <input type="text" class="form-control" id="txtACRF" data-ng-model="entry.acrfNumber" />
                 </div>
 
                 <div class="row" data-ng-show="entry.acrBin == 'yes'">
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="txtRemarks form-label">From</label>
-                            <input type="date" class="form-control" id="txtRemarks" data-ng-model="entry.from" />
+                            <label for="acrFrom form-label">From</label>
+                            <input type="date" class="form-control" id="acrFrom" data-ng-model="entry.from" />
                         </div>
 
                     </div>
@@ -60,20 +60,20 @@
 
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="txtRemarks form-label">To </label>
-                            <input type="date" class="form-control" id="txtRemarks" data-ng-model="entry.to" />
+                            <label for="acrTo form-label">To </label>
+                            <input type="date" class="form-control" id="acrTo" data-ng-model="entry.to" />
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group" data-ng-show="entry.acrBin == 'yes'">
-                    <label for="txtBeBins form-label">BE Bins/Units</label>
-                    <input type="text" class="form-control" id="txtBeBins" data-ng-model="entry.beBins" />
+                    <label for="beBinsUnits form-label">BE Bins/Units</label>
+                    <input type="text" class="form-control" id="beBinsUnits" data-ng-model="entry.beBins" />
                 </div>
 
                 <div class="form-group" data-ng-show="entry.acrBin == 'yes'">
-                    <label for="txtAcrBins form-label">ACR Bins/Units</label>
-                    <input type="text" class="form-control" id="txtAcrBins" data-ng-model="entry.acrBins" />
+                    <label for="acrBinsUnits form-label">ACR Bins/Units</label>
+                    <input type="text" class="form-control" id="acrBinsUnits" data-ng-model="entry.acrBins" />
                 </div>
 
 
@@ -93,13 +93,18 @@
         max-width: 250px;
     }
 </style>
-<div class="container" data-ng-controller="binReqDetailCtrl">
+<div class="container" >
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Request Detail</h1><br /><br />
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
-            <h1>Request Detail</h1><br /><br />
-            <div data-ng-show="reqDetail.reason.indexOf('Roro') == -1">
-                <p><strong>Status of Request: </strong>
-                    <select name="binReqStatus" data-ng-model="reqDetail.status" class="form-control" style="width: 150px;" onchange="showRejectReasonSelect(this)">
+            <div class="row" data-ng-show="reqDetail.reason.indexOf('Roro') == -1">
+                <div class="col-md-12">
+                    <label for="binReqSlt1" ><strong>Status of Request: </strong></label>
+                    <select id="binReqSlt1" name="binReqStatus" data-ng-model="reqDetail.status" class="form-control" style="width: 150px;" onchange="showRejectReasonSelect(this)">
                         <option value="PENDING">Pending</option>
                         <option value="Approved">Approved</option>
                         <option value="Completed">Completed</option>
@@ -107,45 +112,40 @@
                         <option value="Rejected">Rejected</option>
                     </select>
                     <div id="binReqRejectReason">
-                        <p>Reason for rejection</p>
-                        <select name="binReqRejectReason" data-ng-model="reqDetail.rejectReason" class="form-control" style="width: 150px;">
+                        <lable for="rejslt1">Reason for rejection</label>
+                        <select id="rejslt1" name="binReqRejectReason" data-ng-model="reqDetail.rejectReason" class="form-control" style="width: 150px;">
                             <option value="Image not clear">Image not clear</option>
                             <option value="More documents needed">More documents needed</option>
                             <option value="Invalid address">Invalid address</option>
                         </select>
                     </div>
-                    
-                    <br />
-                    <button class="btn btn-sm btn-primary"
-                        data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason)">Update</button>
-                </p>
+                    <button class="btn btn-sm btn-primary" data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason)">Update</button>
+                </div>
             </div>
             
-            <div data-ng-show="reqDetail.reason.indexOf('Roro') != -1">
-                <p><strong>Status of Request: </strong>
-                    <select name="binReqStatus" data-ng-model="reqDetail.status" class="form-control" style="width: 150px;" onchange="showRejectReasonRoroSelect(this)">
+            <div class="row" data-ng-show="reqDetail.reason.indexOf('Roro') != -1">
+                <div class="col-md-12">
+                    <label for="binReqSlt2"><strong>Status of Request: </strong></label>
+                    <select id="binReqSlt2" name="binReqStatus" data-ng-model="reqDetail.status" class="form-control" style="width: 150px;" onchange="showRejectReasonRoroSelect(this)">
                         <option value="PENDING">Pending</option>
                         <option value="Quoted">Quoted</option>
                         <option value="Accepted">Accepted</option>
                         <option value="Rejected">Rejected</option>
                     </select>
                     <div id="binReqRejectReasonRoro">
-                        <p>Reason for rejection</p>
-                        <input type="" list="roroRejectReason" name="binReqRejectReason" data-ng-model="reqDetail.rejectReason" class="form-control" style="width: 150px;">
+                        <label for="rejslt2">Reason for rejection</label>
+                        <input id="rejslt2" type="" list="roroRejectReason" name="binReqRejectReason" data-ng-model="reqDetail.rejectReason" class="form-control" style="width: 150px;">
                         <datalist id="roroRejectReason">
                             <option value="Price">Price</option>
                             <option value="Waiting Time">Waiting Time</option>
                         </datalist>
                     </div>
-                    
-                    <br />
-                    <button class="btn btn-sm btn-primary"
-                        data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason)">Update</button>
-                </p>
+                    <button class="btn btn-sm btn-primary" data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason)">Update</button>
+                </div>
             </div>
 
-            <p data-ng-show="reqDetail.rejectReason != '' && reqDetail.rejectReason != undefined"><strong>Reason of rejection: {{reqDetail.rejectReason}}</strong></p>
-            <p><strong>Request Date: </strong>{{reqDetail.reqDate}}</p>
+            <p data-ng-show="reqDetail.rejectReason != '' && reqDetail.rejectReason != 'undefined'"><strong>Reason of rejection: {{reqDetail.rejectReason}}</strong></p>
+            <p><strong>Request Date: </strong>{{reqDate}}</p>
             <p><strong>Requested By: </strong>{{reqDetail.name}}</p>
             <p><strong>Company Name (if any): </strong>
                 <span data-ng-show="reqDetail.companyName != 'null' && reqDetail.companyName != null">{{reqDetail.companyName}}</span>
@@ -156,6 +156,8 @@
             <p><strong>Bin Type: </strong>{{reqDetail.type}}</p>
             <p><strong>Reason for Request: </strong>{{reqDetail.reason}}</p>
             <p><strong>Remarks: </strong>{{reqDetail.remarks}}</p>
+            <br/>
+            <p><strong>Status Updates History: </strong><div data-ng-repeat="brHistItem in brHistUpdateList">{{brHistItem}}</div></p>
         </div>
         <div class="col-md-6">
             <h3>Photo(s) attached</h3>

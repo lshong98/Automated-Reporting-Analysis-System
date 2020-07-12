@@ -2935,13 +2935,16 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     };
 });
 
-app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParams) {
+app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParams, $window, $route) {
     'use strict';
     $scope.entry = {};
     $scope.req = {
         'id': $routeParams.reqID
     };
-
+    $http.post('/getStaffName', {'id': $window.sessionStorage.getItem('owner')}).then(function (response) {
+        $scope.user = response.data[0].staffName;
+    });  
+       
     $http.post('/getBinReqDetail', $scope.req).then(function (response) {
         var request = response.data;
         $scope.reqDetail = {
@@ -2962,18 +2965,28 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             'policeImg': request[0].policeImg,
             'reqDate': request[0].dateRequest,
             'reqID': request[0].reqID,
-            'rejectReason': request[0].rejectReason
+            'rejectReason': request[0].rejectReason,
+            'brHistUpdate': request[0].brHistUpdate
         };
-
+        $scope.reqDate = $filter('date')($scope.reqDetail.reqDate, 'yyyy-MM-dd HH:MM:ss');
         $scope.entry.acrBin = 'no';
+        if($scope.reqDetail.brHistUpdate == null){
+            $scope.reqDetail.brHistUpdate = "";
+        }else{
+            $scope.brHistUpdateList = $scope.reqDetail.brHistUpdate.split("\n");
+        }
+        
     });
+    
 
     $scope.saveBinRequestStatus = function (status, id, rejectReason) {
-        //scope.showBinRequest = !scope.showBinRequest;
+
+        var updateStatusDate = $filter("date")(Date.now(), 'yyyy-MM-dd HH:mm:ss');
 
         $scope.thisBinRequest = {
             "status": status,
-            "id": id
+            "id": id,
+            "brHistUpdate" : $scope.reqDetail.brHistUpdate + "Update " + status + " by " + $scope.user + " - " + updateStatusDate +"\n"
         };
 
         if (status == 'Approved') {
@@ -2982,17 +2995,13 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             $scope.thisBinRequest.from = $filter('date')($scope.thisBinRequest.from, 'yyyy-MM-dd');
             $scope.thisBinRequest.to = $filter('date')($scope.thisBinRequest.to, 'yyyy-MM-dd');
             $scope.thisBinRequest.rejectReason = rejectReason;
-
-            console.log($scope.thisBinRequest);
             $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
                 var data = response.data;
                 angular.element('body').overhang({
                     type: 'success',
                     message: 'Status Updated!'
                 });
-
-
-                console.log(data);
+                $route.reload();
             }, function (error) {
                 console.log(error);
             });
@@ -3000,17 +3009,13 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             $scope.thisBinRequest.from = $filter('date')($scope.thisBinRequest.from, 'yyyy-MM-dd');
             $scope.thisBinRequest.to = $filter('date')($scope.thisBinRequest.to, 'yyyy-MM-dd');
             $scope.thisBinRequest.rejectReason = '';
-
-            console.log($scope.thisBinRequest);
             $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
                 var data = response.data;
                 angular.element('body').overhang({
                     type: 'success',
                     message: 'Status Updated!'
                 });
-
-
-                console.log(data);
+                $route.reload();
             }, function (error) {
                 console.log(error);
             });
@@ -3023,18 +3028,19 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         $scope.entry.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
         $scope.entry.status = "Approved";
         $scope.entry.id = $routeParams.reqID;
-
         $scope.entry.formattedFrom = $filter('date')($scope.entry.from, 'yyyy-MM-dd');
         $scope.entry.formattedTo = $filter('date')($scope.entry.to, 'yyyy-MM-dd');
+        var updateStatusDate = $filter("date")(Date.now(), 'yyyy-MM-dd HH:MM:ss');
+
+        $scope.entry.brHistUpdate = $scope.reqDetail.brHistUpdate + "Update Approved by " + $scope.user + " - " + updateStatusDate + "\n";
         $http.post('/updateBinRequest', $scope.entry).then(function (response) {
             var data = response.data;
             angular.element('body').overhang({
                 type: 'success',
                 message: 'Status Updated!'
             });
-
             angular.element('#confirmStatus').modal('toggle');
-            console.log(data);
+            location.reload();
         }, function (error) {
             console.log(error);
         });
