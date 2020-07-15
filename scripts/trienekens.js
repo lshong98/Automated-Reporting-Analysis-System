@@ -8,6 +8,10 @@ var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize',
 var socket = io({transports: ['websocket'], 'force new connection': true});
 var flag = false;
 
+//windows notification
+function showWindowsNotification(header, content){
+    const notificaiton = new Notification(header, { body: content});
+}
 function lobi_notify(type, title, content, avatar) {
     var icon = false;
     icon = avatar !== '' ? true : false;
@@ -20,6 +24,9 @@ function lobi_notify(type, title, content, avatar) {
         img: avatar,
         icon: icon
     });
+
+    //windows notification
+    showWindowsNotification(title, content);
 }
 
 function isOpen(ws) {

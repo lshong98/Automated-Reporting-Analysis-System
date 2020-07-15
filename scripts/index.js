@@ -19,6 +19,12 @@ function login() {
                 sessionStorage['position'] = data.details.position;
                 sessionStorage['owner'] = data.details.id;
                 window.location.href = '/pages/';
+
+                if(Notification.permission === "default"){
+                    Notification.requestPermission().then(permission => {
+                        console.log(permission);
+                    });
+                }
             }
             if(data.status == "error"){
                 document.getElementById("loginBtn").style.display = "block";
