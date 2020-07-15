@@ -1354,8 +1354,7 @@ app.post('/checkValidity', function (req, resp) {
         var mailMatch = false;
         var pnoMatch = false;
         database.query(sqlEmail, function (err, res) {
-            console.log("hello from Register NameCheck(email)");
-            console.log(res);
+
             if (res!=undefined){
                 for (var i = 0; i < res.length; i++) {
 
@@ -1502,21 +1501,38 @@ app.post('/NewRegister', function (req, resp) {
                 }
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
-                    if (error) {
+                    try{
+                        database.query(sql3, function (err, res) {
+                            if (err) {
+                                resp.send(err);
+                                console.log(err);
+                                throw err;
+                            } else {
+                                //console.log("Registered");
+                                resp.send("Registered");
+                            }   
+                        });
+                    }catch(error){
                         console.log(error);
-                        resp.send("Mail Failed");
+                        console.log("abc");
                     }
+                    
+//                    if (error) {
+//                        console.log(error);
+//                        resp.send("Mail Failed");
+//                    }
+                    
                     //console.log("Email sent: " + info.response);
-                    database.query(sql3, function (err, res) {
-                        if (err) {
-                            resp.send(err);
-                            console.log(err);
-                            throw err;
-                        } else {
-                            //console.log("Registered");
-                            resp.send("Registered");
-                        }
-                    });
+//                    database.query(sql3, function (err, res) {
+//                        if (err) {
+//                            resp.send(err);
+//                            console.log(err);
+//                            throw err;
+//                        } else {
+//                            //console.log("Registered");
+//                            resp.send("Registered");
+//                        }
+//                    });
                 });
             });
         });
@@ -1739,8 +1755,6 @@ app.post('/checkUpdate', function (req, resp) {
         var passError = false;
         var error = "OK";
         database.query(sql, function (err, res) {
-            console.log("hello from Register NameCheck(email)");
-            console.log(res);
 
             for (var i = 0; i < res.length; i++) {
 
