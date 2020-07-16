@@ -81,11 +81,6 @@ app.post('/sendNotifToDevice', function(req, res) {
         topic: topic
     };
 
-    console.log(req.body);
-    console.log(req.body.target);
-    console.log(req.body.title);
-    console.log(req.body.message);
-
     //var target = req.body.target;
     // if(target == "all"){
     //     console.log("all customers have been selected");
@@ -124,7 +119,6 @@ app.get('/getAnnouncements', function(req, res){
     'use strict';
     var sql = "SELECT * FROM tblannouncement ORDER BY announceDate DESC";
     database.query(sql, function(err, result) {
-        console.log(result);
         if (!err) {
             res.json(result);
         }
@@ -146,7 +140,6 @@ app.get('/fetchCarouselImg', function(req, res) {
                 "id": result[i].id
             });
         }
-        console.log(output);
         res.json(output);
         res.end();
     });
@@ -164,7 +157,6 @@ app.get('/getAllSchedule', function(req, res) {
         for (i = 0; i < result.length; i += 1) {
             output.push(result[i]);
         }
-        console.log(output);
         res.json(output);
         res.end();
     });
@@ -179,7 +171,6 @@ app.get('/getAreas', function(req, res) {
         for (var i = 0; i < result.length; i++) {
             output.push(result[i]);
         }
-        console.log(output);
         res.json(output);
         res.end();
     });
@@ -197,7 +188,6 @@ app.get('/getPendingUser', function(req, res) {
         for (i = 0; i < result.length; i += 1) {
             output.push(result[i]);
         }
-        console.log(output);
         res.json(output);
         res.end();
     });
@@ -216,7 +206,6 @@ app.get('/getPendingBinRequest', function(req, res) {
             for (i = 0; i < result.length; i += 1) {
                 output.push(result[i]);
             }
-            console.log(output);
             res.json(output);
             res.end();
         }
@@ -225,7 +214,7 @@ app.get('/getPendingBinRequest', function(req, res) {
 
 app.post('/getBinReqDetail', function(req, res) {
     'use strict';
-    var sql = "SELECT * FROM tblbinrequest WHERE reqID = '" + req.body.id + "'";
+    var sql = "SELECT tblbinrequest.*, tbluser.userEmail FROM tblbinrequest JOIN tbluser ON tblbinrequest.userID = tbluser.userID WHERE reqID = '" + req.body.id + "'";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -237,7 +226,6 @@ app.post('/getBinReqDetail', function(req, res) {
 
 app.post('/updatePendingUser', function(req, res) {
     'use strict';
-    console.log(req.body);
     var sql = "UPDATE tblcustomer SET status = '" + req.body.status + "' WHERE customerID = '" + req.body.pendingID + "'";
     var transporter, subject, text, email, mailOptions;
     var date = dateTime.create().format('Y-m-d H:i:s');
@@ -261,7 +249,6 @@ app.post('/updatePendingUser', function(req, res) {
                 if (err) {
                     throw err;
                 }
-                console.log("Succeess");
             });
         } else {
             text = "Dear user, we regret to inform you that your registration has been declined. We apologise for any inconveniences caused.";
@@ -282,7 +269,6 @@ app.post('/updatePendingUser', function(req, res) {
                 res.end();
                 console.log(error);
             }
-            console.log("Email sent: " + info.response);
         });
         res.send("User Status Updated");
         res.end();
@@ -325,7 +311,6 @@ app.post('/updateBinRequest', function(req, res) {
                         if (req.body.status == 'Approved') {
 
                             sql = "UPDATE tblbinrequest SET binSize = '" + req.body.binSize + "', userID = '" + userID + "', dateRequest = '" + date + "', unit = '" + req.body.unit + "', remarks = '" + req.body.remarks + "', acrfNumber = '" + req.body.acrfNumber + "', beBins = '" + req.body.beBins + "', acrBins = '" + req.body.acrBins + "' WHERE reqID = '" + req.body.id + "'";
-                            console.log(sql);
                             database.query(sql, function(err, result) {
                                 if (err) {
                                     throw err;
@@ -334,8 +319,6 @@ app.post('/updateBinRequest', function(req, res) {
                                 f.makeID("acr", req.body.creationDate).then(function(ID) {
                                     if (req.body.acrBin == 'yes') {
                                         sql = "INSERT INTO tblacr (acrID, acrfNumber, userID, creationDateTime, `from`, `to`, remarks, beBins, acrBins) VALUES ('" + ID + "', '" + req.body.acrfNumber + "', '" + userID + "', '" + req.body.creationDate + "', '" + req.body.formattedFrom + "', '" + req.body.formattedTo + "', '" + req.body.remarks + "', '" + req.body.beBins + "', '" + req.body.acrBins + "')";
-
-                                        console.log(sql);
                                         database.query(sql, function(err, result) {
                                             if (err) {
                                                 throw err;
@@ -371,7 +354,6 @@ app.get('/getEnquiry', function(req, res) {
             for (i = 0; i < result.length; i += 1) {
                 output.push(result[i]);
             }
-            console.log(output);
             res.json(output);
             res.end();
         }
@@ -398,7 +380,6 @@ app.post('/updateEnquiry', function(req, res) {
 
 app.post('/deleteCarouselImg', function(req, res) {
     'use strict';
-    console.log(req.body);
 
     var imgDir = "",
         sql = "";
@@ -413,7 +394,6 @@ app.post('/deleteCarouselImg', function(req, res) {
             if (err) {
                 throw err;
             }
-            console.log("Image Deleted");
             res.send("Image Deleted");
             res.end();
         });
@@ -422,13 +402,11 @@ app.post('/deleteCarouselImg', function(req, res) {
 
 app.post('/editCollectionSchedule', function(req, res) {
     'use strict';
-    console.log(req.body);
     var sql = "UPDATE tblschedule SET mon = '" + req.body.mon + "', tue = '" + req.body.tue + "', wed = '" + req.body.wed + "', thur = '" + req.body.thur + "', fri = '" + req.body.fri + "', sat = '" + req.body.sat + "' WHERE areaID = '" + req.body.id + "'";
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
         }
-        console.log("Updated");
     });
 });
 
@@ -1221,13 +1199,11 @@ app.post('/readComplaint', function(req,res){
         res.end();
     });
     database.query(readChat, function(err, result){
-        console.log("chat read");
     });
 });
 
 app.post('/addMunicipal', function(req, res) {
     'use strict';
-    console.log(req.body);
     var sql = "INSERT INTO tblsatisfaction_compactor(submissionDate, location, surveyType, name, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.location + "','" + req.body.surveyType + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function(err, result) {
@@ -1241,7 +1217,6 @@ app.post('/addMunicipal', function(req, res) {
 
 app.post('/addCommercial', function(req, res) {
     'use strict';
-    console.log(req.body);
     var sql = "INSERT INTO tblsatisfaction_roro(submissionDate, location, surveyType, name, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, cleanliness, physicalCondition, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.location + "','" + req.body.surveyType + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.cleanliness + "','" + req.body.physicalCond + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function(err, result) {
@@ -1255,7 +1230,6 @@ app.post('/addCommercial', function(req, res) {
 
 app.post('/addScheduled', function(req, res) {
     'use strict';
-    console.log(req.body);
     var sql = "INSERT INTO tblsatisfaction_scheduled(submissionDate, location, name, companyName, address, number, companyRating, teamEfficiency, healthAdherence, regulationsAdherence, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.location + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.healthAdh + "','" + req.body.regAdh + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
 
     database.query(sql, function(err, result) {
@@ -1738,7 +1712,6 @@ app.get('/insertTag', function(req, res) {
                 res.end();
                 throw err;
             } else {
-                console.log("Tag inserted:{'" + req.query.date + "', '" + req.query.serialNo + "', '" + req.query.truckID + "', '" + req.query.longitude + "', '" + req.query.latitude + "'}");
                 emitter.emit('live map');
                 res.end();
             }

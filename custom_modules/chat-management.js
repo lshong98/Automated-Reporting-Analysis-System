@@ -47,7 +47,7 @@ app.post('/messageSend', function (req, res) {
             req.body.recipient = result[0].id;
             
             f.makeID("chat", formatted).then(function (ID) {
-                var sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + req.body.sender + "', '" + req.body.recipient + "', '" + req.body.content + "', '" + req.body.id + "', '" + formatted + "', 'A', 'u')";
+                var sql = "INSERT INTO tblchat (chatID, sender, recipient, content, complaintID, creationDateTime, status, readStat) VALUE ('" + ID + "', '" + req.body.sender + "', '" + req.body.recipient + "', '" + req.body.content + "', '" + req.body.id + "',  NOW(), 'A', 'u')";
                 database.query(sql, function (err, result) {
                     if (err) {
                         res.json({"status": "error", "message": "Something error!"});

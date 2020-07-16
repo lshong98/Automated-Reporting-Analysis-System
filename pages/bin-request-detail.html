@@ -147,6 +147,7 @@
             <p data-ng-show="reqDetail.rejectReason != '' && reqDetail.rejectReason != 'undefined'"><strong>Reason of rejection: {{reqDetail.rejectReason}}</strong></p>
             <p><strong>Request Date: </strong>{{reqDate}}</p>
             <p><strong>Requested By: </strong>{{reqDetail.name}}</p>
+            <p><strong>Email: </strong>{{reqDetail.userEmail}}</p>
             <p><strong>Company Name (if any): </strong>
                 <span data-ng-show="reqDetail.companyName != 'null' && reqDetail.companyName != null">{{reqDetail.companyName}}</span>
                 <span data-ng-show="reqDetail.companyName == 'null' || reqDetail.companyName == null">-</span>

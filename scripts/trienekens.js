@@ -2973,7 +2973,8 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             'reqDate': request[0].dateRequest,
             'reqID': request[0].reqID,
             'rejectReason': request[0].rejectReason,
-            'brHistUpdate': request[0].brHistUpdate
+            'brHistUpdate': request[0].brHistUpdate,
+            'userEmail': request[0].userEmail
         };
         $scope.reqDate = $filter('date')($scope.reqDetail.reqDate, 'yyyy-MM-dd HH:MM:ss');
         $scope.entry.acrBin = 'no';

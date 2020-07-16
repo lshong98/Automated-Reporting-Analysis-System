@@ -644,7 +644,7 @@ app.post('/verifyAppComp', function(req, res) {
     
 
     f.makeID("complaint", req.body.creationDate).then(function(ID) {
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, activeStatus) VALUE ('" + ID + "', '" + req.body.date + "', '" + req.body.time + "', '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.telNo + "', '" + req.body.address + "','" + req.body.type + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '1')";
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, activeStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.telNo + "', '" + req.body.address + "','" + req.body.type + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '1')";
 
         database.query(sql, function(err, result) {
             if (err) {
