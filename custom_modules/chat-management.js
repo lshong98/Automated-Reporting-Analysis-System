@@ -111,7 +111,7 @@ app.post('/sendMessage', function (req, resp) {
             } else {
                 userID = result[0].userID;
                 staffID = result[0].staffID;
-                message = data.message.replace("'", "\\'");
+                message = data.message.split("'").join("\\'");
                 f.makeID('chat', date).then(function (ID) {
                     console.log(date);
                     newID = "CHT"+result[0].userID;

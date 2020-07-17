@@ -323,10 +323,9 @@ app.post('/submitOfficeMadeComplaint', function(req, res) {
 
 
         images = images[0] + "|" + images[1] + "|" + images[2] + "|" + images[3];
-        var nameFormatted = req.body.compName.replace("'", "\\'");
-        var companyFormatted = req.body.compCompany.replace("'", "\\'");
-        var addressFormatted = req.body.compAddress.replace("'", "\\'");
-
+        var nameFormatted = req.body.compName.split("'").join("\\'");
+        var companyFormatted = req.body.compCompany.split("'").join("\\'");
+        var addressFormatted = req.body.compAddress.split("'").join("\\'");
         var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, status, custStatus, cmsStatus, activeStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + nameFormatted + "', '" + companyFormatted + "', '" + req.body.compPhone + "', '" + addressFormatted + "','" + req.body.compType + "', date(now()), time(now()), '" + req.body.compLogBy + "', now(), '" + images + "', 1, '" + req.body.services + "', 'r', 'u', 'open', 'open', 3, '1')";
 
         database.query(sql, function(err, result) {
@@ -528,7 +527,7 @@ app.post('/submitLogisticsComplaint', function(req, res) {
     images = images[0] + "|" + images[1] + "|" + images[2] + "|" +images[3];
     console.log(req.body.wasteColDT);
 
-    var remarkFormatted = req.body.remark.replace("'", "\\'");
+    var remarkFormatted = req.body.remark.split("'").join("\\'");
 
     if (req.body.subDate == null || req.body.subTime == null) {
         var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = " + req.body.subDate + ", forwardedTime = " + req.body.subTime + ", forwardedBy = '" + req.body.by + "',  status = '" + req.body.status + "', statusDate = date(now()) , statusTime = time(now()), remarks = '" + remarkFormatted + "', logsImg = '" + images + "', step = 2, readState = 'u', logsReadState = 'r', driver = '" + req.body.driver + "' , klgStatus = '" + req.body.klgStatus + "', wasteColDT = '" + req.body.wasteColDT + "' WHERE coID = '" + req.body.coID + "' ";
