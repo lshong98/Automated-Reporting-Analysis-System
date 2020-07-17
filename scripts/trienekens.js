@@ -1234,29 +1234,6 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             });
         };
 
-        // scope.editBinRequestStatus = function () {
-        //     scope.showBinRequest = !scope.showBinRequest;
-
-        //     angular.element('.selectpicker').selectpicker('refresh');
-        //     angular.element('.selectpicker').selectpicker('render');
-        // };
-
-        // scope.saveBinRequestStatus = function (status, id) {
-        //     scope.showBinRequest = !scope.showBinRequest;
-
-        //     scope.thisBinRequest = {
-        //         "status": status,
-        //         "id": id
-        //     };
-
-        //     $http.post('/updateBinRequest', scope.thisBinRequest).then(function (response) {
-        //         var data = response.data;
-        //         console.log(data);
-        //     }, function (error) {
-        //         console.log(error);
-        //     });
-        // };
-
         scope.cancelBinRequestStatus = function () {
             scope.showBinRequest = !scope.showBinRequest;
 
@@ -1921,7 +1898,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
             $scope.readBinReq = function(category){
                 $http.post('/readBinRequest', {'category':category}).then(function (response) {
-                    console.log(response.data);
                     if (response.data == "Binrequest Read") {
                         if (category == 'nonroro') {
                             $('.nonrorotab').html('0');
@@ -2973,6 +2949,7 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             'reqDate': request[0].dateRequest,
             'reqID': request[0].reqID,
             'rejectReason': request[0].rejectReason,
+            'rejectExtraInfo': request[0].rejectExtraInfo,
             'brHistUpdate': request[0].brHistUpdate,
             'userEmail': request[0].userEmail
         };
@@ -2987,7 +2964,7 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
     });
     
 
-    $scope.saveBinRequestStatus = function (status, id, rejectReason) {
+    $scope.saveBinRequestStatus = function (status, id, rejectReason, rejectExtraInfo) {
 
         var updateStatusDate = $filter("date")(Date.now(), 'yyyy-MM-dd HH:mm:ss');
 
@@ -3003,6 +2980,7 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             $scope.thisBinRequest.from = $filter('date')($scope.thisBinRequest.from, 'yyyy-MM-dd');
             $scope.thisBinRequest.to = $filter('date')($scope.thisBinRequest.to, 'yyyy-MM-dd');
             $scope.thisBinRequest.rejectReason = rejectReason;
+            $scope.thisBinRequest.rejectExtraInfo = rejectExtraInfo;
             $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
                 var data = response.data;
                 angular.element('body').overhang({
@@ -3017,6 +2995,7 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             $scope.thisBinRequest.from = $filter('date')($scope.thisBinRequest.from, 'yyyy-MM-dd');
             $scope.thisBinRequest.to = $filter('date')($scope.thisBinRequest.to, 'yyyy-MM-dd');
             $scope.thisBinRequest.rejectReason = '';
+            $scope.thisBinRequest.rejectExtraInfo = '';
             $http.post('/updateBinRequest', $scope.thisBinRequest).then(function (response) {
                 var data = response.data;
                 angular.element('body').overhang({

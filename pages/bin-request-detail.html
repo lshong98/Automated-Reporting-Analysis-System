@@ -111,15 +111,19 @@
                         <option value="In Progress">In Progress</option>
                         <option value="Rejected">Rejected</option>
                     </select>
+                    <br/>
                     <div id="binReqRejectReason">
-                        <lable for="rejslt1">Reason for rejection</label>
+                        <label for="rejslt1"><strong>Reason for rejection:</strong></label>
                         <select id="rejslt1" name="binReqRejectReason" data-ng-model="reqDetail.rejectReason" class="form-control" style="width: 150px;">
                             <option value="Image not clear">Image not clear</option>
                             <option value="More documents needed">More documents needed</option>
                             <option value="Invalid address">Invalid address</option>
                         </select>
+                        <br/>
+                        <label for="BinRejInfo"><strong>Rejection extra info given to customer:</strong></label><br/>
+                        <textarea id="BinRejInfo" type="text" class="form-contol" data-ng-model="reqDetail.rejectExtraInfo"></textarea>
                     </div>
-                    <button class="btn btn-sm btn-primary" data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason)">Update</button>
+                    <button class="btn btn-sm btn-primary" data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason, reqDetail.rejectExtraInfo)">Update</button>
                 </div>
             </div>
             
@@ -140,11 +144,12 @@
                             <option value="Waiting Time">Waiting Time</option>
                         </datalist>
                     </div>
-                    <button class="btn btn-sm btn-primary" data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason)">Update</button>
+                    <button class="btn btn-sm btn-primary" data-ng-click="saveBinRequestStatus(reqDetail.status, reqDetail.reqID, reqDetail.rejectReason, reqDetail.rejectExtraInfo)">Update</button>
                 </div>
             </div>
 
-            <p data-ng-show="reqDetail.rejectReason != '' && reqDetail.rejectReason != 'undefined'"><strong>Reason of rejection: {{reqDetail.rejectReason}}</strong></p>
+            <p data-ng-show="reqDetail.rejectReason != '' && reqDetail.rejectReason != 'undefined'"><strong>Reason of rejection:</strong> {{reqDetail.rejectReason}}</p>
+            <p data-ng-show="reqDetail.rejectExtraInfo != '' && reqDetail.rejectExtraInfo != 'undefined'"><strong>Rejection info given to customer:</strong> {{reqDetail.rejectExtraInfo}}</p>
             <p><strong>Request Date: </strong>{{reqDate}}</p>
             <p><strong>Requested By: </strong>{{reqDetail.name}}</p>
             <p><strong>Email: </strong>{{reqDetail.userEmail}}</p>

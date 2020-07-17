@@ -595,7 +595,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 }
             });
         } else { // lost residential without assessment bill image
-            //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
             async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility"], function (file, callback) {
 
                 var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
@@ -644,7 +643,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
             });
         }
     } else if (typeof data.BinRequestBin !== 'undefined') { //Damaged bin
-        //sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
         console.log(sql);
         console.log(req.rawBody);
         //console.log(data);
@@ -686,7 +684,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 });
             });
     } else if (typeof data.BinRequestICLost == 'undefined' && typeof data.BinRequestPolice !== 'undefined') { //Lost commercial
-        //sql = "UPDATE tblbinrequest SET binImg ='/images/BinReqImg/BinRequestBin_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
         console.log(sql);
         console.log(req.rawBody);
         //console.log(data);
@@ -736,7 +733,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 
         var async = require('async');
         if (typeof data.BinRequestTrading !== 'undefined' && typeof data.BinRequestAssessment !== 'undefined') { //new bin commercial with assessment image
-            //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
             async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
 
                 var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
@@ -853,7 +849,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
                 }
             });
         } else if(typeof data.BinRequestTrading == 'undefined' && typeof data.BinRequestAssessment !== 'undefined'){ //new bin residential with assessment bill image
-            //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
             async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
                 var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
@@ -1488,7 +1483,8 @@ app.post('/NewRegister', function (req, resp) {
                 address = data.add1;
             }
 
-            address = address.split("'").join("\\'"),
+            address = address.split("'").join("\\'");
+            // address = address.replace(/'/g,"\\'");
             console.log("ADDRESS: " + address);
 
             bcrypt.hash(data.pass, saltRounds, function(err, hash) {
