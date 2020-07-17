@@ -476,7 +476,7 @@ app.post('/binRequest', function (req, resp) {
         var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
         date = data.date;
         companyName = "";
-        remarks = data.remarks.split("'").join("\\'");
+        remarks = data.remarks.replace(/'/g,"\\'");
 
         database.query(sqlUser, function (err, res) {
             if (!err) {
@@ -486,7 +486,7 @@ app.post('/binRequest', function (req, resp) {
 
                 console.log("user id: " + userID);
                 if (data.name != "" && data.companyName != "" && data.companyAddress != "" && data.contactNumber != "") {
-                    companyName = data.companyName.split("'").join("\\'");
+                    companyName = data.companyName.replace(/'/g,"\\'");
                     var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, companyAddress, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat, brHistUpdate) VALUES('" + userID +"', NOW(), '" + data.name + "','" + companyName + "','" + data.companyAddress + "','" + data.contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + remarks + "','" + data.status + "', 'u', '" + brHistUpdate + "')";
                 } else {
                     var insertSql = "INSERT INTO tblbinrequest(userID,dateRequest,name ,companyName, contactNumber,reason,type,requestDate,requestAddress,remarks,status, readStat, brHistUpdate) VALUES('" + userID + "', NOW(), '" + name + "','" + companyName + "','" + contactNumber + "','" + data.reason + "','" + data.type + "','" + data.requestDate + "','" + data.requestAddress + "','" + remarks + "','" + data.status + "', 'u', '" + brHistUpdate + "')";
@@ -1055,7 +1055,7 @@ app.post('/complaint', function (req, resp) {
                         var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
-                        var remarks = data.compRemarks.split("'").join("\\'");
+                        var remarks = data.compRemarks.replace(/'/g,"\\'");
                         var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
@@ -1094,8 +1094,8 @@ app.post('/satisfaction', function (req, resp) {
         var satisfactionType = data.satisfactionType;
         var sqlUser = "SELECT * FROM tbluser WHERE userEmail ='" + data.user + "'";
         console.log(data);
-        company = data.companyName.split("'").join("\\'");
-        extraComment = data.extraComment.split("'").join("\\'");
+        company = data.companyName.replace(/'/g,"\\'");
+        extraComment = data.extraComment.replace(/'/g,"\\'");
 
         database.query(sqlUser, function (err, res) {
             if (!err) {
@@ -1482,10 +1482,10 @@ app.post('/NewRegister', function (req, resp) {
             } else if (data.add1 != "" && data.add2 == "") {
                 address = data.add1;
             }
-
-            address = address.split("'").join("\\'");
-            // address = address.replace(/'/g,"\\'");
-            console.log("ADDRESS: " + address);
+            console.log("ADDRESS before: " + address);
+            // address = address.split("'").join("\\'");
+            address = address.replace(/'/g,"\\'");
+            console.log("ADDRESS after: " + address);
 
             bcrypt.hash(data.pass, saltRounds, function(err, hash) {
 
