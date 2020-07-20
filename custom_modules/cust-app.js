@@ -1356,11 +1356,9 @@ app.post('/checkValidity', function (req, resp) {
                     if (res[i].userEmail == data.email) {
                         mailMatch = true;
                     }
-    
-                    if (res[i].contactNumber == data.pno) {
-                        pnoMatch = true;
-                    }
-    
+                    // if (res[i].contactNumber == data.pno) {
+                    //     pnoMatch = true;
+                    // }
                 }
     
                 if (pnoMatch == true && mailMatch == true) {
