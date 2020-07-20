@@ -752,7 +752,9 @@ app.controller('exportReportListController', function($scope, $http, $window, $f
                     $scope.reportList[index].date = $filter('date')(value.date, 'yyyy-MM-dd');
                     $http.post('/getStaffName', {'id': $scope.reportList[index].reportingStaffId}).then(function (response) {
                         $scope.reportList[index].staffName = response.data[0].staffName;
-                    });                    
+                    });
+                    $scope.reportList[index].feedback = $scope.reportList[index].feedback.replace(/<p>/gi, " ");
+                    $scope.reportList[index].feedback = $scope.reportList[index].feedback.replace(/<\/p>/gi, " ");    
                 });                  
             });
         }

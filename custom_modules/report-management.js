@@ -73,7 +73,7 @@ app.post('/addReport', function (req, res) {
         complete_status = req.body.status,
         truck_id = req.body.truck,
         driver_id = req.body.driver,
-        remark = req.body.remark.replace(/'/g,"\\'");
+        remark = req.body.remark.replace(/'/g,"\\'"),
         created_on = req.body.creationDate,
         staff_id = req.body.staffID,
         colDay = req.body.colDay;
@@ -220,7 +220,7 @@ app.post('/editReport', function (req, res) {
         status = req.body.status,
         truck_id = req.body.truckID,
         driver_id = req.body.driverID,
-        remark = req.body.remark.replace(/'/g,"\\'");
+        remark = req.body.remark.replace(/'/g,"\\'"),
         colDay = req.body.colDay,
         lh = req.body.lh,
         rttb = req.body.rttb,

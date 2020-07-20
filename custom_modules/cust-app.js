@@ -1479,13 +1479,18 @@ app.post('/NewRegister', function (req, resp) {
 
             if (data.add1 != "" && data.add2 != "") {
                 address = data.add1 + " " + data.add2;
+                console.log("ADDRESS before: " + address);
+                // address = address.split("'").join("\\'");
+                address = address.replace(/'/g,"\\'");
+                console.log("ADDRESS after: " + address);                
             } else if (data.add1 != "" && data.add2 == "") {
                 address = data.add1;
+                console.log("ADDRESS before: " + address);
+                // address = address.split("'").join("\\'");
+                address = address.replace(/'/g,"\\'");
+                console.log("ADDRESS after: " + address);                
             }
-            console.log("ADDRESS before: " + address);
-            // address = address.split("'").join("\\'");
-            address = address.replace(/'/g,"\\'");
-            console.log("ADDRESS after: " + address);
+
 
             bcrypt.hash(data.pass, saltRounds, function(err, hash) {
 
