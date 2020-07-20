@@ -277,10 +277,11 @@ app.post('/updatePendingUser', function(req, res) {
 
 app.post('/updateBinRequest', function(req, res) {
     'use strict';
+    console.log(req.body.rejectExtraInfo);
     var sql = "UPDATE tblbinrequest SET status = '" + req.body.status + "', rejectReason = '"+req.body.rejectReason+"', rejectExtraInfo = '" + req.body.rejectExtraInfo + "',brHistUpdate = '" + req.body.brHistUpdate + "' WHERE reqID = '" + req.body.id + "'";
     var msg = "The status of your bin request with the ID " + req.body.id + " has been updated to " + req.body.status + ". Please go to the View My Requests tab for information on any necessary actions.";
     if (req.body.status == "Rejected"){
-        msg = "The status of your bin request with the ID " + req.body.id + " is rejected because "+req.body.rejectReason+" Please go to the View My Requests tab for information on any necessary actions.";
+        msg = "The status of your bin request with the ID " + req.body.id + " is rejected because "+req.body.rejectReason+". " + req.body.rejectExtraInfo;
     }
     var getUserID = "SELECT userID FROM tblbinrequest WHERE reqID = '" + req.body.id + "'";
     var userID, date = dateTime.create().format('Y-m-d H:M:S');
