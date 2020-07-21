@@ -515,10 +515,10 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
 console.log("lostbin image");
        var async = require('async');
        if (typeof data.BinRequestAssessment !== 'undefined') { // lost residential with Assessment bill image
-           // sql = "UPDATE tblbinrequest SET icImg ='/images/test/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/test/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/test/BinRequestAssessment_" + data.cID + ".jpg',policeImg ='/images/test/BinRequestPolice_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
+           // sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
            async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
-               var fileName = "images/test/" + file + "_" + data.cID + ".jpg";
+               var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                var bufferFile = Buffer.from(data[file], 'base64');
                var bufferStream = new stream.PassThrough();
                bufferStream.end(bufferFile);
@@ -546,7 +546,7 @@ console.log("lostbin image");
                    });
 
                //save file to local folder
-               // fs.writeFile(__dirname + '/../images/test/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+               // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
                // 	if (err) {
                // 		console.log(err);
                // 	} else {
@@ -572,10 +572,10 @@ console.log("lostbin image");
                }
            });
        } else { // lost residential without assessment bill image
-           //sql = "UPDATE tblbinrequest SET icImg ='/images/test/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/test/BinRequestUtility_" + data.cID + ".jpg',policeImg ='/images/test/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+           //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
            async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility"], function (file, callback) {
 
-               var fileName = "images/test/" + file + "_" + data.cID + ".jpg";
+               var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                var bufferFile = Buffer.from(data[file], 'base64');
                var bufferStream = new stream.PassThrough();
                bufferStream.end(bufferFile);
@@ -625,7 +625,7 @@ console.log("lostbin image");
         if (typeof data.DmgBinRequestAssessment !== 'undefined') { // dmg residential with Assessment bill image
             async.each(["DmgBinRequestIC", "DmgBinRequestBin", "DmgBinRequestUtility", "DmgBinRequestAssessment"], function (file, callback) {
  
-                var fileName = "images/test/" + file + "_" + data.cID + ".jpg";
+                var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                 var bufferFile = Buffer.from(data[file], 'base64');
                 var bufferStream = new stream.PassThrough();
                 bufferStream.end(bufferFile);
@@ -653,7 +653,7 @@ console.log("lostbin image");
                     });
  
                 //save file to local folder
-                // fs.writeFile(__dirname + '/../images/test/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+                // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
                 // 	if (err) {
                 // 		console.log(err);
                 // 	} else {
@@ -679,10 +679,10 @@ console.log("lostbin image");
                 }
             });
         } else { // dmg residential without assessment bill image
-            //sql = "UPDATE tblbinrequest SET icImg ='/images/test/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/test/BinRequestUtility_" + data.cID + ".jpg',policeImg ='/images/test/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+            //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestICLost_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',policeImg ='/images/BinReqImg/BinRequestPolice_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
             async.each(["DmgBinRequestIC", "DmgBinRequestBin", "DmgBinRequestUtility"], function (file, callback) {
  
-                var fileName = "images/test/" + file + "_" + data.cID + ".jpg";
+                var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                 var bufferFile = Buffer.from(data[file], 'base64');
                 var bufferStream = new stream.PassThrough();
                 bufferStream.end(bufferFile);
@@ -731,7 +731,7 @@ console.log("lostbin image");
     else if (typeof data.BinRequestBin !== 'undefined') { 
 
        //refer to complaint upload img. remember to delete service key json file
-       var fileName = "images/test/BinRequestBin_" + data.cID + ".jpg";
+       var fileName = "images/BinReqImg/BinRequestBin_" + data.cID + ".jpg";
        var bufferFile = Buffer.from(data.BinRequestBin, 'base64');
        var bufferStream = new stream.PassThrough();
        bufferStream.end(bufferFile);
@@ -771,10 +771,10 @@ console.log("lostbin image");
 
        var async = require('async');
        if (typeof data.BinRequestTrading !== 'undefined' && typeof data.BinRequestAssessment !== 'undefined') { //new bin commercial with assessment image
-           //sql = "UPDATE tblbinrequest SET icImg ='/images/test/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/test/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/test/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/test/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
+           //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg',tradingImg ='/images/BinReqImg/BinRequestTrading_" + data.cID + ".jpg'  WHERE reqID =" + data.cID + "";
            async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment", "BinRequestTrading"], function (file, callback) {
 
-               var fileName = "images/test/" + file + "_" + data.cID + ".jpg";
+               var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                var bufferFile = Buffer.from(data[file], 'base64');
                var bufferStream = new stream.PassThrough();
                bufferStream.end(bufferFile);
@@ -802,7 +802,7 @@ console.log("lostbin image");
                    });
 
                //save to local folder
-               // fs.writeFile(__dirname + '/../images/test/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+               // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
                // 	if (err) {
                // 		console.log(err);
                // 	} else {
@@ -832,7 +832,7 @@ console.log("lostbin image");
        } else if(typeof data.BinRequestTrading !== 'undefined' && typeof data.BinRequestAssessment == 'undefined'){ //new bin commercial without assessment bill image
            async.each(["BinRequestIC", "BinRequestUtility", "BinRequestTrading"], function (file, callback) {
 
-               var fileName = "images/test/" + file + "_" + data.cID + ".jpg";
+               var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                var bufferFile = Buffer.from(data[file], 'base64');
                var bufferStream = new stream.PassThrough();
                bufferStream.end(bufferFile);
@@ -860,7 +860,7 @@ console.log("lostbin image");
                    });
 
                //save to local folder
-               // fs.writeFile(__dirname + '/../images/test/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+               // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
                // 	if (err) {
                // 		console.log(err);
                // 	} else {
@@ -888,10 +888,10 @@ console.log("lostbin image");
                }
            });
        } else if(typeof data.BinRequestTrading == 'undefined' && typeof data.BinRequestAssessment !== 'undefined'){ //new bin residential with assessment bill image
-           //sql = "UPDATE tblbinrequest SET icImg ='/images/test/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/test/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/test/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
+           //sql = "UPDATE tblbinrequest SET icImg ='/images/BinReqImg/BinRequestIC_" + data.cID + ".jpg',utilityImg ='/images/BinReqImg/BinRequestUtility_" + data.cID + ".jpg',assessmentImg ='/images/BinReqImg/BinRequestAssessment_" + data.cID + ".jpg' WHERE reqID =" + data.cID + "";
            async.each(["BinRequestIC", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
 
-               var fileName = "images/test/" + file + "_" + data.cID + ".jpg";
+               var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                var bufferFile = Buffer.from(data[file], 'base64');
                var bufferStream = new stream.PassThrough();
                bufferStream.end(bufferFile);
@@ -919,7 +919,7 @@ console.log("lostbin image");
                    });
 
                //save to local folder
-               // fs.writeFile(__dirname + '/../images/test/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
+               // fs.writeFile(__dirname + '/../images/BinReqImg/' + file + '_' + data.cID + '.jpg', Buffer.from(data[file], 'base64'), function (err) {
                // 	if (err) {
                // 		console.log(err);
                // 	} else {
@@ -948,7 +948,7 @@ console.log("lostbin image");
        } else if(typeof data.BinRequestTrading == 'undefined' && typeof data.BinRequestAssessment == 'undefined'){ //new bin residential without assessment bill image
            async.each(["BinRequestIC", "BinRequestUtility"], function (file, callback) {
 
-               var fileName = "images/test/" + file + "_" + data.cID + ".jpg";
+               var fileName = "images/BinReqImg/" + file + "_" + data.cID + ".jpg";
                var bufferFile = Buffer.from(data[file], 'base64');
                var bufferStream = new stream.PassThrough();
                bufferStream.end(bufferFile);
@@ -1087,11 +1087,13 @@ app.post('/complaint', function (req, resp) {
                     // }
                     complaintID = "COM" + userID + dateID;
                     if (data.compRemarks == null || data.compRemarks == "") {
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u')";
+                        var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
+                        var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
                         var remarks = data.compRemarks.replace(/'/g,"\\'");
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
                     database.query(sql, function (err, res) {

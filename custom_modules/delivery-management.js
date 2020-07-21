@@ -36,7 +36,7 @@ app.post('/getAllBdaf', function (req, res) {
             throw err;
         }
         res.json(result);
-        console.log("GET ALL BDAF: " + result);
+        // console.log("GET ALL BDAF: " + result);
     });
 });
 
