@@ -197,6 +197,12 @@
             </div>
         </div>  
         <div class="form-group row">
+            <label for="showComp" class="col-xs-3 col-form-label form-label-width">Company</label>
+            <div class="col-md-9">
+                <input type="text" id="showComp" class="form-control" data-ng-model="verify.company" readonly/>
+            </div>
+        </div>          
+        <div class="form-group row">
             <label for="showPhone" class="col-xs-3 col-form-label form-label-width">Phone No</label>
             <div class="col-md-9">
                 <input type="text" id="showPhone" class="form-control" data-ng-model="verify.telNo" readonly/>
@@ -247,6 +253,7 @@
         <p><strong>Complaint Title: </strong> {{detailType}}</p>
         <p><strong>Date Time: </strong>{{comDetail.date}}</p>
         <p><strong>Customer: </strong>{{comDetail.customer}}</p>
+        <p><strong>Company: </strong>{{comDetail.company}}</p>
         <p><strong>Contact Number: </strong>{{comDetail.contactNumber}}</p>
         <p><strong>Address:</strong></p>
         <p>{{comDetail.address}}</p>

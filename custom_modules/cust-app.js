@@ -1062,6 +1062,7 @@ app.post('/complaint', function (req, resp) {
     'use strict';
     var data;
     var userID;
+    var premiseComp = "";
     var date = dateTime.create().format('Y-m-d H:M:S');
     var complaintID = 0;
     var sqlComplaintID = "SELECT MAX(complaintID) AS max FROM tblcomplaint";
@@ -1070,7 +1071,6 @@ app.post('/complaint', function (req, resp) {
     req.addListener('data', function (postDataChunk) {
         data = JSON.parse(postDataChunk);
     });
-
     req.addListener('end', function () {
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function (err, res) {
@@ -1086,14 +1086,22 @@ app.post('/complaint', function (req, resp) {
                     //     complaintID = parseInt(complaintID) + 1;
                     // }
                     complaintID = "COM" + userID + dateID;
+                    
+                    //check whether premise got value 21/07/2020
+                    if(data.premiseComp == null || data.premiseComp == ""){
+                        premiseComp = "Household";
+                    }else{
+                        premiseComp = data.premiseComp;
+                    }
+
                     if (data.compRemarks == null || data.compRemarks == "") {
                         var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat, premiseComp, status) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
                         var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
                         var remarks = data.compRemarks.replace(/'/g,"\\'");
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat, premiseComp, status) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
                     database.query(sql, function (err, res) {

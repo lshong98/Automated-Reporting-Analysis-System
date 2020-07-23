@@ -8695,6 +8695,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         $scope.comDetail = {
             'ctype': complaint[0].complaint,
             'title': complaint[0].premiseType,
+            'company': complaint[0].premiseComp,
             'content': complaint[0].remarks,
             'date': $filter('date')(complaint[0].complaintDate, 'medium'),
             'customer': complaint[0].name,
@@ -8714,11 +8715,15 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'source': "Mobile App",
             'refNo': $scope.comDetail.id,
             'name': $scope.comDetail.customer,
+            'company': $scope.comDetail.company,
             'telNo': $scope.comDetail.telNo,
             'address': $scope.comDetail.address,
             'img': $scope.comDetail.img,
             'type': $scope.comDetail.ctype,
             'services': $scope.comDetail.title,
+            'cmsStatus': '3',
+            'lgStatus': 'open',
+            'bdStatus': 'open',
             'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
             'time': $filter('date')(new Date(), 'HH:mm:ss'),
             "forwardLogisticsDate": $filter("date")(new Date(), 'yyyy-MM-dd'),
@@ -8726,6 +8731,10 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             "forwardLogisticsBy": $window.sessionStorage.getItem('owner'),
             "creationDate": $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')
         };
+
+        if($scope.verify.company == "" || $scope.verify.company == null){
+            $scope.verify.company = "Household";
+        }
 
         if ($scope.comDetail.title == 1) {
             $scope.title = "Compactor";

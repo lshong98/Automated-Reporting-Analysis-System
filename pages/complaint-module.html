@@ -114,7 +114,6 @@
                                                 <th width="30%" data-ng-click="orderBy('detailType');">Title <i class="fas fa-sort-down"></i></th>
                                                 <th width="20%" data-ng-click="orderBy('customer');">Customer <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="orderBy('serviceType');">Type <i class="fas fa-sort-down"></i></th>
-                                                <th width="10%" data-ng-click="orderBy('code');">Area <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                             </tr>
                                         </thead>
@@ -124,7 +123,6 @@
                                                 <td data-ng-bind="c.detailType"></td>
                                                 <td data-ng-bind="c.customer"></td>
                                                 <td data-ng-bind="c.serviceType"></td>
-                                                <td data-ng-bind="c.code"></td>
                                                 <td><span data-ng-bind="c.status" data-ng-class="{{showbadge}}"></span></td>
                                                 <td><span data-ng-show="c.unread != null" class="badge badge-danger">{{c.unread}}</span></td>
                                             </tr>

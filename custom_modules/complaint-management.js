@@ -6,6 +6,7 @@ var f = require('./function-management');
 //var variable = require('../variable');
 var fs = require('fs');
 const { Storage } = require('@google-cloud/storage');
+const e = require('express');
 const storage = new Storage({
     keyFilename: './trienekens-management-portal-5c3ad8aa7ee2.json',
     projectId: 'trienekens-management-portal'
@@ -224,7 +225,7 @@ app.get('/getComplaintLoc', function(req, res) {
 //get complaint detail by id
 app.post('/getComplaintDetail', function(req, res) {
     'use strict';
-    var sql = "SELECT co.complaintID, co.premiseType, co.complaint, co.staffID, co.remarks, co.complaintImg, co.complaintDate, cu.name, cu.contactNumber, co.complaintAddress AS address, a.areaID, a.areaName, CONCAT(z.zoneCode,a.areaCode) AS 'code', (CASE WHEN co.status = 'o' THEN 'Open' WHEN co.status = 'p' THEN 'Pending' WHEN co.status = 'i' THEN 'Invalid' WHEN co.status = 'c' THEN 'Closed' END) AS status from tblcomplaint co JOIN tbluser cu ON co.userID = cu.userID LEFT OUTER JOIN tbltaman ON tbltaman.tamanID = cu.tamanID LEFT OUTER JOIN tblarea a ON a.areaID = tbltaman.areaID LEFT OUTER JOIN tblzone z ON z.zoneID = a.zoneID WHERE co.complaintID = '" + req.body.id + "'";
+    var sql = "SELECT co.complaintID, co.premiseType, co.complaint, co.premiseComp, co.staffID, co.remarks, co.complaintImg, co.complaintDate, cu.name, cu.contactNumber, co.complaintAddress AS address, a.areaID, a.areaName, CONCAT(z.zoneCode,a.areaCode) AS 'code', (CASE WHEN co.status = 'o' THEN 'Open' WHEN co.status = 'p' THEN 'Pending' WHEN co.status = 'i' THEN 'Invalid' WHEN co.status = 'c' THEN 'Closed' END) AS status from tblcomplaint co JOIN tbluser cu ON co.userID = cu.userID LEFT OUTER JOIN tbltaman ON tbltaman.tamanID = cu.tamanID LEFT OUTER JOIN tblarea a ON a.areaID = tbltaman.areaID LEFT OUTER JOIN tblzone z ON z.zoneID = a.zoneID WHERE co.complaintID = '" + req.body.id + "'";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -643,13 +644,21 @@ app.post('/verifyAppComp', function(req, res) {
     
 
     f.makeID("complaint", req.body.creationDate).then(function(ID) {
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, activeStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.telNo + "', '" + req.body.address + "','" + req.body.type + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '1')";
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, cmsStatus, activeStatus, status, custStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.company + "','" + req.body.telNo + "', '" + req.body.address + "','" + req.body.type + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '" + req.body.cmsStatus + "', '1', '" + req.body.lgStatus + "', '" + req.body.bdStatus + "')";
 
         database.query(sql, function(err, result) {
             if (err) {
                 throw err;
+            }else{
+                var sql2=" UPDATE tblcomplaint SET status = 'o' WHERE complaintID = '" + req.body.refNo + "'";
+                database.query(sql2, function(err2, result2){
+                    if(err){
+                        throw err;
+                    }else{
+                        res.json({ "status": "success", "message": "Complaint Sent to Logistics" });
+                    }
+                });
             }
-            res.json({ "status": "success", "message": "Complaint Sent to Logistics" });
         });
     });
 });
