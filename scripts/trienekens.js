@@ -3,11 +3,15 @@ jshint: white
 global angular, document, google, Highcharts
 */
 var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize', 'ngCsv', 'easypiechart']);
-
 //var socket = io.connect();
 var socket = io({transports: ['websocket'], 'force new connection': true});
 var flag = false;
 
+
+if(Notification.permission === "default"){
+    Notification.requestPermission().then(permission =>{
+    })
+}
 //windows notification
 function showWindowsNotification(header, content){
     const notificaiton = new Notification(header, { body: content});
@@ -25,8 +29,16 @@ function lobi_notify(type, title, content, avatar) {
         icon: icon
     });
 
-    //windows notification
-    showWindowsNotification(title, content);
+    if(Notification.permission === "granted"){
+        //windows notification
+        showWindowsNotification(title, content);
+    }else if(Notification.permission !== "denied"){
+        Notification.requestPermission().then(permission =>{
+            if(permission === "granted"){
+                showWindowsNotification(title, content);
+            }
+        })
+    }
 }
 
 function isOpen(ws) {

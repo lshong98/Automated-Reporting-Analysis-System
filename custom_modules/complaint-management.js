@@ -327,7 +327,8 @@ app.post('/submitOfficeMadeComplaint', function(req, res) {
         var nameFormatted = req.body.compName.replace(/'/g,"\\'");
         var companyFormatted = req.body.compCompany.replace(/'/g,"\\'");
         var addressFormatted = req.body.compAddress.replace(/'/g,"\\'");
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, status, custStatus, cmsStatus, activeStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + nameFormatted + "', '" + companyFormatted + "', '" + req.body.compPhone + "', '" + addressFormatted + "','" + req.body.compType + "', date(now()), time(now()), '" + req.body.compLogBy + "', now(), '" + images + "', 1, '" + req.body.services + "', 'r', 'u', 'open', 'open', 3, '1')";
+        var compTypeFormatted = req.body.compType.replace(/'/g,"\\'");
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, status, custStatus, cmsStatus, activeStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + nameFormatted + "', '" + companyFormatted + "', '" + req.body.compPhone + "', '" + addressFormatted + "','" + compTypeFormatted + "', date(now()), time(now()), '" + req.body.compLogBy + "', now(), '" + images + "', 1, '" + req.body.services + "', 'r', 'u', 'open', 'open', 3, '1')";
 
         database.query(sql, function(err, result) {
             if (err) {
