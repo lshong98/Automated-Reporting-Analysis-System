@@ -8317,7 +8317,6 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     //get logistics complaint list
     $http.get('/getLogisticsComplaintList').then(function (response) {
 
-
         $scope.logisticsComplaintList = response.data;
         $scope.searchLogComplaintFilter = '';
         $scope.filterLogComplaintList = [];
@@ -8340,6 +8339,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 }
 
                 if ($scope.logisticsComplaintList[i].status == null) {
+                    // console.log($scope.logisticsComplaintList[i].status);
                     $scope.logisticsComplaintList[i].status = "N/A";
                 }
 
@@ -8922,9 +8922,11 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         }
 
         $scope.verifyComp = function () {
+            
             $http.post('/verifyAppComp', $scope.verify).then(function (response) {
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
+                    angular.element('#verifyComplaintModal').modal('toggle');
                 } else {
                     $scope.notify("error", "There has some ERROR!");
                 }
@@ -9432,7 +9434,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                             'coID': $routeParams.complaintCode
                         };
                         $http.post('/updateKLGStatus', $scope.klgStatus).then(function(response){
-                            console.log(response.data.status);
                             if (response.data.status == "success") {
                                 $scope.notify(response.data.status, "KLG Status has been updated");
                                 $route.reload();                              
