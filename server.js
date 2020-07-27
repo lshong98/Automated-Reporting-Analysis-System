@@ -12,6 +12,10 @@ var FCMAdmin = variable.FCMAdmin;
 var FCMServiceAccount = variable.FCMServiceAccount;
 var dateTime = require('node-datetime');
 var nodemailer = require('nodemailer');
+var util = variable.util;
+var webpush = variable.webpush;
+var bodyParser = variable.bodyParser;
+var path = variable.path;
 
 var requestHandler = require('./requestHandlers');
 var database = require('./custom_modules/database-management');
@@ -60,6 +64,26 @@ app.use(function(req, res, next) {
     );
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     next();
+});
+
+//web push notification
+app.use(bodyParser.json());
+const webPushPublicVapidKey = 'BKRH77GzVVAdLbU9ZAblIjl_zKYZzLlJQCRZXsdawtS--XnMPIQUN3QXJ87R9qgNITl7gkHjepq4wsm2SVxq6to';
+const webPushPrivateVapidKey = 'QNRs-ZNv-nTnokUe9DE7KCDG__Z2waPlRljRFjRLjRA';
+webpush.setVapidDetails('mailto:trienekens2019@gmail.com', webPushPublicVapidKey, webPushPrivateVapidKey);
+
+app.post('/subscribe', (req,res) =>{
+    //get push subscription object
+    const subscription = req.body;
+
+    //send 201 - resource created
+    res.status(201).json({});
+
+    //create payload- optional
+    const payload = JSON.stringify({title:'Push Test', body:'Notified from Trienekens-management-web-portal'});
+
+    //pass object into sendNotification
+    webpush.sendNotification(subscription, payload).catch(err => console.error(err));
 });
 
 //FCM

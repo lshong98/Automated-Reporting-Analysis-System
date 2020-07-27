@@ -7,15 +7,61 @@ var app = angular.module('trienekens', ['ngRoute', 'ui.bootstrap', 'ngSanitize',
 var socket = io({transports: ['websocket'], 'force new connection': true});
 var flag = false;
 
+//web push notification
+const webPushPublicVapidKey = 'BKRH77GzVVAdLbU9ZAblIjl_zKYZzLlJQCRZXsdawtS--XnMPIQUN3QXJ87R9qgNITl7gkHjepq4wsm2SVxq6to';
+
+// if('serviceWorker' in navigator){
+//     send().catch(err => console.error(err));
+// }
+
+async function send(){
+    console.log("Registering service worker...");
+    const register = await navigator.serviceWorker.register('/worker.js',{
+        scope : '/'
+    });
+    console.log('Service Worker Registered');
+
+    //Register Push
+    console.log('Registering push');
+    const subscription = await register.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(webPushPublicVapidKey)
+    });
+    console.log('Push Registered');
+    console.log(subscription);
+
+    //send push notification
+    console.log('Sending Push');
+    await fetch('/subscribe',{
+        method: 'POST',
+        body: JSON.stringify(subscription),
+        headers:{
+            'content-type': 'application/json'
+        }
+    });
+    console.log('Push Sent...');
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+  
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+  
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
 
 if(Notification.permission === "default"){
     Notification.requestPermission().then(permission =>{
     })
 }
-//windows notification
-function showWindowsNotification(header, content){
-    const notificaiton = new Notification(header, { body: content});
-}
+
 function lobi_notify(type, title, content, avatar) {
     var icon = false;
     icon = avatar !== '' ? true : false;
@@ -29,13 +75,18 @@ function lobi_notify(type, title, content, avatar) {
         icon: icon
     });
 
+
+}
+
+function webNotification(title, content){
+    
     if(Notification.permission === "granted"){
         //windows notification
-        showWindowsNotification(title, content);
+        var notification = new Notification(title, {body: content});
     }else if(Notification.permission !== "denied"){
         Notification.requestPermission().then(permission =>{
             if(permission === "granted"){
-                showWindowsNotification(title, content);
+                var notification = new Notification(title, {body: content});
             }
         })
     }
@@ -107,6 +158,7 @@ socket.on('new binrequest', function (data) {
     }
 
     lobi_notify('info', 'New Bin Request', 'New Bin Request Received', '');
+    webNotification('Trienekens-web-portal', 'New Bin Request Received');
 });
 
 socket.on('new message', function (data) {
@@ -117,6 +169,7 @@ socket.on('new message', function (data) {
         complaintID = data.complaintID;
 
     lobi_notify('info', 'You received a new message.', 'From complaint ID: '+complaintID, '');
+    webNotification('Trienekens-web-portal', 'You received a new message.');
 });
 
 // socket.on('read municipal', function (data) {
@@ -166,6 +219,7 @@ socket.on('new complaint', function (data) {
         $('.complaint').addClass("badge badge-danger").html(data.unread);
     }
     lobi_notify('info', 'New App Complaint', 'New App Complaint Received', '');
+    webNotification('Trienekens-web-portal', 'New App Complaint Received');
 });
 
 socket.on('read complaint', function (data) {

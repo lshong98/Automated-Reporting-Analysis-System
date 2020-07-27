@@ -25,7 +25,8 @@ var path = variable.path;
 var fs = variable.fs;
 var io = variable.io;
 var stream = require('stream');
-
+var util = variable.util;
+const webPushPublicVapidKey = 'BKRH77GzVVAdLbU9ZAblIjl_zKYZzLlJQCRZXsdawtS--XnMPIQUN3QXJ87R9qgNITl7gkHjepq4wsm2SVxq6to';
 const saltRounds = 10;
 const {
     Storage
@@ -400,6 +401,7 @@ app.post('/updateNotifStat', function (req, resp) {
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.email + "'";
         database.query(sqlUser, function (err, res) {
             if (!err) {
+                console.log( "updateNotifStat:" + util.inspect(res[0], false, null, true));
                 userID = res[0].userID;
                 var readStat = "UPDATE tblnotif SET readStat = 'r' WHERE userID = '" + userID + "'";
                 database.query(readStat, function (err, res) {
@@ -1709,8 +1711,10 @@ app.post('/getInfo', function (req, resp) {
     req.addListener('end', function () {
         var sql = "SELECT * FROM tbluser WHERE userEmail = '" + data.user + "'";
         database.query(sql, function (err, res) {
+            console.log( "getInfo:" + util.inspect(res[0], false, null, true));
+            console.log( "getInfo:" + res[0].address);
             if (res != undefined) {
-                if (res[0].address == undefined) {
+                if (res[0].address == undefined || res[0].address == null) {
                     info["pno"] = res[0].contactNumber;
                     resp.json(info);
                 } else {
