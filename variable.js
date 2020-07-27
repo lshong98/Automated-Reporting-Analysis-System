@@ -16,8 +16,11 @@ var nodemailer = require('nodemailer');
 var path = require('path');
 var sanitizer = require('sanitizer');
 var upload = require('express-fileupload');
+var webpush = require('web-push');
+var bodyParser = require('body-parser');
+var util = require('util');
 
-var SVR_PORT = process.env.SERVER_PORT || 8080;
+var SVR_PORT = process.env.SERVER_PORT || 8181;
 
 exports.app = app;
 exports.bcrypt = bcrypt;
@@ -33,3 +36,6 @@ exports.path = path;
 exports.server = server;
 exports.SVR_PORT = SVR_PORT;
 exports.upload = upload;
+exports.util = util;
+exports.webpush = webpush;
+exports.bodyParser = bodyParser;
