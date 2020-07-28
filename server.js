@@ -73,6 +73,7 @@ const webPushPrivateVapidKey = 'QNRs-ZNv-nTnokUe9DE7KCDG__Z2waPlRljRFjRLjRA';
 webpush.setVapidDetails('mailto:trienekens2019@gmail.com', webPushPublicVapidKey, webPushPrivateVapidKey);
 
 app.post('/subscribe', (req,res) =>{
+    console.log("Subscribe called");
     //get push subscription object
     const subscription = req.body;
 

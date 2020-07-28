@@ -13,6 +13,7 @@ const webPushPublicVapidKey = 'BKRH77GzVVAdLbU9ZAblIjl_zKYZzLlJQCRZXsdawtS--XnMP
 // if('serviceWorker' in navigator){
 //     send().catch(err => console.error(err));
 // }
+// webNotification('Trienekens-web-portal', 'New Bin Request Received');
 
 async function send(){
     console.log("Registering service worker...");
@@ -159,6 +160,9 @@ socket.on('new binrequest', function (data) {
 
     lobi_notify('info', 'New Bin Request', 'New Bin Request Received', '');
     webNotification('Trienekens-web-portal', 'New Bin Request Received');
+    if('serviceWorker' in navigator){
+        send().catch(err => console.error(err));
+    }     
 });
 
 socket.on('new message', function (data) {
@@ -170,6 +174,10 @@ socket.on('new message', function (data) {
 
     lobi_notify('info', 'You received a new message.', 'From complaint ID: '+complaintID, '');
     webNotification('Trienekens-web-portal', 'You received a new message.');
+    if('serviceWorker' in navigator){
+        send().catch(err => console.error(err));
+    }     
+   
 });
 
 // socket.on('read municipal', function (data) {
@@ -220,6 +228,9 @@ socket.on('new complaint', function (data) {
     }
     lobi_notify('info', 'New App Complaint', 'New App Complaint Received', '');
     webNotification('Trienekens-web-portal', 'New App Complaint Received');
+    if('serviceWorker' in navigator){
+        send().catch(err => console.error(err));
+    } 
 });
 
 socket.on('read complaint', function (data) {

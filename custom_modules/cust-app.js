@@ -1473,7 +1473,7 @@ app.post('/checkEmail', function (req, resp) {
 app.post('/NewRegister', function (req, resp) {
     'use strict';
 
-    var data, transporter, subject, text, email, mailOptions, vCode, address;
+    var data, transporter, subject, text, email, mailOptions, vCode, address, name;
     var userID = 0;
     var date = dateTime.create().format('Y-m-d H:M:S');
 
@@ -1512,15 +1512,16 @@ app.post('/NewRegister', function (req, resp) {
                 address = data.add1;
                 address = address.replace(/'/g,"\\'");
             }
+            name = data.name.replace(/'/g,"\\'");
 
             bcrypt.hash(data.pass, saltRounds, function(err, hash) {
 
                 var sql3;
 
                 if (address == undefined) {                
-                    sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + hash + "','" + data.pno + "','" + vCode + "','" + date + "')";
+                    sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, vCode, creationDateTime) VALUES ('" + userID + "','" + name + "','" + data.email + "','" + hash + "','" + data.pno + "','" + vCode + "','" + date + "')";
                 } else {
-                    sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, address, vCode, creationDateTime) VALUES ('" + userID + "','" + data.name + "','" + data.email + "','" + hash + "','" + data.pno + "','" + address + "','" + vCode + "','" + date + "')";
+                    sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, address, vCode, creationDateTime) VALUES ('" + userID + "','" + name + "','" + data.email + "','" + hash + "','" + data.pno + "','" + address + "','" + vCode + "','" + date + "')";
                 }
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
