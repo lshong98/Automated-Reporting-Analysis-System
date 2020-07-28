@@ -1944,6 +1944,33 @@ app.post('/getRequestList', function (req, resp) {
     });
 });
 
+app.post('/deleteBinReq', function(req, res){
+    'use strict';
+    console.log(req.body.binReqID);
+    var sql = "DELETE FROM tblbinrequest WHERE reqID = '" + req.body.binReqID + "'";
+
+    database.query(sql, function (err, result){
+        if(err){
+            throw err;
+        }else{
+            res.send({"status": "success","message": "Deleted Success"});
+        }
+    })
+
+});
+
+app.post('/getFilterExportBinReqReport', function (req, res){
+    'use strict';
+    var sql = "SELECT tblbinrequest.reqID AS 'reqID',  tbluser.name AS 'name', tblbinrequest.dateRequest AS 'dateRequest', tblbinrequest.companyName AS 'companyName', tblbinrequest.contactNumber AS 'contactNumber', tblbinrequest.reason AS 'reason', tblbinrequest.type AS 'type', tblbinrequest.requestAddress AS 'requestAddress', tblbinrequest.remarks AS 'remarks', tblbinrequest.status AS 'status', tblbinrequest.rejectReason AS 'rejectReason', tblbinrequest.rejectExtraInfo AS 'rejectExtraInfo' FROM tblbinrequest JOIN tbluser ON tblbinrequest.userID = tbluser.userID WHERE dateRequest between '" + req.body.startDate +"' AND '" + req.body.endDate + "' ORDER BY dateRequest";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 app.post('/cancelBinRequest', function (req, resp) {
     'use strict';
     var data;

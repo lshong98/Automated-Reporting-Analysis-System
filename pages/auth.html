@@ -885,6 +885,24 @@
                     </label>
                 </li>
                 <li class="list-group-item">
+                    Delete Bin Request
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.binrequest.delete"
+                            data-ng-change="changeValue(auth.binrequest.delete, 'delete binrequest');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>    
+                <li class="list-group-item">
+                    Export Bin Request
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.binrequest.export"
+                            data-ng-change="changeValue(auth.binrequest.export, 'export binrequest');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>                               
+                <li class="list-group-item">
                     Customer Feedback
                     <label class="switch">
                         <input type="checkbox" class="primary" data-ng-model="auth.feedback.view"

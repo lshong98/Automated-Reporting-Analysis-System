@@ -5,6 +5,12 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-2">
+            <button class="btn btn-primary" data-ng-show="showExportBinReq == 'A'" data-ng-click="exportBinReqPage();">Export Report</button>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item"><a class="nav-link active" role="tab" href="#manage-bin-request" data-target="#bin-request" data-toggle="tab" data-ng-click="readBinReq('nonroro')">Bin Requests <span class="badge badge-danger nonrorotab">{{unreadNonRoro}}</span></a></li>
@@ -27,17 +33,18 @@
                                         <th>Bin Type</th>
                                         <th>Request Date</th>
                                         <th>Status</th>
+                                        <th data-ng-show="showDeleteBinReq == 'A'">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="pReq in nonRoroEnquiry | filter:searchBinReq | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index" data-ng-click="binReqDetail(pReq.reqID)">
-                                        <td>{{$index+1}}</td>
-                                        <td>{{pReq.name}}</td>
-                                        <td>{{pReq.contactNumber}}</td>
-                                        <td>{{pReq.reason}}</td>
-                                        <td>{{pReq.type}}</td>
-                                        <td>{{pReq.dateRequest | date: "dd-MM-y"}}</td>
-                                        <td>
+                                    <tr data-ng-repeat="pReq in nonRoroEnquiry | filter:searchBinReq | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index">
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{$index+1}}</td>
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.name}}</td>
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.contactNumber}}</td>
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.reason}}</td>
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.type}}</td>
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.dateRequest | date: "dd-MM-y"}}</td>
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">
                                             <div editable>
                                                 <select name="binReqStatus" data-ng-model="pReq.status" class="form-control" data-ng-show="!showBinRequest">
                                                     <option value="PENDING">Pending</option>
@@ -48,6 +55,7 @@
                                                 <span data-ng-show="showBinRequest">{{pReq.status}}</span>
                                             </div>
                                         </td>
+                                        <td data-ng-show="showDeleteBinReq == 'A'"><button class="btn btn-sm btn-danger" data-ng-show="true" data-ng-click="deleteBinReq(pReq.reqID);"><i class="fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -75,27 +83,29 @@
                                         <th>Bin Type</th>
                                         <th>Request Date</th>
                                         <th>Status</th>
+                                        <th data-ng-show="showDeleteBinReq == 'A'">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="pReq in roroEnquiry | filter:searchRoroEnq | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index" data-ng-click="binReqDetail(pReq.reqID)">
-                                        <td>{{$index+1}}</td>
-                                        <td>{{pReq.name}}</td>
-                                        <td>{{pReq.contactNumber}}</td>
-                                        <td>{{pReq.reason}}</td>
-                                        <td>{{pReq.type}}</td>
-                                        <td>{{pReq.dateRequest | date: "dd-MM-y"}}</td>
-                                        <td>
+                                    <tr data-ng-repeat="rReq in roroEnquiry | filter:searchRoroEnq | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index" >
+                                        <td data-ng-click="binReqDetail(rReq.reqID)">{{$index+1}}</td>
+                                        <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.name}}</td>
+                                        <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.contactNumber}}</td>
+                                        <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.reason}}</td>
+                                        <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.type}}</td>
+                                        <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.dateRequest | date: "dd-MM-y"}}</td>
+                                        <td data-ng-click="binReqDetail(rReq.reqID)">
                                             <div editable>
-                                                <select name="binReqStatus" data-ng-model="pReq.status" class="form-control" data-ng-show="!showBinRequest">
+                                                <select name="binReqStatus" data-ng-model="rReq.status" class="form-control" data-ng-show="!showBinRequest">
                                                     <option value="PENDING">Pending</option>
                                                     <option value="Settled">Settled</option>
                                                     <option value="In Progress">In Progress</option>
                                                     <option value="No Response">No Response</option>
                                                 </select>
-                                                <span data-ng-show="showBinRequest">{{pReq.status}}</span>
+                                                <span data-ng-show="showBinRequest">{{rReq.status}}</span>
                                             </div>
                                         </td>
+                                        <td data-ng-show="showDeleteBinReq == 'A'"><button class="btn btn-sm btn-danger" data-ng-show="true" data-ng-click="deleteBinReq(rReq.reqID);"><i class="fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>

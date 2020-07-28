@@ -575,6 +575,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'custServiceCtrl',
         controllerAs:'custService'
     })
+    .when('/export-bin-request', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/export-bin-request');
+            }
+        },
+        templateUrl: '/export-bin-request',
+        controller: 'exportBinReqCtrl',
+        controllerAs:'exportBinReqCtrl'
+    })    
     .when('/bin-request-detail/:reqID', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {

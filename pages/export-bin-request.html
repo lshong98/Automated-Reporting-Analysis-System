@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-md-12">
+        <h5>Export Report List</h5>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Filter: </h3>
+        <input type="text" name="daterange"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="generateReport()" data-ng-show = "showExportBinReq == 'A'">Generate</button>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="exportReport('exportTable')" data-ng-show = "showExportBinReq == 'A'">Export</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table id="exportTable" class="table table-hover table-striped" data-ng-show = "showExportBinReq == 'A'">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Premise(company name)</th>
+                        <th>Date Request</th>
+                        <th>Reason</th>
+                        <th>Type</th>
+                        <th>Contact No.</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                        <th>Reject Reason</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>               
+                    <tr data-ng-repeat="a in reportList">
+                        <td>{{a.reqID}}</td>
+                        <td>{{a.name}}</td>
+                        <td>{{a.companyName}}</td>
+                        <td>{{a.formattedDate}}</td>
+                        <td>{{a.reason}}</td>
+                        <td>{{a.type}}</td>
+                        <td>{{a.contactNumber}}</td>
+                        <td>{{a.requestAddress}}</td>
+                        <td>{{a.status}}</td>
+                        <td>{{a.rejectReasonCompile}}</td>
+                        <td>{{a.remarks}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $('.clickable').click(function() {
+            $(this).children().find('i').toggleClass("fa-chevron-circle-right fa-chevron-circle-down");
+            $('html, body').animate({
+                scrollTop: $(this).offset().top - 20
+            }, 'slow');
+        });
+    });
+    //$(".table-clickable").on('click', '.clickable-row', function (e, row, $element) {
+    //    window.location.href = $(this).data('href');
+    //});
+
+</script>

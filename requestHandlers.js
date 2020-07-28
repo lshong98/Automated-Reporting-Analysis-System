@@ -214,6 +214,10 @@ app.get('/manage-bin-request', function (req, res) {
     'use strict';
     res.sendFile('pages/approve-bin-request.html', {root: __dirname});
 });
+app.get('/export-bin-request', function (req, res) {
+    'use strict';
+    res.sendFile('pages/export-bin-request.html', {root: __dirname});
+});
 app.get('/bin-request-detail/:reqID', function (req, res) {
     'use strict';
     res.sendFile('pages/bin-request-detail.html', {root: __dirname});

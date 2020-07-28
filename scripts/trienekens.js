@@ -560,7 +560,9 @@ app.service('storeDataService', function () {
                 "send": 'A'
             },
             "binrequest": {
-                "approve": 'A'
+                "approve": 'A',
+                "delete": 'I',
+                "export": 'I'
             },
             "feedback": {
                 "view": 'A'
@@ -1823,7 +1825,7 @@ app.run(function ($rootScope) {
 });
 
 //Customer Service Pages Controller
-app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window, $filter) {
+app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window, $filter, storeDataService) {
     $scope.loggedUser = localStorage.getItem('user');
     $scope.currentPage = 1; //Initial current page to 1
     $scope.itemsPerPage = 3; //Record number each page
@@ -1908,7 +1910,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
     $scope.getPendingBinRequest = function () {
         $http.get('/getPendingBinRequest').then(function (response) {
-            console.log(response.data);
             $scope.pendingBinRequests = response.data;
             $scope.roroEnquiry = [];
             $scope.nonRoroEnquiry = [];
@@ -1927,6 +1928,29 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
             $scope.totalItemsBinReq = $scope.nonRoroEnquiry.length;
             $scope.totalItemsBinReqRoro = $scope.roroEnquiry.length;
+
+            $scope.exportBinReqPage = function(){
+                setTimeout(function(){
+                    window.location.href = '#/export-bin-request';
+                }, 500);
+            }            
+
+            $scope.showDeleteBinReq = angular.copy(storeDataService.show.binrequest.delete);
+            $scope.showExportBinReq = angular.copy(storeDataService.show.binrequest.export);
+            $scope.deleteBinReq = function(binReqID){
+
+                if(confirm("Do you want to Delete the Bin Request / RoRo Request?")){
+                    $http.post('/deleteBinReq', {'binReqID': binReqID}).then(function (response){
+                        if(response.data.status == "success"){
+                            $scope.notify(response.data.status, response.data.message);
+                            
+                        }else{
+                            $scope.notify("error","There is something wrong!");
+                        }
+                        location.reload();
+                    })
+                }
+            }
 
             $http.get('/unreadBinRequestCount').then(function (response) {
                 $scope.unreadRoro = response.data.unreadRoro;
@@ -2069,47 +2093,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(err);
         });
     };
-
-    // $scope.getMunicipalFeedback = function () {
-    //     socket.emit('municipal satisfaction');
-    //     $http.get('/customerFeedbackMunicipal').then(function (response) {
-    //         console.log(response.data);
-    //         $scope.reviews = response.data;
-    //         $scope.totalItems = response.data.length;
-    //         $scope.collPrompt = (response.data.collPrompt / 3) * 100;
-    //         $scope.compRate = (response.data.compRate / 3) * 100;
-    //         $scope.teamEff = (response.data.teamEff / 3) * 100;
-    //         $scope.binHand = (response.data.binHand / 3) * 100;
-    //         $scope.spillCtrl = (response.data.spillCtrl / 3) * 100;
-    //         $scope.qryResp = (response.data.qryResp / 3) * 100;
-
-    //         $scope.options = {
-    //             animate: {
-    //                 duration: 0,
-    //                 enabled: false
-    //             },
-    //             barColor: '#2C3E50',
-    //             scaleColor: false,
-    //             lineWidth: 20,
-    //             lineCap: 'circle'
-    //         };
-
-    //         $http.get('/readSatisfactionMunicipal').then(function (repsonse) {
-    //             console.log(response.data);
-    //         }, function (err) {
-    //             console.log(err);
-    //         });
-    //     }, function (err) {
-    //         console.log(err);
-    //     });
-
-    //     $http.get('/unreadSatisfaction').then(function(response){
-    //         $scope.unreadMunicipal = response.data.municipal;
-    //         $scope.unreadCommercial = response.data.commercial;
-    //         $scope.unreadScheduled = response.data.scheduled;
-    //     });
-    // };
-
+    
     //ng-csv
     $scope.separator = ",";
     $scope.getDataHeaderMunicipal = function () {
@@ -2993,6 +2977,99 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             $scope.resetFormS();
         }
     };
+});
+
+//export bin request page controller
+app.controller('exportBinReqCtrl', function($scope, $http, $filter, storeDataService){
+    'use strict';
+    $scope.showExportBinReq = angular.copy(storeDataService.show.binrequest.export);
+    console.log($scope.showExportBinReq);
+    
+    $scope.filterStartDate = "";
+    $scope.filterEndDate = "";
+        
+    $('input[name="daterange"]').daterangepicker({
+        autoUpdateInput: false,
+        locale: {
+            cancelLabel: 'Clear'
+        }
+    });
+
+    $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        
+        $scope.filterStartDate = new Date(picker.startDate.format('YYYY-MM-DD'));
+        $scope.filterEndDate = new Date(picker.endDate.format('YYYY-MM-DD'));
+        $scope.filterStartDate =  $filter('date')($scope.filterStartDate, 'yyyy-MM-dd');
+        $scope.filterEndDate =  $filter('date')($scope.filterEndDate, 'yyyy-MM-dd');
+    });
+
+    $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+        $scope.filterStartDate = "";
+        $scope.filterEndDate = "";
+    });    
+    
+    $scope.generateReport = function(){
+        if($scope.filterStartDate == "" || $scope.filterEndDate == ""){
+            $scope.notify("error", "Please Fill in the Date Range");
+       }
+       else{
+           var reqObj = {
+               "startDate": $scope.filterStartDate,
+               "endDate": $scope.filterEndDate
+           };
+           
+           $http.post("/getFilterExportBinReqReport", reqObj).then(function(response){
+               $scope.reportList = response.data;              
+               
+               $.each($scope.reportList, function(index, value){
+                   $scope.reportList[index].formattedDate = $filter('date')(value.dateRequest, 'yyyy-MM-dd');
+
+                   if($scope.reportList[index].rejectExtraInfo == undefined || $scope.reportList[index].rejectExtraInfo == null || $scope.reportList[index].rejectExtraInfo == "null"){
+                    $scope.reportList[index].rejectExtraInfo = "";
+                   }
+                   if($scope.reportList[index].rejectReason == undefined || $scope.reportList[index].rejectReason == null || $scope.reportList[index].rejectReason == "null"){
+                    $scope.reportList[index].rejectReason = "";
+                   }
+                   $scope.reportList[index].rejectReasonCompile = $scope.reportList[index].rejectReason + $scope.reportList[index].rejectExtraInfo;
+               });
+               console.log($scope.reportList);
+           });
+       }        
+    };
+
+    $scope.exportReport = function(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name
+        filename = filename?filename+'.xls':'Bin Request Summary.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }    
+          
 });
 
 app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParams, $window, $route) {
@@ -5081,7 +5158,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "send": 'I'
         },
         "binrequest": {
-            "approve": 'I'
+            "approve": 'I',
+            "delete": 'I',
+            "export": 'I'
         },
         "feedback": {
             "view": 'I'
@@ -5351,7 +5430,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "send": 'A'
                         },
                         "binrequest": {
-                            "approve": 'A'
+                            "approve": 'A',
+                            "delete": 'A',
+                            "export": 'A'
                         },
                         "feedback": {
                             "view": 'A'
@@ -5542,7 +5623,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "send": 'I'
                         },
                         "binrequest": {
-                            "approve": 'I'
+                            "approve": 'I',
+                            "delete": 'I',
+                            'Export': 'I'
                         },
                         "feedback": {
                             "view": 'I'
