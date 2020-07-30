@@ -3114,6 +3114,29 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         }else{
             $scope.brHistUpdateList = $scope.reqDetail.brHistUpdate.split("\n");
         }
+
+        var imgArray = [];
+        if($scope.reqDetail.icImg != null){
+            imgArray.push({"url": $scope.reqDetail.icImg, "name": "IC"});
+        }
+        if($scope.reqDetail.binImg != null){
+            imgArray.push({"url": $scope.reqDetail.binImg, "name": "Bin"});
+        }
+        if($scope.reqDetail.utilityImg != null){
+            imgArray.push({"url": $scope.reqDetail.utilityImg, "name": "Utility Bill"});
+        }
+        if($scope.reqDetail.assessmentImg != null){
+            imgArray.push({"url": $scope.reqDetail.assessmentImg, "name": "Assessment Bill"});
+        }
+        if($scope.reqDetail.tradingImg != null){
+            imgArray.push({"url": $scope.reqDetail.tradingImg, "name": "Trading License"});
+        }
+        if($scope.reqDetail.policeImg != null){
+            imgArray.push({"url": $scope.reqDetail.policeImg, "name": "Police Report"});
+        }     
+        $http.post('/getBinReqImgForPDF', imgArray).then(function (response){
+            $scope.imgArray = response.data;
+        });          
         
     });
     
@@ -3163,7 +3186,7 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         }
 
 
-    };
+    };  
 
     $scope.confirmStatus = function () {
         $scope.entry.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
@@ -3185,6 +3208,87 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         }, function (error) {
             console.log(error);
         });
+    }
+
+    $scope.printBinReqImgPDF = function(){
+
+        var doc = new jsPDF();
+        var canvas, context, imgData;
+
+
+        loadImages($scope.imgArray,function(images){
+                //create a canvas
+                canvas = document.createElement('canvas');
+                document.body.appendChild(canvas);
+                canvas.width = 1100;
+                canvas.height =1700;   
+                //add the images
+                context = canvas.getContext('2d');
+                context.fillStyle = "white";
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                for(var item in images){
+                    var x, y;                                             
+                    if(item == 0){
+                        x = 50;
+                        y = 5;
+                    }
+                    else if(item == 1){
+                        x = 400;
+                        y = 5;
+                    }
+                    else if(item == 2){
+                        x = 50;
+                        y = 325;
+                    }
+                    else if(item == 3){
+                        x = 400;
+                        y = 325;
+                    }
+                    else if(item == 4){
+                        x = 50;
+                        y = 650;
+                    }
+                    else if(item == 15){
+                        x = 400;
+                        y = 650;
+                    }
+                    context.drawImage(images[item], x, y, 300, 300);
+                }
+
+                imgData = canvas.toDataURL('image/jpeg');
+                document.body.removeChild(canvas);      
+
+                doc.addImage(imgData, 'JPEG', 0, 0,300, 500);  
+            // doc.addImage(base64Img, 'JPEG', 10, 10, 50, 50, 'monkey');
+                // doc.output('datauri');
+                // doc.save('testing.pdf');
+                var string = doc.output('datauristring');
+                var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
+                var x = window.open();
+                x.document.open();
+                x.document.write(iframe);
+                x.document.close();                                                  
+        }); 
+        
+
+        function loadImages(sources, callback) {
+            var images = {};
+            var loadedImages = 0;
+            var numImages = 0;
+            // get num of sources
+            for(var src in sources) {
+                numImages++;
+            }
+            for(var src in sources) {
+                images[src] = new Image();
+                images[src].onload = function() {
+                    if(++loadedImages >= numImages) {
+                        callback(images);
+                    }
+                };
+                images[src].src = sources[src].url;
+            }
+        }
     }
 
 });

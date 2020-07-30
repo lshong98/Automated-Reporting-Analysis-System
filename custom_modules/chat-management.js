@@ -207,6 +207,9 @@ app.post('/getChats', function (req, resp) {
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
         database.query(sqlUser, function (err, res) {
             if (!err) {
+                console.log("Chat-Management.js - ln210: " + sqlUser);
+                console.log("Chat-Management.js - ln211: " + data.user);
+                console.log("Chat-Management.js - ln212: " + res[0].userID);
                 userID = res[0].userID;
                 var sql = "SELECT complaintID,userID,staffID, DATE_FORMAT(complaintDate, '%Y-%m-%d %T') AS date,premiseType,complaint,days,remarks,status,status,complaintAddress,readStat FROM tblcomplaint WHERE userID = '" + userID + "' ORDER BY complaintID DESC, complaintDate DESC";
                 database.query(sql, function (err, res) {

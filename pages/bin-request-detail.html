@@ -165,8 +165,11 @@
             <br/>
             <p><strong>Status Updates History: </strong><div data-ng-repeat="brHistItem in brHistUpdateList">{{brHistItem}}</div></p>
         </div>
-        <div class="col-md-6">
-            <h3>Photo(s) attached</h3>
+        <div class="col-md-6" id="test">
+            <div class="row">
+                <div class="col-md-10"><h3>Photo(s) attached</h3></div>
+                <div class="col-md-2"><button data-ng-click="printBinReqImgPDF()" class="btn btn-primary">PDF</button></div>
+            </div>
             <div class="row">
                 <div class="col-md-6">
                     <h6>IC</h6>
@@ -248,7 +251,7 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.1/jspdf.debug.js" integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" crossorigin="anonymous"></script>
 <script>
     function showRejectReasonSelect(element){
         document.getElementById('binReqRejectReason').style.display = element.value == "Rejected" ? 'block' : 'none';

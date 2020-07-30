@@ -20,7 +20,7 @@ var webpush = require('web-push');
 var bodyParser = require('body-parser');
 var util = require('util');
 
-var SVR_PORT = process.env.SERVER_PORT || 8181;
+var SVR_PORT = process.env.SERVER_PORT || 8080;
 
 exports.app = app;
 exports.bcrypt = bcrypt;

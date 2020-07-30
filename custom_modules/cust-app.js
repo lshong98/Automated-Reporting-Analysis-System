@@ -42,6 +42,7 @@ const {
 } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const mailer_cred = require('../custapp-mailer-credentials.json');
+const { response } = require('express');
 const mailer_id = mailer_cred.client_id;
 const mailer_sec = mailer_cred.client_secret;
 const mailer_ref_tkn = mailer_cred.refresh_token;
@@ -1712,6 +1713,7 @@ app.post('/getInfo', function (req, resp) {
     req.addListener('end', function () {
         var sql = "SELECT * FROM tbluser WHERE userEmail = '" + data.user + "'";
         database.query(sql, function (err, res) {
+            console.log( "getInfo:" + sql);
             console.log( "getInfo:" + util.inspect(res[0], false, null, true));
             console.log( "getInfo:" + res[0].address);
             if (res != undefined) {
@@ -1726,6 +1728,35 @@ app.post('/getInfo', function (req, resp) {
             }
         });
     });
+});
+
+app.post('/getBinReqImgForPDF',function(req,res){
+
+    const bucketName = 'trienekens-management-portal-images';
+    var responsePathDir = [];
+
+    for(var i = 0; i < req.body.length; i++){
+        var srcFilename = 'images/BinReqImg/' + req.body[i].url.split('/')[6];
+        var destFilename = './images/BinReqImg/' + req.body[i].url.split('/')[6];
+
+        var binReqPDFStorage = new Storage();
+
+        downloadFile().catch(console.error);
+        // responsePathDir.push({url: "http://localhost:8181/images/BinReqImg/" + req.body[i].url.split('/')[6]});
+        responsePathDir.push({url: "https://trienekens-management-portal.appspot.com/images/BinReqImg/" + req.body[i].url.split('/')[6]});
+
+        async function downloadFile() {         
+            const options = {
+                // The path to which the file should be downloaded, e.g. "./file.txt"
+                destination: destFilename,
+            };
+            // Downloads the file
+            await binReqPDFStorage.bucket(bucketName).file(srcFilename).download(options);
+
+        }
+    }
+
+    res.send(responsePathDir);
 });
 
 app.post('/getTaman', function (req, resp) {
