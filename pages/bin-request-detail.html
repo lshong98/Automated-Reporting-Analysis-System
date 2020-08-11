@@ -118,6 +118,7 @@
                             <option value="Image not clear">Image not clear</option>
                             <option value="More documents needed">More documents needed</option>
                             <option value="Invalid address">Invalid address</option>
+                            <option value="Others">Others</option>
                         </select>
                         <br/>
                         <label for="BinRejInfo"><strong>Rejection extra info given to customer:</strong></label><br/>
@@ -162,6 +163,8 @@
             <p><strong>Bin Type: </strong>{{reqDetail.type}}</p>
             <p><strong>Reason for Request: </strong>{{reqDetail.reason}}</p>
             <p><strong>Remarks: </strong>{{reqDetail.remarks}}</p>
+            <p><strong>Pick Up:</strong>{{reqDetail.pickUp}}</p>
+            <p><strong>Bin Serial No:</strong>{{reqDetail.binSerialNo}}</p>
             <br/>
             <p><strong>Status Updates History: </strong><div data-ng-repeat="brHistItem in brHistUpdateList">{{brHistItem}}</div></p>
         </div>

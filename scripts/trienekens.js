@@ -3105,7 +3105,9 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             'rejectReason': request[0].rejectReason,
             'rejectExtraInfo': request[0].rejectExtraInfo,
             'brHistUpdate': request[0].brHistUpdate,
-            'userEmail': request[0].userEmail
+            'userEmail': request[0].userEmail,
+            'pickUp': request[0].pickUp,
+            'binSerialNo': request[0].binSerialNo
         };
         $scope.reqDate = $filter('date')($scope.reqDetail.reqDate, 'yyyy-MM-dd HH:MM:ss');
         $scope.entry.acrBin = 'no';
@@ -3114,6 +3116,9 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
         }else{
             $scope.brHistUpdateList = $scope.reqDetail.brHistUpdate.split("\n");
         }
+        if($scope.reqDetail.pickUp == null){
+            $scope.reqDetail.pickUp = "";
+        }    
 
         var imgArray = [];
         if($scope.reqDetail.icImg != null){
