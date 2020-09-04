@@ -70,7 +70,7 @@
                                                 <td data-ng-bind="c.complaintDate"></td>
                                                 <td data-ng-bind="c.logisticsDateTime"></td>
                                                 <td data-ng-bind="c.customerDateTime"></td>
-                                                <td data-ng-bind="c.name"></td>
+                                                <td><span data-ng-bind="c.name"></span> <span data-ng-bind="c.contactStatus" data-ng-class="{'badge badge-danger': c.contactStatus == 'NA', 'badge badge-warning': c.contactStatus == 'WN', 'badege badge-info': c.contactStatus == 'NN', 'badge badge-dark': c.contactStatus == 'OT', 'badge badge-success': c.contactStatus == 'Complete'}"></span></td>
                                                 <td data-ng-bind="c.serviceType"></td>
                                                 <td data-ng-bind="c.company"></td>
                                                 <td data-ng-bind="c.department"></td>

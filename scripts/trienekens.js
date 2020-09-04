@@ -8453,6 +8453,19 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
             if ($scope.complaintOfficerList[i].status == null) {
                 $scope.complaintOfficerList[i].status = "N/A";
             }
+
+            var contactStatus = $scope.complaintOfficerList[i].contactStatus.split(":");
+             if(contactStatus[0] == "1"){
+                $scope.complaintOfficerList[i].contactStatus = "NA";
+            }else if(contactStatus[0] == "2"){
+                $scope.complaintOfficerList[i].contactStatus = "WN";
+            }else if(contactStatus[0] == "3"){
+                $scope.complaintOfficerList[i].contactStatus = "NN";
+            }else if(contactStatus[0] == "4"){
+                $scope.complaintOfficerList[i].contactStatus = "OT";
+            }else if(contactStatus[0] == '0'){
+                $scope.complaintOfficerList[i].contactStatus = "Complete";
+            }
         }
 
         $scope.filterWebComplaintList = angular.copy($scope.complaintOfficerList);
@@ -8579,7 +8592,6 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         }, true);
 
         $scope.showbadge = "{'badge badge-danger': c.status == 'Invalid', 'badge badge-warning': c.status == 'Pending', 'badge badge-primary': c.status == 'Open', 'badge badge-success': c.status == 'Closed'}";
-
         $scope.unreadAppRowControl = "{'table-active': c.readStat == 'u'}";
     });
 
