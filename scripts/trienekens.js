@@ -8423,6 +8423,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
     //get verified complaint list
     $http.get('/getComplaintOfficerList').then(function (response) {
+        console.log(response);
 
         $scope.complaintOfficerList = response.data;
         $scope.searchWebComplaintFilter = '';
@@ -8454,17 +8455,21 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 $scope.complaintOfficerList[i].status = "N/A";
             }
 
-            var contactStatus = $scope.complaintOfficerList[i].contactStatus.split(":");
-             if(contactStatus[0] == "1"){
-                $scope.complaintOfficerList[i].contactStatus = "NA";
-            }else if(contactStatus[0] == "2"){
-                $scope.complaintOfficerList[i].contactStatus = "WN";
-            }else if(contactStatus[0] == "3"){
-                $scope.complaintOfficerList[i].contactStatus = "NN";
-            }else if(contactStatus[0] == "4"){
-                $scope.complaintOfficerList[i].contactStatus = "OT";
-            }else if(contactStatus[0] == '0'){
-                $scope.complaintOfficerList[i].contactStatus = "Complete";
+            if($scope.complaintOfficerList[i].contactStatus == null){
+                $scope.complaintOfficerList[i].contactStatus = "";
+            }else{
+                var contactStatus = $scope.complaintOfficerList[i].contactStatus.split(":");
+                if(contactStatus[0] == "1"){
+                    $scope.complaintOfficerList[i].contactStatus = "NA";
+                }else if(contactStatus[0] == "2"){
+                    $scope.complaintOfficerList[i].contactStatus = "WN";
+                }else if(contactStatus[0] == "3"){
+                    $scope.complaintOfficerList[i].contactStatus = "NN";
+                }else if(contactStatus[0] == "4"){
+                    $scope.complaintOfficerList[i].contactStatus = "OT";
+                }else if(contactStatus[0] == '0'){
+                    $scope.complaintOfficerList[i].contactStatus = "Complete";
+                }
             }
         }
 
