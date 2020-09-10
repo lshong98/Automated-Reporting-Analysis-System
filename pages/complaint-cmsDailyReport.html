@@ -1,0 +1,101 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>CMS Daily Report(Municipal Waste)</h1>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="startDate" class="col-md-1 col-form-label form-label-width">Start Date</label>
+    <div class="col-md-3">
+        <input type="date" id="startDate" class="form-control mx-sm-2" data-ng-model="startDate" data-ng-change="dateRangeChange()"/>
+    </div>
+</div>    
+
+<div class="form-group row">
+    <label for="endDate" class="col-md-1 col-form-label form-label-width">End Date</label>
+    <div class="col-md-3">
+        <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="endDate" data-ng-change="dateRangeChange()"/>
+    </div>
+    <div class="col-md-3 offset-md-5">
+        <a href="javascript:exportTableToExcel('cmsDailyReportTbl')" class="btn btn-md btn-primary clearfix">Export to Excel</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table" id="cmsDailyReportTbl">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Type of Complaint</th>
+                        <th>TS</th>
+                        <th>MP</th>
+                        <th>TAK</th>
+                        <th>Area Code</th>
+                        <th>Driver</th>
+                        <th>Date Time feedback</th>
+                        <th>Forward Date(contractor)</th>
+                        <th>Date Time of Collection</th>
+                        <th>Main Factor</th>
+                        <th>Remarks</th>
+                        <th>Reviewed By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="c in filterCmsExportList">
+                        <td data-ng-bind="c.complaintDate"></td>
+                        <td data-ng-bind="c.complaintTime"></td>
+                        <td data-ng-bind="c.type"></td>
+                        <td data-ng-bind="c.ts"></td>
+                        <td data-ng-bind="c.mp"></td>
+                        <td data-ng-bind="c.tak"></td>
+                        <td data-ng-bind="c.area"></td>
+                        <td data-ng-bind="c.driver"></td>
+                        <td data-ng-bind="c.feedbackDateTime"></td>
+                        <td data-ng-bind="c.forwardSubconDateTime"></td>
+                        <td data-ng-bind="c.wcdSentences"></td>
+                        <td>4</td>
+                        <td data-ng-bind="c.remarks"></td>
+                        <td data-ng-bind="c.logsReview"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="/scripts/html2canvas.min.js"></script>
+<script>
+
+    function exportTableToExcel(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        
+        // Specify file name
+        filename = filename?filename+'.xls':'CMS_Daily_Report.xls';
+        
+        // Create download link element
+        downloadLink = document.createElement("a");
+        
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+        
+            // Setting the file name
+            downloadLink.download = filename;
+            
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+    </script>   

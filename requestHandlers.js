@@ -166,6 +166,10 @@ app.get('/complaint-export',function (req, res){
     'use strict';
     res.sendFile('pages/complaint-export.html', {root: __dirname});
 });
+app.get('/complaint-cmsDailyReport',function (req, res){
+    'use strict';
+    res.sendFile('pages/complaint-cmsDailyReport.html', {root: __dirname});
+});
 app.get('/complaint-officer', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-officer.html', {root: __dirname});

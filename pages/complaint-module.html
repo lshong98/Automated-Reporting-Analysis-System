@@ -21,6 +21,12 @@
     </div>
     
 </div>
+<div class="row" data-ng-show="nowModule=='log'">
+    <div class="col-md-1">
+        <button class="btn btn-primary" data-ng-show="showlogs.view == 'A'" data-ng-click="exportCmsDailyReport()"><i class="fa fa-plus"></i> CMS Daily Report</button>   
+    </div>
+    
+</div>
 
 <br/>
 
@@ -159,7 +165,8 @@
                                                 <th width="15%" data-ng-click="logsOrderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="logsOrderBy('staff');">By <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="logsOrderBy('department');">Processing Department <i class="fas fa-sort-down"></i></th>                                        
-                                                <th width="10%" data-ng-click="logsOrderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                                <th width="5%" data-ng-click="logsOrderBy('status');">Status <i class="fas fa-sort-down"></i></th>
+                                                <th width="5%">Reviewed By:</th>
                                             </tr>
                                         </thead>
                                         <tbody>               
@@ -171,6 +178,7 @@
                                                 <td data-ng-bind="l.staff"></td>
                                                 <td data-ng-bind="l.department"></td>
                                                 <td data-ng-bind="l.status"></td>
+                                                <td data-ng-bind="l.logsReview"></td>
                                             </tr>
                                         </tbody>
                                     </table>

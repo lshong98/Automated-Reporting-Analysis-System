@@ -397,7 +397,7 @@ app.get('/getComplaintOfficerList', function(req, res) {
 
 app.get('/getLogisticsComplaintList', function(req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.status AS 'status', tblstaff.staffName AS 'staff', tblcomplaintofficer.logsReadState AS 'logsReadState' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.logisticsBy = tblstaff.staffID WHERE step >= 1 AND tblcomplaintofficer.activeStatus = '1' ORDER BY tblcomplaintofficer.creationDateTime DESC";
+    var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.status AS 'status', tblstaff.staffName AS 'staff', tblcomplaintofficer.logsReadState AS 'logsReadState', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.logisticsBy = tblstaff.staffID WHERE step >= 1 AND tblcomplaintofficer.activeStatus = '1' ORDER BY tblcomplaintofficer.creationDateTime DESC";
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -420,6 +420,19 @@ app.get('/getComplaintExportList', function(req, res){
             res.json(result);
         }
     })
+});
+
+app.get('/getCmsDailyReportList', function(req, res){
+    'use strict';
+
+    var sql="SELECT tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDateTime', tblcomplaintofficer.type as 'type', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.under AS 'area', tblstaff.staffName AS 'driver', CONCAT(tblcomplaintofficer.statusDate,' ', tblcomplaintofficer.statusTime) AS 'feedbackDateTime', CONCAT(tblcomplaintofficer.forwardedDate,' ',tblcomplaintofficer.forwardedTime) AS 'forwardSubconDateTime', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblcomplaintofficer.remarks AS 'remarks', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID ORDER BY complaintDateTime DESC";
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }else{
+            res.json(result);
+        }
+    });
 });
 
 app.post('/getComplaintOfficerDetail', function(req, res) {
@@ -643,9 +656,10 @@ app.post('/verifyAppComp', function(req, res) {
         req.body.img = "";
     }
     
+    var typeFormatted = req.body.type.replace(/'/g,"\\'");
 
     f.makeID("complaint", req.body.creationDate).then(function(ID) {
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, cmsStatus, activeStatus, status, custStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.company + "','" + req.body.telNo + "', '" + req.body.address + "','" + req.body.type + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '" + req.body.cmsStatus + "', '1', '" + req.body.lgStatus + "', '" + req.body.bdStatus + "')";
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, cmsStatus, activeStatus, status, custStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.company + "','" + req.body.telNo + "', '" + req.body.address + "','" + typeFormatted + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '" + req.body.cmsStatus + "', '1', '" + req.body.lgStatus + "', '" + req.body.bdStatus + "')";
 
         database.query(sql, function(err, result) {
             if (err) {
