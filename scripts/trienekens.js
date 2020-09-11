@@ -8985,18 +8985,37 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                 $scope.cmsDailyReportList[i].ts = "1";
                 $scope.cmsDailyReportList[i].mp = "-";
                 $scope.cmsDailyReportList[i].tak = "-";
-                $scope.noTS++;
             }else if($scope.cmsDailyReportList[i].subcon == "Mega Power"){
                 $scope.cmsDailyReportList[i].ts = "-";
                 $scope.cmsDailyReportList[i].mp = "1";
                 $scope.cmsDailyReportList[i].tak = "-";
-                $scope.noMP++;
             }else if($scope.cmsDailyReportList[i].subcon == "TAK"){
                 $scope.cmsDailyReportList[i].ts = "-";
                 $scope.cmsDailyReportList[i].mp = "-";
                 $scope.cmsDailyReportList[i].tak = "1";
-                $scope.noTAK++;
             }
+
+            //formulate reason
+            if($scope.cmsDailyReportList[i].reason == 1){
+                $scope.cmsDailyReportList[i].reason = "Missed Collection(1)";
+            }else if($scope.cmsDailyReportList[i].reason == 2){
+                $scope.cmsDailyReportList[i].reason = "Shortage Manpower(1)";
+            }else if($scope.cmsDailyReportList[i].reason == 3){
+                $scope.cmsDailyReportList[i].reason = "Truck Breakdown(1)";
+            }else if($scope.cmsDailyReportList[i].reason == 4){
+                $scope.cmsDailyReportList[i].reason = "Truck Full(1)";
+            }else if($scope.cmsDailyReportList[i].reason == 5){
+                $scope.cmsDailyReportList[i].reason = "Bin Not Sent Back(2)";
+            }else if($scope.cmsDailyReportList[i].reason == 6){
+                $scope.cmsDailyReportList[i].reason = "Leachate(3)";
+            }else if($scope.cmsDailyReportList[i].reason == 7){
+                $scope.cmsDailyReportList[i].reason = "Other(4)";
+            }else if($scope.cmsDailyReportList[i].reason == 8){
+                $scope.cmsDailyReportList[i].reason = "RORO(5)";
+            }
+
+            //formulate review date
+            $scope.cmsDailyReportList[i].logsReviewDate = $filter('date')($scope.cmsDailyReportList[i].logsReviewDate, 'yyyy-MM-dd');
 
             //formulate for area code
             if($scope.cmsDailyReportList[i].area != null){
@@ -9060,6 +9079,9 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
             var compDate = new Date($scope.cmsDailyReportList[i].complaintDate);
             if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
                 $scope.filterCmsExportList[filterAddCount] = $scope.cmsDailyReportList[i];
+                if($scope.cmsDailyReportList[i].subcon == "Trienekens"){ $scope.noTS++; }
+                if($scope.cmsDailyReportList[i].subcon == "Mega Power"){ $scope.noMP++; }
+                if($scope.cmsDailyReportList[i].subcon == "TAK"){ $scope.noTAK++; }
                 filterAddCount += 1;
             }
         }
@@ -9543,10 +9565,12 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         'status': 'open',
         'statusDate': '',
         'statusTime': '',
+        'reason': '',
         'remark': '',
         'logsImg': 'undefined|undefined|undefined',
         'coID': $routeParams.complaintCode,
         'driver': '',
+        'truck': '',
         'wasteColDT': '',
         'klgStatus': ''
     };
@@ -9724,6 +9748,24 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.remarksEditBtn = true;
                     $scope.remarksUpdateCancelBtn = false;
                     $scope.recordremarks = $scope.fullComplaintDetail.remarks;
+
+                    if($scope.fullComplaintDetail.reason == 1){
+                        $scope.fullComplaintDetail.reason = "Missed Collection(1)";
+                    }else if($scope.fullComplaintDetail.reason == 2){
+                        $scope.fullComplaintDetail.reason = "Shortage Manpower(1)";
+                    }else if($scope.fullComplaintDetail.reason == 3){
+                        $scope.fullComplaintDetail.reason = "Truck Breakdown(1)";
+                    }else if($scope.fullComplaintDetail.reason == 4){
+                        $scope.fullComplaintDetail.reason = "Truck Full(1)";
+                    }else if($scope.fullComplaintDetail.reason == 5){
+                        $scope.fullComplaintDetail.reason = "Bin Not Sent Back(2)";
+                    }else if($scope.fullComplaintDetail.reason == 6){
+                        $scope.fullComplaintDetail.reason = "Leachate(3)";
+                    }else if($scope.fullComplaintDetail.reason == 7){
+                        $scope.fullComplaintDetail.reason = "Other(4)";
+                    }else if($scope.fullComplaintDetail.reason == 8){
+                        $scope.fullComplaintDetail.reason = "RORO(5)";
+                    }
                     
                     $scope.wcdEditBtn = false;
 
@@ -9896,6 +9938,10 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
     $http.get('/getDriverList').then(function (response) {
         $scope.driverList = response.data;
+    });
+
+    $http.get('/getTruckList').then(function(response){
+        $scope.truckList = response.data;
     });
 
 
@@ -10081,7 +10127,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.logistics.subTime = null;
         }
 
-        if ($scope.logistics.sub == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "" ) {
+        if ($scope.logistics.sub == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "" || $scope.logistics.reason =="" || $scope.logistics.truck == "") {
 
             $scope.notify("error", "There has some blank column");
             $scope.showSubmitBtn = true;
@@ -10092,6 +10138,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                 $scope.logistics.wasteColDT = ""
             }
             
+            $scope.showSubmitBtn = true;
+            console.log($scope.logistics);
             $http.post('/submitLogisticsComplaint', $scope.logistics).then(function (response) {
                 $scope.showSubmitBtn = true;
                 if (response.data.status == "success") {
@@ -10455,6 +10503,25 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $http.post('/getComplaintOfficerDetail', $scope.coIDobj).then(function (response) {
         $scope.detailObj = response.data.data[0];
         $scope.typeOption = $scope.detailObj.services;
+
+
+        if($scope.detailObj.reason == 1){
+            $scope.detailObj.reason = "Missed Collection(1)";
+        }else if($scope.detailObj.reason == 2){
+            $scope.detailObj.reason = "Shortage Manpower(1)";
+        }else if($scope.detailObj.reason == 3){
+            $scope.detailObj.reason = "Truck Breakdown(1)";
+        }else if($scope.detailObj.reason == 4){
+            $scope.detailObj.reason = "Truck Full(1)";
+        }else if($scope.detailObj.reason == 5){
+            $scope.detailObj.reason = "Bin Not Sent Back(2)";
+        }else if($scope.detailObj.reason == 6){
+            $scope.detailObj.reason = "Leachate(3)";
+        }else if($scope.detailObj.reason == 7){
+            $scope.detailObj.reason = "Other(4)";
+        }else if($scope.detailObj.reason == 8){
+            $scope.detailObj.reason = "RORO(5)";
+        }
 
         //init images
         $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];

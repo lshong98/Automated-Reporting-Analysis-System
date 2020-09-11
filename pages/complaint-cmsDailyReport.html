@@ -34,6 +34,7 @@
                         <th>TAK</th>
                         <th>Area Code</th>
                         <th>Driver</th>
+                        <th>Truck</th>
                         <th>Date Time feedback</th>
                         <th>Forward Date(contractor)</th>
                         <th>Date Time of Collection</th>
@@ -52,12 +53,30 @@
                         <td data-ng-bind="c.tak"></td>
                         <td data-ng-bind="c.area"></td>
                         <td data-ng-bind="c.driver"></td>
+                        <td data-ng-bind="c.truck"></td>
                         <td data-ng-bind="c.feedbackDateTime"></td>
                         <td data-ng-bind="c.forwardSubconDateTime"></td>
                         <td data-ng-bind="c.wcdSentences"></td>
-                        <td>4</td>
+                        <td data-ng-bind="c.reason"></td>
                         <td data-ng-bind="c.remarks"></td>
-                        <td data-ng-bind="c.logsReview"></td>
+                        <td>{{c.logsReview}} - {{c.logsReviewDate}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{noTS}}</td>
+                        <td>{{noMP}}</td>
+                        <td>{{noTAK}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
