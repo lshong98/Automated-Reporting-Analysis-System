@@ -146,6 +146,10 @@ app.get('/bin-database', function (req, res) {
     'use strict';
     res.sendFile('pages/bin-database.html', {root: __dirname});
 });
+app.get('/bdb', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bdb.html', {root: __dirname});
+});
 app.get('/bin-inventory', function (req, res) {
     'use strict'; 
     res.sendFile('pages/bin-inventory.html', {root: __dirname});

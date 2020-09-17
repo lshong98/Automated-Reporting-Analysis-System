@@ -608,6 +608,13 @@ app.service('storeDataService', function () {
             },
             "complaintlogs": {
                 "view": 'I'
+            },
+            "bdb": {
+                "view": 'I',
+                "create": 'I',
+                "edit": 'I',
+                "delete": 'I',
+                "export": 'I'
             }
         },
         "pagination": {
@@ -5315,6 +5322,13 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         },
         "complaintlogs": {
             "view": 'I'
+        },
+        "bdb": {
+            "view": 'I',
+            "create": 'I',
+            "edit": 'I',
+            "delete": 'I',
+            "export": 'I'
         }
     };
 
@@ -5587,6 +5601,13 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         },
                         "complaintlogs": {
                             "view": 'A'
+                        },
+                        "bdb": {
+                            "view": 'A',
+                            "create": 'A',
+                            "edit": 'A',
+                            "delete": 'A',
+                            "export": 'A'
                         }
                     };
                 }
@@ -5770,6 +5791,13 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         },
                         "complaintlogs": {
                             "view": 'I'
+                        },
+                        "bdb": {
+                            "view": 'I',
+                            "create": 'I',
+                            "edit": 'I',
+                            "delete": 'I',
+                            "export": 'I'
                         }
                     };
                 }
@@ -8394,7 +8422,105 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
 
 });
 
+app.controller('bdbController', function($scope, $http, $filter, $window, storeDataService){
+    'use strict';
 
+    $scope.filterTruckList = [];
+    $scope.show = angular.copy(storeDataService.show.bdb);
+    $scope.pagination = angular.copy(storeDataService.pagination);
+
+    $scope.createBin = {
+        "serialNo": "",
+        "brand" : "",
+        "binSize": "",
+        "binInUse": "",
+        "date": "",
+        "name": "",
+        "contact": "",
+        "ic": "",
+        "propertyNo": "",
+        "tmnkpg": "",
+        "address": "",
+        "company": "",
+        "typeOfPro": "",
+        "icPic": "",
+        "sescoPic": "",
+        "kwbPic": "",
+        "communal": "",
+        "council": "",
+        "binStatus": "",
+        "comment": "",
+        "writtenOff": "",
+        "rcDwell": "",
+        "binCentre": "",
+        "acrfSerialNo": ""
+    }
+
+    $http.get('/getBinDatabaseList').then(function(response){
+        $scope.binList = response.data;
+        $scope.totalItems = response.data.length;
+        for(var i = 0; i < $scope.binList.length; i++){
+            $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
+        }
+    });
+
+    $scope.addBinDatabase = function(){
+        $scope.createBin.date = $filter('date')($scope.createBin.date, 'yyyy-MM-dd');
+        
+        $http.post('/addBinDatabase', $scope.createBin). then(function(response){
+            if(response.data.status=="success"){
+                $scope.notify(response.data.status, response.data.message);
+                angular.element('#createBin').modal('toggle');
+            }else{
+                $scope.notify("error", "There has some error.");
+                angular.element('#createBin').modal('toggle');
+            }
+        });
+    }
+
+    $scope.binEditModal = function(id){
+        for(var j = 0; j < $scope.binList.length; j++){
+            if($scope.binList[j].id == id){
+                $scope.editBin = $scope.binList[j];
+                $scope.editBin.date = new Date($scope.editBin.date);
+            }
+        }
+
+        angular.element('#editBin').modal('toggle');
+    }
+
+    $scope.editBinDatabase = function(){
+        $scope.editBin.date = $filter('date')($scope.editBin.date, 'yyyy-MM-dd');
+
+        $.each($scope.editBin, function (key, value) {
+            if(value == null){
+                $scope.editBin[key] = ""
+            }
+        });
+
+        console.log($scope.editBin);
+
+        $http.post('/editBinDatabase', $scope.editBin).then(function(response){
+            if(response.data.status=="success"){
+                $scope.notify(response.data.status, response.data.message);
+                angular.element('#editBin').modal('toggle');
+            }else{
+                $scope.notify("error", "There has some error.");
+                angular.element('#editBin').modal('toggle');
+            }            
+        })
+    }
+
+    $scope.deleteBinDatabase = function(id){
+        if(confirm("Do you want to Delete the Bin record?")){
+            $http.post('/deleteBindatabase',{'id': id}).then(function(response){
+                $scope.notify(response.data.status,response.data.message);
+                location.reload();
+            });
+        }
+    }
+
+});
 
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {
     'use strict';

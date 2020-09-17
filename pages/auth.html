@@ -406,6 +406,58 @@
     <div class="col-md-6">
         <div class="card">
             <!-- Default panel contents -->
+            <div class="card-header">Bin Database</div>
+            <ul class="list-group list-group-flush">               
+                <li class="list-group-item">
+                    Create Bin Database
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bdb.create"
+                            data-ng-change="changeValue(auth.bdb.create, 'create bdb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit Bin Database
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bdb.edit"
+                            data-ng-change="changeValue(auth.bdb.edit, 'edit bdb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Delete Bin Database
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bdb.delete"
+                            data-ng-change="changeValue(auth.bdb.delete, 'delete bdb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View Bin Database
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bdb.view"
+                            data-ng-change="changeValue(auth.bdb.view, 'view bdb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Export Bin Database
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bdb.export"
+                            data-ng-change="changeValue(auth.bdb.export, 'export bdb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>      
+    <!-- <div class="col-md-6">
+        <div class="card">
             <div class="card-header">Wheel Bin Database</div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
@@ -437,7 +489,7 @@
                 </li>
             </ul>
         </div>
-    </div>
+    </div> -->
     <div class="col-md-6">
         <div class="card">
             <!-- Default panel contents -->
@@ -923,7 +975,4 @@
             </ul>
         </div>
     </div>
-
-
-
 </div>

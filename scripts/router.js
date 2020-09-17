@@ -417,6 +417,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'formAuthorizationController',
         controllerAs:'formAuthorization'
     })
+    .when('/bdb', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/bdb');
+            }
+        },
+        templateUrl: '/bdb',
+        controller: 'bdbController',
+        controllerAs:'bdb'
+    })    
     .when('/complaint-module', {
         resolve: {
             "check": function (routingService, $window, $location) {
