@@ -4,6 +4,12 @@
     </div>
 </div>
 <br />
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" data-ng-model="searchBindatabaseFilter" placeholder="&#XF002; Search here..." />
+    </div>
+</div>
+<br/>
 <div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-1">
         <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New</button>
@@ -15,11 +21,6 @@
 <br />
 <div class="row" data-ng-show="show.view">
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -53,7 +54,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="b in binList | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" data-ng-click="binEditModal(b.id)">
+                            <tr data-ng-repeat="b in binList | filter: searchBin | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" data-ng-click="binEditModal(b.id)">
                                 <td>{{b.serialNo}}</td>
                                 <td>{{b.brand}}</td>
                                 <td>{{b.size}}</td>
@@ -82,6 +83,11 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
             </div>
         </div>
     </div>

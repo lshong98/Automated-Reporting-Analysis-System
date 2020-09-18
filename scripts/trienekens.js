@@ -8425,7 +8425,7 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
 app.controller('bdbController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
 
-    $scope.filterTruckList = [];
+    $scope.filterBindatabaseList = [];
     $scope.show = angular.copy(storeDataService.show.bdb);
     $scope.pagination = angular.copy(storeDataService.pagination);
 
@@ -8456,13 +8456,75 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         "acrfSerialNo": ""
     }
 
-    $http.get('/getBinDatabaseList').then(function(response){
-        $scope.binList = response.data;
-        $scope.totalItems = response.data.length;
-        for(var i = 0; i < $scope.binList.length; i++){
-            $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
-        }
+    $http.post('/getBinDatabaseList',{'limitA': 0, 'limitB': 60000}).then(function(responseA){
+        $scope.binList = responseA.data;
+        $http.post('/getBinDatabaseList',{'limitA': 60000, 'limitB': 60000}).then(function(responseB){
+            $scope.binList = $scope.binList.concat(responseB.data);
+            $http.post('/getBinDatabaseList',{'limitA': 120000, 'limitB': 60000}).then(function(responseC){
+                $scope.searchBindatabaseFilter = '';
+                $scope.binList = $scope.binList.concat(responseC.data);
+                // $scope.binList = response.data;
+                $scope.totalItems = $scope.binList.length;
+
+                for(var i = 0; i < $scope.binList.length; i++){
+                    $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
+                }
+
+                $scope.searchBin = function (bin) {
+                    return (bin.serialNo + bin.brand + bin.size + bin.binInUse + bin.date + bin.name + bin.contact + bin.ic + bin.propertyNo + bin.tmnkpg + bin.address + bin.company + bin.typeOfPro + bin.icPic + bin.sescoPic + bin.kwbPic + bin.communal + bin.council + bin.binStatus + bin.comment + bin.writtenOff + bin.rcDwell + bin.binCentre + bin.acrfSerialNo).toUpperCase().indexOf($scope.searchBindatabaseFilter.toUpperCase()) >= 0;
+                    
+                }
+
+                $scope.filterBindatabaseList = angular.copy($scope.binList);
+                $scope.totalItems = $scope.filterBindatabaseList.length;
+
+                $scope.getData = function () {
+                    return $filter('filter')($scope.filterBindatabaseList, $scope.searchBindatabaseFilter);
+                };
+
+                $scope.$watch('searchBindatabaseFilter', function (newVal, oldVal) {
+                    var vm = this;
+                    if (oldVal !== newVal) {
+                        $scope.pagination.currentPage = 1;
+                        $scope.totalItems = $scope.getData().length;
+                    }
+                    return vm;
+                }, true);                   
+            });
+        });
     });
+
+    
+    // $http.get('/getBinDatabaseList').then(function(response){
+    //     $scope.searchBindatabaseFilter = '';
+    //     $scope.binList = response.data;
+    //     $scope.totalItems = response.data.length;
+
+    //     for(var i = 0; i < $scope.binList.length; i++){
+    //         $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
+    //     }
+
+    //     $scope.searchBin = function (bin) {
+    //         return (bin.serialNo + bin.brand + bin.size + bin.binInUse + bin.date + bin.name + bin.contact + bin.ic + bin.propertyNo + bin.tmnkpg + bin.address + bin.company + bin.typeOfPro + bin.icPic + bin.sescoPic + bin.kwbPic + bin.communal + bin.council + bin.binStatus + bin.comment + bin.writtenOff + bin.rcDwell + bin.binCentre + bin.acrfSerialNo).toUpperCase().indexOf($scope.searchBindatabaseFilter.toUpperCase()) >= 0;
+            
+    //     }
+
+    //     $scope.filterBindatabaseList = angular.copy($scope.binList);
+    //     $scope.totalItems = $scope.filterBindatabaseList.length;
+
+    //     $scope.getData = function () {
+    //         return $filter('filter')($scope.filterBindatabaseList, $scope.searchBindatabaseFilter);
+    //     };
+
+    //     $scope.$watch('searchBindatabaseFilter', function (newVal, oldVal) {
+    //         var vm = this;
+    //         if (oldVal !== newVal) {
+    //             $scope.pagination.currentPage = 1;
+    //             $scope.totalItems = $scope.getData().length;
+    //         }
+    //         return vm;
+    //     }, true);        
+    // });
 
     $scope.addBinDatabase = function(){
         $scope.createBin.date = $filter('date')($scope.createBin.date, 'yyyy-MM-dd');

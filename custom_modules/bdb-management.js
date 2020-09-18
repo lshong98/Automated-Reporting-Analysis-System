@@ -7,9 +7,21 @@ var app = express();
 var database = require('./database-management');
 var f = require('./function-management');
 
-app.get('/getBinDatabaseList', function(req, res){
+// app.get('/getBinDatabaseList', function(req, res){
+//     'use strict';
+//     var sql = "SELECT * FROM tblbindatabase";
+
+//     database.query(sql, function(err, result) {
+//         if (err) {
+//             throw err;
+//         }
+//         res.json(result);
+//     });    
+// });
+app.post('/getBinDatabaseList', function(req, res){
     'use strict';
-    var sql = "SELECT * FROM tblbindatabase";
+    var sql = "SELECT * FROM tblbindatabase LIMIT " + req.body.limitA + ", " + req.body.limitB + "";
+    console.log(sql);
 
     database.query(sql, function(err, result) {
         if (err) {
