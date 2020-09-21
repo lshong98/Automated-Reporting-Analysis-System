@@ -3,92 +3,123 @@
         <h5>Bin Database</h5>
     </div>
 </div>
-<br />
-<div class="row">
-    <div class="col-md-12">
-        <input type="text" class="form-control fas" data-ng-model="searchBindatabaseFilter" placeholder="&#XF002; Search here..." />
-    </div>
-</div>
 <br/>
 <div class="row" data-ng-show="show.create == 'A'">
     <div class="col-md-1">
         <button class="btn btn-success" data-toggle="modal" data-target="#createBin"><i class="fa fa-plus"></i> New</button>
     </div>
-    <div class="col-md-1">
-        <button class="btn btn-primary" >Export</button>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label for="searchSerialNo form-label" class="col-md-1">Serial No</label>
+            <input type="text" class="form-control col-md-5" id="searchSerialNo" data-ng-model="searchSerialNo"/>
+            <button type="button" class="btn btn-primary" data-ng-click="searchFunction('serialNo')">Search</button>
+        </div>
+        <div class="form-group row">
+            <label for="searchName form-label" class="col-md-1">Name</label>
+            <input type="text" class="form-control col-md-5" id="searchName" data-ng-model="searchName"/>
+            <button type="button" class="btn btn-primary" data-ng-click="searchFunction('name')">Search</button>
+        </div>
+        <div class="form-group row">
+            <label for="searchIC form-label" class="col-md-1">IC</label>
+            <input type="text" class="form-control col-md-5" id="searchIC"  data-ng-model="searchIC"/>
+            <button type="button" class="btn btn-primary"data-ng-click="searchFunction('ic')">Search</button>
+        </div>
+        <div class="form-group row">
+            <label for="searchAddress form-label" class="col-md-1">Address</label>
+            <input type="text" class="form-control col-md-5" id="searchAddress"  data-ng-model="searchAddress"/>
+            <button type="button" class="btn btn-primary"data-ng-click="searchFunction('address')">Search</button>
+        </div>
     </div>
 </div>
 <br />
-<div class="row" data-ng-show="show.view">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped table-clickable">
-                        <thead>
-                            <tr>
-                                <th>Serial No</th>
-                                <th>Brand</th>
-                                <th>Bin Size</th>
-                                <th>Bin in Use</th>
-                                <th>Date</th>
-                                <th>Full Name</th>
-                                <th>Contact Number</th>
-                                <th>IC</th>
-                                <th>Property No</th>
-                                <th>Tmn/Kpg</th>
-                                <th>Address</th>
-                                <th>Company Name</th>
-                                <th>Type of Pro</th>
-                                <th>Picture:IC</th>
-                                <th>Picture:Sesco</th>
-                                <th>Picture: KWB/Cukai Rumah</th>
-                                <th>Communal</th>
-                                <th>Council</th>
-                                <th>Bin Status</th>
-                                <th>Comment</th>
-                                <th>Written Off</th>
-                                <th>RC Dwell</th>
-                                <th>Bin Centre</th>
-                                <th>ACRF Serial No</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-ng-repeat="b in binList | filter: searchBin | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" data-ng-click="binEditModal(b.id)">
-                                <td>{{b.serialNo}}</td>
-                                <td>{{b.brand}}</td>
-                                <td>{{b.size}}</td>
-                                <td>{{b.binInUse}}</td>
-                                <td>{{b.date}}</td>
-                                <td>{{b.name}}</td>
-                                <td>{{b.contact}}</td>
-                                <td>{{b.ic}}</td>
-                                <td>{{b.propertyNo}}</td>
-                                <td>{{b.tmnkpg}}</td>
-                                <td>{{b.address}}</td>
-                                <td>{{b.company}}</td>
-                                <td>{{b.typeOfPro}}</td>
-                                <td>{{b.icPic}}</td>
-                                <td>{{b.sescoPic}}</td>
-                                <td>{{b.kwbPic}}</td>
-                                <td>{{b.communal}}</td>
-                                <td>{{b.council}}</td>
-                                <td>{{b.binStatus}}</td>
-                                <td>{{b.comment}}</td>
-                                <td>{{b.writtenOff}}</td>
-                                <td>{{b.rcDwell}}</td>
-                                <td>{{b.binCentre}}</td>
-                                <td>{{b.acrfSerialNo}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+<div data-ng-show="showData">
+    <div class="row">
+        <div class="col-md-12">
+            <input type="text" class="form-control fas" data-ng-model="searchBindatabaseFilter" placeholder="&#XF002; Search here..." />
+        </div>
+    </div>
+    <br />
+    <div class="row" data-ng-show="show.export">
+        <div class="col-md-1">
+            <button class="btn btn-primary" data-ng-click="exportBinDatabase('binDatabaseTable')">Export</button>
+        </div>
+    </div>
+    <br/>
+    <div class="row" data-ng-show="show.view">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-clickable" id="binDatabaseTable">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Brand</th>
+                                    <th>Bin Size</th>
+                                    <th>Bin in Use</th>
+                                    <th>Date</th>
+                                    <th>Full Name</th>
+                                    <th>Contact Number</th>
+                                    <th>IC</th>
+                                    <th>Property No</th>
+                                    <th>Tmn/Kpg</th>
+                                    <th>Address</th>
+                                    <th>Company Name</th>
+                                    <th>Type of Pro</th>
+                                    <th>Picture:IC</th>
+                                    <th>Picture:Sesco</th>
+                                    <th>Picture: KWB/Cukai Rumah</th>
+                                    <th>Communal</th>
+                                    <th>Council</th>
+                                    <th>Bin Status</th>
+                                    <th>Comment</th>
+                                    <th>Written Off</th>
+                                    <th>RC Dwell</th>
+                                    <th>Bin Centre</th>
+                                    <th>ACRF Serial No</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr data-ng-repeat="b in binList | filter: searchBin | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" data-ng-click="binEditModal(b.id)"> -->
+                                <tr data-ng-repeat="b in binList | filter: searchBin " data-ng-click="binEditModal(b.id)">
+                                    <td>{{b.serialNo}}</td>
+                                    <td>{{b.brand}}</td>
+                                    <td>{{b.size}}</td>
+                                    <td>{{b.binInUse}}</td>
+                                    <td>{{b.date}}</td>
+                                    <td>{{b.name}}</td>
+                                    <td>{{b.contact}}</td>
+                                    <td>{{b.ic}}</td>
+                                    <td>{{b.propertyNo}}</td>
+                                    <td>{{b.tmnkpg}}</td>
+                                    <td>{{b.address}}</td>
+                                    <td>{{b.company}}</td>
+                                    <td>{{b.typeOfPro}}</td>
+                                    <td>{{b.icPic}}</td>
+                                    <td>{{b.sescoPic}}</td>
+                                    <td>{{b.kwbPic}}</td>
+                                    <td>{{b.communal}}</td>
+                                    <td>{{b.council}}</td>
+                                    <td>{{b.binStatus}}</td>
+                                    <td>{{b.comment}}</td>
+                                    <td>{{b.writtenOff}}</td>
+                                    <td>{{b.rcDwell}}</td>
+                                    <td>{{b.binCentre}}</td>
+                                    <td>{{b.acrfSerialNo}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-            </div>
+            <!-- <div class="row">
+                <div class="col-md-12">
+                    <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                </div>
+            </div> -->
         </div>
     </div>
 </div>

@@ -8428,6 +8428,11 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.filterBindatabaseList = [];
     $scope.show = angular.copy(storeDataService.show.bdb);
     $scope.pagination = angular.copy(storeDataService.pagination);
+    $scope.showData = false;
+    $scope.searchSerailNo = '';
+    $scope.searchName = '';
+    $scope.searchIC = '';
+    $scope.searchAddress = '';
 
     $scope.createBin = {
         "serialNo": "",
@@ -8456,32 +8461,44 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         "acrfSerialNo": ""
     }
 
-    $http.post('/getBinDatabaseList',{'limitA': 0, 'limitB': 60000}).then(function(responseA){
-        $scope.binList = responseA.data;
-        $http.post('/getBinDatabaseList',{'limitA': 60000, 'limitB': 60000}).then(function(responseB){
-            $scope.binList = $scope.binList.concat(responseB.data);
-            $http.post('/getBinDatabaseList',{'limitA': 120000, 'limitB': 60000}).then(function(responseC){
-                $scope.searchBindatabaseFilter = '';
-                $scope.binList = $scope.binList.concat(responseC.data);
-                // $scope.binList = response.data;
-                $scope.totalItems = $scope.binList.length;
+    
+    $scope.searchFunction = function(field){
+        var value = '';
+        if(field == 'serialNo'){
+            value = $scope.searchSerailNo;
+        }else if(field == 'name'){
+            value = $scope.searchName;
+        }else if(field == 'ic'){
+            value = $scope.searchIC;
+        }else if(field == 'address'){
+            value = $scope.searchAddress;
+        }
 
+        if(value == ''){
+            $scope.notify('error', 'Please Don\'t leave the search column blank!');
+        }else{
+            $http.post('/getBinDatabaseList', {'field': field, 'value': value}).then(function(response){
+                $scope.showData = true;
+                $scope.searchBindatabaseFilter = '';
+                $scope.binList = response.data;
+                $scope.totalItems = response.data.length;
+        
                 for(var i = 0; i < $scope.binList.length; i++){
                     $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
                 }
-
+        
                 $scope.searchBin = function (bin) {
                     return (bin.serialNo + bin.brand + bin.size + bin.binInUse + bin.date + bin.name + bin.contact + bin.ic + bin.propertyNo + bin.tmnkpg + bin.address + bin.company + bin.typeOfPro + bin.icPic + bin.sescoPic + bin.kwbPic + bin.communal + bin.council + bin.binStatus + bin.comment + bin.writtenOff + bin.rcDwell + bin.binCentre + bin.acrfSerialNo).toUpperCase().indexOf($scope.searchBindatabaseFilter.toUpperCase()) >= 0;
                     
                 }
-
+        
                 $scope.filterBindatabaseList = angular.copy($scope.binList);
                 $scope.totalItems = $scope.filterBindatabaseList.length;
-
+        
                 $scope.getData = function () {
                     return $filter('filter')($scope.filterBindatabaseList, $scope.searchBindatabaseFilter);
                 };
-
+        
                 $scope.$watch('searchBindatabaseFilter', function (newVal, oldVal) {
                     var vm = this;
                     if (oldVal !== newVal) {
@@ -8489,42 +8506,10 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
                         $scope.totalItems = $scope.getData().length;
                     }
                     return vm;
-                }, true);                   
+                }, true);        
             });
-        });
-    });
-
-    
-    // $http.get('/getBinDatabaseList').then(function(response){
-    //     $scope.searchBindatabaseFilter = '';
-    //     $scope.binList = response.data;
-    //     $scope.totalItems = response.data.length;
-
-    //     for(var i = 0; i < $scope.binList.length; i++){
-    //         $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
-    //     }
-
-    //     $scope.searchBin = function (bin) {
-    //         return (bin.serialNo + bin.brand + bin.size + bin.binInUse + bin.date + bin.name + bin.contact + bin.ic + bin.propertyNo + bin.tmnkpg + bin.address + bin.company + bin.typeOfPro + bin.icPic + bin.sescoPic + bin.kwbPic + bin.communal + bin.council + bin.binStatus + bin.comment + bin.writtenOff + bin.rcDwell + bin.binCentre + bin.acrfSerialNo).toUpperCase().indexOf($scope.searchBindatabaseFilter.toUpperCase()) >= 0;
-            
-    //     }
-
-    //     $scope.filterBindatabaseList = angular.copy($scope.binList);
-    //     $scope.totalItems = $scope.filterBindatabaseList.length;
-
-    //     $scope.getData = function () {
-    //         return $filter('filter')($scope.filterBindatabaseList, $scope.searchBindatabaseFilter);
-    //     };
-
-    //     $scope.$watch('searchBindatabaseFilter', function (newVal, oldVal) {
-    //         var vm = this;
-    //         if (oldVal !== newVal) {
-    //             $scope.pagination.currentPage = 1;
-    //             $scope.totalItems = $scope.getData().length;
-    //         }
-    //         return vm;
-    //     }, true);        
-    // });
+        }
+    }
 
     $scope.addBinDatabase = function(){
         $scope.createBin.date = $filter('date')($scope.createBin.date, 'yyyy-MM-dd');
@@ -8560,8 +8545,6 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
             }
         });
 
-        console.log($scope.editBin);
-
         $http.post('/editBinDatabase', $scope.editBin).then(function(response){
             if(response.data.status=="success"){
                 $scope.notify(response.data.status, response.data.message);
@@ -8577,8 +8560,38 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         if(confirm("Do you want to Delete the Bin record?")){
             $http.post('/deleteBindatabase',{'id': id}).then(function(response){
                 $scope.notify(response.data.status,response.data.message);
-                location.reload();
             });
+        }
+    }
+
+    $scope.exportBinDatabase = function(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        
+        // Specify file name
+        filename = filename?filename+'.xls':'binDatabase.xls';
+        
+        // Create download link element
+        downloadLink = document.createElement("a");
+        
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+        
+            // Setting the file name
+            downloadLink.download = filename;
+            
+            //triggering the function
+            downloadLink.click();
         }
     }
 
