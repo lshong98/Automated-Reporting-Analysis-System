@@ -435,6 +435,19 @@ app.get('/getCmsDailyReportList', function(req, res){
     });
 });
 
+app.get('/getCmsDatasheet', function(req ,res){
+    'use strict';
+
+    var sql= "SELECT tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID ORDER BY complaintDate DESC";
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }else{
+            res.json(result);
+        }
+    });
+});
+
 app.post('/getComplaintOfficerDetail', function(req, res) {
     'use strict';
 
