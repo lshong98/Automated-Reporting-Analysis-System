@@ -9315,6 +9315,72 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
     }
 });
 
+app.controller('complaintscmsStatisticsController', function($scope, $filter, $http){
+    'use strict';
+
+    var datevar = new Date();
+    $scope.date = {
+        'startDate': '',
+        'endDate': ''
+    }
+    $scope.date.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
+    $scope.date.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+
+    $scope.requestStatistics = function(date){
+        $http.post('/getCmsStatistics', date).then(function(response){
+            var myData = response.data;
+            $scope.tsCount = myData.tsCount;
+            $scope.mpCount = myData.mpCount;
+            $scope.takCount = myData.takCount;
+            $scope.roroTSCount = myData.roroTSCount;
+            $scope.roroMPCount = myData.roroMPCount;
+            $scope.roroTAKCount = myData.roroTAKCount;
+            $scope.totalROROCount = $scope.roroTSCount + $scope.roroMPCount + $scope.roroTAKCount;
+            $scope.mbksCount = myData.mbksCount;
+            $scope.dbkuCount = myData.dbkuCount;
+            $scope.mppCount = myData.mppCount;
+            $scope.mdsCount = myData.mdsCount;
+            $scope.validMWCount = myData.validMWCount;
+            $scope.validROROCount = myData.validROROCount;
+            $scope.invalidCount = myData.invalidCount;
+            $scope.missColCountTS = myData.missColCountTS;
+            $scope.shortageMPCountTS = myData.shortageMPCountTS;
+            $scope.truckBDCountTS = myData.truckBDCountTS;
+            $scope.truckFullCountTS = myData.truckFullCountTS;
+            $scope.binNSBCountTS = myData.binNSBCountTS;
+            $scope.lechateCountTS = myData.lechateCountTS;
+            $scope.otherCountTS = myData.otherCountTS;
+            $scope.roroReasonCountTS = myData.roroReasonCountTS;
+            $scope.missColCountMP = myData.missColCountMP;
+            $scope.shortageMPCountMP = myData.shortageMPCountMP;
+            $scope.truckBDCountMP = myData.truckBDCountMP;
+            $scope.truckFullCountMP = myData.truckFullCountMP;
+            $scope.binNSBCountMP = myData.binNSBCountMP;
+            $scope.lechateCountMP = myData.lechateCountMP;
+            $scope.otherCountMP = myData.otherCountMP;
+            $scope.roroReasonCountMP = myData.roroReasonCountMP;
+            $scope.missColCountTAK = myData.missColCountTAK;
+            $scope.shortageMPCountTAK = myData.shortageMPCountTAK;
+            $scope.truckBDCountTAK = myData.truckBDCountTAK;
+            $scope.truckFullCountTAK = myData.truckFullCountTAK;
+            $scope.binNSBCountTAK = myData.binNSBCountTAK;
+            $scope.lechateCountTAK = myData.lechateCountTAK;
+            $scope.otherCountTAK = myData.otherCountTAK;
+            $scope.roroReasonCountTAK = myData.roroReasonCountTAK;
+        });
+    }
+
+    $scope.requestStatistics($scope.date);
+
+    $scope.dateRangeChange = function () {
+        if ($scope.date.startDate != undefined && $scope.date.endDate != undefined && $scope.date.startDate <= $scope.date.endDate) {
+            $scope.requestStatistics($scope.date);
+            console.log("abc");
+        }
+
+    }
+});
+
 app.controller('cmsDatasheetController', function($scope, $filter, $http, $window){
     'use strict';
     var datevar = new Date();

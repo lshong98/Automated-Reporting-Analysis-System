@@ -174,6 +174,10 @@ app.get('/complaint-cmsDailyReport',function (req, res){
     'use strict';
     res.sendFile('pages/complaint-cmsDailyReport.html', {root: __dirname});
 });
+app.get('/complaint-cmsStatistics',function (req, res){
+    'use strict';
+    res.sendFile('pages/complaint-cmsStatistics.html', {root: __dirname});
+});
 app.get('/complaint-cmsDatasheet',function (req, res){
     'use strict';
     res.sendFile('pages/complaint-cmsDatasheet.html', {root: __dirname});
