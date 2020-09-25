@@ -8466,6 +8466,8 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         var value = '';
         if(field == 'serialNo'){
             value = $scope.searchSerialNo;
+        }else if(field == 'binInUse'){
+            value = $scope.searchUse;
         }else if(field == 'name'){
             value = $scope.searchName;
         }else if(field == 'ic'){

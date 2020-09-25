@@ -11,11 +11,11 @@ app.post('/getBinDatabaseList', function(req, res){
     'use strict';
     if(req.body.field == 'address'){
         var sql = "SELECT * FROM tblbindatabase WHERE address LIKE '%" +req.body.value + "%' OR tmnkpg LIKE '%" +req.body.value + "%'";
+    }else if(req.body.field == 'serialNo'){
+        var sql = "SELECT * FROM tblbindatabase WHERE serialNo LIKE '%" +req.body.value + "%' OR comment LIKE '%" +req.body.value + "%'";
     }else{
         var sql = "SELECT * FROM tblbindatabase WHERE " + req.body.field + " LIKE '%" +req.body.value + "%'";
     }
-    
-    console.log(sql);
 
     database.query(sql, function(err, result) {
         if (err) {
