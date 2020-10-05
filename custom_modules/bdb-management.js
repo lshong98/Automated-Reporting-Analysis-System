@@ -22,6 +22,8 @@ app.post('/getBinDatabaseList', function(req, res){
         var sql = "SELECT * FROM tblbindatabase WHERE address LIKE '%" +req.body.value + "%' OR tmnkpg LIKE '%" +req.body.value + "%'";
     }else if(req.body.field == 'serialNo'){
         var sql = "SELECT * FROM tblbindatabase WHERE serialNo LIKE '%" +req.body.value + "%' OR comment LIKE '%" +req.body.value + "%'";
+    }else if(req.body.field == 'date'){
+        var sql = "SELECT * FROM tblbindatabase WHERE date = '" + req.body.value + "'";
     }else{
         var sql = "SELECT * FROM tblbindatabase WHERE " + req.body.field + " LIKE '%" +req.body.value + "%'";
     }
@@ -193,5 +195,18 @@ app.post('/addBatchesBinDB', function(req, res){
         }
         res.json({"status": "success", "message": "Bins Added"});
     })
+})
+
+app.get('/getInitBinDatabase', function(req, res){
+    'use strict';
+    
+    var sql= "SELECT * FROM tblbindatabase ORDER BY date DESC LIMIT 0, 20";
+
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });   
 })
 module.exports = app;

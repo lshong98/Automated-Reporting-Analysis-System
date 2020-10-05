@@ -8433,6 +8433,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.searchName = '';
     $scope.searchIC = '';
     $scope.searchAddress = '';
+    $scope.searchDate = '';
     $scope.editBinNewPic = '';
 
     $scope.createBin = {
@@ -8465,6 +8466,35 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         "binBrand": ""
     }
 
+    $http.get('/getInitBinDatabase').then(function(response){
+        $scope.showData = true;
+        $scope.searchBindatabaseFilter = '';
+        $scope.binList = response.data;
+
+        for(var i = 0; i < $scope.binList.length; i++){
+            $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
+        }
+
+        $scope.searchBin = function (bin) {
+            return (bin.serialNo + bin.brand + bin.size + bin.binInUse + bin.date + bin.name + bin.contact + bin.ic + bin.propertyNo + bin.tmnkpg + bin.address + bin.company + bin.typeOfPro + bin.icPic + bin.sescoPic + bin.kwbPic + bin.communal + bin.council + bin.binStatus + bin.comment + bin.writtenOff + bin.rcDwell + bin.binCentre + bin.acrfSerialNo).toUpperCase().indexOf($scope.searchBindatabaseFilter.toUpperCase()) >= 0;
+            
+        }
+
+        $scope.filterBindatabaseList = angular.copy($scope.binList);
+
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterBindatabaseList, $scope.searchBindatabaseFilter);
+        };
+
+        $scope.$watch('searchBindatabaseFilter', function (newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.pagination.currentPage = 1;
+                $scope.totalItems = $scope.getData().length;
+            }
+            return vm;
+        }, true);            
+    });
     
     $scope.searchFunction = function(field){
         var value = '';
@@ -8478,6 +8508,9 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
             value = $scope.searchIC;
         }else if(field == 'address'){
             value = $scope.searchAddress;
+        }else if(field == 'date'){
+            value = new Date($scope.searchDate);
+            value = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
         }
 
         if(value == ''){

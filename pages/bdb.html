@@ -19,7 +19,10 @@
         </div>
         <div class="form-group row">
             <label for="searchName form-label" class="col-md-1">Bin Status</label>
-            <input type="text" class="form-control col-md-5" id="searchUse" data-ng-model="searchUse"/>
+            <select class="form-control col-md-5" id="searchUse" data-ng-model="searchUse">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
             <button type="button" class="btn btn-primary" data-ng-click="searchFunction('binInUse')">Search</button>
         </div>
         <div class="form-group row">
@@ -36,6 +39,11 @@
             <label for="searchAddress form-label" class="col-md-1">Address</label>
             <input type="text" class="form-control col-md-5" id="searchAddress"  data-ng-model="searchAddress"/>
             <button type="button" class="btn btn-primary"data-ng-click="searchFunction('address')">Search</button>
+        </div>
+        <div class="form-group row">
+            <label for="searchDate form-label" class="col-md-1">Date</label>
+            <input type="date" class="form-control col-md-5" id="searchDate " data-ng-model="searchDate" />
+            <button type="button" class="btn btn-primary"data-ng-click="searchFunction('date')">Search</button>
         </div>
     </div>
 </div>
@@ -74,7 +82,7 @@
                                     <th>Address</th>
                                     <th>Company Name</th>
                                     <th>Type of Pro</th>
-                                    <th>Picture: IC/ Sesco/ KWB</th>
+                                    <th>Picture: Sesco/ KWB/ Cukai Rumah</th>
                                     <th>Communal</th>
                                     <th>Council</th>
                                     <th>Bin Status</th>
@@ -134,7 +142,12 @@
                 </div>
                 <div class="form-group">
                     <label for="editBinSize form-label">Bin Size</label>
-                    <input type="text" class="form-control" id="editBinSize" data-ng-model="editBin.size" />
+                    <select class="form-control" id="editBinSize" data-ng-model="editBin.size">
+                        <option value="120L" >120L</option>
+                        <option value="240L" >240L</option>
+                        <option value="660L" >660L</option>
+                        <option value="1000L" >1000L</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="editBinUse form-label">Bin in Use</label>
@@ -177,10 +190,32 @@
                 </div>
                 <div class="form-group">
                     <label for="editTypeOfPro form-label">Type of Pro</label>
-                    <input type="text" class="form-control" id="editTypeOfPro" data-ng-model="editBin.typeOfPro" />
+                    <select class="form-control" id="editTypeOfPro" data-ng-model="editBin.typeOfPro">
+                        <option value="Condo,Apart,Flat">Condo,Apart,Flat</option>
+                        <option value="Construction Site">Construction Site</option>
+                        <option value="DBKU">DBKU</option>
+                        <option value="Gov Entity">Gov Entity</option>
+                        <option value="Government Housing">Government Housing</option>
+                        <option value="Hospital,Clinic">Hospital,Clinic</option>
+                        <option value="Hotel,Resort">Hotel,Resort</option>
+                        <option value="Household">Household</option>
+                        <option value="Market,Hawker">Market,Hawker</option>
+                        <option value="MBKS">MBKS</option>
+                        <option value="MPP">MPP</option>
+                        <option value="PlaceofWorship">PlaceofWorship</option>
+                        <option value="Private Comm">Private Comm</option>
+                        <option value="Purchased">Purchased</option>
+                        <option value="Shophouse">Shophouse</option>
+                        <option value="Stadium">Stadium</option>
+                        <option value="Temporary">Temporary</option>
+                        <option value="Uni,School,Kindergarden">Uni,School,Kindergarden</option>
+                        <option value="Utility">Utility</option>
+                        <option value="Workshop,Petrol Station">Workshop,Petrol Station</option>
+                        <option value="Factory">Factory</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="editPic form-label">Picture: IC/ Sesco/ KWB</label>
+                    <label for="editPic form-label">Picture: Sesco/ KWB/ Cukai Rumah</label>
                     <input type="file" class="form-control" id="editPic" accept="image/*" data-ng-model="editBinNewPic" app-filereader/>
                     <a href="{{editBin.pic}}" target="_blank"><img src="{{editBin.pic}}" width="300" height="300" style="object-fit: contain;"/></a>
                 </div>
@@ -263,7 +298,12 @@
                     </div>
                     <div class="form-group">
                         <label for="binSize form-label">Bin Size</label>
-                        <input type="text" class="form-control" id="binSize" data-ng-model="createBin.binSize" />
+                        <select class="form-control" id="editBinSize" data-ng-model="createBin.binSize">
+                            <option value="120L" >120L</option>
+                            <option value="240L" >240L</option>
+                            <option value="660L" >660L</option>
+                            <option value="1000L" >1000L</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="binUse form-label">Bin in Use</label>
@@ -306,10 +346,32 @@
                     </div>
                     <div class="form-group">
                         <label for="typeOfPro form-label">Type of Pro</label>
-                        <input type="text" class="form-control" id="typeOfPro" data-ng-model="createBin.typeOfPro" />
+                        <select class="form-control" id="typeOfPro" data-ng-model="createBin.typeOfPro">
+                            <option value="Condo,Apart,Flat">Condo,Apart,Flat</option>
+                            <option value="Construction Site">Construction Site</option>
+                            <option value="DBKU">DBKU</option>
+                            <option value="Gov Entity">Gov Entity</option>
+                            <option value="Government Housing">Government Housing</option>
+                            <option value="Hospital,Clinic">Hospital,Clinic</option>
+                            <option value="Hotel,Resort">Hotel,Resort</option>
+                            <option value="Household">Household</option>
+                            <option value="Market,Hawker">Market,Hawker</option>
+                            <option value="MBKS">MBKS</option>
+                            <option value="MPP">MPP</option>
+                            <option value="PlaceofWorship">PlaceofWorship</option>
+                            <option value="Private Comm">Private Comm</option>
+                            <option value="Purchased">Purchased</option>
+                            <option value="Shophouse">Shophouse</option>
+                            <option value="Stadium">Stadium</option>
+                            <option value="Temporary">Temporary</option>
+                            <option value="Uni,School,Kindergarden">Uni,School,Kindergarden</option>
+                            <option value="Utility">Utility</option>
+                            <option value="Workshop,Petrol Station">Workshop,Petrol Station</option>
+                            <option value="Factory">Factory</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="pic form-label">Picture: IC/Sesco/KWB</label>
+                        <label for="pic form-label">Picture: Sesco/ KWB/ Cukai Rumah</label>
                         <input type="file" class="form-control" id="pic" data-ng-model="createBin.pic" accept="image/*" app-filereader/>
                     </div>
                     <div class="form-group">
