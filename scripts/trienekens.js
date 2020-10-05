@@ -8433,6 +8433,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.searchName = '';
     $scope.searchIC = '';
     $scope.searchAddress = '';
+    $scope.editBinNewPic = '';
 
     $scope.createBin = {
         "serialNo": "",
@@ -8448,17 +8449,20 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         "address": "",
         "company": "",
         "typeOfPro": "",
-        "icPic": "",
-        "sescoPic": "",
-        "kwbPic": "",
+        "pic": "",
         "communal": "",
         "council": "",
         "binStatus": "",
         "comment": "",
-        "writtenOff": "",
-        "rcDwell": "",
-        "binCentre": "",
-        "acrfSerialNo": ""
+        "writtenOff": ""
+    }
+
+    $scope.createBatches={
+        "serialChar": "",
+        "serialNum": "",
+        "volume": "",
+        "size": "",
+        "binBrand": ""
     }
 
     
@@ -8516,7 +8520,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.addBinDatabase = function(){
         $scope.createBin.date = $filter('date')($scope.createBin.date, 'yyyy-MM-dd');
         
-        $http.post('/addBinDatabase', $scope.createBin). then(function(response){
+        $http.post('/addBinDatabase', $scope.createBin).then(function(response){
             if(response.data.status=="success"){
                 $scope.notify(response.data.status, response.data.message);
                 angular.element('#createBin').modal('toggle');
@@ -8527,11 +8531,28 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         });
     }
 
+    $scope.addBinBatches = function(){
+        if($scope.createBatches.serialChar == "" || $scope.createBatches.serialNum == "" || $scope.createBatches.volume == "" || $scope.createBatches.size == "" || $scope.createBatches.binBrand == ""){
+            $scope.notify("error", "Please fill in the blank column");
+        }else{
+            $http.post('/addBatchesBinDB', $scope.createBatches).then(function(response){
+                if(response.data.status == "success"){
+                    $scope.notify("success", "Bins Added");
+                }else{
+                    $scope.notify("error", "Something Wrong!");
+                }
+                
+            })
+        }
+    }
+
     $scope.binEditModal = function(id){
+        console.log(id);
         for(var j = 0; j < $scope.binList.length; j++){
             if($scope.binList[j].id == id){
                 $scope.editBin = $scope.binList[j];
                 $scope.editBin.date = new Date($scope.editBin.date);
+                console.log($scope.editBin);
             }
         }
 
@@ -8540,6 +8561,12 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
 
     $scope.editBinDatabase = function(){
         $scope.editBin.date = $filter('date')($scope.editBin.date, 'yyyy-MM-dd');
+
+        if($scope.editBinNewPic != ''){
+            $scope.editBin.newPic = $scope.editBinNewPic;
+        }else{
+            $scope.editBin.newPic = '';
+        }
 
         $.each($scope.editBin, function (key, value) {
             if(value == null){

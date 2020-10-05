@@ -74,21 +74,16 @@
                                     <th>Address</th>
                                     <th>Company Name</th>
                                     <th>Type of Pro</th>
-                                    <th>Picture:IC</th>
-                                    <th>Picture:Sesco</th>
-                                    <th>Picture: KWB/Cukai Rumah</th>
+                                    <th>Picture: IC/ Sesco/ KWB</th>
                                     <th>Communal</th>
                                     <th>Council</th>
                                     <th>Bin Status</th>
                                     <th>Comment</th>
                                     <th>Written Off</th>
-                                    <th>RC Dwell</th>
-                                    <th>Bin Centre</th>
-                                    <th>ACRF Serial No</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr data-ng-repeat="b in binList | filter: searchBin | offset: (pagination.currentPage - 1) * pagination.itemsPerPage | limitTo: pagination.itemsPerPage" data-ng-click="binEditModal(b.id)"> -->
                                 <tr data-ng-repeat="b in binList | filter: searchBin " data-ng-click="binEditModal(b.id)">
                                     <td>{{b.serialNo}}</td>
                                     <td>{{b.brand}}</td>
@@ -103,31 +98,22 @@
                                     <td>{{b.address}}</td>
                                     <td>{{b.company}}</td>
                                     <td>{{b.typeOfPro}}</td>
-                                    <td>{{b.icPic}}</td>
-                                    <td>{{b.sescoPic}}</td>
-                                    <td>{{b.kwbPic}}</td>
+                                    <td><img src="{{b.pic}}" width="100" height="100" style="object-fit: contain;"/></td>
                                     <td>{{b.communal}}</td>
                                     <td>{{b.council}}</td>
                                     <td>{{b.binStatus}}</td>
                                     <td>{{b.comment}}</td>
                                     <td>{{b.writtenOff}}</td>
-                                    <td>{{b.rcDwell}}</td>
-                                    <td>{{b.binCentre}}</td>
-                                    <td>{{b.acrfSerialNo}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <!-- <div class="row">
-                <div class="col-md-12">
-                    <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="pagination.currentPage" data-max-size="pagination.maxSize" items-per-page="pagination.itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
-                </div>
-            </div> -->
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="editBin" tabindex="-1" role="dialog" aria-labelledby="editBin" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -152,7 +138,10 @@
                 </div>
                 <div class="form-group">
                     <label for="editBinUse form-label">Bin in Use</label>
-                    <input type="text" class="form-control" id="editBinUse" data-ng-model="editBin.binInUse" />
+                    <select class="form-control" id="editBinUse" data-ng-model="editBin.binInUse">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="editBinDate form-label">Date</label>
@@ -191,28 +180,38 @@
                     <input type="text" class="form-control" id="editTypeOfPro" data-ng-model="editBin.typeOfPro" />
                 </div>
                 <div class="form-group">
-                    <label for="editIcPic form-label">Picture: IC</label>
-                    <input type="text" class="form-control" id="editIcPic" data-ng-model="editBin.icPic" />
-                </div>
-                <div class="form-group">
-                    <label for="editSescoPic form-label">Picture: Sesco</label>
-                    <input type="text" class="form-control" id="editSescoPic" data-ng-model="editBin.sescoPic" />
-                </div>
-                <div class="form-group">
-                    <label for="editKwbPic form-label">Picture: KWB/Cukai Rumah</label>
-                    <input type="text" class="form-control" id="editKwbPic" data-ng-model="editBin.kwbPic" />
+                    <label for="editPic form-label">Picture: IC/ Sesco/ KWB</label>
+                    <input type="file" class="form-control" id="editPic" accept="image/*" data-ng-model="editBinNewPic" app-filereader/>
+                    <a href="{{editBin.pic}}" target="_blank"><img src="{{editBin.pic}}" width="300" height="300" style="object-fit: contain;"/></a>
                 </div>
                 <div class="form-group">
                     <label for="editCommunal form-label">Communal</label>
-                    <input type="text" class="form-control" id="editCommunal" data-ng-model="editBin.communal" />
+                    <select class="form-control" id="editCommunal" data-ng-model="editBin.communal">
+                        <option value="Commercial">Commercial</option>
+                        <option value="Residential">Residential</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="editCouncil form-label">Council</label>
-                    <input type="text" class="form-control" id="editCouncil" data-ng-model="editBin.council" />
+                    <select class="form-control" id="editCouncil" data-ng-model="editBin.council">
+                        <option value="MBKS">MBKS</option>
+                        <option value="DBKU">DBKU</option>
+                        <option value="MPP">MPP</option>
+                        <option value="MDS">MDS</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="editBinStatus form-label">Bin Status</label>
-                    <input type="text" class="form-control" id="editBinStatus" data-ng-model="editBin.binStatus" />
+                    <select class="form-control" id="editBinStatus" data-ng-model="editBin.binStatus">
+                        <option value="ACR">ACR</option>
+                        <option value="BE">BE</option>
+                        <option value="DAMAGED">Damaged</option>
+                        <option value="LOST">Lost</option>
+                        <option value="COMMUNAL:R">CommunalR</option>
+                        <option value="COMMUNAL:C">CommunalC</option>
+                        <option value="TEMPORARY">Temporary</option>
+                        <option value="PURCHASED">Purchased</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="editComment form-label">Comment</label>
@@ -220,19 +219,10 @@
                 </div>
                 <div class="form-group">
                     <label for="editWrittenOff form-label">Written Off</label>
-                    <input type="text" class="form-control" id="editWrittenOff" data-ng-model="editBin.writtenOff" />
-                </div>
-                <div class="form-group">
-                    <label for="editRcDwell form-label">RC Dwell</label>
-                    <input type="text" class="form-control" id="editRcDwell" data-ng-model="editBin.rcDwell" />
-                </div>
-                <div class="form-group">
-                    <label for="editBinCentre form-label">Bin Centre</label>
-                    <input type="text" class="form-control" id="editBinCentre" data-ng-model="editBin.binCentre" />
-                </div>
-                <div class="form-group">
-                    <label for="editAcrfSerialNo form-label">ACRF Serial No</label>
-                    <input type="text" class="form-control" id="editAcrfSerialNo" data-ng-model="editBin.acrfSerialNo" />
+                    <select class="form-control" id="editWrittenOff" data-ng-model="editBin.writtenOff">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -253,106 +243,142 @@
           </button>
         </div>
         <div class="modal-body">
-            <div class="form-group">
-                <label for="serialNo form-label">Serial No</label>
-                <input type="text" class="form-control" id="serialNo" data-ng-model="createBin.serialNo" />
-            </div>
-            <div class="form-group">
-                <label for="brand form-label">Brand</label>
-                <input type="text" class="form-control" id="brand" data-ng-model="createBin.brand" />
-            </div>
-            <div class="form-group">
-                <label for="binSize form-label">Bin Size</label>
-                <input type="text" class="form-control" id="binSize" data-ng-model="createBin.binSize" />
-            </div>
-            <div class="form-group">
-                <label for="binUse form-label">Bin in Use</label>
-                <input type="text" class="form-control" id="binUse" data-ng-model="createBin.binInUse" />
-            </div>
-            <div class="form-group">
-                <label for="binDate form-label">Date</label>
-                <input type="date" class="form-control" id="binDate " data-ng-model="createBin.date" />
-            </div>
-            <div class="form-group">
-                <label for="fullName form-label">Full Name</label>
-                <input type="text" class="form-control" id="fullName" data-ng-model="createBin.name" />
-            </div>
-            <div class="form-group">
-                <label for="contact form-label">Contact No</label>
-                <input type="text" class="form-control" id="contact" data-ng-model="createBin.contact" />
-            </div>
-            <div class="form-group">
-                <label for="ic form-label">IC</label>
-                <input type="text" class="form-control" id="ic" data-ng-model="createBin.ic" />
-            </div>
-            <div class="form-group">
-                <label for="proNo form-label">Property No</label>
-                <input type="text" class="form-control" id="proNo" data-ng-model="createBin.propertyNo" />
-            </div>
-            <div class="form-group">
-                <label for="tmnkpg form-label">Tmn/Kpg</label>
-                <input type="text" class="form-control" id="tmnkpg" data-ng-model="createBin.tmnkpg" />
-            </div>
-            <div class="form-group">
-                <label for="address form-label">Address</label>
-                <input type="text" class="form-control" id="address" data-ng-model="createBin.address" />
-            </div>
-            <div class="form-group">
-                <label for="company form-label">Company Name</label>
-                <input type="text" class="form-control" id="company" data-ng-model="createBin.company" />
-            </div>
-            <div class="form-group">
-                <label for="typeOfPro form-label">Type of Pro</label>
-                <input type="text" class="form-control" id="typeOfPro" data-ng-model="createBin.typeOfPro" />
-            </div>
-            <div class="form-group">
-                <label for="icPic form-label">Picture: IC</label>
-                <input type="text" class="form-control" id="icPic" data-ng-model="createBin.icPic" />
-            </div>
-            <div class="form-group">
-                <label for="sescoPic form-label">Picture: Sesco</label>
-                <input type="text" class="form-control" id="sescoPic" data-ng-model="createBin.sescoPic" />
-            </div>
-            <div class="form-group">
-                <label for="kwbPic form-label">Picture: KWB/Cukai Rumah</label>
-                <input type="text" class="form-control" id="kwbPic" data-ng-model="createBin.kwbPic" />
-            </div>
-            <div class="form-group">
-                <label for="communal form-label">Communal</label>
-                <input type="text" class="form-control" id="communal" data-ng-model="createBin.communal" />
-            </div>
-            <div class="form-group">
-                <label for="council form-label">Council</label>
-                <input type="text" class="form-control" id="council" data-ng-model="createBin.council" />
-            </div>
-            <div class="form-group">
-                <label for="binStatus form-label">Bin Status</label>
-                <input type="text" class="form-control" id="binStatus" data-ng-model="createBin.binStatus" />
-            </div>
-            <div class="form-group">
-                <label for="comment form-label">Comment</label>
-                <input type="text" class="form-control" id="comment" data-ng-model="createBin.comment" />
-            </div>
-            <div class="form-group">
-                <label for="writtenOff form-label">Written Off</label>
-                <input type="text" class="form-control" id="writtenOff" data-ng-model="createBin.writtenOff" />
-            </div>
-            <div class="form-group">
-                <label for="rcDwell form-label">RC Dwell</label>
-                <input type="text" class="form-control" id="rcDwell" data-ng-model="createBin.rcDwell" />
-            </div>
-            <div class="form-group">
-                <label for="binCentre form-label">Bin Centre</label>
-                <input type="text" class="form-control" id="binCentre" data-ng-model="createBin.binCentre" />
-            </div>
-            <div class="form-group">
-                <label for="acrfSerialNo form-label">ACRF Serial No</label>
-                <input type="text" class="form-control" id="acrfSerialNo" data-ng-model="createBin.acrfSerialNo" />
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="single-tab" data-toggle="tab" data-target="#singleAdd" role="tab" aria-controls="singleAdd" aria-selected="true" >Add Single</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="batches-tab" data-toggle="tab" data-target="#batchesAdd" role="tab" aria-controls="batchesAdd" aria-selected="false" >Add Batches</a>
+                </li>            
+            </ul>   
+            <div class="tab-content" id="myTab">
+                <div class="tab-pane fade show active" id="singleAdd" role="tabpanel" aria-labelledby="single-tab">         
+                    <div class="form-group">
+                        <label for="serialNo form-label">Serial No</label>
+                        <input type="text" class="form-control" id="serialNo" data-ng-model="createBin.serialNo" />
+                    </div>
+                    <div class="form-group">
+                        <label for="brand form-label">Brand</label>
+                        <input type="text" class="form-control" id="brand" data-ng-model="createBin.brand" />
+                    </div>
+                    <div class="form-group">
+                        <label for="binSize form-label">Bin Size</label>
+                        <input type="text" class="form-control" id="binSize" data-ng-model="createBin.binSize" />
+                    </div>
+                    <div class="form-group">
+                        <label for="binUse form-label">Bin in Use</label>
+                        <select class="form-control" id="binUse" data-ng-model="createBin.binInUse">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="binDate form-label">Date</label>
+                        <input type="date" class="form-control" id="binDate " data-ng-model="createBin.date" />
+                    </div>
+                    <div class="form-group">
+                        <label for="fullName form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" data-ng-model="createBin.name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="contact form-label">Contact No</label>
+                        <input type="text" class="form-control" id="contact" data-ng-model="createBin.contact" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ic form-label">IC</label>
+                        <input type="text" class="form-control" id="ic" data-ng-model="createBin.ic" />
+                    </div>
+                    <div class="form-group">
+                        <label for="proNo form-label">Property No</label>
+                        <input type="text" class="form-control" id="proNo" data-ng-model="createBin.propertyNo" />
+                    </div>
+                    <div class="form-group">
+                        <label for="tmnkpg form-label">Tmn/Kpg</label>
+                        <input type="text" class="form-control" id="tmnkpg" data-ng-model="createBin.tmnkpg" />
+                    </div>
+                    <div class="form-group">
+                        <label for="address form-label">Address</label>
+                        <input type="text" class="form-control" id="address" data-ng-model="createBin.address" />
+                    </div>
+                    <div class="form-group">
+                        <label for="company form-label">Company Name</label>
+                        <input type="text" class="form-control" id="company" data-ng-model="createBin.company" />
+                    </div>
+                    <div class="form-group">
+                        <label for="typeOfPro form-label">Type of Pro</label>
+                        <input type="text" class="form-control" id="typeOfPro" data-ng-model="createBin.typeOfPro" />
+                    </div>
+                    <div class="form-group">
+                        <label for="pic form-label">Picture: IC/Sesco/KWB</label>
+                        <input type="file" class="form-control" id="pic" data-ng-model="createBin.pic" accept="image/*" app-filereader/>
+                    </div>
+                    <div class="form-group">
+                        <label for="communal form-label">Communal</label>
+                        <select class="form-control" id="communal" data-ng-model="createBin.communal">
+                            <option value="Commercial">Commercial</option>
+                            <option value="Residential">Residential</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="council form-label">Council</label>
+                        <select class="form-control" id="council" data-ng-model="createBin.council">
+                            <option value="MBKS">MBKS</option>
+                            <option value="DBKU">DBKU</option>
+                            <option value="MPP">MPP</option>
+                            <option value="MDS">MDS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="binStatus form-label">Bin Status</label>
+                        <select class="form-control" id="binStatus" data-ng-model="createBin.binStatus">
+                            <option value="ACR">ACR</option>
+                            <option value="BE">BE</option>
+                            <option value="DAMAGED">Damaged</option>
+                            <option value="LOST">Lost</option>
+                            <option value="COMMUNAL:R">CommunalR</option>
+                            <option value="COMMUNAL:C">CommunalC</option>
+                            <option value="TEMPORARY">Temporary</option>
+                            <option value="PURCHASED">Purchased</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment form-label">Comment</label>
+                        <input type="text" class="form-control" id="comment" data-ng-model="createBin.comment" />
+                    </div>
+                    <div class="form-group">
+                        <label for="writtenOff form-label">Written Off</label>
+                        <input type="text" class="form-control" id="writtenOff" data-ng-model="createBin.writtenOff" />
+                    </div>
+                    <button type="button" class="btn btn-primary" data-ng-show="show.create == 'A'" data-ng-click="addBinDatabase();">Create</button>
+                </div>
+                <div class="tab-pane fade" id="batchesAdd" role="tabpanel" aria-labelledby="batches-tab">
+                    <div class="form-group">
+                        <label for="serialChar form-label">Serial- Char</label>
+                        <input type="text" class="form-control" id="serialChar" data-ng-model="createBatches.serialChar" />
+                    </div>
+                    <div class="form-group">
+                        <label for="serialNum form-label">Serial- Number</label>
+                        <input type="text" class="form-control" id="serialNum" data-ng-model="createBatches.serialNum" />
+                    </div>
+                    <div class="form-group">
+                        <label for="volume form-label">Volume</label>
+                        <input type="number" class="form-control" id="volume" data-ng-model="createBatches.volume" />
+                    </div>
+                    <div class="form-group">
+                        <label for="size form-label">Bin Size</label>
+                        <input type="text" class="form-control" id="size" data-ng-model="createBatches.size" />
+                    </div>
+                    <div class="form-group">
+                        <label for="binBrand form-label">Bin Brand</label>
+                        <input type="text" class="form-control" id="binBrand" data-ng-model="createBatches.binBrand" />
+                    </div>
+                    <button type="button" class="btn btn-primary" data-ng-show="show.create == 'A'" data-ng-click="addBinBatches();">Create</button>
+                </div>
             </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-ng-show="show.create == 'A'" data-ng-click="addBinDatabase();">Create</button>
         </div>
     </div>
 </div>
+
