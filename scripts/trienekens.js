@@ -8552,16 +8552,20 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
 
     $scope.addBinDatabase = function(){
         $scope.createBin.date = $filter('date')($scope.createBin.date, 'yyyy-MM-dd');
-        
-        $http.post('/addBinDatabase', $scope.createBin).then(function(response){
-            if(response.data.status=="success"){
-                $scope.notify(response.data.status, response.data.message);
-                angular.element('#createBin').modal('toggle');
-            }else{
-                $scope.notify("error", "There has some error.");
-                angular.element('#createBin').modal('toggle');
-            }
-        });
+
+        if($scope.createBin.date == '' || $scope.createBin.date == null || $scope.createBin.serialNo == ''){
+            $scope.notify("error", "Please dont leave blank on date and serial no.")
+        }else{
+            $http.post('/addBinDatabase', $scope.createBin).then(function(response){
+                if(response.data.status=="success"){
+                    $scope.notify(response.data.status, response.data.message);
+                    angular.element('#createBin').modal('toggle');
+                }else{
+                    $scope.notify("error", "There has some error.");
+                    angular.element('#createBin').modal('toggle');
+                }
+            });
+        }
     }
 
     $scope.addBinBatches = function(){
@@ -8607,15 +8611,19 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
             }
         });
 
-        $http.post('/editBinDatabase', $scope.editBin).then(function(response){
-            if(response.data.status=="success"){
-                $scope.notify(response.data.status, response.data.message);
-                angular.element('#editBin').modal('toggle');
-            }else{
-                $scope.notify("error", "There has some error.");
-                angular.element('#editBin').modal('toggle');
-            }            
-        })
+        if($scope.editBin.date == '' || $scope.editBin.date == null || $scope.editBin.serialNo == ''){
+            $scope.notify("error", "Please dont leave blank on date and serial no.")
+        }else{
+            $http.post('/editBinDatabase', $scope.editBin).then(function(response){
+                if(response.data.status=="success"){
+                    $scope.notify(response.data.status, response.data.message);
+                    angular.element('#editBin').modal('toggle');
+                }else{
+                    $scope.notify("error", "There has some error.");
+                    angular.element('#editBin').modal('toggle');
+                }            
+            })
+        }
     }
 
     $scope.deleteBinDatabase = function(id){
