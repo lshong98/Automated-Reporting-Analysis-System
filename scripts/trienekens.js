@@ -9628,7 +9628,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'img': $scope.comDetail.img,
             'type': $scope.comDetail.ctype,
             'services': $scope.comDetail.title,
-            'cmsStatus': '3',
+            'cmsStatus': '',
             'lgStatus': 'open',
             'bdStatus': 'open',
             'date': $filter('date')(new Date(), 'yyyy-MM-dd'),
@@ -10042,8 +10042,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         'coID': $routeParams.complaintCode,
         'driver': '',
         'truck': '',
-        'wasteColDT': '',
-        'klgStatus': ''
+        'wasteColDT': ''
     };
     $scope.complaintImages = {
         'image01': "",
@@ -10322,17 +10321,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                         }
                     });
 
-                    $scope.checkCMSStatus = function () {
-                        //set cms status to closed if lg and bd status are closed
-                        if ($scope.fullComplaintDetail.status == 'closed' && $scope.fullComplaintDetail.custStatus == 'closed') {
-                            $scope.fullComplaintDetail.cmsStatus = "3";
-                        }
-                        if ($scope.fullComplaintDetail.cmsStatus == null) {
-                            $scope.fullComplaintDetail.cmsStatus = "";
-                        }
-
-                    }
-
                     $scope.updateStatus = function () {
                         var time = new Date();
                         $scope.status = {
@@ -10353,22 +10341,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                             }
                         });
 
-                    }
-                    
-                    $scope.updateKLGStatus = function () {
-                        $scope.klgStatus = {
-                            'status': $scope.fullComplaintDetail.klgStatus,
-                            'coID': $routeParams.complaintCode
-                        };
-                        $http.post('/updateKLGStatus', $scope.klgStatus).then(function(response){
-                            if (response.data.status == "success") {
-                                $scope.notify(response.data.status, "KLG Status has been updated");
-                                $route.reload();                              
-
-                            } else {
-                                $scope.notify("error", "There are some ERROR!");
-                            }
-                        });
                     }
 
                 } else {
@@ -11334,13 +11306,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         }
     }
 
-    $scope.checkCMSStatus = function () {
-        //set cms status to closed if lg and bd status are closed
-        if ($scope.detailObj.status == 'closed' && $scope.custStatus.status == 'closed') {
-            $scope.cmsUpdateStatus = "3";
-        }
-    }
-
     $scope.updateCust = function () {
 
         if ($scope.checkCustContactStatus == false) {
@@ -11381,25 +11346,10 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         var time = new Date();
         $scope.custStatus.statusTime = time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
 
-        //        $scope.cmsUpdateRequest = {
-        //            "cmsstatus" : $scope.cmsUpdateStatus,
-        //            "coID" : $routeParams.coID,
-        //            "cmsdate" : $filter('date')(Date.now(), 'yyyy-MM-dd'),
-        //            "cmstime": time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
-        //        };    
-
-
         $http.post('/updateComplaintDetailsCustStatus', $scope.custStatus).then(function (response) {
             if (response.data.status == "success") {
                 $scope.notify(response.data.status, "Status has been updated");
-                $route.reload();
-                //                $http.post('/updateCMSStatus', $scope.cmsUpdateRequest).then(function(response) {
-                //                    if (response.data.status == "success") {
-                //                        
-                //                    } else {
-                //                        $scope.notify("error", "There are some ERROR!");
-                //                    }
-                //                });                 
+                $route.reload();             
             } else {
                 $scope.notify("error", "There has some ERROR!");
             }

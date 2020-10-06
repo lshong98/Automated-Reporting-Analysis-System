@@ -434,18 +434,6 @@
         <div class="mx-sm-3"><span data-ng-repeat="w in wasteData">{{w.date}} - {{w.reporter}}<br/></span></div>
     </div>
     
-    <br/>
-    <hr/>
-    <h4>Action Taken By KLG</h4>
-    <br/>
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">KLG Status:</strong>
-        <p  class="mx-sm-3">
-            <span data-ng-if="detailObj.klgStatus == '0'">Cancelled</span>
-            <span data-ng-if="detailObj.klgStatus == '1'">Valid</span>
-        </p>
-    </div>
-    
     
     <div data-ng-show="viewControl == 2">
         <br/>
@@ -491,24 +479,7 @@
             </div>
         </div>
         
-        <br/>
-<!--
-        <hr/>
-        <h4>Action Taken By CMS Committee</h4>
-        <br/>
-        
-        <div class="form-group row">
-            <label for="cmsStatus" class="col-xs-3 col-form-label form-label-width">Status:</label>
-            <div class="col-md-9">
-                <select class="form-control mx-sm-3" id="cmsStatus" data-ng-model="cmsStatus" data-live-search="true" data-width="100%">
-                        <option value="1">Valid</option>
-                        <option value="2">Invalid</option>
-                        <option value="3">Pending Review</option>
-                </select>
-            </div>
-        </div>          
--->
-        
+        <br/>        
         
         <div class="row">
             <div class="col-md-10"></div>
@@ -531,7 +502,7 @@
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Status:</strong>
         <div class="col-md-3">
-            <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="custStatus.status" data-ng-change="checkCMSStatus()" data-live-search="true" data-width="100%">
+            <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="custStatus.status" data-live-search="true" data-width="100%">
                 <option value="open">Open</option>
                 <option value="closed">Closed</option>
             </select>
