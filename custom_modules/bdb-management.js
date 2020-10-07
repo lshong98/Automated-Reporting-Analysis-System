@@ -23,7 +23,20 @@ app.post('/getBinDatabaseList', function(req, res){
     }else if(req.body.field == 'serialNo'){
         var sql = "SELECT * FROM tblbindatabase WHERE serialNo LIKE '%" +req.body.value + "%' OR comment LIKE '%" +req.body.value + "%'";
     }else if(req.body.field == 'date'){
-        var sql = "SELECT * FROM tblbindatabase WHERE date = '" + req.body.value + "'";
+        
+        if(req.body.value == null){
+            var sql = "SELECT * FROM tblbindatabase WHERE date is NULL";
+        }else{
+            var sql = "SELECT * FROM tblbindatabase WHERE date = '" + req.body.value + "'";
+        }
+    }else if(req.body.field == 'keyInDate'){
+        if(req.body.value == null){
+            var sql = "SELECT * FROM tblbindatabase WHERE keyInDate is NULL";
+        }else{
+            var sql = "SELECT * FROM tblbindatabase WHERE keyInDate = '" + req.body.value + "'";
+        }
+        
+        console.log(sql);
     }else{
         var sql = "SELECT * FROM tblbindatabase WHERE " + req.body.field + " LIKE '%" +req.body.value + "%'";
     }
@@ -91,7 +104,12 @@ app.post('/addBinDatabase', function(req, res){
         pic = '';
     }
 
-    var sql= "INSERT INTO tblbindatabase(serialNo, brand, size, binInUse, date, name, contact, ic, propertyNo, tmnkpg, address, company, typeOfPro, pic, communal, council, binStatus, comment, writtenOff) VALUE ('" + serialNo + "', '" + brand + "', '" + binSize + "', '" + binInUse + "', '" + date + "', '" + name + "', '" + contact + "', '" + ic + "', '" + propertyNo + "', '" + tmnkpg + "', '" + address + "', '" + company + "', '" + typeOfPro + "', '" + pic + "', '" + communal + "', '" + council + "', '" + binStatus + "', '" + comment + "', '" + writtenOff + "')";
+    if(date == "" || date == null){
+        var sql= "INSERT INTO tblbindatabase(serialNo, brand, size, binInUse, name, contact, ic, propertyNo, tmnkpg, address, company, typeOfPro, pic, communal, council, binStatus, comment, writtenOff, keyInDate) VALUE ('" + serialNo + "', '" + brand + "', '" + binSize + "', '" + binInUse + "', '" + name + "', '" + contact + "', '" + ic + "', '" + propertyNo + "', '" + tmnkpg + "', '" + address + "', '" + company + "', '" + typeOfPro + "', '" + pic + "', '" + communal + "', '" + council + "', '" + binStatus + "', '" + comment + "', '" + writtenOff + "', NOW())";
+    }else{
+        var sql= "INSERT INTO tblbindatabase(serialNo, brand, size, binInUse, date, name, contact, ic, propertyNo, tmnkpg, address, company, typeOfPro, pic, communal, council, binStatus, comment, writtenOff, keyInDate) VALUE ('" + serialNo + "', '" + brand + "', '" + binSize + "', '" + binInUse + "', '" + date + "', '" + name + "', '" + contact + "', '" + ic + "', '" + propertyNo + "', '" + tmnkpg + "', '" + address + "', '" + company + "', '" + typeOfPro + "', '" + pic + "', '" + communal + "', '" + council + "', '" + binStatus + "', '" + comment + "', '" + writtenOff + "', NOW())";
+    }
+    console.log(sql);
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
@@ -133,7 +151,6 @@ app.post('/editBinDatabase', function(req, res){
     var brand = req.body.brand.replace(/'/g,"\\'");
     var binSize = req.body.size.replace(/'/g,"\\'");
     var binInUse = req.body.binInUse.replace(/'/g,"\\'");
-    var date = req.body.date;
     var name = req.body.name.replace(/'/g,"\\'");
     var contact = req.body.contact.replace(/'/g,"\\'");
     var ic = req.body.ic.replace(/'/g,"\\'");
@@ -149,12 +166,23 @@ app.post('/editBinDatabase', function(req, res){
     var comment = req.body.comment.replace(/'/g,"\\'");
     var writtenOff = req.body.writtenOff.replace(/'/g,"\\'");  
     var id = req.body.id;
+    if(req.body.date == '' || req.body.date == null){
+        var date = null;
+    }else{
+        var date = "'" + req.body.date + "'";
+    }
+
+    if(req.body.keyInDate == '' || req.body.keyInDate == null){
+        var keyInDate = null;
+    }else{
+        var keyInDate = "'" + req.body.keyInDate + "'";
+    }
 
     if (pic !== '') {
         pic = makeImage(pic, serialNo);
-        var sql= "UPDATE tblbindatabase SET serialNo = '" + serialNo + "', brand = '" + brand + "', size = ' " + binSize + "', binInUse = '" + binInUse + "', date = '" + date + "', name = '" + name + "', contact = '" + contact + "', ic ='" + ic + "', propertyNo = '" + propertyNo + "', tmnkpg = '" + tmnkpg + "', address = '" + address + "', company = '" + company + "', typeOfPro = '" + typeOfPro + "', pic = '" + pic + "', communal = '" + communal + "', council = '" + council + "', binStatus = '" + binStatus + "', comment = '" + comment + "', writtenOff = '" + writtenOff + "' WHERE id = '" + id + "'";
+        var sql= "UPDATE tblbindatabase SET serialNo = '" + serialNo + "', brand = '" + brand + "', size = ' " + binSize + "', binInUse = '" + binInUse + "', date = " + date + ", name = '" + name + "', contact = '" + contact + "', ic ='" + ic + "', propertyNo = '" + propertyNo + "', tmnkpg = '" + tmnkpg + "', address = '" + address + "', company = '" + company + "', typeOfPro = '" + typeOfPro + "', pic = '" + pic + "', communal = '" + communal + "', council = '" + council + "', binStatus = '" + binStatus + "', comment = '" + comment + "', writtenOff = '" + writtenOff + "', keyInDate = " + keyInDate + " WHERE id = '" + id + "'";
     } else {
-        var sql= "UPDATE tblbindatabase SET serialNo = '" + serialNo + "', brand = '" + brand + "', size = ' " + binSize + "', binInUse = '" + binInUse + "', date = '" + date + "', name = '" + name + "', contact = '" + contact + "', ic ='" + ic + "', propertyNo = '" + propertyNo + "', tmnkpg = '" + tmnkpg + "', address = '" + address + "', company = '" + company + "', typeOfPro = '" + typeOfPro + "', communal = '" + communal + "', council = '" + council + "', binStatus = '" + binStatus + "', comment = '" + comment + "', writtenOff = '" + writtenOff + "' WHERE id = '" + id + "'";
+        var sql= "UPDATE tblbindatabase SET serialNo = '" + serialNo + "', brand = '" + brand + "', size = ' " + binSize + "', binInUse = '" + binInUse + "', date = " + date + ", name = '" + name + "', contact = '" + contact + "', ic ='" + ic + "', propertyNo = '" + propertyNo + "', tmnkpg = '" + tmnkpg + "', address = '" + address + "', company = '" + company + "', typeOfPro = '" + typeOfPro + "', communal = '" + communal + "', council = '" + council + "', binStatus = '" + binStatus + "', comment = '" + comment + "', writtenOff = '" + writtenOff + "', keyInDate = " + keyInDate + " WHERE id = '" + id + "'";
     }
 
     database.query(sql, function(err, result) {

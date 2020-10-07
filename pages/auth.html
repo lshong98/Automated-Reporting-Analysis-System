@@ -418,6 +418,15 @@
                     </label>
                 </li>
                 <li class="list-group-item">
+                    Create Bin Database Batches
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.bdb.batch"
+                            data-ng-change="changeValue(auth.bdb.batch, 'batch bdb');"
+                            data-ng-true-value="'A'" data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
                     Edit Bin Database
                     <label class="switch">
                         <input type="checkbox" class="primary" data-ng-model="auth.bdb.edit"
