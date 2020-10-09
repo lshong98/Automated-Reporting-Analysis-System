@@ -345,8 +345,17 @@
         <div class="col-md-9">
             <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="logistics.status" data-live-search="true" data-width="100%">
                     <option value="open">Open</option>
-                    <option value="pending">Pending</option>
                     <option value="closed">Closed</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="inputCmsStatus" class="col-xs-3 col-form-label form-label-width">CMS Status:</label>
+        <div class="col-md-9">
+            <select class="form-control mx-sm-3" id="inputCmsStatus" data-ng-model="logistics.cmsStatus" data-live-search="true" data-width="100%">
+                    <option value="1">Valid</option>
+                    <option value="3">To Be Reviewed</option>
             </select>
         </div>
     </div>
@@ -471,7 +480,6 @@
         <div class="col-md-3">
             <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="fullComplaintDetail.status" data-live-search="true" data-width="100%">
                 <option value="open">Open</option>
-                <option value="pending">Pending</option>
                 <option value="closed">Closed</option>
             </select>
         </div>
@@ -479,8 +487,6 @@
             <button class="btn btn-success" data-ng-click="updateStatus()" >Update</button>
         </div>
     </div>
-    
-
 
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Status Date:</strong>
@@ -490,6 +496,19 @@
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Status Time:</strong>
         <p  class="mx-sm-3">{{fullComplaintDetail.statusTime}}</p>
+    </div>
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">CMS Status:</strong>
+        <div class="col-md-3">
+            <select class="form-control mx-sm-3" id="editCmsStatus" data-ng-model="fullComplaintDetail.cmsStatus" data-live-search="true" data-width="100%">
+                <option value="1">Valid</option>
+                <option value="2" disabled>Invalid</option>
+                <option value="3">To Be Reviewed</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-success" data-ng-click="updateCMSStatus()" >Update</button>
+        </div>
     </div>
     <div class="row">
         <button data-ng-click="editLogsImages()" type="button" class="btn btn-info" style="margin-top: 10px;" data-ng-show="!editImages"><i class="fas fa-pencil-alt"></i> Edit Images</button>
@@ -645,16 +664,7 @@
     </div>
 
     <br/>
-    <hr/>
-    <h4>Action Taken By CMS Comittee</h4> 
-    <br/>
 
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">CMS Status:</strong>
-        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '1'">Valid</p>
-        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '2'">Invalid</p>
-        <p class="mx-sm-3" data-ng-if="fullComplaintDetail.cmsStatus == '3'">Pending</p>
-    </div>   
 </div>
 
 

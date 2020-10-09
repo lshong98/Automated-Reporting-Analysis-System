@@ -28,6 +28,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Time</th>
+                        <th>Complainant</th>
                         <th>Type of Complaint</th>
                         <th>TS</th>
                         <th>MP</th>
@@ -47,6 +48,7 @@
                     <tr data-ng-repeat="c in filterCmsExportList">
                         <td data-ng-bind="c.complaintDate"></td>
                         <td data-ng-bind="c.complaintTime"></td>
+                        <td data-ng-bind="c.name"></td>
                         <td data-ng-bind="c.type"></td>
                         <td data-ng-bind="c.ts"></td>
                         <td data-ng-bind="c.mp"></td>
@@ -62,6 +64,7 @@
                         <td>{{c.logsReview}} - {{c.logsReviewDate}}</td>
                     </tr>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

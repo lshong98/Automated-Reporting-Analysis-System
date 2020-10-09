@@ -91,7 +91,7 @@
                                                 <td>
                                                 <div data-ng-if="c.cmsStatus == '1'">Valid</div>
                                                 <div data-ng-if="c.cmsStatus == '2'">Invalid</div>
-                                                <div data-ng-if="c.cmsStatus == '3'">Pending Review</div>
+                                                <div data-ng-if="c.cmsStatus == '3'">To Be Reviewed</div>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -169,6 +169,7 @@
                                                 <th width="15%" data-ng-click="logsOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="logsOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="logsOrderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="logsOrderBy('reason');">Reason <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="logsOrderBy('staff');">By <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="logsOrderBy('department');">Processing Department <i class="fas fa-sort-down"></i></th>                                        
                                                 <th width="5%" data-ng-click="logsOrderBy('status');">Status <i class="fas fa-sort-down"></i></th>
@@ -181,6 +182,7 @@
                                                 <td data-ng-bind="l.name"></td>
                                                 <td data-ng-bind="l.serviceType"></td>
                                                 <td data-ng-bind="l.company"></td>
+                                                <td data-ng-bind="l.reason"></td>
                                                 <td data-ng-bind="l.staff"></td>
                                                 <td data-ng-bind="l.department"></td>
                                                 <td data-ng-bind="l.status"></td>

@@ -8437,6 +8437,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.searchName = '';
     $scope.searchIC = '';
     $scope.searchAddress = '';
+    $scope.searchCompany = '';
     $scope.searchDate = '';
     $scope.searchKeyDate = '';
     $scope.editBinNewPic = '';
@@ -8514,6 +8515,8 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
             value = $scope.searchIC;
         }else if(field == 'address'){
             value = $scope.searchAddress;
+        }else if(field == 'company'){
+            value = $scope.searchCompany;
         }else if(field == 'date'){
             if($scope.searchDate == '' || $scope.searchDate == null){
                 value = null;
@@ -8927,6 +8930,25 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 } else {
                     $scope.logisticsComplaintList[i].department = "Customer Services";
                 }
+
+                //formulate reason
+                if($scope.logisticsComplaintList[i].reason == 1){
+                    $scope.logisticsComplaintList[i].reason = "Missed Collection(1)";
+                }else if($scope.logisticsComplaintList[i].reason == 2){
+                    $scope.logisticsComplaintList[i].reason = "Shortage Manpower(1)";
+                }else if($scope.logisticsComplaintList[i].reason == 3){
+                    $scope.logisticsComplaintList[i].reason = "Truck Breakdown(1)";
+                }else if($scope.logisticsComplaintList[i].reason == 4){
+                    $scope.logisticsComplaintList[i].reason = "Truck Full(1)";
+                }else if($scope.logisticsComplaintList[i].reason == 5){
+                    $scope.logisticsComplaintList[i].reason = "Bin Not Sent Back(2)";
+                }else if($scope.logisticsComplaintList[i].reason == 6){
+                    $scope.logisticsComplaintList[i].reason = "Leachate(3)";
+                }else if($scope.logisticsComplaintList[i].reason == 7){
+                    $scope.logisticsComplaintList[i].reason = "Other(4)";
+                }else if($scope.logisticsComplaintList[i].reason == 8){
+                    $scope.logisticsComplaintList[i].reason = "RORO(5)";
+                }                
             }
         }
 
@@ -8934,7 +8956,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterLogComplaintList = angular.copy($scope.logisticsComplaintList);
 
         $scope.searchLogComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.name + complaint.company + complaint.serviceType + complaint.staff + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.name + complaint.company + complaint.reason + complaint.serviceType + complaint.staff + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.logComptotalItems = $scope.filterLogComplaintList.length;
@@ -10364,6 +10386,26 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
                     }
 
+                    $scope.updateCMSStatus = function () {
+
+                        var time = new Date();
+                        $scope.cmsUpdateRequest = {
+                            "cmsstatus": $scope.fullComplaintDetail.cmsStatus,
+                            "coID": $routeParams.complaintCode,
+                            "cmsdate": $filter('date')(Date.now(), 'yyyy-MM-dd'),
+                            "cmstime": time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds()
+                        };
+                
+                        $http.post('/updateCMSStatus', $scope.cmsUpdateRequest).then(function (response) {
+                            if (response.data.status == "success") {
+                                $scope.notify(response.data.status, "CMS Status has been updated");
+                                $route.reload();
+                            } else {
+                                $scope.notify("error", "There has some ERROR!");
+                            }
+                        });
+                    }
+
                 } else {
                     $scope.showInfo = false;
                     console.log("ERROR!");
@@ -10591,7 +10633,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.logistics.subTime = null;
         }
 
-        if ($scope.logistics.sub == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "" || $scope.logistics.reason =="" || $scope.logistics.truck == "") {
+        if ($scope.logistics.sub == "" || $scope.logistics.cmsStatus == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "" || $scope.logistics.reason =="" || $scope.logistics.truck == "") {
 
             $scope.notify("error", "There has some blank column");
             $scope.showSubmitBtn = true;
@@ -11311,21 +11353,13 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                         $scope.histUpdateList[n] += "Invalid";
                     } else if ($scope.histUpdateList[n].split(" ")[7] == 3) {
                         $scope.histUpdateList[n] = $scope.histUpdateList[n].substring(0, $scope.histUpdateList[n].length - 1);
-                        $scope.histUpdateList[n] += "Pending Review";
+                        $scope.histUpdateList[n] += "To Be Reviewed";
                     }
                 }
 
             }
         }
     });
-    $scope.setCMSStatus = function () {
-        //set cms status to closed if lg and bd status are closed
-        if ($scope.detailObj.status == 'closed' && $scope.custStatus.status == 'closed') {
-            $scope.cmsStatus = "3";
-        } else {
-            $scope.cmsStatus = "";
-        }
-    }
 
     $scope.updateCust = function () {
 
