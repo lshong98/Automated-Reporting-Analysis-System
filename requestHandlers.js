@@ -162,6 +162,10 @@ app.get('/bin-inventory', function (req, res) {
     'use strict'; 
     res.sendFile('pages/bin-inventory.html', {root: __dirname});
 });
+app.get('/acr-database', function(req,res){
+    'use strict';
+    res.sendFile('pages/acr-database.html', {root: __dirname});
+})
 app.get('/authorization', function (req, res) {
     'use strict';
     res.sendFile('pages/authorization.html', {root: __dirname});

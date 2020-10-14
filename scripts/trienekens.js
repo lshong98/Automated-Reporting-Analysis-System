@@ -8791,6 +8791,11 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
         });
     }
 });
+
+app.controller('acrdbController', function($scope, $http, $filter, storeDataService){
+    'use strict';
+});
+
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {
     'use strict';
     var asc = true;

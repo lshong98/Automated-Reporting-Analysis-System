@@ -313,6 +313,10 @@ function menuItem(keyword, status) {
             if(status == 'A'){
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/bdb"><i class="fas fa-dumpster"></i> Bin Database </a></li>';
             }
+        case "view acr":
+            if(status == 'A'){
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/acr-database"><i class="fas fa-dumpster"></i> ACR Database </a></li>';
+            }
         // case "view enquiry":
         //     if (status == 'A') {
         //         return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-enquiry"><i class="fa fa-file"></i> Customer Enquiry <span class="enquiry"></span></a></li>';

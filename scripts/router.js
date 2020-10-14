@@ -449,6 +449,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'bdbHistDetailController',
         controllerAs:'bdbHistDetail'
     })
+    .when('/acr-database', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/acr-database');
+            }
+        },
+        templateUrl: '/acr-database',
+        controller: 'acrdbController',
+        controllerAs:'acrdb'
+    })
     .when('/complaint-module', {
         resolve: {
             "check": function (routingService, $window, $location) {

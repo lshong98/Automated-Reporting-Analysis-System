@@ -350,9 +350,8 @@
             </ul>
         </div>
     </div>
-    <div class="col-md-6">
+    <!-- <div class="col-md-6">
         <div class="card">
-            <!-- Default panel contents -->
             <div class="card-header">ACR Management</div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
@@ -396,6 +395,58 @@
                     <label class="switch">
                         <input type="checkbox" class="primary" data-ng-model="auth.acr.bdview"
                             data-ng-change="changeValue(auth.acr.bdview, 'bdview acr');" data-ng-true-value="'A'"
+                            data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div> -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">ACR Database</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Create ACR
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acrdb.create"
+                            data-ng-change="changeValue(auth.acrdb.create, 'create acrdb');" data-ng-true-value="'A'"
+                            data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Edit ACR
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acrdb.edit"
+                            data-ng-change="changeValue(auth.acrdb.edit, 'edit acrdb');" data-ng-true-value="'A'"
+                            data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    Delete ACR
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acrdb.delete"
+                            data-ng-change="changeValue(auth.acrdb.delete, 'delete acrdb');" data-ng-true-value="'A'"
+                            data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    View ACR
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acrdb.view"
+                            data-ng-change="changeValue(auth.acrdb.view, 'view acrdb');" data-ng-true-value="'A'"
+                            data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
+                <li class="list-group-item">
+                    History & Permission
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acrdb.hist"
+                            data-ng-change="changeValue(auth.acrdb.hist, 'hist acrdb');" data-ng-true-value="'A'"
                             data-ng-false-value="'I'" />
                         <span class="slider"></span>
                     </label>
