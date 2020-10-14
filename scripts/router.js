@@ -426,7 +426,29 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: '/bdb',
         controller: 'bdbController',
         controllerAs:'bdb'
-    })    
+    })
+    .when('/bdb-hist', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/bdb-hist');
+            }
+        },
+        templateUrl: '/bdb-hist',
+        controller: 'bdbHistController',
+        controllerAs:'bdbHist'
+    })
+    .when('/bdb-hist-detail/:bdbID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/bdb-hist-detail/' + $route.current.params.bdbID);
+            }
+        },
+        templateUrl: function(params){
+            return '/bdb-hist-detail/' + params.bdbID;
+        },
+        controller: 'bdbHistDetailController',
+        controllerAs:'bdbHistDetail'
+    })
     .when('/complaint-module', {
         resolve: {
             "check": function (routingService, $window, $location) {

@@ -150,6 +150,14 @@ app.get('/bdb', function (req, res) {
     'use strict';
     res.sendFile('pages/bdb.html', {root: __dirname});
 });
+app.get('/bdb-hist', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bdb-hist.html', {root: __dirname});
+});
+app.get('/bdb-hist-detail/:bdbID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bdb-hist-detail.html', {root: __dirname});
+});
 app.get('/bin-inventory', function (req, res) {
     'use strict'; 
     res.sendFile('pages/bin-inventory.html', {root: __dirname});

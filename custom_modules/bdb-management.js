@@ -35,8 +35,13 @@ app.post('/getBinDatabaseList', function(req, res){
         }else{
             var sql = "SELECT * FROM tblbindatabase WHERE keyInDate = '" + req.body.value + "'";
         }
+    }else if(req.body.field == 'changesDate'){
+        if(req.body.value == null){
+            var sql = "SELECT * FROM tblbindatabase WHERE changesDate is NULL";
+        }else{
+            var sql = "SELECT * FROM tblbindatabase WHERE changesDate = '" + req.body.value + "'";
+        }
         
-        console.log(sql);
     }else{
         var sql = "SELECT * FROM tblbindatabase WHERE " + req.body.field + " LIKE '%" +req.body.value + "%'";
     }
@@ -109,7 +114,6 @@ app.post('/addBinDatabase', function(req, res){
     }else{
         var sql= "INSERT INTO tblbindatabase(serialNo, brand, size, binInUse, date, name, contact, ic, propertyNo, tmnkpg, address, company, typeOfPro, pic, communal, council, binStatus, comment, writtenOff, keyInDate) VALUE ('" + serialNo + "', '" + brand + "', '" + binSize + "', '" + binInUse + "', '" + date + "', '" + name + "', '" + contact + "', '" + ic + "', '" + propertyNo + "', '" + tmnkpg + "', '" + address + "', '" + company + "', '" + typeOfPro + "', '" + pic + "', '" + communal + "', '" + council + "', '" + binStatus + "', '" + comment + "', '" + writtenOff + "', NOW())";
     }
-    console.log(sql);
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
@@ -147,24 +151,24 @@ app.post('/editBinDatabase', function(req, res){
         return public_url;
     }
 
-    var serialNo = req.body.serialNo.replace(/'/g,"\\'");
-    var brand = req.body.brand.replace(/'/g,"\\'");
-    var binSize = req.body.size.replace(/'/g,"\\'");
-    var binInUse = req.body.binInUse.replace(/'/g,"\\'");
-    var name = req.body.name.replace(/'/g,"\\'");
-    var contact = req.body.contact.replace(/'/g,"\\'");
-    var ic = req.body.ic.replace(/'/g,"\\'");
-    var propertyNo = req.body.propertyNo.replace(/'/g,"\\'");
-    var tmnkpg = req.body.tmnkpg.replace(/'/g,"\\'");
-    var address = req.body.address.replace(/'/g,"\\'");
-    var company = req.body.company.replace(/'/g,"\\'");
-    var typeOfPro = req.body.typeOfPro.replace(/'/g,"\\'");
+    var serialNo = req.body.serialNo.replace(/'/g,"\\\\'");
+    var brand = req.body.brand.replace(/'/g,"\\\\'");
+    var binSize = req.body.size.replace(/'/g,"\\\\'");
+    var binInUse = req.body.binInUse.replace(/'/g,"\\\\'");
+    var name = req.body.name.replace(/'/g,"\\\\'");
+    var contact = req.body.contact.replace(/'/g,"\\\\'");
+    var ic = req.body.ic.replace(/'/g,"\\\\'");
+    var propertyNo = req.body.propertyNo.replace(/'/g,"\\\\'");
+    var tmnkpg = req.body.tmnkpg.replace(/'/g,"\\\\'");
+    var address = req.body.address.replace(/'/g,"\\\\'");
+    var company = req.body.company.replace(/'/g,"\\\\'");
+    var typeOfPro = req.body.typeOfPro.replace(/'/g,"\\\\'");
     var pic = req.body.newPic;
-    var communal = req.body.communal.replace(/'/g,"\\'");
-    var council = req.body.council.replace(/'/g,"\\'");
-    var binStatus = req.body.binStatus.replace(/'/g,"\\'");
-    var comment = req.body.comment.replace(/'/g,"\\'");
-    var writtenOff = req.body.writtenOff.replace(/'/g,"\\'");  
+    var communal = req.body.communal.replace(/'/g,"\\\\'");
+    var council = req.body.council.replace(/'/g,"\\\\'");
+    var binStatus = req.body.binStatus.replace(/'/g,"\\\\'");
+    var comment = req.body.comment.replace(/'/g,"\\\\'");
+    var writtenOff = req.body.writtenOff.replace(/'/g,"\\\\'");  
     var id = req.body.id;
     if(req.body.date == '' || req.body.date == null){
         var date = null;
@@ -180,18 +184,84 @@ app.post('/editBinDatabase', function(req, res){
 
     if (pic !== '') {
         pic = makeImage(pic, serialNo);
-        var sql= "UPDATE tblbindatabase SET serialNo = '" + serialNo + "', brand = '" + brand + "', size = ' " + binSize + "', binInUse = '" + binInUse + "', date = " + date + ", name = '" + name + "', contact = '" + contact + "', ic ='" + ic + "', propertyNo = '" + propertyNo + "', tmnkpg = '" + tmnkpg + "', address = '" + address + "', company = '" + company + "', typeOfPro = '" + typeOfPro + "', pic = '" + pic + "', communal = '" + communal + "', council = '" + council + "', binStatus = '" + binStatus + "', comment = '" + comment + "', writtenOff = '" + writtenOff + "', keyInDate = " + keyInDate + " WHERE id = '" + id + "'";
+        var editSql= "UPDATE tblbindatabase SET serialNo = '" + serialNo + "', brand = '" + brand + "', size = ' " + binSize + "', binInUse = '" + binInUse + "', date = " + date + ", name = '" + name + "', contact = '" + contact + "', ic ='" + ic + "', propertyNo = '" + propertyNo + "', tmnkpg = '" + tmnkpg + "', address = '" + address + "', company = '" + company + "', typeOfPro = '" + typeOfPro + "', pic = '" + pic + "', communal = '" + communal + "', council = '" + council + "', binStatus = '" + binStatus + "', comment = '" + comment + "', writtenOff = '" + writtenOff + "', keyInDate = " + keyInDate + " WHERE id = '" + id + "'";
     } else {
-        var sql= "UPDATE tblbindatabase SET serialNo = '" + serialNo + "', brand = '" + brand + "', size = ' " + binSize + "', binInUse = '" + binInUse + "', date = " + date + ", name = '" + name + "', contact = '" + contact + "', ic ='" + ic + "', propertyNo = '" + propertyNo + "', tmnkpg = '" + tmnkpg + "', address = '" + address + "', company = '" + company + "', typeOfPro = '" + typeOfPro + "', communal = '" + communal + "', council = '" + council + "', binStatus = '" + binStatus + "', comment = '" + comment + "', writtenOff = '" + writtenOff + "', keyInDate = " + keyInDate + " WHERE id = '" + id + "'";
+        var editSql= "UPDATE tblbindatabase SET serialNo = '" + serialNo + "', brand = '" + brand + "', size = ' " + binSize + "', binInUse = '" + binInUse + "', date = " + date + ", name = '" + name + "', contact = '" + contact + "', ic ='" + ic + "', propertyNo = '" + propertyNo + "', tmnkpg = '" + tmnkpg + "', address = '" + address + "', company = '" + company + "', typeOfPro = '" + typeOfPro + "', communal = '" + communal + "', council = '" + council + "', binStatus = '" + binStatus + "', comment = '" + comment + "', writtenOff = '" + writtenOff + "', keyInDate = " + keyInDate + " WHERE id = '" + id + "'";
     }
+
+    var content = {
+        'serialNo': serialNo,
+        'brand': brand,
+        'size': binSize,
+        'binInUse': binInUse,
+        'date': date,
+        'name': name,
+        'contact': contact,
+        'ic':ic,
+        'propertyNo': propertyNo,
+        'tmnkpg': tmnkpg,
+        'address': address,
+        'company': company,
+        'typeOfPro': typeOfPro,
+        'communal': communal,
+        'pic': pic,
+        'council': council,
+        'binStatus': binStatus,
+        'comment': comment,
+        'writtenOff': writtenOff,
+        'keyInDate': keyInDate,
+        'id': id
+    }
+    content = JSON.stringify(content);
+    content = content.replace(/"/g,'\\"');
+    var sql = "INSERT INTO tblbdblog (requestDate, requestor, action, insertQuery, content, status, changesDate, binID) VALUE (NOW(), '" + req.body.user + "', '1', \"" + editSql + "\", \"" + content + "\", 0, null, '" + id + "')";
 
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
         }
-        res.json({"status": "success", "message": "Edit Successfull"});
+        res.json({"status": "success", "message": "Edit Request Pending"});
     });
 });
+
+app.get('/getBdbHistList',function(req, res){
+    'use strict';
+
+    var sql = "SELECT tblbdblog.id AS 'id', tblbdblog.requestDate AS 'requestDate', tblstaff.staffName AS 'requestor', tblbdblog.insertQuery AS 'query', tblbdblog.content AS 'content', (CASE WHEN tblbdblog.status = '0' THEN 'Pending' WHEN tblbdblog.status = '1' THEN 'Approve' WHEN tblbdblog.status = '2' THEN 'Reject' END) AS 'status', tblbdblog.changesDate AS 'changesDate', (CASE WHEN tblbdblog.action = '1' THEN 'Edit' WHEN tblbdblog.action = '2' THEN 'Delete' END)AS 'action' FROM tblbdblog JOIN tblstaff ON tblbdblog.requestor = tblstaff.staffID ORDER BY tblbdblog.requestDate DESC";
+
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    })
+})
+
+app.post('/getBdbHistDetail', function(req, res){
+    'use strict';
+
+    var sql = "SELECT tblbdblog.id AS 'id', tblbdblog.requestDate AS 'requestDate', tblbdblog.insertQuery AS 'query',tblstaff.staffName AS 'requestor', tblbdblog.insertQuery AS 'query', tblbdblog.content AS 'content', (CASE WHEN tblbdblog.status = '0' THEN 'Pending' WHEN tblbdblog.status = '1' THEN 'Approve' WHEN tblbdblog.status = '2' THEN 'Reject' END) AS 'status', tblbdblog.changesDate AS 'changesDate', (CASE WHEN tblbdblog.action = '1' THEN 'Edit' WHEN tblbdblog.action = '2' THEN 'Delete' END)AS 'action', tblbdblog.content AS 'content', tblbdblog.oldContent AS 'oldContent' FROM tblbdblog JOIN tblstaff ON tblbdblog.requestor = tblstaff.staffID WHERE tblbdblog.id = '" + req.body.id + "' ORDER BY tblbdblog.requestDate DESC";
+
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    })
+});
+
+app.post('/getBdbOriDetail', function(req, res){
+    'use strict';
+
+    var sql= "SELECT * FROM tblbindatabase WHERE id = '" + req.body.id + "'";
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    });
+
+})
 
 app.post('/deleteBindatabase', function(req, res){
     'use strict';
@@ -207,7 +277,6 @@ app.post('/deleteBindatabase', function(req, res){
 
 app.post('/addBatchesBinDB', function(req, res){
     'use strict';
-    console.log(req.body);
     var sql = "INSERT INTO tblbindatabase (serialNo, brand, size, binInUse) VALUES";
     var num = req.body.serialNum;
     for(var i = 0; i < req.body.volume; i++){
@@ -225,10 +294,36 @@ app.post('/addBatchesBinDB', function(req, res){
     })
 })
 
+app.post('/bdbAprvRejEdit', function(req, res){
+    'use strict';
+
+    if(req.body.status == '1'){
+        var sql = req.body.query;
+        database.query(sql, function(err, result){
+            if(err){
+                throw err;
+            }
+            database.query("UPDATE tblbindatabase SET changesDate = NOW() WHERE id = '" + req.body.binId + "'", function(err, result){
+                if(err){
+                    throw err;
+                }
+            })
+        })
+    }
+    var oldContent = req.body.oldContent.replace(/'/g,"\\'");
+    var sql2 = "UPDATE tblbdblog SET changesDate = NOW(), status = '" + req.body.status + "', oldContent = '" + oldContent + "' WHERE id = '" + req.body.id + "'";
+    database.query(sql2, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json({"status": "success", "message": "Success"});
+    })
+})
+
 app.get('/getInitBinDatabase', function(req, res){
     'use strict';
     
-    var sql= "SELECT * FROM tblbindatabase ORDER BY date DESC LIMIT 0, 20";
+    var sql= "SELECT * FROM tblbindatabase ORDER BY changesDate DESC LIMIT 0, 20";
 
     database.query(sql, function(err, result) {
         if (err) {

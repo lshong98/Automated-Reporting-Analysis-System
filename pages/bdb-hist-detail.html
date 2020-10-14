@@ -1,0 +1,149 @@
+<div data-ng-show="show.hist == 'A'">
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Bin Database Hist Log Detail</h5>
+        </div>
+    </div>
+    <br/>
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Request Date:</strong>
+        <p  class="mx-sm-3">{{bdbDetail.requestDate}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Requestor:</strong>
+        <p  class="mx-sm-3">{{bdbDetail.requestor}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Action:</strong>
+        <p  class="mx-sm-3">{{bdbDetail.action}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Status:</strong>
+        <p  class="mx-sm-3">{{bdbDetail.status}}</p>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Changes</h5>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Item</th>
+                    <th>Original</th>
+                    <th>Changes</th>
+                </tr>
+                <tr>
+                    <th width="20%">Serial No</th>
+                    <td width="40%">{{oldContent.serialNo}}</td>
+                    <td width="40%">{{newContent.serialNo}}</td>
+                </tr>
+                <tr>
+                    <th>Brand</th>
+                    <td>{{oldContent.brand}}</td>
+                    <td>{{newContent.brand}}</td>
+                </tr>
+                <tr>
+                    <th>Bin Size</th>
+                    <td>{{oldContent.size}}</td>
+                    <td>{{newContent.size}}</td>
+                </tr>
+                <tr>
+                    <th>Bin in Use</th>
+                    <td>{{oldContent.binInUse}}</td>
+                    <td>{{newContent.binInUse}}</td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>{{oldContent.date}}</td>
+                    <td>{{newContent.date}}</td>
+                </tr>
+                <tr>
+                    <th>Full Name</th>
+                    <td>{{oldContent.name}}</td>
+                    <td>{{newContent.name}}</td>
+                </tr>
+                <tr>
+                    <th>Contact Number</th>
+                    <td>{{oldContent.contact}}</td>
+                    <td>{{newContent.contact}}</td>
+                </tr>
+                <tr>
+                    <th>IC</th>
+                    <td>{{oldContent.ic}}</td>
+                    <td>{{newContent.ic}}</td>
+                </tr>
+                <tr>
+                    <th>Property No</th>
+                    <td>{{oldContent.propertyNo}}</td>
+                    <td>{{newContent.propertyNo}}</td>
+                </tr>
+                <tr>
+                    <th>Tmn/Kpg</th>
+                    <td>{{oldContent.tmnkpg}}</td>
+                    <td>{{newContent.tmnkpg}}</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td>{{oldContent.address}}</td>
+                    <td>{{newContent.address}}</td>
+                </tr>
+                <tr>
+                    <th>Company Name</th>
+                    <td>{{oldContent.company}}</td>
+                    <td>{{newContent.company}}</td>
+                </tr>
+                <tr>
+                    <th>Type of Pro</th>
+                    <td>{{oldContent.typeOfPro}}</td>
+                    <td>{{newContent.typeOfPro}}</td>
+                </tr>
+                <tr>
+                    <th>Picture: Sesco/KWB/Cukai Rumah</th>
+                    <td><img src="{{oldContent.pic}}" width="100" height="100" style="object-fit: contain;"/></td>
+                    <td><img src="{{newContent.pic}}" width="100" height="100" style="object-fit: contain;"/></td>
+                </tr>
+                <tr>
+                    <th>Communal</th>
+                    <td>{{oldContent.communal}}</td>
+                    <td>{{newContent.communal}}</td>
+                </tr>
+                <tr>
+                    <th>Council</th>
+                    <td>{{oldContent.council}}</td>
+                    <td>{{newContent.council}}</td>
+                </tr>
+                <tr>
+                    <th>Bin Status</th>
+                    <td>{{oldContent.binStatus}}</td>
+                    <td>{{newContent.binStatus}}</td>
+                </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td>{{oldContent.comment}}</td>
+                    <td>{{newContent.comment}}</td>
+                </tr>
+                <tr>
+                    <th>Written Off</th>
+                    <td>{{oldContent.writtenOff}}</td>
+                    <td>{{newContent.writtenOff}}</td>
+                </tr>
+                <tr>
+                    <th>Key in Date</th>
+                    <td>{{oldContent.keyInDate}}</td>
+                    <td>{{newContent.keyInDate}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br/>
+    <div class="row" data-ng-show="bdbDetail.status == 'Pending'">
+        <div class="col-md-1 offset-md-10">
+            <button class="btn btn-success btn-md" data-ng-click="bdbEditReq('1')">Approve</button>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-danger btn-md" data-ng-click="bdbEditReq('2')">Reject</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<div data-ng-show="show.hist == 'A'">
+    <div class="row">
+        <div class="col-md-12">
+            <h5>Bin Database Hist Log</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 offset-md-11">
+            <button class="btn btn-sm btn-danger" data-ng-click="backBtn()">Back</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-clickable">
+                    <thead>
+                        <tr>
+                            <th width="20%">Request Date</th>
+                            <th width="20%">Requestor</th>
+                            <th width="20%">Action</th>
+                            <th width="20%">Status</th>
+                            <th width="20%">Changes Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="l in bdbHistList" data-ng-click="bdbDetailPage(l.id)">
+                            <td>{{l.requestDate}}</td>
+                            <td>{{l.requestor}}</td>
+                            <td>{{l.action}}</td>
+                            <td>{{l.status}}</td>
+                            <td>{{l.changesDate}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

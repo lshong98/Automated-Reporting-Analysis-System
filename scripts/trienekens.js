@@ -615,7 +615,8 @@ app.service('storeDataService', function () {
                 "edit": 'I',
                 "delete": 'I',
                 "export": 'I',
-                "batch": 'I'
+                "batch": 'I',
+                "hist": 'I'
             }
         },
         "pagination": {
@@ -5330,7 +5331,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "edit": 'I',
             "delete": 'I',
             "export": 'I',
-            "batch": 'I'
+            "batch": 'I',
+            "hist": 'I'
         }
     };
 
@@ -5610,7 +5612,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "edit": 'A',
                             "delete": 'A',
                             "export": 'A',
-                            "batch": 'A'
+                            "batch": 'A',
+                            "hist": 'A'
                         }
                     };
                 }
@@ -5801,7 +5804,8 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "edit": 'I',
                             "delete": 'I',
                             "export": 'I',
-                            "batch": 'I'
+                            "batch": 'I',
+                            "hist": 'I'
                         }
                     };
                 }
@@ -8429,6 +8433,7 @@ app.controller('formAuthorizationController', function ($scope, $window, $http, 
 app.controller('bdbController', function($scope, $http, $filter, $window, storeDataService){
     'use strict';
 
+    $scope.user = window.sessionStorage.getItem('owner');
     $scope.filterBindatabaseList = [];
     $scope.show = angular.copy(storeDataService.show.bdb);
     $scope.pagination = angular.copy(storeDataService.pagination);
@@ -8440,6 +8445,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.searchCompany = '';
     $scope.searchDate = '';
     $scope.searchKeyDate = '';
+    $scope.searchChangesDate = '';
     $scope.editBinNewPic = '';
 
     $scope.createBin = {
@@ -8476,14 +8482,15 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         $scope.showData = true;
         $scope.searchBindatabaseFilter = '';
         $scope.binList = response.data;
-
+        console.log($scope.binList[0]);
         for(var i = 0; i < $scope.binList.length; i++){
             $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
             $scope.binList[i].keyInDate = $filter('date')($scope.binList[i].keyInDate, 'yyyy-MM-dd');
+            $scope.binList[i].changesDate = $filter('date')($scope.binList[i].changesDate, 'yyyy-MM-dd');
         }
-
+console.log($scope.binList[0]);
         $scope.searchBin = function (bin) {
-            return (bin.serialNo + bin.brand + bin.size + bin.binInUse + bin.date + bin.name + bin.contact + bin.ic + bin.propertyNo + bin.tmnkpg + bin.address + bin.company + bin.typeOfPro + bin.pic + bin.communal + bin.council + bin.binStatus + bin.comment + bin.writtenOff + bin.keyInDate ).toUpperCase().indexOf($scope.searchBindatabaseFilter.toUpperCase()) >= 0;
+            return (bin.serialNo + bin.brand + bin.size + bin.binInUse + bin.date + bin.name + bin.contact + bin.ic + bin.propertyNo + bin.tmnkpg + bin.address + bin.company + bin.typeOfPro + bin.pic + bin.communal + bin.council + bin.binStatus + bin.comment + bin.writtenOff + bin.keyInDate + bin.changesDate).toUpperCase().indexOf($scope.searchBindatabaseFilter.toUpperCase()) >= 0;
             
         }
 
@@ -8531,6 +8538,13 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
                 value = new Date($scope.searchKeyDate);
                 value = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
             }
+        }else if(field == 'changesDate'){
+            if($scope.searchChangesDate == '' || $scope.searchChangesDate == null){
+                value = null;
+            }else{
+                value = new Date($scope.searchChangesDate);
+                value = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
+            }
         }
 
         if(value == ''){
@@ -8545,6 +8559,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
                 for(var i = 0; i < $scope.binList.length; i++){
                     $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
                     $scope.binList[i].keyInDate = $filter('date')($scope.binList[i].keyInDate, 'yyyy-MM-dd');
+                    $scope.binList[i].changesDate = $filter('date')($scope.binList[i].changesDate, 'yyyy-MM-dd');
                 }
         
                 $scope.searchBin = function (bin) {
@@ -8569,6 +8584,10 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
                 }, true);        
             });
         }
+    }
+
+    $scope.hnp = function(){
+        window.location.href = '#/bdb-hist';
     }
 
     $scope.addBinDatabase = function(){
@@ -8638,6 +8657,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         if($scope.editBin.serialNo == ''){
             $scope.notify("error", "Please dont leave blank on serial no.")
         }else{
+            $scope.editBin.user = $scope.user;
             $http.post('/editBinDatabase', $scope.editBin).then(function(response){
                 if(response.data.status=="success"){
                     $scope.notify(response.data.status, response.data.message);
@@ -8691,6 +8711,86 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
 
 });
 
+
+app.controller('bdbHistController', function($scope, $http, $filter, $window, storeDataService){
+    'use strict'
+    
+    $scope.show = angular.copy(storeDataService.show.bdb);
+    $scope.bdbHistList = [];
+
+    $http.get('/getBdbHistList').then(function(response){
+        $scope.bdbHistList = response.data;
+
+        for(var i = 0; i < $scope.bdbHistList.length; i++){
+            $scope.bdbHistList[i].requestDate = $filter('date')($scope.bdbHistList[i].requestDate, 'yyyy-MM-dd');
+            $scope.bdbHistList[i].changesDate = $filter('date')($scope.bdbHistList[i].changesDate, 'yyyy-MM-dd');
+        }
+        
+    });
+
+    $scope.backBtn = function () {
+        window.history.back();
+    }
+
+    $scope.bdbDetailPage = function(bdbID){
+        window.location.href = "#/bdb-hist-detail/" + bdbID;
+    }
+
+});
+
+app.controller('bdbHistDetailController', function($scope, $http, $filter, $window, $routeParams, $route, storeDataService){
+    'use strict';
+
+    $scope.show = angular.copy(storeDataService.show.bdb);
+
+    $scope.bdbID = {
+        "id": $routeParams.bdbID
+    };
+
+    $http.post('/getBdbHistDetail', $scope.bdbID).then(function(response){
+        $scope.bdbDetail = response.data[0];
+        $scope.bdbDetail.requestDate = $filter('date')($scope.bdbDetail.requestDate, 'yyyy-MM-dd');
+        $scope.bdbDetail.changesDate = $filter('date')($scope.bdbDetail.changesDate, 'yyyy-MM-dd');
+        
+        // $scope.bdbDetail.content = $scope.bdbDetail.content.replace(/'/g,"");
+        $scope.bdbDetail.content = $scope.bdbDetail.content.replace(/\\/g,"");
+        $scope.newContent = JSON.parse($scope.bdbDetail.content);
+        if($scope.newContent.date != null){
+            $scope.newContent.date =  $scope.newContent.date.replace(/'/g,"");
+        }
+        if($scope.newContent.keyInDate != null){
+            $scope.newContent.keyInDate =  $scope.newContent.keyInDate.replace(/'/g,"");
+        }
+        if($scope.bdbDetail.status != "Pending"){
+            $scope.bdbDetail.oldContent = $scope.bdbDetail.oldContent.replace(/\\/g,"");
+            $scope.oldContent = JSON.parse($scope.bdbDetail.oldContent);
+        }
+        if($scope.bdbDetail.status == "Pending"){
+            $http.post('/getBdbOriDetail', {'id': $scope.newContent.id}).then(function(response){
+                $scope.oldContent = response.data[0];
+                $scope.oldContent.date = $filter('date')($scope.oldContent.date, 'yyyy-MM-dd');
+                $scope.oldContent.keyInDate = $filter('date')($scope.oldContent.keyInDate, 'yyyy-MM-dd');
+            })
+        }
+    });
+
+    $scope.bdbEditReq = function(status){
+        var query = {
+            "status": status,
+            "query": $scope.bdbDetail.query,
+            "oldContent": JSON.stringify($scope.oldContent),
+            "id": $scope.bdbDetail.id,
+            "binId": $scope.oldContent.id
+        }
+
+        $http.post('/bdbAprvRejEdit', query).then(function(response){
+            if(response.data.status == "success"){
+                $scope.notify("success", "Success");
+                $route.reload(); 
+            }
+        });
+    }
+});
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {
     'use strict';
     var asc = true;
