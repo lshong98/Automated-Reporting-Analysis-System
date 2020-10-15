@@ -101,8 +101,8 @@
                 </tr>
                 <tr>
                     <th>Picture: Sesco/KWB/Cukai Rumah</th>
-                    <td><img src="{{oldContent.pic}}" width="100" height="100" style="object-fit: contain;"/></td>
-                    <td><img src="{{newContent.pic}}" width="100" height="100" style="object-fit: contain;"/></td>
+                    <td><a href="{{oldContent.pic}}" target="_blank"><img src="{{oldContent.pic}}" width="100" height="100" style="object-fit: contain;"/></a></td>
+                    <td><a href="{{newContent.pic}}" target="_blank"><img src="{{newContent.pic}}" width="100" height="100" style="object-fit: contain;"/></a></td>
                 </tr>
                 <tr>
                     <th>Communal</th>
@@ -135,6 +135,23 @@
                     <td>{{newContent.keyInDate}}</td>
                 </tr>
             </table>
+        </div>
+    </div>
+    <br/>
+    <div class="row form-group" data-ng-show="bdbDetail.status != 'Pending'">
+        <div class="col-md-2">
+            <label for="remarkCol">Remarks:</label>
+        </div>
+        <div class="col-md-10">
+            <p>{{remark}}</p>
+        </div>
+    </div>
+    <div class="row form-group" data-ng-show="bdbDetail.status == 'Pending'">
+        <div class="col-md-2">
+            <label for="remarkCol">Remarks:</label>
+        </div>
+        <div class="col-md-10">
+            <textarea class="form-control" id="remarkCol" rows="3" data-ng-model="remarkCol"></textarea>
         </div>
     </div>
     <br/>

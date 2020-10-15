@@ -15,11 +15,12 @@
                 <table class="table table-hover table-striped table-clickable">
                     <thead>
                         <tr>
-                            <th width="20%">Request Date</th>
-                            <th width="20%">Requestor</th>
-                            <th width="20%">Action</th>
-                            <th width="20%">Status</th>
-                            <th width="20%">Changes Date</th>
+                            <th width="15%">Request Date</th>
+                            <th width="15%">Requestor</th>
+                            <th width="15%">Action</th>
+                            <th width="15%">Status</th>
+                            <th width="15%">Approver</th>
+                            <th width="15%">Approve/Reject Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,6 +29,7 @@
                             <td>{{l.requestor}}</td>
                             <td>{{l.action}}</td>
                             <td>{{l.status}}</td>
+                            <td>{{l.approver}}</td>
                             <td>{{l.changesDate}}</td>
                         </tr>
                     </tbody>

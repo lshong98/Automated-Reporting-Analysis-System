@@ -8740,8 +8740,9 @@ app.controller('bdbHistController', function($scope, $http, $filter, $window, st
 
 app.controller('bdbHistDetailController', function($scope, $http, $filter, $window, $routeParams, $route, storeDataService){
     'use strict';
-
+    $scope.approver = window.sessionStorage.getItem('owner');
     $scope.show = angular.copy(storeDataService.show.bdb);
+    $scope.remarkCol = "";
 
     $scope.bdbID = {
         "id": $routeParams.bdbID
@@ -8764,6 +8765,7 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
         if($scope.bdbDetail.status != "Pending"){
             $scope.bdbDetail.oldContent = $scope.bdbDetail.oldContent.replace(/\\/g,"");
             $scope.oldContent = JSON.parse($scope.bdbDetail.oldContent);
+            $scope.remark = $scope.bdbDetail.remark;
         }
         if($scope.bdbDetail.status == "Pending"){
             $http.post('/getBdbOriDetail', {'id': $scope.newContent.id}).then(function(response){
@@ -8780,7 +8782,9 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
             "query": $scope.bdbDetail.query,
             "oldContent": JSON.stringify($scope.oldContent),
             "id": $scope.bdbDetail.id,
-            "binId": $scope.oldContent.id
+            "binId": $scope.oldContent.id,
+            "approver": $scope.approver,
+            "remarkCol": $scope.remarkCol
         }
 
         $http.post('/bdbAprvRejEdit', query).then(function(response){

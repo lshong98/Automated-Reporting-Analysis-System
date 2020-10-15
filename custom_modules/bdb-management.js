@@ -227,7 +227,7 @@ app.post('/editBinDatabase', function(req, res){
 app.get('/getBdbHistList',function(req, res){
     'use strict';
 
-    var sql = "SELECT tblbdblog.id AS 'id', tblbdblog.requestDate AS 'requestDate', tblstaff.staffName AS 'requestor', tblbdblog.insertQuery AS 'query', tblbdblog.content AS 'content', (CASE WHEN tblbdblog.status = '0' THEN 'Pending' WHEN tblbdblog.status = '1' THEN 'Approve' WHEN tblbdblog.status = '2' THEN 'Reject' END) AS 'status', tblbdblog.changesDate AS 'changesDate', (CASE WHEN tblbdblog.action = '1' THEN 'Edit' WHEN tblbdblog.action = '2' THEN 'Delete' END)AS 'action' FROM tblbdblog JOIN tblstaff ON tblbdblog.requestor = tblstaff.staffID ORDER BY tblbdblog.requestDate DESC";
+    var sql = "SELECT tblbdblog.id AS 'id', tblbdblog.requestDate AS 'requestDate', tblstaff.staffName AS 'requestor', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblbdblog.approver) AS 'approver',tblbdblog.insertQuery AS 'query', tblbdblog.content AS 'content', (CASE WHEN tblbdblog.status = '0' THEN 'Pending' WHEN tblbdblog.status = '1' THEN 'Approve' WHEN tblbdblog.status = '2' THEN 'Reject' END) AS 'status', tblbdblog.changesDate AS 'changesDate', (CASE WHEN tblbdblog.action = '1' THEN 'Edit' WHEN tblbdblog.action = '2' THEN 'Delete' END)AS 'action' FROM tblbdblog JOIN tblstaff ON tblbdblog.requestor = tblstaff.staffID ORDER BY tblbdblog.requestDate DESC";
 
     database.query(sql, function(err, result){
         if(err){
@@ -240,7 +240,7 @@ app.get('/getBdbHistList',function(req, res){
 app.post('/getBdbHistDetail', function(req, res){
     'use strict';
 
-    var sql = "SELECT tblbdblog.id AS 'id', tblbdblog.requestDate AS 'requestDate', tblbdblog.insertQuery AS 'query',tblstaff.staffName AS 'requestor', tblbdblog.insertQuery AS 'query', tblbdblog.content AS 'content', (CASE WHEN tblbdblog.status = '0' THEN 'Pending' WHEN tblbdblog.status = '1' THEN 'Approve' WHEN tblbdblog.status = '2' THEN 'Reject' END) AS 'status', tblbdblog.changesDate AS 'changesDate', (CASE WHEN tblbdblog.action = '1' THEN 'Edit' WHEN tblbdblog.action = '2' THEN 'Delete' END)AS 'action', tblbdblog.content AS 'content', tblbdblog.oldContent AS 'oldContent' FROM tblbdblog JOIN tblstaff ON tblbdblog.requestor = tblstaff.staffID WHERE tblbdblog.id = '" + req.body.id + "' ORDER BY tblbdblog.requestDate DESC";
+    var sql = "SELECT tblbdblog.id AS 'id', tblbdblog.requestDate AS 'requestDate', tblbdblog.insertQuery AS 'query',tblstaff.staffName AS 'requestor', tblbdblog.insertQuery AS 'query', tblbdblog.content AS 'content', (CASE WHEN tblbdblog.status = '0' THEN 'Pending' WHEN tblbdblog.status = '1' THEN 'Approve' WHEN tblbdblog.status = '2' THEN 'Reject' END) AS 'status', tblbdblog.changesDate AS 'changesDate', (CASE WHEN tblbdblog.action = '1' THEN 'Edit' WHEN tblbdblog.action = '2' THEN 'Delete' END)AS 'action', tblbdblog.content AS 'content', tblbdblog.oldContent AS 'oldContent', tblbdblog.remark AS 'remark' FROM tblbdblog JOIN tblstaff ON tblbdblog.requestor = tblstaff.staffID WHERE tblbdblog.id = '" + req.body.id + "' ORDER BY tblbdblog.requestDate DESC";
 
     database.query(sql, function(err, result){
         if(err){
@@ -311,7 +311,8 @@ app.post('/bdbAprvRejEdit', function(req, res){
         })
     }
     var oldContent = req.body.oldContent.replace(/'/g,"\\'");
-    var sql2 = "UPDATE tblbdblog SET changesDate = NOW(), status = '" + req.body.status + "', oldContent = '" + oldContent + "' WHERE id = '" + req.body.id + "'";
+    var remark = req.body.remarkCol.replace(/'/g,"\\'");
+    var sql2 = "UPDATE tblbdblog SET changesDate = NOW(), status = '" + req.body.status + "', oldContent = '" + oldContent + "', approver = '" + req.body.approver + "', remark = '" + remark + "' WHERE id = '" + req.body.id + "'";
     database.query(sql2, function(err, result){
         if(err){
             throw err;
