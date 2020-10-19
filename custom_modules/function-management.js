@@ -313,7 +313,7 @@ function menuItem(keyword, status) {
             if(status == 'A'){
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/bdb"><i class="fas fa-dumpster"></i> Bin Database </a></li>';
             }
-        case "view acr":
+        case "view acrdb":
             if(status == 'A'){
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/acr-database"><i class="fas fa-dumpster"></i> ACR Database </a></li>';
             }

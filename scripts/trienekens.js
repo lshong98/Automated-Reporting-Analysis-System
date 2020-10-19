@@ -617,6 +617,14 @@ app.service('storeDataService', function () {
                 "export": 'I',
                 "batch": 'I',
                 "hist": 'I'
+            },
+            "acrdb": {
+                "view": 'I',
+                "create": 'I',
+                "edit": 'I',
+                "delete": 'I',
+                "export": 'I',
+                "hist": 'I'
             }
         },
         "pagination": {
@@ -5333,6 +5341,14 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "export": 'I',
             "batch": 'I',
             "hist": 'I'
+        },
+        "acrdb": {
+            "view": 'I',
+            "create": 'I',
+            "edit": 'I',
+            "delete": 'I',
+            "export": 'I',
+            "hist": 'I'
         }
     };
 
@@ -5614,6 +5630,14 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "export": 'A',
                             "batch": 'A',
                             "hist": 'A'
+                        },
+                        "acrdb": {
+                            "view": 'A',
+                            "create": 'A',
+                            "edit": 'A',
+                            "delete": 'A',
+                            "export": 'A',
+                            "hist": 'A'
                         }
                     };
                 }
@@ -5805,6 +5829,14 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "delete": 'I',
                             "export": 'I',
                             "batch": 'I',
+                            "hist": 'I'
+                        },
+                        "acrdb": {
+                            "view": 'I',
+                            "create": 'I',
+                            "edit": 'I',
+                            "delete": 'I',
+                            "export": 'I',
                             "hist": 'I'
                         }
                     };
@@ -8482,13 +8514,13 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         $scope.showData = true;
         $scope.searchBindatabaseFilter = '';
         $scope.binList = response.data;
-        console.log($scope.binList[0]);
+
         for(var i = 0; i < $scope.binList.length; i++){
             $scope.binList[i].date = $filter('date')($scope.binList[i].date, 'yyyy-MM-dd');
             $scope.binList[i].keyInDate = $filter('date')($scope.binList[i].keyInDate, 'yyyy-MM-dd');
             $scope.binList[i].changesDate = $filter('date')($scope.binList[i].changesDate, 'yyyy-MM-dd');
         }
-console.log($scope.binList[0]);
+
         $scope.searchBin = function (bin) {
             return (bin.serialNo + bin.brand + bin.size + bin.binInUse + bin.date + bin.name + bin.contact + bin.ic + bin.propertyNo + bin.tmnkpg + bin.address + bin.company + bin.typeOfPro + bin.pic + bin.communal + bin.council + bin.binStatus + bin.comment + bin.writtenOff + bin.keyInDate + bin.changesDate).toUpperCase().indexOf($scope.searchBindatabaseFilter.toUpperCase()) >= 0;
             
@@ -8798,6 +8830,146 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
 
 app.controller('acrdbController', function($scope, $http, $filter, storeDataService){
     'use strict';
+
+    $scope.filterAcrdbList = [];
+    $scope.show = angular.copy(storeDataService.show.bdb);
+    $scope.dateOfApplication = "";
+    $scope.cf = {
+        "mon": "",
+        "tue": "",
+        "wed": "",
+        "thu": "",
+        "fri": "",
+        "sat": "",
+        "sun": ""
+    }
+
+    $http.get('/getAcrdbList').then(function(response){
+
+        $scope.acrdb = {
+            "serialNo": "",
+            "brand": "",
+            "binSize": "",
+            "dateOfApplication": "",
+            "name": "",
+            "contact": "",
+            "ic": "",
+            "company": "",
+            "billAddress": "",
+            "serviceAddress":"",
+            "frequency": "",
+            "typeOfPremise": "",
+            "acrSerialNo": "",
+            "council": "",
+            "councilSerialNo": "",
+            "remarks": "",
+            "mon": "",
+            "tue": "",
+            "wed": "",
+            "thu": "",
+            "fri": "",
+            "sat": "",
+            "sun": ""
+        }
+        $scope.searchAcrdbListFilter = '';
+        $scope.acrdbList = response.data;
+
+        for(var i = 0; i < $scope.acrdbList.length; i++){
+            $scope.acrdbList[i].dateOfApplication = $filter('date')($scope.acrdbList[i].dateOfApplication, 'yyyy-MM-dd');
+            $scope.acrdbList[i].cf = '';
+            if( $scope.acrdbList[i].mon == 'X'){
+                $scope.acrdbList[i].cf += ' Mon ';
+            }
+            if( $scope.acrdbList[i].tue == 'X'){
+                $scope.acrdbList[i].cf += ' Tue ';
+            }
+            if( $scope.acrdbList[i].wed == 'X'){
+                $scope.acrdbList[i].cf += ' Wed ';
+            }
+            if( $scope.acrdbList[i].thu == 'X'){
+                $scope.acrdbList[i].cf += ' Thu ';
+            }
+            if( $scope.acrdbList[i].fri == 'X'){
+                $scope.acrdbList[i].cf += ' Fri ';
+            }
+            if( $scope.acrdbList[i].sat == 'X'){
+                $scope.acrdbList[i].cf += ' Sat ';
+            }
+            if( $scope.acrdbList[i].sun == 'X'){
+                $scope.acrdbList[i].cf += ' Sun ';
+            }
+        }
+
+        $scope.searchAcrdb = function (acrdb) {
+            return (acrdb.serialNo + acrdb.brand + acrdb.binSize + acrdb.dateOfApplication + acrdb.name + acrdb.contact + acrdb.ic + acrdb.company + acrdb.billingAddress + acrdb.serviceAddress + acrdb.frequency + acrdb.typeOfPremise + acrdb.acrSerialNo + acrdb.council + acrdb.councilSerialNo + acrdb.remarks + acrdb.cf).toUpperCase().indexOf($scope.searchAcrdbListFilter.toUpperCase()) >= 0;
+            
+        }
+
+        $scope.filterAcrdbList = angular.copy($scope.acrdbList);
+
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterAcrdbList, $scope.searchAcrdbListFilter);
+        };
+
+
+
+        $scope.addAcrdb = function(){
+
+            $scope.acrdb.dateOfApplication = $filter('date')($scope.dateOfApplication, 'yyyy-MM-dd');
+            if($scope.cf.mon == true){
+                $scope.acrdb.mon = "X";
+            }else{
+                $scope.acrdb.mon = "I";
+            }
+            if($scope.cf.tue == true){
+                $scope.acrdb.tue = "X"
+            }else{
+                $scope.acrdb.tue = "I";
+            }
+
+            if($scope.cf.wed == true){
+                $scope.acrdb.wed = "X"
+            }else{
+                $scope.acrdb.wed = "I";
+            }
+
+            if($scope.cf.thu == true){
+                $scope.acrdb.thu = "X"
+            }else{
+                $scope.acrdb.thu = "I";
+            }
+
+            if($scope.cf.fri == true){
+                $scope.acrdb.fri = "X"
+            }else{
+                $scope.acrdb.fri = "I";
+            }
+
+            if($scope.cf.sat == true){
+                $scope.acrdb.sat = "X"
+            }else{
+                $scope.acrdb.sat = "I";
+            }
+
+            if($scope.cf.sun == true){
+                $scope.acrdb.sun = "X"
+            }else{
+                $scope.acrdb.sun = "I";
+            }
+
+            if($scope.acrdb.dateOfApplication == ""){
+                $scope.notify('error', 'don\'t leave the date of application blank.');
+            }else{
+                $http.post('/addAcrDB', $scope.acrdb).then(function(response){
+                    
+                    if(response.data.status == 'success'){
+                        $scope.notify('success', 'Insert Success');
+                        angular.element('#createAcrdb').modal('toggle');
+                    }
+                });
+            }
+        }
+    });
 });
 
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {
