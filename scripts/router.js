@@ -459,6 +459,18 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'acrdbController',
         controllerAs:'acrdb'
     })
+    .when('/acr-database-edit/:acrID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/acr-database-edit/' + $route.current.params.acrID);
+            }
+        },
+        templateUrl: function(params){
+            return '/acr-database-edit/' + params.acrID;
+        },
+        controller: 'acrdbEditController',
+        controllerAs:'acrdbEdit'
+    })
     .when('/complaint-module', {
         resolve: {
             "check": function (routingService, $window, $location) {

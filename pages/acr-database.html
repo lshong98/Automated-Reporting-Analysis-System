@@ -172,7 +172,7 @@
         <button class="btn btn-success" data-ng-show="show.create == 'A'" data-toggle="modal" data-target="#createAcrdb"><i class="fa fa-plus"></i> New</button>
     </div>
     <div class="col-md-1">
-        <button class="btn btn-primary" data-ng-click="">Export</button>
+        <button class="btn btn-primary" data-ng-show="show.export == 'A'" data-ng-click="exportAcrDatabase('acrDBTable')">Export</button>
     </div>
 </div>
 <br/>
@@ -202,7 +202,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="a in acrdbList | filter: searchAcrdb">
+                    <tr data-ng-repeat="a in acrdbList | filter: searchAcrdb" data-ng-click="editAcrdbPage(a.id)">
                         <td>{{a.serialNo}}</td>
                         <td>{{a.brand}}</td>
                         <td>{{a.binSize}}</td>
@@ -211,7 +211,7 @@
                         <td>{{a.contact}}</td>
                         <td>{{a.ic}}</td>
                         <td>{{a.company}}</td>
-                        <td>{{a.billingAddress}}</td>
+                        <td>{{a.billAddress}}</td>
                         <td>{{a.serviceAddress}}</td>
                         <td>{{a.frequency}}</td>
                         <td>{{a.typeOfPremise}}</td>

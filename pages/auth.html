@@ -451,6 +451,15 @@
                         <span class="slider"></span>
                     </label>
                 </li>
+                <li class="list-group-item">
+                    Export ACR
+                    <label class="switch">
+                        <input type="checkbox" class="primary" data-ng-model="auth.acrdb.export"
+                            data-ng-change="changeValue(auth.acrdb.export, 'export acrdb');" data-ng-true-value="'A'"
+                            data-ng-false-value="'I'" />
+                        <span class="slider"></span>
+                    </label>
+                </li>
             </ul>
         </div>
     </div>

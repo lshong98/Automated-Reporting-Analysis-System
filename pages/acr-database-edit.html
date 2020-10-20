@@ -1,0 +1,187 @@
+<div class="row">
+    <div class="col-md-12">
+        <h5>ACR Database - Edit</h5>
+    </div>
+</div>
+<br/>
+<div class="form-group row">
+    <label for="inputSerialNo" class="col-md-2 col-form-label form-label-width">Serial No</label>
+    <div class="col-md-10">
+        <input type="text" id="inputSerialNo" class="form-control mx-sm-3" data-ng-model="acrdbDetail.serialNo" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputBrand" class="col-md-2 col-form-label form-label-width">Brand</label>
+    <div class="col-md-10">
+        <select id="inputBrand" class="form-control mx-sm-3" data-ng-model="acrdbDetail.brand">
+            <option value="SULO" selected>SULO</option>
+            <option value="SCHAFER">SCHAFER</option>
+            <option value="CONTENUR">CONTENUR</option>
+            <option value="N/A">N/A</option>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputBinSize" class="col-md-2 col-form-label form-label-width">Bin Size</label>
+    <div class="col-md-10">
+        <select id="inputBinSize" class="form-control mx-sm-3" data-ng-model="acrdbDetail.binSize">
+            <option value="120L" selected>120L</option>
+            <option value="240L">240L</option>
+            <option value="660L">660L</option>
+            <option value="1000L">1000L</option>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputDate" class="col-md-2 col-form-label form-label-width">Date</label>
+    <div class="col-md-10">
+        <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="acrdbDetail.dateOfApplication" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputName" class="col-md-2 col-form-label form-label-width">Name</label>
+    <div class="col-md-10">
+        <input type="text" id="inputName" class="form-control mx-sm-3" data-ng-model="acrdbDetail.name" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputContact" class="col-md-2 col-form-label form-label-width">Contact</label>
+    <div class="col-md-10">
+        <input type="text" id="inputContact" class="form-control mx-sm-3" data-ng-model="acrdbDetail.contact" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputIC" class="col-md-2 col-form-label form-label-width">IC</label>
+    <div class="col-md-10">
+        <input type="text" id="inputIC" class="form-control mx-sm-3" data-ng-model="acrdbDetail.ic" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputCompany" class="col-md-2 col-form-label form-label-width">Company</label>
+    <div class="col-md-10">
+        <input type="text" id="inputCompany" class="form-control mx-sm-3" data-ng-model="acrdbDetail.company" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputBillingAddress" class="col-md-2 col-form-label form-label-width">Billing Address</label>
+    <div class="col-md-10">
+        <input type="text" id="inputBillingAddress" class="form-control mx-sm-3" data-ng-model="acrdbDetail.billAddress" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputServiceAddress" class="col-md-2 col-form-label form-label-width">Service Address</label>
+    <div class="col-md-10">
+        <input type="text" id="inputServiceAddress" class="form-control mx-sm-3" data-ng-model="acrdbDetail.serviceAddress" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputFrequency" class="col-md-2 col-form-label form-label-width">Frequency</label>
+    <div class="col-md-10">
+        <input type="text" id="inputFrequency" class="form-control mx-sm-3" data-ng-model="acrdbDetail.frequency" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputTypePremise" class="col-md-2 col-form-label form-label-width">Type of Premise</label>
+    <div class="col-md-10">
+        <select id="inputTypePremise" class="form-control mx-sm-3" data-ng-model="acrdbDetail.typeOfPremise">
+            <option value="Shophouse" selected>Shophouse</option>
+            <option value="Private Comm">Private Comm</option>
+            <option value="Hospital,Clinic">Hospital, Clinic</option>
+            <option value="Workshop,Petrol Station">Workshop, Petrol Station</option>
+            <option value="Household">Household</option>
+            <option value="Construction Site">Construction Site</option>
+            <option value="Uni,School,Kindergarden">Uni,School,Kindergarden</option>
+            <option value="Utility">Utility</option>
+            <option value="Condo,Apart,Flat">Condo,Apart,Flat</option>
+            <option value="Hotel,Resort">Hotel,Resort</option>
+            <option value="DBKU">DBKU</option>
+            <option value="Gov Entity">Gov Entity</option>
+            <option value="Market Hawker">Market Hawker</option>
+            <option value="Placeofworship">Placeofworship</option>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputAcrSerialNo" class="col-md-2 col-form-label form-label-width">ACR Serial No</label>
+    <div class="col-md-10">
+        <input type="text" id="inputAcrSerialNo" class="form-control mx-sm-3" data-ng-model="acrdbDetail.acrSerialNo" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputCouncil" class="col-md-2 col-form-label form-label-width">Council</label>
+    <div class="col-md-10">
+        <select id="inputCouncil" class="form-control mx-sm-3" data-ng-model="acrdbDetail.council">
+            <option value="DBKU">DBKU</option>
+            <option value="MPP">MPP</option>
+            <option value="MBKS">MBKS</option>
+            <option value="MDS">MDS</option>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputCouncilSerialNo" class="col-md-2 col-form-label form-label-width">Council Serial No</label>
+    <div class="col-md-10">
+        <input type="text" id="inputCouncilSerialNo" class="form-control mx-sm-3" data-ng-model="acrdbDetail.councilSerialNo" />
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputRemarks" class="col-md-2 col-form-label form-label-width">Remarks</label>
+    <div class="col-md-10">
+        <textarea id="inputRemarks" class="form-control mx-sm-3" data-ng-model="acrdbDetail.councilSerialNo"></textarea>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="inputCF" class="col-md-2 col-form-label form-label-width">Collection Frequency</label>
+    <div class="col-md-10" id="inputCF">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="monCheck" data-ng-model="acrdbDetail.checkMon">
+            <label class="form-check-label" for="monCheck">
+                Mon
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="tueCheck" data-ng-model="acrdbDetail.checkTue">
+            <label class="form-check-label" for="tueCheck">
+                Tue
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="wedCheck" data-ng-model="acrdbDetail.checkWed">
+            <label class="form-check-label" for="wedCheck">
+                Wed
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="thuCheck" data-ng-model="acrdbDetail.checkThu">
+            <label class="form-check-label" for="thuCheck">
+                Thu
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="friCheck" data-ng-model="acrdbDetail.checkFri">
+            <label class="form-check-label" for="friCheck">
+                Fri
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="satCheck" data-ng-model="acrdbDetail.checkSat">
+            <label class="form-check-label" for="satCheck">
+                Sat
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="sunCheck" data-ng-model="acrdbDetail.checkSun">
+            <label class="form-check-label" for="sunCheck">
+                Sun
+            </label>
+        </div>
+    </div>  
+</div>
+
+<div class="row">
+    <div class="col-md-2 offset-md-10">
+        <button class="btn btn-success" data-ng-click="saveAcrdbEdit()">Save</button>
+        <button class="btn btn-danger" data-ng-click="acrdbEditBack()">Back</button>
+    </div>
+</div>

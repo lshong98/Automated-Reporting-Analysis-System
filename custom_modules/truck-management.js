@@ -13,7 +13,8 @@ app.post('/addTruck', function (req, res) {
     var log = [];
     
     f.makeID("truck", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tbltruck (truckID, transporter, type, truckTon, truckNum, truckExpiryStatus, creationDateTime, truckStatus) VALUE ('" + ID + "', '" + req.body.transporter + "', '" + req.body.type + "', '" + req.body.ton + "', '" + req.body.no + "', '" + req.body.roadtax + "', '" + req.body.creationDate + "', 'A')";
+        console.log("Server.js - line 16: " + ID);
+        var sql = "INSERT INTO tbltruck (truckID, transporter, type, truckTon, truckNum, truckExpiryStatus, creationDateTime, truckStatus) VALUE ('" + ID + "', '" + req.body.transporter + "', '" + req.body.type + "', '" + req.body.ton + "', '" + req.body.no + "', '" + req.body.roadtax + "', NOW(), 'A')";
         
         f.sendForAuthorization(req.body.creationDate, req.body.iam, "add", "Create new truck", ID, "tbltruck", "\"" + sql + "\"");
         f.logTransaction(req.body.creationDate, req.body.iam, "add", "Request to Create New truck", ID, "tbltruck");

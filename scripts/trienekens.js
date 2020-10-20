@@ -8743,7 +8743,6 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
 
 });
 
-
 app.controller('bdbHistController', function($scope, $http, $filter, $window, storeDataService){
     'use strict'
     
@@ -8832,7 +8831,7 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
     'use strict';
 
     $scope.filterAcrdbList = [];
-    $scope.show = angular.copy(storeDataService.show.bdb);
+    $scope.show = angular.copy(storeDataService.show.acrdb);
     $scope.dateOfApplication = "";
     $scope.cf = {
         "mon": "",
@@ -8878,25 +8877,25 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
             $scope.acrdbList[i].dateOfApplication = $filter('date')($scope.acrdbList[i].dateOfApplication, 'yyyy-MM-dd');
             $scope.acrdbList[i].cf = '';
             if( $scope.acrdbList[i].mon == 'X'){
-                $scope.acrdbList[i].cf += ' Mon ';
+                $scope.acrdbList[i].cf += 'Mon,';
             }
             if( $scope.acrdbList[i].tue == 'X'){
-                $scope.acrdbList[i].cf += ' Tue ';
+                $scope.acrdbList[i].cf += ' Tue,';
             }
             if( $scope.acrdbList[i].wed == 'X'){
-                $scope.acrdbList[i].cf += ' Wed ';
+                $scope.acrdbList[i].cf += ' Wed,';
             }
             if( $scope.acrdbList[i].thu == 'X'){
-                $scope.acrdbList[i].cf += ' Thu ';
+                $scope.acrdbList[i].cf += ' Thu,';
             }
             if( $scope.acrdbList[i].fri == 'X'){
-                $scope.acrdbList[i].cf += ' Fri ';
+                $scope.acrdbList[i].cf += ' Fri,';
             }
             if( $scope.acrdbList[i].sat == 'X'){
-                $scope.acrdbList[i].cf += ' Sat ';
+                $scope.acrdbList[i].cf += ' Sat,';
             }
             if( $scope.acrdbList[i].sun == 'X'){
-                $scope.acrdbList[i].cf += ' Sun ';
+                $scope.acrdbList[i].cf += ' Sun';
             }
         }
 
@@ -8969,7 +8968,121 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
                 });
             }
         }
+
+        $scope.editAcrdbPage = function(acrId){
+            console.log($scope.show)
+            if($scope.show.edit == 'A'){
+                window.location.href = '#/acr-database-edit/' + acrId;
+            }
+        }
     });
+
+    $scope.exportAcrDatabase = function(tableID, filename = ''){
+        console.log(tableID);
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        
+        // Specify file name
+        filename = filename?filename+'.xls':'acrDatabase.xls';
+        
+        // Create download link element
+        downloadLink = document.createElement("a");
+        
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+        
+            // Setting the file name
+            downloadLink.download = filename;
+            
+            //triggering the function
+            downloadLink.click();
+        }
+    }     
+});
+
+app.controller('acrdbEditController', function($scope, $http, $filter, storeDataService, $routeParams, $route){
+    'use strict';
+
+    $scope.show = angular.copy(storeDataService.show.acrdb);
+    var acrID = {
+        'id': $routeParams.acrID
+    }
+    if($scope.show.edit == 'A'){
+        $http.post('/getAcrDbDetail', acrID).then(function(response){
+            $scope.acrdbDetail = response.data[0];
+            
+            $scope.acrdbDetail.dateOfApplication = new Date($scope.acrdbDetail.dateOfApplication);
+            $scope.acrdbDetail.checkMon = "";
+            $scope.acrdbDetail.checkTue = "";
+            $scope.acrdbDetail.checkWed = "";
+            $scope.acrdbDetail.checkThu = "";
+            $scope.acrdbDetail.checkFri = "";
+            $scope.acrdbDetail.checkSat = "";
+            $scope.acrdbDetail.checkSun = "";
+            
+            if($scope.acrdbDetail.mon == 'X'){
+                $scope.acrdbDetail.checkMon = true;
+            }else{
+                $scope.acrdbDetail.checkMon = false;
+            }
+            if($scope.acrdbDetail.tue == 'X'){
+                $scope.acrdbDetail.checkTue = true;
+            }else{
+                $scope.acrdbDetail.checkTue = false;
+            }
+            if($scope.acrdbDetail.wed == 'X'){
+                $scope.acrdbDetail.checkWed = true;
+            }else{
+                $scope.acrdbDetail.checkWed = false;
+            }
+            if($scope.acrdbDetail.thu == 'X'){
+                $scope.acrdbDetail.checkThu = true;
+            }else{
+                $scope.acrdbDetail.checkThu = false;
+            }
+            if($scope.acrdbDetail.fri == 'X'){
+                $scope.acrdbDetail.checkFri = true;
+            }else{
+                $scope.acrdbDetail.checkFri = false;
+            }
+            if($scope.acrdbDetail.sat == 'X'){
+                $scope.acrdbDetail.checkSat = true;
+            }else{
+                $scope.acrdbDetail.checkSat = false;
+            }
+            if($scope.acrdbDetail.sun == 'X'){
+                $scope.acrdbDetail.checkSun = true;
+            }else{
+                $scope.acrdbDetail.checkSun = false;
+            }
+        console.log($scope.acrdbDetail);
+
+        })
+
+        $scope.acrdbEditBack = function(){
+            window.history.back();
+        }
+
+        $scope.saveAcrdbEdit = function(){
+            $scope.acrdbDetail.saveDateOfApplication = $filter('date')($scope.acrdbDetail.dateOfApplication, 'yyyy-MM-dd');
+            $http.post('/saveAcrdbEdit', $scope.acrdbDetail).then(function(response){
+                if(response.data.status == 'success'){
+                    window.location.href = '#/acr-database';
+                }
+            });
+            
+        }
+    }   
 });
 
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {
