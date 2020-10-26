@@ -8475,9 +8475,12 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.searchIC = '';
     $scope.searchAddress = '';
     $scope.searchCompany = '';
-    $scope.searchDate = '';
-    $scope.searchKeyDate = '';
-    $scope.searchChangesDate = '';
+    $scope.searchDateStart = '';
+    $scope.searchDateEnd = '';
+    $scope.searchKeyDateStart = '';
+    $scope.searchKeyDateEnd = '';
+    $scope.searchChangesDateStart = '';
+    $scope.searchChangesDateEnd = '';
     $scope.editBinNewPic = '';
 
     $scope.createBin = {
@@ -8557,25 +8560,40 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         }else if(field == 'company'){
             value = $scope.searchCompany;
         }else if(field == 'date'){
-            if($scope.searchDate == '' || $scope.searchDate == null){
+            if($scope.searchDateStart == '' || $scope.searchDateStart == null){
                 value = null;
             }else{
-                value = new Date($scope.searchDate);
-                value = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
+                var value1 = new Date($scope.searchDateStart);
+                if($scope.searchDateEnd == '' || $scope.searchDateEnd == null){
+                    var value2 = new Date();
+                }else{
+                    var value2 = new Date($scope.searchDateEnd);
+                }
+                value = value1.getFullYear() + '-' + (value1.getMonth() + 1) + '-' + value1.getDate() + '::' + value2.getFullYear() + '-' + (value2.getMonth() + 1) + '-' + value2.getDate();
             }
         }else if(field == 'keyInDate'){
-            if($scope.searchKeyDate == '' || $scope.searchKeyDate == null){
+            if($scope.searchKeyDateStart == '' || $scope.searchKeyDateStart == null){
                 value = null;
             }else{
-                value = new Date($scope.searchKeyDate);
-                value = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
+                var value1 = new Date($scope.searchKeyDateStart);
+                if($scope.searchKeyDateEnd == '' || $scope.searchKeyDateEnd == null){
+                    var value2 = new Date();
+                }else{
+                    var value2 = new Date($scope.searchKeyDateEnd);
+                }
+                value = value1.getFullYear() + '-' + (value1.getMonth() + 1) + '-' + value1.getDate() + '::' + value2.getFullYear() + '-' + (value2.getMonth() + 1) + '-' + value2.getDate();
             }
         }else if(field == 'changesDate'){
-            if($scope.searchChangesDate == '' || $scope.searchChangesDate == null){
+            if($scope.searchChangesDateStart == '' || $scope.searchChangesDateStart == null){
                 value = null;
             }else{
-                value = new Date($scope.searchChangesDate);
-                value = value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
+                var value1 = new Date($scope.searchChangesDateStart);
+                if($scope.searchChangesDateEnd == '' || $scope.searchChangesDateEnd == null){
+                    var value2 = new Date();
+                }else{
+                    var value2 = new Date($scope.searchChangesDateEnd);
+                }
+                value = value1.getFullYear() + '-' + (value1.getMonth() + 1) + '-' + value1.getDate() + '::' + value2.getFullYear() + '-' + (value2.getMonth() + 1) + '-' + value2.getDate();
             }
         }
 

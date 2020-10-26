@@ -50,17 +50,20 @@
         </div>
         <div class="form-group row">
             <label for="searchDate form-label" class="col-md-1">Date</label>
-            <input type="date" class="form-control col-md-5" id="searchDate " data-ng-model="searchDate" />
+            <input type="date" class="form-control col-md-3" id="searchDateStart" data-ng-model="searchDateStart" />
+            <input type="date" class="form-control col-md-3" id="searchDateEnd" data-ng-model="searchDateEnd" />
             <button type="button" class="btn btn-primary"data-ng-click="searchFunction('date')">Search</button>
         </div>
         <div class="form-group row">
             <label for="searchKeyDate form-label" class="col-md-1">Create Date</label>
-            <input type="date" class="form-control col-md-5" id="searchKeyDate " data-ng-model="searchKeyDate" />
+            <input type="date" class="form-control col-md-3" id="searchKeyDateStart" data-ng-model="searchKeyDateStart" />
+            <input type="date" class="form-control col-md-3" id="searchKeyDateEnd" data-ng-model="searchKeyDateEnd" />
             <button type="button" class="btn btn-primary"data-ng-click="searchFunction('keyInDate')">Search</button>
         </div>
         <div class="form-group row">
             <label for="searchChangesDate form-label" class="col-md-1">Edit Date</label>
-            <input type="date" class="form-control col-md-5" id="searchChangesDate " data-ng-model="searchChangesDate" />
+            <input type="date" class="form-control col-md-3" id="searchChangesDateStart" data-ng-model="searchChangesDateStart" />
+            <input type="date" class="form-control col-md-3" id="searchChangesDateEnd" data-ng-model="searchChangesDateEnd" />
             <button type="button" class="btn btn-primary"data-ng-click="searchFunction('changesDate')">Search</button>
         </div>
     </div>

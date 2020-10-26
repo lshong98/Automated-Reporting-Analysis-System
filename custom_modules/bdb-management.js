@@ -27,19 +27,25 @@ app.post('/getBinDatabaseList', function(req, res){
         if(req.body.value == null){
             var sql = "SELECT * FROM tblbindatabase WHERE date is NULL";
         }else{
-            var sql = "SELECT * FROM tblbindatabase WHERE date = '" + req.body.value + "'";
+            var startDate = req.body.value.split("::")[0];
+            var endDate = req.body.value.split("::")[1];
+            var sql = "SELECT * FROM tblbindatabase WHERE date BETWEEN '" + startDate + "' AND '" + endDate + "'";
         }
     }else if(req.body.field == 'keyInDate'){
         if(req.body.value == null){
             var sql = "SELECT * FROM tblbindatabase WHERE keyInDate is NULL";
         }else{
-            var sql = "SELECT * FROM tblbindatabase WHERE keyInDate = '" + req.body.value + "'";
+            var startDate = req.body.value.split("::")[0];
+            var endDate = req.body.value.split("::")[1];
+            var sql = "SELECT * FROM tblbindatabase WHERE keyInDate BETWEEN '" + startDate + "' AND '" + endDate + "'";
         }
     }else if(req.body.field == 'changesDate'){
         if(req.body.value == null){
             var sql = "SELECT * FROM tblbindatabase WHERE changesDate is NULL";
         }else{
-            var sql = "SELECT * FROM tblbindatabase WHERE changesDate = '" + req.body.value + "'";
+            var startDate = req.body.value.split("::")[0];
+            var endDate = req.body.value.split("::")[1];
+            var sql = "SELECT * FROM tblbindatabase WHERE changesDate BETWEEN '" + startDate + "' AND '" + endDate + "'";
         }
         
     }else{
