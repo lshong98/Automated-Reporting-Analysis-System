@@ -1366,7 +1366,7 @@ app.post('/loadMenu', function(req, res) {
             first_text = (key.mgmtName).split(" ")[0];
             second_text = (key.mgmtName).split(" ")[1];
             
-            if(second_text === "complaintweb" || second_text === "complaintapp" || second_text === "complaintlogs"){
+            if(second_text === "complaintwebkch" || second_text === "complaintappkch" || second_text === "complaintlogskch" || second_text === "complaintwebbtu" || second_text === "complaintappbtu" || second_text === "complaintlogsbtu"){
                 complaint_flags += 1;
             }else if (first_text === "view" || (key.mgmtName).indexOf("upload") !== -1 || (key.mgmtName).indexOf("send") !== -1 || (key.mgmtName).indexOf("approve") !== -1) {
                 

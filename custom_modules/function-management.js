@@ -263,7 +263,7 @@ function menuItem(keyword, status) {
             }
         case "view complaintmodule": 
             if (status == 'A') {
-                return '<li class="menu__item" data-ng-show="show.complaintapp.view == \'A\' || show.complaintweb.view == \'A\' || show.complaintlogs.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module <span class="complaint"></span></a></li>';
+                return '<li class="menu__item" data-ng-show="show.complaintappkch.view == \'A\' || show.complaintwebkch.view == \'A\' || show.complaintlogskch.view == \'A\' || show.complaintappbtu.view == \'A\' || show.complaintwebbtu.view == \'A\' || show.complaintlogsbtu.view == \'A\'" role="menuitem"><a class="menu__link" href="#/complaint-module"><i class="fas fa-bullhorn"></i> Complaint Module <span class="complaint"></span></a></li>';
             }
         case "view transactionLog":
             if (status == 'A') {

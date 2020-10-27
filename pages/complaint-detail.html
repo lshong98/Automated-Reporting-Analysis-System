@@ -167,6 +167,15 @@
       </div>
       <div class="modal-body">
         <div class="form-group row">
+            <label for="showZon" class="col-xs-3 col-form-label form-label-width">Zone</label>
+            <div class="col-md-9">
+                <select class="form-control" data-ng-model="verify.zon" id="showZon">
+                    <option value="KCH">KCH</option>
+                    <option value="BTU">BTU</option>
+                </select>
+            </div>
+        </div> 
+        <div class="form-group row">
             <label for="showDate" class="col-xs-3 col-form-label form-label-width">Date</label>
             <div class="col-md-9">
                 <input type="text" id="showDate" class="form-control" data-ng-model="verify.date" readonly/>

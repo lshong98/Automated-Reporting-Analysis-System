@@ -159,15 +159,20 @@ app.post('/logsOfficerUpdateRemarks', function(req, res) {
 
 
 //complaint module
-app.get('/getComplaintList', function(req, res) {
+app.post('/getComplaintList', function(req, res) {
     'use strict';
 
     var sql = "",
         readComplaintSql = "";
 
-    //sql = "SELECT tblcomplaint.complaintDate AS 'date', tblcomplaint.complaint AS 'title', tbluser.name AS  'customer', tblcomplaint.premiseType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Closed' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'Invalid' WHEN tblcomplaint.status ='o' THEN 'Open' END) AS status, tblcomplaint.readStat AS 'readStat' FROM tblcomplaint JOIN tbluser ON tbluser.userID = tblcomplaint.userID LEFT OUTER JOIN tbltaman ON tbltaman.tamanID = tbluser.tamanID LEFT OUTER JOIN tblarea ON tblarea.areaID = tbltaman.areaID LEFT OUTER JOIN tblzone ON tblzone.zoneID = tblarea.zoneID ORDER BY date DESC";
-    sql = "SELECT * FROM (SELECT tblcomplaint.complaintDate AS 'date', tblcomplaint.complaint AS 'title', tbluser.name AS  'customer', tblcomplaint.premiseType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Closed' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'Invalid' WHEN tblcomplaint.status ='o' THEN 'Open' END) AS status, tblcomplaint.readStat AS 'readStat' FROM tblcomplaint JOIN tbluser ON tbluser.userID = tblcomplaint.userID LEFT OUTER JOIN tbltaman ON tbltaman.tamanID = tbluser.tamanID LEFT OUTER JOIN tblarea ON tblarea.areaID = tbltaman.areaID LEFT OUTER JOIN tblzone ON tblzone.zoneID = tblarea.zoneID) t1 LEFT OUTER JOIN (SELECT complaintID as 'chatCompID', COUNT(readStat) as 'unread' from tblchat WHERE readStat = 'u' and recipient LIKE 'A%' GROUP BY complaintID) t2 ON t1.complaintID = t2.chatCompID ORDER BY t1.date DESC";
-    //readComplaintSql = "UPDATE tblcomplaint SET readStat = 'r'";
+    if(req.body.zon == ""){
+        sql = "SELECT * FROM (SELECT tblcomplaint.complaintDate AS 'date', tblcomplaint.complaint AS 'title', tbluser.name AS  'customer', tblcomplaint.premiseType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Closed' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'Invalid' WHEN tblcomplaint.status ='o' THEN 'Open' END) AS status, tblcomplaint.readStat AS 'readStat' FROM tblcomplaint JOIN tbluser ON tbluser.userID = tblcomplaint.userID LEFT OUTER JOIN tbltaman ON tbltaman.tamanID = tbluser.tamanID LEFT OUTER JOIN tblarea ON tblarea.areaID = tbltaman.areaID LEFT OUTER JOIN tblzone ON tblzone.zoneID = tblarea.zoneID) t1 LEFT OUTER JOIN (SELECT complaintID as 'chatCompID', COUNT(readStat) as 'unread' from tblchat WHERE readStat = 'u' and recipient LIKE 'A%' GROUP BY complaintID) t2 ON t1.complaintID = t2.chatCompID ORDER BY t1.date DESC";
+    }else{
+        sql = "SELECT * FROM (SELECT tblcomplaint.complaintDate AS 'date', tblcomplaint.complaint AS 'title', tbluser.name AS  'customer', tblcomplaint.premiseType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Closed' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'Invalid' WHEN tblcomplaint.status ='o' THEN 'Open' END) AS status, tblcomplaint.readStat AS 'readStat' FROM tblcomplaint JOIN tbluser ON tbluser.userID = tblcomplaint.userID LEFT OUTER JOIN tbltaman ON tbltaman.tamanID = tbluser.tamanID LEFT OUTER JOIN tblarea ON tblarea.areaID = tbltaman.areaID LEFT OUTER JOIN tblzone ON tblzone.zoneID = tblarea.zoneID WHERE tblcomplaint.zon = '" + req.body.zon + "') t1 LEFT OUTER JOIN (SELECT complaintID as 'chatCompID', COUNT(readStat) as 'unread' from tblchat WHERE readStat = 'u' and recipient LIKE 'A%' GROUP BY complaintID) t2 ON t1.complaintID = t2.chatCompID ORDER BY t1.date DESC";
+    }
+    
+    console.log(sql);
+    
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -306,7 +311,7 @@ app.post('/submitOfficeMadeComplaint', function(req, res) {
         var companyFormatted = req.body.compCompany.replace(/'/g,"\\'");
         var addressFormatted = req.body.compAddress.replace(/'/g,"\\'");
         var compTypeFormatted = req.body.compType.replace(/'/g,"\\'");
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, status, custStatus, activeStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + nameFormatted + "', '" + companyFormatted + "', '" + req.body.compPhone + "', '" + addressFormatted + "','" + compTypeFormatted + "', date(now()), time(now()), '" + req.body.compLogBy + "', now(), '" + images + "', 1, '" + req.body.services + "', 'r', 'u', 'open', 'open', '1')";
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, status, custStatus, activeStatus, zon) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + nameFormatted + "', '" + companyFormatted + "', '" + req.body.compPhone + "', '" + addressFormatted + "','" + compTypeFormatted + "', date(now()), time(now()), '" + req.body.compLogBy + "', now(), '" + images + "', 1, '" + req.body.services + "', 'r', 'u', 'open', 'open', '1', '" + req.body.zon + "')";
 
         database.query(sql, function(err, result) {
             if (err) {
@@ -359,9 +364,14 @@ app.post('/submitEditTOC', function(req,res){
     });    
 });
 
-app.get('/getComplaintOfficerList', function(req, res) {
+app.post('/getComplaintOfficerList', function(req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaintofficer.coID AS 'coID', CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState', tblcomplaintofficer.contactStatus AS 'contactStatus' FROM tblcomplaintofficer WHERE tblcomplaintofficer.activeStatus = '1' ORDER BY tblcomplaintofficer.creationDateTime DESC";
+
+    if(req.body.zon == ''){
+        var sql = "SELECT tblcomplaintofficer.coID AS 'coID', CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState', tblcomplaintofficer.contactStatus AS 'contactStatus' FROM tblcomplaintofficer WHERE tblcomplaintofficer.activeStatus = '1' ORDER BY tblcomplaintofficer.creationDateTime DESC";
+    }else{
+        var sql = "SELECT tblcomplaintofficer.coID AS 'coID', CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState', tblcomplaintofficer.contactStatus AS 'contactStatus' FROM tblcomplaintofficer WHERE tblcomplaintofficer.activeStatus = '1' AND zon = '" + req.body.zon + "' ORDER BY tblcomplaintofficer.creationDateTime DESC";
+    }
 
     database.query(sql, function(err, result) {
 
@@ -373,9 +383,14 @@ app.get('/getComplaintOfficerList', function(req, res) {
 
 });
 
-app.get('/getLogisticsComplaintList', function(req, res) {
+app.post('/getLogisticsComplaintList', function(req, res) {
     'use strict';
-    var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.reason AS 'reason', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.status AS 'status', tblstaff.staffName AS 'staff', tblcomplaintofficer.logsReadState AS 'logsReadState', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.logisticsBy = tblstaff.staffID WHERE step >= 1 AND tblcomplaintofficer.activeStatus = '1' ORDER BY tblcomplaintofficer.creationDateTime DESC";
+
+    if(req.body.zon == ''){
+        var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.reason AS 'reason', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.status AS 'status', tblstaff.staffName AS 'staff', tblcomplaintofficer.logsReadState AS 'logsReadState', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.logisticsBy = tblstaff.staffID WHERE step >= 1 AND tblcomplaintofficer.activeStatus = '1' ORDER BY tblcomplaintofficer.creationDateTime DESC";
+    }else{
+        var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.reason AS 'reason', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.status AS 'status', tblstaff.staffName AS 'staff', tblcomplaintofficer.logsReadState AS 'logsReadState', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.logisticsBy = tblstaff.staffID WHERE step >= 1 AND tblcomplaintofficer.activeStatus = '1' AND zon = '" + req.body.zon + "' ORDER BY tblcomplaintofficer.creationDateTime DESC";
+    }
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -650,7 +665,7 @@ app.post('/verifyAppComp', function(req, res) {
     var typeFormatted = req.body.type.replace(/'/g,"\\'");
 
     f.makeID("complaint", req.body.creationDate).then(function(ID) {
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, cmsStatus, activeStatus, status, custStatus) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.company + "','" + req.body.telNo + "', '" + req.body.address + "','" + typeFormatted + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '" + req.body.cmsStatus + "', '1', '" + req.body.lgStatus + "', '" + req.body.bdStatus + "')";
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, cmsStatus, activeStatus, status, custStatus, zon) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.source + "', '" + req.body.refNo + "', '" + req.body.name + "', '" + req.body.company + "','" + req.body.telNo + "', '" + req.body.address + "','" + typeFormatted + "', '" + req.body.forwardLogisticsDate + "', '" + req.body.forwardLogisticsTime + "', '" + req.body.forwardLogisticsBy + "', '" + req.body.creationDate + "', '" + req.body.img + "', 1, '" + req.body.services + "', 'r', 'u', '" + req.body.cmsStatus + "', '1', '" + req.body.lgStatus + "', '" + req.body.bdStatus + "', '" + req.body.zon + "')";
 
         database.query(sql, function(err, result) {
             if (err) {

@@ -180,39 +180,7 @@ socket.on('new message', function (data) {
    
 });
 
-// socket.on('read municipal', function (data) {
-//     if (data.unread > 0) {
-//         var unread = $('.satisfaction').html();
-//         console.log(unread);
-//         if (unread > 0) {
-//             var remaining = parseInt(unread) - parseInt(data.unread);
-//             console.log(remaining);
-//             $('.satisfaction').addClass("badge badge-danger").html(remaining);
-//         }
-//     }
-// });
 
-// socket.on('read commercial', function (data) {
-//     if (data.unread > 0) {
-//         var unread = $('.satisfaction').html();
-//         if (unread > 0) {
-//             var remaining = parseInt(unread) - parseInt(data.unread);
-//             console.log(remaining);
-//             $('.satisfaction').addClass("badge badge-danger").html(remaining);
-//         }
-//     }
-// });
-
-// socket.on('read scheduled', function (data) {
-//     if (data.unread > 0) {
-//         var unread = $('.satisfaction').html();
-//         if (unread > 0) {
-//             var remaining = parseInt(unread) - parseInt(data.unread);
-//             console.log(remaining);
-//             $('.satisfaction').addClass("badge badge-danger").html(remaining);
-//         }
-//     }
-// });
 
 socket.on('read enquiry', function (data) {
     $('.enquiry').addClass("badge badge-danger").html(data.unread);
@@ -596,17 +564,30 @@ app.service('storeDataService', function () {
                 "edit": 'I',
                 "create": 'I'
             },
-            "complaintapp": {
+            "complaintappkch": {
                 "view": 'I'
             },
-            "complaintweb": {
+            "complaintwebkch": {
                 "view": 'I',
                 "create": 'I',
                 "hist": 'I',
                 "editcms": 'I',
                 "delete": 'I'
             },
-            "complaintlogs": {
+            "complaintlogskch": {
+                "view": 'I'
+            },
+            "complaintappbtu": {
+                "view": 'I'
+            },
+            "complaintwebbtu": {
+                "view": 'I',
+                "create": 'I',
+                "hist": 'I',
+                "editcms": 'I',
+                "delete": 'I'
+            },
+            "complaintlogsbtu": {
                 "view": 'I'
             },
             "bdb": {
@@ -5320,17 +5301,30 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
             "edit": 'I',
             "create": 'I'
         },
-        "complaintapp": {
+        "complaintappkch": {
             "view": 'I'
         },
-        "complaintweb": {
+        "complaintwebkch": {
             "view": 'I',
             "create": 'I',
             "hist": 'I',
             "editcms": 'I',
             "delete": 'I'
         },
-        "complaintlogs": {
+        "complaintlogskch": {
+            "view": 'I'
+        },
+        "complaintappbtu": {
+            "view": 'I'
+        },
+        "complaintwebbtu": {
+            "view": 'I',
+            "create": 'I',
+            "hist": 'I',
+            "editcms": 'I',
+            "delete": 'I'
+        },
+        "complaintlogsbtu": {
             "view": 'I'
         },
         "bdb": {
@@ -5609,17 +5603,30 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "edit": 'A',
                             "create": 'A'
                         },
-                        "complaintapp": {
+                        "complaintappkch": {
                             "view": 'A'
                         },
-                        "complaintweb": {
+                        "complaintwebkch": {
                             "view": 'A',
                             "create": 'A',
                             "hist": 'A',
                             "editcms": 'A',
                             "delete": 'A'
                         },
-                        "complaintlogs": {
+                        "complaintlogskch": {
+                            "view": 'A'
+                        },
+                        "complaintappbtu": {
+                            "view": 'A'
+                        },
+                        "complaintwebbtu": {
+                            "view": 'A',
+                            "create": 'A',
+                            "hist": 'A',
+                            "editcms": 'A',
+                            "delete": 'A'
+                        },
+                        "complaintlogsbtu": {
                             "view": 'A'
                         },
                         "bdb": {
@@ -5809,17 +5816,30 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             "edit": 'I',
                             "create": 'I'
                         },
-                        "complaintapp": {
+                        "complaintappkch": {
                             "view": 'I'
                         },
-                        "complaintweb": {
+                        "complaintwebkch": {
                             "view": 'I',
                             "create": 'I',
                             "hist": 'I',
                             "editcms": 'I',
                             "delete": 'I'
                         },
-                        "complaintlogs": {
+                        "complaintlogskch": {
+                            "view": 'I'
+                        },
+                        "complaintappbtu": {
+                            "view": 'I'
+                        },
+                        "complaintwebbtu": {
+                            "view": 'I',
+                            "create": 'I',
+                            "hist": 'I',
+                            "editcms": 'I',
+                            "delete": 'I'
+                        },
+                        "complaintlogsbtu": {
                             "view": 'I'
                         },
                         "bdb": {
@@ -9110,12 +9130,20 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     $scope.complaintOfficerList = [];
     $scope.logisticsComplaintList = [];
     $scope.nowModule = 'web';
+    $scope.zonReq = {
+        "zon": ''
+    }
+    $scope.zonReqApp = {
+        "zon": ''
+    }
 
     //show control
-    $scope.showweb = angular.copy(storeDataService.show.complaintweb);
-    $scope.showapp = angular.copy(storeDataService.show.complaintapp);
-    $scope.showlogs = angular.copy(storeDataService.show.complaintlogs);
-    console.log($scope.showlogs);
+    $scope.showwebkch = angular.copy(storeDataService.show.complaintwebkch);
+    $scope.showappkch = angular.copy(storeDataService.show.complaintappkch);
+    $scope.showlogskch = angular.copy(storeDataService.show.complaintlogskch);
+    $scope.showwebbtu = angular.copy(storeDataService.show.complaintwebbtu);
+    $scope.showappbtu = angular.copy(storeDataService.show.complaintappbtu);
+    $scope.showlogsbtu = angular.copy(storeDataService.show.complaintlogsbtu);
 
     $scope.unreadWebComplaintCount = 0;
     $scope.unreadAppComplaintCount = 0;
@@ -9128,9 +9156,24 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     //    $scope.currentPage = 1; //Initial current page to 1
     //    $scope.itemsPerPage = 7; //Record number each page
     //    $scope.maxSize = 8; //Show the number in page
+    if($scope.showwebkch.view == 'A' && $scope.showwebbtu.view == 'A'){
+        $scope.zonReq.zon = ""
+    }else if($scope.showwebkch.view == 'A'){
+        $scope.zonReq.zon = "KCH"
+    }else if($scope.showwebbtu.view == 'A'){
+        $scope.zonReq.zon = "BTU"
+    }
+
+    if($scope.showappkch.view == 'A' && $scope.showappbtu.view == 'A'){
+        $scope.zonReqApp.zon = ""
+    }else if($scope.showappkch.view == 'A'){
+        $scope.zonReqApp.zon = "KCH"
+    }else if($scope.showappbtu.view == 'A'){
+        $scope.zonReqApp.zon = "BTU"
+    }
 
     //get verified complaint list
-    $http.get('/getComplaintOfficerList').then(function (response) {
+    $http.post('/getComplaintOfficerList', $scope.zonReq).then(function (response) {
         console.log(response);
 
         $scope.complaintOfficerList = response.data;
@@ -9207,7 +9250,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     });
 
     //get app complaint list
-    $http.get('/getComplaintList').then(function (response) {
+    $http.post('/getComplaintList', $scope.zonReqApp).then(function (response) {
         $scope.searchComplaintFilter = '';
         $scope.filterComplaintList = [];
         $scope.complaintList = response.data;
@@ -9309,7 +9352,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     });
 
     //get logistics complaint list
-    $http.get('/getLogisticsComplaintList').then(function (response) {
+    $http.post('/getLogisticsComplaintList', $scope.zonReq).then(function (response) {
 
         $scope.logisticsComplaintList = response.data;
         $scope.searchLogComplaintFilter = '';
@@ -9467,7 +9510,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
 });
 
-//complaint export controller
+
 app.controller('complaintExportController', function ($scope, $http, $window) {
     'use strict';
 
@@ -10029,8 +10072,8 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
 
     }
 });
-//complaint detail controller
-app.controller('complaintDetailController', function ($scope, $http, $filter, $window, $routeParams, $route) {
+
+app.controller('complaintDetailController', function ($scope, $http, $filter, $window, $routeParams, $route, storeDataService) {
     'use strict';
     $scope.showInchargeBtn = true;
     $scope.showUninchargeBtn = false;
@@ -10091,7 +10134,8 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             "forwardLogisticsDate": $filter("date")(new Date(), 'yyyy-MM-dd'),
             "forwardLogisticsTime": $filter('date')(new Date(), 'HH:mm:ss'),
             "forwardLogisticsBy": $window.sessionStorage.getItem('owner'),
-            "creationDate": $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss')
+            "creationDate": $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+            "zon": ''
         };
 
         if($scope.verify.company == "" || $scope.verify.company == null){
@@ -11134,9 +11178,13 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
 });
 
-app.controller('complaintOfficercreateController', function ($scope, $http, $filter, $window) {
+app.controller('complaintOfficercreateController', function ($scope, $http, $filter, $window, storeDataService) {
     $scope.showSubmitBtn = true;
     $scope.showTypeOption = 0;
+
+    $scope.kchZon = angular.copy(storeDataService.show.complaintwebkch.create);
+    $scope.btuZon = angular.copy(storeDataService.show.complaintwebbtu.create);
+
     $scope.comp = {
         "compDate": '',
         "compTime": '',
@@ -11152,7 +11200,8 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         "compLogTime": '',
         "compLogBy": $window.sessionStorage.getItem('owner'),
         "creationDate": '',
-        "services": ''
+        "services": '',
+        "zon": ''
     };
 
     $scope.tc1 = false;
@@ -11267,6 +11316,12 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         $scope.comp.compTime = $filter('date')(new Date(), 'HH:mm:ss');
         $scope.comp.compLogTime = $filter('date')(new Date(), 'HH:mm:ss');
 
+        if($scope.kchZon == 'A'){
+            $scope.comp.zon = "KCH";
+        }else if($scope.btuZon == 'A'){
+            $scope.comp.zon = "BTU"
+        }
+
         if ($scope.tc1 == true) {
             if ($scope.tc1days == undefined || $scope.tc1days == "") {
                 $scope.tc1days = "0";
@@ -11330,6 +11385,8 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         $scope.comp.compType = $scope.comp.compType.substring(0, $scope.comp.compType.length - 3);
         $scope.comp.services = $scope.typeOption;
 
+        
+
 
         if ($scope.comp.compDate == '' || $scope.comp.compTime == '' || $scope.comp.compSource == '' || $scope.comp.compRefNo == '' || $scope.comp.compName == '' || $scope.comp.compPhone == '' || $scope.comp.compAddress == '' || $scope.comp.compType == '' || $scope.comp.compLogDate == '' || $scope.comp.compLogTime == '' || $scope.comp.compLogBy == '' || $scope.comp.services == '') {
             console.log($scope.comp);
@@ -11369,9 +11426,12 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         'coID': $routeParams.coID
     };
 
-    $scope.showcmsupdatebtn = angular.copy(storeDataService.show.complaintweb.editcms);
-    $scope.showhiststatuslist = angular.copy(storeDataService.show.complaintweb.hist);
-    $scope.showDelete = angular.copy(storeDataService.show.complaintweb.delete);
+    $scope.showcmsupdatebtnKch = angular.copy(storeDataService.show.complaintwebkch.editcms);
+    $scope.showcmsupdatebtnBtu = angular.copy(storeDataService.show.complaintwebbtu.editcms);
+    $scope.showhiststatuslistKch = angular.copy(storeDataService.show.complaintwebkch.hist);
+    $scope.showhiststatuslistBtu = angular.copy(storeDataService.show.complaintwebbtu.hist);
+    $scope.showDeleteKch = angular.copy(storeDataService.show.complaintwebkch.delete);
+    $scope.showDeleteBtu = angular.copy(storeDataService.show.complaintwebbtu.delete);
     $scope.showEditTOC = false;
 
     $scope.custStatus = {
@@ -11998,12 +12058,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         });
 
     }
-
-    //    $scope.editComp = function (coID) {
-    //        setTimeout(function () {
-    //            window.location.href = '#/complaint-officer-edit/' + coID;
-    //        }, 500);
-    //    }
 
     $scope.backList = function () {
         window.location.href = '#/complaint-module';
