@@ -614,7 +614,6 @@ app.service('storeDataService', function () {
             "maxSize": 10 //Show the number in page
         }
     };
-
     return globalList;
 });
 
@@ -3316,13 +3315,18 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     }
 
     $http.post('/getAllAuth', $scope.navigation).then(function (response) {
-
         $.each(response.data, function (index, value) {
             $.each($scope.show, function (bigKey, bigValue) {
                 $.each(bigValue, function (smallKey, smallValue) {
                     if (smallKey == "collection") {
                         $.each(smallValue, function (xsmallKey, xsmallValue) {
-                            $scope.show[bigKey][smallKey][xsmallKey] = value.status;
+                            if(value.name == 'add collection' && xsmallKey == 'add'){
+                                $scope.show[bigKey][smallKey][xsmallKey] = value.status;
+                            }
+                            if(value.name == 'edit collection' && xsmallKey == 'edit'){
+                                $scope.show[bigKey][smallKey][xsmallKey] = value.status;
+                            }
+                            
                         });
                     } else {
                         if (value.name.indexOf(smallKey) != -1) {
@@ -4215,7 +4219,7 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
     };
 
     $scope.show = angular.copy(storeDataService.show.area);
-
+    console.log($scope.show);
     //in area-management.js
     $http.get('/getZoneList').then(function (response) {
         var data = response.data;
@@ -9137,6 +9141,10 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         "zon": ''
     }
 
+    $scope.zonReqLogs = {
+        "zon": ''
+    }
+
     //show control
     $scope.showwebkch = angular.copy(storeDataService.show.complaintwebkch);
     $scope.showappkch = angular.copy(storeDataService.show.complaintappkch);
@@ -9164,6 +9172,14 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.zonReq.zon = "BTU"
     }
 
+    if($scope.showlogskch.view == 'A' && $scope.showlogsbtu.view == 'A'){
+        $scope.zonReqLogs.zon = ""
+    }else if($scope.showlogskch.view == 'A'){
+        $scope.zonReqLogs.zon = "KCH"
+    }else if($scope.showlogsbtu.view == 'A'){
+        $scope.zonReqLogs.zon = "BTU"
+    }
+
     if($scope.showappkch.view == 'A' && $scope.showappbtu.view == 'A'){
         $scope.zonReqApp.zon = ""
     }else if($scope.showappkch.view == 'A'){
@@ -9174,7 +9190,6 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
     //get verified complaint list
     $http.post('/getComplaintOfficerList', $scope.zonReq).then(function (response) {
-        console.log(response);
 
         $scope.complaintOfficerList = response.data;
         $scope.searchWebComplaintFilter = '';
@@ -9352,7 +9367,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
     });
 
     //get logistics complaint list
-    $http.post('/getLogisticsComplaintList', $scope.zonReq).then(function (response) {
+    $http.post('/getLogisticsComplaintList', $scope.zonReqLogs).then(function (response) {
 
         $scope.logisticsComplaintList = response.data;
         $scope.searchLogComplaintFilter = '';

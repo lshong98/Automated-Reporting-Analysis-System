@@ -171,8 +171,6 @@ app.post('/getComplaintList', function(req, res) {
         sql = "SELECT * FROM (SELECT tblcomplaint.complaintDate AS 'date', tblcomplaint.complaint AS 'title', tbluser.name AS  'customer', tblcomplaint.premiseType AS 'type', tblarea.areaName AS 'area', CONCAT(tblzone.zoneCode,tblarea.areaCode) AS 'code', tblcomplaint.complaintID AS ' complaintID', (CASE WHEN tblcomplaint.status = 'c' THEN 'Closed' WHEN tblcomplaint.status = 'p' THEN 'Pending' WHEN tblcomplaint.status = 'i' THEN 'Invalid' WHEN tblcomplaint.status ='o' THEN 'Open' END) AS status, tblcomplaint.readStat AS 'readStat' FROM tblcomplaint JOIN tbluser ON tbluser.userID = tblcomplaint.userID LEFT OUTER JOIN tbltaman ON tbltaman.tamanID = tbluser.tamanID LEFT OUTER JOIN tblarea ON tblarea.areaID = tbltaman.areaID LEFT OUTER JOIN tblzone ON tblzone.zoneID = tblarea.zoneID WHERE tblcomplaint.zon = '" + req.body.zon + "') t1 LEFT OUTER JOIN (SELECT complaintID as 'chatCompID', COUNT(readStat) as 'unread' from tblchat WHERE readStat = 'u' and recipient LIKE 'A%' GROUP BY complaintID) t2 ON t1.complaintID = t2.chatCompID ORDER BY t1.date DESC";
     }
     
-    console.log(sql);
-    
 
     database.query(sql, function(err, result) {
         if (err) {
@@ -391,7 +389,6 @@ app.post('/getLogisticsComplaintList', function(req, res) {
     }else{
         var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.reason AS 'reason', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.status AS 'status', tblstaff.staffName AS 'staff', tblcomplaintofficer.logsReadState AS 'logsReadState', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.logisticsBy = tblstaff.staffID WHERE step >= 1 AND tblcomplaintofficer.activeStatus = '1' AND zon = '" + req.body.zon + "' ORDER BY tblcomplaintofficer.creationDateTime DESC";
     }
-
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
