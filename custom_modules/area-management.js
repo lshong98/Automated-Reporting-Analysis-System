@@ -130,8 +130,8 @@ app.post('/updateArea', function (req, res) {
         information.staff_name = staff_info.name;
         information.position_name = staff_info.position;
         
-        var sql = "UPDATE tblarea SET areaName = '" + area_name + "', areaCode = '" + area_code + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + driver_id + "', transporter = '" + transporter + "', collection_frequency = '" + collection_frequency + "', areaStatus = '" + area_status + "' WHERE areaID = '" + area_id + "'",
-            content = "";
+        var sql = "UPDATE tblarea SET areaName = '" + area_name.replace(/'/g,"\\\\\'") + "', areaCode = '" + area_code.replace(/'/g,"\\\\\'") + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + driver_id + "', transporter = '" + transporter + "', collection_frequency = '" + collection_frequency + "', areaStatus = '" + area_status + "' WHERE areaID = '" + area_id + "'";
+        var content = "";
 
         content = "" + information.staff_name + " would like to update area details. The changes shown below:\n";
         content += 'Area Code: <s>' + information.original.areaCode + '</s> to ' + area_code + '\n';
@@ -169,8 +169,10 @@ app.post('/addCollection', function (req, res) {
     'use strict';
     
     var dt = dateTime.create().format('Y-m-d H:M:S'),
-        sql = "INSERT INTO tbltaman(areaID, tamanName) VALUE ('" + req.body.area + "', '" + req.body.address + "')";
-    
+    address = req.body.address.replace(/'/g,"\\'");
+
+    var sql = "INSERT INTO tbltaman(areaID, tamanName) VALUE ('" + req.body.area + "', '" + address + "')";
+    console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

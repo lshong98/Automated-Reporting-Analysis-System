@@ -4219,7 +4219,6 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
     };
 
     $scope.show = angular.copy(storeDataService.show.area);
-    console.log($scope.show);
     //in area-management.js
     $http.get('/getZoneList').then(function (response) {
         var data = response.data;

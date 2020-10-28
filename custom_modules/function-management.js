@@ -190,7 +190,6 @@ function logTransaction(date, staffID, action, description, rowID, tblName) {
 
 function sendForAuthorization(date, staffId, action, description, rowID, tblName, query) {
     var dt = dateTime.create().format('Y-m-d H:M:S');
-    console.log(dt);
     var sql = "INSERT INTO tblauthorization (date, staffId, action, description, authorizedBy, rowID, tblName, authorize, query) VALUES (now(), \"" + staffId + "\", \"" + action + "\", \"" + description +  "\", NULL, \"" + rowID +"\", \""+ tblName + "\", 'M', " + query + ")";
 
     //var sql = "INSERT INTO tblauthorization (date, staffID, action, description, rowID, tblName, authorize, query) VALUES ('"+ date +"', '"+ staffId +"', '"+ action +"', '"+ description +"', '"+ rowID +"', '"+ tblName +"', 'M', '"+ query +"')";
@@ -347,6 +346,7 @@ function log(dt, title, content, staff) {
         dt = dateTime.create();
         dt._now = result[0].serverdate;
         dt = dt.format('Y-m-d H:M:S');
+        content = content.replace(/'/g,"\\'");
         makeID('history', dt).then(function (ID) {
             sql = "INSERT INTO tblhistory (historyID, title, content, staffID, creationDateTime, status) VALUE ('" + ID + "', '" + title + "', '" + content + "', '" + staff + "', now(), 'A')";
             database.query(sql, function (err, result) {
