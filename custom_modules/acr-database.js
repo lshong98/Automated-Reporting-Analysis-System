@@ -26,7 +26,7 @@ app.get('/getAcrdbList',function(req, res){
 app.post('/addAcrDB', function(req, res){
     'use strict';
     
-    var sql = "INSERT INTO tblacrdatabase (`Serial_No`, `Brand`, `Bin_Size`, `Date_of_Application`, `Name`, `Tel_Contact`, `IC_Number`, `Company_Name`, `Billing_Address`, `Place_of_service_Lot_No`, `Frequency`, `Type_of_Premise`, `ACR_Serial_No`, `Council_Serial_No`, `Remarks`, `Mon`, `Tue`, `Wed`, `Thu`, `Fri`, `Sat`, `Sun`, `Council`) VALUES ('" + req.body.serialNo + "', '" + req.body.brand + "', '" + req.body.binSize + "', '" + req.body.dateOfApplication + "', '" + req.body.name + "', '" + req.body.contact + "', '" + req.body.ic + "', '" + req.body.company + "', '" + req.body.billAddress + "', '" + req.body.serviceAddress + "', '" + req.body.frequency + "', '" + req.body.typeOfPremise + "', '" + req.body.acrSerialNo + "', '" + req.body.councilSerialNo + "', '" + req.body.remarks + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.sun + "', '" + req.body.council + "')"
+    var sql = "INSERT INTO tblacrdatabase (`Serial_No`, `Brand`, `Bin_Size`, `Date_of_Application`, `Name`, `Tel_Contact`, `IC_Number`, `Company_Name`, `Billing_Address`, `Place_of_service_Lot_No`, `Frequency`, `Type_of_Premise`, `ACR_Serial_No`, `Council_Serial_No`, `Remarks`, `Mon`, `Tue`, `Wed`, `Thu`, `Fri`, `Sat`, `Sun`, `Council`, `status`) VALUES ('" + req.body.serialNo + "', '" + req.body.brand + "', '" + req.body.binSize + "', '" + req.body.dateOfApplication + "', '" + req.body.name + "', '" + req.body.contact + "', '" + req.body.ic + "', '" + req.body.company + "', '" + req.body.billAddress + "', '" + req.body.serviceAddress + "', '" + req.body.frequency + "', '" + req.body.typeOfPremise + "', '" + req.body.acrSerialNo + "', '" + req.body.councilSerialNo + "', '" + req.body.remarks + "', '" + req.body.mon + "', '" + req.body.tue + "', '" + req.body.wed + "', '" + req.body.thu + "', '" + req.body.fri + "', '" + req.body.sat + "', '" + req.body.sun + "', '" + req.body.council + "', '1')"
 
     database.query(sql, function(err, result){
         if(err){
@@ -130,3 +130,17 @@ console.log(sql);
 });
 
 module.exports = app;
+
+app.post('/deleteAcrdb', function(req, res){
+    'use strict';
+    var sql = "UPDATE tblacrdatabase SET status = 0 WHERE id = '" + req.body.id + "';";
+    
+    database.query(sql,function(err,result){
+        if(err){
+            throw err;
+        }else{
+            res.json({"status":"success", "message":"ACR has been deleted."});
+        }
+        
+    });
+})

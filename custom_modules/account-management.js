@@ -162,7 +162,7 @@ app.post('/updateProfile', function (req, res) {
 app.get('/getAllUser', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status, tblposition.positionName AS position, tblstaff.transporter AS 'transporter', tblstaff.type AS type FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID AND tblposition.positionName != 'DEVELOPER'";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.username, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'ACTIVE' WHEN tblstaff.staffStatus = 'I' THEN 'INACTIVE' END) AS status, tblposition.positionName AS position, tblstaff.transporter AS 'transporter', tblstaff.type AS type FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
