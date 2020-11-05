@@ -8946,6 +8946,14 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
                 $scope.acrdbList[i].cf += ' Sun';
                 $scope.acrdbList[i].frequencyNum++;
             }
+
+            if($scope.acrdbList[i].binStatus == '0'){
+                $scope.acrdbList[i].status = "Active";
+            }else if($scope.acrdbList[i].binStatus == '1'){
+                $scope.acrdbList[i].status = "Postponed";
+            }else if($scope.acrdbList[i].binStatus == '2'){
+                $scope.acrdbList[i].status = "Terminated";
+            }
         }
 
         $scope.searchAcrdb = function (acrdb) {
@@ -9063,10 +9071,34 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
     var acrID = {
         'id': $routeParams.acrID
     }
+    $scope.areaList = [];
+    
+    $http.get('/getAreaList').then(function (response) {
+        $.each(response.data, function (index, value) {
+            var areaID = value.id.split(",");
+            var areaName = value.name.split(",");
+            var code = value.code.split(",");
+            var area = [];
+            $.each(areaID, function (index, value) {
+                area.push({
+                    "id": areaID[index],
+                    "name": areaName[index],
+                    "code": code[index]
+                });
+            });
+            $scope.areaList.push({
+                "zone": {
+                    "id": value.zoneID,
+                    "name": value.zoneName
+                },
+                "area": area
+            });
+        });
+    });  
 
     $http.post('/getAcrDbDetail', acrID).then(function(response){
+        $scope.renderSltPicker();
         $scope.acrdbDetail = response.data[0];
-        
         $scope.acrdbDetail.dateOfApplication = new Date($scope.acrdbDetail.dateOfApplication);
         $scope.acrdbDetail.checkMon = "";
         $scope.acrdbDetail.checkTue = "";
@@ -9111,9 +9143,16 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
         }else{
             $scope.acrdbDetail.checkSun = false;
         }
-    console.log($scope.acrdbDetail);
 
-    })
+        var acrAreaSplit = $scope.acrdbDetail.area.split(';');
+        var areaList = [];
+        for(var i = 0; i < acrAreaSplit.length; i++){
+            areaList[i] = acrAreaSplit[i];
+        }
+        $scope.acrdbDetail.area1 = areaList[0];
+        $scope.acrdbDetail.area2 = areaList[1];
+        $scope.acrdbDetail.area3 = areaList[2];
+    });  
 
     $scope.acrdbEditBack = function(){
         window.history.back();
@@ -9121,6 +9160,17 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
 
     $scope.saveAcrdbEdit = function(){
         $scope.acrdbDetail.saveDateOfApplication = $filter('date')($scope.acrdbDetail.dateOfApplication, 'yyyy-MM-dd');
+        $scope.acrdbDetail.area = "";
+        if($scope.acrdbDetail.area1 != undefined){
+            $scope.acrdbDetail.area += $scope.acrdbDetail.area1 + ";";
+        }
+        if($scope.acrdbDetail.area2 != undefined){
+            $scope.acrdbDetail.area += $scope.acrdbDetail.area2 + ";";
+        }
+        if($scope.acrdbDetail.area3 != undefined){
+            $scope.acrdbDetail.area += $scope.acrdbDetail.area3 + ";";
+        }
+
         $http.post('/saveAcrdbEdit', $scope.acrdbDetail).then(function(response){
             if(response.data.status == 'success'){
                 window.location.href = '#/acr-database';
@@ -9960,7 +10010,6 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
     $scope.dateRangeChange = function () {
         if ($scope.date.startDate != undefined && $scope.date.endDate != undefined && $scope.date.startDate <= $scope.date.endDate) {
             $scope.requestStatistics($scope.date);
-            console.log("abc");
         }
 
     }

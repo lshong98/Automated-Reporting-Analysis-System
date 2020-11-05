@@ -39,6 +39,46 @@
     </div>
 </div>
 <div class="form-group row">
+    <label for="inputBinStatus" class="col-md-2 col-form-label form-label-width">Status</label>
+    <div class="col-md-10">
+        <select id="inputBinStatus" class="form-control mx-sm-3" data-ng-model="acrdbDetail.binStatus">
+            <option value="0" selected>Active</option>
+            <option value="1">Postponed</option>
+            <option value="2">Terminated</option>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputBinArea1" class="col-md-2 col-form-label form-label-width">Area Code1</label>
+    <div class="col-md-10">
+        <select class="form-control mx-sm-3" id="inputBinArea1" data-ng-model="acrdbDetail.area1" data-live-search="true" data-width="100%">
+              <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                  <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+              </optgroup>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputBinArea2" class="col-md-2 col-form-label form-label-width">Area Code2</label>
+    <div class="col-md-10">
+        <select class="form-control mx-sm-3" id="inputBinArea2" data-ng-model="acrdbDetail.area2" data-live-search="true" data-width="100%">
+              <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                  <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+              </optgroup>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="inputBinArea3" class="col-md-2 col-form-label form-label-width">Area Code3</label>
+    <div class="col-md-10">
+        <select class="form-control mx-sm-3" id="inputBinArea3" data-ng-model="acrdbDetail.area3" data-live-search="true" data-width="100%">
+              <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                  <option value="{{a.id}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+              </optgroup>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
     <label for="inputName" class="col-md-2 col-form-label form-label-width">Name</label>
     <div class="col-md-10">
         <input type="text" id="inputName" class="form-control mx-sm-3" data-ng-model="acrdbDetail.name" />
@@ -72,12 +112,6 @@
     <label for="inputServiceAddress" class="col-md-2 col-form-label form-label-width">Service Address</label>
     <div class="col-md-10">
         <input type="text" id="inputServiceAddress" class="form-control mx-sm-3" data-ng-model="acrdbDetail.serviceAddress" />
-    </div>
-</div>
-<div class="form-group row">
-    <label for="inputFrequency" class="col-md-2 col-form-label form-label-width">Frequency</label>
-    <div class="col-md-10">
-        <input type="text" id="inputFrequency" class="form-control mx-sm-3" data-ng-model="acrdbDetail.frequency" />
     </div>
 </div>
 <div class="form-group row">
