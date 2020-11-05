@@ -74,6 +74,7 @@ app.post('/addReport', function (req, res) {
         truck_id = req.body.truck,
         driver_id = req.body.driver,
         remark = req.body.remark.replace(/'/g,"\\'"),
+        acr = req.body.acr.replace(/'/g,"\\'"),
         created_on = req.body.creationDate,
         staff_id = req.body.staffID,
         colDay = req.body.colDay;
@@ -138,7 +139,7 @@ app.post('/addReport', function (req, res) {
             gpswox = '';
         }
             
-            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, lh, rttb, wt, gpswox, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID, colDay) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + lh + "', '" + rttb + "', '" + wt + "', '" + gpswox + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "', '" + colDay + "')",
+            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, lh, rttb, wt, gpswox, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID, colDay, acr) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + lh + "', '" + rttb + "', '" + wt + "', '" + gpswox + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "', '" + colDay + "', '" + acr + "')",
                 reportID = ID;
 
             database.query(sql, function (err, result) {
@@ -383,7 +384,7 @@ app.post('/editReport', function (req, res) {
 });
 app.post('/getReport', function (req, res) {
     'use strict';
-    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.reportFeedback AS feedback, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.lh AS lh, tblreport.rttb AS rttb, tblreport.wt AS wt, tblreport.gpswox AS gpswox, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(tbltaman.tamanName) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN tblarea ON tblarea.areaID = tblreport.areaID JOIN tbltaman ON tbltaman.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
+    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.reportFeedback AS feedback, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.lh AS lh, tblreport.rttb AS rttb, tblreport.wt AS wt, tblreport.gpswox AS gpswox, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(tbltaman.tamanName) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status, tblreport.acr AS acr FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN tblarea ON tblarea.areaID = tblreport.areaID JOIN tbltaman ON tbltaman.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -468,32 +469,35 @@ app.post('/getReportingStaff', function (req, res) {
     });
 });
 
-//app.post('/getPeriodForReportACR',function (req, res){
-//    'use strict';
-//    
-//    var sql = "SELECT tbldcs.periodFrom as 'periodFrom', tbldcs.periodTo as 'periodTo' FROM tbldcs WHERE tbldcs.areaID  = '" + req.body.area + "' AND tbldcs.driverID = '" + req.body.driverID + "' AND CURDATE() BETWEEN tbldcs.periodFrom AND tbldcs.periodTo";
-//    database.query(sql, function (err, result) {
-//        if (err) {
-//            throw err;
-//        }
-//        res.json(result);
-//    });
-//});
-//app.post('/getReportACR', function (req, res) {
-//
-//    'use strict';
-//    
-////    var sql = "SELECT tblacr.acrName AS name FROM tblacrfreq JOIN tblreport ON tblreport.areaID = tblacrfreq.areaID JOIN tblacr ON tblacr.acrID = tblacrfreq.acrID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblacr.acrName";
-////    var sql = "SELECT tblcustomer.name FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID JOIN tbldcs ON tblacr.dcsID = tbldcs.dcsID WHERE tbldcs.areaID = '" + req.body.area + "' AND ('" + req.body.date + "' BETWEEN tbldcs.periodFrom AND tbldcs.periodTo) AND tbldcs.driverID = '" + req.body.driverID + "'";
-////    var sql = "SELECT tblcustomer.name as 'name' FROM tblcustomer JOIN tblacr ON tblcustomer.customerID = tblacr.customerID WHERE tblacr.from BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "' OR tblacr.to BETWEEN '" + req.body.periodFrom + "' AND '" + req.body.periodTo + "'";
-//    
-//    database.query(sql, function (err, result) {
-//        if (err) {
-//            throw err;
-//        }
-//        res.json(result);
-//    });
-//});
+app.post('/getReportAcrList', function(req, res){
+    'use strict';
+
+    var checkDay = '';
+
+    if(req.body.day == '0'){
+        checkDay = 'Sun';
+    }else if(req.body.day == '1'){
+        checkDay = 'Mon';
+    }else if(req.body.day == '2'){
+        checkDay = 'Tue';
+    }else if(req.body.day == '3'){
+        checkDay = 'Wed';
+    }else if(req.body.day == '4'){
+        checkDay = 'Thu';
+    }else if(req.body.day == '5'){
+        checkDay = 'Fri';
+    }else if(req.body.day == '6'){
+        checkDay = 'Sat';
+    }
+    var sql = "SELECT `id` AS 'id', `Name` AS 'name', `Company_Name` AS 'company' FROM tblacrdatabase WHERE area LIKE '%" + req.body.area + "%' AND `" + checkDay + "` = 'X' AND status = '0'";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
 
 app.post('/getReportACR', function (req, res) {
     'use strict';

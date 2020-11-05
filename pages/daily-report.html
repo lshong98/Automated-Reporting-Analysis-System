@@ -3,90 +3,6 @@
         width: 110px;
     }
 </style>
-<!--  Modal  -->
-<div class="modal fade" id="previewReport" tabindex="-1" role="dialog" aria-labelledby="previewReport" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Preview</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <center>
-                            <table border="1">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2">IVMW INSPECTION REPORT</th>
-                                        <th>DATE</th>
-                                        <th colspan="2" date-now="yyyy-MM-dd"></th>
-                                        <th>TIME</th>
-                                        <th colspan="3">0430 - 1500</th>
-                                    </tr>
-                                    <tr>
-                                        <th>AREA CODE</th>
-                                        <th>COLLECTION AREA</th>
-                                        <th>COLLECTION FREQUENCY</th>
-                                        <th>BIN CENTERS</th>
-                                        <th>ACR CUSTOMER</th>
-                                        <th>TRANSPORTER</th>
-                                        <th>TRUCK NO.</th>
-                                        <th>DRIVER</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td rowspan="5" data-ng-bind="$params_areaCode"></td>
-                                        <td rowspan="5">....</td>
-                                        <td rowspan="5">TUE &amp; FRI</td>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td rowspan="5">TS</td>
-                                        <td rowspan="5">QAA3604N</td>
-                                        <td rowspan="5">NORSUTIADI BIN SENO</td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </center>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="image_previewer" tabindex="-1" role="dialog" aria-labelledby="image_previewer" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div style="width: 100%;height: 100%;">
-                    <img src="" id="this_image" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="row">
     <div class="col-md-12">
@@ -97,7 +13,6 @@
 <div class="form-group row">
     <label for="inputDate form-label" class="col-xs-3 col-form-label form-label-width">Date</label>
     <div class="col-md-9">
-        <!--        <input data-provide="datepicker" type="text" id="inputDate" class="form-control mx-sm-3 datepicker" data-date-format="yyyy-mm-dd" />-->
         <input type="date" id="inputDate" class="form-control mx-sm-3" data-ng-model="colDate" />
     </div>
 </div>
@@ -105,7 +20,6 @@
 <div class="form-group row">
     <label for="inputStartTime form-label" class="col-xs-3 col-form-label form-label-width">Start Time</label>
     <div class="col-md-9">
-        <!--        <input type="text" id="inputStartTime" class="form-control mx-sm-3 clockpicker-start" readonly />-->
         <input type="time" id="inputStartTime" class="form-control mx-sm-3" data-ng-model="report.startTime" data-ng-change="startTimeChange(report.startTime)" str-to-time="" />
     </div>
 </div>
@@ -113,7 +27,6 @@
 <div class="form-group row">
     <label for="inputEndTime form-label" class="col-xs-3 col-form-label form-label-width">End Time</label>
     <div class="col-md-9">
-        <!--        <input type="text" id="inputEndTime" class="form-control mx-sm-3 clockpicker-end" readonly />-->
         <input type="time" id="inputEndTime" class="form-control mx-sm-3" data-ng-model="report.endTime" data-ng-change="endTimeChange(report.endTime)" str-to-time />
     </div>
 </div>
@@ -158,18 +71,26 @@
 <div class="form-group row">
     <label for="inputRemark" class="col-xs-3 col-form-label form-label-width">Remark</label>
     <div class="col-md-9">
-        <!--<input type="text" id="inputRemark" class="form-control mx-sm-3" />-->
         <textarea rows="4" cols="50" id="inputRemark" class="form-control mx-sm-3" data-ng-model="report.remark"></textarea>
     </div>
 </div>
-<!--
 <div class="form-group row">
-    <div class="col-md-12">
-        <button class="btn btn-primary btnShape" data-shape="circle">Circle</button>
-        <button class="btn btn-warning btnShape" data-shape="rectangle">Rectangle</button>
+    <div class="col-xs-3">
+        <div class="row">
+            <div class="col-md-12">
+                <label for="inputACR" class="col-form-label form-label-width">ACR List</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-primary btn-sm" data-ng-click="generateACRList();">generate</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <textarea rows="4" cols="50" id="inputACR" class="form-control mx-sm-3" data-ng-model="report.acr"></textarea>
     </div>
 </div>
--->
 
 <style>
     .target {
@@ -254,7 +175,6 @@
 <br /><br /><br />
 <div class="row">
     <div class="col-md-12">
-        <!--<button class="btn btn-primary" data-toggle="modal" data-target="#previewReport">Preview</button>-->
         <button class="btn btn-primary submit" data-ng-click="addReport()" data-ng-show="showSubmitBtn">Submit</button>
     </div>
 </div>

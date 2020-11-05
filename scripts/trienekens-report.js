@@ -10,6 +10,7 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
 
     $scope.report = {
         "areaCode": $routeParams.areaCode,
+        "acr": '',
         "collectionDate": '',
         "startTime": '',
         "endTime": '',
@@ -54,11 +55,6 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
     $scope.truckList = [];
     $scope.driverList = [];
 
-    //    var params = $routeParams.areaCode;
-    //    var areaCode = params.split("+")[0];
-    //    var areaName = params.split("+")[1];
-    //    
-    //    $scope.$params_areaName = areaName;
     $scope.params = {
         "areaCode": $routeParams.areaCode,
         "areaName": $routeParams.areaName
@@ -107,6 +103,16 @@ app.controller('dailyController', function($scope, $window, $routeParams, $http,
             $scope.report.status = 'A';
         }
     });
+
+    $scope.generateACRList = function(){
+        $http.post('/getReportAcrList', {"area": $routeParams.areaCode, "day": $scope.colDate.getDay()}).then(function(response){
+            $scope.report.acr = '';
+            for(var i = 0; i < response.data.length; i++){
+                $scope.report.acr += response.data[i].company + '\n';
+            }
+        })
+    }
+
 
     $scope.passArea = {
         "areaID": $routeParams.areaCode
@@ -648,38 +654,6 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     //$scope.acr = "";
     var map;
 
-//    function GMapCircle(lat, lng, circleArr, detail = 8) {
-//        var uri = 'https://maps.googleapis.com/maps/api/staticmap?';
-//        var staticMapSrc = 'center=' + lat + ',' + lng;
-//        staticMapSrc += '&size=650x650';
-//        staticMapSrc += '&path=color:0xFF0000FF|weight:1|';
-//        var r = 6371;
-//        var pi = Math.PI;
-//
-//        $.each(circleArr, function(index, value) {
-//            var _lat = (value.lat * pi) / 180;
-//            var _lng = (value.lng * pi) / 180;
-//            var d = (value.radius / 1000) / r;
-//            var i = 0;
-//
-//            for (i = 0; i <= 360; i += detail) {
-//                var brng = i * pi / 180;
-//                var pLat = Math.asin(Math.sin(_lat) * Math.cos(d) + Math.cos(_lat) * Math.sin(d) * Math.cos(brng));
-//                var pLng = ((_lng + Math.atan2(Math.sin(brng) * Math.sin(d) * Math.cos(_lat), Math.cos(d) - Math.sin(_lat) * Math.sin(pLat))) * 180) / pi;
-//                pLat = (pLat * 180) / pi;
-//                if (staticMapSrc.slice(-32) == "&path=color:0xFF0000FF|weight:1|") {
-//                    staticMapSrc += pLat + "," + pLng;
-//                } else {
-//                    staticMapSrc += "|" + pLat + "," + pLng;
-//                }
-//            }
-//            if (index != circleArr.length) {
-//                staticMapSrc += "&path=color:0xFF0000FF|weight:1|";
-//            }
-//        });
-//        return uri + encodeURI(staticMapSrc) + '&key=<APIKEY>';
-//    }
-
     $scope.report = {
         "reportID": $routeParams.reportCode,
         "check": $scope.show.check
@@ -718,97 +692,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         $scope.report = {
             "reportID": $routeParams.reportCode
         };
-{
-//        $http.post('/loadSpecificBoundary', $scope.area).then(function(response) {
-//        if(response.data.length != 0 ){    
-//            var sumOfCoLat = 0;
-//            var sumOfCoLng = 0;
-//            for (var i = 0; i < response.data.length; i++) {
-//                sumOfCoLat += response.data[i].lat;
-//                sumOfCoLng += response.data[i].lng;
-//            }
-//            var avgOfCoLat = sumOfCoLat / response.data.length;
-//            var avgOfCoLng = sumOfCoLng / response.data.length;
-//            var data = response.data;
-//            var boundary = [];
-//
-//            for (var i = 0; i < response.data.length; i++) {
-//                boundary.push(new google.maps.LatLng(data[i].lat, data[i].lng));
-//
-//            }
-//            //            for (var i = 0; i < data.length; i++) {
-//            //                if (i === 0) {
-//            //                    boundaries.push({"id": data[i].id, "color": data[i].color, "areaID": data[i].areaID, "area": (data[i].zone + data[i].area), "latLngs": [], "coordinate": []});
-//            //                } else if (i > 0 && data[i - 1].id !== data[i].id) {
-//            //                    boundaries.push({"id": data[i].id, "color": data[i].color, "areaID": data[i].areaID, "area": (data[i].zone + data[i].area), "latLngs": [], "coordinate": []});
-//            //                }
-//            //            }
-//            //
-//            //            for (var j = 0; j < data.length; j++) {
-//            //
-//            //                for (var k = 0; k < boundaries.length; k++) {
-//            //                    if (data[j].id === boundaries[k].id) {
-//            //                        boundaries[k].coordinate.push(new google.maps.LatLng(data[j].lat, data[j].lng));
-//            //                        boundaries[k].latLngs.push({"lat": data[j].lat, "lng": data[j].lng});
-//            //                    }
-//            //                }
-//            //            }        
-//            //            
-//            //
-//
-//
-//
-//
-//            var polygonColorCode = "#" + response.data[0].color;
-//            var myPolygon = new google.maps.Polygon({
-//                paths: boundary,
-//                strokeColor: polygonColorCode,
-//                strokeWeight: 2,
-//                fillColor: polygonColorCode,
-//                fillOpacity: 0.45
-//            });
-//
-//
-//
-//            var $googleMap = document.getElementById('googleMap');
-//            var visualizeMap = {
-//                center: new google.maps.LatLng(avgOfCoLat, avgOfCoLng),
-//                mapTypeId: google.maps.MapTypeId.ROADMAP,
-//                mapTypeControl: false,
-//                panControl: false,
-//                zoomControl: false,
-//                streetViewControl: false,
-//                disableDefaultUI: true,
-//                editable: false
-//            };
-//
-//            map = new google.maps.Map($googleMap, visualizeMap);
-//            myPolygon.setMap(map);
-//
-//            $window.setTimeout(function() {
-//                map.panTo(new google.maps.LatLng(avgOfCoLat, avgOfCoLng));
-//                map.setZoom(12);
-//                }, 1000);
-//            
-//            }else{
-//                $scope.notify("warn", "Certain area has no draw boundary yet! Map can't be shown");
-//                var $googleMap = document.getElementById('googleMap');
-//
-//                var visualizeMap = {
-//                    center: new google.maps.LatLng(1.5503052, 110.3394602),
-//                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-//                    mapTypeControl: false,
-//                    panControl: false,
-//                    zoomControl: false,
-//                    streetViewControl: false,
-//                    disableDefaultUI: true,
-//                    editable: false,
-//                    zoom: 13
-//                };
-//                map = new google.maps.Map($googleMap, visualizeMap);
-//            }               
-//        });
-    }
+
         $http.post('/getReportBinCenter', $scope.area).then(function(response) {
             $scope.thisReport.bin = response.data;
             $scope.row = Object.keys($scope.thisReport.bin).length;
@@ -823,120 +707,49 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         $http.post('/getReportingStaff', $scope.report).then(function(response) {
             $scope.thisReport.reportingStaff = response.data[0].staffName;
         });
-
-
-//        $http.post('/getReportCircle', $scope.report).then(function(response) {
-//            var data = response.data;
-//            $window.setTimeout(function() {
-//                $.each(data, function(index, value) {
-//                    var circle = new google.maps.Circle({
-//                        map: map,
-//                        center: new google.maps.LatLng(data[index].cLat, data[index].cLong),
-//                        radius: parseFloat(data[index].radius),
-//                        fillColor: 'transparent',
-//                        strokeColor: 'red',
-//                        editable: false,
-//                        draggable: false
-//                    });
-//                });
-//            }, 1000);
-//        });
-
-        //    $window.setTimeout(function() {
-        //        var image = GMapCircle($scope.thisReport.lat, $scope.thisReport.lng, $scope.circles);
-        //        $('.googleMap').attr("src", image);
-        //    }, 1000);
-
-//        $http.post('/getReportRect', $scope.report).then(function(response) {
-//            var data = response.data;
-//            $window.setTimeout(function() {
-//                $.each(data, function(index, value) {
-//                    var rect = new google.maps.Rectangle({
-//                        map: map,
-//                        bounds: new google.maps.LatLngBounds(
-//                            new google.maps.LatLng(data[index].swLat, data[index].swLng),
-//                            new google.maps.LatLng(data[index].neLat, data[index].neLng),
-//                        ),
-//                        fillColor: 'transparent',
-//                        strokeColor: 'red',
-//                        editable: false,
-//                        draggable: false
-//                    });
-//                })
-//            }, 1000);
-//        });
-
-//        $http.post('/getPeriodForReportACR', $scope.thisReport).then(function(response){
-//            if(response.data != null){
-//                $scope.infoForGetACR = {
-//                    "periodFrom" : response.data[0].periodFrom,
-//                    "periodTo" : response.data[0].periodTo,
-//                    "area" : $scope.thisReport.area,
-//                    "driverID" : $scope.thisReport.driverID
-//                };
-//                
-//
-//                $http.post('/getReportACR', $scope.infoForGetACR).then(function(response) {
-//                    if (response.data.length != 0) {
-//                        $scope.thisReport.acr = response.data;
-//                    } else {
-//                        $scope.thisReport.acr = [];
-//                    }
-//                    $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-//                    $scope.acr = "";
-//                    $.each($scope.thisReport.acr, function(index, value) {
-//                        $scope.acr += value.name;
-//                        if ((index + 1) != $scope.acrRow) {
-//                            $scope.acr += ', ';
-//                        }
-//                    });
-//                });     
-//            }
-//
-//        });
         
-        $scope.forGetAcrInfo = $scope.thisReport;
-        $scope.forGetAcrInfo.todayday = "";
-        var d = new Date($scope.thisReport.date);
-        var n = d.getDay();
-        if(n == 1){
-            $scope.forGetAcrInfo.todayday = "mon";
-        }
-        else if(n == 2){
-            $scope.forGetAcrInfo.todayday = "tue";
-        }
-        else if(n == 3){
-            $scope.forGetAcrInfo.todayday = "wed";
-        }
-        else if(n == 4){
-            $scope.forGetAcrInfo.todayday = "thu";
-        }
-        else if(n == 5){
-            $scope.forGetAcrInfo.todayday = "fri";
-        }
-        else if(n == 6){
-            $scope.forGetAcrInfo.todayday = "sat";
-        }else if(n == 0){
-            $scope.forGetAcrInfo.todayday = "sun";
-        }
-        console.log($scope.forGetAcrInfo);
-        $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(response){
-            if (response.data !== null) {
-                if (response.data.length > 0) {
-                    $scope.thisReport.acr = response.data;
-                } else {
-                    $scope.thisReport.acr = [];
-                }
-                $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-                $scope.acr = "";
-                $.each($scope.thisReport.acr, function(index, value) {
-                    $scope.acr += value.name;
-                    if ((index + 1) != $scope.acrRow) {
-                        $scope.acr += ', ';
-                    }
-                });
-            }
-        });
+        // $scope.forGetAcrInfo = $scope.thisReport;
+        // $scope.forGetAcrInfo.todayday = "";
+        // var d = new Date($scope.thisReport.date);
+        // var n = d.getDay();
+        // if(n == 1){
+        //     $scope.forGetAcrInfo.todayday = "mon";
+        // }
+        // else if(n == 2){
+        //     $scope.forGetAcrInfo.todayday = "tue";
+        // }
+        // else if(n == 3){
+        //     $scope.forGetAcrInfo.todayday = "wed";
+        // }
+        // else if(n == 4){
+        //     $scope.forGetAcrInfo.todayday = "thu";
+        // }
+        // else if(n == 5){
+        //     $scope.forGetAcrInfo.todayday = "fri";
+        // }
+        // else if(n == 6){
+        //     $scope.forGetAcrInfo.todayday = "sat";
+        // }else if(n == 0){
+        //     $scope.forGetAcrInfo.todayday = "sun";
+        // }
+        
+        // $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(response){
+        //     if (response.data !== null) {
+        //         if (response.data.length > 0) {
+        //             $scope.thisReport.acr = response.data;
+        //         } else {
+        //             $scope.thisReport.acr = [];
+        //         }
+        //         $scope.acrRow = Object.keys($scope.thisReport.acr).length;
+        //         $scope.acr = "";
+        //         $.each($scope.thisReport.acr, function(index, value) {
+        //             $scope.acr += value.name;
+        //             if ((index + 1) != $scope.acrRow) {
+        //                 $scope.acr += ', ';
+        //             }
+        //         });
+        //     }
+        // });
 
 
         $scope.editReport = function() {
