@@ -2612,15 +2612,15 @@ app.get('/unreadBinRequestCount', function (req, res) {
         // io.sockets.in(roomManager).emit('new enquiry', {
         //     "unread": result[0].unread
         // });
-        var unread = result[0].unread;
-        var unreadRoro = result[0].unreadRoro;
-        var unreadNonRoro = unread - unreadRoro;
-        var json = {
-            'unread': unread,
-            'unreadRoro': unreadRoro,
-            'unreadNonRoro': unreadNonRoro
-        };
-        res.json(json);
+        // var unread = result[0].unread;
+        // var unreadRoro = result[0].unreadRoro;
+        // var unreadNonRoro = unread - unreadRoro;
+        // var json = {
+        //     'unread': unread,
+        //     'unreadRoro': unreadRoro,
+        //     'unreadNonRoro': unreadNonRoro
+        // };
+        res.json(result);
     });
 });
 
@@ -2631,8 +2631,16 @@ app.get('/unreadComplaintCount', function (req, res) {
         // io.sockets.in(roomManager).emit('new enquiry', {
         //     "unread": result[0].unread
         // });
-        var unread = result[0].unread;
-        res.send(unread.toString());
+        
+        if(result != undefined){
+            console.log(result);
+            var unread = result[0].unread;
+            res.send(unread.toString());
+        }else{
+            res.send('0');
+        }
+        // res.json(result);
+        
     });
 });
 

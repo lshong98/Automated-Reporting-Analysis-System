@@ -1950,8 +1950,8 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             }
 
             $http.get('/unreadBinRequestCount').then(function (response) {
-                $scope.unreadRoro = response.data.unreadRoro;
-                $scope.unreadNonRoro = response.data.unreadNonRoro;
+                $scope.unreadRoro = response.data[0].unreadRoro;
+                $scope.unreadNonRoro = response.data[0].unread - response.data[0].unreadRoro;
             });
 
             //search non roro request
@@ -3370,7 +3370,7 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
     });
 
     $http.get('/unreadBinRequestCount').then(function (response) {
-        if (response.data.unread != 0) {
+        if (response.data[0].unread != 0) {
             $('.binrequest').addClass("badge badge-danger").html(response.data.unread);
         }
     });
