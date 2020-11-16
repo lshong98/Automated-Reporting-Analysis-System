@@ -39,7 +39,7 @@ app.post('/addUser', function (req, res) {
         if (status === 'A') {
             f.makeID("account", req.body.creationDate).then(function (ID) {
                 var thePassword = bcrypt.hashSync(req.body.password, 10),
-                    sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, transporter, type, creationDateTime, staffStatus) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.transporter + "', '" + req.body.type + "', '" + req.body.creationDate + "', 'A')";
+                    sql = "INSERT INTO tblstaff (staffID, username, password, staffName, positionID, transporter, type, creationDateTime, staffStatus, branch) VALUE ('" + ID + "', '" + req.body.username + "', '" + thePassword + "', '" + req.body.name + "', '" + req.body.position.id + "', '" + req.body.transporter + "', '" + req.body.type + "', '" + req.body.creationDate + "', 'A', '" + req.body.branch + "')";
                 
                 // Authorize
                 f.sendForAuthorization(req.body.creationDate, req.body.owner, "add", "Created New Account", ID, "tblstaff", "\"" + sql + "\"");
@@ -122,7 +122,7 @@ app.post('/updateProfile', function (req, res) {
             throw err;
         }
         req.body.position = result[0].id;
-        var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', transporter = '" + req.body.transporter + "', type = '" + req.body.type + "', staffStatus = '" + req.body.status + "', staffPic = '" + req.body.avatar + "' WHERE staffID = '" + req.body.id + "'";
+        var sql = "UPDATE tblstaff SET staffName = '" + req.body.name + "', staffIC = '" + req.body.ic + "', staffGender = '" + req.body.gender + "', staffDOB = '" + req.body.dob + "', staffAddress = '" + req.body.address + "', handphone = '" + req.body.handphone + "', phone = '" + req.body.phone + "', email = '" + req.body.email + "', positionID = '" + req.body.position + "', transporter = '" + req.body.transporter + "', type = '" + req.body.type + "', staffStatus = '" + req.body.status + "', staffPic = '" + req.body.avatar + "', branch = '" + req.body.branch + "' WHERE staffID = '" + req.body.id + "'";
         
         f.sendForAuthorization(cdt, req.body.iam, "update", "Update Account Details", req.body.id, "tblstaff", "\"" + sql + "\"");
         
@@ -136,6 +136,7 @@ app.post('/updateProfile', function (req, res) {
             var content = "";
                     
             content = "" + log.staff_name + " would like to update an account details. The changes shown below:\n";
+            content += 'Branch: <s>' + log.original.branch + '</s> to ' + req.body.branch + '\n';
             content += 'Staff Name: <s>' + log.original.staffName + '</s> to ' + req.body.name + '\n';
             content += 'Staff IC: <s>' + log.original.staffIC + '</s> to ' + req.body.ic + '\n';
             content += 'Staff Gender: <s>' + log.original.staffGender + '</s> to ' + req.body.gender + '\n';
@@ -174,7 +175,7 @@ app.get('/getAllUser', function (req, res) {
 // Load specific account
 app.post('/loadSpecificAccount', function (req, res) {
     'use strict';
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'I' THEN 'Inactive' END) AS status, tblstaff.transporter AS 'transporter', tblstaff.type AS 'type', tblstaff.handphone, tblstaff.phone, tblstaff.email, tblposition.positionName AS position, tblstaff.staffPic AS avatar FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.staffIC AS ic, (CASE WHEN tblstaff.staffGender = 'M' THEN 'Male' WHEN tblstaff.staffGender = 'F' THEN 'Female' END) AS gender, DATE_FORMAT(tblstaff.staffDOB, '%d %M %Y') AS dob, tblstaff.staffAddress AS address, (CASE WHEN tblstaff.staffStatus = 'A' THEN 'Active' WHEN tblstaff.staffStatus = 'I' THEN 'Inactive' END) AS status, tblstaff.transporter AS 'transporter', tblstaff.type AS 'type', tblstaff.handphone, tblstaff.phone, tblstaff.email, tblposition.positionName AS position, tblstaff.staffPic AS avatar, tblstaff.branch AS branch FROM tblstaff JOIN tblposition ON tblstaff.positionID = tblposition.positionID WHERE tblstaff.staffID = '" + req.body.id + "' LIMIT 0, 1";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -203,7 +204,7 @@ app.get('/getStaffList', function (req, res) {
 // Used in comboBox - Driver
 app.get('/getDriverList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblposition JOIN tblstaff ON tblstaff.positionID = tblposition.positionID WHERE tblposition.positionName = 'Driver' AND tblstaff.staffStatus = 'A'";
+    var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name, tblstaff.branch AS branch FROM tblposition JOIN tblstaff ON tblstaff.positionID = tblposition.positionID WHERE tblposition.positionName = 'Driver' AND tblstaff.staffStatus = 'A'";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

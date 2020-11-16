@@ -73,6 +73,20 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
+                                <label>Branch</label>
+                            </div>
+                            <div class="col-md-6">
+                                <div editable>
+                                    <select class="form-control" data-ng-show="!showProfile" data-ng-model="thisAccount.branch">
+                                        <option value="KCH">KCH</option>
+                                        <option value="BTU">BTU</option>
+                                    </select>
+                                    <p data-ng-show="showProfile" data-ng-bind="thisAccount.branch"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <label>Name</label>
                             </div>
                             <div class="col-md-6">

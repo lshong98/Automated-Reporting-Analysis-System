@@ -29,7 +29,14 @@
                   <option value="4">Service Truck</option>
                   <option value="5">Box Van</option>
               </select>
-          </div>       
+          </div>   
+          <div class="form-group">
+            <label for="sltBranch form-label">Branch</label>
+            <select id="sltType" class="form-control" data-ng-model="truck.branch">
+                <option value="KCH">KCH</option>
+                <option value="BTU">BTU</option>
+            </select>
+        </div>     
           <div class="form-group">
               <label for="txtTon form-label">Collection Ton</label>
               <input type="text" class="form-control" id="txtTon " data-ng-model="truck.ton" />
@@ -159,6 +166,15 @@
                                 </td>
                                 <td>
                                     <div editable>
+                                        <select data-ng-show="!showTruck" id="sltBranch" class="form-control" data-ng-model="t.branch">
+                                            <option value="KCH">KCH</option>
+                                            <option value="BTU">BTU</option>
+                                          </select> 
+                                        <span data-ng-show="showTruck" data-ng-bind="t.branch"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div editable>
                                         <select data-ng-show="!showTruck" id="sltType" class="form-control" data-ng-model="t.type">
                                           <option value="0" selected>N/A</option>
                                           <option value="1">Compactor</option>
@@ -200,7 +216,7 @@
                                     </div>
                                 </td>
                                 <td data-ng-show="show.edit == 'A'">
-                                    <button class="btn btn-sm btn-primary" data-ng-show="showTruck" data-ng-click="editTruck(t.id, t.no, t.transporter, t.type, t.ton, t.roadtax, t.status);"><i class="fa fa-pencil-alt"></i></button>
+                                    <button class="btn btn-sm btn-primary" data-ng-show="showTruck" data-ng-click="editTruck(t.id, t.no, t.transporter, t.type, t.ton, t.roadtax, t.status, t.branch);"><i class="fa fa-pencil-alt"></i></button>
                                     
                                     <button class="btn btn-sm btn-warning" data-ng-show="!showTruck" data-ng-click="saveTruck();"><i class="fa fa-save"></i></button>
                                     

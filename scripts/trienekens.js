@@ -663,7 +663,8 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
             "transport": '',
             "ton": '',
             "roadtax": '',
-            "status": ''
+            "status": '',
+            "branch": ''
         };
         scope.thisZone = {
             "id": '',
@@ -986,7 +987,7 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
 
         }
 
-        scope.editTruck = function (id, no, transporter, type, ton, tax, status) {
+        scope.editTruck = function (id, no, transporter, type, ton, tax, status, branch) {
             scope.showTruck = !scope.showTruck;
             scope.thisTruck = {
                 "id": id,
@@ -995,7 +996,8 @@ app.directive('editable', function ($compile, $http, $filter, storeDataService) 
                 "type": type,
                 "ton": ton,
                 "roadtax": tax,
-                "status": status
+                "status": status,
+                "branch": branch
             };
         };
         scope.saveTruck = function () {
@@ -4108,7 +4110,7 @@ app.controller('areaController', function ($scope, $http, $filter, storeDataServ
 
     $scope.addArea = function () {
         $scope.showCreateBtn = false;
-        if ($scope.area.code == null || $scope.area.code == "" || $scope.area.name == null || $scope.area.name == "" || $scope.area.zone == null || $scope.area.zone == "" || $scope.area.staff == null || $scope.area.staff == "" || $scope.area.driver == null || $scope.area.driver == "") {
+        if ($scope.area.code == null || $scope.area.code == "" || $scope.area.name == null || $scope.area.name == "" || $scope.area.zone == null || $scope.area.zone == "" || $scope.area.staff == null || $scope.area.staff == "" || $scope.area.driver == null || $scope.area.driver == "" || $scope.area.branch == null || $scope.area.branch == "") {
             $scope.notify("error", "There Has Blank Column.");
             $scope.showCreateBtn = true;
         } else {
@@ -4192,6 +4194,7 @@ app.controller('thisAreaController', function ($scope, $http, $routeParams, stor
         "driver": '',
         "transporter": '',
         "status": '',
+        "branch": '',
         "days": {
             "mon": '',
             "tue": '',
@@ -4734,6 +4737,7 @@ app.controller('specificAccController', function ($scope, $http, $routeParams, $
         "handphone": '',
         "phone": '',
         "address": '',
+        "branch": '',
         "iam": window.sessionStorage.getItem('owner')
     };
 
@@ -4796,6 +4800,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             "no": '',
             "driver": '',
             "area": '',
+            "branch": '',
             "transporter": '',
             "type": '0',
             "iam": window.sessionStorage.getItem('owner')
@@ -4829,7 +4834,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
         storeDataService.truck = angular.copy($scope.truckList);
 
         $scope.searchTruck = function (truck) {
-            return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
+            return (truck.id + truck.no + truck.transporter + truck.ton + truck.roadtax + truck.status + truck.branch).toUpperCase().indexOf($scope.searchTruckFilter.toUpperCase()) >= 0;
         }
 
         $scope.truckListActive = [];
@@ -4892,7 +4897,7 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
 
     $scope.addTruck = function () {
         $scope.showCreateBtn = false;
-        if ($scope.truck.no == null || $scope.truck.transporter == null || $scope.truck.ton == null || $scope.truck.roadtax == null || $scope.truck.no == "" || $scope.truck.transporter == "" || $scope.truck.type == "" || $scope.truck.ton == "" || $scope.truck.roadtax == "") {
+        if ($scope.truck.no == null || $scope.truck.transporter == null || $scope.truck.ton == null || $scope.truck.roadtax == null || $scope.truck.branch == null || $scope.truck.no == "" || $scope.truck.transporter == "" || $scope.truck.type == "" || $scope.truck.ton == "" || $scope.truck.roadtax == "" || $scope.truck.branch == "") {
             $scope.notify("error", "There Has Blank Column");
             $scope.showCreateBtn = true;
         } else {
@@ -10591,6 +10596,9 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
     $scope.detailObj = {};
     $scope.areaList = [];
+    $scope.driverList = [];
+    $scope.truckList = [];
+
     $scope.logistics = {
         'areaUnder': '',
         'areaCouncil': '',
@@ -10935,42 +10943,61 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
             });
         }
-    });
 
-    $http.get('/getAreaList').then(function (response) {
-        $scope.renderSltPicker();
-        $.each(response.data, function (index, value) {
-            var areaID = value.id.split(",");
-            var areaName = value.name.split(",");
-            var code = value.code.split(",");
-            var area = [];
-            $.each(areaID, function (index, value) {
-                area.push({
-                    "id": areaID[index],
-                    "name": areaName[index],
-                    "code": code[index]
-                });
-            });
-            $scope.areaList.push({
-                "zone": {
-                    "id": value.zoneID,
-                    "name": value.zoneName
-                },
-                "area": area
-            });
-        });
-        $('.selectpicker').on('change', function () {
+        $http.get('/getAreaList').then(function (response) {
             $scope.renderSltPicker();
+            $.each(response.data, function (index, value) {
+                if(value.branch == $scope.detailObj.zon){
+                    var areaID = value.id.split(",");
+                    var areaName = value.name.split(",");
+                    var code = value.code.split(",");
+                    var area = [];
+                    $.each(areaID, function (index, value) {
+                        area.push({
+                            "id": areaID[index],
+                            "name": areaName[index],
+                            "code": code[index]
+                        });
+                    });
+                    $scope.areaList.push({
+                        "zone": {
+                            "id": value.zoneID,
+                            "name": value.zoneName
+                        },
+                        "area": area
+                    });
+                }
+            });
+            $('.selectpicker').on('change', function () {
+                $scope.renderSltPicker();
+            });
         });
+    
+        $http.get('/getDriverList').then(function (response) {
+            $.each(response.data, function (index, value) {
+                if(value.branch == $scope.detailObj.zon){
+                    $scope.driverList.push({
+                        "id": value.id,
+                        "name": value.name
+                    })
+                }
+            });
+            // $scope.driverList = response.data;
+        });
+    
+        $http.get('/getTruckList').then(function(response){
+            $.each(response.data, function (index, value) {
+                if(value.branch == $scope.detailObj.zon){
+                    $scope.truckList.push({
+                        "id": value.id,
+                        "no": value.no
+                    })
+                }
+            });
+        });
+    
     });
 
-    $http.get('/getDriverList').then(function (response) {
-        $scope.driverList = response.data;
-    });
-
-    $http.get('/getTruckList').then(function(response){
-        $scope.truckList = response.data;
-    });
 
 
     function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {

@@ -19,18 +19,6 @@
               <input type="text" class="form-control" id="txtAreaName" data-ng-model="area.name" />
           </div>
           
-          <!--new added-->
-          <!--<div class="form-group">
-              <label for="sltColFreq form-label">Collection Frequency</label>
-              <input type="checkbox" name="cf1" value="monday" data-ng-model="area.collectionFrequency"> Monday<br>
-              <input type="checkbox" name="cf2" value="tuesday" data-ng-model="area.collectionFrequency"> Tuesday<br>
-              <input type="checkbox" name="cf3" value="wednesday" data-ng-model="area.collectionFrequency"> Wednesday<br>
-              <input type="checkbox" name="cf4" value="thursday" data-ng-model="area.collectionFrequency"> Thursday<br>
-              <input type="checkbox" name="cf5" value="friday" data-ng-model="area.collectionFrequency"> Friday<br>
-              <input type="checkbox" name="cf6" value="saturday" data-ng-model="area.collectionFrequency"> Saturday<br>
-              <input type="checkbox" name="cf7" value="sunday" data-ng-model="area.collectionFrequency"> Sunday<br>
-          </div>-->
-          
           <div class="form-group">
               <label for="sltZoneName form-label">Zone Name</label>
               <select id="sltZoneName" class="form-control" data-ng-model="area.zone" data-ng-options="zone as zone.zoneidname for zone in zoneList"></select>
@@ -52,7 +40,14 @@
                   <option value="2">TAK</option>
                   <option value="3">MP</option>
               </select>
-          </div>          
+          </div>    
+          <div class="form-group">
+              <label for="sltBranch form-label">Branch</label>
+              <select id="sltBranch" class="form-control" data-ng-model="area.branch">
+                  <option value="KCH">KCH</option>
+                  <option value="BTU">BTU</option>
+              </select>
+          </div>      
 <!--
           <div class="form-group">
               <label for="sltBoundaries form-label">Boundaries</label>

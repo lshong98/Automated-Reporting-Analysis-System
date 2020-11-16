@@ -17,11 +17,12 @@ app.post('/addArea', function (req, res) {
         area_name = req.body.name,
         area_code = req.body.code,
         transporter = req.body.transporter,
+        branch = req.body.branch,
         created_on = req.body.creationDate,
         staff_id = req.body.iam;
     
     f.makeID("area", req.body.creationDate).then(function (ID) {
-        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, driverID, areaName, areaCode, transporter, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + zone_id + "', '" + in_charge_staff_id + "', '" + driver_id + "', '" + area_name + "', '" + area_code + "','" + transporter + "', '" + created_on + "', 'A')";
+        var sql = "INSERT INTO tblarea (areaID, zoneID, staffID, driverID, areaName, areaCode, transporter, branch, creationDateTime, areaStatus) VALUE ('" + ID + "', '" + zone_id + "', '" + in_charge_staff_id + "', '" + driver_id + "', '" + area_name + "', '" + area_code + "','" + transporter + "', '" + branch + "', '" + created_on + "', 'A')";
         
         f.sendForAuthorization(created_on, staff_id, "add", "Create new area", ID, "tblarea", "\"" + sql + "\"");
         
@@ -62,7 +63,7 @@ app.get('/getAllArea', function (req, res) {
 // Used in comboBox - Zone with area
 app.get('/getAreaList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS code FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
+    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS code, tblarea.branch AS branch FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
@@ -116,6 +117,7 @@ app.post('/updateArea', function (req, res) {
         driver_id = req.body.driver,
         transporter = req.body.transporter,
         collection_frequency = req.body.frequency,
+        branch = req.body.branch,
         area_status = req.body.status === "Active" ? 'A' : 'I',
         staff_id = req.body.iam;
     
@@ -130,7 +132,7 @@ app.post('/updateArea', function (req, res) {
         information.staff_name = staff_info.name;
         information.position_name = staff_info.position;
         
-        var sql = "UPDATE tblarea SET areaName = '" + area_name.replace(/'/g,"\\\\\'") + "', areaCode = '" + area_code.replace(/'/g,"\\\\\'") + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + driver_id + "', transporter = '" + transporter + "', collection_frequency = '" + collection_frequency + "', areaStatus = '" + area_status + "' WHERE areaID = '" + area_id + "'";
+        var sql = "UPDATE tblarea SET areaName = '" + area_name.replace(/'/g,"\\\\\'") + "', areaCode = '" + area_code.replace(/'/g,"\\\\\'") + "', zoneID = '" + information.zoneID + "', staffID = '" + information.staffID + "', driverID = '" + driver_id + "', transporter = '" + transporter + "', branch = '" + branch + "', collection_frequency = '" + collection_frequency + "', areaStatus = '" + area_status + "' WHERE areaID = '" + area_id + "'";
         var content = "";
 
         content = "" + information.staff_name + " would like to update area details. The changes shown below:\n";
@@ -139,7 +141,8 @@ app.post('/updateArea', function (req, res) {
         content += 'Belonging to: <s>' + information.original.zoneID + '</s> to ' + information.zoneID + '\n';
         content += 'Collection Frequency: <s>' + information.original.collection_frequency + '</s> to ' + collection_frequency + '\n';
         content += 'Driver: <s>' + information.original.driverID + '</s> to ' + driver_id + '\n';
-        content += 'Driver: <s>' + information.original.transporter + '</s> to ' + transporter + '\n';
+        content += 'Transporter: <s>' + information.original.transporter + '</s> to ' + transporter + '\n';
+        content += 'Branch: <s>' + information.original.branch + '</s> to ' + branch + '\n';
         content += 'Reporting Officer: <s>' + information.original.staffID + '</s> to ' + information.staffID + '\n';
         content += 'Area Status: <s>' + information.original.areaStatus + '</s> to ' + area_status + '\n';
 
@@ -155,7 +158,7 @@ app.post('/updateArea', function (req, res) {
 app.post('/thisArea', function (req, res) {
     'use strict';
     
-    var sql = "SELECT tblarea.areaID AS id, tblarea.areaCode AS code, tblarea.areaName AS name, tblarea.driverID AS driver, tblarea.transporter AS transporter, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
+    var sql = "SELECT tblarea.areaID AS id, tblarea.areaCode AS code, tblarea.areaName AS name, tblarea.driverID AS driver, tblarea.transporter AS transporter, tblarea.branch AS branch, tblstaff.staffName AS staff, tblzone.zoneName AS zone, (CASE WHEN tblarea.areaStatus = 'A' THEN 'Active' WHEN tblarea.areaStatus = 'I' THEN 'Inactive' END) AS status, collection_frequency AS frequency FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tblstaff ON tblarea.staffID = tblstaff.staffID WHERE tblarea.areaID = '" + req.body.id + "' LIMIT 0, 1";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;
