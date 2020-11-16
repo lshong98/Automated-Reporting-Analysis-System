@@ -15,33 +15,33 @@ const webPushPublicVapidKey = 'BKRH77GzVVAdLbU9ZAblIjl_zKYZzLlJQCRZXsdawtS--XnMP
 // }
 // webNotification('Trienekens-web-portal', 'New Bin Request Received');
 
-async function send(){
-    console.log("Registering service worker...");
-    const register = await navigator.serviceWorker.register('/worker.js',{
-        scope : '/'
-    });
-    console.log('Service Worker Registered');
+// async function send(){
+//     console.log("Registering service worker...");
+//     const register = await navigator.serviceWorker.register('/worker.js',{
+//         scope : '/'
+//     });
+//     console.log('Service Worker Registered');
 
-    //Register Push
-    console.log('Registering push');
-    const subscription = await register.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(webPushPublicVapidKey)
-    });
-    console.log('Push Registered');
-    console.log(subscription);
+//     //Register Push
+//     console.log('Registering push');
+//     const subscription = await register.pushManager.subscribe({
+//         userVisibleOnly: true,
+//         applicationServerKey: urlBase64ToUint8Array(webPushPublicVapidKey)
+//     });
+//     console.log('Push Registered');
+//     console.log(subscription);
 
-    //send push notification
-    console.log('Sending Push');
-    await fetch('/subscribe',{
-        method: 'POST',
-        body: JSON.stringify(subscription),
-        headers:{
-            'content-type': 'application/json'
-        }
-    });
-    console.log('Push Sent...');
-}
+//     //send push notification
+//     console.log('Sending Push');
+//     await fetch('/subscribe',{
+//         method: 'POST',
+//         body: JSON.stringify(subscription),
+//         headers:{
+//             'content-type': 'application/json'
+//         }
+//     });
+//     console.log('Push Sent...');
+// }
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -160,9 +160,9 @@ socket.on('new binrequest', function (data) {
 
     lobi_notify('info', 'New Bin Request', 'New Bin Request Received', '');
     webNotification('Trienekens-web-portal', 'New Bin Request Received');
-    if('serviceWorker' in navigator){
-        send().catch(err => console.error(err));
-    }     
+    // if('serviceWorker' in navigator){
+    //     send().catch(err => console.error(err));
+    // }     
 });
 
 socket.on('new message', function (data) {
@@ -174,9 +174,9 @@ socket.on('new message', function (data) {
 
     lobi_notify('info', 'You received a new message.', 'From complaint ID: '+complaintID, '');
     webNotification('Trienekens-web-portal', 'You received a new message.');
-    if('serviceWorker' in navigator){
-        send().catch(err => console.error(err));
-    }     
+    // if('serviceWorker' in navigator){
+    //     send().catch(err => console.error(err));
+    // }     
    
 });
 
@@ -196,9 +196,9 @@ socket.on('new complaint', function (data) {
     }
     lobi_notify('info', 'New App Complaint', 'New App Complaint Received', '');
     webNotification('Trienekens-web-portal', 'New App Complaint Received');
-    if('serviceWorker' in navigator){
-        send().catch(err => console.error(err));
-    } 
+    // if('serviceWorker' in navigator){
+    //     send().catch(err => console.error(err));
+    // } 
 });
 
 socket.on('read complaint', function (data) {
