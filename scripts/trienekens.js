@@ -9959,15 +9959,16 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
     'use strict';
 
     var datevar = new Date();
-    $scope.date = {
+    $scope.obj = {
         'startDate': '',
-        'endDate': ''
+        'endDate': '',
+        'zon': 'KCH'
     }
-    $scope.date.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
-    $scope.date.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+    $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
+    $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
 
-    $scope.requestStatistics = function(date){
-        $http.post('/getCmsStatistics', date).then(function(response){
+    $scope.requestStatistics = function(obj){
+        $http.post('/getCmsStatistics', obj).then(function(response){
             var myData = response.data;
             $scope.tsCount = myData.tsCount;
             $scope.mpCount = myData.mpCount;
@@ -10010,11 +10011,11 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         });
     }
 
-    $scope.requestStatistics($scope.date);
+    $scope.requestStatistics($scope.obj);
 
-    $scope.dateRangeChange = function () {
-        if ($scope.date.startDate != undefined && $scope.date.endDate != undefined && $scope.date.startDate <= $scope.date.endDate) {
-            $scope.requestStatistics($scope.date);
+    $scope.objChange = function () {
+        if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
+            $scope.requestStatistics($scope.obj);
         }
 
     }
@@ -10629,6 +10630,15 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         'image03': false,
         'image04': false
     }
+
+    $scope.editLogistics = {
+        "coID": '',
+        "area": '',
+        "council": '',
+        "sub": '',
+        "truck": '',
+        "driver": ''
+    }
     $scope.editImages = false;
     $scope.showSubmitBtn = true;
     $scope.showCompImg = true;
@@ -10639,6 +10649,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     $scope.showLogsImg = true;
     $scope.showAreaLogistics = false;
     $scope.wasteColDT = "";
+    $scope.showLogsEdit = false;
 
     $http.post('/getStaffName', {'id': $window.sessionStorage.getItem('owner')}).then(function (response) {
         $scope.lgStaff = response.data[0].staffName;
@@ -10893,6 +10904,26 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                             $scope.driverName = '';
                         }
                     });
+
+                    //set up edit data
+                    $scope.editLogistics.coID = $routeParams.complaintCode;
+                    $scope.editLogistics.area = $scope.fullComplaintDetail.area;
+                    $scope.editLogistics.council = $scope.fullComplaintDetail.council;
+                    $scope.editLogistics.sub = $scope.fullComplaintDetail.sub;
+                    $scope.editLogistics.driver = $scope.fullComplaintDetail.driver;
+                    $scope.editLogistics.truck = $scope.fullComplaintDetail.truck;
+
+                    $scope.updateLogisticsCMSEdit = function(){
+                        $http.post('/updateLogisticsCMSEdit', $scope.editLogistics).then(function(response){
+                            if (response.data.status == "success") {
+                                $scope.notify(response.data.status, "Data has been updated");
+                                $route.reload();                              
+
+                            } else {
+                                $scope.notify("error", "There are some ERROR!");
+                            }
+                        });
+                    }
 
                     $scope.updateStatus = function () {
                         var time = new Date();
@@ -11267,6 +11298,10 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.notify("error", "The Column is blank!");
             $scope.wcdEditBtn = true;
         }        
+    }
+
+    $scope.logsEditChange = function(value){
+        $scope.showLogsEdit = value;
     }
 
 });

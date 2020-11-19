@@ -445,23 +445,54 @@
 
 <div data-ng-show="showInfo">
 
-    <h4>Action Taken By Logistics</h4>
-
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Action Taken By Logistics</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <btn class="btn btn-primary" data-ng-show="!showLogsEdit" data-ng-click="showLogsEdit = 'TRUE'; ">Edit</btn>
+            <btn class="btn btn-success" data-ng-show="showLogsEdit" data-ng-click="updateLogisticsCMSEdit();">Save</btn>
+            <btn class="btn btn-danger" data-ng-show="showLogsEdit" data-ng-click="showLogsEdit = FALSE ">Cancel</btn>
+        </div>
+    </div>
+    <br/>
     <!--original area  under-->
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Area Code:</strong>
-        <p class="mx-sm-3">{{areaCode}}</p>
+        <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{areaCode}}</p>
+        <div class="col-md-9" data-ng-show="showLogsEdit">
+            <select class="mx-sm-3 form-control" id="editUnder" data-ng-model="editLogistics.area" data-live-search="true" data-width="100%">
+                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                      <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+                  </optgroup>
+            </select>
+        </div>
     </div>
     
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Area by Council:</strong>
-        <p class="mx-sm-3">{{fullComplaintDetail.council}}</p>
+        <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{fullComplaintDetail.council}}</p>
+        <div class="col-md-9" data-ng-show="showLogsEdit">
+            <select class="mx-sm-3 form-control" id="editCouncil" data-ng-model="editLogistics.council" data-live-search="true" data-width="100%">
+                <option value="DBKU">DBKU</option>            
+                <option value="MBKS">MBKS</option>
+                <option value="MPP">MPP</option>
+                <option value="MDS">MDS</option>
+            </select>
+        </div>
     </div>
 
     <!--original forwarded to sub-contractor-->
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Area Under:</strong>
-        <p  class="mx-sm-3">{{fullComplaintDetail.sub}}</p>
+        <p  class="mx-sm-3" data-ng-show="!showLogsEdit">{{fullComplaintDetail.sub}}</p>
+        <div class="col-md-9" data-ng-show="showLogsEdit">
+            <select class="mx-sm-3 form-control" id="editSub" data-ng-model="editLogistics.sub" data-live-search="true" data-width="100%">
+                <option data-ng-repeat="x in areaUnderList" value="{{x}}">{{x}}</option>
+            </select>
+        </div>
     </div>
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Date:</strong>
@@ -573,12 +604,22 @@
     
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Driver:</strong>
-        <p class="mx-sm-3">{{driverName}}</p>
+        <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{driverName}}</p>
+        <div class="col-md-9" data-ng-show="showLogsEdit">
+            <select class="form-control mx-sm-3" id="editDriver" data-ng-model="editLogistics.driver" data-live-search="true" data-width="100%">
+                <option value="{{d.id}}" data-ng-repeat="d in driverList">{{d.name}}</option>
+            </select>
+        </div>
     </div>    
 
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Truck:</strong>
-        <p class="mx-sm-3">{{fullComplaintDetail.truck}}</p>
+        <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{fullComplaintDetail.truck}}</p>
+        <div class="col-md-9" data-ng-show="showLogsEdit">
+            <select class="form-control mx-sm-3" id="editTruck" data-ng-model="editLogistics.truck" data-live-search="true" data-width="100%">
+                <option data-ng-repeat="t in truckList" value="{{t.no}}">{{t.no}}</option>
+            </select>
+        </div>
     </div>    
     
     <div class="form-group row">

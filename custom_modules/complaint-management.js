@@ -564,6 +564,21 @@ app.post('/submitLogisticsComplaint', function(req, res) {
     });
 });
 
+app.post('/updateLogisticsCMSEdit', function(req, res){
+    'use strict';
+    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.area + "', council = '" + req.body.council + "', forwardedSub = '" + req.body.sub + "', truck = '" + req.body.truck + "', driver = '" + req.body.driver + "' WHERE coID = '" + req.body.coID + "'";
+
+    database.query(sql, function(err, result){
+        if (err) {
+            throw err;
+        }
+        res.json({
+            "message": "Data updated",
+            "status": "success"
+        });
+    })
+})
+
 app.post('/updateComplaintImages', function(req, res) {
     'use strict';
     
@@ -717,114 +732,115 @@ app.post('/getCmsStatistics', function(req,res){
     var endDate = req.body.endDate;
     var result = {}
 
-    f.waterfallQuery("SELECT COUNT(*) AS 'tsCount' FROM tblcomplaintofficer WHERE forwardedSub = 'Trienekens' AND services = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "' ").then(function(tsCount){
+
+    f.waterfallQuery("SELECT COUNT(*) AS 'tsCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'Trienekens' AND services = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "' ").then(function(tsCount){
         result.tsCount = tsCount.tsCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'mpCount' FROM tblcomplaintofficer WHERE forwardedSub = 'Mega Power' AND services = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'mpCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'Mega Power' AND services = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(mpCount){
         result.mpCount = mpCount.mpCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'takCount' FROM tblcomplaintofficer WHERE forwardedSub = 'TAK' AND services = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'takCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'TAK' AND services = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(takCount){
         result.takCount = takCount.takCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'roroTSCount' FROM tblcomplaintofficer WHERE forwardedSub = 'Trienekens' AND services = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'roroTSCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'Trienekens' AND services = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroTSCount){
         result.roroTSCount = roroTSCount.roroTSCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'roroMPCount' FROM tblcomplaintofficer WHERE forwardedSub = 'Mega Power' AND services = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'roroMPCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'Mega Power' AND services = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroMPCount){
         result.roroMPCount = roroMPCount.roroMPCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'roroTAKCount' FROM tblcomplaintofficer WHERE forwardedSub = 'TAK' AND services = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'roroTAKCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'TAK' AND services = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroTAKCount){
         result.roroTAKCount = roroTAKCount.roroTAKCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'mbksCount' FROM tblcomplaintofficer WHERE council = 'MBKS' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'mbksCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND council = 'MBKS' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(mbksCount){
         result.mbksCount = mbksCount.mbksCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'dbkuCount' FROM tblcomplaintofficer WHERE council = 'DBKU' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'dbkuCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND council = 'DBKU' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(dbkuCount){
         result.dbkuCount = dbkuCount.dbkuCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'mppCount' FROM tblcomplaintofficer WHERE council = 'MPP' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'mppCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND council = 'MPP' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(mppCount){
         result.mppCount = mppCount.mppCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'mdsCount' FROM tblcomplaintofficer WHERE council = 'MDS' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'mdsCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND council = 'MDS' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(mdsCount){
         result.mdsCount = mdsCount.mdsCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'validMWCount' FROM tblcomplaintofficer WHERE cmsStatus = '1' AND services = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'validMWCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND cmsStatus = '1' AND services = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(validMWCount){
         result.validMWCount = validMWCount.validMWCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'validROROCount' FROM tblcomplaintofficer WHERE cmsStatus = '1' AND services = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'validROROCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND cmsStatus = '1' AND services = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(validROROCount){
         result.validROROCount = validROROCount.validROROCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'invalidCount' FROM tblcomplaintofficer WHERE cmsStatus = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'invalidCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND cmsStatus = '2' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(invalidCount){
         result.invalidCount = invalidCount.invalidCount;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountTS' FROM tblcomplaintofficer WHERE reason = '1' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '1' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(missColCountTS){
         result.missColCountTS = missColCountTS.missColCountTS;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'shortageMPCountTS' FROM tblcomplaintofficer WHERE reason = '2' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'shortageMPCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '2' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(shortageMPCountTS){
         result.shortageMPCountTS = shortageMPCountTS.shortageMPCountTS;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'truckBDCountTS' FROM tblcomplaintofficer WHERE reason = '3' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'truckBDCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '3' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(truckBDCountTS){
         result.truckBDCountTS = truckBDCountTS.truckBDCountTS;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'truckFullCountTS' FROM tblcomplaintofficer WHERE reason = '4' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'truckFullCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '4' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(truckFullCountTS){
         result.truckFullCountTS = truckFullCountTS.truckFullCountTS;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'binNSBCountTS' FROM tblcomplaintofficer WHERE reason = '5' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'binNSBCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '5' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(binNSBCountTS){
         result.binNSBCountTS = binNSBCountTS.binNSBCountTS;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'lechateCountTS' FROM tblcomplaintofficer WHERE reason = '6' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'lechateCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '6' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(lechateCountTS){
         result.lechateCountTS = lechateCountTS.lechateCountTS;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'otherCountTS' FROM tblcomplaintofficer WHERE reason = '7' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'otherCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '7' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(otherCountTS){
         result.otherCountTS = otherCountTS.otherCountTS;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountTS' FROM tblcomplaintofficer WHERE reason = '8' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '8' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroReasonCountTS){
         result.roroReasonCountTS = roroReasonCountTS.roroReasonCountTS;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountMP' FROM tblcomplaintofficer WHERE reason = '1' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '1' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(missColCountMP){
         result.missColCountMP = missColCountMP.missColCountMP;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'shortageMPCountMP' FROM tblcomplaintofficer WHERE reason = '2' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'shortageMPCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '2' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(shortageMPCountMP){
         result.shortageMPCountMP = shortageMPCountMP.shortageMPCountMP;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'truckBDCountMP' FROM tblcomplaintofficer WHERE reason = '3' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'truckBDCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '3' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(truckBDCountMP){
         result.truckBDCountMP = truckBDCountMP.truckBDCountMP;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'truckFullCountMP' FROM tblcomplaintofficer WHERE reason = '4' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'truckFullCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '4' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(truckFullCountMP){
         result.truckFullCountMP = truckFullCountMP.truckFullCountMP;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'binNSBCountMP' FROM tblcomplaintofficer WHERE reason = '5' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'binNSBCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '5' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(binNSBCountMP){
         result.binNSBCountMP = binNSBCountMP.binNSBCountMP;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'lechateCountMP' FROM tblcomplaintofficer WHERE reason = '6' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'lechateCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '6' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(lechateCountMP){
         result.lechateCountMP = lechateCountMP.lechateCountMP;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'otherCountMP' FROM tblcomplaintofficer WHERE reason = '7' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'otherCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '7' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(otherCountMP){
         result.otherCountMP = otherCountMP.otherCountMP;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountMP' FROM tblcomplaintofficer WHERE reason = '8' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '8' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroReasonCountMP){
         result.roroReasonCountMP = roroReasonCountMP.roroReasonCountMP;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountTAK' FROM tblcomplaintofficer WHERE reason = '1' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '1' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(missColCountTAK){
         result.missColCountTAK = missColCountTAK.missColCountTAK;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'shortageMPCountTAK' FROM tblcomplaintofficer WHERE reason = '2' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'shortageMPCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '2' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(shortageMPCountTAK){
         result.shortageMPCountTAK = shortageMPCountTAK.shortageMPCountTAK;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'truckBDCountTAK' FROM tblcomplaintofficer WHERE reason = '3' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'truckBDCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '3' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(truckBDCountTAK){
         result.truckBDCountTAK = truckBDCountTAK.truckBDCountTAK;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'truckFullCountTAK' FROM tblcomplaintofficer WHERE reason = '4' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'truckFullCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '4' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(truckFullCountTAK){
         result.truckFullCountTAK = truckFullCountTAK.truckFullCountTAK;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'binNSBCountTAK' FROM tblcomplaintofficer WHERE reason = '5' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'binNSBCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '5' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(binNSBCountTAK){
         result.binNSBCountTAK = binNSBCountTAK.binNSBCountTAK;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'lechateCountTAK' FROM tblcomplaintofficer WHERE reason = '6' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'lechateCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '6' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(lechateCountTAK){
         result.lechateCountTAK = lechateCountTAK.lechateCountTAK;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'otherCountTAK' FROM tblcomplaintofficer WHERE reason = '7' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'otherCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '7' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(otherCountTAK){
         result.otherCountTAK = otherCountTAK.otherCountTAK;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountTAK' FROM tblcomplaintofficer WHERE reason = '8' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '8' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroReasonCountTAK){
         result.roroReasonCountTAK = roroReasonCountTAK.roroReasonCountTAK;
         res.json(result);
