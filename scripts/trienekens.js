@@ -8799,10 +8799,10 @@ app.controller('bdbHistController', function($scope, $http, $filter, $window, st
         $scope.bdbHistList = response.data;
 
         for(var i = 0; i < $scope.bdbHistList.length; i++){
+            $scope.bdbHistList[i].serialNo = JSON.parse($scope.bdbHistList[i].content).serialNo;      
             $scope.bdbHistList[i].requestDate = $filter('date')($scope.bdbHistList[i].requestDate, 'yyyy-MM-dd');
             $scope.bdbHistList[i].changesDate = $filter('date')($scope.bdbHistList[i].changesDate, 'yyyy-MM-dd');
-        }
-        
+        }    
     });
 
     $scope.backBtn = function () {
@@ -9812,144 +9812,139 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
 
 app.controller('complaintcmsDailyReportController', function($scope, $filter, $http, $window){
     var datevar = new Date();
-    $scope.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
-    $scope.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+    $scope.obj = {
+        'startDate': '',
+        'endDate': '',
+        'zon': 'KCH'
+    }
+    $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
+    $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
 
     $scope.cmsDailyReportList = [];
-    $scope.filterCmsExportList = [];
 
-    $http.get('/getCmsDailyReportList').then(function(response){
-        $scope.cmsDailyReportList = response.data;
-        var splitType = "";
-        var splitTypeContent = "";
-        var splitTypeSpecialContent = ""; 
-        var filterAddCount = 0;
-        $scope.noTS = 0;
-        $scope.noMP = 0;
-        $scope.noTAK = 0;
 
-        for(var i=0; i<$scope.cmsDailyReportList.length; i++){
-            $scope.cmsDailyReportList[i].complaintDate = $filter('date')($scope.cmsDailyReportList[i].complaintDate, 'yyyy-MM-dd');
+    $scope.request = function(obj){
+        console.log(obj);
+        $http.post('/getCmsDailyReportList', obj).then(function(response){
+            $scope.cmsDailyReportList = response.data;
+            var splitType = "";
+            var splitTypeContent = "";
+            var splitTypeSpecialContent = ""; 
+            $scope.noTS = 0;
+            $scope.noMP = 0;
+            $scope.noTAK = 0;
 
-            //formulate for subcon column
-            if($scope.cmsDailyReportList[i].subcon == "Trienekens"){
-                $scope.cmsDailyReportList[i].ts = "1";
-                $scope.cmsDailyReportList[i].mp = "-";
-                $scope.cmsDailyReportList[i].tak = "-";
-            }else if($scope.cmsDailyReportList[i].subcon == "Mega Power"){
-                $scope.cmsDailyReportList[i].ts = "-";
-                $scope.cmsDailyReportList[i].mp = "1";
-                $scope.cmsDailyReportList[i].tak = "-";
-            }else if($scope.cmsDailyReportList[i].subcon == "TAK"){
-                $scope.cmsDailyReportList[i].ts = "-";
-                $scope.cmsDailyReportList[i].mp = "-";
-                $scope.cmsDailyReportList[i].tak = "1";
-            }
+            for(var i=0; i<$scope.cmsDailyReportList.length; i++){
+                $scope.cmsDailyReportList[i].complaintDate = $filter('date')($scope.cmsDailyReportList[i].complaintDate, 'yyyy-MM-dd');
 
-            //formulate reason
-            if($scope.cmsDailyReportList[i].reason == 1){
-                $scope.cmsDailyReportList[i].reason = "Missed Collection(1)";
-            }else if($scope.cmsDailyReportList[i].reason == 2){
-                $scope.cmsDailyReportList[i].reason = "Shortage Manpower(1)";
-            }else if($scope.cmsDailyReportList[i].reason == 3){
-                $scope.cmsDailyReportList[i].reason = "Truck Breakdown(1)";
-            }else if($scope.cmsDailyReportList[i].reason == 4){
-                $scope.cmsDailyReportList[i].reason = "Truck Full(1)";
-            }else if($scope.cmsDailyReportList[i].reason == 5){
-                $scope.cmsDailyReportList[i].reason = "Bin Not Sent Back(2)";
-            }else if($scope.cmsDailyReportList[i].reason == 6){
-                $scope.cmsDailyReportList[i].reason = "Leachate(3)";
-            }else if($scope.cmsDailyReportList[i].reason == 7){
-                $scope.cmsDailyReportList[i].reason = "Other(4)";
-            }else if($scope.cmsDailyReportList[i].reason == 8){
-                $scope.cmsDailyReportList[i].reason = "RORO(5)";
-            }
+                //formulate for subcon column
+                if($scope.cmsDailyReportList[i].subcon == "Trienekens"){
+                    $scope.cmsDailyReportList[i].ts = "1";
+                    $scope.cmsDailyReportList[i].mp = "-";
+                    $scope.cmsDailyReportList[i].tak = "-";
+                }else if($scope.cmsDailyReportList[i].subcon == "Mega Power"){
+                    $scope.cmsDailyReportList[i].ts = "-";
+                    $scope.cmsDailyReportList[i].mp = "1";
+                    $scope.cmsDailyReportList[i].tak = "-";
+                }else if($scope.cmsDailyReportList[i].subcon == "TAK"){
+                    $scope.cmsDailyReportList[i].ts = "-";
+                    $scope.cmsDailyReportList[i].mp = "-";
+                    $scope.cmsDailyReportList[i].tak = "1";
+                }
 
-            //formulate review date
-            $scope.cmsDailyReportList[i].logsReviewDate = $filter('date')($scope.cmsDailyReportList[i].logsReviewDate, 'yyyy-MM-dd');
+                //formulate reason
+                if($scope.cmsDailyReportList[i].reason == 1){
+                    $scope.cmsDailyReportList[i].reason = "Missed Collection(1)";
+                }else if($scope.cmsDailyReportList[i].reason == 2){
+                    $scope.cmsDailyReportList[i].reason = "Shortage Manpower(1)";
+                }else if($scope.cmsDailyReportList[i].reason == 3){
+                    $scope.cmsDailyReportList[i].reason = "Truck Breakdown(1)";
+                }else if($scope.cmsDailyReportList[i].reason == 4){
+                    $scope.cmsDailyReportList[i].reason = "Truck Full(1)";
+                }else if($scope.cmsDailyReportList[i].reason == 5){
+                    $scope.cmsDailyReportList[i].reason = "Bin Not Sent Back(2)";
+                }else if($scope.cmsDailyReportList[i].reason == 6){
+                    $scope.cmsDailyReportList[i].reason = "Leachate(3)";
+                }else if($scope.cmsDailyReportList[i].reason == 7){
+                    $scope.cmsDailyReportList[i].reason = "Other(4)";
+                }else if($scope.cmsDailyReportList[i].reason == 8){
+                    $scope.cmsDailyReportList[i].reason = "RORO(5)";
+                }
 
-            //formulate for area code
-            if($scope.cmsDailyReportList[i].area != null){
-                $scope.cmsDailyReportList[i].area = $scope.cmsDailyReportList[i].area.split(",")[1];
-            }
-            
-            //formulate value for type of complaint
-            $scope.detailType = "";
-            splitType = $scope.cmsDailyReportList[i].type.split(":,:");
-            for (var n = 0; n < splitType.length; n++) {
-                if (splitType[n].length > 3) {
-                    splitTypeSpecialContent = splitType[n].split(":::::");
-                    if (splitTypeSpecialContent[0] == '1') {
-                        splitTypeSpecialContent[2] = "Waste not collected";
-                    } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
-                        splitTypeSpecialContent[2] = "Others";
+                //formulate review date
+                $scope.cmsDailyReportList[i].logsReviewDate = $filter('date')($scope.cmsDailyReportList[i].logsReviewDate, 'yyyy-MM-dd');
+
+                //formulate for area code
+                if($scope.cmsDailyReportList[i].area != null){
+                    $scope.cmsDailyReportList[i].area = $scope.cmsDailyReportList[i].area.split(",")[1];
+                }
+                
+                //formulate value for type of complaint
+                $scope.detailType = "";
+                splitType = $scope.cmsDailyReportList[i].type.split(":,:");
+                for (var n = 0; n < splitType.length; n++) {
+                    if (splitType[n].length > 3) {
+                        splitTypeSpecialContent = splitType[n].split(":::::");
+                        if (splitTypeSpecialContent[0] == '1') {
+                            splitTypeSpecialContent[2] = "Waste not collected";
+                        } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
+                            splitTypeSpecialContent[2] = "Others";
+                        }
+                        $scope.detailType += splitTypeSpecialContent[2];
+                    } else {
+                        if (splitType[n] == '2') {
+                            splitTypeContent = "Bin not pushed back to its original location";
+                        } else if (splitType[n] == '3') {
+                            splitTypeContent = "Spillage of waste";
+                        } else if (splitType[n] == '4') {
+                            splitTypeContent = "Spillage of leachate water";
+                        } else if (splitType[n] == '5') {
+                            splitTypeContent = "RoRo not send";
+                        } else if (splitType[n] == '6') {
+                            splitTypeContent = "RoRo not exchanged";
+                        } else if (splitType[n] == '7') {
+                            splitTypeContent = "RoRo not pulled";
+                        } else if (splitType[n] == '8') {
+                            splitTypeContent = "RoRo not emptied";
+                        } else if (splitType[n] == '9') {
+                            splitTypeContent = "Waste not collected on time";
+                        } else if (splitType[n] == '10') {
+                            splitTypeContent = "Spillage during collection";
+                        } else if (splitType[n] == '11') {
+                            splitTypeContent = "Incomplete documents";
+                        }
+                        $scope.detailType += splitTypeContent;
                     }
-                    $scope.detailType += splitTypeSpecialContent[2];
-                } else {
-                    if (splitType[n] == '2') {
-                        splitTypeContent = "Bin not pushed back to its original location";
-                    } else if (splitType[n] == '3') {
-                        splitTypeContent = "Spillage of waste";
-                    } else if (splitType[n] == '4') {
-                        splitTypeContent = "Spillage of leachate water";
-                    } else if (splitType[n] == '5') {
-                        splitTypeContent = "RoRo not send";
-                    } else if (splitType[n] == '6') {
-                        splitTypeContent = "RoRo not exchanged";
-                    } else if (splitType[n] == '7') {
-                        splitTypeContent = "RoRo not pulled";
-                    } else if (splitType[n] == '8') {
-                        splitTypeContent = "RoRo not emptied";
-                    } else if (splitType[n] == '9') {
-                        splitTypeContent = "Waste not collected on time";
-                    } else if (splitType[n] == '10') {
-                        splitTypeContent = "Spillage during collection";
-                    } else if (splitType[n] == '11') {
-                        splitTypeContent = "Incomplete documents";
+
+                    if (n < (splitType.length - 1)) {
+                        $scope.detailType += ", ";
                     }
-                    $scope.detailType += splitTypeContent;
+
+                }
+                $scope.cmsDailyReportList[i].type = $scope.detailType;
+                
+                //formulate value for waste collection date time
+                if($scope.cmsDailyReportList[i].wasteColDT != null){
+                    var wasteArray = $scope.cmsDailyReportList[i].wasteColDT.split(";");
+                    $scope.cmsDailyReportList[i].wcdSentences = "";
+                    for(var c=0; c < wasteArray.length - 1; c++){
+                        $scope.cmsDailyReportList[i].wcdSentences += wasteArray[c].split(",")[0] + " - " + wasteArray[c].split(",")[1] + ".\n";
+                    }  
                 }
 
-                if (n < (splitType.length - 1)) {
-                    $scope.detailType += ", ";
-                }
-
-            }
-            $scope.cmsDailyReportList[i].type = $scope.detailType;
-            
-            //formulate value for waste collection date time
-            if($scope.cmsDailyReportList[i].wasteColDT != null){
-                var wasteArray = $scope.cmsDailyReportList[i].wasteColDT.split(";");
-                $scope.cmsDailyReportList[i].wcdSentences = "";
-                for(var c=0; c < wasteArray.length - 1; c++){
-                    $scope.cmsDailyReportList[i].wcdSentences += wasteArray[c].split(",")[0] + " - " + wasteArray[c].split(",")[1] + ".\n";
-                }  
-            }
-
-            //filtering
-            var compDate = new Date($scope.cmsDailyReportList[i].complaintDate);
-            if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
-                $scope.filterCmsExportList[filterAddCount] = $scope.cmsDailyReportList[i];
-                if($scope.cmsDailyReportList[i].subcon == "Trienekens"){ $scope.noTS++; }
-                if($scope.cmsDailyReportList[i].subcon == "Mega Power"){ $scope.noMP++; }
-                if($scope.cmsDailyReportList[i].subcon == "TAK"){ $scope.noTAK++; }
-                filterAddCount += 1;
-            }
-        }
-    });
-
-    $scope.dateRangeChange = function () {
-        if ($scope.startDate != undefined && $scope.endDate != undefined && $scope.startDate <= $scope.endDate) {
-
-            var filterAddCount = 0;
-            $scope.filterCmsExportList = [];
-            for (var n = 0; n < $scope.cmsDailyReportList.length; n++) {
-                var compDate = new Date($scope.cmsDailyReportList[n].complaintDate);
-                if (compDate >= $scope.startDate-1 && compDate <= $scope.endDate) {
-                    $scope.filterCmsExportList[filterAddCount] = $scope.cmsDailyReportList[n];
-                    filterAddCount += 1;
+                //filtering
+                var compDate = new Date($scope.cmsDailyReportList[i].complaintDate);
+                if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
+                    if($scope.cmsDailyReportList[i].subcon == "Trienekens"){ $scope.noTS++; }
+                    if($scope.cmsDailyReportList[i].subcon == "Mega Power"){ $scope.noMP++; }
+                    if($scope.cmsDailyReportList[i].subcon == "TAK"){ $scope.noTAK++; }
                 }
             }
+        });
+    }
+    $scope.objChange = function () {
+        if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
+            $scope.request($scope.obj);
         }
 
     }

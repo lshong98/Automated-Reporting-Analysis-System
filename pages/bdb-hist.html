@@ -17,6 +17,7 @@
                         <tr>
                             <th width="15%">Request Date</th>
                             <th width="15%">Requestor</th>
+                            <th width="15%">Serial No</th>
                             <th width="15%">Action</th>
                             <th width="15%">Status</th>
                             <th width="15%">Approver</th>
@@ -27,6 +28,7 @@
                         <tr data-ng-repeat="l in bdbHistList" data-ng-click="bdbDetailPage(l.id)">
                             <td>{{l.requestDate}}</td>
                             <td>{{l.requestor}}</td>
+                            <td>{{l.serialNo}}</td>
                             <td>{{l.action}}</td>
                             <td>{{l.status}}</td>
                             <td>{{l.approver}}</td>
