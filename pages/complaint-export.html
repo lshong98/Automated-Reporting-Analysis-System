@@ -28,6 +28,7 @@
             <table class="table"  id="complaintExport">
                 <thead>
                     <tr>
+                        <th>Branch</th>
                         <th>CMS Date Time</th>
                         <th>LG Date Time</th>
                         <th>LG KPI Response Time (hours:minute)</th>
@@ -54,6 +55,7 @@
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="c in filterComplaintExportList">
+                        <td data-ng-bind="c.zon"></td>
                         <td data-ng-bind="c.complaintDate"></td>
                         <td data-ng-bind="c.logisticsDateTime"></td>
                         <td data-ng-bind="c.lgkpi"></td>

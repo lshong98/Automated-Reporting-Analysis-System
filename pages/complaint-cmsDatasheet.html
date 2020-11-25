@@ -6,20 +6,32 @@
 <div class="form-group row">
     <label for="startDate" class="col-md-1 col-form-label form-label-width">Start Date</label>
     <div class="col-md-3">
-        <input type="date" id="startDate" class="form-control mx-sm-2" data-ng-model="startDate" data-ng-change="dateRangeChange()"/>
+        <input type="date" id="startDate" class="form-control mx-sm-2" data-ng-model="obj.startDate" />
     </div>
 </div>    
-
 <div class="form-group row">
     <label for="endDate" class="col-md-1 col-form-label form-label-width">End Date</label>
     <div class="col-md-3">
-        <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="endDate" data-ng-change="dateRangeChange()"/>
+        <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="obj.endDate"/>
     </div>
     <div class="col-md-3 offset-md-5">
         <a href="javascript:exportTableToExcel('cmsDatasheetTbl')" class="btn btn-md btn-primary clearfix">Export to Excel</a>
     </div>
 </div>
-
+<div class="form-group row">
+    <label for="zon" class="col-md-1 col-form-label form-label-width">Branch</label>
+    <div class="col-md-3">
+        <select id="zon" class="form-control mx-sm-2" data-ng-model="obj.zon">
+            <option value="KCH" selected>KCH</option>
+            <option value="BTU">BTU</option>
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-primary" data-ng-click="objChange()" >Generate</button>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
@@ -41,7 +53,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="c in filterCmsDatasheet">
+                    <tr data-ng-repeat="c in cmsDataSheet">
                         <td data-ng-bind="c.complaintDate"></td>
                         <td data-ng-bind="c.area"></td>
                         <td data-ng-bind="c.ts"></td>

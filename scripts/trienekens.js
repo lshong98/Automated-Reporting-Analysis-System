@@ -8873,7 +8873,7 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
     }
 });
 
-app.controller('acrdbController', function($scope, $http, $filter, storeDataService){
+app.controller('acrdbController', function($scope, $http, $filter, storeDataService, $window){
     'use strict';
 
     $scope.filterAcrdbList = [];
@@ -9067,6 +9067,10 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
             downloadLink.click();
         }
     }     
+
+    $scope.acrCustomerList = function(){
+        window.location.href = '#/acr-database-custList';
+    }
 });
 
 app.controller('acrdbEditController', function($scope, $http, $filter, storeDataService, $routeParams, $route){
@@ -9182,6 +9186,11 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
             }
         });
     }
+});
+
+app.controller('acrdbCustListController', function($scope, $http){
+    'use strict'
+    
 });
 
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {
@@ -10019,122 +10028,119 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
 app.controller('cmsDatasheetController', function($scope, $filter, $http, $window){
     'use strict';
     var datevar = new Date();
-    $scope.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
-    $scope.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+    $scope.obj = {
+        'startDate': '',
+        'endDate': '',
+        'zon': 'KCH'
+    }
+    $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
+    $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
 
     $scope.cmsDataSheet = [];
-    $scope.filterCmsDatasheet = [];
 
-    $http.get('/getCmsDatasheet').then(function(response){
-        $scope.cmsDataSheet = response.data;
-        var splitType = "";
-        var splitTypeContent = "";
-        var splitTypeSpecialContent = ""; 
-        var filterAddCount = 0;
-        $scope.noTS = 0;
-        $scope.noMP = 0;
-        $scope.noTAK = 0;
-
-        for(var i=0; i<$scope.cmsDataSheet.length; i++){
-            $scope.cmsDataSheet[i].complaintDate = $filter('date')($scope.cmsDataSheet[i].complaintDate, 'yyyy-MM-dd');
-
-            //formulate for subcon column
-            if($scope.cmsDataSheet[i].subcon == "Trienekens"){
-                $scope.cmsDataSheet[i].ts = "1";
-                $scope.cmsDataSheet[i].mp = "-";
-                $scope.cmsDataSheet[i].tak = "-";
-            }else if($scope.cmsDataSheet[i].subcon == "Mega Power"){
-                $scope.cmsDataSheet[i].ts = "-";
-                $scope.cmsDataSheet[i].mp = "1";
-                $scope.cmsDataSheet[i].tak = "-";
-            }else if($scope.cmsDataSheet[i].subcon == "TAK"){
-                $scope.cmsDataSheet[i].ts = "-";
-                $scope.cmsDataSheet[i].mp = "-";
-                $scope.cmsDataSheet[i].tak = "1";
-            }
-
-            //formulate for area code
-            if($scope.cmsDataSheet[i].area != null){
-                $scope.cmsDataSheet[i].area = $scope.cmsDataSheet[i].area.split(",")[1];
-            }
-
-            //formulate value for type of complaint
-            $scope.detailType = "";
-            splitType = $scope.cmsDataSheet[i].type.split(":,:");
-            for (var n = 0; n < splitType.length; n++) {
-                if (splitType[n].length > 3) {
-                    splitTypeSpecialContent = splitType[n].split(":::::");
-                    if (splitTypeSpecialContent[0] == '1') {
-                        splitTypeSpecialContent[2] = "Waste not collected for " + splitTypeSpecialContent[1] + " days";
-                    } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
-                        splitTypeSpecialContent[2] = "Others";
-                    }
-                    $scope.detailType += splitTypeSpecialContent[2];
-                } else {
-                    if (splitType[n] == '2') {
-                        splitTypeContent = "Bin not pushed back to its original location";
-                    } else if (splitType[n] == '3') {
-                        splitTypeContent = "Spillage of waste";
-                    } else if (splitType[n] == '4') {
-                        splitTypeContent = "Spillage of leachate water";
-                    } else if (splitType[n] == '5') {
-                        splitTypeContent = "RoRo not send";
-                    } else if (splitType[n] == '6') {
-                        splitTypeContent = "RoRo not exchanged";
-                    } else if (splitType[n] == '7') {
-                        splitTypeContent = "RoRo not pulled";
-                    } else if (splitType[n] == '8') {
-                        splitTypeContent = "RoRo not emptied";
-                    } else if (splitType[n] == '9') {
-                        splitTypeContent = "Schedule Waste not collected on time";
-                    } else if (splitType[n] == '10') {
-                        splitTypeContent = "Schedule Waste spillage during collection";
-                    } else if (splitType[n] == '11') {
-                        splitTypeContent = "Incomplete documents";
-                    }
-                    $scope.detailType += splitTypeContent;
-                }
-
-                if (n < (splitType.length - 1)) {
-                    $scope.detailType += ", ";
-                }
-
-            }
-            $scope.cmsDataSheet[i].type = $scope.detailType;            
-            
-            //formulate value for waste collection date time
-            if($scope.cmsDataSheet[i].wasteColDT != null){
-                var wasteArray = $scope.cmsDataSheet[i].wasteColDT.split(";");
-                $scope.cmsDataSheet[i].wcdSentences = "";
-                for(var c=0; c < wasteArray.length - 1; c++){
-                    $scope.cmsDataSheet[i].wcdSentences += wasteArray[c].split(",")[0] + ".\n";
-                }  
-            }
-
-            //filtering
-            var compDate = new Date($scope.cmsDataSheet[i].complaintDate);
-            if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
-                $scope.filterCmsDatasheet[filterAddCount] = $scope.cmsDataSheet[i];
-                if($scope.cmsDataSheet[i].subcon == "Trienekens"){ $scope.noTS++; }
-                if($scope.cmsDataSheet[i].subcon == "Mega Power"){ $scope.noMP++; }
-                if($scope.cmsDataSheet[i].subcon == "TAK"){ $scope.noTAK++; }
-                filterAddCount += 1;
-            }
-        }
-    });    
-
-    $scope.dateRangeChange = function () {
-        if ($scope.startDate != undefined && $scope.endDate != undefined && $scope.startDate <= $scope.endDate) {
-
+    $scope.request = function(obj){
+        $http.post('/getCmsDatasheet', obj).then(function(response){
+            $scope.cmsDataSheet = response.data;
+            var splitType = "";
+            var splitTypeContent = "";
+            var splitTypeSpecialContent = ""; 
             var filterAddCount = 0;
-            $scope.filterCmsDatasheet = [];
-            for (var n = 0; n < $scope.cmsDataSheet.length; n++) {
-                var compDate = new Date($scope.cmsDataSheet[n].complaintDate);
-                if (compDate >= $scope.startDate-1 && compDate <= $scope.endDate) {
-                    $scope.filterCmsDatasheet[filterAddCount] = $scope.cmsDataSheet[n];
+            $scope.noTS = 0;
+            $scope.noMP = 0;
+            $scope.noTAK = 0;
+
+            for(var i=0; i<$scope.cmsDataSheet.length; i++){
+                $scope.cmsDataSheet[i].complaintDate = $filter('date')($scope.cmsDataSheet[i].complaintDate, 'yyyy-MM-dd');
+
+                //formulate for subcon column
+                if($scope.cmsDataSheet[i].subcon == "Trienekens"){
+                    $scope.cmsDataSheet[i].ts = "1";
+                    $scope.cmsDataSheet[i].mp = "-";
+                    $scope.cmsDataSheet[i].tak = "-";
+                }else if($scope.cmsDataSheet[i].subcon == "Mega Power"){
+                    $scope.cmsDataSheet[i].ts = "-";
+                    $scope.cmsDataSheet[i].mp = "1";
+                    $scope.cmsDataSheet[i].tak = "-";
+                }else if($scope.cmsDataSheet[i].subcon == "TAK"){
+                    $scope.cmsDataSheet[i].ts = "-";
+                    $scope.cmsDataSheet[i].mp = "-";
+                    $scope.cmsDataSheet[i].tak = "1";
+                }
+
+                //formulate for area code
+                if($scope.cmsDataSheet[i].area != null){
+                    $scope.cmsDataSheet[i].area = $scope.cmsDataSheet[i].area.split(",")[1];
+                }
+
+                //formulate value for type of complaint
+                $scope.detailType = "";
+                splitType = $scope.cmsDataSheet[i].type.split(":,:");
+                for (var n = 0; n < splitType.length; n++) {
+                    if (splitType[n].length > 3) {
+                        splitTypeSpecialContent = splitType[n].split(":::::");
+                        if (splitTypeSpecialContent[0] == '1') {
+                            splitTypeSpecialContent[2] = "Waste not collected for " + splitTypeSpecialContent[1] + " days";
+                        } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
+                            splitTypeSpecialContent[2] = "Others";
+                        }
+                        $scope.detailType += splitTypeSpecialContent[2];
+                    } else {
+                        if (splitType[n] == '2') {
+                            splitTypeContent = "Bin not pushed back to its original location";
+                        } else if (splitType[n] == '3') {
+                            splitTypeContent = "Spillage of waste";
+                        } else if (splitType[n] == '4') {
+                            splitTypeContent = "Spillage of leachate water";
+                        } else if (splitType[n] == '5') {
+                            splitTypeContent = "RoRo not send";
+                        } else if (splitType[n] == '6') {
+                            splitTypeContent = "RoRo not exchanged";
+                        } else if (splitType[n] == '7') {
+                            splitTypeContent = "RoRo not pulled";
+                        } else if (splitType[n] == '8') {
+                            splitTypeContent = "RoRo not emptied";
+                        } else if (splitType[n] == '9') {
+                            splitTypeContent = "Schedule Waste not collected on time";
+                        } else if (splitType[n] == '10') {
+                            splitTypeContent = "Schedule Waste spillage during collection";
+                        } else if (splitType[n] == '11') {
+                            splitTypeContent = "Incomplete documents";
+                        }
+                        $scope.detailType += splitTypeContent;
+                    }
+
+                    if (n < (splitType.length - 1)) {
+                        $scope.detailType += ", ";
+                    }
+
+                }
+                $scope.cmsDataSheet[i].type = $scope.detailType;            
+                
+                //formulate value for waste collection date time
+                if($scope.cmsDataSheet[i].wasteColDT != null){
+                    var wasteArray = $scope.cmsDataSheet[i].wasteColDT.split(";");
+                    $scope.cmsDataSheet[i].wcdSentences = "";
+                    for(var c=0; c < wasteArray.length - 1; c++){
+                        $scope.cmsDataSheet[i].wcdSentences += wasteArray[c].split(",")[0] + ".\n";
+                    }  
+                }
+
+                //filtering
+                var compDate = new Date($scope.cmsDataSheet[i].complaintDate);
+                if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
+                    $scope.filterCmsDatasheet[filterAddCount] = $scope.cmsDataSheet[i];
+                    if($scope.cmsDataSheet[i].subcon == "Trienekens"){ $scope.noTS++; }
+                    if($scope.cmsDataSheet[i].subcon == "Mega Power"){ $scope.noMP++; }
+                    if($scope.cmsDataSheet[i].subcon == "TAK"){ $scope.noTAK++; }
                     filterAddCount += 1;
                 }
             }
+        });    
+    }
+
+    $scope.objChange = function () {
+        if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
+            $scope.request($scope.obj);
         }
 
     }

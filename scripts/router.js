@@ -471,6 +471,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'acrdbEditController',
         controllerAs:'acrdbEdit'
     })
+    .when('/acr-database-custList', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/acr-database-custList');
+            }
+        },
+        templateUrl: '/acr-database-custList',
+        controller: 'acrdbCustListController',
+        controllerAs:'acrdbCustList'
+    })
     .when('/complaint-module', {
         resolve: {
             "check": function (routingService, $window, $location) {
