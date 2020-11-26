@@ -707,49 +707,6 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
         $http.post('/getReportingStaff', $scope.report).then(function(response) {
             $scope.thisReport.reportingStaff = response.data[0].staffName;
         });
-        
-        // $scope.forGetAcrInfo = $scope.thisReport;
-        // $scope.forGetAcrInfo.todayday = "";
-        // var d = new Date($scope.thisReport.date);
-        // var n = d.getDay();
-        // if(n == 1){
-        //     $scope.forGetAcrInfo.todayday = "mon";
-        // }
-        // else if(n == 2){
-        //     $scope.forGetAcrInfo.todayday = "tue";
-        // }
-        // else if(n == 3){
-        //     $scope.forGetAcrInfo.todayday = "wed";
-        // }
-        // else if(n == 4){
-        //     $scope.forGetAcrInfo.todayday = "thu";
-        // }
-        // else if(n == 5){
-        //     $scope.forGetAcrInfo.todayday = "fri";
-        // }
-        // else if(n == 6){
-        //     $scope.forGetAcrInfo.todayday = "sat";
-        // }else if(n == 0){
-        //     $scope.forGetAcrInfo.todayday = "sun";
-        // }
-        
-        // $http.post('/getReportACR', $scope.forGetAcrInfo).then(function(response){
-        //     if (response.data !== null) {
-        //         if (response.data.length > 0) {
-        //             $scope.thisReport.acr = response.data;
-        //         } else {
-        //             $scope.thisReport.acr = [];
-        //         }
-        //         $scope.acrRow = Object.keys($scope.thisReport.acr).length;
-        //         $scope.acr = "";
-        //         $.each($scope.thisReport.acr, function(index, value) {
-        //             $scope.acr += value.name;
-        //             if ((index + 1) != $scope.acrRow) {
-        //                 $scope.acr += ', ';
-        //             }
-        //         });
-        //     }
-        // });
 
 
         $scope.editReport = function() {

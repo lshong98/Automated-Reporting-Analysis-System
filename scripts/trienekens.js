@@ -8510,7 +8510,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.searchChangesDateStart = '';
     $scope.searchChangesDateEnd = '';
     $scope.editBinNewPic = '';
-
+console.log($scope.show);
     $scope.createBin = {
         "serialNo": "",
         "brand" : "",
