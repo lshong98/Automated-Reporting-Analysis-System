@@ -9191,6 +9191,82 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
 app.controller('acrdbCustListController', function($scope, $http){
     'use strict'
     
+    $http.get('/getAcrdbCustList').then(function(response){
+        $scope.acrdbCustList = response.data;
+        $scope.searchAcrdbCustListFilter = '';
+        $scope.filterAcrdbCustList = [];
+
+        $scope.searchAcrdbCustList = function (acrdbCustList) {
+            return (acrdbCustList.company).toUpperCase().indexOf($scope.searchAcrdbCustListFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.filterAcrdbCustList = angular.copy($scope.acrdbCustList);
+
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterAcrdbCustList, $scope.searchAcrdbCustListFilter);
+        };
+
+    });
+
+    $scope.acrdbCustDetails = function(company){
+        window.location.href = '#/acr-database-custDetails/' + company
+    }
+});
+
+app.controller('acrdbCustDetailsController', function($scope, $http, $routeParams, $filter){
+    'use strict';
+
+    $scope.companyName = $routeParams.custID;
+    $scope.acrBinList = []
+    $scope.acrBinCount = 0;
+    $scope.beBinCount = 0;
+
+    $scope.acrDetailsList = []
+
+    $http.post('/getAcrdbCustBin', {'company': $scope.companyName}).then(function(response){
+        $scope.acrBinList = response.data;
+        $scope.searchAcrdbCustBinFilter = '';
+        $scope.filterAcrdbCustBin= [];
+
+        for(var i = 0; i< $scope.acrBinList.length; i++){
+            $scope.acrBinList[i].date = $filter('date')($scope.acrBinList[i].date, 'yyyy-MM-dd');
+            if($scope.acrBinList[i].binStatus == 'ACR'){
+                $scope.acrBinCount++;
+            }else if($scope.acrBinList[i].binStatus == 'BE'){
+                $scope.beBinCount++;
+            }
+        }
+
+        $scope.searchAcrdbCustBins = function (acrdbCustBin) {
+            return (acrdbCustBin.serialNo + acrdbCustBin.binStatus + acrdbCustBin.size + acrdbCustBin.binInUse + acrdbCustBin.date + acrdbCustBin.name + acrdbCustBin.brand).toUpperCase().indexOf($scope.searchAcrdbCustBinFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.filterAcrdbCustBin = angular.copy($scope.acrBinList);
+
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterAcrdbCustBin, $scope.searchAcrdbCustBinFilter);
+        };
+    })
+
+    $http.post('/getAcrdbCustDetails', {'company': $scope.companyName}).then(function(response){
+        $scope.acrDetailsList = response.data;
+        $scope.searchAcrdbCustDetailsFilter = '';
+        $scope.filterAcrdbCustDetails= [];
+
+        for(var j = 0; j< $scope.acrDetailsList.length; j++){
+            $scope.acrDetailsList[j].date = $filter('date')($scope.acrDetailsList[j].date, 'yyyy-MM-dd');
+        }
+
+        $scope.searchAcrdbCustDetails = function (acrdbCustDetails) {
+            return (acrdbCustDetails.serialNo + acrdbCustDetails.brand + acrdbCustDetails.binSize + acrdbCustDetails.date + acrdbCustDetails.name).toUpperCase().indexOf($scope.searchAcrdbCustDetailsFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.filterAcrdbCustDetails = angular.copy($scope.acrDetailsList);
+
+        $scope.getData = function () {
+            return $filter('filter')($scope.filterAcrdbCustDetails, $scope.searchAcrdbCustDetailsFilter);
+        };        
+    });　
 });
 
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {

@@ -283,11 +283,11 @@ app.post('/deleteBindatabase', function(req, res){
 
 app.post('/addBatchesBinDB', function(req, res){
     'use strict';
-    var sql = "INSERT INTO tblbindatabase (serialNo, brand, size, binInUse) VALUES";
+    var sql = "INSERT INTO tblbindatabase (serialNo, brand, size, binInUse, keyInDate, changesDate) VALUES";
     var num = req.body.serialNum;
     for(var i = 0; i < req.body.volume; i++){
         var serialNo = req.body.serialChar + num;
-        sql += "('" + serialNo + "', '" + req.body.binBrand + "', '" + req.body.size + "', 'Inactive'),";
+        sql += "('" + serialNo + "', '" + req.body.binBrand + "', '" + req.body.size + "', 'Inactive', NOW(), NOW()),";
         num++;
     }
     sql = sql.replace(/.$/,";");

@@ -59,7 +59,7 @@ app.post('/addAcrDB', function(req, res){
         if(err){
             throw err;
         }else{
-            var sql2 = "UPDATE tblbindatabase SET `name` = '" + name + "', `contact` = '" + contact + "', ic = '" + ic + "', address = '" + serviceAddress + "', company = '" + company + "', typeOfPro = '" + typeOfPremise + "', binStatus = 'ACR', binInUse = 'Active', date = '" + date +"', council = '" + council + "' WHERE serialNo = '" + serialNo + "';";
+            var sql2 = "UPDATE tblbindatabase SET `name` = '" + name + "', `contact` = '" + contact + "', ic = '" + ic + "', address = '" + serviceAddress + "', company = '" + company + "', typeOfPro = '" + typeOfPremise + "', binStatus = 'ACR', binInUse = 'Active', date = '" + date +"', council = '" + council + "', changesDate = NOW() WHERE serialNo = '" + serialNo + "'";
             database.query(sql2, function(err, result){
                 if(err){
                     throw err;
@@ -179,8 +179,6 @@ app.post('/saveAcrdbEdit', function(req, res){
     });
 });
 
-module.exports = app;
-
 app.post('/deleteAcrdb', function(req, res){
     'use strict';
     var sql = "UPDATE tblacrdatabase SET status = 0 WHERE id = '" + req.body.id + "';";
@@ -194,3 +192,43 @@ app.post('/deleteAcrdb', function(req, res){
         
     });
 })
+
+app.get('/getAcrdbCustList', function(req, res){
+    'use strict';
+    var sql="SELECT `Company_Name` AS 'company' FROM tblacrdatabase GROUP BY tblacrdatabase.Company_Name"
+
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.post('/getAcrdbCustBin', function(req, res){
+    'use strict';
+
+    var sql = "SELECT serialNo AS 'serialNo', brand AS 'brand', size AS 'size', binInUse AS 'binInUse', date AS 'date', name AS 'name', binStatus AS 'binStatus' FROM tblbindatabase WHERE company LIKE '%" + req.body.company + "%' ORDER BY 'binStatus'";
+
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.post('/getAcrdbCustDetails', function(req, res){
+    'use strict';
+
+    var sql = "SELECT `Serial_No` AS 'serialNo', `Brand` AS 'brand', `Bin_Size` AS 'binSize', `Date_of_Application` AS 'date', `Name` AS 'name' FROM tblacrdatabase WHERE `Company_Name` = '" + req.body.company + "'";
+
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+module.exports = app;

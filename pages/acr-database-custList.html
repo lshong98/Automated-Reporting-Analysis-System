@@ -5,7 +5,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <input type="text" class="form-control fas" data-ng-model="searchAcrdbCustomer" placeholder="&#XF002; Search company here..." />
+        <input type="text" class="form-control fas" data-ng-model="searchAcrdbCustListFilter" placeholder="&#XF002; Search company here..." />
     </div>
 </div>
 
@@ -16,12 +16,13 @@
                 <thead>
                     <tr>
                         <th>Company</th>
-                        <th>Acr Bin</th>
-                        <th>BE Bin</th>
+                        <!-- <th>Acr Bin</th>
+                        <th>BE Bin</th> -->
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="a in acrdbCustList | filter: searchAcrdbCustList">
+                    <tr data-ng-repeat="a in filterAcrdbCustList | filter: searchAcrdbCustList" data-ng-click="acrdbCustDetails(a.company)">
+                        <td>{{a.company}}</td>
                     </tr>
                 </tbody>
             </table>

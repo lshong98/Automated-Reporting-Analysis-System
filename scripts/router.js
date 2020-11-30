@@ -480,6 +480,18 @@ app.config(function($routeProvider, $locationProvider){
         templateUrl: '/acr-database-custList',
         controller: 'acrdbCustListController',
         controllerAs:'acrdbCustList'
+    })    
+    .when('/acr-database-custDetails/:custID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/acr-database-custDetails/' + $route.current.params.custID);
+            }
+        },
+        templateUrl: function(params){
+            return '/acr-database-custDetails/' + params.custID;
+        },
+        controller: 'acrdbCustDetailsController',
+        controllerAs:'acrdbCustDetails'
     })
     .when('/complaint-module', {
         resolve: {

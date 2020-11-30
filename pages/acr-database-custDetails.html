@@ -1,0 +1,102 @@
+<div class="row">
+    <div class="col-md-12">
+        <h5>ACR Database Customer - {{companyName}}</h5>
+    </div>
+</div>
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        <h6>ACR Bin: {{acrBinCount}}</h6>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h6>BE Bin: {{beBinCount}}</h6>
+    </div>
+</div>
+<br/>
+<hr/>
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        <h5>Bin Database Record</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" data-ng-model="searchAcrdbCustBinFilter" placeholder="&#XF002; Search here..." />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-clickable">
+                <thead>
+                    <tr>
+                        <th>Serial No</th>
+                        <th>Brand</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                        <th>Bin Status</th>
+                        <th>Bin In Use</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="b in filterAcrdbCustBin | filter: searchAcrdbCustBins" >
+                        <td>{{b.serialNo}}</td>
+                        <td>{{b.brand}}</td>
+                        <td>{{b.size}}</td>
+                        <td>{{b.date}}</td>
+                        <td>{{b.binStatus}}</td>
+                        <td>{{b.binInUse}}</td>
+                        <td>{{b.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>ACR Database Record</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" data-ng-model="searchAcrdbCustDetailsFilter" placeholder="&#XF002; Search here..." />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-clickable">
+                <thead>
+                    <tr>
+                        <th>Serial No</th>
+                        <th>Brand</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="b in filterAcrdbCustDetails | filter: searchAcrdbCustDetails" >
+                        <td>{{b.serialNo}}</td>
+                        <td>{{b.brand}}</td>
+                        <td>{{b.size}}</td>
+                        <td>{{b.date}}</td>
+                        <td>{{b.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

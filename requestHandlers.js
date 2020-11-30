@@ -174,6 +174,10 @@ app.get('/acr-database-custList', function(req,res){
     'use strict';
     res.sendFile('pages/acr-database-custList.html', {root: __dirname});
 })
+app.get('/acr-database-custDetails/:custID', function(req,res){
+    'use strict';
+    res.sendFile('pages/acr-database-custDetails.html', {root: __dirname});
+})
 app.get('/authorization', function (req, res) {
     'use strict';
     res.sendFile('pages/authorization.html', {root: __dirname});
