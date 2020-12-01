@@ -427,6 +427,18 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'bdbController',
         controllerAs:'bdb'
     })
+    .when('/bdb-edit/:bdbID', {
+        resolve: {
+            "check": function (routingService, $window, $location, $route) {
+                return routingService.auth($window, $location, '/bdb-edit/' + $route.current.params.bdbID);
+            }
+        },
+        templateUrl: function(params){
+            return '/bdb-edit/' + params.bdbID;
+        },
+        controller: 'bdbEditController',
+        controllerAs:'bdbEdit'
+    })
     .when('/bdb-hist', {
         resolve: {
             "check": function (routingService, $window, $location) {

@@ -60,6 +60,19 @@ app.post('/getBinDatabaseList', function(req, res){
     });    
 });
 
+app.post('/getBinDatabaseDetail', function(req, res){
+    'use strict';
+
+    var sql = "SELECT * FROM tblbindatabase WHERE id='" + req.body.id + "'";
+
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+})
+
 app.post('/addBinDatabase', function(req, res){
     'use strict';
 

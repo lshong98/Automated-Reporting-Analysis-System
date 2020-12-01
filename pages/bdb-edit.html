@@ -1,0 +1,184 @@
+<div class="row">
+    <div class="col-md-12">
+        <h5>Bin Database</h5>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editSerialNo form-label" class="col-md-2">Serial No</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editSerialNo" data-ng-model="editBin.serialNo" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editBrand form-label" class="col-md-2">Brand</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editBrand" data-ng-model="editBin.brand" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editBinSize form-label" class="col-md-2">Bin Size</label>
+    <div class="col-md-10">
+        <select class="form-control" id="editBinSize" data-ng-model="editBin.size">
+            <option value="120L" >120L</option>
+            <option value="240L" >240L</option>
+            <option value="660L" >660L</option>
+            <option value="1000L" >1000L</option>
+        </select>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editBinUse form-label" class="col-md-2">Bin in Use</label>
+    <div class="col-md-10">
+        <select class="form-control" id="editBinUse" data-ng-model="editBin.binInUse">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editBinDate form-label" class="col-md-2">Date</label>
+    <div class="col-md-10">
+        <input type="date" class="form-control" id="editBinDate " data-ng-model="editBin.date" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editFullName form-label" class="col-md-2">Full Name</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editFullName" data-ng-model="editBin.name" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editContact form-label" class="col-md-2">Contact No</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editContact" data-ng-model="editBin.contact" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editIc form-label" class="col-md-2">IC</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editIc" data-ng-model="editBin.ic" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editProNo form-label" class="col-md-2">Property No</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editProNo" data-ng-model="editBin.propertyNo" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editTmnkpg form-label" class="col-md-2">Tmn/Kpg</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editTmnkpg" data-ng-model="editBin.tmnkpg" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editAddress form-label" class="col-md-2">Address</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editAddress" data-ng-model="editBin.address" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editCompany form-label" class="col-md-2">Company Name</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editCompany" data-ng-model="editBin.company" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editTypeOfPro form-label" class="col-md-2">Type of Pro</label>
+    <div class="col-md-10">
+    <select class="form-control" id="editTypeOfPro" data-ng-model="editBin.typeOfPro">
+        <option value="Condo,Apart,Flat">Condo,Apart,Flat</option>
+        <option value="Construction Site">Construction Site</option>
+        <option value="DBKU">DBKU</option>
+        <option value="Gov Entity">Gov Entity</option>
+        <option value="Government Housing">Government Housing</option>
+        <option value="Hospital,Clinic">Hospital,Clinic</option>
+        <option value="Hotel,Resort">Hotel,Resort</option>
+        <option value="Household">Household</option>
+        <option value="Market,Hawker">Market,Hawker</option>
+        <option value="MBKS">MBKS</option>
+        <option value="MPP">MPP</option>
+        <option value="PlaceofWorship">PlaceofWorship</option>
+        <option value="Private Comm">Private Comm</option>
+        <option value="Purchased">Purchased</option>
+        <option value="Shophouse">Shophouse</option>
+        <option value="Stadium">Stadium</option>
+        <option value="Temporary">Temporary</option>
+        <option value="Uni,School,Kindergarden">Uni,School,Kindergarden</option>
+        <option value="Utility">Utility</option>
+        <option value="Workshop,Petrol Station">Workshop,Petrol Station</option>
+        <option value="Factory">Factory</option>
+    </select>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editPic form-label" class="col-md-2">Picture: Sesco/ KWB/ Cukai Rumah</label>
+    <div class="col-md-10">
+        <input type="file" class="form-control" id="editPic" accept="image/*" data-ng-model="editBinNewPic" app-filereader/>
+        <a href="{{editBin.pic}}" target="_blank"><img src="{{editBin.pic}}" width="300" height="300" style="object-fit: contain;"/></a>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editCommunal form-label" class="col-md-2">Communal</label>
+    <div class="col-md-10">
+        <select class="form-control" id="editCommunal" data-ng-model="editBin.communal">
+            <option value="Commercial">Commercial</option>
+            <option value="Residential">Residential</option>
+        </select>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editCouncil form-label" class="col-md-2">Council</label>
+    <div class="col-md-10">
+        <select class="form-control" id="editCouncil" data-ng-model="editBin.council">
+            <option value="MBKS">MBKS</option>
+            <option value="DBKU">DBKU</option>
+            <option value="MPP">MPP</option>
+            <option value="MDS">MDS</option>
+        </select>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editBinStatus form-label" class="col-md-2">Bin Status</label>
+    <div class="col-md-10">
+        <select class="form-control" id="editBinStatus" data-ng-model="editBin.binStatus">
+            <option value="ACR">ACR</option>
+            <option value="BE">BE</option>
+            <option value="DAMAGED">Damaged</option>
+            <option value="LOST">Lost</option>
+            <option value="COMMUNAL:R">CommunalR</option>
+            <option value="COMMUNAL:C">CommunalC</option>
+            <option value="TEMPORARY">Temporary</option>
+            <option value="PURCHASED">Purchased</option>
+        </select>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editComment form-label" class="col-md-2">Comment</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="editComment" data-ng-model="editBin.comment" />
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editWrittenOff form-label" class="col-md-2">Written Off</label>
+    <div class="col-md-10">
+        <select class="form-control" id="editWrittenOff" data-ng-model="editBin.writtenOff">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+    </div>
+</div>
+<div class="row form-group">
+    <label for="editKeyInDate form-label" class="col-md-2">Key In Date</label>
+    <div class="col-md-10">
+        <input type="date" class="form-control" id="editKeyInDate " data-ng-model="editBin.keyInDate" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-1 offset-md-10">
+        <button type="button" class="btn btn-danger" data-ng-click="deleteBinDatabase(editBin.id)">Delete</button>
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn btn-primary" data-ng-click="editBinDatabase();">Edit</button>
+    </div>
+</div>

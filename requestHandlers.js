@@ -150,6 +150,10 @@ app.get('/bdb', function (req, res) {
     'use strict';
     res.sendFile('pages/bdb.html', {root: __dirname});
 });
+app.get('/bdb-edit/:bdbID', function (req, res) {
+    'use strict';
+    res.sendFile('pages/bdb-edit.html', {root: __dirname});
+});
 app.get('/bdb-hist', function (req, res) {
     'use strict';
     res.sendFile('pages/bdb-hist.html', {root: __dirname});
