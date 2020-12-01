@@ -8702,18 +8702,7 @@ console.log($scope.show);
     }
 
     $scope.binEditModal = function(id){
-        for(var j = 0; j < $scope.binList.length; j++){
-            if($scope.binList[j].id == id){
-                $scope.editBin = $scope.binList[j];
-                if($scope.editBin.date != null){
-                    $scope.editBin.date = new Date($scope.editBin.date);
-                }
-                if($scope.editBin.keyInDate != null){
-                    $scope.editBin.keyInDate = new Date($scope.editBin.keyInDate);
-                }
-            }
-        }
-        angular.element('#editBin').modal('toggle');
+        window.location.href = "#/bdb-edit/" + id;
     }
 
     $scope.editBinDatabase = function(){
@@ -8786,6 +8775,60 @@ console.log($scope.show);
             downloadLink.click();
         }
     }
+
+});
+
+app.controller('bdbEditController', function($scope, $http, $filter, $window, $routeParams, $route, storeDataService){
+    'use strict';
+
+    $scope.bdbID = {
+        "id": $routeParams.bdbID
+    }
+
+    $http.post('/getBinDatabaseDetail', $scope.bdbID).then(function(response){
+        $scope.editBin = response.data[0];
+
+        if($scope.editBin.date != null){
+            $scope.editBin.date = new Date($scope.editBin.date);
+        }
+        if($scope.editBin.keyInDate != null){
+            $scope.editBin.keyInDate = new Date($scope.editBin.keyInDate);
+        }
+        console.log($scope.editBin);
+    });
+
+    $scope.editBinDatabase = function(){
+        $scope.editBin.date = $filter('date')($scope.editBin.date, 'yyyy-MM-dd');
+        $scope.editBin.keyInDate = $filter('date')($scope.editBin.keyInDate, 'yyyy-MM-dd');
+
+        if($scope.editBinNewPic != ''){
+            $scope.editBin.newPic = $scope.editBinNewPic;
+        }else{
+            $scope.editBin.newPic = '';
+        }
+
+        $.each($scope.editBin, function (key, value) {
+            if(value == null){
+                $scope.editBin[key] = ""
+            }
+        });
+
+        if($scope.editBin.serialNo == ''){
+            $scope.notify("error", "Please dont leave blank on serial no.")
+        }else{
+            $scope.editBin.user = $scope.user;
+            $http.post('/editBinDatabase', $scope.editBin).then(function(response){
+                if(response.data.status=="success"){
+                    $scope.notify(response.data.status, response.data.message);
+                    angular.element('#editBin').modal('toggle');
+                }else{
+                    $scope.notify("error", "There has some error.");
+                    angular.element('#editBin').modal('toggle');
+                }            
+            })
+        }
+    }
+
 
 });
 
@@ -9560,7 +9603,9 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                     $scope.logisticsComplaintList[i].reason = "Other(4)";
                 }else if($scope.logisticsComplaintList[i].reason == 8){
                     $scope.logisticsComplaintList[i].reason = "RORO(5)";
-                }                
+                }else if($scope.logisticsComplaintList[i].reason == 9){
+                    $scope.logisticsComplaintList[i].reason = "Spillage of waste";
+                }               
             }
         }
 
@@ -10072,6 +10117,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.lechateCountTS = myData.lechateCountTS;
             $scope.otherCountTS = myData.otherCountTS;
             $scope.roroReasonCountTS = myData.roroReasonCountTS;
+            $scope.spillageCountTS = myData.spillageCountTS;
             $scope.missColCountMP = myData.missColCountMP;
             $scope.shortageMPCountMP = myData.shortageMPCountMP;
             $scope.truckBDCountMP = myData.truckBDCountMP;
@@ -10080,6 +10126,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.lechateCountMP = myData.lechateCountMP;
             $scope.otherCountMP = myData.otherCountMP;
             $scope.roroReasonCountMP = myData.roroReasonCountMP;
+            $scope.spillageCountMP = myData.spillageCountMP;
             $scope.missColCountTAK = myData.missColCountTAK;
             $scope.shortageMPCountTAK = myData.shortageMPCountTAK;
             $scope.truckBDCountTAK = myData.truckBDCountTAK;
@@ -10088,6 +10135,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.lechateCountTAK = myData.lechateCountTAK;
             $scope.otherCountTAK = myData.otherCountTAK;
             $scope.roroReasonCountTAK = myData.roroReasonCountTAK;
+            $scope.spillageCountTAK = myData.spillageCountTAK;
         });
     }
 
@@ -10896,6 +10944,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                         $scope.fullComplaintDetail.reason = "Other(4)";
                     }else if($scope.fullComplaintDetail.reason == 8){
                         $scope.fullComplaintDetail.reason = "RORO(5)";
+                    }else if($scope.fullComplaintDetail.reason == 9){
+                        $scope.fullComplaintDetail.reason = "Spillage of waste";
                     }
                     
                     $scope.wcdEditBtn = false;
@@ -11704,6 +11754,8 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             $scope.detailObj.reason = "Other(4)";
         }else if($scope.detailObj.reason == 8){
             $scope.detailObj.reason = "RORO(5)";
+        }else if($scope.detailObj.reason == 9){
+            $scope.detailObj.reason = "Spillage of waste";
         }
 
         //init images

@@ -796,6 +796,9 @@ app.post('/getCmsStatistics', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '8' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroReasonCountTS){
         result.roroReasonCountTS = roroReasonCountTS.roroReasonCountTS;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'spillageCountTS' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '9' AND forwardedSub = 'Trienekens' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(spillageCountTS){
+        result.spillageCountTS = spillageCountTS.spillageCountTS;
         return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '1' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(missColCountMP){
         result.missColCountMP = missColCountMP.missColCountMP;
@@ -820,6 +823,9 @@ app.post('/getCmsStatistics', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '8' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroReasonCountMP){
         result.roroReasonCountMP = roroReasonCountMP.roroReasonCountMP;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'spillageCountMP' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '9' AND forwardedSub = 'Mega Power' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(spillageCountMP){
+        result.spillageCountMP = spillageCountMP.spillageCountMP;
         return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '1' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(missColCountTAK){
         result.missColCountTAK = missColCountTAK.missColCountTAK;
@@ -844,6 +850,9 @@ app.post('/getCmsStatistics', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '8' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(roroReasonCountTAK){
         result.roroReasonCountTAK = roroReasonCountTAK.roroReasonCountTAK;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'spillageCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '9' AND forwardedSub = 'TAK' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(spillageCountTAK){
+        result.spillageCountTAK = spillageCountTAK.spillageCountTAK;
         res.json(result);
         res.end(); 
     });
