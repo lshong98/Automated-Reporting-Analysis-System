@@ -10108,6 +10108,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.mdsCount = myData.mdsCount;
             $scope.validMWCount = myData.validMWCount;
             $scope.validROROCount = myData.validROROCount;
+            $scope.validScheduledCount = myData.validScheduledCount;
             $scope.invalidCount = myData.invalidCount;
             $scope.missColCountTS = myData.missColCountTS;
             $scope.shortageMPCountTS = myData.shortageMPCountTS;
