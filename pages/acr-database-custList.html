@@ -16,13 +16,17 @@
                 <thead>
                     <tr>
                         <th>Company</th>
-                        <!-- <th>Acr Bin</th>
-                        <th>BE Bin</th> -->
+                        <th>Acr Bin</th>
+                        <th>BE Bin</th>
+                        <th>Council</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="a in filterAcrdbCustList | filter: searchAcrdbCustList" data-ng-click="acrdbCustDetails(a.company)">
                         <td>{{a.company}}</td>
+                        <td>{{a.acr}}</td>
+                        <td>{{a.be}}</td>
+                        <td>{{a.council}}</td>
                     </tr>
                 </tbody>
             </table>

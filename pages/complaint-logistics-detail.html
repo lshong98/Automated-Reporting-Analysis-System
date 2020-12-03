@@ -384,7 +384,7 @@
         <label for="inputReason" class="col-xs-3 col-form-label form-label-width">Reason</label>
         <div class="col-md-9">
             <select class="form-control mx-sm-3" id="inputReason" data-ng-model="logistics.reason" data-width="100%">
-                <option value="1">Missed Collection</option>
+                <option value="1">Waste Not Collected</option>
                 <option value="2">Shortage Manpower</option>
                 <option value="3">Truck Breakdown</option>
                 <option value="4">Truck Full</option>
@@ -625,7 +625,20 @@
     
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Reason:</strong>
-        <p class="mx-sm-3">{{fullComplaintDetail.reason}}</p>
+        <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{fullComplaintDetail.reason}}</p>
+        <div class="col-md-9" data-ng-show="showLogsEdit">
+            <select class="form-control mx-sm-3" id="editReason" data-ng-model="editLogistics.reason" data-width="100%">
+                <option value="1">Waste Not Collected</option>
+                <option value="2">Shortage Manpower</option>
+                <option value="3">Truck Breakdown</option>
+                <option value="4">Truck Full</option>
+                <option value="5">Bin Not Sent Back</option>
+                <option value="6">Leachate</option>
+                <option value="7">Other</option>
+                <option value="8">RORO</option>
+                <option value="9">Spillage of waste</option>
+            </select>
+        </div>
     </div>    
 
     <div class="form-group row">

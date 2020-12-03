@@ -1242,12 +1242,12 @@ app.post('/complaint', function (req, resp) {
 
                     if (data.compRemarks == null || data.compRemarks == "") {
                         var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat, premiseComp, status) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat, premiseComp, status, zon) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p', '')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
                         var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
                         var remarks = data.compRemarks.replace(/'/g,"\\'");
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat, premiseComp, status) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p')";
+                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat, premiseComp, status, zon) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p', '')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
                     database.query(sql, function (err, res) {

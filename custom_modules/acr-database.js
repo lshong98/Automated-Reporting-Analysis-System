@@ -195,7 +195,7 @@ app.post('/deleteAcrdb', function(req, res){
 
 app.get('/getAcrdbCustList', function(req, res){
     'use strict';
-    var sql="SELECT `Company_Name` AS 'company' FROM tblacrdatabase GROUP BY tblacrdatabase.Company_Name"
+    var sql="SELECT b.company, a.be, b.acr FROM (SELECT tblbindatabase.company AS 'company', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE' GROUP BY tblbindatabase.company)a RIGHT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'acr' FROM tblacrdatabase GROUP BY tblacrdatabase.Company_Name)b ON a.company = b.company;"
 
     database.query(sql, function(err, result){
         if(err){

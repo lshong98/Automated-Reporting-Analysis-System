@@ -415,7 +415,7 @@ app.get('/getComplaintExportList', function(req, res){
 app.post('/getCmsDailyReportList', function(req, res){
     'use strict';
 
-    var sql="SELECT tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', tblcomplaintofficer.name AS 'name',CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDateTime', tblcomplaintofficer.type as 'type', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.under AS 'area', tblstaff.staffName AS 'driver', CONCAT(tblcomplaintofficer.statusDate,' ', tblcomplaintofficer.statusTime) AS 'feedbackDateTime', CONCAT(tblcomplaintofficer.forwardedDate,' ',tblcomplaintofficer.forwardedTime) AS 'forwardSubconDateTime', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblcomplaintofficer.remarks AS 'remarks', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview', tblcomplaintofficer.logisticsReviewDate AS 'logsReviewDate', tblcomplaintofficer.reason AS 'reason', tblcomplaintofficer.trucK AS 'truck' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.activeStatus = 1 AND tblcomplaintofficer.zon = '" + req.body.zon + "' AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "' ORDER BY complaintDateTime DESC";
+    var sql="SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', tblcomplaintofficer.name AS 'name',CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDateTime', tblcomplaintofficer.type as 'type', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.under AS 'area', tblstaff.staffName AS 'driver', CONCAT(tblcomplaintofficer.statusDate,' ', tblcomplaintofficer.statusTime) AS 'feedbackDateTime', CONCAT(tblcomplaintofficer.forwardedDate,' ',tblcomplaintofficer.forwardedTime) AS 'forwardSubconDateTime', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblcomplaintofficer.remarks AS 'remarks', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview', tblcomplaintofficer.logisticsReviewDate AS 'logsReviewDate', tblcomplaintofficer.reason AS 'reason', tblcomplaintofficer.trucK AS 'truck' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.activeStatus = 1 AND tblcomplaintofficer.zon = '" + req.body.zon + "' AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "' ORDER BY complaintDateTime DESC";
     database.query(sql, function(err, result){
         if(err){
             throw err;
@@ -567,7 +567,7 @@ app.post('/submitLogisticsComplaint', function(req, res) {
 
 app.post('/updateLogisticsCMSEdit', function(req, res){
     'use strict';
-    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.area + "', council = '" + req.body.council + "', forwardedSub = '" + req.body.sub + "', truck = '" + req.body.truck + "', driver = '" + req.body.driver + "' WHERE coID = '" + req.body.coID + "'";
+    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.area + "', council = '" + req.body.council + "', forwardedSub = '" + req.body.sub + "', truck = '" + req.body.truck + "', driver = '" + req.body.driver + "', reason = '" + req.body.reason + "' WHERE coID = '" + req.body.coID + "'";
 
     database.query(sql, function(err, result){
         if (err) {
@@ -669,6 +669,30 @@ app.post('/updateComplaintReview', function(req, res) {
     });
 });
 
+app.post('/updateComplaintReviewDaily', function(req, res) {
+    'use strict';
+
+    console.log(req.body.coID.length);
+    var sql = "UPDATE tblcomplaintofficer SET logisticsReview = '" + req.body.staffID + "', logisticsReviewDate = date(now()) WHERE";
+
+    for(var i=0; i<req.body.coID.length; i++){
+        if(i != 0){
+            sql += 'OR';
+        }
+        sql += " coID = '" + req.body.coID[i] + "'"
+    }
+
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json({
+            "message": "Complaint is Reviewed",
+            "status": "success"
+        });
+    });
+});
+
 app.post('/verifyAppComp', function(req, res) {
     'use strict';
     if(req.body.img == null){
@@ -700,9 +724,9 @@ app.post('/verifyAppComp', function(req, res) {
 app.post('/setIncharge', function(req, res) {
     'use strict';
     if (req.body.staffID == null) {
-        var sql = "UPDATE tblcomplaint SET staffID = " + req.body.staffID;
+        var sql = "UPDATE tblcomplaint SET staffID = " + req.body.staffID + " WHERE complaintID = '" + req.body.complaintID + "'";
     } else {
-        var sql = "UPDATE tblcomplaint SET staffID = '" + req.body.staffID + "'";
+        var sql = "UPDATE tblcomplaint SET staffID = '" + req.body.staffID + "' WHERE complaintID = '" + req.body.complaintID + "'";
     }
 
     database.query(sql, function(err, result) {
@@ -856,6 +880,33 @@ app.post('/getCmsStatistics', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'spillageCountTAK' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '9' AND forwardedSub = 'TAK' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(spillageCountTAK){
         result.spillageCountTAK = spillageCountTAK.spillageCountTAK;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'missColCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '1' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(missColCountOther){
+        result.missColCountOther = missColCountOther.missColCountOther;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'shortageMPCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '2' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(shortageMPCountOther){
+        result.shortageMPCountOther = shortageMPCountOther.shortageMPCountOther;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'truckBDCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '3' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(truckBDCountOther){
+        result.truckBDCountOther = truckBDCountOther.truckBDCountOther;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'truckFullCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '4' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(truckFullCountOther){
+        result.truckFullCountOther = truckFullCountOther.truckFullCountOther;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'binNSBCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '5' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(binNSBCountOther){
+        result.binNSBCountOther = binNSBCountOther.binNSBCountOther;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'lechateCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '6' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(lechateCountOther){
+        result.lechateCountOther = lechateCountOther.lechateCountOther;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'otherCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '7' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(otherCountOther){
+        result.otherCountOther = otherCountOther.otherCountOther;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'roroReasonCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '8' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(roroReasonCountOther){
+        result.roroReasonCountOther = roroReasonCountOther.roroReasonCountOther;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'spillageCountOther' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND reason = '9' AND forwardedSub != 'TAK' AND forwardedSub != 'Mega Power' AND forwardedSub != 'Trienekens' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(spillageCountOther){
+        result.spillageCountOther = spillageCountOther.spillageCountOther;
         res.json(result);
         res.end(); 
     });

@@ -31,6 +31,7 @@
         <button class="btn btn-primary" data-ng-click="objChange()" >Generate</button>
     </div>
 </div>
+
 <hr/>
 <div class="row">
     <div class="col-md-12">
@@ -40,7 +41,7 @@
             <table class="table table-bordered" id="validCMSTbl">
                 <thead>
                     <tr>
-                        <th width="35%">MW Service Provider</th>
+                        <th width="35%">Service Provider</th>
                         <th width="15%">Amount</th>
                         <th width="35%">Council</th>
                         <th width="15%">Amount</th>
@@ -127,7 +128,7 @@
                     </tr>
                     <tr>
                         <th colspan="2">Total</th>
-                        <th>{{validMWCount + validROROCount + invalidCount}}</th>
+                        <th>{{validMWCount + validROROCount + validScheduledCount + invalidCount}}</th>
                     </tr>
                 </tbody>
             </table>
@@ -151,78 +152,89 @@
                         <th>TS</th>
                         <th>MP</th>
                         <th>TAK</th>
+                        <th>Other</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Truck breakdown</td>
-                        <td>{{truckBDCountTS + truckBDCountMP + truckBDCountTAK}}</td>
+                        <td>{{truckBDCountTS + truckBDCountMP + truckBDCountTAK + truckBDCountOther}}</td>
                         <td>{{truckBDCountTS}}</td>
                         <td>{{truckBDCountMP}}</td>
                         <td>{{truckBDCountTAK}}</td>
+                        <td>{{truckBDCountOther}}</td>
                     </tr>
                     <tr>
                         <td>Truck full</td>
-                        <td>{{truckFullCountTS + truckFullCountMP + truckFullCountTAK}}</td>
+                        <td>{{truckFullCountTS + truckFullCountMP + truckFullCountTAK + truckFullCountOther}}</td>
                         <td>{{truckFullCountTS}}</td>
                         <td>{{truckFullCountMP}}</td>
                         <td>{{truckFullCountTAK}}</td>
+                        <td>{{truckFullCountOther}}</td>
                     </tr>
                     <tr>
                         <td>Shortage manpower</td>
-                        <td>{{shortageMPCountTS + shortageMPCountMP + shortageMPCountTAK}}</td>
+                        <td>{{shortageMPCountTS + shortageMPCountMP + shortageMPCountTAK + shortageMPCountOther}}</td>
                         <td>{{shortageMPCountTS}}</td>
                         <td>{{shortageMPCountMP}}</td>
                         <td>{{shortageMPCountTAK}}</td>
+                        <td>{{shortageMPCountOther}}</td>
                     </tr>
                     <tr>
                         <td>Waste not collected</td>
-                        <td>{{missColCountTS + missColCountMP + missColCountTAK}}</td>
+                        <td>{{missColCountTS + missColCountMP + missColCountTAK + missColCountOther}}</td>
                         <td>{{missColCountTS}}</td>
                         <td>{{missColCountMP}}</td>
                         <td>{{missColCountTAK}}</td>
+                        <td>{{missColCountOther}}</td>
                     </tr>
                     <tr>
                         <td>Bin not send back</td>
-                        <td>{{binNSBCountTS + binNSBCountMP + binNSBCountTAK}}</td>
+                        <td>{{binNSBCountTS + binNSBCountMP + binNSBCountTAK + binNSBCountOther}}</td>
                         <td>{{binNSBCountTS}}</td>
                         <td>{{binNSBCountMP}}</td>
                         <td>{{binNSBCountTAK}}</td>
+                        <td>{{binNSBCountOther}}</td>
                     </tr>
                     <tr>
                         <td>Other</td>
-                        <td>{{otherCountTS + otherCountMP + otherCountTAK}}</td>
+                        <td>{{otherCountTS + otherCountMP + otherCountTAK + otherCountOther}}</td>
                         <td>{{otherCountTS}}</td>
                         <td>{{otherCountMP}}</td>
                         <td>{{otherCountTAK}}</td>
+                        <td>{{otherCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>Lechate</td>
-                        <td>{{lechateCountTS + lechateCountMP + lechateCountTAK}}</td>
+                        <td>Leachate</td>
+                        <td>{{lechateCountTS + lechateCountMP + lechateCountTAK + lechateCountOther}}</td>
                         <td>{{lechateCountTS}}</td>
                         <td>{{lechateCountMP}}</td>
                         <td>{{lechateCountTAK}}</td>
+                        <td>{{lechateCountOther}}</td>
                     </tr>
                     <tr>
                         <td>RORO</td>
-                        <td>{{roroReasonCountTS + roroReasonCountMP + roroReasonCountTAK}}</td>
+                        <td>{{roroReasonCountTS + roroReasonCountMP + roroReasonCountTAK + roroReasonCountOther}}</td>
                         <td>{{roroReasonCountTS}}</td>
                         <td>{{roroReasonCountMP}}</td>
                         <td>{{roroReasonCountTAK}}</td>
+                        <td>{{roroReasonCountOther}}</td>
                     </tr>
                     <tr>
                         <td>Spillage of Waste</td>
-                        <td>{{spillageCountTS + spillageCountMP + spillageCountTAK}}</td>
+                        <td>{{spillageCountTS + spillageCountMP + spillageCountTAK + spillageCountOther}}</td>
                         <td>{{spillageCountTS}}</td>
                         <td>{{spillageCountMP}}</td>
                         <td>{{spillageCountTAK}}</td>
+                        <td>{{spillageCountOther}}</td>
                     </tr>
                     <tr>
                         <th>Total</th>
-                        <td>{{truckBDCountTS + truckBDCountMP + truckBDCountTAK + truckFullCountTS + truckFullCountMP + truckFullCountTAK + shortageMPCountTS + shortageMPCountMP + shortageMPCountTAK + missColCountTS + missColCountMP + missColCountTAK + binNSBCountTS + binNSBCountMP + binNSBCountTAK + otherCountTS + otherCountMP + otherCountTAK + lechateCountTS + lechateCountMP + lechateCountTAK + roroReasonCountTS + roroReasonCountMP + roroReasonCountTAK}}</td>
+                        <td>{{truckBDCountTS + truckBDCountMP + truckBDCountTAK + truckBDCountOther + truckFullCountTS + truckFullCountMP + truckFullCountTAK + truckFullCountOther + shortageMPCountTS + shortageMPCountMP + shortageMPCountTAK + shortageMPCountOther + missColCountTS + missColCountMP + missColCountTAK + missColCountTAK + binNSBCountTS + binNSBCountMP + binNSBCountTAK + binNSBCountOther + otherCountTS + otherCountMP + otherCountTAK + otherCountOther + lechateCountTS + lechateCountMP + lechateCountTAK + lechateCountOther + roroReasonCountTS + roroReasonCountMP + roroReasonCountTAK + roroReasonCountOther}}</td>
                         <td>{{truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS}}</td>
                         <td>{{truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP}}</td>
                         <td>{{truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK}}</td>
+                        <td>{{truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + roroReasonCountOther}}</td>
                     </tr>
                 </tbody>
             </table>

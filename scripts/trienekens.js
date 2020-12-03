@@ -9588,7 +9588,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
                 //formulate reason
                 if($scope.logisticsComplaintList[i].reason == 1){
-                    $scope.logisticsComplaintList[i].reason = "Missed Collection(1)";
+                    $scope.logisticsComplaintList[i].reason = "Waste Not Collected(1)";
                 }else if($scope.logisticsComplaintList[i].reason == 2){
                     $scope.logisticsComplaintList[i].reason = "Shortage Manpower(1)";
                 }else if($scope.logisticsComplaintList[i].reason == 3){
@@ -9918,7 +9918,7 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
 
     $scope.dateRangeChange = function () {
         if ($scope.startDate != undefined && $scope.endDate != undefined && $scope.startDate <= $scope.endDate) {
-
+            $scope.endDate.setDate($scope.endDate.getDate() + 1);
             var filterAddCount = 0;
             $scope.filterComplaintExportList = [];
             for (var n = 0; n < $scope.complaintExportList.length; n++) {
@@ -9929,7 +9929,6 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
                 }
             }
         }
-        console.log($scope.filterComplaintExportList);
 
     }
 
@@ -9956,6 +9955,7 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
     $scope.request = function(obj){
         console.log(obj);
         $http.post('/getCmsDailyReportList', obj).then(function(response){
+            console.log(response.data);
             $scope.cmsDailyReportList = response.data;
             var splitType = "";
             var splitTypeContent = "";
@@ -9984,7 +9984,7 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
 
                 //formulate reason
                 if($scope.cmsDailyReportList[i].reason == 1){
-                    $scope.cmsDailyReportList[i].reason = "Missed Collection(1)";
+                    $scope.cmsDailyReportList[i].reason = "Waste Not Collected(1)";
                 }else if($scope.cmsDailyReportList[i].reason == 2){
                     $scope.cmsDailyReportList[i].reason = "Shortage Manpower(1)";
                 }else if($scope.cmsDailyReportList[i].reason == 3){
@@ -10072,12 +10072,37 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
             }
         });
     }
+
     $scope.objChange = function () {
         if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
+            $scope.obj.endDate.setDate($scope.obj.endDate.getDate() + 1);
             $scope.request($scope.obj);
         }
-
     }
+
+    $scope.cmsReview = function () {
+        if (confirm("Are you sure you want to review complaints?")) {
+            var reviewComplaint = {
+                'department': "LG",
+                'staffID': window.sessionStorage.getItem('owner'),
+                'coID': []
+            }
+
+            for(var i=0; i<$scope.cmsDailyReportList.length; i++){
+                reviewComplaint.coID[i] = $scope.cmsDailyReportList[i].coID;
+            }
+
+            $http.post('/updateComplaintReviewDaily', reviewComplaint).then(function (response) {
+                if (response.data.status == "success") {
+                    $scope.notify(response.data.status, response.data.message);
+                    $route.reload();
+                } else {
+                    $scope.notify("error", "There are some ERROR reviewing the complaint");
+                }
+            });
+        }
+    }
+
 });
 
 app.controller('complaintscmsStatisticsController', function($scope, $filter, $http){
@@ -10093,6 +10118,57 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
     $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
 
     $scope.requestStatistics = function(obj){
+        $scope.tsCount = 0;
+        $scope.mpCount = 0;
+        $scope.takCount = 0;
+        $scope.roroTSCount = 0;
+        $scope.roroMPCount = 0;
+        $scope.roroTAKCount = 0;
+        $scope.totalROROCount = 0;
+        $scope.mbksCount = 0;
+        $scope.dbkuCount = 0;
+        $scope.mppCount = 0;
+        $scope.mdsCount = 0;
+        $scope.validMWCount = 0;
+        $scope.validROROCount = 0;
+        $scope.validScheduledCount = 0;
+        $scope.invalidCount = 0;
+        $scope.missColCountTS = 0;
+        $scope.shortageMPCountTS = 0;
+        $scope.truckBDCountTS = 0;
+        $scope.truckFullCountTS = 0;
+        $scope.binNSBCountTS = 0;
+        $scope.lechateCountTS = 0;
+        $scope.otherCountTS = 0;
+        $scope.roroReasonCountTS = 0;
+        $scope.spillageCountTS = 0;
+        $scope.missColCountMP = 0;
+        $scope.shortageMPCountMP = 0;
+        $scope.truckBDCountMP = 0;
+        $scope.truckFullCountMP = 0;
+        $scope.binNSBCountMP = 0;
+        $scope.lechateCountMP = 0;
+        $scope.otherCountMP = 0;
+        $scope.roroReasonCountMP = 0;
+        $scope.spillageCountMP = 0;
+        $scope.missColCountTAK = 0;
+        $scope.shortageMPCountTAK = 0;
+        $scope.truckBDCountTAK = 0;
+        $scope.truckFullCountTAK = 0;
+        $scope.binNSBCountTAK = 0;
+        $scope.lechateCountTAK = 0;
+        $scope.otherCountTAK = 0;
+        $scope.roroReasonCountTAK = 0;
+        $scope.spillageCountTAK = 0;
+        $scope.missColCountOther = 0;
+        $scope.shortageMPCountOther = 0;
+        $scope.truckBDCountOther = 0;
+        $scope.truckFullCountOther = 0
+        $scope.binNSBCountOther = 0;
+        $scope.lechateCountOther = 0;
+        $scope.otherCountOther = 0;
+        $scope.roroReasonCountOther = 0;
+        $scope.spillageCountOther = 0;
         $http.post('/getCmsStatistics', obj).then(function(response){
             var myData = response.data;
             $scope.tsCount = myData.tsCount;
@@ -10137,6 +10213,15 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.otherCountTAK = myData.otherCountTAK;
             $scope.roroReasonCountTAK = myData.roroReasonCountTAK;
             $scope.spillageCountTAK = myData.spillageCountTAK;
+            $scope.missColCountOther = myData.missColCountOther;
+            $scope.shortageMPCountOther = myData.shortageMPCountOther;
+            $scope.truckBDCountOther = myData.truckBDCountOther;
+            $scope.truckFullCountOther = myData.truckFullCountOther;
+            $scope.binNSBCountOther = myData.binNSBCountOther;
+            $scope.lechateCountOther = myData.lechateCountOther;
+            $scope.otherCountOther = myData.otherCountOther;
+            $scope.roroReasonCountOther = myData.roroReasonCountOther;
+            $scope.spillageCountOther = myData.spillageCountOther;
         });
     }
 
@@ -10144,6 +10229,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
 
     $scope.objChange = function () {
         if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
+            $scope.obj.endDate.setDate($scope.obj.endDate.getDate() + 1);
             $scope.requestStatistics($scope.obj);
         }
 
@@ -10164,6 +10250,7 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
     $scope.cmsDataSheet = [];
 
     $scope.request = function(obj){
+
         $http.post('/getCmsDatasheet', obj).then(function(response){
             $scope.cmsDataSheet = response.data;
             var splitType = "";
@@ -10265,6 +10352,7 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
 
     $scope.objChange = function () {
         if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
+            $scope.obj.endDate.setDate($scope.obj.endDate.getDate() + 1);
             $scope.request($scope.obj);
         }
 
@@ -10489,7 +10577,8 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
 
         $scope.inchargeChat = function () {
             var staffID = {
-                "staffID": window.sessionStorage.getItem('owner')
+                "staffID": window.sessionStorage.getItem('owner'),
+                "complaintID": $routeParams.complaintCode
             };
             $http.post('/setIncharge', staffID).then(function (response) {
                 if (response.data.status = "success") {
@@ -10763,7 +10852,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         "council": '',
         "sub": '',
         "truck": '',
-        "driver": ''
+        "driver": '',
+        "reason": ''
     }
     $scope.editImages = false;
     $scope.showSubmitBtn = true;
@@ -10928,9 +11018,10 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.remarksEditBtn = true;
                     $scope.remarksUpdateCancelBtn = false;
                     $scope.recordremarks = $scope.fullComplaintDetail.remarks;
-
+                    $scope.editLogistics.reason = $scope.fullComplaintDetail.reason;
+                    
                     if($scope.fullComplaintDetail.reason == 1){
-                        $scope.fullComplaintDetail.reason = "Missed Collection(1)";
+                        $scope.fullComplaintDetail.reason = "Waste Not Collected(1)";
                     }else if($scope.fullComplaintDetail.reason == 2){
                         $scope.fullComplaintDetail.reason = "Shortage Manpower(1)";
                     }else if($scope.fullComplaintDetail.reason == 3){
@@ -10988,12 +11079,20 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     
                     //formulate waste collected on
                     $scope.wasteData = [];
+                    
                     var wasteArray = $scope.fullComplaintDetail.wasteColDT.split(";");
-                    for(var i=0; i < wasteArray.length - 1; i++){
+                    if(wasteArray.length == '1'){
                         $scope.wasteData.push({
-                            "date": wasteArray[i].split(",")[0],
-                            "reporter": wasteArray[i].split(",")[1]
+                            "date": 'N/A',
+                            "reporter": 'N/A'
                         });
+                    }else{
+                        for(var i=0; i < wasteArray.length - 1; i++){
+                            $scope.wasteData.push({
+                                "date": wasteArray[i].split(",")[0],
+                                "reporter": wasteArray[i].split(",")[1]
+                            });
+                        }
                     }
                     
 
@@ -11740,7 +11839,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
 
         if($scope.detailObj.reason == 1){
-            $scope.detailObj.reason = "Missed Collection(1)";
+            $scope.detailObj.reason = "Waste Not Collected(1)";
         }else if($scope.detailObj.reason == 2){
             $scope.detailObj.reason = "Shortage Manpower(1)";
         }else if($scope.detailObj.reason == 3){
@@ -11866,12 +11965,19 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             //formulate waste collected on
             $scope.wasteData = [];
             var wasteArray = $scope.detailObj.wasteColDT.split(";");
-            for(var i=0; i < wasteArray.length - 1; i++){
+            if(wasteArray.length == '1'){
                 $scope.wasteData.push({
-                    "date": wasteArray[i].split(",")[0],
-                    "reporter": wasteArray[i].split(",")[1]
+                    "date": 'N/A',
+                    "reporter": 'N/A'
                 });
-            }  
+            }else{
+                for(var i=0; i < wasteArray.length - 1; i++){
+                    $scope.wasteData.push({
+                        "date": wasteArray[i].split(",")[0],
+                        "reporter": wasteArray[i].split(",")[1]
+                    });
+                }  
+            }
         }
 
         //date reformat
