@@ -9946,8 +9946,11 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
         'endDate': '',
         'zon': 'KCH'
     }
-    $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
-    $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+    // $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
+    // $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+
+    $scope.obj.startDate = new Date();
+    $scope.obj.endDate = new Date();
 
     $scope.cmsDailyReportList = [];
 
@@ -10063,19 +10066,17 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                 }
 
                 //filtering
-                var compDate = new Date($scope.cmsDailyReportList[i].complaintDate);
-                if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
-                    if($scope.cmsDailyReportList[i].subcon == "Trienekens"){ $scope.noTS++; }
-                    if($scope.cmsDailyReportList[i].subcon == "Mega Power"){ $scope.noMP++; }
-                    if($scope.cmsDailyReportList[i].subcon == "TAK"){ $scope.noTAK++; }
-                }
+                if($scope.cmsDailyReportList[i].subcon == "Trienekens"){ $scope.noTS++; }
+                if($scope.cmsDailyReportList[i].subcon == "Mega Power"){ $scope.noMP++; }
+                if($scope.cmsDailyReportList[i].subcon == "TAK"){ $scope.noTAK++; }
+
             }
         });
     }
 
     $scope.objChange = function () {
         if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
-            $scope.obj.endDate.setDate($scope.obj.endDate.getDate() + 1);
+            $scope.obj.startDate.setDate($scope.obj.startDate.getDate() - 1);
             $scope.request($scope.obj);
         }
     }
@@ -10116,8 +10117,13 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
     }
     $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
     $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+    $("[data-toggle=popover]").popover({
+        html:true
+    });
+    
 
     $scope.requestStatistics = function(obj){
+
         $scope.tsCount = 0;
         $scope.mpCount = 0;
         $scope.takCount = 0;
@@ -10169,6 +10175,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.otherCountOther = 0;
         $scope.roroReasonCountOther = 0;
         $scope.spillageCountOther = 0;
+        $scope.scheduledCount = 0;
         $http.post('/getCmsStatistics', obj).then(function(response){
             var myData = response.data;
             $scope.tsCount = myData.tsCount;
@@ -10182,6 +10189,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.dbkuCount = myData.dbkuCount;
             $scope.mppCount = myData.mppCount;
             $scope.mdsCount = myData.mdsCount;
+            $scope.scheduledCount = myData.scheduledCount;
             $scope.validMWCount = myData.validMWCount;
             $scope.validROROCount = myData.validROROCount;
             $scope.validScheduledCount = myData.validScheduledCount;
@@ -10223,6 +10231,112 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.roroReasonCountOther = myData.roroReasonCountOther;
             $scope.spillageCountOther = myData.spillageCountOther;
         });
+
+        $http.post('/getCmsStatisticsCategoryTruckBreakdown', obj).then(function(response){
+            $scope.truckBreakDownRootCause = "";
+            if(response.data.length == 0){
+                $scope.truckBreakDownRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.truckBreakDownRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryTruckFull', obj).then(function(response){
+            $scope.truckFullRootCause = "";
+            if(response.data.length == 0){
+                $scope.truckFullRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.truckFullRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryShortageManpower', obj).then(function(response){
+            $scope.shortageManpowerRootCause = "";
+            if(response.data.length == 0){
+                $scope.shortageManpowerRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.shortageManpowerRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryWasteNotCollected', obj).then(function(response){
+            $scope.wasteNotCollectedRootCause = "";
+            if(response.data.length == 0){
+                $scope.wasteNotCollectedRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.wasteNotCollectedRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area  + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryBinNSB', obj).then(function(response){
+            $scope.binNSBRootCause = "";
+            if(response.data.length == 0){
+                $scope.binNSBRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.binNSBRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryOther', obj).then(function(response){
+            $scope.otherRootCause = "";
+            if(response.data.length == 0){
+                $scope.otherRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.otherRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryLeachate', obj).then(function(response){
+            $scope.leachateRootCause = "";
+            if(response.data.length == 0){
+                $scope.leachateRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.leachateRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryRoro', obj).then(function(response){
+            $scope.roroRootCause = "";
+            if(response.data.length == 0){
+                $scope.roroRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.roroRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategorySpillage', obj).then(function(response){
+            $scope.spillageRootCause = "";
+            if(response.data.length == 0){
+                $scope.spillageRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.spillageRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
     }
 
     $scope.requestStatistics($scope.obj);
@@ -10338,14 +10452,9 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
                 }
 
                 //filtering
-                var compDate = new Date($scope.cmsDataSheet[i].complaintDate);
-                if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
-                    $scope.filterCmsDatasheet[filterAddCount] = $scope.cmsDataSheet[i];
-                    if($scope.cmsDataSheet[i].subcon == "Trienekens"){ $scope.noTS++; }
-                    if($scope.cmsDataSheet[i].subcon == "Mega Power"){ $scope.noMP++; }
-                    if($scope.cmsDataSheet[i].subcon == "TAK"){ $scope.noTAK++; }
-                    filterAddCount += 1;
-                }
+                if($scope.cmsDataSheet[i].subcon == "Trienekens"){ $scope.noTS++; }
+                if($scope.cmsDataSheet[i].subcon == "Mega Power"){ $scope.noMP++; }
+                if($scope.cmsDataSheet[i].subcon == "TAK"){ $scope.noTAK++; }
             }
         });    
     }
@@ -11540,6 +11649,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
     $scope.kchZon = angular.copy(storeDataService.show.complaintwebkch.create);
     $scope.btuZon = angular.copy(storeDataService.show.complaintwebbtu.create);
 
+    $scope.companyHousehold = '';
     $scope.comp = {
         "compDate": '',
         "compTime": '',
@@ -11740,10 +11850,15 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         $scope.comp.compType = $scope.comp.compType.substring(0, $scope.comp.compType.length - 3);
         $scope.comp.services = $scope.typeOption;
 
-        
+        if($scope.companyHousehold == 'Household'){
+            $scope.comp.compCompany = 'Household';
+        }
+        if($scope.refNoSlt == 'N/A'){
+            $scope.comp.compRefNo = 'N/A';
+        }
 
 
-        if ($scope.comp.compDate == '' || $scope.comp.compTime == '' || $scope.comp.compSource == '' || $scope.comp.compRefNo == '' || $scope.comp.compName == '' || $scope.comp.compPhone == '' || $scope.comp.compAddress == '' || $scope.comp.compType == '' || $scope.comp.compLogDate == '' || $scope.comp.compLogTime == '' || $scope.comp.compLogBy == '' || $scope.comp.services == '') {
+        if ($scope.comp.compDate == '' || $scope.comp.compTime == '' || $scope.comp.compSource == '' || $scope.comp.compRefNo == '' || $scope.comp.compName == '' || $scope.comp.compPhone == '' || $scope.comp.compAddress == '' || $scope.comp.compType == '' || $scope.comp.compLogDate == '' || $scope.comp.compLogTime == '' || $scope.comp.compLogBy == '' || $scope.comp.services == '' || $scope.comp.compCompany == '') {
             console.log($scope.comp);
             $scope.notify("error", "There has some blank column");
             $scope.showSubmitBtn = true;

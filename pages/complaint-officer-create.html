@@ -36,7 +36,11 @@
 <div class="form-group row">
     <label for="inputRefNo" class="col-xs-3 col-form-label form-label-width">Reference No:</label>
     <div class="col-md-9">
-        <input type="text" id="inputRefNo" placeholder="If from Council" class="form-control mx-sm-3" data-ng-model="comp.compRefNo" />
+        <select id="inputCompany" class="form-control mx-sm-3" data-ng-model="refNoSlt">
+            <option value="N/A" selected>N/A</option>
+            <option value="ref">Ref</option>
+        </select>
+        <input type="text" id="inputRefNo" placeholder="If from Council" class="form-control mx-sm-3" data-ng-show="refNoSlt == 'ref'" data-ng-model="comp.compRefNo" />
     </div>
 </div>
 
@@ -52,9 +56,13 @@
 </div>
 
 <div class="form-group row">
-    <label for="inputCompany" class="col-xs-3 col-form-label form-label-width">Company:</label>
+    <label for="inputCompany" class="col-xs-3 col-form-label form-label-width">Company / Household:</label>
     <div class="col-md-9">
-        <input type="text" id="inputCompany" placeholder="Company" class="form-control mx-sm-3" data-ng-model="comp.compCompany" />
+        <select id="inputCompany" class="form-control mx-sm-3" data-ng-model="companyHousehold">
+            <option value="Household" selected>Household</option>
+            <option value="Company">Company</option>
+        </select>
+        <input type="text"  placeholder="Company" class="form-control mx-sm-3" data-ng-show="companyHousehold == 'Company'" data-ng-model="comp.compCompany" />
     </div>
 </div>
 

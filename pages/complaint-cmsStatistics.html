@@ -67,28 +67,40 @@
                         <td>{{mppCount}}</td>
                     </tr>
                     <tr>
-                        <td>RORO TS</td>
-                        <td>{{roroTSCount}}</td>
+                        <td></td>
+                        <td></td>
                         <td>MDS</td>
                         <td>{{mdsCount}}</td>
                     </tr>
                     <tr>
+                        <td>RORO TS</td>
+                        <td>{{roroTSCount}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td>RORO MP</td>
                         <td>{{roroMPCount}}</td>
-                        <td>RORO</td>
-                        <td>{{totalROROCount}}</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>RORO TAK</td>
                         <td>{{roroTAKCount}}</td>
-                        <td></td>
-                        <td></td>
+                        <td>RORO</td>
+                        <td>{{totalROROCount}}</td>
+                    </tr>
+                    <tr>
+                        <td>Scheduled Waste</td>
+                        <td>{{scheduledCount}}</td>
+                        <td>Scheduled Waste</td>
+                        <td>{{scheduledCount}}</td>
                     </tr>
                     <tr>
                         <th>Total</th>
-                        <th>{{tsCount + mpCount + takCount + roroTSCount + roroMPCount + roroTAKCount}}</th>
+                        <th>{{tsCount + mpCount + takCount + roroTSCount + roroMPCount + roroTAKCount + scheduledCount}}</th>
                         <th>Total</th>
-                        <th>{{dbkuCount + mbksCount + mppCount + totalROROCount}}</th>
+                        <th>{{dbkuCount + mbksCount + mppCount + mdsCount + totalROROCount + scheduledCount}}</th>
                     </tr>
                 </tbody>
             </table>
@@ -157,7 +169,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Truck breakdown</td>
+                        <td data-container="body" title="Truck Breakdown" data-toggle="popover" data-placement="left" data-content="{{truckBreakDownRootCause}}">Truck breakdown</td>
                         <td>{{truckBDCountTS + truckBDCountMP + truckBDCountTAK + truckBDCountOther}}</td>
                         <td>{{truckBDCountTS}}</td>
                         <td>{{truckBDCountMP}}</td>
@@ -165,7 +177,7 @@
                         <td>{{truckBDCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>Truck full</td>
+                        <td data-container="body" title="Truck Full" data-toggle="popover" data-placement="left" data-content="{{truckFullRootCause}}">Truck full</td>
                         <td>{{truckFullCountTS + truckFullCountMP + truckFullCountTAK + truckFullCountOther}}</td>
                         <td>{{truckFullCountTS}}</td>
                         <td>{{truckFullCountMP}}</td>
@@ -173,7 +185,7 @@
                         <td>{{truckFullCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>Shortage manpower</td>
+                        <td data-container="body" title="Shortage manpower" data-toggle="popover" data-placement="left" data-content="{{shortageManpowerRootCause}}">Shortage manpower</td>
                         <td>{{shortageMPCountTS + shortageMPCountMP + shortageMPCountTAK + shortageMPCountOther}}</td>
                         <td>{{shortageMPCountTS}}</td>
                         <td>{{shortageMPCountMP}}</td>
@@ -181,7 +193,7 @@
                         <td>{{shortageMPCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>Waste not collected</td>
+                        <td data-container="body" title="Waste Not Collected" data-toggle="popover" data-placement="left" data-content="{{wasteNotCollectedRootCause}}">Waste not collected</td>
                         <td>{{missColCountTS + missColCountMP + missColCountTAK + missColCountOther}}</td>
                         <td>{{missColCountTS}}</td>
                         <td>{{missColCountMP}}</td>
@@ -189,7 +201,7 @@
                         <td>{{missColCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>Bin not send back</td>
+                        <td data-container="body" title="Bin Not Send Back" data-toggle="popover" data-placement="left" data-content="{{binNSBRootCause}}">Bin not send back</td>
                         <td>{{binNSBCountTS + binNSBCountMP + binNSBCountTAK + binNSBCountOther}}</td>
                         <td>{{binNSBCountTS}}</td>
                         <td>{{binNSBCountMP}}</td>
@@ -197,7 +209,7 @@
                         <td>{{binNSBCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>Other</td>
+                        <td data-container="body" title="Other" data-toggle="popover" data-placement="left" data-content="{{otherRootCause}}">Other</td>
                         <td>{{otherCountTS + otherCountMP + otherCountTAK + otherCountOther}}</td>
                         <td>{{otherCountTS}}</td>
                         <td>{{otherCountMP}}</td>
@@ -205,7 +217,7 @@
                         <td>{{otherCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>Leachate</td>
+                        <td data-container="body" title="Leachate" data-toggle="popover" data-placement="left" data-content="{{leachateRootCause}}">Leachate</td>
                         <td>{{lechateCountTS + lechateCountMP + lechateCountTAK + lechateCountOther}}</td>
                         <td>{{lechateCountTS}}</td>
                         <td>{{lechateCountMP}}</td>
@@ -213,7 +225,7 @@
                         <td>{{lechateCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>RORO</td>
+                        <td data-container="body" title="RoRo" data-toggle="popover" data-placement="left" data-content="{{roroRootCause}}">RORO</td>
                         <td>{{roroReasonCountTS + roroReasonCountMP + roroReasonCountTAK + roroReasonCountOther}}</td>
                         <td>{{roroReasonCountTS}}</td>
                         <td>{{roroReasonCountMP}}</td>
@@ -221,7 +233,7 @@
                         <td>{{roroReasonCountOther}}</td>
                     </tr>
                     <tr>
-                        <td>Spillage of Waste</td>
+                        <td data-container="body" title="Spillage of Waste" data-toggle="popover" data-placement="left" data-content="{{spillageRootCause}}">Spillage of Waste</td>
                         <td>{{spillageCountTS + spillageCountMP + spillageCountTAK + spillageCountOther}}</td>
                         <td>{{spillageCountTS}}</td>
                         <td>{{spillageCountMP}}</td>
@@ -230,7 +242,7 @@
                     </tr>
                     <tr>
                         <th>Total</th>
-                        <td>{{truckBDCountTS + truckBDCountMP + truckBDCountTAK + truckBDCountOther + truckFullCountTS + truckFullCountMP + truckFullCountTAK + truckFullCountOther + shortageMPCountTS + shortageMPCountMP + shortageMPCountTAK + shortageMPCountOther + missColCountTS + missColCountMP + missColCountTAK + missColCountTAK + binNSBCountTS + binNSBCountMP + binNSBCountTAK + binNSBCountOther + otherCountTS + otherCountMP + otherCountTAK + otherCountOther + lechateCountTS + lechateCountMP + lechateCountTAK + lechateCountOther + roroReasonCountTS + roroReasonCountMP + roroReasonCountTAK + roroReasonCountOther}}</td>
+                        <td>{{ truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS + truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP + truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK + truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + roroReasonCountOther}}</td>
                         <td>{{truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS}}</td>
                         <td>{{truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP}}</td>
                         <td>{{truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK}}</td>
