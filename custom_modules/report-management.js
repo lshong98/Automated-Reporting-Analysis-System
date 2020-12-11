@@ -139,7 +139,7 @@ app.post('/addReport', function (req, res) {
             gpswox = '';
         }
             
-            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, lh, rttb, wt, gpswox, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID, colDay, acr) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + lh + "', '" + rttb + "', '" + wt + "', '" + gpswox + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "', '" + colDay + "', '" + acr + "')",
+            var sql = "INSERT INTO tblreport (reportID, areaID, reportCollectionDate, operationTimeStart, operationTimeEnd, garbageAmount, lh, rttb, wt, gpswox, reportFeedback, readStatus, completionStatus, truckID, driverID, remark, creationDateTime, staffID, colDay, acr, reportCompletionStatus) VALUE ('" + ID + "', '" + area_code + "', '" + collection_date + "', '" + operation_start + "', '" + operation_end + "', '" + tonnage + "', '" + lh + "', '" + rttb + "', '" + wt + "', '" + gpswox + "', '', '" + read_status + "', '" + complete_status + "', '" + truck_id + "', '" + driver_id + "', '" + remark + "', '" + created_on + "', '" + staff_id + "', '" + colDay + "', '" + acr + "', 'i')",
                 reportID = ID;
 console.log(sql);
             database.query(sql, function (err, result) {
@@ -194,10 +194,11 @@ app.post('/report_feedback', function (req, res) {
 //    var feedback = sanitizeHtml(req.body.feedback),
 //        report_id = sanitizeHtml(req.body.id);
     var feedback = req.body.feedback,
-        report_id = req.body.id;
+        report_id = req.body.id,
+        reportCompletionStatus = req.body.reportCompletionStatus;
     
     feedback = feedback.replace(/'/g, "\\'");
-    var sql = "UPDATE tblreport SET reportFeedback = '" + feedback + "' WHERE reportID = '" + report_id + "'";
+    var sql = "UPDATE tblreport SET reportFeedback = '" + feedback + "', reportCompletionStatus = '" + reportCompletionStatus + "' WHERE reportID = '" + report_id + "'";
     
     database.query(sql, function (err, result) {
         if (err) {
@@ -384,7 +385,7 @@ app.post('/editReport', function (req, res) {
 });
 app.post('/getReport', function (req, res) {
     'use strict';
-    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.reportFeedback AS feedback, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.lh AS lh, tblreport.rttb AS rttb, tblreport.wt AS wt, tblreport.gpswox AS gpswox, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(tbltaman.tamanName) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status, tblreport.acr AS acr FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN tblarea ON tblarea.areaID = tblreport.areaID JOIN tbltaman ON tbltaman.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
+    var sql = "SELECT tblreport.reportID AS id, tblreport.areaID AS area, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS areaCode, tblreport.reportCollectionDate AS date, tblreport.operationTimeStart AS startTime, tblreport.operationTimeEnd AS endTime, tblreport.remark, tblreport.reportFeedback AS feedback, tblarea.latitude AS lat, tblarea.longitude AS lng, tblreport.garbageAmount AS ton, tblreport.lh AS lh, tblreport.rttb AS rttb, tblreport.wt AS wt, tblreport.gpswox AS gpswox, tbltruck.truckNum AS truck, tbltruck.truckID as truckID, tbltruck.transporter AS transporter, tblstaff.staffName AS driver, tblstaff.staffID AS driverID, GROUP_CONCAT(tbltaman.tamanName) AS collection, tblarea.collection_frequency AS frequency, tblreport.completionStatus as status, tblreport.acr AS acr, tblreport.reportCompletionStatus AS 'reportCompletionStatus' FROM tblreport JOIN tbltruck ON tbltruck.truckID = tblreport.truckID JOIN tblstaff ON tblreport.driverID = tblstaff.staffID JOIN tblarea ON tblarea.areaID = tblreport.areaID JOIN tbltaman ON tbltaman.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblreport.reportID = '" + req.body.reportID + "' GROUP BY tblreport.areaID";
     console.log(sql);
     database.query(sql, function (err, result) {
         if (err) {
@@ -551,7 +552,7 @@ app.post('/getReportRect', function (req, res) {
 app.get('/getReportList', function (req, res) {
     'use strict';
     
-    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, DATE_FORMAT(tblreport.creationDateTime, '%Y-%m-%d %r') AS sdate, tblstaff.staffName AS staffName, tbltruck.truckNum AS truck, tblreport.garbageAmount AS ton, tblreport.completionStatus AS status, tblreport.remark AS remark, tblreport.reportFeedback AS feedback, tblreport.readStatus AS readStatus FROM tblreport JOIN tblstaff ON tblstaff.staffID = tblreport.staffID  JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
+    var sql = "SELECT reportID AS reportID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS area, reportCollectionDate AS date, DATE_FORMAT(tblreport.creationDateTime, '%Y-%m-%d %r') AS sdate, tblstaff.staffName AS staffName, tbltruck.truckNum AS truck, tblreport.garbageAmount AS ton, tblreport.completionStatus AS status, tblreport.remark AS remark, tblreport.reportFeedback AS feedback, tblreport.readStatus AS readStatus, (CASE WHEN tblreport.reportCompletionStatus = 'c' THEN 'Complete' WHEN tblreport.reportCompletionStatus = 'i' THEN 'Incomplete' END) AS reportCompletionStatus FROM tblreport JOIN tblstaff ON tblstaff.staffID = tblreport.staffID  JOIN tblarea ON tblreport.areaID = tblarea.areaID JOIN tblzone ON tblarea.zoneID = tblzone.zoneID JOIN tbltruck ON tblreport.truckID = tbltruck.truckID ORDER BY tblreport.creationDateTime DESC";
     
     database.query(sql, function (err, result) {
         if (err) {

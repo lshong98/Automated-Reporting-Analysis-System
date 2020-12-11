@@ -9940,14 +9940,11 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
 });
 
 app.controller('complaintcmsDailyReportController', function($scope, $filter, $http, $window){
-    var datevar = new Date();
     $scope.obj = {
         'startDate': '',
         'endDate': '',
         'zon': 'KCH'
     }
-    // $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
-    // $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
 
     $scope.obj.startDate = new Date();
     $scope.obj.endDate = new Date();
@@ -9956,10 +9953,10 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
 
 
     $scope.request = function(obj){
-        console.log(obj);
         $http.post('/getCmsDailyReportList', obj).then(function(response){
-            console.log(response.data);
+            
             $scope.cmsDailyReportList = response.data;
+            $scope.obj.startDate.setDate($scope.obj.startDate.getDate() + 1);
             var splitType = "";
             var splitTypeContent = "";
             var splitTypeSpecialContent = ""; 
@@ -10076,8 +10073,9 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
 
     $scope.objChange = function () {
         if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
-            $scope.obj.startDate.setDate($scope.obj.startDate.getDate() - 1);
-            $scope.request($scope.obj);
+            var  sendObjDate = $scope.obj;
+            sendObjDate.startDate.setDate(sendObjDate.startDate.getDate() - 1);
+            $scope.request(sendObjDate);
         }
     }
 
@@ -10104,6 +10102,12 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
         }
     }
 
+});
+
+app.controller('complaintscmsBDStatisticsController', function($scope, $filter, $http){
+    'use strict';
+
+    console.log("abc");
 });
 
 app.controller('complaintscmsStatisticsController', function($scope, $filter, $http){

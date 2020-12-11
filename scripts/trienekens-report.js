@@ -674,7 +674,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
     });
     
     $('button[name="submit_feedback"]').on('click', function () {
-        $http.post('/report_feedback', {"id": $scope.reportID, "feedback": $('textarea[name="report_feedback"]').val()}).then(function (response) {
+        $http.post('/report_feedback', {"id": $scope.reportID, "feedback": $('textarea[name="report_feedback"]').val(), "reportCompletionStatus": $scope.reportCompletionStatus}).then(function (response) {
             $scope.notify(response.data.status, response.data.message);
             window.location.href = '#/reporting';
         });
@@ -682,7 +682,7 @@ app.controller('viewReportController', function($scope, $http, $routeParams, $wi
 
     $http.post('/getReport', $scope.report).then(function(response) {
         $scope.thisReport = response.data[0];
-        console.log($scope.thisReport);
+        $scope.reportCompletionStatus = $scope.thisReport.reportCompletionStatus;
         $("#summernote").summernote("code", $scope.thisReport.feedback);
         $scope.thisReport.date = $filter('date')($scope.thisReport.date, 'yyyy-MM-dd');
         $scope.area = {
