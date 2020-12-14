@@ -10107,7 +10107,32 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
 app.controller('complaintscmsBDStatisticsController', function($scope, $filter, $http){
     'use strict';
 
-    console.log("abc");
+    var datevar = new Date();
+    $scope.obj = {
+        'startDate': '',
+        'endDate': '',
+        'zon': 'KCH'
+    }
+    $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
+    $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+    $("[data-toggle=popover]").popover({
+        html:true
+    });
+    $scope.requestStatistics = function(obj){
+        $http.post("/getCmsBDStatisticsMW", obj).then(function(response){
+            $scope.mwData = response.data;
+        });
+    }
+
+    $scope.requestStatistics($scope.obj);
+
+    $scope.objChange = function () {
+        if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
+            $scope.obj.endDate.setDate($scope.obj.endDate.getDate() + 1);
+            $scope.requestStatistics($scope.obj);
+        }
+
+    }
 });
 
 app.controller('complaintscmsStatisticsController', function($scope, $filter, $http){

@@ -429,7 +429,7 @@ app.post('/getCmsDailyReportList', function(req, res){
 app.post('/getCmsDatasheet', function(req ,res){
     'use strict';
 
-    var sql= "SELECT tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND (tblcomplaintofficer.services = '1' OR tblcomplaintofficer.services = '2') AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "'  ORDER BY complaintDate DESC";
+    var sql= "SELECT tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver', tblcomplaintofficer.typeCode AS 'typeCode' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND (tblcomplaintofficer.services = '1' OR tblcomplaintofficer.services = '2') AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "'  ORDER BY complaintDate DESC";
     console.log(sql);
     database.query(sql, function(err, result){
         if(err){
@@ -758,7 +758,6 @@ app.post('/getCmsStatistics', function(req,res){
     var endDate = req.body.endDate;
     var result = {}
 
-console.log("select * from tblcomplaintofficer where complaintDate between '" + req.body.startDate + "' AND '" + req.body.endDate + "'");
     f.waterfallQuery("SELECT COUNT(*) AS 'tsCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'Trienekens' AND services = '1' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "' ").then(function(tsCount){
         result.tsCount = tsCount.tsCount;
         return f.waterfallQuery("SELECT COUNT(*) AS 'mpCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'Mega Power' AND services = '1' AND cmsStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
@@ -1063,6 +1062,30 @@ app.post('/getCmsStatisticsCategorySpillage',function(req, res){
             res.json(result);
         }
     });
+});
+
+app.post('/getCmsBDStatisticsMW', function(req,res){
+    'use strict';
+    var startDate = req.body.startDate;
+    var endDate = req.body.endDate;
+    var result = {}
+
+    f.waterfallQuery("SELECT COUNT(*) AS 'totalComp' FROM tblcomplaintofficer WHERE services = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'").then(function(response){
+        result.totalComp = response.totalComp;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'tsValid' FROM tblcomplaintofficer WHERE forwardedSub = 'Trienekens' AND services = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' ");
+    }).then(function(response){
+        result.tsValid = response.tsValid;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'mpValid' FROM tblcomplaintofficer WHERE forwardedSub = 'Mega Power' AND services = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' ");
+    }).then(function(response){
+        result.mpValid = response.mpValid;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'takValid' FROM tblcomplaintofficer WHERE forwardedSub = 'TAK' AND services = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' ");
+    }).then(function(response){
+        result.takValid = response.takValid;
+        res.json(result);
+        res.end();
+    })
+    
+
 });
 
 module.exports = app;
