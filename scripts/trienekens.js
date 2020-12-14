@@ -10429,47 +10429,68 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
 
                 //formulate value for type of complaint
                 $scope.detailType = "";
+                // $scope.detailTypeCode2 = "";
                 splitType = $scope.cmsDataSheet[i].type.split(":,:");
                 for (var n = 0; n < splitType.length; n++) {
                     if (splitType[n].length > 3) {
                         splitTypeSpecialContent = splitType[n].split(":::::");
                         if (splitTypeSpecialContent[0] == '1') {
                             splitTypeSpecialContent[2] = "Waste not collected for " + splitTypeSpecialContent[1] + " days";
+                            // $scope.detailTypeCode2 += "1";
                         } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
                             splitTypeSpecialContent[2] = "Others";
+                            // if(splitTypeSpecialContent[0] == '12'){
+                            //     $scope.detailTypeCode2 += "12";
+                            // }else if(splitTypeSpecialContent[0] == '13'){
+                            //     $scope.detailTypeCode2 += "13";
+                            // }else if(splitTypeSpecialContent[0] == '14'){
+                            //     $scope.detailTypeCode2 += "14";
+                            // }
                         }
                         $scope.detailType += splitTypeSpecialContent[2];
                     } else {
                         if (splitType[n] == '2') {
                             splitTypeContent = "Bin not pushed back to its original location";
+                            // $scope.detailTypeCode2 += "2";
                         } else if (splitType[n] == '3') {
                             splitTypeContent = "Spillage of waste";
+                            // $scope.detailTypeCode2 += "3";
                         } else if (splitType[n] == '4') {
                             splitTypeContent = "Spillage of leachate water";
+                            // $scope.detailTypeCode2 += "4";
                         } else if (splitType[n] == '5') {
                             splitTypeContent = "RoRo not send";
+                            // $scope.detailTypeCode2 += "5";
                         } else if (splitType[n] == '6') {
                             splitTypeContent = "RoRo not exchanged";
+                            // $scope.detailTypeCode2 += "6";
                         } else if (splitType[n] == '7') {
                             splitTypeContent = "RoRo not pulled";
+                            // $scope.detailTypeCode2 += "7";
                         } else if (splitType[n] == '8') {
                             splitTypeContent = "RoRo not emptied";
+                            // $scope.detailTypeCode2 += "8";
                         } else if (splitType[n] == '9') {
                             splitTypeContent = "Schedule Waste not collected on time";
+                            // $scope.detailTypeCode2 += "9";
                         } else if (splitType[n] == '10') {
                             splitTypeContent = "Schedule Waste spillage during collection";
+                            // $scope.detailTypeCode2 += "10";
                         } else if (splitType[n] == '11') {
                             splitTypeContent = "Incomplete documents";
+                            // $scope.detailTypeCode2 += "11";
                         }
                         $scope.detailType += splitTypeContent;
                     }
 
                     if (n < (splitType.length - 1)) {
                         $scope.detailType += ", ";
+                        // $scope.detailTypeCode2 += ",";
                     }
 
                 }
                 $scope.cmsDataSheet[i].type = $scope.detailType;            
+                // $scope.cmsDataSheet[i].typeCode2 = $scope.detailTypeCode2;            
                 
                 //formulate value for waste collection date time
                 if($scope.cmsDataSheet[i].wasteColDT != null){
@@ -10495,6 +10516,14 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
         }
 
     }
+    // $scope.changeTypeCode = function(){
+    //     console.log($scope.cmsDataSheet.length);
+    //     for(var i = 0;i < $scope.cmsDataSheet.length; i++){
+    //         $http.post('/changeCompTypeCode', {"coID": $scope.cmsDataSheet[i].coID, "typeCode": $scope.cmsDataSheet[i].typeCode2}).then(function(response){
+    //             console.log("abc");
+    //         })
+    //     }
+    // }
 });
 
 app.controller('complaintDetailController', function ($scope, $http, $filter, $window, $routeParams, $route, storeDataService) {

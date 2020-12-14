@@ -429,7 +429,7 @@ app.post('/getCmsDailyReportList', function(req, res){
 app.post('/getCmsDatasheet', function(req ,res){
     'use strict';
 
-    var sql= "SELECT tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver', tblcomplaintofficer.typeCode AS 'typeCode' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND (tblcomplaintofficer.services = '1' OR tblcomplaintofficer.services = '2') AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "'  ORDER BY complaintDate DESC";
+    var sql= "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver', tblcomplaintofficer.typeCode AS 'typeCode' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND (tblcomplaintofficer.services = '1' OR tblcomplaintofficer.services = '2') AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "'  ORDER BY complaintDate DESC";
     console.log(sql);
     database.query(sql, function(err, result){
         if(err){
@@ -1086,6 +1086,20 @@ app.post('/getCmsBDStatisticsMW', function(req,res){
     })
     
 
+});
+
+app.post('/changeCompTypeCode', function(req, res){
+    'use strict';
+console.log(req.body.coID);
+    var sql = "UPDATE tblcomplaintofficer SET typeCode = '" + req.body.typeCode + "' WHERE coID = '" + req.body.coID + "'";
+console.log(sql);
+    database.query(sql,function(err,result){
+        if(err){
+            throw err;
+        }else{
+            res.json(result);
+        }
+    });
 });
 
 module.exports = app;
