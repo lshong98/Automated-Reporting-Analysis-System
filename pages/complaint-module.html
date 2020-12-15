@@ -13,16 +13,21 @@
 <br />
 
 <div class="row" data-ng-show="nowModule=='web'">
-    <div class="col-md-1">
-        <button class="btn btn-success" data-ng-show="showwebkch.create == 'A' || showwebbtu.create == 'A'" data-ng-click="createComp()"><i class="fa fa-plus"></i> New</button>   
+    <div class="col-md-2">
+        <button class="btn btn-success btn-md" data-ng-show="showwebkch.create == 'A' || showwebbtu.create == 'A'" data-ng-click="createComp()"><i class="fa fa-plus"></i> New</button>   
     </div>
-    <div class="col-md-1">
-        <button class="btn btn-primary" data-ng-show="showwebkch.create == 'A' || showwebbtu.create == 'A'" data-ng-click="exportComp()"><i class="fa fa-plus"></i> Export</button>   
+    <div class="col-md-2">
+        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="exportComp()"><i class="fa fa-plus"></i> Export</button>   
     </div>
-    <div class="col-md-1">
-        <button class="btn btn-primary" data-ng-show="showwebkch.create == 'A' || showwebbtu.create == 'A'" data-ng-click="exportCmsDatasheet()"><i class="fa fa-plus"></i> CMS Datasheet</button>   
+</div>
+<br/>
+<div class="row" data-ng-show="nowModule=='web'">
+    <div class="col-md-2" >
+        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="exportCmsDatasheet()"><i class="fa fa-plus"></i> CMS Datasheet</button>   
     </div>
-    
+    <div class="col-md-2">
+        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="bdCMSStatistics()"><i class="fa fa-plus"></i> CMS BD Statistics</button>   
+    </div>
 </div>
 <div class="row" data-ng-show="nowModule=='log'">
     <div class="col-md-2">

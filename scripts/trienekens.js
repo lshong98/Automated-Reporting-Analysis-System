@@ -9664,6 +9664,11 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         window.location.href = '#/complaint-cmsDailyReport';
     };
 
+        //route to bd cms statistics
+    $scope.bdCMSStatistics = function () {
+        window.location.href = '#/complaint-cmsBDStatistics';
+    };
+
     //route to general cms statistics
     $scope.logisticsGeneralCMSStatistics = function () {
         window.location.href = '#/complaint-cmsStatistics';
@@ -10121,6 +10126,7 @@ app.controller('complaintscmsBDStatisticsController', function($scope, $filter, 
     $scope.requestStatistics = function(obj){
         $http.post("/getCmsBDStatisticsMW", obj).then(function(response){
             $scope.mwData = response.data;
+            console.log($scope.mwData);
         });
     }
 
