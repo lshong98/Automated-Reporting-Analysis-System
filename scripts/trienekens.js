@@ -10126,7 +10126,12 @@ app.controller('complaintscmsBDStatisticsController', function($scope, $filter, 
     $scope.requestStatistics = function(obj){
         $http.post("/getCmsBDStatisticsMW", obj).then(function(response){
             $scope.mwData = response.data;
-            console.log($scope.mwData);
+        });
+        $http.post("/getCmsBDStatisticsRoro", obj).then(function(response){
+            $scope.roroData = response.data;
+        });
+        $http.post("/getCmsBDStatisticsSW", obj).then(function(response){
+            $scope.swData = response.data;
         });
     }
 
@@ -10435,68 +10440,68 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
 
                 //formulate value for type of complaint
                 $scope.detailType = "";
-                // $scope.detailTypeCode2 = "";
+                $scope.detailTypeCode2 = "";
                 splitType = $scope.cmsDataSheet[i].type.split(":,:");
                 for (var n = 0; n < splitType.length; n++) {
                     if (splitType[n].length > 3) {
                         splitTypeSpecialContent = splitType[n].split(":::::");
                         if (splitTypeSpecialContent[0] == '1') {
                             splitTypeSpecialContent[2] = "Waste not collected for " + splitTypeSpecialContent[1] + " days";
-                            // $scope.detailTypeCode2 += "1";
+                            $scope.detailTypeCode2 += "a";
                         } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
                             splitTypeSpecialContent[2] = "Others";
-                            // if(splitTypeSpecialContent[0] == '12'){
-                            //     $scope.detailTypeCode2 += "12";
-                            // }else if(splitTypeSpecialContent[0] == '13'){
-                            //     $scope.detailTypeCode2 += "13";
-                            // }else if(splitTypeSpecialContent[0] == '14'){
-                            //     $scope.detailTypeCode2 += "14";
-                            // }
+                            if(splitTypeSpecialContent[0] == '12'){
+                                $scope.detailTypeCode2 += "l";
+                            }else if(splitTypeSpecialContent[0] == '13'){
+                                $scope.detailTypeCode2 += "m";
+                            }else if(splitTypeSpecialContent[0] == '14'){
+                                $scope.detailTypeCode2 += "n";
+                            }
                         }
                         $scope.detailType += splitTypeSpecialContent[2];
                     } else {
                         if (splitType[n] == '2') {
                             splitTypeContent = "Bin not pushed back to its original location";
-                            // $scope.detailTypeCode2 += "2";
+                            $scope.detailTypeCode2 += "b";
                         } else if (splitType[n] == '3') {
                             splitTypeContent = "Spillage of waste";
-                            // $scope.detailTypeCode2 += "3";
+                            $scope.detailTypeCode2 += "c";
                         } else if (splitType[n] == '4') {
                             splitTypeContent = "Spillage of leachate water";
-                            // $scope.detailTypeCode2 += "4";
+                            $scope.detailTypeCode2 += "d";
                         } else if (splitType[n] == '5') {
                             splitTypeContent = "RoRo not send";
-                            // $scope.detailTypeCode2 += "5";
+                            $scope.detailTypeCode2 += "e";
                         } else if (splitType[n] == '6') {
                             splitTypeContent = "RoRo not exchanged";
-                            // $scope.detailTypeCode2 += "6";
+                            $scope.detailTypeCode2 += "f";
                         } else if (splitType[n] == '7') {
                             splitTypeContent = "RoRo not pulled";
-                            // $scope.detailTypeCode2 += "7";
+                            $scope.detailTypeCode2 += "g";
                         } else if (splitType[n] == '8') {
                             splitTypeContent = "RoRo not emptied";
-                            // $scope.detailTypeCode2 += "8";
+                            $scope.detailTypeCode2 += "h";
                         } else if (splitType[n] == '9') {
                             splitTypeContent = "Schedule Waste not collected on time";
-                            // $scope.detailTypeCode2 += "9";
+                            $scope.detailTypeCode2 += "i";
                         } else if (splitType[n] == '10') {
                             splitTypeContent = "Schedule Waste spillage during collection";
-                            // $scope.detailTypeCode2 += "10";
+                            $scope.detailTypeCode2 += "j";
                         } else if (splitType[n] == '11') {
                             splitTypeContent = "Incomplete documents";
-                            // $scope.detailTypeCode2 += "11";
+                            $scope.detailTypeCode2 += "k";
                         }
                         $scope.detailType += splitTypeContent;
                     }
 
                     if (n < (splitType.length - 1)) {
                         $scope.detailType += ", ";
-                        // $scope.detailTypeCode2 += ",";
+                        $scope.detailTypeCode2 += ",";
                     }
 
                 }
                 $scope.cmsDataSheet[i].type = $scope.detailType;            
-                // $scope.cmsDataSheet[i].typeCode2 = $scope.detailTypeCode2;            
+                $scope.cmsDataSheet[i].typeCode2 = $scope.detailTypeCode2;            
                 
                 //formulate value for waste collection date time
                 if($scope.cmsDataSheet[i].wasteColDT != null){
@@ -10522,14 +10527,14 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
         }
 
     }
-    // $scope.changeTypeCode = function(){
-    //     console.log($scope.cmsDataSheet.length);
-    //     for(var i = 0;i < $scope.cmsDataSheet.length; i++){
-    //         $http.post('/changeCompTypeCode', {"coID": $scope.cmsDataSheet[i].coID, "typeCode": $scope.cmsDataSheet[i].typeCode2}).then(function(response){
-    //             console.log("abc");
-    //         })
-    //     }
-    // }
+    $scope.changeTypeCode = function(){
+        console.log($scope.cmsDataSheet.length);
+        for(var i = 0;i < $scope.cmsDataSheet.length; i++){
+            $http.post('/changeCompTypeCode', {"coID": $scope.cmsDataSheet[i].coID, "typeCode": $scope.cmsDataSheet[i].typeCode2}).then(function(response){
+                console.log("abc");
+            })
+        }
+    }
 });
 
 app.controller('complaintDetailController', function ($scope, $http, $filter, $window, $routeParams, $route, storeDataService) {
@@ -10584,6 +10589,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             'address': $scope.comDetail.address,
             'img': $scope.comDetail.img,
             'type': $scope.comDetail.ctype,
+            'typeCode': '',
             'services': $scope.comDetail.title,
             'cmsStatus': '',
             'lgStatus': 'open',
@@ -10617,35 +10623,49 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                 splitTypeSpecialContent = splitType[i].split(":::::");
                 if (splitTypeSpecialContent[0] == '1') {
                     splitTypeSpecialContent[2] = "Waste not collected (days)";
+                    $scope.verify.typeCode += 'a,';
                 } else if (splitTypeSpecialContent[0] == '12') {
                     splitTypeSpecialContent[2] = "Others(compactor)";
+                    $scope.verify.typeCode += 'l,';
                 } else if (splitTypeSpecialContent[0] == '13') {
                     splitTypeSpecialContent[2] = "Others(hooklift)";
+                    $scope.verify.typeCode += 'm,';
                 } else if (splitTypeSpecialContent[0] == '14') {
                     splitTypeSpecialContent[2] = "Others(hazardous waste)";
+                    $scope.verify.typeCode += 'n,';
                 }
                 $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
             } else {
                 if (splitType[i] == '2') {
                     splitTypeContent = "Bin not pushed back to its original location";
+                    $scope.verify.typeCode += 'b,';
                 } else if (splitType[i] == '3') {
                     splitTypeContent = "Spillage of waste";
+                    $scope.verify.typeCode += 'c,';
                 } else if (splitType[i] == '4') {
                     splitTypeContent = "Spillage of leachate water";
+                    $scope.verify.typeCode += 'd,';
                 } else if (splitType[i] == '5') {
                     splitTypeContent = "RoRo not send";
+                    $scope.verify.typeCode += 'e,';
                 } else if (splitType[i] == '6') {
                     splitTypeContent = "RoRo not exchanged";
+                    $scope.verify.typeCode += 'f,';
                 } else if (splitType[i] == '7') {
                     splitTypeContent = "RoRo not pulled";
+                    $scope.verify.typeCode += 'g,';
                 } else if (splitType[i] == '8') {
                     splitTypeContent = "RoRo not emptied";
+                    $scope.verify.typeCode += 'h,';
                 } else if (splitType[i] == '9') {
                     splitTypeContent = "Waste not collected on time";
+                    $scope.verify.typeCode += 'i,';
                 } else if (splitType[i] == '10') {
                     splitTypeContent = "Spillage during collection";
+                    $scope.verify.typeCode += 'j,';
                 } else if (splitType[i] == '11') {
                     splitTypeContent = "Incomplete documents";
+                    $scope.verify.typeCode += 'k,';
                 }
                 $scope.detailType += splitTypeContent;
             }
@@ -11725,6 +11745,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         "compAddress": '',
         "compImg": 'undefined|undefined|undefined',
         "compType": '',
+        "compTypeCode": '',
         "compLogDate": '',
         "compLogTime": '',
         "compLogBy": $window.sessionStorage.getItem('owner'),
@@ -11845,6 +11866,9 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
         $scope.comp.compTime = $filter('date')(new Date(), 'HH:mm:ss');
         $scope.comp.compLogTime = $filter('date')(new Date(), 'HH:mm:ss');
 
+        $scope.comp.compType = "";
+        $scope.comp.compTypeCode = "";
+
         if($scope.kchZon == 'A'){
             $scope.comp.zon = "KCH";
         }else if($scope.btuZon == 'A'){
@@ -11857,36 +11881,47 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             }
             $scope.comp.compType += '1:::::';
             $scope.comp.compType += $scope.tc1days + ':,:';
+            $scope.comp.compTypeCode += "a,";
         }
         if ($scope.tc2 == true) {
             $scope.comp.compType += '2:,:';
+            $scope.comp.compTypeCode += "b,";
         }
         if ($scope.tc3 == true) {
             $scope.comp.compType += '3:,:';
+            $scope.comp.compTypeCode += "c,";
         }
         if ($scope.tc4 == true) {
             $scope.comp.compType += '4:,:';
+            $scope.comp.compTypeCode += "d,";
         }
         if ($scope.tc5 == true) {
             $scope.comp.compType += '5:,:';
+            $scope.comp.compTypeCode += "e,";
         }
         if ($scope.tc6 == true) {
             $scope.comp.compType += '6:,:';
+            $scope.comp.compTypeCode += "f,";
         }
         if ($scope.tc7 == true) {
             $scope.comp.compType += '7:,:';
+            $scope.comp.compTypeCode += "g,";
         }
         if ($scope.tc8 == true) {
             $scope.comp.compType += '8:,:';
+            $scope.comp.compTypeCode += "h,";
         }
         if ($scope.tc9 == true) {
             $scope.comp.compType += '9:,:';
+            $scope.comp.compTypeCode += "i,";
         }
         if ($scope.tc10 == true) {
             $scope.comp.compType += '10:,:';
+            $scope.comp.compTypeCode += "j,";
         }
         if ($scope.tc11 == true) {
             $scope.comp.compType += '11:,:';
+            $scope.comp.compTypeCode += "k,";
         }
         if ($scope.tc12 == true) {
             if ($scope.tc12others == undefined) {
@@ -11894,6 +11929,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             }
             $scope.comp.compType += '12:::::';
             $scope.comp.compType += $scope.tc12others + ':,:';
+            $scope.comp.compTypeCode += "l,";
         }
         if ($scope.tc13 == true) {
             if ($scope.tc13others == undefined) {
@@ -11901,6 +11937,7 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             }
             $scope.comp.compType += '13:::::';
             $scope.comp.compType += $scope.tc13others + ':,:';
+            $scope.comp.compTypeCode += "m,";
         }
         if ($scope.tc14 == true) {
             if ($scope.tc14others == undefined) {
@@ -11908,10 +11945,11 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             }
             $scope.comp.compType += '14:::::';
             $scope.comp.compType += $scope.tc14others + ':,:';
+            $scope.comp.compTypeCode += "n,";
         }
 
-
         $scope.comp.compType = $scope.comp.compType.substring(0, $scope.comp.compType.length - 3);
+        $scope.comp.compTypeCode = $scope.comp.compTypeCode.substring(0, $scope.comp.compType.length - 1);
         $scope.comp.services = $scope.typeOption;
 
         if($scope.companyHousehold == 'Household'){
