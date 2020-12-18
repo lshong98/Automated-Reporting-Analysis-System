@@ -93,6 +93,64 @@ function webNotification(title, content){
     }
 }
 
+function bdKPIFunc(custDate, custTime, compDate, compTime){
+
+    if (custDate != null && custTime != null && compDate != null && compTime != null) {
+
+        var returnBdKPI = '';
+        var bdDateFormat = new Date(custDate);
+        var complaintDateFormat = new Date(compDate);
+        
+        var bkBetweenDay = bdDateFormat - complaintDateFormat;
+        bkBetweenDay = bkBetweenDay / 60 / 60 / 24 / 1000;
+
+        var bkBetweenTime = "";
+
+        var bdTimeFormat = new Date(2000, 0, 1, custTime.split(":")[0], custTime.split(":")[1]);
+
+        var complaintTimeFormat = new Date(2000, 0, 1, compTime.split(":")[0], compTime.split(":")[1]);
+
+        var operationStartTime = new Date(2000, 0, 1, 0, 00);
+        var operationEndTime = new Date(2000, 0, 1, 24, 00);
+
+        if (bkBetweenDay == 0) {
+            bkBetweenTime = bdTimeFormat - complaintTimeFormat;
+
+            bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
+            bkBetweenTime = bkBetweenTime.toFixed(2); 
+            var splitHrsBK = "";
+            var splitMinBK = "";
+
+            var splitHrsBK = bkBetweenTime.split(".")[0];
+            var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
+
+            returnBdKPI = splitHrsBK + ":" + splitMinBK; 
+
+        } else if (bkBetweenDay >= 1) {
+
+            bkBetweenTime = (operationEndTime - complaintTimeFormat) + (bdTimeFormat - operationStartTime);
+            bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
+
+            for (var dayCounter = 1; dayCounter < bkBetweenDay; dayCounter++) {
+                bkBetweenTime += 24;
+            }
+
+            bkBetweenTime = bkBetweenTime.toFixed(2);
+            var splitHrsBK = "";
+            var splitMinBK = "";
+
+            var splitHrsBK = bkBetweenTime.split(".")[0];
+            var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
+
+            returnBdKPI = splitHrsBK + ":" + splitMinBK;                    
+        } else {
+            returnBdKPI = "N/A";
+        }  
+        
+        return returnBdKPI;
+    }
+}
+
 function isOpen(ws) {
     var ping = {
         "type": "ping"
@@ -10406,6 +10464,7 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
     $scope.request = function(obj){
 
         $http.post('/getCmsDatasheet', obj).then(function(response){
+            
             $scope.cmsDataSheet = response.data;
             var splitType = "";
             var splitTypeContent = "";
@@ -10417,6 +10476,7 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
 
             for(var i=0; i<$scope.cmsDataSheet.length; i++){
                 $scope.cmsDataSheet[i].complaintDate = $filter('date')($scope.cmsDataSheet[i].complaintDate, 'yyyy-MM-dd');
+                $scope.cmsDataSheet[i].customerDate = $filter('date')($scope.cmsDataSheet[i].customerDate, 'yyyy-MM-dd');
 
                 //formulate for subcon column
                 if($scope.cmsDataSheet[i].subcon == "Trienekens"){
@@ -10533,6 +10593,26 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
             $http.post('/changeCompTypeCode', {"coID": $scope.cmsDataSheet[i].coID, "typeCode": $scope.cmsDataSheet[i].typeCode2}).then(function(response){
                 console.log("abc");
             })
+        }
+    }
+    
+    $scope.setupKPI = function(){
+        
+        for(var i = 0;i < $scope.cmsDataSheet.length; i++){
+            if($scope.cmsDataSheet[i].customerDate != null && $scope.cmsDataSheet[i].customerTime != null && $scope.cmsDataSheet[i].complaintDate != null && $scope.cmsDataSheet[i].complaintTime != null){
+                
+                var bdKPI = bdKPIFunc($scope.cmsDataSheet[i].customerDate, $scope.cmsDataSheet[i].customerTime, $scope.cmsDataSheet[i].complaintDate, $scope.cmsDataSheet[i].complaintTime);
+                var bdKPIAchieve = 'A';
+                if(bdKPI.split(":")[0] > 24){
+                    bdKPIAchieve = 'N';
+                }
+                $scope.cmsDataSheet[i].bdKPI = bdKPI;
+                $scope.cmsDataSheet[i].bdKPIAchieve = bdKPIAchieve;
+
+                $http.post('/setupBDKPI', {"coID": $scope.cmsDataSheet[i].coID, "bdKPI":  $scope.cmsDataSheet[i].bdKPI, "bdKPIAchieve": $scope.cmsDataSheet[i].bdKPIAchieve}).then(function(response){
+                    console.log("abc");
+                })
+            }
         }
     }
 });
@@ -12432,10 +12512,18 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         $scope.cust.contactStatus = $scope.custContactableStatus;
 
 
+        var bdKPI = bdKPIFunc($scope.cust.custDate, $scope.cust.custTime, $scope.detailObj.complaintDate, $scope.detailObj.complaintTime);
+        var bdKPIAchieve = 'A';
+        if(bdKPI.split(":")[0] > 24){
+            bdKPIAchieve = 'N';
+        }
         if ($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == '' || $scope.cust.custStatus == '') {
             $scope.notify("error", "There has some blank column");
             $scope.showSubCustBtn = true;
         } else {
+            $scope.cust.bdKPI = bdKPI;
+            $scope.cust.bdKPIAchieve = bdKPIAchieve;
+
             $http.post('/updateCustInformation', $scope.cust).then(function (response) {
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
