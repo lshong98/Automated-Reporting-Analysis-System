@@ -1108,6 +1108,12 @@ app.post('/getCmsBDStatisticsMW', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'others' FROM tblcomplaintofficer WHERE council != 'DBKU' AND council != 'MBKS' AND council != 'MPP' AND services = '1' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' AND cmsStatus = '1'");
     }).then(function(response){
         result.others = response.others;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'achieveKPI' FROM tblcomplaintofficer WHERE bdKPIAchieve = 'A' AND services = '1' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.achieveKPI = response.achieveKPI;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'notAchieveKPI' FROM tblcomplaintofficer WHERE bdKPIAchieve = 'N' AND services = '1' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.notAchieveKPI = response.notAchieveKPI;
         res.send(result);
         res.end();
     })
@@ -1145,6 +1151,12 @@ app.post('/getCmsBDStatisticsRoro', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'otherType' FROM tblcomplaintofficer WHERE typeCode LIKE '%m%' AND services = '2' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' AND cmsStatus = '1' ");
     }).then(function(response){
         result.otherType = response.otherType;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'achieveKPI' FROM tblcomplaintofficer WHERE bdKPIAchieve = 'A' AND services = '2' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.achieveKPI = response.achieveKPI;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'notAchieveKPI' FROM tblcomplaintofficer WHERE bdKPIAchieve = 'N' AND services = '2' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.notAchieveKPI = response.notAchieveKPI;
         res.send(result);
         res.end();
     })
@@ -1182,6 +1194,12 @@ app.post('/getCmsBDStatisticsSW', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'others' FROM tblcomplaintofficer WHERE typeCode LIKE '%n%' AND services = '3' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' AND cmsStatus = '1' ");
     }).then(function(response){
         result.others = response.others;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'achieveKPI' FROM tblcomplaintofficer WHERE bdKPIAchieve = 'A' AND services = '3' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.achieveKPI = response.achieveKPI;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'notAchieveKPI' FROM tblcomplaintofficer WHERE bdKPIAchieve = 'N' AND services = '2' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.notAchieveKPI = response.notAchieveKPI;
         res.send(result);
         res.end();
     })

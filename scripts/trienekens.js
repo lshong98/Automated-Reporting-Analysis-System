@@ -100,9 +100,11 @@ function bdKPIFunc(custDate, custTime, compDate, compTime){
         var returnBdKPI = '';
         var bdDateFormat = new Date(custDate);
         var complaintDateFormat = new Date(compDate);
-        
+
         var bkBetweenDay = bdDateFormat - complaintDateFormat;
         bkBetweenDay = bkBetweenDay / 60 / 60 / 24 / 1000;
+
+        var checkBetweenDay = bkBetweenDay + 1;
 
         var bkBetweenTime = "";
 
@@ -133,6 +135,13 @@ function bdKPIFunc(custDate, custTime, compDate, compTime){
 
             for (var dayCounter = 1; dayCounter < bkBetweenDay; dayCounter++) {
                 bkBetweenTime += 24;
+            }
+            for(var x = 0; x < checkBetweenDay; x++){
+                var checkDate = new Date(complaintDateFormat);
+                checkDate.setDate(checkDate.getDate() + x);
+                if(checkDate.getDay() == '6' || checkDate.getDay() == '0'){
+                    bkBetweenTime -= 24;
+                }
             }
 
             bkBetweenTime = bkBetweenTime.toFixed(2);
@@ -10600,7 +10609,7 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
         
         for(var i = 0;i < $scope.cmsDataSheet.length; i++){
             if($scope.cmsDataSheet[i].customerDate != null && $scope.cmsDataSheet[i].customerTime != null && $scope.cmsDataSheet[i].complaintDate != null && $scope.cmsDataSheet[i].complaintTime != null){
-                
+                console.log($scope.cmsDataSheet[i]);
                 var bdKPI = bdKPIFunc($scope.cmsDataSheet[i].customerDate, $scope.cmsDataSheet[i].customerTime, $scope.cmsDataSheet[i].complaintDate, $scope.cmsDataSheet[i].complaintTime);
                 var bdKPIAchieve = 'A';
                 if(bdKPI.split(":")[0] > 24){
