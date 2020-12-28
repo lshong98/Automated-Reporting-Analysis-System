@@ -1205,11 +1205,26 @@ app.post('/getCmsBDStatisticsSW', function(req,res){
     })
 });
 
+app.post('/getCMSQOP', function(req, res){
+    'use strict';
+    var startDate = req.body.startDate;
+    var endDate = req.body.endDate;
+    var sql="SELECT coID AS 'coID', complaintDate AS 'complaintDate', services AS 'services', bdKPI AS 'bdKPI', bdKPIAchieve AS 'bdKPIAchieve' FROM tblcomplaintofficer WHERE activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'";
+console.log(sql);
+    database.query(sql,function(err,result){
+        if(err){
+            throw err;
+        }else{
+            res.json(result);
+        }
+    });
+})
+
 app.post('/changeCompTypeCode', function(req, res){
     'use strict';
-console.log(req.body.coID);
+
     var sql = "UPDATE tblcomplaintofficer SET typeCode = '" + req.body.typeCode + "' WHERE coID = '" + req.body.coID + "'";
-console.log(sql);
+
     database.query(sql,function(err,result){
         if(err){
             throw err;
@@ -1232,6 +1247,5 @@ console.log(sql);
         }
     });
 });
-
 
 module.exports = app;

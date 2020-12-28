@@ -555,6 +555,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintscmsBDStatisticsController',
         controllerAs: 'complaintscmsBDStatisticsController'
     })
+    .when('/complaint-cmsBDQOP',{
+        resolve: {
+            "check": function (routingService, $window, $location){
+                return routingService.auth($window, $location, '/complaint-cmsBDQOP');
+            }
+        },
+        templateUrl: '/complaint-cmsBDQOP',
+        controller: 'complaintscmsBDQOPController',
+        controllerAs: 'complaintscmsBDQOPController'
+    })
     .when('/complaint-cmsDatasheet',{
         resolve: {
             "check": function (routingService, $window, $location){

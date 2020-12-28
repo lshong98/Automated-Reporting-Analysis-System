@@ -210,6 +210,10 @@ app.get('/complaint-cmsBDStatistics',function (req, res){
     'use strict';
     res.sendFile('pages/complaint-cmsBDStatistics.html', {root: __dirname});
 });
+app.get('/complaint-cmsBDQOP',function (req, res){
+    'use strict';
+    res.sendFile('pages/complaint-cmsBDQOP.html', {root: __dirname});
+});
 app.get('/complaint-cmsDatasheet',function (req, res){
     'use strict';
     res.sendFile('pages/complaint-cmsDatasheet.html', {root: __dirname});

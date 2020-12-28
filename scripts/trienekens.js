@@ -9731,9 +9731,14 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         window.location.href = '#/complaint-cmsDailyReport';
     };
 
-        //route to bd cms statistics
+    //route to bd cms statistics
     $scope.bdCMSStatistics = function () {
         window.location.href = '#/complaint-cmsBDStatistics';
+    };
+
+    //route to bd cms qop
+    $scope.bdQOP = function () {
+        window.location.href = '#/complaint-cmsBDQOP';
     };
 
     //route to general cms statistics
@@ -10174,6 +10179,255 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
         }
     }
 
+});
+
+app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
+    'use strict';
+
+
+    var datevar = new Date();
+    $scope.obj = {
+        'year': '',
+        'month': '',
+        'zon': 'KCH',
+        'startDate': '',
+        'endDate': ''
+    }
+    $scope.obj.year = new Date().getFullYear();
+    $scope.obj.month = new Date().getMonth().toString();
+
+    $scope.objChange = function(){
+
+        $scope.firstMW = 0;
+        $scope.firstRoro = 0;
+        $scope.firstSW = 0;
+        $scope.firstMWAchieved = 0;
+        $scope.firstRoroAchieved = 0;
+        $scope.firstSWAchieved = 0;
+        $scope.firstMWNotAchieved = 0;
+        $scope.firstRoroNotAchieved = 0;
+        $scope.firstSWNotAchieved = 0;
+        
+        $scope.secondMW = 0;
+        $scope.secondRoro = 0;
+        $scope.secondSW = 0;
+        $scope.secondMWAchieved = 0;
+        $scope.secondRoroAchieved = 0;
+        $scope.secondSWAchieved = 0;
+        $scope.secondMWNotAchieved = 0;
+        $scope.secondRoroNotAchieved = 0;
+        $scope.secondSWNotAchieved = 0;
+
+        $scope.thirdMW = 0;
+        $scope.thirdRoro = 0;
+        $scope.thirdSW = 0;
+        $scope.thirdMWAchieved = 0;
+        $scope.thirdRoroAchieved = 0;
+        $scope.thirdSWAchieved = 0;
+        $scope.thirdMWNotAchieved = 0;
+        $scope.thirdRoroNotAchieved = 0;
+        $scope.thirdSWNotAchieved = 0;
+
+        $scope.fourthMW = 0;
+        $scope.fourthRoro = 0;
+        $scope.fourthSW = 0;
+        $scope.fourthMWAchieved = 0;
+        $scope.fourthRoroAchieved = 0;
+        $scope.fourthSWAchieved = 0;
+        $scope.fourthMWNotAchieved = 0;
+        $scope.fourthRoroNotAchieved = 0;
+        $scope.fourthSWNotAchieved = 0;
+
+        $scope.fifthMW = 0;
+        $scope.fifthRoro = 0;
+        $scope.fifthSW = 0;
+        $scope.fifthMWAchieved = 0;
+        $scope.fifthRoroAchieved = 0;
+        $scope.fifthSWAchieved = 0;
+        $scope.fifthMWNotAchieved = 0;
+        $scope.fifthRoroNotAchieved = 0;
+        $scope.fifthSWNotAchieved = 0;
+
+        $scope.obj.startDate = new Date(parseInt($scope.obj.year), parseInt($scope.obj.month), 1);
+        $scope.obj.endDate = new Date(parseInt($scope.obj.year), parseInt($scope.obj.month) + 1, 0);
+
+        var firstWeekLastDayDate = new Date();
+        var secondWeekLastDayDate = new Date();
+        var thirdWeekLastDayDate = new Date();
+        var fourthWeekLastDayDate = new Date();
+        var fifthWeekLastDayDate = new Date();
+        var dateFlag = new Date();
+        dateFlag.setFullYear($scope.obj.startDate.getFullYear());
+        dateFlag.setMonth($scope.obj.startDate.getMonth());
+        dateFlag.setDate($scope.obj.startDate.getDate());
+
+        firstWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
+        secondWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
+        thirdWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
+        fourthWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
+        fifthWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
+
+        firstWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
+        secondWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
+        thirdWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
+        fourthWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
+        fifthWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
+
+        for(var w=0; w<7; w++){
+            if(dateFlag.getDay() == 0){
+                if(w == 0){
+                    firstWeekLastDayDate.setDate(dateFlag.getDate() + 7);
+                }else{
+                    firstWeekLastDayDate.setDate(dateFlag.getDate());
+                }
+                break;
+            }
+            dateFlag.setDate(dateFlag.getDate() + 1);
+        }
+        secondWeekLastDayDate.setDate(firstWeekLastDayDate.getDate() + 7);
+        thirdWeekLastDayDate.setDate(secondWeekLastDayDate.getDate() + 7);
+        fourthWeekLastDayDate.setDate(thirdWeekLastDayDate.getDate() + 7);
+        fifthWeekLastDayDate.setDate($scope.obj.endDate.getDate());
+
+        $scope.firstWeekStart = $filter('date')($scope.obj.startDate, "yyyy-MM-dd");
+        $scope.firstWeekEnd = $filter('date')(firstWeekLastDayDate, "yyyy-MM-dd");   
+        $scope.secondWeekStart = $filter('date')(new Date(firstWeekLastDayDate).setDate(firstWeekLastDayDate.getDate() + 1), "yyyy-MM-dd");
+        $scope.secondWeekEnd = $filter('date')(secondWeekLastDayDate, "yyyy-MM-dd");
+        $scope.thirdWeekStart = $filter('date')(new Date(secondWeekLastDayDate).setDate(secondWeekLastDayDate.getDate() + 1), "yyyy-MM-dd");
+        $scope.thirdWeekEnd = $filter('date')(thirdWeekLastDayDate, "yyyy-MM-dd");
+        $scope.fourthWeekStart = $filter('date')(new Date(thirdWeekLastDayDate).setDate(thirdWeekLastDayDate.getDate() + 1), "yyyy-MM-dd");
+        $scope.fourthWeekEnd = $filter('date')(fourthWeekLastDayDate, "yyyy-MM-dd");
+        $scope.fifthWeekStart = $filter('date')(new Date(fourthWeekLastDayDate).setDate(fourthWeekLastDayDate.getDate() + 1), "yyyy-MM-dd");
+        $scope.fifthWeekEnd = $filter('date')(fifthWeekLastDayDate, "yyyy-MM-dd");
+
+        $http.post('/getCMSQOP', $scope.obj).then(function(response){
+
+            for(var i =0; i<response.data.length; i++){
+                var compDate = new Date($filter('date')(response.data[i].complaintDate, "yyyy-MM-dd"));
+
+                if(compDate >= $scope.obj.startDate && compDate <= firstWeekLastDayDate){
+                    if(response.data[i].services == '1'){
+                        $scope.firstMW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.firstMWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.firstMWNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '2'){
+                        $scope.firstRoro += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.firstRoroAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.firstRoroNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '3'){
+                        $scope.firstSW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.firstSWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.firstSWNotAchieved += 1;
+                        }
+                    }            
+                    
+                }else if(compDate > firstWeekLastDayDate && compDate <= secondWeekLastDayDate){
+                    if(response.data[i].services == '1'){
+                        $scope.secondMW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.secondMWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.secondMWNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '2'){
+                        $scope.secondRoro += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.secondRoroAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.secondRoroNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '3'){
+                        $scope.secondSW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.secondSWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.secondSWNotAchieved += 1;
+                        }
+                    }    
+                }else if(compDate > secondWeekLastDayDate && compDate <= thirdWeekLastDayDate){
+                    if(response.data[i].services == '1'){
+                        $scope.thirdMW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.thirdMWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.thirdMWNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '2'){
+                        $scope.thirdRoro += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.thirdRoroAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.thirdRoroNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '3'){
+                        $scope.thirdSW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.thirdSWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.thirdSWNotAchieved += 1;
+                        }
+                    }    
+                }else if(compDate > thirdWeekLastDayDate && compDate <= fourthWeekLastDayDate){
+                    if(response.data[i].services == '1'){
+                        $scope.fourthMW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.fourthMWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.fourthMWNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '2'){
+                        $scope.fourthRoro += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.fourthRoroAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.fourthRoroNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '3'){
+                        $scope.fourthSW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.fourthSWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.fourthSWNotAchieved += 1;
+                        }
+                    }    
+                }else if(compDate > fourthWeekLastDayDate && compDate <= fifthWeekLastDayDate){
+                    if(response.data[i].services == '1'){
+                        $scope.fifthMW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.fifthMWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.fifthMWNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '2'){
+                        $scope.fifthRoro += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.fifthRoroAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.fifthRoroNotAchieved += 1;
+                        }
+                    }else if(response.data[i].services == '3'){
+                        $scope.fifthSW += 1;
+                        if(response.data[i].bdKPIAchieve == 'A'){
+                            $scope.fifthSWAchieved += 1;
+                        }else if(response.data[i].bdKPIAchieve == 'N'){
+                            $scope.fifthSWNotAchieved += 1;
+                        }
+                    }    
+                }
+                
+                
+            }
+            
+        })
+    }
 });
 
 app.controller('complaintscmsBDStatisticsController', function($scope, $filter, $http){

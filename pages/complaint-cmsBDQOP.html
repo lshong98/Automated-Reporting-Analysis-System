@@ -1,0 +1,216 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Quality Objective Plan</h1>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <label for="year" class="col-md-1 col-form-label form-label-width">Year</label>
+    <div class="col-md-3">
+        <input type="text" id="year" class="form-control mx-sm-2" data-ng-model="obj.year"/>
+    </div>
+</div>    
+
+<div class="form-group row">
+    <label for="month" class="col-md-1 col-form-label form-label-width">Month</label>
+    <div class="col-md-3">
+        <select id="month" class="form-control mx-sm-2" data-ng-model="obj.month">
+            <option value="0">Jan</option>
+            <option value="1">Feb</option>
+            <option value="2">Mar</option>
+            <option value="3">Apr</option>
+            <option value="4">May</option>
+            <option value="5">Jun</option>
+            <option value="6">Jul</option>
+            <option value="7">Aug</option>
+            <option value="8">Sep</option>
+            <option value="9">Oct</option>
+            <option value="10">Nov</option>
+            <option value="11">Dec</option>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="zon" class="col-md-1 col-form-label form-label-width">Branch</label>
+    <div class="col-md-3">
+        <select id="zon" class="form-control mx-sm-2" data-ng-model="obj.zon">
+            <option value="KCH" selected>KCH</option>
+            <option value="BTU">BTU</option>
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-primary" data-ng-click="objChange()" >Generate</button>
+        <a href="javascript:exportTableToExcel('bdQOPTbl', 'BDQOP')" class="btn btn-md btn-primary clearfix">Export to Excel</a>
+    </div>
+</div>
+
+<hr/>
+<div class="row">
+    <div class="col-md-12">
+
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="bdQOPTbl">
+                <thead>
+                    <tr>
+                        <td rowspan="3">Date</td>
+                        <td colspan="3">Total CMS Received</td>
+                        <td colspan="4">Municipal</td>
+                        <td colspan="4">RoRo</td>
+                        <td colspan="4">SW</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">Municipal</td>
+                        <td rowspan="2">RORO</td>
+                        <td rowspan="2">SW</td>
+                        <td rowspan="2">Total Response BD to customer within 24 Hours of Complaint Lodged</td>
+                        <td rowspan="2">Total Response BD to customer after 24 Hours of Complaint Lodged</td>
+                        <td colspan=2>Percentage(%) of Compliance Achieved</td>
+                        <td rowspan="2">Total Response BD to customer within 24 Hours of Complaint Lodged</td>
+                        <td rowspan="2">Total Response BD to customer after 24 Hours of Complaint Lodged</td>
+                        <td colspan="2">Percentage(%) of Compliance Achieved</td>
+                        <td rowspan="2">Total Response BD to customer within 24 Hours of Complaint Lodged</td>
+                        <td rowspan="2">Total Response BD to customer after 24 Hours of Complaint Lodged</td>
+                        <td colspan="2">Percentage(%) of Compliance Achieved</td>
+                    </tr>
+                    <tr>
+                        <td>Yes</td>
+                        <td>No</td>
+                        <td>Yes</td>
+                        <td>No</td>
+                        <td>Yes</td>
+                        <td>No</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{firstWeekStart}} - {{firstWeekEnd}}</td>
+                        <td>{{firstMW}}</td>
+                        <td>{{firstRoro}}</td>
+                        <td>{{firstSW}}</td>
+                        <td>{{firstMWAchieved}}</td>
+                        <td>{{firstMWNotAchieved}}</td>
+                        <td>{{firstMWAchieved/(firstMWAchieved + firstMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{firstMWNotAchieved/(firstMWAchieved + firstMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{firstRoroAchieved}}</td>
+                        <td>{{firstRoroNotAchieved}}</td>
+                        <td>{{firstRoroAchieved/(firstRoroAchieved + firstRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{firstRoroNotAchieved/(firstRoroAchieved + firstRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{firstSWAchieved}}</td>
+                        <td>{{firstSWNotAchieved}}</td>
+                        <td>{{firstSWAchieved/(firstSWAchieved + firstSWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{firstSWNotAchieved/(firstSWAchieved + firstSWNotAchieved)*100 | number:2}} %</td>
+                    </tr>
+                    <tr>
+                        <td>{{secondWeekStart}} - {{secondWeekEnd}}</td>
+                        <td>{{secondMW}}</td>
+                        <td>{{secondRoro}}</td>
+                        <td>{{secondSW}}</td>
+                        <td>{{secondMWAchieved}}</td>
+                        <td>{{secondMWNotAchieved}}</td>
+                        <td>{{secondMWAchieved/(secondMWAchieved + secondMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{secondMWNotAchieved/(secondMWAchieved + secondMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{secondRoroAchieved}}</td>
+                        <td>{{secondRoroNotAchieved}}</td>
+                        <td>{{secondRoroAchieved/(secondRoroAchieved + secondRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{secondRoroNotAchieved/(secondRoroAchieved + secondRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{secondSWAchieved}}</td>
+                        <td>{{secondSWNotAchieved}}</td>
+                        <td>{{secondSWAchieved/(secondSWAchieved + secondSWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{secondSWNotAchieved/(secondSWAchieved + secondSWNotAchieved)*100 | number:2}} %</td>
+                    </tr>
+                    <tr>
+                        <td>{{thirdWeekStart}} - {{thirdWeekEnd}}</td>
+                        <td>{{thirdMW}}</td>
+                        <td>{{thirdRoro}}</td>
+                        <td>{{thirdSW}}</td>
+                        <td>{{thirdMWAchieved}}</td>
+                        <td>{{thirdMWNotAchieved}}</td>
+                        <td>{{thirdMWAchieved/(thirdMWAchieved + thirdMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{thirdMWNotAchieved/(thirdMWAchieved + thirdMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{thirdRoroAchieved}}</td>
+                        <td>{{thirdRoroNotAchieved}}</td>
+                        <td>{{thirdRoroAchieved/(thirdRoroAchieved + thirdRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{thirdRoroNotAchieved/(thirdRoroAchieved + thirdRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{thirdSWAchieved}}</td>
+                        <td>{{thirdSWNotAchieved}}</td>
+                        <td>{{thirdSWAchieved/(thirdSWAchieved + thirdSWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{thirdSWNotAchieved/(thirdSWAchieved + thirdSWNotAchieved)*100 | number:2}} %</td>
+                    </tr>
+                    <tr>
+                        <td>{{fourthWeekStart}} - {{fourthWeekEnd}}</td>
+                        <td>{{fourthMW}}</td>
+                        <td>{{fourthRoro}}</td>
+                        <td>{{fourthSW}}</td>
+                        <td>{{fourthMWAchieved}}</td>
+                        <td>{{fourthMWNotAchieved}}</td>
+                        <td>{{fourthMWAchieved/(fourthMWAchieved + fourthMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fourthMWNotAchieved/(fourthMWAchieved + fourthMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fourthRoroAchieved}}</td>
+                        <td>{{fourthRoroNotAchieved}}</td>
+                        <td>{{fourthRoroAchieved/(fourthRoroAchieved + fourthRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fourthRoroNotAchieved/(fourthRoroAchieved + fourthRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fourthSWAchieved}}</td>
+                        <td>{{fourthSWNotAchieved}}</td>
+                        <td>{{fourthSWAchieved/(fourthSWAchieved + fourthSWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fourthSWNotAchieved/(fourthSWAchieved + fourthSWNotAchieved)*100 | number:2}} %</td>
+                    </tr>
+                    <tr>
+                        <td>{{fifthWeekStart}} - {{fifthWeekEnd}}</td>
+                        <td>{{fifthMW}}</td>
+                        <td>{{fifthRoro}}</td>
+                        <td>{{fifthSW}}</td>
+                        <td>{{fifthMWAchieved}}</td>
+                        <td>{{fifthMWNotAchieved}}</td>
+                        <td>{{fifthMWAchieved/(fifthMWAchieved + fifthMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fifthMWNotAchieved/(fifthMWAchieved + fifthMWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fifthRoroAchieved}}</td>
+                        <td>{{fifthRoroNotAchieved}}</td>
+                        <td>{{fifthRoroAchieved/(fifthRoroAchieved + fifthRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fifthRoroNotAchieved/(fifthRoroAchieved + fifthRoroNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fifthSWAchieved}}</td>
+                        <td>{{fifthSWNotAchieved}}</td>
+                        <td>{{fifthSWAchieved/(fifthSWAchieved + fifthSWNotAchieved)*100 | number:2}} %</td>
+                        <td>{{fifthSWNotAchieved/(fifthSWAchieved + fifthSWNotAchieved)*100 | number:2}} %</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+    function exportTableToExcel(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        
+        // Specify file name
+        filename = filename?filename+'.xls':'data.xls';
+        
+        // Create download link element
+        downloadLink = document.createElement("a");
+        
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+        
+            // Setting the file name
+            downloadLink.download = filename;
+            
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+</script>  
