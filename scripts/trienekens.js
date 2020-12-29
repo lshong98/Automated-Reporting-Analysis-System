@@ -602,6 +602,9 @@ app.service('storeDataService', function () {
             "feedback": {
                 "view": 'A'
             },
+            "cssInfo": {
+                "view": 'A'
+            },
             "enquiry": {
                 "view": 'A'
             },
@@ -1889,6 +1892,10 @@ app.run(function ($rootScope) {
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
     };
 });
+app.controller('cssInfoCtrl', function($scope, $http, storeDataService) {
+    'use strict';
+    console.log("abc");
+});
 
 //Customer Service Pages Controller
 app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window, $filter, storeDataService) {
@@ -2428,46 +2435,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         });
     };
 
-    // $scope.getCommercialFeedback = function () {
-    //     socket.emit('commercial satisfaction');
-    //     $http.get('/customerFeedbackCommercial').then(function (response) {
-    //         console.log(response.data);
-    //         $scope.reviewsCommercial = response.data;
-    //         $scope.totalItemsCommercial = response.data.length;
-    //         $scope.collPromptCommercial = (response.data.collPrompt / 3) * 100;
-    //         $scope.compRateCommercial = (response.data.compRate / 3) * 100;
-    //         $scope.teamEffCommercial = (response.data.teamEff / 3) * 100;
-    //         $scope.cleanliness = (response.data.cleanliness / 3) * 100;
-    //         $scope.physicalCond = (response.data.physicalCond / 3) * 100;
-    //         $scope.qryRespCommercial = (response.data.qryResp / 3) * 100;
-
-    //         $scope.options = {
-    //             animate: {
-    //                 duration: 0,
-    //                 enabled: false
-    //             },
-    //             barColor: '#2C3E50',
-    //             scaleColor: false,
-    //             lineWidth: 20,
-    //             lineCap: 'circle'
-    //         };
-
-    //         $http.get('/readSatisfactionCommercial').then(function (repsonse) {
-    //             console.log(response.data);
-    //         }, function (err) {
-    //             console.log(err);
-    //         });
-    //     }, function (err) {
-    //         console.log(err);
-    //     });
-
-    //     $http.get('/unreadSatisfaction').then(function(response){
-    //         $scope.unreadMunicipal = response.data.municipal;
-    //         $scope.unreadCommercial = response.data.commercial;
-    //         $scope.unreadScheduled = response.data.scheduled;
-    //     });
-    // };
-
     $scope.getCommercialFeedback = function () {
         //socket.emit('commercial satisfaction');
         $http.post('/customerFeedbackCommercial', $scope.filters).then(function (response) {
@@ -2692,44 +2659,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         });
     };
 
-    // $scope.getScheduledFeedback = function () {
-    //     socket.emit('scheduled satisfaction');
-    //     $http.get('/customerFeedbackScheduled').then(function (response) {
-    //         console.log(response.data);
-    //         $scope.reviewsScheduled = response.data;
-    //         $scope.totalItemsScheduled = response.data.length;
-    //         $scope.compRateScheduled = (response.data.compRate / 3) * 100;
-    //         $scope.teamEffScheduled = (response.data.teamEff / 3) * 100;
-    //         $scope.healthAdh = (response.data.healthAdh / 3) * 100;
-    //         $scope.regAdh = (response.data.regAdh / 3) * 100;
-    //         $scope.qryRespScheduled = (response.data.qryResp / 3) * 100;
-
-    //         $scope.options = {
-    //             animate: {
-    //                 duration: 0,
-    //                 enabled: false
-    //             },
-    //             barColor: '#2C3E50',
-    //             scaleColor: false,
-    //             lineWidth: 20,
-    //             lineCap: 'circle'
-    //         };
-
-    //         $http.get('/readSatisfactionScheduled').then(function (repsonse) {
-    //             console.log(response.data);
-    //         }, function (err) {
-    //             console.log(err);
-    //         });
-    //     }, function (err) {
-    //         console.log(err);
-    //     });
-
-    //     $http.get('/unreadSatisfaction').then(function(response){
-    //         $scope.unreadMunicipal = response.data.municipal;
-    //         $scope.unreadCommercial = response.data.commercial;
-    //         $scope.unreadScheduled = response.data.scheduled;
-    //     });
-    // };
 
     $scope.getScheduledFeedback = function () {
         //socket.emit('scheduled satisfaction');
@@ -5347,6 +5276,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "feedback": {
             "view": 'I'
         },
+        "cssInfo": {
+            "view": 'I'
+        },
         "enquiry": {
             "view": 'I'
         },
@@ -5649,6 +5581,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "feedback": {
                             "view": 'A'
                         },
+                        "cssInfo": {
+                            "view": 'A'
+                        },
                         "enquiry": {
                             "view": 'A'
                         },
@@ -5870,6 +5805,9 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             'Export': 'I'
                         },
                         "feedback": {
+                            "view": 'I'
+                        },
+                        "cssInfo": {
                             "view": 'I'
                         },
                         "enquiry": {
@@ -10453,6 +10391,10 @@ app.controller('complaintscmsBDStatisticsController', function($scope, $filter, 
         });
         $http.post("/getCmsBDStatisticsSW", obj).then(function(response){
             $scope.swData = response.data;
+        });
+
+        $http.post("/getCmsSource", obj).then(function(response){
+            $scope.source = response.data;
         });
     }
 

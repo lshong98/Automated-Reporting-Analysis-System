@@ -31,7 +31,61 @@
         <button class="btn btn-primary" data-ng-click="objChange()" >Generate</button>
     </div>
 </div>
-
+<hr/>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered" id="sourceTbl">
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Telephone</td>
+                    <td>{{source.telephone}}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{source.email}}</td>
+                </tr>
+                <tr>
+                    <td>Fax</td>
+                    <td>{{source.fax}}</td>
+                </tr>
+                <tr>
+                    <td>MBKS</td>
+                    <td>{{source.mbks}}</td>
+                </tr>
+                <tr>
+                    <td>DBKU</td>
+                    <td>{{source.dbku}}</td>
+                </tr>
+                <tr>
+                    <td>MPP</td>
+                    <td>{{source.mpp}}</td>
+                </tr>
+                <tr>
+                    <td>MDS</td>
+                    <td>{{source.mds}}</td>
+                </tr>
+                <tr>
+                    <td>Talikhidmat</td>
+                    <td>{{source.talikhidmat}}</td>
+                </tr>
+                <tr>
+                    <td>Social Media</td>
+                    <td>{{source.socialMedia}}</td>
+                </tr>
+                <tr>
+                    <td>Mobile Apps</td>
+                    <td>{{source.apps}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 <hr/>
 <ul class="nav nav-tabs">
     <li class="nav-item"><a class="nav-link active" data-toggle="tab" data-target="#mw">MW</a></li>

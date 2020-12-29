@@ -1064,6 +1064,46 @@ app.post('/getCmsStatisticsCategorySpillage',function(req, res){
     });
 });
 
+app.post('/getCmsSource', function(req,res){
+    'use strict';
+    var startDate = req.body.startDate;
+    var endDate = req.body.endDate;
+    var result = {};
+
+    f.waterfallQuery("SELECT COUNT(*) AS 'telephone' FROM tblcomplaintofficer WHERE sorce = 'Telephone' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'").then(function(response){
+        result.telephone = response.telephone;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'email' FROM tblcomplaintofficer WHERE sorce = 'Email' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'")
+    }).then(function(response){
+        result.email = response.email;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'fax' FROM tblcomplaintofficer WHERE sorce = 'Fax' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.fax = response.fax;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'mbks' FROM tblcomplaintofficer WHERE sorce = 'MBKS' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.mbks = response.mbks;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'dbku' FROM tblcomplaintofficer WHERE sorce = 'DBKU' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.dbku = response.dbku;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'mpp' FROM tblcomplaintofficer WHERE sorce = 'MPP' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.mpp = response.mpp;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'mds' FROM tblcomplaintofficer WHERE sorce = 'MDS' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.mds = response.mds;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'talikhidmat' FROM tblcomplaintofficer WHERE sorce = 'Talikhidmat' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.talikhidmat = response.talikhidmat;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'socialMedia' FROM tblcomplaintofficer WHERE sorce = 'Social Media' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.socialMedia = response.socialMedia;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'apps' FROM tblcomplaintofficer WHERE sorce = 'Mobile App' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(response){
+        result.apps = response.apps;
+        res.send(result);
+        res.end();
+    })
+});
+
 app.post('/getCmsBDStatisticsMW', function(req,res){
     'use strict';
     var startDate = req.body.startDate;

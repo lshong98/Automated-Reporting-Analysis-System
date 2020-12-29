@@ -282,6 +282,10 @@ app.get('/customer-feedback', function (req, res) {
     'use strict';
     res.sendFile('pages/customer-feedback.html', {root: __dirname});
 });
+app.get('/cssInfo', function (req, res) {
+    'use strict';
+    res.sendFile('pages/cssInfo.html', {root: __dirname});
+});
 app.get('/boundary/:areaID', function (req, res) {
     'use strict';
     res.sendFile('pages/boundary.html', {root: __dirname});
