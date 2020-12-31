@@ -2935,9 +2935,9 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
                     $scope.getMunicipalFeedback(); //REFRESH DETAILS
 
                     angular.element('#municipal-form').modal('toggle');
+                    $scope.resetFormM();
                 }
             });
-            $scope.resetFormM();
         } else if (type == "commercial") {
             $http.post('/addCommercial', $scope.c).then(function (response) {
                 var returnedData = response.data;
@@ -2951,9 +2951,10 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
                     $scope.getCommercialFeedback(); //REFRESH DETAILS
 
                     angular.element('#commercial-form').modal('toggle');
+                    $scope.resetFormC();
                 }
             });
-            $scope.resetFormM();
+            
         } else {
             $http.post('/addScheduled', $scope.s).then(function (response) {
                 var returnedData = response.data;
@@ -2967,9 +2968,10 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
                     $scope.getScheduledFeedback(); //REFRESH DETAILS
 
                     angular.element('#scheduled-form').modal('toggle');
+                    $scope.resetFormS();
                 }
             });
-            $scope.resetFormS();
+            
         }
     };
 });
@@ -9966,6 +9968,11 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
 
     $scope.cmsDailyReportList = [];
 
+    $scope.viewComp = function (coID) {
+        setTimeout(function () {
+            window.location.href = '#/complaint-officer-detail/' + coID;
+        }, 500);
+    };
 
     $scope.request = function(obj){
         $http.post('/getCmsDailyReportList', obj).then(function(response){
@@ -9981,6 +9988,10 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
 
             for(var i=0; i<$scope.cmsDailyReportList.length; i++){
                 $scope.cmsDailyReportList[i].complaintDate = $filter('date')($scope.cmsDailyReportList[i].complaintDate, 'yyyy-MM-dd');
+
+                if($scope.cmsDailyReportList[i].forwardSubconDateTime == '' || $scope.cmsDailyReportList[i].forwardSubconDateTime == null){
+                    $scope.cmsDailyReportList[i].forwardSubconDateTime = '-';
+                }
 
                 //formulate for subcon column
                 if($scope.cmsDailyReportList[i].subcon == "Trienekens"){
@@ -10075,6 +10086,10 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                     for(var c=0; c < wasteArray.length - 1; c++){
                         $scope.cmsDailyReportList[i].wcdSentences += wasteArray[c].split(",")[0] + " - " + wasteArray[c].split(",")[1] + ".\n";
                     }  
+                }
+
+                if($scope.cmsDailyReportList[i].wcdSentences == ''){
+                    $scope.cmsDailyReportList[i].wcdSentences = '-';
                 }
 
                 //filtering
@@ -10195,9 +10210,9 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         var fourthWeekLastDayDate = new Date();
         var fifthWeekLastDayDate = new Date();
         var dateFlag = new Date();
+
         dateFlag.setFullYear($scope.obj.startDate.getFullYear());
-        dateFlag.setMonth($scope.obj.startDate.getMonth());
-        dateFlag.setDate($scope.obj.startDate.getDate());
+        dateFlag.setMonth($scope.obj.startDate.getMonth(),$scope.obj.startDate.getDate());
 
         firstWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
         secondWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
@@ -10205,11 +10220,11 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         fourthWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
         fifthWeekLastDayDate.setFullYear($scope.obj.startDate.getFullYear());
 
-        firstWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
-        secondWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
-        thirdWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
-        fourthWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
-        fifthWeekLastDayDate.setMonth($scope.obj.startDate.getMonth());
+        firstWeekLastDayDate.setMonth($scope.obj.startDate.getMonth(),1);
+        secondWeekLastDayDate.setMonth($scope.obj.startDate.getMonth(),1);
+        thirdWeekLastDayDate.setMonth($scope.obj.startDate.getMonth(),1);
+        fourthWeekLastDayDate.setMonth($scope.obj.startDate.getMonth(),1);
+        fifthWeekLastDayDate.setMonth($scope.obj.startDate.getMonth(),1);
 
         for(var w=0; w<7; w++){
             if(dateFlag.getDay() == 0){
@@ -10237,7 +10252,7 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         $scope.fourthWeekEnd = $filter('date')(fourthWeekLastDayDate, "yyyy-MM-dd");
         $scope.fifthWeekStart = $filter('date')(new Date(fourthWeekLastDayDate).setDate(fourthWeekLastDayDate.getDate() + 1), "yyyy-MM-dd");
         $scope.fifthWeekEnd = $filter('date')(fifthWeekLastDayDate, "yyyy-MM-dd");
-
+        
         $http.post('/getCMSQOP', $scope.obj).then(function(response){
 
             for(var i =0; i<response.data.length; i++){
@@ -11392,7 +11407,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.areaUnderList = ["Trienekens", "Mega Power", "TAK"];
         } else if ($scope.detailObj.services === "3") { //Hazardous Waste
             $scope.showAreaLogistics = false;
-            $scope.areaUnderList = ["Trienekens", "Inna Tech", "Petro Jadi", "Others"];
+            $scope.areaUnderList = ["Trienekens", "InnaTech", "Petro Jadi", "Others"];
         }
 
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');

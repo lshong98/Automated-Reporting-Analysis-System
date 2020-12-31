@@ -53,8 +53,8 @@
                         <th>Area Code</th>
                         <th>Driver</th>
                         <th>Truck</th>
-                        <th>Date Time feedback</th>
-                        <th>Forward Date(contractor)</th>
+                        <th>Feedback (Date/Time)</th>
+                        <th>Forward to Sub-Contractor (Date/Time)</th>
                         <th>Waste Collected On</th>
                         <th>Reason</th>
                         <th>Remarks</th>
@@ -62,7 +62,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="c in cmsDailyReportList">
+                    <tr data-ng-repeat="c in cmsDailyReportList" data-ng-click="viewComp(c.coID)">
                         <td data-ng-bind="c.complaintDate"></td>
                         <td data-ng-bind="c.complaintTime"></td>
                         <td data-ng-bind="c.name"></td>

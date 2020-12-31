@@ -45,7 +45,7 @@ app.post('/updateComplaintDetailsStatus', function(req, res) {
             if(histdata[0].histUpdateList == null){
                 histdata[0].histUpdateList = "";
             }
-            var histUpdateList = histdata[0].histUpdateList + "Logistics update status on: " + req.body.statusdate + ", " + req.body.statustime + " - " + req.body.status +  "\n";
+            var histUpdateList = histdata[0].histUpdateList + "Logistics update CMS Status on: " + req.body.statusdate + ", " + req.body.statustime + " - " + req.body.status +  "\n";
 
             var sql = "UPDATE tblcomplaintofficer SET status = '" + req.body.status + "', readState = 'u', logsReadState = 'r', histUpdateList = '" + histUpdateList + "' WHERE coID = '" + req.body.coID + "' ";
 
@@ -109,7 +109,7 @@ app.post('/updateCMSStatus', function(req, res) {
             if(histdata[0].histUpdateList == null){
                 histdata[0].histUpdateList = "";
             }            
-            var histUpdateList = histdata[0].histUpdateList + "CMS status update on: " + req.body.cmsdate + ", " + req.body.cmstime + " - " + req.body.cmsstatus + "\n";
+            var histUpdateList = histdata[0].histUpdateList + "CMS validity update on: " + req.body.cmsdate + ", " + req.body.cmstime + " - " + req.body.cmsstatus + "\n";
 
             var sql = "UPDATE tblcomplaintofficer SET cmsStatus = '" + req.body.cmsstatus + "', histUpdateList = '" + histUpdateList + "' WHERE coID = '" + req.body.coID + "' ";
 
@@ -1213,7 +1213,7 @@ app.post('/getCmsBDStatisticsSW', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'tsValid' FROM tblcomplaintofficer WHERE forwardedSub = 'Trienekens' AND services = '3' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' AND cmsStatus = '1'");
     }).then(function(response){
         result.tsValid = response.tsValid;
-        return f.waterfallQuery("SELECT COUNT(*) AS 'innatechValid' FROM tblcomplaintofficer WHERE forwardedSub = 'Inna Tech' AND services = '3' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' AND cmsStatus = '1'");
+        return f.waterfallQuery("SELECT COUNT(*) AS 'innatechValid' FROM tblcomplaintofficer WHERE forwardedSub = 'InnaTech' AND services = '3' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' AND cmsStatus = '1'");
     }).then(function(response){
         result.innatechValid = response.innatechValid;
         return f.waterfallQuery("SELECT COUNT(*) AS 'petroJadiValid' FROM tblcomplaintofficer WHERE forwardedSub = 'Petro Jadi' AND services = '3' AND activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' AND cmsStatus = '1'");
