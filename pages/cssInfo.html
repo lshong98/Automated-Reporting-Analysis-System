@@ -1,1 +1,170 @@
-<h1>test</h1>
+<h5>CSS Info Details</h5>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="compactor-tab" data-toggle="tab" data-target="#compactorTab" role="tab" aria-controls="compactorTab" aria-selected="true">Compactor</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="roro-tab" data-toggle="tab" data-target="#roroTab" role="tab" aria-controls="roroTab" aria-selected="false">Roro</a>
+            </li>            
+            <li class="nav-item">
+                <a class="nav-link" id="scheduled-tab" data-toggle="tab" data-target="#scheduleTab" role="tab" aria-controls="scheduleTab" aria-selected="false">Scheduled waste</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tab-content" id="myTab">
+            <div class="tab-pane fade show active" id="compactorTab" role="tabpanel" aria-labelledby="compactor-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchCompactorFilter"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Location</th>
+                                        <th>Name</th>
+                                        <th>Contact</th>
+                                        <th>Quality of Services</th>
+                                        <th>Adherence to Safe Working Practices</th>
+                                        <th>Promptness of Collection</th>
+                                        <th>Bin Handling</th>
+                                        <th>Spillage Control</th>
+                                        <th>Query Response</th>
+                                        <th>Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="c in filterCompactorList | filter: searchCompactor | offset: (compactorCurrentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                        <td>{{c.date}}</td>
+                                        <td>{{c.location}}</td>
+                                        <td>{{c.name}}</td>
+                                        <td>{{c.contact}}</td>
+                                        <td>{{c.companyRating}}</td>
+                                        <td>{{c.teamEfficiency}}</td>
+                                        <td>{{c.collectionPromptness}}</td>
+                                        <td>{{c.binHandling}}</td>
+                                        <td>{{c.spillageControl}}</td>
+                                        <td>{{c.queryResponse}}</td>
+                                        <td>{{c.comment}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul uib-pagination boundary-links="true" total-items="compactorTotalItems" ng-model="compactorCurrentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="roroTab" role="tabpanel" aria-labelledby="roro-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchRoroFilter"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Location</th>
+                                        <th>Name</th>
+                                        <th>Contact</th>
+                                        <th>Quality of Services</th>
+                                        <th>Adherence to Safe Working Practices</th>
+                                        <th>Promptness of Collection</th>
+                                        <th>Condition of Container (Cleanliness)</th>
+                                        <th>Condition of Container (Physical Working Condition)</th>                                
+                                        <th>Query Response</th>
+                                        <th>Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="r in filterRoroList | filter: searchRoro | offset: (roroCurrentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                            <td>{{r.date}}</td>
+                                            <td>{{r.location}}</td>
+                                            <td>{{r.name}}</td>
+                                            <td>{{r.contact}}</td>
+                                            <td>{{r.companyRating}}</td>
+                                            <td>{{r.teamEfficiency}}</td>
+                                            <td>{{r.collectionPromptness}}</td>
+                                            <td>{{r.cleanliness}}</td>
+                                            <td>{{r.physicalCondition}}</td>
+                                            <td>{{r.queryResponse}}</td>
+                                            <td>{{r.comment}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul uib-pagination boundary-links="true" total-items="roroTotalItems" ng-model="roroCurrentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="scheduleTab" role="tabpanel" aria-labelledby="scheduled-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchScheduledFilter"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Location</th>
+                                        <th>Name</th>
+                                        <th>Contact</th>
+                                        <th>Efficiency of our service team</th>
+                                        <th>Adherence to Health, Safety, Security and Environmental Standards</th>
+                                        <th>Adherence to Regulations</th>                              
+                                        <th>Query Response</th>
+                                        <th>Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="s in filterScheduledList | filter: searchScheduled | offset: (scheduledCurrentPage - 1) * itemsPerPage | limitTo: itemsPerPage">
+                                        <td>{{s.date}}</td>
+                                        <td>{{s.location}}</td>
+                                        <td>{{s.name}}</td>
+                                        <td>{{s.contact}}</td>
+                                        <td>{{s.teamEfficiency}}</td>
+                                        <td>{{s.healthAdherence}}</td>
+                                        <td>{{s.regulationsAdherence}}</td>
+                                        <td>{{s.queryResponse}}</td>
+                                        <td>{{s.comment}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul uib-pagination boundary-links="true" total-items="scheduledTotalItems" ng-model="scheduledCurrentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

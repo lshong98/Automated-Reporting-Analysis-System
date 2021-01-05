@@ -1892,9 +1892,104 @@ app.run(function ($rootScope) {
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
     };
 });
-app.controller('cssInfoCtrl', function($scope, $http, storeDataService) {
+app.controller('cssInfoCtrl', function($scope, $http, $filter, storeDataService) {
     'use strict';
-    console.log("abc");
+    
+    $scope.searchCompactorFilter = '';
+    $scope.searchRoroFilter = '';
+    $scope.searchScheduledFilter = '';
+    $scope.compactorCurrentPage = 1; //Initial current page to 1
+    $scope.roroCurrentPage = 1; //Initial current page to 1
+    $scope.scheduledCurrentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 10; //Record number each page
+    $scope.maxSize = 10; //Show the number in page
+
+    $scope.filterCompactorList = [];
+    $scope.filterRoroList = [];
+    $scope.filterScheduledList = [];
+
+    $http.get('/getCSSInfoCompactor').then(function(response){
+        $scope.compactorInfo = response.data;      
+        
+        for(var c = 0; c < $scope.compactorInfo.length; c++){
+            $scope.compactorInfo[c].date = $filter('date')($scope.compactorInfo[c].date, 'yyyy-MM-dd HH:mm:ss');
+        }
+
+        $scope.searchCompactor = function(compactor){
+            return (compactor.date + compactor.location + compactor.name + compactor.contact + compactor.comment).toUpperCase().indexOf($scope.searchCompactorFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.filterCompactorList = angular.copy($scope.compactorInfo);
+        $scope.compactorTotalItems = $scope.filterCompactorList.length;
+        $scope.compactorGetData = function() {
+            return $filter('filter')($scope.filterCompactorList, $scope.searchCompactorFilter);
+        };
+        
+        //filter pagination count
+        $scope.$watch('searchCompactorFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.compactorCurrentPage = 1;
+                $scope.compactorTotalItems = $scope.compactorGetData().length;
+            }
+            return vm;
+        }, true);
+    })
+
+    $http.get('/getCSSInfoRoro').then(function(response){
+        $scope.roroInfo = response.data;
+
+        for(var r=0; r<$scope.roroInfo.length; r++){
+            $scope.roroInfo[r].date = $filter('date')($scope.roroInfo[r].date, 'yyyy-MM-dd HH:mm:ss');
+        }
+
+        $scope.searchRoro = function(roro){
+            return (roro.date + roro.location + roro.name + roro.contact + roro.comment).toUpperCase().indexOf($scope.searchRoroFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.filterRoroList = angular.copy($scope.roroInfo);
+        $scope.roroTotalItems = $scope.filterRoroList.length;
+        $scope.roroGetData = function() {
+            return $filter('filter')($scope.filterRoroList, $scope.searchRoroFilter);
+        };
+
+        //filter pagination count
+        $scope.$watch('searchRoroFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.roroCurrentPage = 1;
+                $scope.roroTotalItems = $scope.roroGetData().length;
+            }
+            return vm;
+        }, true);
+    })
+
+    $http.get('/getCSSInfoScheduled').then(function(response){
+        $scope.scheduledInfo = response.data;
+        for(var s=0; s<$scope.scheduledInfo.length; s++){
+            $scope.scheduledInfo[s].date = $filter('date')($scope.scheduledInfo[s].date, 'yyyy-MM-dd HH:mm:ss');
+        }
+
+        $scope.searchScheduled = function(scheduled){
+            return (scheduled.date + scheduled.location + scheduled.name + scheduled.contact + scheduled.comment).toUpperCase().indexOf($scope.searchScheduledFilter.toUpperCase()) >= 0;
+        }
+
+        $scope.filterScheduledList = angular.copy($scope.scheduledInfo);
+        $scope.scheduledTotalItems = $scope.filterScheduledList.length;
+        $scope.scheduledGetData = function() {
+            return $filter('filter')($scope.filterScheduledList, $scope.searchScheduledFilter);
+        };
+
+        //filter pagination count
+        $scope.$watch('searchScheduledFilter', function(newVal, oldVal) {
+            var vm = this;
+            if (oldVal !== newVal) {
+                $scope.scheduledCurrentPage = 1;
+                $scope.scheduledTotalItems = $scope.scheduledGetData().length;
+            }
+            return vm;
+        }, true);        
+    })
 });
 
 //Customer Service Pages Controller

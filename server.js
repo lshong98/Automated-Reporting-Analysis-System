@@ -1230,6 +1230,42 @@ app.post('/readComplaint', function(req,res){
     });
 });
 
+app.get('/getCSSInfoCompactor', function(req, res){
+    'use strict';
+
+    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', collectionPromptness AS 'collectionPromptness', binHandling AS 'binHandling', spillageControl AS 'spillageControl', queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_compactor ORDER BY submissionDate DESC";
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.send(result);
+    });
+});
+
+app.get('/getCSSInfoRoro', function(req, res){
+    'use strict';
+
+    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', collectionPromptness AS 'collectionPromptness', cleanliness AS 'cleanliness', physicalCondition AS 'physicalCondition', queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_roro ORDER BY submissionDate DESC";
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.send(result);
+    });
+});
+
+app.get('/getCSSInfoScheduled', function(req, res){
+    'use strict';
+
+    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', healthAdherence AS 'healthAdherence', regulationsAdherence AS 'regulationsAdherence',  queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_scheduled ORDER BY submissionDate DESC";
+    database.query(sql, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        res.send(result);
+    });
+});
+
 app.post('/addMunicipal', function(req, res) {
     'use strict';
     var sql = "INSERT INTO tblsatisfaction_compactor(submissionDate, location, surveyType, name, companyName, address, number, companyRating, teamEfficiency, collectionPromptness, binHandling, spillageControl, queryResponse, extraComment, readStat) VALUES('" + req.body.formattedDate + "','" + req.body.location + "','" + req.body.surveyType + "','" + req.body.name + "','" + req.body.company + "','" + req.body.address + "','" + req.body.number + "','" + req.body.compRate + "','" + req.body.teamEff + "','" + req.body.collPrompt + "','" + req.body.binHand + "','" + req.body.spillCtrl + "','" + req.body.qryResp + "','" + req.body.extraComment + "','r')";
