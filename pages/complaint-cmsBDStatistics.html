@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <h1>BD CMS Statistics</h1>
+        <h1>BD CMS Monthly Report</h1>
     </div>
 </div> 
 
@@ -145,22 +145,22 @@
                             </th>
                         </tr>
                         <tr>
-                            <td>1. Waste Not Collected</td>
+                            <td>Waste Not Collected</td>
                             <td>{{mwData.wasteNotCollected}}</td>
                             <td>{{mwData.wasteNotCollected / (mwData.wasteNotCollected + mwData.binNotPushBack + mwData.spillageWaste + mwData.spillageLeachate + mwData.otherType) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>2. Bin not pushed back to its original location</td>
+                            <td>Bin not pushed back to its original location</td>
                             <td>{{mwData.binNotPushBack}}</td>
                             <td>{{mwData.binNotPushBack / (mwData.wasteNotCollected + mwData.binNotPushBack + mwData.spillageWaste + mwData.spillageLeachate + mwData.otherType) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>3. Spillage of waste</td>
+                            <td>Spillage of waste</td>
                             <td>{{mwData.spillageWaste}}</td>
                             <td>{{mwData.spillageWaste / (mwData.wasteNotCollected + mwData.binNotPushBack + mwData.spillageWaste + mwData.spillageLeachate + mwData.otherType) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>4. Spillage of leachate water</td>
+                            <td>Spillage of leachate water</td>
                             <td>{{mwData.spillageLeachate}}</td>
                             <td>{{mwData.spillageLeachate / (mwData.wasteNotCollected + mwData.binNotPushBack + mwData.spillageWaste + mwData.spillageLeachate + mwData.otherType) * 100 | number:2}} %</td>
                         </tr>
@@ -243,22 +243,22 @@
                             </th>
                         </tr>
                         <tr>
-                            <td>5. Container not sent</td>
+                            <td>Container not sent</td>
                             <td>{{roroData.containerNotSent}}</td>
                             <td>{{roroData.containerNotSent / (roroData.containerNotSent + roroData.containerNotExchanged + roroData.containerNotPulled + roroData.containerNotEmptied + roroData.otherType) * 100 | number:2}} %<td>
                         </tr>
                         <tr>
-                            <td>6. Container not exchanged</td>
+                            <td>Container not exchanged</td>
                             <td>{{roroData.containerNotExchanged}}</td>
                             <td>{{roroData.containerNotExchanged / (roroData.containerNotSent + roroData.containerNotExchanged + roroData.containerNotPulled + roroData.containerNotEmptied + roroData.otherType) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>7. Container not pulled</td>
+                            <td>Container not pulled</td>
                             <td>{{roroData.containerNotPulled}}</td>
                             <td>{{roroData.containerNotPulled / (roroData.containerNotSent + roroData.containerNotExchanged + roroData.containerNotPulled + roroData.containerNotEmptied + roroData.otherType) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>8. Container not emptied</td>
+                            <td>Container not emptied</td>
                             <td>{{roroData.containerNotEmptied}}</td>
                             <td>{{roroData.containerNotEmptied / (roroData.containerNotSent + roroData.containerNotExchanged + roroData.containerNotPulled + roroData.containerNotEmptied + roroData.otherType) * 100 | number:2}} %</td>
                         </tr>
@@ -323,17 +323,17 @@
                             </th>
                         </tr>
                         <tr>
-                            <td>1. Waste not collected</td>
+                            <td>Waste not collected</td>
                             <td>{{swData.wasteNotCollected}}</td>
                             <td>{{swData.wasteNotCollected  / (swData.wasteNotCollected + swData.spillage + swData.incompleteDocs + swData.others) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>2. Spillage during collection</td>
+                            <td>Spillage during collection</td>
                             <td>{{swData.spillage}}</td>
                             <td>{{swData.spillage  / (swData.wasteNotCollected + swData.spillage + swData.incompleteDocs + swData.others) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>3. Incomplete documents/td>
+                            <td>Incomplete documents/td>
                             <td>{{swData.incompleteDocs}}</td>
                             <td>{{swData.incompleteDocs  / (swData.wasteNotCollected + swData.spillage + swData.incompleteDocs + swData.others) * 100 | number:2}} %</td>
                         </tr>

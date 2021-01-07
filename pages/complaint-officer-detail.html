@@ -153,14 +153,13 @@
             <button class="btn btn-primary" data-ng-click="reviewComplaintBD()" >Review</button>
             <button class="btn btn-danger" data-ng-click="backList()" >Back</button>
             <a href="javascript:exportPdf()" class="btn btn-md btn-success ">Print</a>
-            <button class="btn btn-danger" data-ng-show="showDeleteKch == 'A' || showDeleteBtu == 'A'" data-ng-click="deleteComplaint()" >Delete</button>
-    <!--        <button class="btn btn-success" data-ng-click="editComp(detailObj.coID)"><i class="fa fa-plus"></i> Edit</button>            -->
+            <button class="btn btn-danger" data-ng-show="showDeleteKch == 'A' || showDeleteBtu == 'A'" data-ng-click="deleteComplaint()" >Delete</button>         
         </div>
     </div>
 <div id="nodeToRenderAsPDF" style="padding-left: 20px;">
     <div class="row">
         <div class="col-md-12">
-            <h2>Details of Complaint</h2>        
+            <h2>CMS Details</h2>        
         </div>
     </div>
 
@@ -318,23 +317,10 @@
     <hr/>
     <br/>
 
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Forwarded to Logistics Date:</strong>
-        <p  class="mx-sm-3">{{detailObj.logisticsDate}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Forwarded to Logistics Time:</strong>
-        <p  class="mx-sm-3">{{detailObj.logisticsTime}}</p>
-    </div>
-
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Forwarded to Logistics By:</strong>
         <p  class="mx-sm-3">{{staffName}}</p>
     </div>
-
-
 
 <div data-ng-show="viewControl >= 2">
     <br/>
@@ -410,6 +396,16 @@
     </div>
     
     <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Feedback to BD (Date):</strong>
+        <p  class="mx-sm-3">{{detailObj.statusDate}}</p>
+    </div>
+
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Feedback to BD (Time):</strong>
+        <p  class="mx-sm-3">{{detailObj.statusTime}}</p>
+    </div>
+
+    <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Responded By:</strong>
         <p  class="mx-sm-3">{{logsStaffName}}</p>
     </div>  
@@ -422,16 +418,6 @@
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">CMS Status:</strong>
         <p  class="mx-sm-3">{{detailObj.status}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Forwarded Date:</strong>
-        <p  class="mx-sm-3">{{detailObj.statusDate}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Forwarded Time:</strong>
-        <p  class="mx-sm-3">{{detailObj.statusTime}}</p>
     </div>
     
     <div data-ng-show="viewControl == 2">

@@ -15,6 +15,17 @@
     <div class="col-md-3">
         <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="obj.endDate"/>
     </div>
+</div>
+
+<div class="form-group row">
+    <label for="services" class="col-md-1 col-form-label form-label-width">Services</label>
+    <div class="col-md-3">
+        <select id="services" class="form-control mx-sm-2" data-ng-model="obj.services">
+            <option value="1" selected>Compactor</option>
+            <option value="2">Hooklift</option>
+            <option value="3">Scheduled Waste</option>
+        </select>
+    </div>
     <div class="col-md-3 offset-md-5">
         <a href="javascript:exportTableToExcel('cmsDailyReportTbl')" class="btn btn-md btn-primary clearfix">Export to Excel</a>
     </div>
@@ -43,19 +54,19 @@
             <table class="table" id="cmsDailyReportTbl">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Complainant</th>
-                        <th>Type of Complaint</th>
+                        <th>CMS Lodged</th>
+                        <th>Services</th>
+                        <th>Name</th>
+                        <th>Details</th>
                         <th>TS</th>
                         <th>MP</th>
                         <th>TAK</th>
                         <th>Area Code</th>
                         <th>Driver</th>
                         <th>Truck</th>
-                        <th>Feedback (Date/Time)</th>
-                        <th>Forward to Sub-Contractor (Date/Time)</th>
-                        <th>Waste Collected On</th>
+                        <th>LG Date / Time</th>
+                        <th>Subcon Date/Time</th>
+                        <th>Waste Collected On (If Applicable)</th>
                         <th>Reason</th>
                         <th>Remarks</th>
                         <th>Reviewed By</th>
@@ -63,8 +74,8 @@
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="c in cmsDailyReportList" data-ng-click="viewComp(c.coID)">
-                        <td data-ng-bind="c.complaintDate"></td>
-                        <td data-ng-bind="c.complaintTime"></td>
+                        <td data-ng-bind="c.complaintDateTime"></td>
+                        <td data-ng-bind="c.servicesType"></td>
                         <td data-ng-bind="c.name"></td>
                         <td data-ng-bind="c.type"></td>
                         <td data-ng-bind="c.ts"></td>

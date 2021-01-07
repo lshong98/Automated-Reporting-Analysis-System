@@ -230,10 +230,6 @@ app.get('/complaint-officer-detail/:coID', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-officer-detail.html', {root: __dirname});
 });
-app.get('/complaint-officer-edit/:coID', function (req, res) {
-    'use strict';
-    res.sendFile('pages/complaint-officer-edit.html', {root: __dirname});
-});
 app.get('/complaint-detail/:complaintCode', function (req, res) {
     'use strict';
     res.sendFile('pages/complaint-detail.html', {root: __dirname});

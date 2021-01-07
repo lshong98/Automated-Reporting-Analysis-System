@@ -414,9 +414,9 @@ app.get('/getComplaintExportList', function(req, res){
 
 app.post('/getCmsDailyReportList', function(req, res){
     'use strict';
-    console.log(req.body.startDate);
-    console.log(req.body.endDate);
-    var sql="SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', tblcomplaintofficer.name AS 'name',CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDateTime', tblcomplaintofficer.type as 'type', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.under AS 'area', tblstaff.staffName AS 'driver', CONCAT(tblcomplaintofficer.statusDate,' ', tblcomplaintofficer.statusTime) AS 'feedbackDateTime', CONCAT(tblcomplaintofficer.forwardedDate,' ',tblcomplaintofficer.forwardedTime) AS 'forwardSubconDateTime', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblcomplaintofficer.remarks AS 'remarks', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview', tblcomplaintofficer.logisticsReviewDate AS 'logsReviewDate', tblcomplaintofficer.reason AS 'reason', tblcomplaintofficer.trucK AS 'truck' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.activeStatus = 1 AND (tblcomplaintofficer.services = '1' OR tblcomplaintofficer.services = '2') AND tblcomplaintofficer.zon = '" + req.body.zon + "' AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "' ORDER BY complaintDateTime DESC";
+
+    var sql="SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.name AS 'name',CONCAT(tblcomplaintofficer.complaintDate,' ',tblcomplaintofficer.complaintTime) AS 'complaintDateTime', tblcomplaintofficer.type as 'type', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.under AS 'area', tblstaff.staffName AS 'driver', CONCAT(tblcomplaintofficer.statusDate,' ', tblcomplaintofficer.statusTime) AS 'feedbackDateTime', CONCAT(tblcomplaintofficer.forwardedDate,' ',tblcomplaintofficer.forwardedTime) AS 'forwardSubconDateTime', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblcomplaintofficer.remarks AS 'remarks', (SELECT tblstaff.staffName FROM tblstaff WHERE tblstaff.staffID = tblcomplaintofficer.logisticsReview) AS 'logsReview', tblcomplaintofficer.logisticsReviewDate AS 'logsReviewDate', tblcomplaintofficer.reason AS 'reason', tblcomplaintofficer.trucK AS 'truck' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.activeStatus = 1 AND tblcomplaintofficer.services = '" + req.body.services + "' AND tblcomplaintofficer.zon = '" + req.body.zon + "' AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "' ORDER BY complaintDateTime DESC";
+
     database.query(sql, function(err, result){
         if(err){
             throw err;
@@ -429,7 +429,7 @@ app.post('/getCmsDailyReportList', function(req, res){
 app.post('/getCmsDatasheet', function(req ,res){
     'use strict';
 
-    var sql= "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', tblcomplaintofficer.customerDate AS 'customerDate', tblcomplaintofficer.customerTime AS 'customerTime', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver', tblcomplaintofficer.typeCode AS 'typeCode' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND (tblcomplaintofficer.services = '1' OR tblcomplaintofficer.services = '2') AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "'  ORDER BY complaintDate DESC";
+    var sql= "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', tblcomplaintofficer.customerDate AS 'customerDate', tblcomplaintofficer.customerTime AS 'customerTime', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver', tblcomplaintofficer.typeCode AS 'typeCode' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND tblcomplaintofficer.services = '" + req.body.services + "' AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "'  ORDER BY complaintDate DESC";
 
     database.query(sql, function(err, result){
         if(err){
@@ -639,14 +639,28 @@ app.post('/updateCustInformation', function(req, res) {
 
     var sql = "UPDATE tblcomplaintofficer SET customerDate = '" + req.body.custDate + "', customerTime = '" + req.body.custTime + "', customerBy = '" + req.body.custBy + "', step = 3, custStatus = '" + req.body.custStatus + "', contactStatus = '" + req.body.contactStatus + "', readState = 'r', logsReadState = 'u', bdKPI = '" + req.body.bdKPI + "', bdKPIAchieve = '" + req.body.bdKPIAchieve + "' WHERE coID = '" + req.body.coID + "' ";
 
+    console.log("UPDATE tblcomplaint SET status = 'i' WHERE complaintID = '" + req.body.refNo + "'");
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
+        }else{
+            if(req.body.custStatus == 'closed' && req.body.sorce == 'Mobile App'){
+                database.query("UPDATE tblcomplaint SET status = 'c' WHERE complaintID = '" + req.body.refNo + "'",function(err2, result2){
+                    if(err2){
+                        throw err2;
+                    }
+                    res.json({
+                        "message": "Information updated",
+                        "status": "success"
+                    });
+                })
+            }else{
+                res.json({
+                    "message": "Information updated",
+                    "status": "success"
+                });
+            }
         }
-        res.json({
-            "message": "Information updated",
-            "status": "success"
-        });
     });
 });
 
@@ -720,6 +734,21 @@ app.post('/verifyAppComp', function(req, res) {
             }
         });
     });
+});
+
+app.post('/setAppNotApplicable', function(req, res){
+    'use strict';
+
+    var sql = "UPDATE tblcomplaint SET status = 'i' WHERE complaintID = '" + req.body.complaintID + "'";
+
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }else{
+            res.json({ "status": "success", "message": "Status 'Invalid' has been update" });
+        }
+    });
+
 });
 
 app.post('/setIncharge', function(req, res) {

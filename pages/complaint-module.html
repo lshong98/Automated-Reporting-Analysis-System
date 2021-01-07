@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <h5>Complaint Module</h5>
+        <h5>Complaint Management System (CMS)</h5>
     </div>
 </div>
 <!--
@@ -26,7 +26,7 @@
         <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="exportCmsDatasheet()"><i class="fa fa-plus"></i> CMS Datasheet</button>   
     </div>
     <div class="col-md-2">
-        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="bdCMSStatistics()"><i class="fa fa-plus"></i> CMS BD Statistics</button>   
+        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="bdCMSStatistics()"><i class="fa fa-plus"></i>BD CMS Monthly Report </button>   
     </div>
     <div class="col-md-2">
         <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="bdQOP()"><i class="fa fa-plus"></i> CMS BD QOP</button>   
@@ -48,10 +48,10 @@
     <div class="col-md-12">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="webComplaint-tab" data-toggle="tab" data-target="#webComplaint" role="tab" aria-controls="webComplaint" aria-selected="true" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="tabClick('web')">Complaint Management <span class="badge badge-danger">{{unreadWebComplaintCount}}</span></a>
+                <a class="nav-link active" id="webComplaint-tab" data-toggle="tab" data-target="#webComplaint" role="tab" aria-controls="webComplaint" aria-selected="true" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="tabClick('web')">Business Development <span class="badge badge-danger">{{unreadWebComplaintCount}}</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="appComplaint-tab" data-toggle="tab" data-target="#appComplaint" role="tab" aria-controls="appComplaint" aria-selected="false" data-ng-show="showappkch.view == 'A' || showappbtu.view == 'A'" data-ng-click="tabClick('app')">App Complaint <span class="badge badge-danger">{{unreadAppComplaintCount}}</span></a>
+                <a class="nav-link" id="appComplaint-tab" data-toggle="tab" data-target="#appComplaint" role="tab" aria-controls="appComplaint" aria-selected="false" data-ng-show="showappkch.view == 'A' || showappbtu.view == 'A'" data-ng-click="tabClick('app')">App CMS <span class="badge badge-danger">{{unreadAppComplaintCount}}</span></a>
             </li>            
             <li class="nav-item">
                 <a class="nav-link" id="logistics-tab" data-toggle="tab" data-target="#logistics" role="tab" aria-controls="logistics" aria-selected="false" data-ng-show="showlogskch.view == 'A' || showlogsbtu.view == 'A'" data-ng-click="tabClick('log')">Logistics <span class="badge badge-danger">{{unreadLogComplaintCount}}</span></a>
@@ -73,13 +73,13 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th width="9%" data-ng-click="webOrderBy('date');">CMS Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="webOrderBy('date');">CMS Lodged <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('logisticsDateTime');">LG Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('customerDateTime');">BD Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="webOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
-                                                <th width="9%" data-ng-click="webOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
-                                                <th width="12%" data-ng-click="webOrderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
-                                                <th width="15%" data-ng-click="webOrderBy('department');">Processing Department <i class="fas fa-sort-down"></i></th>
+                                                <th width="8%" data-ng-click="webOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="webOrderBy('company');">Company / Household <i class="fas fa-sort-down"></i></th>
+                                                <th width="16%" data-ng-click="webOrderBy('department');">Processing Department <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('lgStatus');">LG Status <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('bdStatus');">BD Status <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="webOrderBy('cmsStatus');">CMS Review Status <i class="fas fa-sort-down"></i></th>
@@ -131,9 +131,9 @@
                                         <thead>
                                             <tr>
                                                 <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
-                                                <th width="30%" data-ng-click="orderBy('detailType');">Title <i class="fas fa-sort-down"></i></th>
+                                                <th width="30%" data-ng-click="orderBy('detailType');">Complaint Details <i class="fas fa-sort-down"></i></th>
                                                 <th width="20%" data-ng-click="orderBy('customer');">Customer <i class="fas fa-sort-down"></i></th>
-                                                <th width="10%" data-ng-click="orderBy('serviceType');">Type <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%" data-ng-click="orderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="orderBy('status');">Status <i class="fas fa-sort-down"></i></th>
                                             </tr>
                                         </thead>
@@ -173,15 +173,14 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th width="15%" data-ng-click="logsOrderBy('date');">Date <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%" data-ng-click="logsOrderBy('date');">CMS Lodged <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="logsOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
-                                                <th width="15%" data-ng-click="logsOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
-                                                <th width="15%" data-ng-click="logsOrderBy('company');">Company Name <i class="fas fa-sort-down"></i></th>
+                                                <th width="13%" data-ng-click="logsOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
+                                                <th width="16%" data-ng-click="logsOrderBy('company');">Company / Household <i class="fas fa-sort-down"></i></th>
                                                 <th width="15%" data-ng-click="logsOrderBy('reason');">Reason <i class="fas fa-sort-down"></i></th>
-                                                <th width="15%" data-ng-click="logsOrderBy('staff');">By <i class="fas fa-sort-down"></i></th>
-                                                <th width="15%" data-ng-click="logsOrderBy('department');">Processing Department <i class="fas fa-sort-down"></i></th>                                        
-                                                <th width="5%" data-ng-click="logsOrderBy('status');">Status <i class="fas fa-sort-down"></i></th>
-                                                <th width="5%">Reviewed By:</th>
+                                                <th width="16%" data-ng-click="logsOrderBy('department');">Processing Department <i class="fas fa-sort-down"></i></th>                                        
+                                                <th width="10%" data-ng-click="logsOrderBy('status');">LG Status <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%">CMS Review Status </th>
                                             </tr>
                                         </thead>
                                         <tbody>               
@@ -191,7 +190,6 @@
                                                 <td data-ng-bind="l.serviceType"></td>
                                                 <td data-ng-bind="l.company"></td>
                                                 <td data-ng-bind="l.reason"></td>
-                                                <td data-ng-bind="l.staff"></td>
                                                 <td data-ng-bind="l.department"></td>
                                                 <td data-ng-bind="l.status"></td>
                                                 <td data-ng-bind="l.logsReview"></td>

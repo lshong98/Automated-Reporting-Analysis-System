@@ -606,19 +606,7 @@ app.config(function($routeProvider, $locationProvider){
         },
         controller: 'complaintOfficerdetailController',
         controllerAs:'complaintOfficerdetail'
-    })
-    .when('/complaint-officer-edit/:coID', {
-        resolve: {
-            "check": function (routingService, $window, $location, $route) {
-                return routingService.auth($window, $location, '/complaint-officer-edit/' + $route.current.params.coID);
-            }
-        },
-        templateUrl: function(params){
-            return '/complaint-officer-edit/' + params.coID;
-        },
-        controller: 'complaintOfficereditController',
-        controllerAs:'complaintOfficeredits'
-    })      
+    })   
     .when('/complaint-detail/:complaintCode', {
         resolve: {
             "check": function (routingService, $window, $location, $route) {

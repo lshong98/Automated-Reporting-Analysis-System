@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <h1>CMS Datasheet for Municipal Waste</h1>
+        <h1>CMS Datasheet</h1>
     </div>
 </div>
 <div class="form-group row">
@@ -27,6 +27,16 @@
         </select>
     </div>
 </div>
+<div class="form-group row">
+    <label for="services" class="col-md-1 col-form-label form-label-width">Services</label>
+    <div class="col-md-3">
+        <select id="services" class="form-control mx-sm-2" data-ng-model="obj.services">
+            <option value="1" selected>Compactor</option>
+            <option value="2">Hooklift</option>
+            <option value="3">Scheduled Waste</option>
+        </select>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <button class="btn btn-primary" data-ng-click="objChange()" >Generate</button>
@@ -39,17 +49,17 @@
             <table class="table" id="cmsDatasheetTbl">
                 <thead>
                     <tr>
-                        <th>Date</th>
+                        <th>CMS Lodged</th>
                         <th>Area Code</th>
                         <th>TS</th>
                         <th>Mega</th>
                         <th>Toh Ah Kaw</th>
                         <th>Name</th>
-                        <th>Name of company(if any)</th>
+                        <th>Household / Company</th>
                         <th>Address</th>
-                        <th>Category</th>
+                        <th>Reason</th>
                         <th>Remarks</th>
-                        <th>Collected on</th>
+                        <th>Waste Collected on (If applicable)</th>
                         <th>Driver</th>
                         <!-- <th>Type Code</th> -->
                         <!-- <th>Type Code2</th> -->

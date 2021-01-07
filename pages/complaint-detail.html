@@ -233,23 +233,18 @@
 </div>
 <div class="row">
     <div class="col-md-9">
-        <h3>Complaint Detail</h3>
+        <h3>CMS Detail</h3>
     </div>
     <div class="col-md-3">
-        <label for="statusUpdate" >Status</label>
-        <select id="statusUpdate" data-ng-model="comDetail.status" data-live-search="true">
-            <option value="Open">Open</option>
-            <option value="Pending">Pending</option>
-            <option value="Closed">Closed</option>
-            <option value="Invalid">Invalid</option>
-            
-        </select>
-        <button class="btn btn-sm btn-primary" data-ng-show="showUpdateBtn" data-ng-click="updateStatus()">Update</button>
+        <p><strong>Status:</strong> <span>{{comDetail.status}}</span></p>
     </div>
 </div>
 <div class="row">
     <div class="col-md-1">
         <button class="btn btn-success" data-toggle="modal" data-target="#verifyComplaintModal"><i class="fa fa-plus"></i> Verify</button> 
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-danger" data-toggle="modal" data-ng-click="setNotApplicable()"><i class="fa fa-plus"></i> Not Applicable</button> 
     </div>
     <div class="col-md-1">
         <button class="btn btn-sm btn-success" data-ng-show="showInchargeBtn" data-ng-click="inchargeChat()">In charge</button>
@@ -258,8 +253,8 @@
 </div>
 <div class="row">
     <div class="col-md-6 detailBox">
-        <p><strong>Premise Type: </strong>{{title}}</p>
-        <p><strong>Complaint Title: </strong> {{detailType}}</p>
+        <p><strong>Type of Services: </strong>{{services}}</p>
+        <p><strong>Complaint Details: </strong> {{detailType}}</p>
         <p><strong>Date Time: </strong>{{comDetail.date}}</p>
         <p><strong>Customer: </strong>{{comDetail.customer}}</p>
         <p><strong>Company: </strong>{{comDetail.company}}</p>
