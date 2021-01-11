@@ -9501,7 +9501,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
             } else if ($scope.complaintOfficerList[i].services == 2) {
                 $scope.complaintOfficerList[i].serviceType = "Hooklift";
             } else if ($scope.complaintOfficerList[i].services == 3) {
-                $scope.complaintOfficerList[i].serviceType = "Hazardous waste";
+                $scope.complaintOfficerList[i].serviceType = "Scheduled waste";
             }
 
             if ($scope.complaintOfficerList[i].status == null) {
@@ -9581,7 +9581,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                     } else if (splitTypeSpecialContent[0] == '13') {
                         splitTypeSpecialContent[2] = "Others(hooklift)";
                     } else if (splitTypeSpecialContent[0] == '14') {
-                        splitTypeSpecialContent[2] = "Others(hazardous waste)";
+                        splitTypeSpecialContent[2] = "Others(Scheduled waste)";
                     }
 
                     $scope.complaintList[i].detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
@@ -9620,7 +9620,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 } else if ($scope.complaintList[i].type == 2) {
                     $scope.complaintList[i].serviceType = "Hooklift";
                 } else if ($scope.complaintList[i].type == 3) {
-                    $scope.complaintList[i].serviceType = "Hazardous waste";
+                    $scope.complaintList[i].serviceType = "Scheduled waste";
                 }
             }
 
@@ -9674,7 +9674,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 } else if ($scope.logisticsComplaintList[i].services == 2) {
                     $scope.logisticsComplaintList[i].serviceType = "Hooklift";
                 } else if ($scope.logisticsComplaintList[i].services == 3) {
-                    $scope.logisticsComplaintList[i].serviceType = "Hazardous waste";
+                    $scope.logisticsComplaintList[i].serviceType = "Scheduled waste";
                 }
 
                 if ($scope.logisticsComplaintList[i].status == null) {
@@ -11027,7 +11027,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
             $scope.services = "Hooklift";
         } 
         else if ($scope.comDetail.services == 3) {
-            $scope.services = "Hazardous waste";
+            $scope.services = "Scheduled waste";
         }
 
         splitType = $scope.comDetail.ctype.split(":,:");
@@ -11044,7 +11044,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                     splitTypeSpecialContent[2] = "Others(hooklift)";
                     $scope.verify.typeCode += 'm,';
                 } else if (splitTypeSpecialContent[0] == '14') {
-                    splitTypeSpecialContent[2] = "Others(hazardous waste)";
+                    splitTypeSpecialContent[2] = "Others(Scheduled waste)";
                     $scope.verify.typeCode += 'n,';
                 }
                 $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
@@ -11522,7 +11522,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         } else if ($scope.detailObj.services === "2") { //Hooklift
             $scope.showAreaLogistics = false;
             $scope.areaUnderList = ["Trienekens", "Mega Power", "TAK"];
-        } else if ($scope.detailObj.services === "3") { //Hazardous Waste
+        } else if ($scope.detailObj.services === "3") { //Scheduled Waste
             $scope.showAreaLogistics = false;
             $scope.areaUnderList = ["Trienekens", "InnaTech", "Petro Jadi", "Others"];
         }
@@ -11564,7 +11564,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                 } else if (splitTypeSpecialContent[0] == '13') {
                     splitTypeSpecialContent[2] = "Others(hooklift)";
                 } else if (splitTypeSpecialContent[0] == '14') {
-                    splitTypeSpecialContent[2] = "Others(hazardous waste)";
+                    splitTypeSpecialContent[2] = "Others(Scheduled waste)";
                 }
                 $scope.detailType += splitTypeSpecialContent[2] + ': ' + splitTypeSpecialContent[1];
             } else {
@@ -12056,6 +12056,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.logistics.subDate = null;
             $scope.logistics.subTime = null;
         }
+
+        
 
         if ($scope.logistics.sub == "" || $scope.logistics.cmsStatus == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "" || $scope.logistics.reason =="" || $scope.logistics.truck == "") {
 
@@ -12655,7 +12657,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                     $scope.tc13 = true;
                     $scope.tc13others = splitTypeSpecialContent[1];
                 } else if (splitTypeSpecialContent[0] == '14') {
-                    splitTypeSpecialContent[2] = "Others(hazardous waste)";
+                    splitTypeSpecialContent[2] = "Others(Scheduled waste)";
                     $scope.tc14 = true;
                     $scope.tc14others = splitTypeSpecialContent[1];
                 }

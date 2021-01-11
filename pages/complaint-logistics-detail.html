@@ -251,7 +251,7 @@
         <div class="mx-sm-3">
             <p data-ng-if="detailObj.services == '1'">Compactor</p>
             <p data-ng-if="detailObj.services == '2'">Hooklift</p>
-            <p data-ng-if="detailObj.services == '3'">Hazardous Waste</p>
+            <p data-ng-if="detailObj.services == '3'">Scheduled Waste</p>
         </div>
     </div>
     
@@ -294,7 +294,7 @@
         <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Code</label>
         <div class="col-md-9">
             <select class="form-control mx-sm-3 selectpicker" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
-                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}" >
                       <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
                   </optgroup>
             </select>
@@ -304,7 +304,7 @@
     <div class="form-group row" data-ng-show="showAreaLogistics">
         <label for="inputCouncil" class="col-xs-3 col-form-label form-label-width">Area by Council</label>
         <div class="col-md-9">
-            <select class="form-control mx-sm-3" id="inputCouncil" data-ng-model="logistics.areaCouncil" data-live-search="true" data-width="100%">
+            <select class="form-control mx-sm-3" id="inputCouncil" data-ng-model="logistics.areaCouncil" data-live-search="true" data-width="100%" disabled>
                 <option value="DBKU">DBKU</option>            
                 <option value="MBKS">MBKS</option>
                 <option value="MPP">MPP</option>
