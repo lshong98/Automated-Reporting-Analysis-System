@@ -76,6 +76,7 @@
                                                 <th width="10%" data-ng-click="webOrderBy('date');">CMS Lodged <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('logisticsDateTime');">LG Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('customerDateTime');">BD Time <i class="fas fa-sort-down"></i></th>
+                                                <th width="8%">BD KPI <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="webOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="webOrderBy('company');">Company / Household <i class="fas fa-sort-down"></i></th>
@@ -90,6 +91,7 @@
                                                 <td data-ng-bind="c.complaintDate"></td>
                                                 <td data-ng-bind="c.logisticsDateTime"></td>
                                                 <td data-ng-bind="c.customerDateTime"></td>
+                                                <td><span data-ng-bind="c.bdKPI"></span><br/><span data-ng-bind="c.bdKPIAchieveWord" data-ng-class="{'badge badge-danger': c.bdKPIAchieve == 'N', 'badge badge-warning': c.bdKPIAchieve == 'E', 'badge badge-success': c.bdKPIAchieve == 'A', 'badge badge-info': c.bdKPIAchieveWord == 'Blank'}"></span></td>
                                                 <td><span data-ng-bind="c.name"></span> <span data-ng-bind="c.contactStatus" data-ng-class="{'badge badge-danger': c.contactStatus == 'NA', 'badge badge-warning': c.contactStatus == 'WN', 'badege badge-info': c.contactStatus == 'NN', 'badge badge-dark': c.contactStatus == 'OT', 'badge badge-success': c.contactStatus == 'Complete'}"></span></td>
                                                 <td data-ng-bind="c.serviceType"></td>
                                                 <td data-ng-bind="c.company"></td>
@@ -174,6 +176,7 @@
                                         <thead>
                                             <tr>
                                                 <th width="15%" data-ng-click="logsOrderBy('date');">CMS Lodged <i class="fas fa-sort-down"></i></th>
+                                                <th width="15%">LG KPI</th>
                                                 <th width="15%" data-ng-click="logsOrderBy('name');">Name <i class="fas fa-sort-down"></i></th>
                                                 <th width="13%" data-ng-click="logsOrderBy('serviceType');">Services <i class="fas fa-sort-down"></i></th>
                                                 <th width="16%" data-ng-click="logsOrderBy('company');">Company / Household <i class="fas fa-sort-down"></i></th>
@@ -186,6 +189,7 @@
                                         <tbody>               
                                             <tr data-ng-repeat="l in logisticsComplaintList | filter: searchLogComplaint | offset: (paginationLogComp.currentPage - 1) * paginationLogComp.itemsPerPage | limitTo: paginationLogComp.itemsPerPage" class="clickable-row" data-ng-click="viewLogComp(l.coID)" data-ng-class="{{unreadLogRowControl}}">
                                                 <td data-ng-bind="l.complaintDate"></td>
+                                                <td><span data-ng-bind="l.lgKPI"></span><br/><span data-ng-bind="l.lgKPIAchieveWord" data-ng-class="{'badge badge-danger': l.lgKPIAchieve == 'N', 'badge badge-warning': l.lgKPIAchieve == 'E', 'badge badge-success': l.lgKPIAchieve == 'A', 'badge badge-info': l.lgKPIAchieveWord == 'Blank'}"></span></td>
                                                 <td data-ng-bind="l.name"></td>
                                                 <td data-ng-bind="l.serviceType"></td>
                                                 <td data-ng-bind="l.company"></td>

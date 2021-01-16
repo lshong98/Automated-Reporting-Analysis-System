@@ -293,7 +293,7 @@
     <div class="form-group row" data-ng-show="showAreaLogistics">
         <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Code</label>
         <div class="col-md-9">
-            <select class="form-control mx-sm-3 selectpicker" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
+            <select class="form-control mx-sm-3" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
                   <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}" >
                       <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
                   </optgroup>
@@ -301,17 +301,17 @@
         </div>
     </div>
 
-    <div class="form-group row" data-ng-show="showAreaLogistics">
+    <!-- <div class="form-group row" data-ng-show="showAreaLogistics">
         <label for="inputCouncil" class="col-xs-3 col-form-label form-label-width">Area by Council</label>
         <div class="col-md-9">
-            <select class="form-control mx-sm-3" id="inputCouncil" data-ng-model="logistics.areaCouncil" data-live-search="true" data-width="100%" disabled>
+            <select class="form-control mx-sm-3" id="inputCouncil" data-ng-model="logistics.areaCouncil" data-live-search="true" data-width="100%" >
                 <option value="DBKU">DBKU</option>            
                 <option value="MBKS">MBKS</option>
                 <option value="MPP">MPP</option>
                 <option value="MDS">MDS</option>
             </select>
         </div>
-    </div>
+    </div> -->
 
     <!--original forwarded to sub-contractor-->
     <div class="form-group row">
@@ -474,15 +474,15 @@
     
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Area by Council:</strong>
-        <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{fullComplaintDetail.council}}</p>
-        <div class="col-md-9" data-ng-show="showLogsEdit">
+        <p class="mx-sm-3">{{fullComplaintDetail.council}}</p>
+        <!-- <div class="col-md-9" data-ng-show="showLogsEdit">
             <select class="mx-sm-3 form-control" id="editCouncil" data-ng-model="editLogistics.council" data-live-search="true" data-width="100%">
                 <option value="DBKU">DBKU</option>            
                 <option value="MBKS">MBKS</option>
                 <option value="MPP">MPP</option>
                 <option value="MDS">MDS</option>
             </select>
-        </div>
+        </div> -->
     </div>
 
     <!--original forwarded to sub-contractor-->

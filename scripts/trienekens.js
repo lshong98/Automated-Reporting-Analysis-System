@@ -160,6 +160,72 @@ function bdKPIFunc(custDate, custTime, compDate, compTime){
     }
 }
 
+function lgKPIFunc(statusDate, statusTime, compDate, compTime){
+
+    if (statusDate != null && statusTime != null && statusDate != null && statusTime != null) {
+        var returnLGKPI = '';
+        var lgDateFormat = new Date(statusDate);
+        var complaintDateFormat = new Date(compDate);
+
+        var lgBetweenDay = lgDateFormat - complaintDateFormat;
+        lgBetweenDay = lgBetweenDay / 60 / 60 / 24 / 1000;
+
+        var checkBetweenDay = lgBetweenDay + 1;
+
+        var lgBetweenTime = "";
+
+        var lgTimeFormat = new Date(2000, 0, 1, statusTime.split(":")[0], statusTime.split(":")[1]);
+
+        var complaintTimeFormat = new Date(2000, 0, 1, compTime.split(":")[0], compTime.split(":")[1]);
+
+        var operationStartTime = new Date(2000, 0, 1, 0, 00);
+        var operationEndTime = new Date(2000, 0, 1, 24, 00);
+
+        if (lgBetweenDay == 0) {
+            lgBetweenTime = lgTimeFormat - complaintTimeFormat;
+
+            lgBetweenTime = lgBetweenTime / 60 / 60 / 1000;
+            lgBetweenTime = lgBetweenTime.toFixed(2); 
+            var splitHrsLG = "";
+            var splitMinLG = "";
+
+            var splitHrsLG = lgBetweenTime.split(".")[0];
+            var splitMinLG = lgBetweenTime.split(".")[1] / 100 * 60;                
+
+            returnLGKPI = splitHrsLG + ":" + splitMinLG; 
+
+        } else if (lgBetweenDay >= 1) {
+
+            lgBetweenTime = (operationEndTime - complaintTimeFormat) + (lgTimeFormat - operationStartTime);
+            lgBetweenTime = lgBetweenTime / 60 / 60 / 1000;
+
+            for (var dayCounter = 1; dayCounter < lgBetweenDay; dayCounter++) {
+                lgBetweenTime += 24;
+            }
+            for(var x = 0; x < checkBetweenDay; x++){
+                var checkDate = new Date(complaintDateFormat);
+                checkDate.setDate(checkDate.getDate() + x);
+                if(checkDate.getDay() == '0'){
+                    lgBetweenTime -= 24;
+                }
+            }
+
+            lgBetweenTime = lgBetweenTime.toFixed(2);
+            var splitHrsLG = "";
+            var splitMinLG = "";
+
+            var splitHrsLG = lgBetweenTime.split(".")[0];
+            var splitMinLG = lgBetweenTime.split(".")[1] / 100 * 60;                
+
+            returnLGKPI = splitHrsLG + ":" + splitMinLG;                    
+        } else {
+            returnLGKPI = "N/A";
+        }  
+        
+        return returnLGKPI;
+    }
+}
+
 function isOpen(ws) {
     var ping = {
         "type": "ping"
@@ -8886,7 +8952,7 @@ app.controller('bdbEditController', function($scope, $http, $filter, $window, $r
     $scope.bdbID = {
         "id": $routeParams.bdbID
     }
-
+    $scope.user = window.sessionStorage.getItem('owner');
     $http.post('/getBinDatabaseDetail', $scope.bdbID).then(function(response){
         $scope.editBin = response.data[0];
 
@@ -9524,12 +9590,22 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                     $scope.complaintOfficerList[i].contactStatus = "Complete";
                 }
             }
+
+            if($scope.complaintOfficerList[i].bdKPIAchieve == 'A'){
+                $scope.complaintOfficerList[i].bdKPIAchieveWord = 'Achieve';
+            }else if($scope.complaintOfficerList[i].bdKPIAchieve == 'N'){
+                $scope.complaintOfficerList[i].bdKPIAchieveWord = 'Over Time';
+            }else if($scope.complaintOfficerList[i].bdKPIAchieve == 'E'){
+                $scope.complaintOfficerList[i].bdKPIAchieveWord = 'Error';
+            }else if($scope.complaintOfficerList[i].bdKPIAchieve == '' || $scope.complaintOfficerList[i].bdKPIAchieve == null){
+                $scope.complaintOfficerList[i].bdKPIAchieveWord = 'Blank';
+            }
         }
 
         $scope.filterWebComplaintList = angular.copy($scope.complaintOfficerList);
 
         $scope.searchWebComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.customerDateTime + complaint.logisticsDateTime + complaint.name + complaint.company + complaint.serviceType + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.customerDateTime + complaint.logisticsDateTime + complaint.bdKPIAchieveWord +  complaint.name + complaint.company + complaint.serviceType + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.webComptotalItems = $scope.filterWebComplaintList.length;
@@ -9708,6 +9784,16 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 }else if($scope.logisticsComplaintList[i].reason == 9){
                     $scope.logisticsComplaintList[i].reason = "Spillage of waste";
                 }               
+
+                if($scope.logisticsComplaintList[i].lgKPIAchieve == 'A'){
+                    $scope.logisticsComplaintList[i].lgKPIAchieveWord = 'Achieve';
+                }else if($scope.logisticsComplaintList[i].lgKPIAchieve == 'N'){
+                    $scope.logisticsComplaintList[i].lgKPIAchieveWord = 'Over Time';
+                }else if($scope.logisticsComplaintList[i].lgKPIAchieve == 'E'){
+                    $scope.logisticsComplaintList[i].lgKPIAchieveWord = 'Error';
+                }else if($scope.logisticsComplaintList[i].lgKPIAchieve == '' || $scope.logisticsComplaintList[i].lgKPIAchieve == null){
+                    $scope.logisticsComplaintList[i].lgKPIAchieveWord = 'Blank';
+                }
             }
         }
 
@@ -10087,6 +10173,14 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
 
                 $scope.cmsDailyReportList[i].complaintDateTime = $scope.cmsDailyReportList[i].complaintDate + ' ' +$scope.cmsDailyReportList[i].complaintTime;
 
+                $scope.cmsDailyReportList[i].statusDate = $filter('date')($scope.cmsDailyReportList[i].statusDate, 'yyyy-MM-dd');
+
+                if($scope.cmsDailyReportList[i].statusDate ==  null || $scope.cmsDailyReportList[i].statusTime == null){
+                    $scope.cmsDailyReportList[i].statusDateTime = '-';
+                }else{
+                    $scope.cmsDailyReportList[i].statusDateTime = $scope.cmsDailyReportList[i].statusDate + ' ' +$scope.cmsDailyReportList[i].statusTime;
+                }
+
                 if($scope.cmsDailyReportList[i].forwardSubconDateTime == '' || $scope.cmsDailyReportList[i].forwardSubconDateTime == null){
                     $scope.cmsDailyReportList[i].forwardSubconDateTime = '-';
                 }
@@ -10237,6 +10331,30 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                     $scope.notify("error", "There are some ERROR reviewing the complaint");
                 }
             });
+        }
+    }
+
+    $scope.setupLGKPI = function(){
+        
+        for(var i = 0;i < $scope.cmsDailyReportList.length; i++){
+            if($scope.cmsDailyReportList[i].statusDate != null && $scope.cmsDailyReportList[i].statusTime != null && $scope.cmsDailyReportList[i].complaintDate != null && $scope.cmsDailyReportList[i].complaintTime != null){
+                console.log($scope.cmsDailyReportList[i]);
+                var lgKPI = lgKPIFunc($scope.cmsDailyReportList[i].statusDate, $scope.cmsDailyReportList[i].statusTime, $scope.cmsDailyReportList[i].complaintDate, $scope.cmsDailyReportList[i].complaintTime);
+                var lgKPIAchieve = 'A';
+                if(lgKPI.split(":")[0] > 6){
+                    lgKPIAchieve = 'N';
+                }else if(lgKPI == 'N/A'){
+                    lgKPIAchieve = 'E';
+                }
+                $scope.cmsDailyReportList[i].lgKPI = lgKPI;
+                $scope.cmsDailyReportList[i].lgKPIAchieve = lgKPIAchieve;
+
+                console.log($scope.cmsDailyReportList[i].lgKPI);
+                console.log($scope.cmsDailyReportList[i].lgKPIAchieve);
+                $http.post('/setupLGKPI', {"coID": $scope.cmsDailyReportList[i].coID, "lgKPI":  $scope.cmsDailyReportList[i].lgKPI, "lgKPIAchieve": $scope.cmsDailyReportList[i].lgKPIAchieve}).then(function(response){
+                    console.log("abc");
+                })
+            }
         }
     }
 
@@ -10938,6 +11056,8 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
                 var bdKPIAchieve = 'A';
                 if(bdKPI.split(":")[0] > 24){
                     bdKPIAchieve = 'N';
+                }else if(bdKPI == 'N/A'){
+                    bdKPIAchieve = 'E';
                 }
                 $scope.cmsDataSheet[i].bdKPI = bdKPI;
                 $scope.cmsDataSheet[i].bdKPIAchieve = bdKPIAchieve;
@@ -11820,7 +11940,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         }
 
         $http.get('/getAreaList').then(function (response) {
-            $scope.renderSltPicker();
             $.each(response.data, function (index, value) {
                 if(value.branch == $scope.detailObj.zon){
                     var areaID = value.id.split(",");
@@ -11843,9 +11962,16 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     });
                 }
             });
-            $('.selectpicker').on('change', function () {
-                $scope.renderSltPicker();
-            });
+
+            $('#inputUnder').on('change', function(){
+                $scope.logistics.areaCouncil = $(':selected', this).closest('optgroup').attr('label');
+                console.log($scope.logistics.areaCouncil);
+            })
+
+            $('#editUnder').on('change', function(){
+                $scope.editLogistics.council = $(':selected', this).closest('optgroup').attr('label');
+                console.log($scope.editLogistics.council);
+            })
         });
     
         $http.get('/getDriverList').then(function (response) {
@@ -12042,6 +12168,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     $scope.submit = function () {
         $scope.logistics.statusDate = $filter('date')(Date.now(), 'yyyy-MM-dd');
         $scope.logistics.statusTime = $filter('date')(Date.now(), 'HH:mm:ss');
+        $scope.logistics.complaintDate = $scope.detailObj.complaintDate;
+        $scope.logistics.complaintTime = $scope.detailObj.complaintTime;
         
 
         if ($scope.logistics.sub == "Mega Power" || $scope.logistics.sub == "TAK") {
@@ -12057,6 +12185,19 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.logistics.subTime = null;
         }
 
+
+        if($scope.logistics.statusDate != null && $scope.logistics.statusTime != null && $scope.logistics.complaintDate != null && $scope.logistics.complaintTime != null){
+            var lgKPI = lgKPIFunc($scope.logistics.statusDate, $scope.logistics.statusTime, $scope.logistics.complaintDate, $scope.logistics.complaintTime);
+            var lgKPIAchieve = 'A';
+            if(lgKPI.split(":")[0] > 6){
+                lgKPIAchieve = 'N';
+            }else if(lgKPI == 'N/A'){
+                lgKPIAchieve = 'E';
+            }
+            $scope.logistics.lgKPI = lgKPI;
+            $scope.logistics.lgKPIAchieve = lgKPIAchieve;
+        }
+            
         
 
         if ($scope.logistics.sub == "" || $scope.logistics.cmsStatus == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "" || $scope.logistics.reason =="" || $scope.logistics.truck == "") {
@@ -12869,6 +13010,8 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         var bdKPIAchieve = 'A';
         if(bdKPI.split(":")[0] > 24){
             bdKPIAchieve = 'N';
+        }else if(bdKPI == 'N/A'){
+            bdKPIAchieve = 'E'
         }
         if ($scope.cust.custDate == '' || $scope.cust.custDate == undefined || $scope.cust.custTime == '' || $scope.cust.custStatus == '') {
             $scope.notify("error", "There has some blank column");
