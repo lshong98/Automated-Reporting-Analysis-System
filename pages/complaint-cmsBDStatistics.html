@@ -295,27 +295,17 @@
                         </tr>
                         <tr>
                             <th>Overall total no. of valid complaints</th>
-                            <td colspan="2">{{swData.tsValid + swData.innatechValid + swData.petroJadiValid + swData.otherSubconValid}}</td>
+                            <td colspan="2">{{swData.tsValid + swData.otherSubconValid}}</td>
                         </tr>
                         <tr>
                             <td>TS</td>
                             <td width="15%">{{swData.tsValid}}</td>
-                            <td width="15%">{{swData.tsValid / (swData.tsValid + swData.petroJadiValid + swData.innatechValid + swData.otherSubconValid) * 100 | number:2}} %</td>
-                        </tr>
-                        <tr>
-                            <td>Innatech</td>
-                            <td>{{swData.innatechValid}}</td>
-                            <td>{{swData.innatechValid / (swData.tsValid + swData.petroJadiValid + swData.innatechValid + swData.otherSubconValid) * 100 | number:2}} %</td>
-                        </tr>
-                        <tr>
-                            <td>Petro Jadi</td>
-                            <td>{{swData.petroJadiValid}}</td>
-                            <td>{{swData.petroJadiValid / (swData.tsValid + swData.petroJadiValid + swData.innatechValid + swData.otherSubconValid) * 100 | number:2}} %</td>
+                            <td width="15%">{{swData.tsValid / (swData.tsValid + swData.otherSubconValid) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
                             <td>Others</td>
                             <td>{{swData.otherSubconValid}}</td>
-                            <td>{{swData.otherSubconValid / (swData.tsValid + swData.petroJadiValid + swData.innatechValid + swData.otherSubconValid) * 100 | number:2}} %</td>
+                            <td>{{swData.otherSubconValid / (swData.tsValid + swData.otherSubconValid) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
                             <th colspan="3">

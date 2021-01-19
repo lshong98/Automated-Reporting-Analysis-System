@@ -218,7 +218,7 @@
                         <td>{{otherCountOther}}</td>
                     </tr>
                     <tr>
-                        <td data-container="body" title="Leachate" data-toggle="popover" data-placement="left" data-content="{{leachateRootCause}}">Leachate</td>
+                        <td data-container="body" title="Leachate" data-toggle="popover" data-placement="left" data-content="{{leachateRootCause}}">Spillage of Leachate</td>
                         <td>{{lechateCountTS + lechateCountMP + lechateCountTAK + lechateCountOther}}</td>
                         <td>{{lechateCountTS}}</td>
                         <td>{{lechateCountMP}}</td>
@@ -242,12 +242,20 @@
                         <td>{{spillageCountOther}}</td>
                     </tr>
                     <tr>
+                        <td data-container="body" title="Not wearing PPE or Uniform" data-toggle="popover" data-placement="left" data-content="{{notWearingPPERootCause}}">Not wearing PPE / Uniform</td>
+                        <td>{{notWearingPPECountTS + notWearingPPECountMP + notWearingPPECountTAK + notWearingPPECountOther}}</td>
+                        <td>{{notWearingPPECountTS}}</td>
+                        <td>{{notWearingPPECountMP}}</td>
+                        <td>{{notWearingPPECountTAK}}</td>
+                        <td>{{notWearingPPECountOther}}</td>
+                    </tr>
+                    <tr>
                         <th>Total</th>
-                        <td>{{ truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS + spillageCountTS + truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP + spillageCountMP + truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK + spillageCountTAK + truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + roroReasonCountOther + spillageCountOther}}</td>
-                        <td>{{truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS + spillageCountTS}}</td>
-                        <td>{{truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP + spillageCountMP}}</td>
-                        <td>{{truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK + spillageCountTAK}}</td>
-                        <td>{{truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + roroReasonCountOther + spillageCountOther}}</td>
+                        <td>{{ truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS + spillageCountTS + truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP + spillageCountMP + truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK + spillageCountTAK + truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + roroReasonCountOther + spillageCountOther + notWearingPPECountTS + notWearingPPECountMP + notWearingPPECountTAK + notWearingPPECountOther}}</td>
+                        <td>{{truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS + spillageCountTS + notWearingPPECountTS }}</td>
+                        <td>{{truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP + spillageCountMP + notWearingPPECountMP }}</td>
+                        <td>{{truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK + spillageCountTAK + notWearingPPECountTAK }}</td>
+                        <td>{{truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + roroReasonCountOther + spillageCountOther + notWearingPPECountOther}}</td>
                     </tr>
                 </tbody>
             </table>

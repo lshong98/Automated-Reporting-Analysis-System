@@ -9776,13 +9776,15 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 }else if($scope.logisticsComplaintList[i].reason == 5){
                     $scope.logisticsComplaintList[i].reason = "Bin Not Sent Back(2)";
                 }else if($scope.logisticsComplaintList[i].reason == 6){
-                    $scope.logisticsComplaintList[i].reason = "Leachate(3)";
+                    $scope.logisticsComplaintList[i].reason = "Spillage of Leachate(3)";
                 }else if($scope.logisticsComplaintList[i].reason == 7){
                     $scope.logisticsComplaintList[i].reason = "Other(4)";
                 }else if($scope.logisticsComplaintList[i].reason == 8){
                     $scope.logisticsComplaintList[i].reason = "RORO(5)";
                 }else if($scope.logisticsComplaintList[i].reason == 9){
                     $scope.logisticsComplaintList[i].reason = "Spillage of waste";
+                }else if($scope.logisticsComplaintList[i].reason == 10){
+                    $scope.logisticsComplaintList[i].reason = "Not wearing PPE / Uniform";
                 }               
 
                 if($scope.logisticsComplaintList[i].lgKPIAchieve == 'A'){
@@ -10220,11 +10222,15 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                 }else if($scope.cmsDailyReportList[i].reason == 5){
                     $scope.cmsDailyReportList[i].reason = "Bin Not Sent Back(2)";
                 }else if($scope.cmsDailyReportList[i].reason == 6){
-                    $scope.cmsDailyReportList[i].reason = "Leachate(3)";
+                    $scope.cmsDailyReportList[i].reason = "Spillage of Leachate(3)";
                 }else if($scope.cmsDailyReportList[i].reason == 7){
                     $scope.cmsDailyReportList[i].reason = "Other(4)";
                 }else if($scope.cmsDailyReportList[i].reason == 8){
                     $scope.cmsDailyReportList[i].reason = "RORO(5)";
+                }else if($scope.cmsDailyReportList[i].reason == 9){
+                    $scope.cmsDailyReportList[i].reason = "Spillage of waste";
+                }else if($scope.cmsDailyReportList[i].reason == 10){
+                    $scope.cmsDailyReportList[i].reason = "Not wearing PPE / Uniform";
                 }
 
                 //formulate review date
@@ -10692,6 +10698,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.otherCountTS = 0;
         $scope.roroReasonCountTS = 0;
         $scope.spillageCountTS = 0;
+        $scope.notWearingPPECountTS = 0;
         $scope.missColCountMP = 0;
         $scope.shortageMPCountMP = 0;
         $scope.truckBDCountMP = 0;
@@ -10701,6 +10708,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.otherCountMP = 0;
         $scope.roroReasonCountMP = 0;
         $scope.spillageCountMP = 0;
+        $scope.notWearingPPECountMP = 0;
         $scope.missColCountTAK = 0;
         $scope.shortageMPCountTAK = 0;
         $scope.truckBDCountTAK = 0;
@@ -10710,6 +10718,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.otherCountTAK = 0;
         $scope.roroReasonCountTAK = 0;
         $scope.spillageCountTAK = 0;
+        $scope.notWearingPPECountTAK = 0;
         $scope.missColCountOther = 0;
         $scope.shortageMPCountOther = 0;
         $scope.truckBDCountOther = 0;
@@ -10719,6 +10728,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.otherCountOther = 0;
         $scope.roroReasonCountOther = 0;
         $scope.spillageCountOther = 0;
+        $scope.notWearingPPECountOther = 0;
         $scope.scheduledCount = 0;
         $http.post('/getCmsStatistics', obj).then(function(response){
             var myData = response.data;
@@ -10747,6 +10757,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.otherCountTS = myData.otherCountTS;
             $scope.roroReasonCountTS = myData.roroReasonCountTS;
             $scope.spillageCountTS = myData.spillageCountTS;
+            $scope.notWearingPPECountTS = myData.notWearingPPECountTS;
             $scope.missColCountMP = myData.missColCountMP;
             $scope.shortageMPCountMP = myData.shortageMPCountMP;
             $scope.truckBDCountMP = myData.truckBDCountMP;
@@ -10756,6 +10767,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.otherCountMP = myData.otherCountMP;
             $scope.roroReasonCountMP = myData.roroReasonCountMP;
             $scope.spillageCountMP = myData.spillageCountMP;
+            $scope.notWearingPPECountMP = myData.notWearingPPECountMP;
             $scope.missColCountTAK = myData.missColCountTAK;
             $scope.shortageMPCountTAK = myData.shortageMPCountTAK;
             $scope.truckBDCountTAK = myData.truckBDCountTAK;
@@ -10765,6 +10777,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.otherCountTAK = myData.otherCountTAK;
             $scope.roroReasonCountTAK = myData.roroReasonCountTAK;
             $scope.spillageCountTAK = myData.spillageCountTAK;
+            $scope.notWearingPPECountTAK = myData.notWearingPPECountTAK;
             $scope.missColCountOther = myData.missColCountOther;
             $scope.shortageMPCountOther = myData.shortageMPCountOther;
             $scope.truckBDCountOther = myData.truckBDCountOther;
@@ -10774,6 +10787,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.otherCountOther = myData.otherCountOther;
             $scope.roroReasonCountOther = myData.roroReasonCountOther;
             $scope.spillageCountOther = myData.spillageCountOther;
+            $scope.notWearingPPECountOther = myData.notWearingPPECountOther;
         });
 
         $http.post('/getCmsStatisticsCategoryTruckBreakdown', obj).then(function(response){
@@ -10878,6 +10892,17 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
                 var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
                 var area = response.data[i].area.split(",")[1];
                 $scope.spillageRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryNotWearingPPE', obj).then(function(response){
+            $scope.notWearingPPERootCause = "";
+            if(response.data.length == 0){
+                $scope.notWearingPPERootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.notWearingPPERootCause += compDate + " - " + response.data[i].forwardedSub + "<br />";
             }
         });
 
@@ -11596,6 +11621,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     $scope.showAreaLogistics = false;
     $scope.wasteColDT = "";
     $scope.showLogsEdit = false;
+    $scope.subOthers = '';
+    $scope.subOthersEdit = '';
 
     $http.post('/getStaffName', {'id': $window.sessionStorage.getItem('owner')}).then(function (response) {
         $scope.lgStaff = response.data[0].staffName;
@@ -11644,7 +11671,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.areaUnderList = ["Trienekens", "Mega Power", "TAK"];
         } else if ($scope.detailObj.services === "3") { //Scheduled Waste
             $scope.showAreaLogistics = false;
-            $scope.areaUnderList = ["Trienekens", "InnaTech", "Petro Jadi", "Others"];
+            $scope.areaUnderList = ["Trienekens", "Others"];
         }
 
         $scope.detailObj.complaintDate = $filter('date')($scope.detailObj.complaintDate, 'yyyy-MM-dd');
@@ -11768,14 +11795,16 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     }else if($scope.fullComplaintDetail.reason == 5){
                         $scope.fullComplaintDetail.reason = "Bin Not Sent Back(2)";
                     }else if($scope.fullComplaintDetail.reason == 6){
-                        $scope.fullComplaintDetail.reason = "Leachate(3)";
+                        $scope.fullComplaintDetail.reason = "Spillage of Leachate(3)";
                     }else if($scope.fullComplaintDetail.reason == 7){
                         $scope.fullComplaintDetail.reason = "Other(4)";
                     }else if($scope.fullComplaintDetail.reason == 8){
                         $scope.fullComplaintDetail.reason = "RORO(5)";
                     }else if($scope.fullComplaintDetail.reason == 9){
                         $scope.fullComplaintDetail.reason = "Spillage of waste";
-                    }
+                    }else if($scope.fullComplaintDetail[i].reason == 10){
+                        $scope.fullComplaintDetail[i].reason = "Not wearing PPE / Uniform";
+                    }   
                     
                     $scope.wcdEditBtn = false;
 
@@ -11873,11 +11902,21 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.editLogistics.coID = $routeParams.complaintCode;
                     $scope.editLogistics.area = $scope.fullComplaintDetail.area;
                     $scope.editLogistics.council = $scope.fullComplaintDetail.council;
-                    $scope.editLogistics.sub = $scope.fullComplaintDetail.sub;
+                    if($scope.fullComplaintDetail.sub != 'Trienekens' && $scope.fullComplaintDetail.sub != 'Mega Power' && $scope.fullComplaintDetail.sub != 'TAK'){
+                        $scope.editLogistics.sub = 'Others';
+                        $scope.subOthersEdit = $scope.fullComplaintDetail.sub;
+                    }else{
+                        $scope.editLogistics.sub = $scope.fullComplaintDetail.sub;
+                    }
                     $scope.editLogistics.driver = $scope.fullComplaintDetail.driver;
                     $scope.editLogistics.truck = $scope.fullComplaintDetail.truck;
 
                     $scope.updateLogisticsCMSEdit = function(){
+
+                        if($scope.editLogistics.sub == 'Others'){
+                            $scope.editLogistics.sub = $scope.subOthersEdit;
+                        }
+
                         $http.post('/updateLogisticsCMSEdit', $scope.editLogistics).then(function(response){
                             if (response.data.status == "success") {
                                 $scope.notify(response.data.status, "Data has been updated");
@@ -12172,13 +12211,17 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         $scope.logistics.complaintTime = $scope.detailObj.complaintTime;
         
 
-        if ($scope.logistics.sub == "Mega Power" || $scope.logistics.sub == "TAK") {
+        if ($scope.logistics.sub != "Trienekens") {
             if ($scope.logsSubDate == null || $scope.logsSubTime == null) {
                 $scope.notify("error", "Please Fill In Sub-Contractor Date and Time");
                 $scope.showSubmitBtn = true;
             } else {
                 $scope.logistics.subDate = $filter('date')($scope.logsSubDate, 'yyyy-MM-dd');
                 $scope.logistics.subTime = $filter('date')($scope.logsSubTime, 'HH:mm:ss');
+
+                if($scope.logistics.sub == 'Others'){
+                    $scope.logistics.sub = $scope.subOthers;
+                }
             }
         } else {
             $scope.logistics.subDate = null;
@@ -12633,13 +12676,15 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         }else if($scope.detailObj.reason == 5){
             $scope.detailObj.reason = "Bin Not Sent Back(2)";
         }else if($scope.detailObj.reason == 6){
-            $scope.detailObj.reason = "Leachate(3)";
+            $scope.detailObj.reason = "Spillage of Leachate(3)";
         }else if($scope.detailObj.reason == 7){
             $scope.detailObj.reason = "Other(4)";
         }else if($scope.detailObj.reason == 8){
             $scope.detailObj.reason = "RORO(5)";
         }else if($scope.detailObj.reason == 9){
             $scope.detailObj.reason = "Spillage of waste";
+        }else if($scope.detailObj.reason == 10){
+            $scope.detailObj.reason = "Not wearing PPE / Uniform";
         }
 
         //init images

@@ -320,10 +320,11 @@
             <select class="form-control mx-sm-3" id="inputSub" data-ng-model="logistics.sub" data-live-search="true" data-width="100%">
                 <option data-ng-repeat="x in areaUnderList" value="{{x}}">{{x}}</option>
             </select>
+            <input type="text" class="form-control mx-sm-3" data-ng-show="logistics.sub == 'Others'" placeholder="Sub-Contractor Name" data-ng-model="subOthers"/>
         </div>
     </div>
     
-    <div data-ng-show="logistics.sub == 'Mega Power' || logistics.sub == 'TAK'">
+    <div data-ng-show="logistics.sub != 'Trienekens'">
         <div class="form-group row">
             <label for="inputSubDate" class="col-xs-3 col-form-label form-label-width">Forwarded to Sub-Contractor Date</label>
             <div class="col-md-9">
@@ -368,10 +369,11 @@
                 <option value="3">Truck Breakdown</option>
                 <option value="4">Truck Full</option>
                 <option value="5">Bin Not Sent Back</option>
-                <option value="6">Leachate</option>
+                <option value="6">Spillage of Leachate</option>
                 <option value="7">Other</option>
                 <option value="8">RORO</option>
                 <option value="9">Spillage of waste</option>
+                <option value="10">Not wearing PPE / Uniform</option>
             </select>
         </div>
     </div>
@@ -484,8 +486,7 @@
             </select>
         </div> -->
     </div>
-
-    <!--original forwarded to sub-contractor-->
+    
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Area Under:</strong>
         <p  class="mx-sm-3" data-ng-show="!showLogsEdit">{{fullComplaintDetail.sub}}</p>
@@ -493,6 +494,7 @@
             <select class="mx-sm-3 form-control" id="editSub" data-ng-model="editLogistics.sub" data-live-search="true" data-width="100%">
                 <option data-ng-repeat="x in areaUnderList" value="{{x}}">{{x}}</option>
             </select>
+            <input type="text" class="form-control mx-sm-3" data-ng-show="editLogistics.sub == 'Others'" placeholder="Sub-Contractor Name" data-ng-model="subOthersEdit"/>
         </div>
     </div>
     <div class="form-group row">
@@ -599,10 +601,11 @@
                 <option value="3">Truck Breakdown</option>
                 <option value="4">Truck Full</option>
                 <option value="5">Bin Not Sent Back</option>
-                <option value="6">Leachate</option>
+                <option value="6">Spillage of Leachate</option>
                 <option value="7">Other</option>
                 <option value="8">RORO</option>
                 <option value="9">Spillage of waste</option>
+                <option value="10">Not wearing PPE / Uniform</option>
             </select>
         </div>
     </div>    
