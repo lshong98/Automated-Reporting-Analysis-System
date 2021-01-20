@@ -2073,7 +2073,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
     $scope.sendNotifToDevice = function () {
         $scope.data = {
-            //'target': $scope.notifTarget,
+            // 'target': "LocalDeveloper",
             'target': "TriAllUsers",
             'title': $scope.notifTitle,
             'message': $scope.notifMessage,
@@ -9869,6 +9869,10 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         window.location.href = '#/complaint-cmsStatistics';
     };
 
+    $scope.cmsSubconDataPage = function(){
+        window.location.href = '#/complaint-cmsSubconData';
+    }
+
     //route to cms datasheet
     $scope.exportCmsDatasheet = function () {
         window.location.href = '#/complaint-cmsDatasheet';
@@ -10652,7 +10656,41 @@ app.controller('complaintscmsBDStatisticsController', function($scope, $filter, 
             $scope.obj.endDate.setDate($scope.obj.endDate.getDate() + 1);
             $scope.requestStatistics($scope.obj);
         }
+    }
+});
+app.controller('complaintcmsSubconDataController', function ($scope, $filter, $http, $window) {
+    'use strict';
 
+    var datevar = new Date();
+    $scope.obj = {
+        'startDate': '',
+        'endDate': '',
+        'zon': 'KCH'
+    }
+    $scope.obj.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
+    $scope.obj.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
+
+    $scope.requestSubconPenaltyData = function(obj){
+        $http.post('/getCMSSubconPenalty', obj).then(function(response){
+            $scope.penaltyList = response.data;
+
+            $scope.penaltyList.forEach( function(item, index){
+                item.areaName = item.area.split(',')[1];
+            })
+
+            $scope.notify("success", "Data Loaded");
+        });
+        
+    }
+
+
+    $scope.requestSubconPenaltyData($scope.obj);
+
+    $scope.objChange = function () {
+        if ($scope.obj.startDate != undefined && $scope.obj.endDate != undefined && $scope.obj.startDate <= $scope.obj.endDate) {
+            $scope.obj.endDate.setDate($scope.obj.endDate.getDate() + 1);
+            $scope.requestSubconPenaltyData($scope.obj);
+        }
     }
 });
 

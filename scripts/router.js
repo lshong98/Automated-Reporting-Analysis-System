@@ -535,6 +535,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'complaintcmsDailyReportController',
         controllerAs: 'complaintcmsDailyReport'
     })
+    .when('/complaint-cmsSubconData',{
+        resolve: {
+            "check": function (routingService, $window, $location){
+                return routingService.auth($window, $location, '/complaint-cmsSubconData');
+            }
+        },
+        templateUrl: '/complaint-cmsSubconData',
+        controller: 'complaintcmsSubconDataController',
+        controllerAs: 'complaintcmsSubconDataController'
+    })
     .when('/complaint-cmsStatistics',{
         resolve: {
             "check": function (routingService, $window, $location){

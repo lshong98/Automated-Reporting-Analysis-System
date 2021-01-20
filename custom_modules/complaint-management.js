@@ -1162,6 +1162,24 @@ app.post('/getCmsSource', function(req,res){
     })
 });
 
+app.post('/getCMSSubconPenalty', function(req, res){
+    'use strict';
+
+    var startDate = req.body.startDate;
+    var endDate = req.body.endDate;
+    var zon = req.body.zon;
+
+    var sql = "SELECT tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', COUNT(*) AS 'validCount' FROM tblcomplaintofficer WHERE reason != '6' AND reason != '9' AND reason != '10' AND activeStatus = '1' AND zon = '" + zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "' AND cmsStatus = '1' GROUP BY area, subcon ORDER BY subcon, area";
+
+    database.query(sql,function(err,result){
+        if(err){
+            throw err;
+        }else{
+            res.json(result);
+        }
+    });
+});
+
 app.post('/getCmsBDStatisticsMW', function(req,res){
     'use strict';
     var startDate = req.body.startDate;

@@ -23,21 +23,24 @@
 <br/>
 <div class="row" data-ng-show="nowModule=='web'">
     <div class="col-md-2" >
-        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="exportCmsDatasheet()"><i class="fa fa-plus"></i> CMS Datasheet</button>   
+        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="exportCmsDatasheet()">CMS Datasheet</button>   
     </div>
     <div class="col-md-2">
-        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="bdCMSStatistics()"><i class="fa fa-plus"></i>BD CMS Monthly Report </button>   
+        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="bdCMSStatistics()">BD CMS Monthly Report </button>   
     </div>
     <div class="col-md-2">
-        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="bdQOP()"><i class="fa fa-plus"></i> CMS BD QOP</button>   
+        <button class="btn btn-primary btn-md" data-ng-show="showwebkch.view == 'A' || showwebbtu.view == 'A'" data-ng-click="bdQOP()">CMS BD QOP</button>   
     </div>
 </div>
 <div class="row" data-ng-show="nowModule=='log'">
     <div class="col-md-2">
-        <button class="btn btn-primary" data-ng-show="showlogskch.view == 'A' || showlogsbtu.view == 'A'" data-ng-click="exportCmsDailyReport()"><i class="fa fa-plus"></i> CMS Daily Report</button>   
+        <button class="btn btn-primary" data-ng-show="showlogskch.view == 'A' || showlogsbtu.view == 'A'" data-ng-click="exportCmsDailyReport()">CMS Daily Report</button>   
     </div>
     <div class="col-md-2">
-        <button class="btn btn-primary" data-ng-show="showlogskch.view == 'A' || showlogsbtu.view == 'A'" data-ng-click="logisticsGeneralCMSStatistics()"><i class="fa fa-plus"></i> General CMS Statistics</button>   
+        <button class="btn btn-primary" data-ng-show="showlogskch.view == 'A' || showlogsbtu.view == 'A'" data-ng-click="logisticsGeneralCMSStatistics()">General CMS Statistics</button>   
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-show="showlogskch.view == 'A' || showlogsbtu.view == 'A'" data-ng-click="cmsSubconDataPage()">CMS Penalty</button>   
     </div>
     
 </div>

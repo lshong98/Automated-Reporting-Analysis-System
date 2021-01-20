@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>CMS Penalty</h1>
+    </div>
+</div> 
+<hr/>
+<div class="form-group row">
+    <label for="startDate" class="col-md-1 col-form-label form-label-width">Start Date</label>
+    <div class="col-md-3">
+        <input type="date" id="startDate" class="form-control mx-sm-2" data-ng-model="obj.startDate"/>
+    </div>
+</div>    
+
+<div class="form-group row">
+    <label for="endDate" class="col-md-1 col-form-label form-label-width">End Date</label>
+    <div class="col-md-3">
+        <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="obj.endDate"/>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="zon" class="col-md-1 col-form-label form-label-width">Branch</label>
+    <div class="col-md-3">
+        <select id="zon" class="form-control mx-sm-2" data-ng-model="obj.zon">
+            <option value="KCH" selected>KCH</option>
+            <option value="BTU">BTU</option>
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-primary" data-ng-click="objChange()" >Generate</button>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-12">
+        <p style="text-align: right;"><i>Below table only include reason type - 'truck breakdown', 'truck full', 'shortage manpower', 'waste not collected', 'bin not send back', 'roro', 'other'</i></p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="subconPenaltyTable">
+                <thead>
+                    <tr>
+                        <th>Area Code</th>
+                        <th>TS/MP/TAK</th>
+                        <th>Valid CMS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat='p in penaltyList'>
+                        <td>{{p.areaName}}</td>
+                        <td>{{p.subcon}}</td>
+                        <td>{{p.validCount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

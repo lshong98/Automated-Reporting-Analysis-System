@@ -202,6 +202,10 @@ app.get('/complaint-cmsDailyReport',function (req, res){
     'use strict';
     res.sendFile('pages/complaint-cmsDailyReport.html', {root: __dirname});
 });
+app.get('/complaint-cmsSubconData',function (req, res){
+    'use strict';
+    res.sendFile('pages/complaint-cmsSubconData.html', {root: __dirname});
+});
 app.get('/complaint-cmsStatistics',function (req, res){
     'use strict';
     res.sendFile('pages/complaint-cmsStatistics.html', {root: __dirname});
