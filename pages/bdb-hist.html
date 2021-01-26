@@ -5,6 +5,11 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-12">
+            <input type="text" class="form-control fas" data-ng-model="searchBdbHistFilter" placeholder="&#XF002; Search here..." />
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-1 offset-md-11">
             <button class="btn btn-sm btn-danger" data-ng-click="backBtn()">Back</button>
         </div>
@@ -25,7 +30,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-ng-repeat="l in bdbHistList" data-ng-click="bdbDetailPage(l.id)">
+                        <tr data-ng-repeat="l in bdbHistList | filter: searchBdb" data-ng-click="bdbDetailPage(l.id)">
                             <td>{{l.requestDate}}</td>
                             <td>{{l.requestor}}</td>
                             <td>{{l.serialNo}}</td>

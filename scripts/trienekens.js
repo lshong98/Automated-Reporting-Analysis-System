@@ -8678,7 +8678,7 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
     $scope.searchChangesDateStart = '';
     $scope.searchChangesDateEnd = '';
     $scope.editBinNewPic = '';
-console.log($scope.show);
+
     $scope.createBin = {
         "serialNo": "",
         "brand" : "",
@@ -9005,6 +9005,8 @@ app.controller('bdbHistController', function($scope, $http, $filter, $window, st
     
     $scope.show = angular.copy(storeDataService.show.bdb);
     $scope.bdbHistList = [];
+    $scope.filterBdbHistList = [];
+    $scope.searchBdbHistFilter = '';
 
     $http.get('/getBdbHistList').then(function(response){
         $scope.bdbHistList = response.data;
@@ -9014,6 +9016,12 @@ app.controller('bdbHistController', function($scope, $http, $filter, $window, st
             $scope.bdbHistList[i].requestDate = $filter('date')($scope.bdbHistList[i].requestDate, 'yyyy-MM-dd');
             $scope.bdbHistList[i].changesDate = $filter('date')($scope.bdbHistList[i].changesDate, 'yyyy-MM-dd');
         }    
+
+        $scope.searchBdb = function (bdb) {
+            return (bdb.requestDAte + bdb.requestor + bdb.serialNo + bdb.action + bdb.status + bdb.approver + bdb.changesDate ).toUpperCase().indexOf($scope.searchBdbHistFilter.toUpperCase()) >= 0;    
+        }
+
+        $scope.filterBdbHistList = angular.copy($scope.bdbHistList);
     });
 
     $scope.backBtn = function () {
