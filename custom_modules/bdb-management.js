@@ -233,6 +233,7 @@ app.post('/editBinDatabase', function(req, res){
     }
     content = JSON.stringify(content);
     content = content.replace(/"/g,'\\"');
+    content = content.replace(/\t/g,'');
     var sql = "INSERT INTO tblbdblog (requestDate, requestor, action, insertQuery, content, status, changesDate, binID) VALUE (NOW(), '" + req.body.user + "', '1', \"" + editSql + "\", \"" + content + "\", 0, null, '" + id + "')";
 
     database.query(sql, function(err, result) {

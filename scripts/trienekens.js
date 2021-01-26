@@ -9011,17 +9011,18 @@ app.controller('bdbHistController', function($scope, $http, $filter, $window, st
     $http.get('/getBdbHistList').then(function(response){
         $scope.bdbHistList = response.data;
 
-        for(var i = 0; i < $scope.bdbHistList.length; i++){
-            $scope.bdbHistList[i].serialNo = JSON.parse($scope.bdbHistList[i].content).serialNo;      
-            $scope.bdbHistList[i].requestDate = $filter('date')($scope.bdbHistList[i].requestDate, 'yyyy-MM-dd');
-            $scope.bdbHistList[i].changesDate = $filter('date')($scope.bdbHistList[i].changesDate, 'yyyy-MM-dd');
-        }    
-
         $scope.searchBdb = function (bdb) {
             return (bdb.requestDAte + bdb.requestor + bdb.serialNo + bdb.action + bdb.status + bdb.approver + bdb.changesDate ).toUpperCase().indexOf($scope.searchBdbHistFilter.toUpperCase()) >= 0;    
         }
 
         $scope.filterBdbHistList = angular.copy($scope.bdbHistList);
+
+        for(var i = 0; i < $scope.bdbHistList.length; i++){
+            $scope.bdbHistList[i].content = $scope.bdbHistList[i].content.replace(/\t/g,' ');
+            $scope.bdbHistList[i].serialNo = JSON.parse($scope.bdbHistList[i].content).serialNo;      
+            $scope.bdbHistList[i].requestDate = $filter('date')($scope.bdbHistList[i].requestDate, 'yyyy-MM-dd');
+            $scope.bdbHistList[i].changesDate = $filter('date')($scope.bdbHistList[i].changesDate, 'yyyy-MM-dd');
+        } 
     });
 
     $scope.backBtn = function () {
@@ -9051,6 +9052,7 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
         
         // $scope.bdbDetail.content = $scope.bdbDetail.content.replace(/'/g,"");
         $scope.bdbDetail.content = $scope.bdbDetail.content.replace(/\\/g,"");
+        $scope.bdbDetail.content = $scope.bdbDetail.content.replace(/\t/g,' ');
         $scope.newContent = JSON.parse($scope.bdbDetail.content);
         if($scope.newContent.date != null){
             $scope.newContent.date =  $scope.newContent.date.replace(/'/g,"");
