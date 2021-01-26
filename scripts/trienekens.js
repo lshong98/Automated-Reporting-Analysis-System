@@ -12022,12 +12022,14 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     var areaID = value.id.split(",");
                     var areaName = value.name.split(",");
                     var code = value.code.split(",");
+                    var subcon = value.subcon.split(",");
                     var area = [];
                     $.each(areaID, function (index, value) {
                         area.push({
                             "id": areaID[index],
                             "name": areaName[index],
-                            "code": code[index]
+                            "code": code[index],
+                            "subcon": subcon[index]
                         });
                     });
                     $scope.areaList.push({
@@ -12042,7 +12044,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
             $('#inputUnder').on('change', function(){
                 $scope.logistics.areaCouncil = $(':selected', this).closest('optgroup').attr('label');
-                console.log($scope.logistics.areaCouncil);
+                $scope.subcon = $(':selected', this).attr('subcon');
+                console.log($scope.subcon);
             })
 
             $('#editUnder').on('change', function(){

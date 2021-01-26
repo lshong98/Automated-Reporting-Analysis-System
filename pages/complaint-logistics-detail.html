@@ -294,8 +294,8 @@
         <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Code</label>
         <div class="col-md-9">
             <select class="form-control mx-sm-3" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
-                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}" >
-                      <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+                  <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
+                      <option value="{{a.id}},{{a.code}}" subcon="{{a.subcon}}" data-ng-repeat="a in w.area">{{a.code}}</option>
                   </optgroup>
             </select>
         </div>
