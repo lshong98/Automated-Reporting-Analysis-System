@@ -9,8 +9,7 @@
 </style>
 <div class="row">
     <div class="col-md-12">
-        <h5>Officer Made Complaint</h5>
-        <h4>Complaint Management Sheet</h4>
+        <h4>Create New Complaint</h4>
     </div>
 </div>
 
@@ -40,7 +39,7 @@
             <option value="N/A" selected>N/A</option>
             <option value="ref">Ref</option>
         </select>
-        <input type="text" id="inputRefNo" placeholder="If from Council" class="form-control mx-sm-3" data-ng-show="refNoSlt == 'ref'" data-ng-model="comp.compRefNo" />
+        <input type="text" id="inputRefNo" placeholder="If from Council/ Talikhidmat" class="form-control mx-sm-3" data-ng-show="refNoSlt == 'ref'" data-ng-model="comp.compRefNo" />
     </div>
 </div>
 
@@ -111,8 +110,8 @@
     <label class="col-xs-3 col-form-label form-label-width">Type of Services:</label>
     <div class="col-md-9" >
         <select class="form-control" data-ng-model="typeOption" data-width="50%">
-            <option value="1">Compactor</option>
-            <option value="2">Hooklift</option>
+            <option value="1">Municipal Waste</option>
+            <option value="2">Roro Container</option>
             <option value="3">Scheduled waste</option>
         </select>
     </div>

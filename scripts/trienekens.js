@@ -9564,8 +9564,6 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 $scope.unreadWebComplaintCount++;
             }
 
-            $scope.complaintOfficerList[i].complaintDate = $filter('date')($scope.complaintOfficerList[i].complaintDate, 'yyyy-MM-dd');
-
             if ($scope.complaintOfficerList[i].step == 1) {
                 $scope.complaintOfficerList[i].department = "Logistics";
             } else {
@@ -9573,9 +9571,9 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
             }
 
             if ($scope.complaintOfficerList[i].services == 1) {
-                $scope.complaintOfficerList[i].serviceType = "Compactor";
+                $scope.complaintOfficerList[i].serviceType = "Municipal Waste";
             } else if ($scope.complaintOfficerList[i].services == 2) {
-                $scope.complaintOfficerList[i].serviceType = "Hooklift";
+                $scope.complaintOfficerList[i].serviceType = "Roro Container";
             } else if ($scope.complaintOfficerList[i].services == 3) {
                 $scope.complaintOfficerList[i].serviceType = "Scheduled waste";
             }
@@ -9601,6 +9599,11 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 }
             }
 
+            
+            if($scope.complaintOfficerList[i].bdKPI != null){                
+                $scope.complaintOfficerList[i].bdKPINum = $scope.complaintOfficerList[i].bdKPI.split(":")[0] + ":" + parseInt($scope.complaintOfficerList[i].bdKPI.split(":")[1]);
+            }
+            
             if($scope.complaintOfficerList[i].bdKPIAchieve == 'A'){
                 $scope.complaintOfficerList[i].bdKPIAchieveWord = 'Achieve';
             }else if($scope.complaintOfficerList[i].bdKPIAchieve == 'N'){
@@ -9663,9 +9666,9 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                     if (splitTypeSpecialContent[0] == '1') {
                         splitTypeSpecialContent[2] = "Waste not collected (days)";
                     } else if (splitTypeSpecialContent[0] == '12') {
-                        splitTypeSpecialContent[2] = "Others(compactor)";
+                        splitTypeSpecialContent[2] = "Others(Municipal waste)";
                     } else if (splitTypeSpecialContent[0] == '13') {
-                        splitTypeSpecialContent[2] = "Others(hooklift)";
+                        splitTypeSpecialContent[2] = "Others(Roro container)";
                     } else if (splitTypeSpecialContent[0] == '14') {
                         splitTypeSpecialContent[2] = "Others(Scheduled waste)";
                     }
@@ -9702,9 +9705,9 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 //                }
 
                 if ($scope.complaintList[i].type == 1) {
-                    $scope.complaintList[i].serviceType = "Compactor";
+                    $scope.complaintList[i].serviceType = "Municipal waste";
                 } else if ($scope.complaintList[i].type == 2) {
-                    $scope.complaintList[i].serviceType = "Hooklift";
+                    $scope.complaintList[i].serviceType = "Roro container";
                 } else if ($scope.complaintList[i].type == 3) {
                     $scope.complaintList[i].serviceType = "Scheduled waste";
                 }
@@ -9753,12 +9756,12 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                     $scope.unreadLogComplaintCount++;
                 }
 
-                $scope.logisticsComplaintList[i].complaintDate = $filter('date')($scope.logisticsComplaintList[i].complaintDate, 'yyyy-MM-dd');
+                // $scope.logisticsComplaintList[i].complaintDate = $filter('date')($scope.logisticsComplaintList[i].complaintDate, 'yyyy-MM-dd');
 
                 if ($scope.logisticsComplaintList[i].services == 1) {
-                    $scope.logisticsComplaintList[i].serviceType = "Compactor";
+                    $scope.logisticsComplaintList[i].serviceType = "Municipal waste";
                 } else if ($scope.logisticsComplaintList[i].services == 2) {
-                    $scope.logisticsComplaintList[i].serviceType = "Hooklift";
+                    $scope.logisticsComplaintList[i].serviceType = "Roro Container";
                 } else if ($scope.logisticsComplaintList[i].services == 3) {
                     $scope.logisticsComplaintList[i].serviceType = "Scheduled waste";
                 }
@@ -9796,6 +9799,10 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                 }else if($scope.logisticsComplaintList[i].reason == 10){
                     $scope.logisticsComplaintList[i].reason = "Not wearing PPE / Uniform";
                 }               
+
+                if($scope.logisticsComplaintList[i].lgKPI != null){                
+                    $scope.logisticsComplaintList[i].lgKPINum = $scope.logisticsComplaintList[i].lgKPI.split(":")[0] + ":" + parseInt($scope.logisticsComplaintList[i].lgKPI.split(":")[1]);
+                }
 
                 if($scope.logisticsComplaintList[i].lgKPIAchieve == 'A'){
                     $scope.logisticsComplaintList[i].lgKPIAchieveWord = 'Achieve';
@@ -10202,9 +10209,9 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                 }
 
                 if($scope.cmsDailyReportList[i].services == '1'){
-                    $scope.cmsDailyReportList[i].servicesType = 'Compactor';
+                    $scope.cmsDailyReportList[i].servicesType = 'Municipal waste';
                 }else if($scope.cmsDailyReportList[i].services == '2'){
-                    $scope.cmsDailyReportList[i].servicesType = 'Hooklift';
+                    $scope.cmsDailyReportList[i].servicesType = 'Roro container';
                 }else if($scope.cmsDailyReportList[i].services == '3'){
                     $scope.cmsDailyReportList[i].services = 'Scheduled Waste';
                 }
@@ -11214,10 +11221,10 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
         }
 
         if ($scope.comDetail.services == 1) {
-            $scope.services = "Compactor";
+            $scope.services = "Municipal waste";
         } 
         else if ($scope.comDetail.services == 2) {
-            $scope.services = "Hooklift";
+            $scope.services = "Roro container";
         } 
         else if ($scope.comDetail.services == 3) {
             $scope.services = "Scheduled waste";
@@ -11231,10 +11238,10 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                     splitTypeSpecialContent[2] = "Waste not collected (days)";
                     $scope.verify.typeCode += 'a,';
                 } else if (splitTypeSpecialContent[0] == '12') {
-                    splitTypeSpecialContent[2] = "Others(compactor)";
+                    splitTypeSpecialContent[2] = "Others(Municipal waste)";
                     $scope.verify.typeCode += 'l,';
                 } else if (splitTypeSpecialContent[0] == '13') {
-                    splitTypeSpecialContent[2] = "Others(hooklift)";
+                    splitTypeSpecialContent[2] = "Others(Roro container)";
                     $scope.verify.typeCode += 'm,';
                 } else if (splitTypeSpecialContent[0] == '14') {
                     splitTypeSpecialContent[2] = "Others(Scheduled waste)";
@@ -11711,10 +11718,10 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.complaintImages.image04 = "";
         }        
 
-        if ($scope.detailObj.services === "1") { //Compactor
+        if ($scope.detailObj.services === "1") { //Municipal waste
             $scope.showAreaLogistics = true;
             $scope.areaUnderList = ["Trienekens", "Mega Power", "TAK"];
-        } else if ($scope.detailObj.services === "2") { //Hooklift
+        } else if ($scope.detailObj.services === "2") { //Roro container
             $scope.showAreaLogistics = false;
             $scope.areaUnderList = ["Trienekens", "Mega Power", "TAK"];
         } else if ($scope.detailObj.services === "3") { //Scheduled Waste
@@ -11755,9 +11762,9 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                 if (splitTypeSpecialContent[0] == '1') {
                     splitTypeSpecialContent[2] = "Waste not collected (days)";
                 } else if (splitTypeSpecialContent[0] == '12') {
-                    splitTypeSpecialContent[2] = "Others(compactor)";
+                    splitTypeSpecialContent[2] = "Others(Municipal waste)";
                 } else if (splitTypeSpecialContent[0] == '13') {
-                    splitTypeSpecialContent[2] = "Others(hooklift)";
+                    splitTypeSpecialContent[2] = "Others(Roro container)";
                 } else if (splitTypeSpecialContent[0] == '14') {
                     splitTypeSpecialContent[2] = "Others(Scheduled waste)";
                 }
@@ -12886,11 +12893,11 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                     $scope.tc1 = true;
                     $scope.tc1days = splitTypeSpecialContent[1];
                 } else if (splitTypeSpecialContent[0] == '12') {
-                    splitTypeSpecialContent[2] = "Others(compactor)";
+                    splitTypeSpecialContent[2] = "Others(Municipal waste)";
                     $scope.tc12 = true;
                     $scope.tc12others = splitTypeSpecialContent[1];
                 } else if (splitTypeSpecialContent[0] == '13') {
-                    splitTypeSpecialContent[2] = "Others(hooklift)";
+                    splitTypeSpecialContent[2] = "Others(Roro container)";
                     $scope.tc13 = true;
                     $scope.tc13others = splitTypeSpecialContent[1];
                 } else if (splitTypeSpecialContent[0] == '14') {
