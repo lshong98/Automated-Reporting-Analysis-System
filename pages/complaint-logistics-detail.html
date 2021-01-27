@@ -462,19 +462,19 @@
     </div>
     <br/>
     <!--original area  under-->
-    <div class="form-group row">
+    <div class="form-group row" data-ng-show="showAreaLogistics">
         <strong class="col-xs-3 form-label-width">Area Code:</strong>
         <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{areaCode}}</p>
         <div class="col-md-9" data-ng-show="showLogsEdit">
             <select class="mx-sm-3 form-control" id="editUnder" data-ng-model="editLogistics.area" data-live-search="true" data-width="100%">
                   <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
-                      <option value="{{a.id}},{{a.code}}" data-ng-repeat="a in w.area">{{a.code}}</option>
+                      <option value="{{a.id}},{{a.code}}" subcon="{{a.subcon}}" data-ng-repeat="a in w.area">{{a.code}}</option>
                   </optgroup>
             </select>
         </div>
     </div>
     
-    <div class="form-group row">
+    <div class="form-group row" data-ng-show="showAreaLogistics">
         <strong class="col-xs-3 form-label-width">Area by Council:</strong>
         <p class="mx-sm-3">{{fullComplaintDetail.council}}</p>
         <!-- <div class="col-md-9" data-ng-show="showLogsEdit">

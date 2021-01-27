@@ -9316,6 +9316,9 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
                     "code": code[index]
                 });
             });
+            area.sort(function(a, b) {
+                return (a[code] > b[code]) ? 1 : ((a[code] < b[code]) ? -1 : 0);
+            });
             $scope.areaList.push({
                 "zone": {
                     "id": value.zoneID,
@@ -10694,7 +10697,10 @@ app.controller('complaintcmsSubconDataController', function ($scope, $filter, $h
             $scope.penaltyList.forEach( function(item, index){
                 item.areaName = item.area.split(',')[1];
             })
-
+            $scope.penaltyList.sort(function(a, b) {
+                // return (a.areaName > b.areaName) ? 1 : ((a.areaName < b.areaName) ? -1 : 0);
+                return a.subcon === b.subcon ? ((a.areaName > b.areaName) ? 1 : ((a.areaName < b.areaName) ? -1 : 0)) : a.subcon - b.subcon;
+            });
             $scope.notify("success", "Data Loaded");
         });
         
@@ -11972,6 +11978,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                             $scope.editLogistics.sub = $scope.subOthersEdit;
                         }
 
+                        $scope.editLogistics.sub = $('#editSub').val();
+
                         $http.post('/updateLogisticsCMSEdit', $scope.editLogistics).then(function(response){
                             if (response.data.status == "success") {
                                 $scope.notify(response.data.status, "Data has been updated");
@@ -12049,6 +12057,11 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                             "subcon": subcon[index]
                         });
                     });
+
+                    area.sort(function(a, b) {
+                        return (a[code] > b[code]) ? 1 : ((a[code] < b[code]) ? -1 : 0);
+                    });
+
                     $scope.areaList.push({
                         "zone": {
                             "id": value.zoneID,
@@ -12062,12 +12075,33 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $('#inputUnder').on('change', function(){
                 $scope.logistics.areaCouncil = $(':selected', this).closest('optgroup').attr('label');
                 $scope.subcon = $(':selected', this).attr('subcon');
-                console.log($scope.subcon);
+                if($scope.subcon == 'TS'){
+                    $scope.subcon2 = "Trienekens";
+                }else if($scope.subcon == 'MP'){
+                    $scope.subcon2 = 'Mega Power';
+                }else if($scope.subcon == 'TAK'){
+                    $scope.subcon2 = 'TAK'
+                }else{
+                    $scope.subcon2 = 'Others'
+                }
+                $('#inputSub').val($scope.subcon2);
             })
 
             $('#editUnder').on('change', function(){
                 $scope.editLogistics.council = $(':selected', this).closest('optgroup').attr('label');
-                console.log($scope.editLogistics.council);
+                $scope.subcon = $(':selected', this).attr('subcon');
+                
+                if($scope.subcon == 'TS'){
+                    $scope.subcon2 = "Trienekens";
+                }else if($scope.subcon == 'MP'){
+                    $scope.subcon2 = 'Mega Power';
+                }else if($scope.subcon == 'TAK'){
+                    $scope.subcon2 = 'TAK'
+                }else{
+                    $scope.subcon2 = 'Others'
+                }
+                $('#editSub').val($scope.subcon2);
+                
             })
         });
     
@@ -12268,6 +12302,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         $scope.logistics.complaintDate = $scope.detailObj.complaintDate;
         $scope.logistics.complaintTime = $scope.detailObj.complaintTime;
         
+        $scope.logistics.sub = $('#inputSub').val();
 
         if ($scope.logistics.sub != "Trienekens") {
             if ($scope.logsSubDate == null || $scope.logsSubTime == null) {
@@ -12712,6 +12747,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
     $scope.showSubCustBtn = true;
     $scope.showCompImg = true;
     $scope.showLogsImg = true;
+    $scope.showAreaControl = true;
 
     var splitType = "";
     var splitTypeContent = "";
@@ -12803,6 +12839,14 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             } else {
                 $scope.logsImages.image04 = "";
             }            
+        }
+
+        if ($scope.detailObj.services === "1") { //Municipal waste
+            $scope.showAreaControl = true;
+        } else if ($scope.detailObj.services === "2") { //Roro container
+            $scope.showAreaControl = false;
+        } else if ($scope.detailObj.services === "3") { //Scheduled Waste
+            $scope.showAreaControl = false;
         }
 
         //review
