@@ -37,102 +37,212 @@
                 <tr>
                     <th width="20%">Serial No</th>
                     <td width="40%">{{oldContent.serialNo}}</td>
-                    <td width="40%">{{newContent.serialNo}}</td>
+                    <td width="40%">
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.serialNo"></span>
+                        <input type="text" class="form-control" id="bdbSerialNo" data-ng-show="editView" data-ng-model="editContent.serialNo" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Brand</th>
                     <td>{{oldContent.brand}}</td>
-                    <td>{{newContent.brand}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.brand"></span>
+                        <input type="text" class="form-control" id="bdbBrand" data-ng-show="editView" data-ng-model="editContent.brand" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Bin Size</th>
                     <td>{{oldContent.size}}</td>
-                    <td>{{newContent.size}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.size"></span>
+                        <select class="form-control" id="bdbBinSize" data-ng-show="editView" data-ng-model="editContent.size">
+                            <option value="120L" >120L</option>
+                            <option value="240L" >240L</option>
+                            <option value="660L" >660L</option>
+                            <option value="1000L" >1000L</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <th>Bin in Use</th>
                     <td>{{oldContent.binInUse}}</td>
-                    <td>{{newContent.binInUse}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.binInUse"></span>
+                        <select class="form-control" id="bdbBinUse" data-ng-show="editView" data-ng-model="editContent.binInUse">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <th>Date</th>
                     <td>{{oldContent.date}}</td>
-                    <td>{{newContent.date}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.date"></span>
+                        <input type="date" class="form-control" id="bdbBinDate " data-ng-show="editView" data-ng-model="editContent.date" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Full Name</th>
                     <td>{{oldContent.name}}</td>
-                    <td>{{newContent.name}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.name"></span>
+                        <input type="text" class="form-control" id="bdbFullName" data-ng-show="editView" data-ng-model="editContent.name" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Contact Number</th>
                     <td>{{oldContent.contact}}</td>
-                    <td>{{newContent.contact}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.contact"></span>
+                        <input type="text" class="form-control" id="bdbContact" data-ng-show="editView" data-ng-model="editContent.contact" />
+                    </td>
                 </tr>
                 <tr>
                     <th>IC</th>
                     <td>{{oldContent.ic}}</td>
-                    <td>{{newContent.ic}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.ic"></span>
+                        <input type="text" class="form-control" id="bdbIc" data-ng-show="editView" data-ng-model="editContent.ic" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Property No</th>
                     <td>{{oldContent.propertyNo}}</td>
-                    <td>{{newContent.propertyNo}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.propertyNo"></span>
+                        <input type="text" class="form-control" id="bdbProNo" data-ng-show="editView" data-ng-model="editContent.propertyNo" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Tmn/Kpg</th>
                     <td>{{oldContent.tmnkpg}}</td>
-                    <td>{{newContent.tmnkpg}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.tmnkpg"></span>
+                        <input type="text" class="form-control" id="bdbTmnkpg" data-ng-show="editView" data-ng-model="editContent.tmnkpg" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Address</th>
                     <td>{{oldContent.address}}</td>
-                    <td>{{newContent.address}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.address"></span>
+                        <input type="text" class="form-control" id="bdbAddress" data-ng-show="editView" data-ng-model="editContent.address" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Company Name</th>
                     <td>{{oldContent.company}}</td>
-                    <td>{{newContent.company}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.company"></span>
+                        <input type="text" class="form-control" id="bdbCompany" data-ng-show="editView" data-ng-model="editContent.company" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Type of Pro</th>
                     <td>{{oldContent.typeOfPro}}</td>
-                    <td>{{newContent.typeOfPro}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.typeOfPro"></span>
+                        <select class="form-control" id="bdbTypeOfPro" data-ng-show="editView" data-ng-model="editContent.typeOfPro">
+                            <option value="Condo,Apart,Flat">Condo,Apart,Flat</option>
+                            <option value="Construction Site">Construction Site</option>
+                            <option value="DBKU">DBKU</option>
+                            <option value="Gov Entity">Gov Entity</option>
+                            <option value="Government Housing">Government Housing</option>
+                            <option value="Hospital,Clinic">Hospital,Clinic</option>
+                            <option value="Hotel,Resort">Hotel,Resort</option>
+                            <option value="Household">Household</option>
+                            <option value="Market,Hawker">Market,Hawker</option>
+                            <option value="MBKS">MBKS</option>
+                            <option value="MPP">MPP</option>
+                            <option value="PlaceofWorship">PlaceofWorship</option>
+                            <option value="Private Comm">Private Comm</option>
+                            <option value="Purchased">Purchased</option>
+                            <option value="Shophouse">Shophouse</option>
+                            <option value="Stadium">Stadium</option>
+                            <option value="Temporary">Temporary</option>
+                            <option value="Uni,School,Kindergarden">Uni,School,Kindergarden</option>
+                            <option value="Utility">Utility</option>
+                            <option value="Workshop,Petrol Station">Workshop,Petrol Station</option>
+                            <option value="Factory">Factory</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <th>Picture: Sesco/KWB/Cukai Rumah</th>
                     <td><a href="{{oldContent.pic}}" target="_blank"><img src="{{oldContent.pic}}" width="100" height="100" style="object-fit: contain;"/></a></td>
-                    <td><a href="{{newContent.pic}}" target="_blank"><img src="{{newContent.pic}}" width="100" height="100" style="object-fit: contain;"/></a></td>
+                    <td>
+                        <a href="{{editContent.pic}}" target="_blank" data-ng-show="!editView"><img src="{{editContent.pic}}" width="100" height="100" style="object-fit: contain;"/></a>
+                        <input type="file" class="form-control" id="bdbPic" accept="image/*" data-ng-show="editView" data-ng-model="editBinNewPic" app-filereader/>
+                    </td>
                 </tr>
                 <tr>
                     <th>Communal</th>
                     <td>{{oldContent.communal}}</td>
-                    <td>{{newContent.communal}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.communal"></span>
+                        <select class="form-control" id="bdbCommunal" data-ng-show="editView" data-ng-model="editContent.communal">
+                            <option value="Commercial">Commercial</option>
+                            <option value="Residential">Residential</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <th>Council</th>
                     <td>{{oldContent.council}}</td>
-                    <td>{{newContent.council}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.council"></span>
+                        <select class="form-control" id="bdbCouncil" data-ng-show="editView" data-ng-model="editContent.council">
+                            <option value="MBKS">MBKS</option>
+                            <option value="DBKU">DBKU</option>
+                            <option value="MPP">MPP</option>
+                            <option value="MDS">MDS</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <th>Bin Status</th>
                     <td>{{oldContent.binStatus}}</td>
-                    <td>{{newContent.binStatus}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.binStatus"></span>
+                        <select class="form-control" id="bdbBinStatus" data-ng-show="editView" data-ng-model="editContent.binStatus">
+                            <option value="ACR">ACR</option>
+                            <option value="BE">BE</option>
+                            <option value="DAMAGED">Damaged</option>
+                            <option value="LOST">Lost</option>
+                            <option value="COMMUNAL:R">CommunalR</option>
+                            <option value="COMMUNAL:C">CommunalC</option>
+                            <option value="TEMPORARY">Temporary</option>
+                            <option value="PURCHASED">Purchased</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <th>Comment</th>
                     <td>{{oldContent.comment}}</td>
-                    <td>{{newContent.comment}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.comment"></span>
+                        <input type="text" class="form-control" id="bdbComment" data-ng-show="editView" data-ng-model="editContent.comment" />
+                    </td>
                 </tr>
                 <tr>
                     <th>Written Off</th>
                     <td>{{oldContent.writtenOff}}</td>
-                    <td>{{newContent.writtenOff}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.writtenOff"></span>
+                        <select class="form-control" id="bdbWrittenOff" data-ng-show="editView" data-ng-model="editContent.writtenOff">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <th>Key in Date</th>
                     <td>{{oldContent.keyInDate}}</td>
-                    <td>{{newContent.keyInDate}}</td>
+                    <td>
+                        <span  data-ng-show="!editView" data-ng-bind="newContent.keyInDate"></span>
+                        <input type="date" class="form-control" id="bdbKeyInDate " data-ng-show="editView" data-ng-model="editContent.keyInDate" />
+                    </td>
                 </tr>
             </table>
         </div>
@@ -156,11 +266,16 @@
     </div>
     <br/>
     <div class="row" data-ng-show="bdbDetail.status == 'Pending'">
-        <div class="col-md-1 offset-md-10">
-            <button class="btn btn-success btn-md" data-ng-click="bdbEditReq('1')">Approve</button>
+        <div class="col-md-1 offset-md-9">
+            <button class="btn btn-primary btn-md" data-ng-show="!editView" data-ng-click="editView = 'TRUE'; ">Edit</btn>
         </div>
         <div class="col-md-1">
-            <button class="btn btn-danger btn-md" data-ng-click="bdbEditReq('2')">Reject</button>
+            <button class="btn btn-success btn-md" data-ng-show="!editView" data-ng-click="bdbEditReq('1')">Approve</button>
+            <button class="btn btn-success btn-md" data-ng-show="editView" data-ng-click="saveEditBdbHist()">Save</btn>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-danger btn-md" data-ng-show="!editView" data-ng-click="bdbEditReq('2')">Reject</button>
+            <button class="btn btn-danger btn-md" data-ng-show="editView" data-ng-click="cancelEditBdbHist()">Cancel</btn>
         </div>
     </div>
 </div>

@@ -8873,38 +8873,6 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
         window.location.href = "#/bdb-edit/" + id;
     }
 
-    $scope.editBinDatabase = function(){
-        $scope.editBin.date = $filter('date')($scope.editBin.date, 'yyyy-MM-dd');
-        $scope.editBin.keyInDate = $filter('date')($scope.editBin.keyInDate, 'yyyy-MM-dd');
-
-        if($scope.editBinNewPic != ''){
-            $scope.editBin.newPic = $scope.editBinNewPic;
-        }else{
-            $scope.editBin.newPic = '';
-        }
-
-        $.each($scope.editBin, function (key, value) {
-            if(value == null){
-                $scope.editBin[key] = ""
-            }
-        });
-
-        if($scope.editBin.serialNo == ''){
-            $scope.notify("error", "Please dont leave blank on serial no.")
-        }else{
-            $scope.editBin.user = $scope.user;
-            $http.post('/editBinDatabase', $scope.editBin).then(function(response){
-                if(response.data.status=="success"){
-                    $scope.notify(response.data.status, response.data.message);
-                    angular.element('#editBin').modal('toggle');
-                }else{
-                    $scope.notify("error", "There has some error.");
-                    angular.element('#editBin').modal('toggle');
-                }            
-            })
-        }
-    }
-
     $scope.deleteBinDatabase = function(id){
         if(confirm("Do you want to Delete the Bin record?")){
             $http.post('/deleteBindatabase',{'id': id}).then(function(response){
@@ -8968,11 +8936,12 @@ app.controller('bdbEditController', function($scope, $http, $filter, $window, $r
     $scope.editBinDatabase = function(){
         $scope.editBin.date = $filter('date')($scope.editBin.date, 'yyyy-MM-dd');
         $scope.editBin.keyInDate = $filter('date')($scope.editBin.keyInDate, 'yyyy-MM-dd');
+        $scope.editBin.myTimeStamp =  $filter('date')(new Date(), 'yyyyMMddHHmmss');
 
-        if($scope.editBinNewPic != ''){
+        if($scope.editBinNewPic != undefined){
             $scope.editBin.newPic = $scope.editBinNewPic;
         }else{
-            $scope.editBin.newPic = '';
+            $scope.editBin.newPic = $scope.editBin.pic;
         }
 
         $.each($scope.editBin, function (key, value) {
@@ -8988,10 +8957,9 @@ app.controller('bdbEditController', function($scope, $http, $filter, $window, $r
             $http.post('/editBinDatabase', $scope.editBin).then(function(response){
                 if(response.data.status=="success"){
                     $scope.notify(response.data.status, response.data.message);
-                    angular.element('#editBin').modal('toggle');
+                    window.location.href = '#/bdb';
                 }else{
                     $scope.notify("error", "There has some error.");
-                    angular.element('#editBin').modal('toggle');
                 }            
             })
         }
@@ -9040,6 +9008,7 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
     $scope.approver = window.sessionStorage.getItem('owner');
     $scope.show = angular.copy(storeDataService.show.bdb);
     $scope.remarkCol = "";
+    $scope.editView = false;
 
     $scope.bdbID = {
         "id": $routeParams.bdbID
@@ -9049,11 +9018,11 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
         $scope.bdbDetail = response.data[0];
         $scope.bdbDetail.requestDate = $filter('date')($scope.bdbDetail.requestDate, 'yyyy-MM-dd');
         $scope.bdbDetail.changesDate = $filter('date')($scope.bdbDetail.changesDate, 'yyyy-MM-dd');
-        
-        // $scope.bdbDetail.content = $scope.bdbDetail.content.replace(/'/g,"");
+
         $scope.bdbDetail.content = $scope.bdbDetail.content.replace(/\\/g,"");
         $scope.bdbDetail.content = $scope.bdbDetail.content.replace(/\t/g,' ');
         $scope.newContent = JSON.parse($scope.bdbDetail.content);
+
         if($scope.newContent.date != null){
             $scope.newContent.date =  $scope.newContent.date.replace(/'/g,"");
         }
@@ -9072,6 +9041,15 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
                 $scope.oldContent.keyInDate = $filter('date')($scope.oldContent.keyInDate, 'yyyy-MM-dd');
             })
         }
+
+        $scope.editContent = JSON.parse($scope.bdbDetail.content);
+        if($scope.editContent.date != null){
+            $scope.editContent.date = new Date($scope.editContent.date);
+        }
+        if($scope.editContent.keyInDate != null){
+            $scope.editContent.keyInDate = new Date($scope.editContent.keyInDate);
+        }
+        
     });
 
     $scope.bdbEditReq = function(status){
@@ -9091,6 +9069,45 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
                 $route.reload(); 
             }
         });
+    }
+
+    $scope.saveEditBdbHist = function(){
+        $scope.editContent.date = $filter('date')($scope.editContent.date, 'yyyy-MM-dd');
+        $scope.editContent.keyInDate = $filter('date')($scope.editContent.keyInDate, 'yyyy-MM-dd');
+        $scope.editContent.myTimeStamp =  $filter('date')(new Date(), 'yyyyMMddHHmmss');
+        $scope.editContent.remarkCol = $scope.remarkCol;
+
+        if($scope.editBinNewPic != undefined){
+            $scope.editContent.newPic = $scope.editBinNewPic;
+        }else{
+            $scope.editContent.newPic = $scope.editContent.pic;
+        }
+
+        $.each($scope.editContent, function (key, value) {
+            if(value == null){
+                $scope.editContent[key] = ""
+            }
+        });
+
+        if($scope.editContent.serialNo == ''){
+            $scope.notify("error", "Please dont leave blank on serial no.")
+        }else{
+            $scope.editContent.approver = $scope.approver;
+            $scope.editContent.logID = $scope.bdbID.id;
+
+            $http.post('/editBdbFromHist', $scope.editContent).then(function(response){
+                if(response.data.status=="success"){
+                    $scope.notify(response.data.status, response.data.message);
+                    $route.reload();   
+                }else{
+                    $scope.notify("error", "There has some error.");
+                }            
+            })
+        }        
+    }
+
+    $scope.cancelEditBdbHist = function(){
+        $scope.editView = false;
     }
 });
 
