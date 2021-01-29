@@ -409,8 +409,9 @@ app.post('/editBdbFromHist', function(req, res){
     content = content.replace(/"/g,'\\"');
     content = content.replace(/\t/g,'');
     var remark = req.body.remarkCol.replace(/'/g,"\\'");
+    var oldContent = req.body.oldContent.replace(/'/g,"\\'");
     
-    var sql = "UPDATE tblbdblog SET insertQuery = \"" + editSql + "\", content = \"" + content + "\",  approver = '" + req.body.approver + "', remark = '" + remark + "', status = 1, changesDate = NOW() WHERE id ='" + req.body.logID +"'";
+    var sql = "UPDATE tblbdblog SET insertQuery = \"" + editSql + "\", content = \"" + content + "\",  approver = '" + req.body.approver + "', oldContent = '" + oldContent + "', remark = '" + remark + "', status = 1, changesDate = NOW() WHERE id ='" + req.body.logID +"'";
 
     database.query(editSql, function(err, result) {
         if (err) {

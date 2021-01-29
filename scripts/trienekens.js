@@ -9094,6 +9094,7 @@ app.controller('bdbHistDetailController', function($scope, $http, $filter, $wind
         }else{
             $scope.editContent.approver = $scope.approver;
             $scope.editContent.logID = $scope.bdbID.id;
+            $scope.editContent.oldContent = JSON.stringify($scope.oldContent);
 
             $http.post('/editBdbFromHist', $scope.editContent).then(function(response){
                 if(response.data.status=="success"){
