@@ -55,6 +55,7 @@
             <table class="table" id="cmsDailyReportTbl">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>CMS Lodged</th>
                         <th>Services</th>
                         <th>Name</th>
@@ -75,6 +76,7 @@
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="c in cmsDailyReportList" data-ng-click="viewComp(c.coID)">
+                        <td data-ng-bind="c.coID"></td>
                         <td data-ng-bind="c.complaintDateTime"></td>
                         <td data-ng-bind="c.servicesType"></td>
                         <td data-ng-bind="c.name"></td>

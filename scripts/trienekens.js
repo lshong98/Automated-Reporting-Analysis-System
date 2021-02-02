@@ -9667,7 +9667,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterWebComplaintList = angular.copy($scope.complaintOfficerList);
 
         $scope.searchWebComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.customerDateTime + complaint.logisticsDateTime + complaint.bdKPIAchieveWord +  complaint.name + complaint.company + complaint.serviceType + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.coID + complaint.customerDateTime + complaint.logisticsDateTime + complaint.bdKPIAchieveWord +  complaint.name + complaint.company + complaint.serviceType + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.webComptotalItems = $scope.filterWebComplaintList.length;
@@ -9770,7 +9770,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterComplaintList = angular.copy($scope.complaintList);
 
         $scope.searchComplaint = function (complaint) {
-            return (complaint.date + complaint.detailType + complaint.customer + complaint.serviceType + complaint.code + complaint.status).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.date + complaint.complaintID + complaint.detailType + complaint.customer + complaint.serviceType + complaint.code + complaint.status).toUpperCase().indexOf($scope.searchComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.appComptotalItems = $scope.filterComplaintList.length;
@@ -9870,7 +9870,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterLogComplaintList = angular.copy($scope.logisticsComplaintList);
 
         $scope.searchLogComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.name + complaint.company + complaint.reason + complaint.serviceType + complaint.staff + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.coID + complaint.name + complaint.company + complaint.reason + complaint.serviceType + complaint.staff + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.logComptotalItems = $scope.filterLogComplaintList.length;

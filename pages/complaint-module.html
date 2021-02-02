@@ -76,6 +76,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
+                                                <th width="5%">ID</th>
                                                 <th width="10%" data-ng-click="webOrderBy('date');">CMS Lodged <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('logisticsDateTime');">LG Date/Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('customerDateTime');">BD Date/Time <i class="fas fa-sort-down"></i></th>
@@ -91,6 +92,7 @@
                                         </thead>
                                         <tbody>               
                                             <tr data-ng-repeat="c in complaintOfficerList | filter:searchWebComplaint | offset: (paginationWebComp.currentPage - 1) * paginationWebComp.itemsPerPage | limitTo: paginationWebComp.itemsPerPage" data-ng-click="viewComp(c.coID)" data-ng-class="{{unreadWebRowControl}}">
+                                                <td data-ng-bind="c.coID"></td>
                                                 <td data-ng-bind="c.complaintDate"></td>
                                                 <td data-ng-bind="c.logisticsDateTime"></td>
                                                 <td data-ng-bind="c.customerDateTime"></td>
@@ -135,6 +137,7 @@
                                     <table class="table table-hover table-clickable">
                                         <thead>
                                             <tr>
+                                                <th width="10%">ID</th>
                                                 <th width="20%" data-ng-click="orderBy('date');">Date <i class="fas fa-sort-down"></i></th>
                                                 <th width="30%" data-ng-click="orderBy('detailType');">Complaint Details <i class="fas fa-sort-down"></i></th>
                                                 <th width="20%" data-ng-click="orderBy('customer');">Customer <i class="fas fa-sort-down"></i></th>
@@ -144,6 +147,7 @@
                                         </thead>
                                         <tbody>                                         
                                             <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (paginationAppComp.currentPage - 1) * paginationAppComp.itemsPerPage | limitTo: paginationAppComp.itemsPerPage" data-ng-click="complaintDetail(c.complaintID)" data-ng-class="{{unreadAppRowControl}}">
+                                                <td data-nd-bind="c.complaintID"></td>
                                                 <td data-ng-bind="c.date"></td>
                                                 <td data-ng-bind="c.detailType"></td>
                                                 <td data-ng-bind="c.customer"></td>
@@ -178,6 +182,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
+                                                <th width="5%">ID</th>
                                                 <th width="15%" data-ng-click="logsOrderBy('date');">CMS Lodged <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="logsOrderBy('logisticsDateTime');">LG Date/Time <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%">LG KPI</th>
@@ -192,6 +197,7 @@
                                         </thead>
                                         <tbody>               
                                             <tr data-ng-repeat="l in logisticsComplaintList | filter: searchLogComplaint | offset: (paginationLogComp.currentPage - 1) * paginationLogComp.itemsPerPage | limitTo: paginationLogComp.itemsPerPage" class="clickable-row" data-ng-click="viewLogComp(l.coID)" data-ng-class="{{unreadLogRowControl}}">
+                                                <td data-ng-bind="l.coID"></td>
                                                 <td data-ng-bind="l.complaintDate"></td>
                                                 <td data-ng-bind="l.logisticsDateTime"></td>
                                                 <td><span data-ng-bind="l.lgKPINum"></span><br/><span data-ng-bind="l.lgKPIAchieveWord" data-ng-class="{'badge badge-danger': l.lgKPIAchieve == 'N', 'badge badge-warning': l.lgKPIAchieve == 'E', 'badge badge-success': l.lgKPIAchieve == 'A', 'badge badge-info': l.lgKPIAchieveWord == 'Blank'}"></span></td>

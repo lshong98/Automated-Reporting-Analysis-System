@@ -18,7 +18,7 @@
     </div>
     <div class="col-md-3 offset-md-5">
         <a href="javascript:exportTableToExcel('complaintExport')" class="btn btn-md btn-primary clearfix"><span class="fa fa-file-pdf-o"></span> Export to Excel</a>
-       <button class="btn btn-primary" data-ng-click="setupKPI()"><i class="fa fa-plus"></i> Export</button>
+       <!-- <button class="btn btn-primary" data-ng-click="setupKPI()"><i class="fa fa-plus"></i> Export</button> -->
     </div>
 </div>
 
@@ -29,6 +29,7 @@
                 <thead>
                     <tr>
                         <th>Branch</th>
+                        <th>ID</th>
                         <th>CMS Date Time</th>
                         <th>LG Date Time</th>
                         <th>LG KPI Response Time (hours:minute)</th>
@@ -56,6 +57,7 @@
                 <tbody>
                     <tr data-ng-repeat="c in filterComplaintExportList">
                         <td data-ng-bind="c.zon"></td>
+                        <td data-ng-bind="c.coID"></td>
                         <td data-ng-bind="c.complaintDate"></td>
                         <td data-ng-bind="c.logisticsDateTime"></td>
                         <td data-ng-bind="c.lgkpi"></td>
