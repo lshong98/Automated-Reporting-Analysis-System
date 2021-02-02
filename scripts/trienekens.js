@@ -668,9 +668,6 @@ app.service('storeDataService', function () {
             "feedback": {
                 "view": 'A'
             },
-            "cssInfo": {
-                "view": 'A'
-            },
             "enquiry": {
                 "view": 'A'
             },
@@ -1958,118 +1955,18 @@ app.run(function ($rootScope) {
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" + concat + "&key=<APIKEY>";
     };
 });
-app.controller('cssInfoCtrl', function($scope, $http, $filter, storeDataService) {
-    'use strict';
-    
-    $scope.searchCompactorFilter = '';
-    $scope.searchRoroFilter = '';
-    $scope.searchScheduledFilter = '';
-    $scope.compactorCurrentPage = 1; //Initial current page to 1
-    $scope.roroCurrentPage = 1; //Initial current page to 1
-    $scope.scheduledCurrentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 10; //Record number each page
-    $scope.maxSize = 10; //Show the number in page
-
-    $scope.filterCompactorList = [];
-    $scope.filterRoroList = [];
-    $scope.filterScheduledList = [];
-
-    $http.get('/getCSSInfoCompactor').then(function(response){
-        $scope.compactorInfo = response.data;      
-        
-        for(var c = 0; c < $scope.compactorInfo.length; c++){
-            $scope.compactorInfo[c].date = $filter('date')($scope.compactorInfo[c].date, 'yyyy-MM-dd HH:mm:ss');
-        }
-
-        $scope.searchCompactor = function(compactor){
-            return (compactor.date + compactor.location + compactor.name + compactor.contact + compactor.comment).toUpperCase().indexOf($scope.searchCompactorFilter.toUpperCase()) >= 0;
-        }
-
-        $scope.filterCompactorList = angular.copy($scope.compactorInfo);
-        $scope.compactorTotalItems = $scope.filterCompactorList.length;
-        $scope.compactorGetData = function() {
-            return $filter('filter')($scope.filterCompactorList, $scope.searchCompactorFilter);
-        };
-        
-        //filter pagination count
-        $scope.$watch('searchCompactorFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.compactorCurrentPage = 1;
-                $scope.compactorTotalItems = $scope.compactorGetData().length;
-            }
-            return vm;
-        }, true);
-    })
-
-    $http.get('/getCSSInfoRoro').then(function(response){
-        $scope.roroInfo = response.data;
-
-        for(var r=0; r<$scope.roroInfo.length; r++){
-            $scope.roroInfo[r].date = $filter('date')($scope.roroInfo[r].date, 'yyyy-MM-dd HH:mm:ss');
-        }
-
-        $scope.searchRoro = function(roro){
-            return (roro.date + roro.location + roro.name + roro.contact + roro.comment).toUpperCase().indexOf($scope.searchRoroFilter.toUpperCase()) >= 0;
-        }
-
-        $scope.filterRoroList = angular.copy($scope.roroInfo);
-        $scope.roroTotalItems = $scope.filterRoroList.length;
-        $scope.roroGetData = function() {
-            return $filter('filter')($scope.filterRoroList, $scope.searchRoroFilter);
-        };
-
-        //filter pagination count
-        $scope.$watch('searchRoroFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.roroCurrentPage = 1;
-                $scope.roroTotalItems = $scope.roroGetData().length;
-            }
-            return vm;
-        }, true);
-    })
-
-    $http.get('/getCSSInfoScheduled').then(function(response){
-        $scope.scheduledInfo = response.data;
-        for(var s=0; s<$scope.scheduledInfo.length; s++){
-            $scope.scheduledInfo[s].date = $filter('date')($scope.scheduledInfo[s].date, 'yyyy-MM-dd HH:mm:ss');
-        }
-
-        $scope.searchScheduled = function(scheduled){
-            return (scheduled.date + scheduled.location + scheduled.name + scheduled.contact + scheduled.comment).toUpperCase().indexOf($scope.searchScheduledFilter.toUpperCase()) >= 0;
-        }
-
-        $scope.filterScheduledList = angular.copy($scope.scheduledInfo);
-        $scope.scheduledTotalItems = $scope.filterScheduledList.length;
-        $scope.scheduledGetData = function() {
-            return $filter('filter')($scope.filterScheduledList, $scope.searchScheduledFilter);
-        };
-
-        //filter pagination count
-        $scope.$watch('searchScheduledFilter', function(newVal, oldVal) {
-            var vm = this;
-            if (oldVal !== newVal) {
-                $scope.scheduledCurrentPage = 1;
-                $scope.scheduledTotalItems = $scope.scheduledGetData().length;
-            }
-            return vm;
-        }, true);        
-    })
-});
 
 //Customer Service Pages Controller
 app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window, $filter, storeDataService) {
     $scope.loggedUser = localStorage.getItem('user');
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemsPerPage = 3; //Record number each page
+
     $scope.itemsPerPageBinReq = 10;
     $scope.itemsPerPageEnquiry = 10;
     $scope.itemsPerPageAnnouncement = 10;
+
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 3; //Record number each page
     $scope.maxSize = 8; //Show the number in page
-    $scope.m = {};
-    $scope.c = {};
-    $scope.s = {};
 
     $scope.sendNotifToDevice = function () {
         $scope.data = {
@@ -2340,39 +2237,104 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         return ["Team Efficiency Unsatisfied", "Team Efficiency Satisfied", "Team Efficiency Very Satisfied", "Company Rating Unsatisfied", "Company Rating Satisfied", "Company Rating Very Satisfied", "Health Adherence Unsatisfied", "Health Adherence Satisfied", "Health Adherence Very Satisfied", "Regulations Adherence Unsatisfied", "Regulations Adherence Satisfied", "Regulations Adherence Very Satisfied", "Query Response Unsatisfied", "Query Response Satisfied", "Query Response Very Satisfied"];
     };
 
-    //Filter cust satisfaction
-    $scope.filterFunction = function () {
-        var currentYear = (new Date()).getFullYear();
-        $scope.yearOptions = [];
-        $scope.filters = {};
 
-        for (var i = currentYear; i >= 2018; i--) {
-            $scope.yearKV = {
-                "name": i,
-                "value": i
-            };
-            $scope.yearOptions.push($scope.yearKV);
+
+
+});
+
+app.controller('cssInfoCtrl', function($scope, $http, $filter, storeDataService) {
+    'use strict';
+
+    $scope.currentPage = 1; //Initial current page to 1
+    $scope.itemsPerPage = 3; //Record number each page
+    $scope.maxSize = 8; //Show the number in page
+
+    $scope.searchCompactorFilter = '';
+    $scope.searchRoroFilter = '';
+    $scope.searchScheduledFilter = '';
+    $scope.compactorCurrentPage = 1; //Initial current page to 1
+    $scope.roroCurrentPage = 1; //Initial current page to 1
+    $scope.scheduledCurrentPage = 1; //Initial current page to 1
+    $scope.detailItemsPerPage = 10; //Record number each page
+    $scope.detailMaxSize = 10; //Show the number in page
+
+    $scope.filterCompactorList = [];
+    $scope.filterRoroList = [];
+    $scope.filterScheduledList = [];
+    $scope.m = {};
+    $scope.c = {};
+    $scope.s = {};
+
+    //auto-fill satisfaction form date
+    var today = new Date();
+    $scope.m.date = today;
+    $scope.c.date = today;
+    $scope.s.date = today;
+
+    $scope.m.formattedDate = $filter('date')($scope.m.date, 'yyyy-MM-dd HH:mm:ss');
+    $scope.c.formattedDate = $filter('date')($scope.c.date, 'yyyy-MM-dd HH:mm:ss');
+    $scope.s.formattedDate = $filter('date')($scope.s.date, 'yyyy-MM-dd HH:mm:ss');
+
+
+
+
+
+    $scope.addFeedback = function (type) {
+        if (type == "municipal") {
+            $http.post('/addMunicipal', $scope.m).then(function (response) {
+                var returnedData = response.data;
+
+                if (returnedData === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        "message": "Feedback added successfully!"
+                    });
+
+                    $scope.getMunicipalFeedback(); //REFRESH DETAILS
+
+                    angular.element('#municipal-form').modal('toggle');
+                    $scope.resetFormM();
+                }
+            });
+        } else if (type == "commercial") {
+            $http.post('/addCommercial', $scope.c).then(function (response) {
+                var returnedData = response.data;
+
+                if (returnedData === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        "message": "Feedback added successfully!"
+                    });
+
+                    $scope.getCommercialFeedback(); //REFRESH DETAILS
+
+                    angular.element('#commercial-form').modal('toggle');
+                    $scope.resetFormC();
+                }
+            });
+            
+        } else {
+            $http.post('/addScheduled', $scope.s).then(function (response) {
+                var returnedData = response.data;
+
+                if (returnedData === "success") {
+                    angular.element('body').overhang({
+                        type: "success",
+                        "message": "Feedback added successfully!"
+                    });
+
+                    $scope.getScheduledFeedback(); //REFRESH DETAILS
+
+                    angular.element('#scheduled-form').modal('toggle');
+                    $scope.resetFormS();
+                }
+            });
+            
         }
-        var year = document.getElementById("year");
-        var selectedYear = year.options[year.selectedIndex].value;
-        //console.log(selectedYear);
-        var month = document.getElementById("month");
-        var selectedMonth = month.options[month.selectedIndex].value;
-
-        var location = document.getElementById("locationFilter");
-        var selectedLocation = location.options[location.selectedIndex].value;
-        console.log(selectedLocation);
-        $scope.filters.year = selectedYear.value;
-        $scope.filters.month = selectedMonth.value;
-        $scope.filters.location = selectedLocation.value;
-    }
+    };
 
     $scope.getMunicipalFeedback = function () {
-        //socket.emit('municipal satisfaction');
-
-        console.log($scope.filters);
         $http.post('/customerFeedbackMunicipal', $scope.filters).then(function (response) {
-            console.log(response.data);
             $scope.reviews = response.data;
             $scope.totalItems = response.data.comments.length;
             $scope.totalUnsatisfied = $scope.reviews.compRateUS + $scope.reviews.teamEffUS + $scope.reviews.collPromptUS + $scope.reviews.binHandUS + $scope.reviews.spillCtrlUS + $scope.reviews.qryRespUS;
@@ -2385,7 +2347,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             delete data.comments;
             $scope.municipalData = [];
             $scope.municipalData.push(data);
-            console.log($scope.municipalData);
 
             //excel filename
             if ($scope.filters.month == undefined && $scope.filters.location == undefined) {
@@ -2397,13 +2358,8 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             } else if ($scope.filters.month == undefined && $scope.filters.location != undefined){
                 $scope.filename = $scope.filters.year.value.toString() + "_" + $scope.filters.location + "_custsatisfaction_municipal.xls";
             }
-            console.log($scope.filters.location);
-            //console.log(document.getElementById('feedback-summary').innerHTML);
+            
             $scope.downloadxls = function (tableid) {
-                // var blob = new Blob([document.getElementById('feedback-summary').innerHTML], {
-                //     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
-                // });
-                // saveAs(blob, $scope.filename);
                 var downloadLink;
                 var dataType = 'application/vnd.ms-excel';
                 var tableSelect = document.getElementById(tableid);
@@ -2588,18 +2544,40 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(err);
         });
 
-        $http.post('/countSatisfaction', $scope.filters).then(function (response) {
-            console.log(response.data);
-            $scope.unreadMunicipal = response.data.municipal;
-            $scope.unreadCommercial = response.data.commercial;
-            $scope.unreadScheduled = response.data.scheduled;
-        });
+        var municipalYearMonth = transformYearMothLocFunc($scope.filters);
+        $http.post('/getCSSInfoCompactor', municipalYearMonth).then(function(response){
+            $scope.compactorInfo = response.data;      
+            
+            for(var c = 0; c < $scope.compactorInfo.length; c++){
+                $scope.compactorInfo[c].date = $filter('date')($scope.compactorInfo[c].date, 'yyyy-MM-dd HH:mm:ss');
+            }
+    
+            $scope.searchCompactor = function(compactor){
+                return (compactor.date + compactor.location + compactor.name + compactor.contact + compactor.comment).toUpperCase().indexOf($scope.searchCompactorFilter.toUpperCase()) >= 0;
+            }
+    
+            $scope.filterCompactorList = angular.copy($scope.compactorInfo);
+            $scope.compactorTotalItems = $scope.filterCompactorList.length;
+            $scope.compactorGetData = function() {
+                return $filter('filter')($scope.filterCompactorList, $scope.searchCompactorFilter);
+            };
+            
+            //filter pagination count
+            $scope.$watch('searchCompactorFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.compactorCurrentPage = 1;
+                    $scope.compactorTotalItems = $scope.compactorGetData().length;
+                }
+                return vm;
+            }, true);
+        })
+        $scope.getCountSatisfaction;
     };
 
     $scope.getCommercialFeedback = function () {
-        //socket.emit('commercial satisfaction');
         $http.post('/customerFeedbackCommercial', $scope.filters).then(function (response) {
-            console.log(response.data);
+            
             $scope.reviewsCommercial = response.data;
             $scope.totalItemsCommercial = response.data.comments.length;
             $scope.totalUnsatisfiedCom = $scope.reviewsCommercial.compRateUS + $scope.reviewsCommercial.teamEffUS + $scope.reviewsCommercial.collPromptUS + $scope.reviewsCommercial.cleanlinessUS + $scope.reviewsCommercial.physicalCondUS + $scope.reviewsCommercial.qryRespUS;
@@ -2812,19 +2790,42 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(err);
         });
 
-        $http.post('/countSatisfaction', $scope.filters).then(function (response) {
-            console.log(response.data);
-            $scope.unreadMunicipal = response.data.municipal;
-            $scope.unreadCommercial = response.data.commercial;
-            $scope.unreadScheduled = response.data.scheduled;
-        });
+        var commercialYearMonth = transformYearMothLocFunc($scope.filters);
+        $http.post('/getCSSInfoRoro', commercialYearMonth).then(function(response){
+            $scope.roroInfo = response.data;
+
+            for(var r=0; r<$scope.roroInfo.length; r++){
+                $scope.roroInfo[r].date = $filter('date')($scope.roroInfo[r].date, 'yyyy-MM-dd HH:mm:ss');
+            }
+
+            $scope.searchRoro = function(roro){
+                return (roro.date + roro.location + roro.name + roro.contact + roro.comment).toUpperCase().indexOf($scope.searchRoroFilter.toUpperCase()) >= 0;
+            }
+
+            $scope.filterRoroList = angular.copy($scope.roroInfo);
+            $scope.roroTotalItems = $scope.filterRoroList.length;
+            $scope.roroGetData = function() {
+                return $filter('filter')($scope.filterRoroList, $scope.searchRoroFilter);
+            };
+
+            //filter pagination count
+            $scope.$watch('searchRoroFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.roroCurrentPage = 1;
+                    $scope.roroTotalItems = $scope.roroGetData().length;
+                }
+                return vm;
+            }, true);
+        })
+
+        $scope.getCountSatisfaction;
     };
 
 
     $scope.getScheduledFeedback = function () {
-        //socket.emit('scheduled satisfaction');
         $http.post('/customerFeedbackScheduled', $scope.filters).then(function (response) {
-            console.log(response.data);
+            
             $scope.reviewsScheduled = response.data;
             $scope.totalItemsScheduled = response.data.comments.length;
             $scope.totalUnsatisfiedS = $scope.reviewsScheduled.compRateUS + $scope.reviewsScheduled.teamEffUS + $scope.reviewsScheduled.regAdhUS + $scope.reviewsScheduled.healthAdhUS + $scope.reviewsScheduled.qryRespUS;
@@ -3013,24 +3014,71 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             console.log(err);
         });
 
+        var scheduledYearMonth = transformYearMothLocFunc($scope.filters);
+        $http.post('/getCSSInfoScheduled', scheduledYearMonth).then(function(response){
+            $scope.scheduledInfo = response.data;
+            for(var s=0; s<$scope.scheduledInfo.length; s++){
+                $scope.scheduledInfo[s].date = $filter('date')($scope.scheduledInfo[s].date, 'yyyy-MM-dd HH:mm:ss');
+            }
+    
+            $scope.searchScheduled = function(scheduled){
+                return (scheduled.date + scheduled.location + scheduled.name + scheduled.contact + scheduled.comment).toUpperCase().indexOf($scope.searchScheduledFilter.toUpperCase()) >= 0;
+            }
+    
+            $scope.filterScheduledList = angular.copy($scope.scheduledInfo);
+            $scope.scheduledTotalItems = $scope.filterScheduledList.length;
+            $scope.scheduledGetData = function() {
+                return $filter('filter')($scope.filterScheduledList, $scope.searchScheduledFilter);
+            };
+    
+            //filter pagination count
+            $scope.$watch('searchScheduledFilter', function(newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.scheduledCurrentPage = 1;
+                    $scope.scheduledTotalItems = $scope.scheduledGetData().length;
+                }
+                return vm;
+            }, true);        
+        })
+    
+        $scope.getCountSatisfaction;
+    };
+
+    $scope.getCountSatisfaction = function(){
         $http.post('/countSatisfaction', $scope.filters).then(function (response) {
-            console.log(response.data);
             $scope.unreadMunicipal = response.data.municipal;
             $scope.unreadCommercial = response.data.commercial;
             $scope.unreadScheduled = response.data.scheduled;
         });
-    };
+    }
 
-    //auto-fill satisfaction form date
-    //console.log(today);
-    var today = new Date();
-    $scope.m.date = today;
-    $scope.c.date = today;
-    $scope.s.date = today;
+    //Filter cust satisfaction
+    $scope.filterFunction = function () {
+        var currentYear = (new Date()).getFullYear();
+        $scope.yearOptions = [];
+        $scope.filters = {};
 
-    $scope.m.formattedDate = $filter('date')($scope.m.date, 'yyyy-MM-dd HH:mm:ss');
-    $scope.c.formattedDate = $filter('date')($scope.c.date, 'yyyy-MM-dd HH:mm:ss');;
-    $scope.s.formattedDate = $filter('date')($scope.s.date, 'yyyy-MM-dd HH:mm:ss');;
+        for (var i = currentYear; i >= 2018; i--) {
+            $scope.yearKV = {
+                "name": i,
+                "value": i
+            };
+            $scope.yearOptions.push($scope.yearKV);
+        }
+        var year = document.getElementById("year");
+        var selectedYear = year.options[year.selectedIndex].value;
+        //console.log(selectedYear);
+        var month = document.getElementById("month");
+        var selectedMonth = month.options[month.selectedIndex].value;
+
+        var location = document.getElementById("locationFilter");
+        var selectedLocation = location.options[location.selectedIndex].value;
+
+        $scope.filters.year = selectedYear.value;
+        $scope.filters.month = selectedMonth.value;
+        $scope.filters.location = selectedLocation.value;
+    }
 
     $scope.resetFormM = function () {
         $scope.m.date = today;
@@ -3081,61 +3129,50 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         $scope.s.extraComment = '';
     }
 
-    $scope.addFeedback = function (type) {
-        console.log($scope.m);
-        if (type == "municipal") {
-            $http.post('/addMunicipal', $scope.m).then(function (response) {
-                var returnedData = response.data;
+    var transformYearMothLocFunc = function(myObj){
+        var myYear = myObj.year.name.toString();
+        var myMonth = myObj.month;
+        var myLoc = myObj.location;
+        console.log(myObj);
 
-                if (returnedData === "success") {
-                    angular.element('body').overhang({
-                        type: "success",
-                        "message": "Feedback added successfully!"
-                    });
-
-                    $scope.getMunicipalFeedback(); //REFRESH DETAILS
-
-                    angular.element('#municipal-form').modal('toggle');
-                    $scope.resetFormM();
-                }
-            });
-        } else if (type == "commercial") {
-            $http.post('/addCommercial', $scope.c).then(function (response) {
-                var returnedData = response.data;
-
-                if (returnedData === "success") {
-                    angular.element('body').overhang({
-                        type: "success",
-                        "message": "Feedback added successfully!"
-                    });
-
-                    $scope.getCommercialFeedback(); //REFRESH DETAILS
-
-                    angular.element('#commercial-form').modal('toggle');
-                    $scope.resetFormC();
-                }
-            });
-            
-        } else {
-            $http.post('/addScheduled', $scope.s).then(function (response) {
-                var returnedData = response.data;
-
-                if (returnedData === "success") {
-                    angular.element('body').overhang({
-                        type: "success",
-                        "message": "Feedback added successfully!"
-                    });
-
-                    $scope.getScheduledFeedback(); //REFRESH DETAILS
-
-                    angular.element('#scheduled-form').modal('toggle');
-                    $scope.resetFormS();
-                }
-            });
-            
+        if(myLoc == undefined){
+            myLoc = '';
         }
-    };
+
+        if(myMonth == undefined){
+            myMonth = '';
+        }else if(myMonth == 1){
+            myMonth = "01";
+        }else if(myMonth == 2){
+            myMonth = "02";
+        }else if(myMonth == 3){
+            myMonth = "03";
+        }else if(myMonth == 4){
+            myMonth = "04";
+        }else if(myMonth == 5){
+            myMonth = "05";
+        }else if(myMonth == 6){
+            myMonth = "06";
+        }else if(myMonth == 7){
+            myMonth = "07";
+        }else if(myMonth == 8){
+            myMonth = "08";
+        }else if(myMonth == 9){
+            myMonth = "09";
+        }else if(myMonth == 10){
+            myMonth = "10";
+        }else if(myMonth == 11){
+            myMonth = "11";
+        }else if(myMonth == 12){
+            myMonth = "12";
+        }
+
+        var myYearMonth = myYear + "-" + myMonth;
+
+        return {"yearMonth": myYearMonth, "location": myLoc};
+    }
 });
+
 
 //export bin request page controller
 app.controller('exportBinReqCtrl', function($scope, $http, $filter, storeDataService){
@@ -5439,9 +5476,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
         "feedback": {
             "view": 'I'
         },
-        "cssInfo": {
-            "view": 'I'
-        },
         "enquiry": {
             "view": 'I'
         },
@@ -5744,9 +5778,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                         "feedback": {
                             "view": 'A'
                         },
-                        "cssInfo": {
-                            "view": 'A'
-                        },
                         "enquiry": {
                             "view": 'A'
                         },
@@ -5968,9 +5999,6 @@ app.controller('specificAuthController', function ($scope, $http, $routeParams, 
                             'Export': 'I'
                         },
                         "feedback": {
-                            "view": 'I'
-                        },
-                        "cssInfo": {
                             "view": 'I'
                         },
                         "enquiry": {
@@ -9663,6 +9691,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
     //get app complaint list
     $http.post('/getComplaintList', $scope.zonReqApp).then(function (response) {
+        
         $scope.searchComplaintFilter = '';
         $scope.filterComplaintList = [];
         $scope.complaintList = response.data;

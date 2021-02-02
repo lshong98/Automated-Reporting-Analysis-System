@@ -1130,16 +1130,7 @@ app.post('/countSatisfaction', function(req, res) {
                 res.json(json);
                 res.end();
             }
-            // unreadMunicipal = result[0].unread;
-            // database.query(commercial, function(err, result){
-            //     unreadCommercial = result[0].unread;
-            //     database.query(scheduled, function(err, result){
-            //         unreadScheduled = result[0].unread;
-            //         json = {"municipal":unreadMunicipal,"commercial":unreadCommercial,"scheduled":unreadScheduled};
-            //         res.json(json);
-            //         res.end();
-            //     });
-            // });
+
         });
     }
     var countWmonth = "";
@@ -1230,10 +1221,10 @@ app.post('/readComplaint', function(req,res){
     });
 });
 
-app.get('/getCSSInfoCompactor', function(req, res){
+app.post('/getCSSInfoCompactor', function(req, res){
     'use strict';
+    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', collectionPromptness AS 'collectionPromptness', binHandling AS 'binHandling', spillageControl AS 'spillageControl', queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_compactor WHERE submissionDate LIKE '" + req.body.yearMonth + "%' AND location LIKE '%" + req.body.location + "%' ORDER BY submissionDate DESC";
 
-    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', collectionPromptness AS 'collectionPromptness', binHandling AS 'binHandling', spillageControl AS 'spillageControl', queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_compactor ORDER BY submissionDate DESC";
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
@@ -1242,10 +1233,10 @@ app.get('/getCSSInfoCompactor', function(req, res){
     });
 });
 
-app.get('/getCSSInfoRoro', function(req, res){
+app.post('/getCSSInfoRoro', function(req, res){
     'use strict';
 
-    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', collectionPromptness AS 'collectionPromptness', cleanliness AS 'cleanliness', physicalCondition AS 'physicalCondition', queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_roro ORDER BY submissionDate DESC";
+    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', collectionPromptness AS 'collectionPromptness', cleanliness AS 'cleanliness', physicalCondition AS 'physicalCondition', queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_roro WHERE submissionDate LIKE '" + req.body.yearMonth + "%' AND location LIKE '%" + req.body.location + "%' ORDER BY submissionDate DESC";
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
@@ -1254,10 +1245,10 @@ app.get('/getCSSInfoRoro', function(req, res){
     });
 });
 
-app.get('/getCSSInfoScheduled', function(req, res){
+app.post('/getCSSInfoScheduled', function(req, res){
     'use strict';
 
-    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', healthAdherence AS 'healthAdherence', regulationsAdherence AS 'regulationsAdherence',  queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_scheduled ORDER BY submissionDate DESC";
+    var sql = "SELECT name AS 'name', companyName AS 'companyName', number AS 'contact', location AS 'location', submissionDate AS 'date', companyRating AS 'companyRating', teamEfficiency AS 'teamEfficiency', healthAdherence AS 'healthAdherence', regulationsAdherence AS 'regulationsAdherence',  queryResponse AS 'queryResponse', extraComment AS 'comment' FROM tblsatisfaction_scheduled WHERE submissionDate LIKE '" + req.body.yearMonth + "%' AND location LIKE '%" + req.body.location + "%' ORDER BY submissionDate DESC";
     database.query(sql, function(err, result) {
         if (err) {
             throw err;

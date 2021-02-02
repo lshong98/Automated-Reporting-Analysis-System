@@ -740,18 +740,8 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: '/customer-feedback',
-        controller: 'custServiceCtrl',
-        controllerAs:'custService'
-    })
-    .when('/cssInfo',{
-        resolve:{
-            "check": function(routingService, $window, $location){
-                return routingService.auth($window, $location, '/cssInfo');
-            }
-        },
-        templateUrl: '/cssInfo',
         controller: 'cssInfoCtrl',
-        controllerAs: 'cssInfo'
+        controllerAs:'cssInfo'
     })
     .when('/boundary/:areaID', {
         resolve: {

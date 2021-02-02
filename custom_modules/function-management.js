@@ -308,10 +308,6 @@ function menuItem(keyword, status) {
             if (status == 'A') {
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/customer-feedback"><i class="fa fa-file"></i> Customer Feedback <span class="satisfaction"></span></a></li>';
             }
-        case "view cssInfo":
-            if (status == 'A') {
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/cssInfo"><i class="fa fa-file"></i> CSS Form <span class="satisfaction"></span></a></li>';
-            }
         case "view bdb":
             if(status == 'A'){
                 return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/bdb"><i class="fas fa-dumpster"></i> Bin Database </a></li>';

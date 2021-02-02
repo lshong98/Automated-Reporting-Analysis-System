@@ -65,20 +65,20 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="name form-label">Name</label>
-                    <input type="text" class="form-control" id="name" data-ng-model="m.name">
+                    <label for="mname form-label">Name</label>
+                    <input type="text" class="form-control" id="mname" data-ng-model="m.name">
                 </div>
                 <div class="form-group">
-                    <label for="company form-label">Company</label>
-                    <input type="text" class="form-control" id="company" data-ng-model="m.company">
+                    <label for="mcompany form-label">Company</label>
+                    <input type="text" class="form-control" id="mcompany" data-ng-model="m.company">
                 </div>
                 <div class="form-group">
-                    <label for="address form-label">Address</label>
-                    <input type="text" class="form-control" id="address" data-ng-model="m.address">
+                    <label for="maddress form-label">Address</label>
+                    <input type="text" class="form-control" id="maddress" data-ng-model="m.address">
                 </div>
                 <div class="form-group">
-                    <label for="number form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="number" data-ng-model="m.number">
+                    <label for="mnumber form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="mnumber" data-ng-model="m.number">
                 </div>
                 <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
                 <div class="form-group">
@@ -200,20 +200,20 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="name form-label">Name</label>
-                    <input type="text" class="form-control" id="name" data-ng-model="c.name">
+                    <label for="cname form-label">Name</label>
+                    <input type="text" class="form-control" id="cname" data-ng-model="c.name">
                 </div>
                 <div class="form-group">
-                    <label for="company form-label">Company</label>
-                    <input type="text" class="form-control" id="company" data-ng-model="c.company">
+                    <label for="ccompany form-label">Company</label>
+                    <input type="text" class="form-control" id="ccompany" data-ng-model="c.company">
                 </div>
                 <div class="form-group">
-                    <label for="address form-label">Address</label>
-                    <input type="text" class="form-control" id="address" data-ng-model="c.address">
+                    <label for="caddress form-label">Address</label>
+                    <input type="text" class="form-control" id="caddress" data-ng-model="c.address">
                 </div>
                 <div class="form-group">
-                    <label for="number form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="number" data-ng-model="c.number">
+                    <label for="cnumber form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="cnumber" data-ng-model="c.number">
                 </div>
                 <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
                 <div class="form-group">
@@ -333,20 +333,20 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="name form-label">Name</label>
-                    <input type="text" class="form-control" id="name" data-ng-model="s.name">
+                    <label for="sname form-label">Name</label>
+                    <input type="text" class="form-control" id="sname" data-ng-model="s.name">
                 </div>
                 <div class="form-group">
-                    <label for="company form-label">Company</label>
-                    <input type="text" class="form-control" id="company" data-ng-model="s.company">
+                    <label for="scompany form-label">Company</label>
+                    <input type="text" class="form-control" id="scompany" data-ng-model="s.company">
                 </div>
                 <div class="form-group">
-                    <label for="address form-label">Address</label>
-                    <input type="text" class="form-control" id="address" data-ng-model="s.address">
+                    <label for="saddress form-label">Address</label>
+                    <input type="text" class="form-control" id="saddress" data-ng-model="s.address">
                 </div>
                 <div class="form-group">
-                    <label for="number form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="number" data-ng-model="s.number">
+                    <label for="snumber form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="snumber" data-ng-model="s.number">
                 </div>
                 <label for="form-label"><b>1. How do you rate us as a company that promotes sustainable living?</b></label>
                 <div class="form-group">
@@ -448,7 +448,6 @@
                             <button class="btn btn-success" data-toggle="modal" data-target="#municipal-form" data-ng-click="resetFormM()"><i class="fa fa-plus"></i> New Municipal Feedback</button>
                         </div>
                         <div class="col-md-6">
-                            <!-- <button class="btn btn-danger" ng-csv="municipalData" csv-header="getDataHeaderMunicipal()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button>        -->
                             <button class="btn btn-danger" data-ng-click="downloadxls('feedback-summary')">Download Excel File</button>
                         </div>
                     </div><br />
@@ -492,10 +491,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Company Rating</h5><br />
-                                    <!-- <div easypiechart options="options" percent="compRate" class="chart">
-                                        {{reviews.compRate | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="municipal-comp-rate" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -505,10 +500,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Team Efficiency</h5><br />
-                                    <!-- <div easypiechart options="options" percent="teamEff" class="chart">
-                                        {{reviews.teamEff | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="municipal-team-eff" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -521,10 +512,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Collection Promptness</h5><br />
-                                    <!-- <div easypiechart options="options" percent="collPrompt" class="chart">
-                                        {{reviews.collPrompt | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="municipal-coll-prompt" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -534,10 +521,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Bin Handling</h5><br />
-                                    <!-- <div easypiechart options="options" percent="binHand" class="chart">
-                                        {{reviews.binHand | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="municipal-bin-hand" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -550,10 +533,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Spillage Control</h5><br />
-                                    <!-- <div easypiechart options="options" percent="spillCtrl" class="chart">
-                                        {{reviews.spillCtrl | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="municipal-spill-ctrl" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -563,17 +542,13 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Query Response</h5><br />
-                                    <!-- <div easypiechart options="options" percent="qryResp" class="chart">
-                                        {{reviews.qryResp | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="municipal-qry-resp" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <br /><br />
+                    <hr /><br />
                     <div class="row">
                         <div class="col-md-6">
                             <h4>Comments</h4><br />
@@ -587,87 +562,65 @@
                         </div>
                     </div>
 
-                    <!--Table for pdf download-->
-                    <div class="row" hidden>
-                        <div class="col-md-12 chart-download" >
-                            <table class="table" id="feedback-summary">
-                                <thead>
-                                    <tr>
-                                        <th>Classification of Feedback</th>
-                                        <th>Not Satisfied</th>
-                                        <th>Satisfied</th>
-                                        <th>Very Satisfied</th>
-                                        <th>No Response</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Quality of Services: </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>How do you rate us as a company that promotes sustainable living?</td>
-                                        <td>{{reviews.compRateUS}}</td>
-                                        <td>{{reviews.compRateAvg}}</td>
-                                        <td>{{reviews.compRateS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Efficiency of Our Team</td>
-                                        <td>{{reviews.teamEffUS}}</td>
-                                        <td>{{reviews.teamEffAvg}}</td>
-                                        <td>{{reviews.teamEffS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Promptness of Collection According to the Requested Date & Time</td>
-                                        <td>{{reviews.collPromptUS}}</td>
-                                        <td>{{reviews.collPromptAvg}}</td>
-                                        <td>{{reviews.collPromptS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Bin Handling (e.g bin returned to its original location)</td>
-                                        <td>{{reviews.binHandUS}}</td>
-                                        <td>{{reviews.binHandAvg}}</td>
-                                        <td>{{reviews.binHandS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Spillage Control (e.g spillage of waste, spillage of leachate water)</td>
-                                        <td>{{reviews.spillCtrlUS}}</td>
-                                        <td>{{reviews.spillCtrlAvg}}</td>
-                                        <td>{{reviews.spillCtrlS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Our response/feedback to your queries</td>
-                                        <td>{{reviews.qryRespUS}}</td>
-                                        <td>{{reviews.qryRespAvg}}</td>
-                                        <td>{{reviews.qryRespS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td>{{totalUnsatisfied}}</td>
-                                        <td>{{totalSatisfied}}</td>
-                                        <td>{{totalVSatisfied}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                     <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
                         <div class="col-md-12">
                             <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
                         </div>
                     </div>
-                    <br /><br />
+                    <hr /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Details</h4><br />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchCompactorFilter"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Location</th>
+                                            <th>Name</th>
+                                            <th>Contact</th>
+                                            <th>Quality of Services</th>
+                                            <th>Adherence to Safe Working Practices</th>
+                                            <th>Promptness of Collection</th>
+                                            <th>Bin Handling</th>
+                                            <th>Spillage Control</th>
+                                            <th>Query Response</th>
+                                            <th>Comments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-ng-repeat="c in filterCompactorList | filter: searchCompactor | offset: (compactorCurrentPage - 1) * detailItemsPerPage | limitTo: detailItemsPerPage">
+                                            <td>{{c.date}}</td>
+                                            <td>{{c.location}}</td>
+                                            <td>{{c.name}}</td>
+                                            <td>{{c.contact}}</td>
+                                            <td>{{c.companyRating}}</td>
+                                            <td>{{c.teamEfficiency}}</td>
+                                            <td>{{c.collectionPromptness}}</td>
+                                            <td>{{c.binHandling}}</td>
+                                            <td>{{c.spillageControl}}</td>
+                                            <td>{{c.queryResponse}}</td>
+                                            <td>{{c.comment}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul uib-pagination boundary-links="true" total-items="compactorTotalItems" ng-model="compactorCurrentPage" data-max-size="detailMaxSize" items-per-page="detailItemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                        </div>
+                    </div>
                 </div>
 
                 <!--Commercial Feedback-->
@@ -676,8 +629,7 @@
                         <div class="col-md-3">
                             <button class="btn btn-success" data-toggle="modal" data-target="#commercial-form" data-ng-click="resetFormC()"><i class="fa fa-plus"></i> New Commercial Feedback</button>
                         </div>
-                        <div class="col-md-6">
-                            <!-- <button class="btn btn-danger" ng-csv="commercialData" csv-header="getDataHeaderCommercial()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button> -->
+                        <div class="col-md-6">                        
                             <button class="btn btn-danger" data-ng-click="downloadxlsCommercial('feedback-summary-commercial')">Download Excel File</button>
                         </div>
                     </div><br />
@@ -721,10 +673,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Company Rating</h5><br />
-                                    <!-- <div easypiechart options="options" percent="compRateCommercial" class="chart">
-                                        {{reviewsCommercial.compRate | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="commercial-comp-rate" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -734,10 +682,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Team Efficiency</h5><br />
-                                    <!-- <div easypiechart options="options" percent="teamEffCommercial" class="chart">
-                                        {{reviewsCommercial.teamEff | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="commercial-team-eff" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -750,10 +694,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Collection Promptness</h5><br />
-                                    <!-- <div easypiechart options="options" percent="collPromptCommercial" class="chart">
-                                                {{reviewsCommercial.collPrompt | number:1}}
-                                            </div>
-                                            <span class="overall">Out of 3</span> -->
                                     <div id="commercial-coll-prompt" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -763,10 +703,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Cleanliness</h5><br />
-                                    <!-- <div easypiechart options="options" percent="cleanliness" class="chart">
-                                                    {{reviewsCommercial.cleanliness | number:1}}
-                                                </div>
-                                                <span class="overall">Out of 3</span> -->
                                     <div id="commercial-cleanliness" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -779,10 +715,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Physical Condition</h5><br />
-                                    <!-- <div easypiechart options="options" percent="physicalCond" class="chart">
-                                        {{reviewsCommercial.physicalCond | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="commercial-physical-cond" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -792,10 +724,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Query Response</h5><br />
-                                    <!-- <div easypiechart options="options" percent="qryRespCommercial" class="chart">
-                                        {{reviewsCommercial.qryResp | number:1}}
-                                    </div>
-                                    <span class="overall">Out of 3</span> -->
                                     <div id="commercial-qry-resp" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -816,87 +744,65 @@
                         </div>
                     </div>
 
-                    <!--Table for pdf download-->
-                    <div class="row" hidden>
-                        <div class="col-md-12 chart-download">
-                            <table class="table feedback-summary" id="feedback-summary-commercial">
-                                <thead>
-                                    <tr>
-                                        <th>Classification of Feedback</th>
-                                        <th>Not Satisfied</th>
-                                        <th>Satisfied</th>
-                                        <th>Very Satisfied</th>
-                                        <th>No Response</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Quality of Services: </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>How do you rate us as a company that promotes sustainable living?</td>
-                                        <td>{{reviewsCommercial.compRateUS}}</td>
-                                        <td>{{reviewsCommercial.compRateAvg}}</td>
-                                        <td>{{reviewsCommercial.compRateS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Efficiency of Our Team</td>
-                                        <td>{{reviewsCommercial.teamEffUS}}</td>
-                                        <td>{{reviewsCommercial.teamEffAvg}}</td>
-                                        <td>{{reviewsCommercial.teamEffS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Promptness of Collection According to the Requested Date & Time</td>
-                                        <td>{{reviewsCommercial.collPromptUS}}</td>
-                                        <td>{{reviewsCommercial.collPromptAvg}}</td>
-                                        <td>{{reviewsCommercial.collPromptS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cleanliness (e.g visual, smell)</td>
-                                        <td>{{reviewsCommercial.cleanlinessUS}}</td>
-                                        <td>{{reviewsCommercial.cleanlinessAvg}}</td>
-                                        <td>{{reviewsCommercial.cleanlinessS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Physical Working Condition</td>
-                                        <td>{{reviewsCommercial.physicalCondUS}}</td>
-                                        <td>{{reviewsCommercial.physicalCondAvg}}</td>
-                                        <td>{{reviewsCommercial.physicalCondS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Our response/feedback to your queries</td>
-                                        <td>{{reviewsCommercial.qryRespUS}}</td>
-                                        <td>{{reviewsCommercial.qryRespAvg}}</td>
-                                        <td>{{reviewsCommercial.qryRespS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td>{{totalUnsatisfiedCom}}</td>
-                                        <td>{{totalSatisfiedCom}}</td>
-                                        <td>{{totalVSatisfiedCom}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                     <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
                         <div class="col-md-12">
                             <ul uib-pagination boundary-links="true" total-items="totalItemsCommercial" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
                         </div>
                     </div>
-                    <br /><br />
+                    <hr /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Details</h4><br />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchRoroFilter"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Location</th>
+                                            <th>Name</th>
+                                            <th>Contact</th>
+                                            <th>Quality of Services</th>
+                                            <th>Adherence to Safe Working Practices</th>
+                                            <th>Promptness of Collection</th>
+                                            <th>Condition of Container (Cleanliness)</th>
+                                            <th>Condition of Container (Physical Working Condition)</th>                                
+                                            <th>Query Response</th>
+                                            <th>Comments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-ng-repeat="r in filterRoroList | filter: searchRoro | offset: (roroCurrentPage - 1) * detailItemsPerPage | limitTo: detailItemsPerPage">
+                                                <td>{{r.date}}</td>
+                                                <td>{{r.location}}</td>
+                                                <td>{{r.name}}</td>
+                                                <td>{{r.contact}}</td>
+                                                <td>{{r.companyRating}}</td>
+                                                <td>{{r.teamEfficiency}}</td>
+                                                <td>{{r.collectionPromptness}}</td>
+                                                <td>{{r.cleanliness}}</td>
+                                                <td>{{r.physicalCondition}}</td>
+                                                <td>{{r.queryResponse}}</td>
+                                                <td>{{r.comment}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul uib-pagination boundary-links="true" total-items="roroTotalItems" ng-model="roroCurrentPage" data-max-size="detailMaxSize" items-per-page="detailItemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                        </div>
+                    </div>
                 </div>
 
                 <!--Scheduled Feedback-->
@@ -905,8 +811,7 @@
                         <div class="col-md-3">
                             <button class="btn btn-success" data-toggle="modal" data-target="#scheduled-form" data-ng-click="resetFormS()"><i class="fa fa-plus"></i> New Scheduled Feedback</button>
                         </div>
-                        <div class="col-md-6">
-                            <!-- <button class="btn btn-danger" ng-csv="scheduledData" csv-header="getDataHeaderScheduled()" filename="{{filename}}" field-separator="{{separator}}">Export CSV</button> -->
+                        <div class="col-md-6">                            
                             <button class="btn btn-danger" data-ng-click="downloadxlsScheduled('feedback-summary-scheduled')">Download Excel File</button>
                         </div>
                     </div><br />
@@ -953,10 +858,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Company Rating</h5><br />
-                                    <!-- <div easypiechart options="options" percent="compRateScheduled" class="chart">
-                                            {{reviewsScheduled.compRate | number:1}}
-                                        </div>
-                                        <span class="overall">Out of 3</span> -->
                                     <div id="scheduled-comp-rate" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -966,10 +867,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Team Efficiency</h5><br />
-                                    <!-- <div easypiechart options="options" percent="teamEffScheduled" class="chart">
-                                            {{reviewsScheduled.teamEff | number:1}}
-                                        </div>
-                                        <span class="overall">Out of 3</span> -->
                                     <div id="scheduled-team-eff" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -982,10 +879,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Regulations Adherence</h5><br />
-                                    <!-- <div easypiechart options="options" percent="regAdh" class="chart">
-                                            {{reviewsScheduled.regAdh | number:1}}
-                                        </div>
-                                        <span class="overall">Out of 3</span> -->
                                     <div id="scheduled-reg-adh" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -995,10 +888,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Health Adherence</h5><br />
-                                    <!-- <div easypiechart options="options" percent="healthAdh" class="chart">
-                                                {{reviewsScheduled.healthAdh | number:1}}
-                                            </div>
-                                            <span class="overall">Out of 3</span> -->
                                     <div id="scheduled-health-adh" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -1011,10 +900,6 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Query Response</h5><br />
-                                    <!-- <div easypiechart options="options" percent="qryRespScheduled" class="chart">
-                                                    {{reviewsScheduled.qryResp | number:1}}
-                                                </div>
-                                                <span class="overall">Out of 3</span> -->
                                     <div id="scheduled-qry-resp" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                                     <br />
                                 </div>
@@ -1035,82 +920,283 @@
                         </div>
                     </div>
 
-                    <!--Table for pdf download-->
-                    <div class="row" hidden>
-                        <div class="col-md-12 chart-download">
-                            <table class="table feedback-summary" id="feedback-summary-scheduled">
-                                <thead>
-                                    <tr>
-                                        <th>Classification of Feedback</th>
-                                        <th>Not Satisfied</th>
-                                        <th>Satisfied</th>
-                                        <th>Very Satisfied</th>
-                                        <th>No Response</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Quality of Services: </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>How do you rate us as a company that promotes sustainable living?</td>
-                                        <td>{{reviewsScheduled.compRateUS}}</td>
-                                        <td>{{reviewsScheduled.compRateAvg}}</td>
-                                        <td>{{reviewsScheduled.compRateS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Efficiency of Our Service Team</td>
-                                        <td>{{reviewsScheduled.teamEffUS}}</td>
-                                        <td>{{reviewsScheduled.teamEffAvg}}</td>
-                                        <td>{{reviewsScheduled.teamEffS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Adherence to Regulations</td>
-                                        <td>{{reviewsScheduled.regAdhUS}}</td>
-                                        <td>{{reviewsScheduled.regAdhAvg}}</td>
-                                        <td>{{reviewsScheduled.regAdhS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Adherence to health, safety, security and environmental standards</td>
-                                        <td>{{reviewsScheduled.healthAdhUS}}</td>
-                                        <td>{{reviewsScheduled.healthAdhAvg}}</td>
-                                        <td>{{reviewsScheduled.healthAdhS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Our response/feedback to your queries</td>
-                                        <td>{{reviewsScheduled.qryRespUS}}</td>
-                                        <td>{{reviewsScheduled.qryRespAvg}}</td>
-                                        <td>{{reviewsScheduled.qryRespS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td>{{totalUnsatisfiedS}}</td>
-                                        <td>{{totalSatisfiedS}}</td>
-                                        <td>{{totalVSatisfiedS}}</td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                     <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
                         <div class="col-md-12">
                             <ul uib-pagination boundary-links="true" total-items="totalItemsScheduled" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
                         </div>
                     </div>
-                    <br /><br />
+                    <hr /><br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Details</h4><br />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchScheduledFilter"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Location</th>
+                                            <th>Name</th>
+                                            <th>Contact</th>
+                                            <th>Efficiency of our service team</th>
+                                            <th>Adherence to Health, Safety, Security and Environmental Standards</th>
+                                            <th>Adherence to Regulations</th>                              
+                                            <th>Query Response</th>
+                                            <th>Comments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-ng-repeat="s in filterScheduledList | filter: searchScheduled | offset: (scheduledCurrentPage - 1) * detailItemsPerPage | limitTo: detailItemsPerPage">
+                                            <td>{{s.date}}</td>
+                                            <td>{{s.location}}</td>
+                                            <td>{{s.name}}</td>
+                                            <td>{{s.contact}}</td>
+                                            <td>{{s.teamEfficiency}}</td>
+                                            <td>{{s.healthAdherence}}</td>
+                                            <td>{{s.regulationsAdherence}}</td>
+                                            <td>{{s.queryResponse}}</td>
+                                            <td>{{s.comment}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul uib-pagination boundary-links="true" total-items="scheduledTotalItems" ng-model="scheduledCurrentPage" data-max-size="detailMaxSize" items-per-page="detailItemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+
+<!--Table for pdf download-->
+<div class="row" hidden>
+    <div class="col-md-12 chart-download" >
+        <table class="table" id="feedback-summary">
+            <thead>
+                <tr>
+                    <th>Classification of Feedback</th>
+                    <th>Not Satisfied</th>
+                    <th>Satisfied</th>
+                    <th>Very Satisfied</th>
+                    <th>No Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Quality of Services: </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>How do you rate us as a company that promotes sustainable living?</td>
+                    <td>{{reviews.compRateUS}}</td>
+                    <td>{{reviews.compRateAvg}}</td>
+                    <td>{{reviews.compRateS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Efficiency of Our Team</td>
+                    <td>{{reviews.teamEffUS}}</td>
+                    <td>{{reviews.teamEffAvg}}</td>
+                    <td>{{reviews.teamEffS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Promptness of Collection According to the Requested Date & Time</td>
+                    <td>{{reviews.collPromptUS}}</td>
+                    <td>{{reviews.collPromptAvg}}</td>
+                    <td>{{reviews.collPromptS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Bin Handling (e.g bin returned to its original location)</td>
+                    <td>{{reviews.binHandUS}}</td>
+                    <td>{{reviews.binHandAvg}}</td>
+                    <td>{{reviews.binHandS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Spillage Control (e.g spillage of waste, spillage of leachate water)</td>
+                    <td>{{reviews.spillCtrlUS}}</td>
+                    <td>{{reviews.spillCtrlAvg}}</td>
+                    <td>{{reviews.spillCtrlS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Our response/feedback to your queries</td>
+                    <td>{{reviews.qryRespUS}}</td>
+                    <td>{{reviews.qryRespAvg}}</td>
+                    <td>{{reviews.qryRespS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{totalUnsatisfied}}</td>
+                    <td>{{totalSatisfied}}</td>
+                    <td>{{totalVSatisfied}}</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!--Table for pdf download-->
+<div class="row" hidden>
+    <div class="col-md-12 chart-download">
+        <table class="table feedback-summary" id="feedback-summary-commercial">
+            <thead>
+                <tr>
+                    <th>Classification of Feedback</th>
+                    <th>Not Satisfied</th>
+                    <th>Satisfied</th>
+                    <th>Very Satisfied</th>
+                    <th>No Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Quality of Services: </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>How do you rate us as a company that promotes sustainable living?</td>
+                    <td>{{reviewsCommercial.compRateUS}}</td>
+                    <td>{{reviewsCommercial.compRateAvg}}</td>
+                    <td>{{reviewsCommercial.compRateS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Efficiency of Our Team</td>
+                    <td>{{reviewsCommercial.teamEffUS}}</td>
+                    <td>{{reviewsCommercial.teamEffAvg}}</td>
+                    <td>{{reviewsCommercial.teamEffS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Promptness of Collection According to the Requested Date & Time</td>
+                    <td>{{reviewsCommercial.collPromptUS}}</td>
+                    <td>{{reviewsCommercial.collPromptAvg}}</td>
+                    <td>{{reviewsCommercial.collPromptS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Cleanliness (e.g visual, smell)</td>
+                    <td>{{reviewsCommercial.cleanlinessUS}}</td>
+                    <td>{{reviewsCommercial.cleanlinessAvg}}</td>
+                    <td>{{reviewsCommercial.cleanlinessS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Physical Working Condition</td>
+                    <td>{{reviewsCommercial.physicalCondUS}}</td>
+                    <td>{{reviewsCommercial.physicalCondAvg}}</td>
+                    <td>{{reviewsCommercial.physicalCondS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Our response/feedback to your queries</td>
+                    <td>{{reviewsCommercial.qryRespUS}}</td>
+                    <td>{{reviewsCommercial.qryRespAvg}}</td>
+                    <td>{{reviewsCommercial.qryRespS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{totalUnsatisfiedCom}}</td>
+                    <td>{{totalSatisfiedCom}}</td>
+                    <td>{{totalVSatisfiedCom}}</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--Table for pdf download-->
+<div class="row" hidden>
+    <div class="col-md-12 chart-download">
+        <table class="table feedback-summary" id="feedback-summary-scheduled">
+            <thead>
+                <tr>
+                    <th>Classification of Feedback</th>
+                    <th>Not Satisfied</th>
+                    <th>Satisfied</th>
+                    <th>Very Satisfied</th>
+                    <th>No Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Quality of Services: </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>How do you rate us as a company that promotes sustainable living?</td>
+                    <td>{{reviewsScheduled.compRateUS}}</td>
+                    <td>{{reviewsScheduled.compRateAvg}}</td>
+                    <td>{{reviewsScheduled.compRateS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Efficiency of Our Service Team</td>
+                    <td>{{reviewsScheduled.teamEffUS}}</td>
+                    <td>{{reviewsScheduled.teamEffAvg}}</td>
+                    <td>{{reviewsScheduled.teamEffS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Adherence to Regulations</td>
+                    <td>{{reviewsScheduled.regAdhUS}}</td>
+                    <td>{{reviewsScheduled.regAdhAvg}}</td>
+                    <td>{{reviewsScheduled.regAdhS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Adherence to health, safety, security and environmental standards</td>
+                    <td>{{reviewsScheduled.healthAdhUS}}</td>
+                    <td>{{reviewsScheduled.healthAdhAvg}}</td>
+                    <td>{{reviewsScheduled.healthAdhS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Our response/feedback to your queries</td>
+                    <td>{{reviewsScheduled.qryRespUS}}</td>
+                    <td>{{reviewsScheduled.qryRespAvg}}</td>
+                    <td>{{reviewsScheduled.qryRespS}}</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{totalUnsatisfiedS}}</td>
+                    <td>{{totalSatisfiedS}}</td>
+                    <td>{{totalVSatisfiedS}}</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
