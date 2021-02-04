@@ -61,8 +61,9 @@
                         <th>Name</th>
                         <th>Details</th>
                         <th>TS</th>
-                        <th>MP</th>
-                        <th>TAK</th>
+                        <th data-ng-show="showOtherSubcon == false">MP</th>
+                        <th data-ng-show="showOtherSubcon == false">TAK</th>
+                        <th data-ng-show="showOtherSubcon == true">Others</th>
                         <th>Area Code</th>
                         <th>Driver</th>
                         <th>Truck</th>
@@ -82,8 +83,9 @@
                         <td data-ng-bind="c.name"></td>
                         <td data-ng-bind="c.type"></td>
                         <td data-ng-bind="c.ts"></td>
-                        <td data-ng-bind="c.mp"></td>
-                        <td data-ng-bind="c.tak"></td>
+                        <td data-ng-show="showOtherSubcon == false" data-ng-bind="c.mp"></td>
+                        <td data-ng-show="showOtherSubcon == false" data-ng-bind="c.tak"></td>
+                        <td data-ng-show="showOtherSubcon == true" data-ng-bind="c.others"></td>
                         <td data-ng-bind="c.area"></td>
                         <td data-ng-bind="c.driver"></td>
                         <td data-ng-bind="c.truck"></td>
@@ -99,9 +101,11 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
                         <td>{{noTS}}</td>
-                        <td>{{noMP}}</td>
-                        <td>{{noTAK}}</td>
+                        <td data-ng-show="showOtherSubcon == false">{{noMP}}</td>
+                        <td data-ng-show="showOtherSubcon == false">{{noTAK}}</td>
+                        <td data-ng-show="showOtherSubcon == true">{{noOthers}}</td>
                         <td></td>
                         <td></td>
                         <td></td>

@@ -10210,6 +10210,8 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
         'zon': 'KCH'
     }
 
+    $scope.showOtherSubcon = false;
+
     $scope.obj.startDate = new Date();
     $scope.obj.endDate = new Date();
 
@@ -10223,7 +10225,13 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
 
     $scope.request = function(obj){
         $http.post('/getCmsDailyReportList', obj).then(function(response){
-            
+
+            if($scope.obj.services == '3'){
+                $scope.showOtherSubcon = true;
+            }else{
+                $scope.showOtherSubcon = false;
+            }
+
             $scope.cmsDailyReportList = response.data;
             $scope.obj.startDate.setDate($scope.obj.startDate.getDate() + 1);
             var splitType = "";
@@ -10232,6 +10240,7 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
             $scope.noTS = 0;
             $scope.noMP = 0;
             $scope.noTAK = 0;
+            $scope.noOthers = 0;
 
             for(var i=0; i<$scope.cmsDailyReportList.length; i++){
                 $scope.cmsDailyReportList[i].complaintDate = $filter('date')($scope.cmsDailyReportList[i].complaintDate, 'yyyy-MM-dd');
@@ -10259,18 +10268,33 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                 }
 
                 //formulate for subcon column
-                if($scope.cmsDailyReportList[i].subcon == "Trienekens"){
-                    $scope.cmsDailyReportList[i].ts = "1";
-                    $scope.cmsDailyReportList[i].mp = "-";
-                    $scope.cmsDailyReportList[i].tak = "-";
-                }else if($scope.cmsDailyReportList[i].subcon == "Mega Power"){
-                    $scope.cmsDailyReportList[i].ts = "-";
-                    $scope.cmsDailyReportList[i].mp = "1";
-                    $scope.cmsDailyReportList[i].tak = "-";
-                }else if($scope.cmsDailyReportList[i].subcon == "TAK"){
-                    $scope.cmsDailyReportList[i].ts = "-";
-                    $scope.cmsDailyReportList[i].mp = "-";
-                    $scope.cmsDailyReportList[i].tak = "1";
+                if($scope.obj.services == '3'){
+                    if($scope.cmsDailyReportList[i].subcon == "Trienekens"){
+                        $scope.cmsDailyReportList[i].ts = "1";
+                        $scope.cmsDailyReportList[i].others = "-";
+                        $scope.noTS++;
+                    }else{
+                        $scope.cmsDailyReportList[i].ts = "-";
+                        $scope.cmsDailyReportList[i].others = "1";
+                        $scope.noOthers++;
+                    }
+                }else{
+                    if($scope.cmsDailyReportList[i].subcon == "Trienekens"){
+                        $scope.cmsDailyReportList[i].ts = "1";
+                        $scope.cmsDailyReportList[i].mp = "-";
+                        $scope.cmsDailyReportList[i].tak = "-";
+                        $scope.noTS++;
+                    }else if($scope.cmsDailyReportList[i].subcon == "Mega Power"){
+                        $scope.cmsDailyReportList[i].ts = "-";
+                        $scope.cmsDailyReportList[i].mp = "1";
+                        $scope.cmsDailyReportList[i].tak = "-";
+                        $scope.noMP++;
+                    }else if($scope.cmsDailyReportList[i].subcon == "TAK"){
+                        $scope.cmsDailyReportList[i].ts = "-";
+                        $scope.cmsDailyReportList[i].mp = "-";
+                        $scope.cmsDailyReportList[i].tak = "1";
+                        $scope.noTAK++;
+                    }
                 }
 
                 //formulate reason
@@ -10362,12 +10386,6 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                 if($scope.cmsDailyReportList[i].wcdSentences == ''){
                     $scope.cmsDailyReportList[i].wcdSentences = '-';
                 }
-
-                //filtering
-                if($scope.cmsDailyReportList[i].subcon == "Trienekens"){ $scope.noTS++; }
-                if($scope.cmsDailyReportList[i].subcon == "Mega Power"){ $scope.noMP++; }
-                if($scope.cmsDailyReportList[i].subcon == "TAK"){ $scope.noTAK++; }
-
             }
         });
     }
