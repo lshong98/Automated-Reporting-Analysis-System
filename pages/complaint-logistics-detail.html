@@ -356,6 +356,7 @@
         <div class="col-md-9">
             <select class="form-control mx-sm-3" id="inputTruck" data-ng-model="logistics.truck" data-live-search="true" data-width="100%">
                 <option data-ng-repeat="t in truckList" value="{{t.no}}">{{t.no}}</option>
+                <option value="Other">Other</option>
             </select>
         </div>
     </div>
@@ -587,6 +588,7 @@
         <div class="col-md-9" data-ng-show="showLogsEdit">
             <select class="form-control mx-sm-3" id="editTruck" data-ng-model="editLogistics.truck" data-live-search="true" data-width="100%">
                 <option data-ng-repeat="t in truckList" value="{{t.no}}">{{t.no}}</option>
+                <option value="Other">Other</option>
             </select>
         </div>
     </div>    

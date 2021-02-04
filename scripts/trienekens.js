@@ -9733,7 +9733,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                     } else if (splitType[j] == '4') {
                         splitTypeContent = "Spillage of leachate water";
                     } else if (splitType[j] == '5') {
-                        splitTypeContent = "RoRo not send";
+                        splitTypeContent = "RoRo not sent";
                     } else if (splitType[j] == '6') {
                         splitTypeContent = "RoRo not exchanged";
                     } else if (splitType[j] == '7') {
@@ -9988,224 +9988,216 @@ app.controller('complaintExportController', function ($scope, $http, $window) {
     'use strict';
 
     var datevar = new Date();
-    $scope.startDate = new Date(datevar.getFullYear(), datevar.getMonth(), 1);
-    $scope.endDate = new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0);
 
-    $scope.complaintExportList = [];
-    $scope.filterComplaintExportList = [];
-    
-  
-
-    $http.get('/getComplaintExportList').then(function (response) {
-        $scope.complaintExportList = response.data;
-        
-        var filterAddCount = 0;
-        var splitType = "";
-        var splitTypeContent = "";
-        var splitTypeSpecialContent = ""; 
-        
-
-        for (var i = 0; i < response.data.length; i++) {
-            $scope.detailType = "";
-            //formulate value for type of complaint
-            splitType = $scope.complaintExportList[i].type.split(":,:");
-            for (var n = 0; n < splitType.length; n++) {
-                if (splitType[n].length > 3) {
-                    splitTypeSpecialContent = splitType[n].split(":::::");
-                    if (splitTypeSpecialContent[0] == '1') {
-                        splitTypeSpecialContent[2] = "Waste not collected";
-                    } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
-                        splitTypeSpecialContent[2] = "Others";
-                    }
-                    $scope.detailType += splitTypeSpecialContent[2];
-                } else {
-                    if (splitType[n] == '2') {
-                        splitTypeContent = "Bin not pushed back to its original location";
-                    } else if (splitType[n] == '3') {
-                        splitTypeContent = "Spillage of waste";
-                    } else if (splitType[n] == '4') {
-                        splitTypeContent = "Spillage of leachate water";
-                    } else if (splitType[n] == '5') {
-                        splitTypeContent = "RoRo not send";
-                    } else if (splitType[n] == '6') {
-                        splitTypeContent = "RoRo not exchanged";
-                    } else if (splitType[n] == '7') {
-                        splitTypeContent = "RoRo not pulled";
-                    } else if (splitType[n] == '8') {
-                        splitTypeContent = "RoRo not emptied";
-                    } else if (splitType[n] == '9') {
-                        splitTypeContent = "Waste not collected on time";
-                    } else if (splitType[n] == '10') {
-                        splitTypeContent = "Spillage during collection";
-                    } else if (splitType[n] == '11') {
-                        splitTypeContent = "Incomplete documents";
-                    }
-                    $scope.detailType += splitTypeContent;
-                }
-
-                if (i < (splitType.length - 1)) {
-                    $scope.detailType += ", ";
-                }
-
-            }  
-            $scope.complaintExportList[i].complaintTypeFormatted = $scope.detailType;            
-
-            //calculation for lg kpi
-            if ($scope.complaintExportList[i].logisticsDateTime != null && $scope.complaintExportList[i].complaintDate != null) {
-
-                var lgDateFormat = new Date($scope.complaintExportList[i].logisticsDateTime.split(" ")[0]);
-                var complaintDateFormat = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
-
-                var lkBetweenDay = lgDateFormat - complaintDateFormat;
-                lkBetweenDay = lkBetweenDay / 60 / 60 / 24 / 1000;
-
-                var lkBetweenTime = "";
-
-                var lgTimeFormat = new Date(2000, 0, 1, $scope.complaintExportList[i].logisticsDateTime.split(" ")[1].split(":")[0], $scope.complaintExportList[i].logisticsDateTime.split(" ")[1].split(":")[1]);
-
-                var complaintTimeFormat = new Date(2000, 0, 1, $scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[0], $scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[1]);
-
-                var operationStartTime = new Date(2000, 0, 1, 8, 30);
-                var operationEndTime = new Date(2000, 0, 1, 17, 30);
-
-                if (lkBetweenDay == 0) {
-                    lkBetweenTime = lgTimeFormat - complaintTimeFormat;
-
-                    lkBetweenTime = lkBetweenTime / 60 / 60 / 1000;
-                    lkBetweenTime = lkBetweenTime.toFixed(2);
-
-                } else if (lkBetweenDay >= 1) {
-
-                    lkBetweenTime = (operationEndTime - complaintTimeFormat) + (lgTimeFormat - operationStartTime);
-                    lkBetweenTime = lkBetweenTime / 60 / 60 / 1000;
-
-                    for (var dayCounter = 1; dayCounter < lkBetweenDay; dayCounter++) {
-                        lkBetweenTime += 9;
-                    }
-                    lkBetweenTime = lkBetweenTime.toFixed(2);
-                } else {
-                    lkBetweenTime = "Error Data";
-                }
-                
-                
-                var splitHrsLK = "";
-                var splitMinLK = "";
-
-                var splitHrsLK = lkBetweenTime.split(".")[0];
-                var splitMinLK = lkBetweenTime.split(".")[1] / 100 * 60;
-                
-                $scope.complaintExportList[i].lgkpi = splitHrsLK + ":" + splitMinLK;
-
-            }
-
-            //calculation for bd kpi
-            if ($scope.complaintExportList[i].customerDateTime != null && $scope.complaintExportList[i].complaintDate != null) {
-
-                var bdDateFormat = new Date($scope.complaintExportList[i].customerDateTime.split(" ")[0]);
-                var complaintDateFormat = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
-                var dateFlag = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
-                
-                var bkBetweenDay = bdDateFormat - complaintDateFormat;
-                bkBetweenDay = bkBetweenDay / 60 / 60 / 24 / 1000;
-
-                var bkBetweenTime = "";
-
-                var bdTimeFormat = new Date(2000, 0, 1, $scope.complaintExportList[i].customerDateTime.split(" ")[1].split(":")[0], $scope.complaintExportList[i].customerDateTime.split(" ")[1].split(":")[1]);
-
-                var complaintTimeFormat = new Date(2000, 0, 1, $scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[0], $scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[1]);
-
-                var operationStartTime = new Date(2000, 0, 1, 8, 30);
-                var operationEndTime = new Date(2000, 0, 1, 17, 30);
-
-                if (bkBetweenDay == 0) {
-                    bkBetweenTime = bdTimeFormat - complaintTimeFormat;
-
-                    bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
-                    bkBetweenTime = bkBetweenTime.toFixed(2); 
-                    var splitHrsBK = "";
-                    var splitMinBK = "";
-
-                    var splitHrsBK = bkBetweenTime.split(".")[0];
-                    var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
-
-                    $scope.complaintExportList[i].bdkpi = splitHrsBK + ":" + splitMinBK; 
-
-                } else if (bkBetweenDay >= 1) {
-
-                    bkBetweenTime = (operationEndTime - complaintTimeFormat) + (bdTimeFormat - operationStartTime);
-                    bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
-
-                    for (var dayCounter = 1; dayCounter < bkBetweenDay; dayCounter++) {
-                        bkBetweenTime += 9;
-//                        console.log("daycounter" + dayCounter);
-//                        console.log("bkbetweenDay" + bkBetweenDay);
-
-//                        console.log(dateFlag);
-//                        console.log(dateFlag.getDay());
-//                        if(dateFlag.getDay() == 0){
-//                            bkBetweenTime -= 9;
-//                        }
-//                        dateFlag.setDate(dateFlag.getDate() + 1);
-//                        console.log(dateFlag);
-                    }
-
-                    bkBetweenTime = bkBetweenTime.toFixed(2);
-                    var splitHrsBK = "";
-                    var splitMinBK = "";
-
-                    var splitHrsBK = bkBetweenTime.split(".")[0];
-                    var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
-
-                    $scope.complaintExportList[i].bdkpi = splitHrsBK + ":" + splitMinBK;                    
-                } else {
-                    $scope.complaintExportList[i].bdkpi = "Error Data";
-                }              
-
-            }
-
-            var compDate = new Date($scope.complaintExportList[i].complaintDate);
-
-            if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
-                $scope.filterComplaintExportList[filterAddCount] = $scope.complaintExportList[i];
-                filterAddCount += 1;
-
-            }
-            
-            
-            //formulate waste collected on
-            if($scope.complaintExportList[i].wasteColDT != null){
-                var wasteArray = $scope.complaintExportList[i].wasteColDT.split(";");
-                $scope.complaintExportList[i].wcdSentences = "";
-                for(var c=0; c < wasteArray.length - 1; c++){
-                    $scope.complaintExportList[i].wcdSentences += wasteArray[c].split(",")[0] + " - " + wasteArray[c].split(",")[1] + ".\n";
-                }  
-            }
-
-
-        }
-
-
-    });
-
-    $scope.dateRangeChange = function () {
-        if ($scope.startDate != undefined && $scope.endDate != undefined && $scope.startDate <= $scope.endDate) {
-            $scope.endDate.setDate($scope.endDate.getDate() + 1);
-            var filterAddCount = 0;
-            $scope.filterComplaintExportList = [];
-            for (var n = 0; n < $scope.complaintExportList.length; n++) {
-                var compDate = new Date($scope.complaintExportList[n].complaintDate);
-                if (compDate >= $scope.startDate && compDate <= $scope.endDate) {
-                    $scope.filterComplaintExportList[filterAddCount] = $scope.complaintExportList[n];
-                    filterAddCount += 1;
-                }
-            }
-        }
-
+    $scope.obj = {
+        "startDate": new Date(datevar.getFullYear(), datevar.getMonth(), 1),
+        "endDate": new Date(datevar.getFullYear(), datevar.getMonth() + 1, 0),
+        "services": '0',
+        "zon": 'KCH'
     }
 
-    $scope.exportCompReport = function (module) {
-        console.log($scope.startDate);
-        console.log($scope.endDate);
+    $scope.complaintExportList = [];
+
+    $scope.generateExportList = function(){
+        $http.post('/getComplaintExportList', $scope.obj).then(function (response) {
+            
+            $scope.complaintExportList = response.data;
+            
+            var splitType = "";
+            var splitTypeContent = "";
+            var splitTypeSpecialContent = ""; 
+            
+
+            for (var i = 0; i < response.data.length; i++) {
+                $scope.detailType = "";
+                //formulate value for type of complaint
+                splitType = $scope.complaintExportList[i].type.split(":,:");
+                for (var n = 0; n < splitType.length; n++) {
+                    if (splitType[n].length > 3) {
+                        splitTypeSpecialContent = splitType[n].split(":::::");
+                        if (splitTypeSpecialContent[0] == '1') {
+                            splitTypeSpecialContent[2] = "Waste not collected";
+                        } else if (splitTypeSpecialContent[0] == '12' || splitTypeSpecialContent[0] == '13' || splitTypeSpecialContent[0] == '14') {
+                            splitTypeSpecialContent[2] = "Others";
+                        }
+                        $scope.detailType += splitTypeSpecialContent[2];
+                    } else {
+                        if (splitType[n] == '2') {
+                            splitTypeContent = "Bin not pushed back to its original location";
+                        } else if (splitType[n] == '3') {
+                            splitTypeContent = "Spillage of waste";
+                        } else if (splitType[n] == '4') {
+                            splitTypeContent = "Spillage of leachate water";
+                        } else if (splitType[n] == '5') {
+                            splitTypeContent = "RoRo not sent";
+                        } else if (splitType[n] == '6') {
+                            splitTypeContent = "RoRo not exchanged";
+                        } else if (splitType[n] == '7') {
+                            splitTypeContent = "RoRo not pulled";
+                        } else if (splitType[n] == '8') {
+                            splitTypeContent = "RoRo not emptied";
+                        } else if (splitType[n] == '9') {
+                            splitTypeContent = "Waste not collected on time";
+                        } else if (splitType[n] == '10') {
+                            splitTypeContent = "Spillage during collection";
+                        } else if (splitType[n] == '11') {
+                            splitTypeContent = "Incomplete documents";
+                        }
+                        $scope.detailType += splitTypeContent;
+                    }
+
+                    if (i < (splitType.length - 1)) {
+                        $scope.detailType += ", ";
+                    }
+
+                }  
+                $scope.complaintExportList[i].complaintTypeFormatted = $scope.detailType;            
+
+                //calculation for lg kpi
+                if ($scope.complaintExportList[i].logisticsDateTime != null && $scope.complaintExportList[i].complaintDate != null) {
+
+                    var lgDateFormat = new Date($scope.complaintExportList[i].logisticsDateTime.split(" ")[0]);
+                    var complaintDateFormat = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
+
+                    var lkBetweenDay = lgDateFormat - complaintDateFormat;
+                    lkBetweenDay = lkBetweenDay / 60 / 60 / 24 / 1000;
+
+                    var lkBetweenTime = "";
+
+                    var lgTimeFormat = new Date(2000, 0, 1, $scope.complaintExportList[i].logisticsDateTime.split(" ")[1].split(":")[0], $scope.complaintExportList[i].logisticsDateTime.split(" ")[1].split(":")[1]);
+
+                    var complaintTimeFormat = new Date(2000, 0, 1, $scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[0], $scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[1]);
+
+                    var operationStartTime = new Date(2000, 0, 1, 8, 30);
+                    var operationEndTime = new Date(2000, 0, 1, 17, 30);
+
+                    if (lkBetweenDay == 0) {
+                        lkBetweenTime = lgTimeFormat - complaintTimeFormat;
+
+                        lkBetweenTime = lkBetweenTime / 60 / 60 / 1000;
+                        lkBetweenTime = lkBetweenTime.toFixed(2);
+
+                    } else if (lkBetweenDay >= 1) {
+
+                        lkBetweenTime = (operationEndTime - complaintTimeFormat) + (lgTimeFormat - operationStartTime);
+                        lkBetweenTime = lkBetweenTime / 60 / 60 / 1000;
+
+                        for (var dayCounter = 1; dayCounter < lkBetweenDay; dayCounter++) {
+                            lkBetweenTime += 9;
+                        }
+                        lkBetweenTime = lkBetweenTime.toFixed(2);
+                    } else {
+                        lkBetweenTime = "Error Data";
+                    }
+                    
+                    
+                    var splitHrsLK = "";
+                    var splitMinLK = "";
+
+                    var splitHrsLK = lkBetweenTime.split(".")[0];
+                    var splitMinLK = lkBetweenTime.split(".")[1] / 100 * 60;
+                    
+                    $scope.complaintExportList[i].lgkpi = splitHrsLK + ":" + splitMinLK;
+
+                }
+
+                //calculation for bd kpi
+                if ($scope.complaintExportList[i].customerDateTime != null && $scope.complaintExportList[i].complaintDate != null) {
+
+                    var bdDateFormat = new Date($scope.complaintExportList[i].customerDateTime.split(" ")[0]);
+                    var complaintDateFormat = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
+                    var dateFlag = new Date($scope.complaintExportList[i].complaintDate.split(" ")[0]);
+                    
+                    var bkBetweenDay = bdDateFormat - complaintDateFormat;
+                    bkBetweenDay = bkBetweenDay / 60 / 60 / 24 / 1000;
+
+                    var bkBetweenTime = "";
+
+                    var bdTimeFormat = new Date(2000, 0, 1, $scope.complaintExportList[i].customerDateTime.split(" ")[1].split(":")[0], $scope.complaintExportList[i].customerDateTime.split(" ")[1].split(":")[1]);
+
+                    var complaintTimeFormat = new Date(2000, 0, 1, $scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[0], $scope.complaintExportList[i].complaintDate.split(" ")[1].split(":")[1]);
+
+                    var operationStartTime = new Date(2000, 0, 1, 8, 30);
+                    var operationEndTime = new Date(2000, 0, 1, 17, 30);
+
+                    if (bkBetweenDay == 0) {
+                        bkBetweenTime = bdTimeFormat - complaintTimeFormat;
+
+                        bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
+                        bkBetweenTime = bkBetweenTime.toFixed(2); 
+                        var splitHrsBK = "";
+                        var splitMinBK = "";
+
+                        var splitHrsBK = bkBetweenTime.split(".")[0];
+                        var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
+
+                        $scope.complaintExportList[i].bdkpi = splitHrsBK + ":" + splitMinBK; 
+
+                    } else if (bkBetweenDay >= 1) {
+
+                        bkBetweenTime = (operationEndTime - complaintTimeFormat) + (bdTimeFormat - operationStartTime);
+                        bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
+
+                        for (var dayCounter = 1; dayCounter < bkBetweenDay; dayCounter++) {
+                            bkBetweenTime += 9;
+    //                        console.log("daycounter" + dayCounter);
+    //                        console.log("bkbetweenDay" + bkBetweenDay);
+
+    //                        console.log(dateFlag);
+    //                        console.log(dateFlag.getDay());
+    //                        if(dateFlag.getDay() == 0){
+    //                            bkBetweenTime -= 9;
+    //                        }
+    //                        dateFlag.setDate(dateFlag.getDate() + 1);
+    //                        console.log(dateFlag);
+                        }
+
+                        bkBetweenTime = bkBetweenTime.toFixed(2);
+                        var splitHrsBK = "";
+                        var splitMinBK = "";
+
+                        var splitHrsBK = bkBetweenTime.split(".")[0];
+                        var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
+
+                        $scope.complaintExportList[i].bdkpi = splitHrsBK + ":" + splitMinBK;                    
+                    } else {
+                        $scope.complaintExportList[i].bdkpi = "Error Data";
+                    }              
+
+                }
+                
+                //formulate waste collected on
+                if($scope.complaintExportList[i].wasteColDT != null){
+                    var wasteArray = $scope.complaintExportList[i].wasteColDT.split(";");
+                    $scope.complaintExportList[i].wcdSentences = "";
+                    for(var c=0; c < wasteArray.length - 1; c++){
+                        $scope.complaintExportList[i].wcdSentences += wasteArray[c].split(",")[0] + " - " + wasteArray[c].split(",")[1] + ".\n";
+                    }  
+                }
+
+                if($scope.complaintExportList[i].reason == 1){
+                    $scope.complaintExportList[i].reason = "Waste Not Collected";
+                }else if($scope.complaintExportList[i].reason == 2){
+                    $scope.complaintExportList[i].reason = "Shortage Manpower";
+                }else if($scope.complaintExportList[i].reason == 3){
+                    $scope.complaintExportList[i].reason = "Truck Breakdown";
+                }else if($scope.complaintExportList[i].reason == 4){
+                    $scope.complaintExportList[i].reason = "Truck Full";
+                }else if($scope.complaintExportList[i].reason == 5){
+                    $scope.complaintExportList[i].reason = "Bin Not Sent Back";
+                }else if($scope.complaintExportList[i].reason == 6){
+                    $scope.complaintExportList[i].reason = "Spillage of Leachate";
+                }else if($scope.complaintExportList[i].reason == 7){
+                    $scope.complaintExportList[i].reason = "Other";
+                }else if($scope.complaintExportList[i].reason == 8){
+                    $scope.complaintExportList[i].reason = "RORO";
+                }else if($scope.complaintExportList[i].reason == 9){
+                    $scope.complaintExportList[i].reason = "Spillage of waste";
+                }else if($scope.complaintExportList[i].reason == 10){
+                    $scope.complaintExportList[i].reason = "Not wearing PPE / Uniform";
+                }
+            }
+        });
     }
 
 });
@@ -10332,7 +10324,7 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                         } else if (splitType[n] == '4') {
                             splitTypeContent = "Spillage of leachate water";
                         } else if (splitType[n] == '5') {
-                            splitTypeContent = "RoRo not send";
+                            splitTypeContent = "RoRo not sent";
                         } else if (splitType[n] == '6') {
                             splitTypeContent = "RoRo not exchanged";
                         } else if (splitType[n] == '7') {
@@ -11110,7 +11102,7 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
                             splitTypeContent = "Spillage of leachate water";
                             $scope.detailTypeCode2 += "d";
                         } else if (splitType[n] == '5') {
-                            splitTypeContent = "RoRo not send";
+                            splitTypeContent = "RoRo not sent";
                             $scope.detailTypeCode2 += "e";
                         } else if (splitType[n] == '6') {
                             splitTypeContent = "RoRo not exchanged";
@@ -11312,7 +11304,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
                     splitTypeContent = "Spillage of leachate water";
                     $scope.verify.typeCode += 'd,';
                 } else if (splitType[i] == '5') {
-                    splitTypeContent = "RoRo not send";
+                    splitTypeContent = "RoRo not sent";
                     $scope.verify.typeCode += 'e,';
                 } else if (splitType[i] == '6') {
                     splitTypeContent = "RoRo not exchanged";
@@ -11830,7 +11822,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                 } else if (splitType[i] == '4') {
                     splitTypeContent = "Spillage of leachate water";
                 } else if (splitType[i] == '5') {
-                    splitTypeContent = "RoRo not send";
+                    splitTypeContent = "RoRo not sent";
                 } else if (splitType[i] == '6') {
                     splitTypeContent = "RoRo not exchanged";
                 } else if (splitType[i] == '7') {
@@ -12351,17 +12343,15 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         
         $scope.logistics.sub = $('#inputSub').val();
 
-        if ($scope.logistics.sub != "Trienekens") {
-            if ($scope.logsSubDate == null || $scope.logsSubTime == null) {
-                $scope.notify("error", "Please Fill In Sub-Contractor Date and Time");
+        if ($scope.logistics.sub == "Others") {
+            if ($scope.logsSubDate == null || $scope.logsSubTime == null ||  $scope.subOthers == '') {
+                $scope.notify("error", "Please Fill In Sub-Contractor, Date and Time");
                 $scope.showSubmitBtn = true;
             } else {
                 $scope.logistics.subDate = $filter('date')($scope.logsSubDate, 'yyyy-MM-dd');
                 $scope.logistics.subTime = $filter('date')($scope.logsSubTime, 'HH:mm:ss');
-
-                if($scope.logistics.sub == 'Others'){
-                    $scope.logistics.sub = $scope.subOthers;
-                }
+                $scope.logistics.sub = $scope.subOthers;
+                
             }
         } else {
             $scope.logistics.subDate = null;
@@ -12380,8 +12370,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             $scope.logistics.lgKPI = lgKPI;
             $scope.logistics.lgKPIAchieve = lgKPIAchieve;
         }
-            
-        
 
         if ($scope.logistics.sub == "" || $scope.logistics.cmsStatus == "" || $scope.logistics.status == "" || $scope.logistics.statusDate == "" || $scope.logistics.statusTime == "" || $scope.logistics.remarks == "" || $scope.logistics.reason =="" || $scope.logistics.truck == "") {
 
@@ -13008,7 +12996,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                     splitTypeContent = "Spillage of leachate water";
                     $scope.tc4 = true;
                 } else if (splitType[i] == '5') {
-                    splitTypeContent = "RoRo not send";
+                    splitTypeContent = "RoRo not sent";
                     $scope.tc5 = true;
                 } else if (splitType[i] == '6') {
                     splitTypeContent = "RoRo not exchanged";

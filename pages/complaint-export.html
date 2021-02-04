@@ -7,18 +7,44 @@
 <div class="form-group row">
     <label for="startDate" class="col-md-1 col-form-label form-label-width">Start Date</label>
     <div class="col-md-3">
-        <input type="date" id="startDate" class="form-control mx-sm-2" data-ng-model="startDate" data-ng-change="dateRangeChange()"/>
+        <input type="date" id="startDate" class="form-control mx-sm-2" data-ng-model="obj.startDate" />
     </div>
 </div>    
 
 <div class="form-group row">
     <label for="endDate" class="col-md-1 col-form-label form-label-width">End Date</label>
     <div class="col-md-3">
-        <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="endDate" data-ng-change="dateRangeChange()"/>
+        <input type="date" id="endDate" class="form-control mx-sm-2" data-ng-model="obj.endDate" />
     </div>
-    <div class="col-md-3 offset-md-5">
+</div>
+
+<div class="form-group row">
+    <label for="services" class="col-md-1 col-form-label form-label-width">Services</label>
+    <div class="col-md-3">
+        <select id="services" class="form-control mx-sm-2" data-ng-model="obj.services">
+            <option value="0" selected>All</option>
+            <option value="1" selected>Municipal Waste</option>
+            <option value="2">Roro Container</option>
+            <option value="3">Scheduled Waste</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group row">
+    <label for="zon" class="col-md-1 col-form-label form-label-width">Branch</label>
+    <div class="col-md-3">
+        <select id="zon" class="form-control mx-sm-2" data-ng-model="obj.zon">
+            <option value="KCH" selected>KCH</option>
+            <option value="BTU">BTU</option>
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-1">
+        <button class="btn btn-primary" data-ng-click="generateExportList()" >Generate</button>
+    </div>
+    <div class="col-md-1">
         <a href="javascript:exportTableToExcel('complaintExport')" class="btn btn-md btn-primary clearfix"><span class="fa fa-file-pdf-o"></span> Export to Excel</a>
-       <!-- <button class="btn btn-primary" data-ng-click="setupKPI()"><i class="fa fa-plus"></i> Export</button> -->
     </div>
 </div>
 
@@ -47,6 +73,7 @@
                         <th>CMS Review Status</th>
                         <th>Area Code</th>
                         <th>Driver</th>
+                        <th>Reason</th>
                         <th>Remarks</th>
                         <th>Waste Collected On</th>
                         <th>Respondent</th>
@@ -55,7 +82,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="c in filterComplaintExportList">
+                    <tr data-ng-repeat="c in complaintExportList">
                         <td data-ng-bind="c.zon"></td>
                         <td data-ng-bind="c.coID"></td>
                         <td data-ng-bind="c.complaintDate"></td>
@@ -75,6 +102,7 @@
                         <td data-ng-bind="c.cmsStatus"></td>
                         <td data-ng-bind="c.area"></td>
                         <td data-ng-bind="c.driver"></td>
+                        <td data-ng-bind="c.reason"></td>
                         <td data-ng-bind="c.remarks"></td>
                         <td data-ng-bind="c.wcdSentences"></td>
                         <td data-ng-bind="c.respondent"></td>
