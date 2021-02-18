@@ -433,7 +433,7 @@ app.post('/getCmsDailyReportList', function(req, res){
 app.post('/getCmsDatasheet', function(req ,res){
     'use strict';
 
-    var sql= "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', tblcomplaintofficer.customerDate AS 'customerDate', tblcomplaintofficer.customerTime AS 'customerTime', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver', tblcomplaintofficer.typeCode AS 'typeCode' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND tblcomplaintofficer.services = '" + req.body.services + "' AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "'  ORDER BY complaintDate DESC";
+    var sql= "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.complaintDate AS 'complaintDate', tblcomplaintofficer.complaintTime AS 'complaintTime', tblcomplaintofficer.customerDate AS 'customerDate', tblcomplaintofficer.customerTime AS 'customerTime', tblcomplaintofficer.services AS 'services', tblcomplaintofficer.under AS 'area', tblcomplaintofficer.forwardedSub AS 'subcon', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.address AS 'address', tblcomplaintofficer.type AS 'type', tblcomplaintofficer.remarks AS 'remarks', tblcomplaintofficer.wasteColDT AS 'wasteColDT', tblstaff.staffName AS 'driver', tblcomplaintofficer.typeCode AS 'typeCode' FROM tblcomplaintofficer LEFT JOIN tblstaff ON tblcomplaintofficer.driver = tblstaff.staffID WHERE tblcomplaintofficer.activeStatus = '1' AND tblcomplaintofficer.zon = '" + req.body.zon + "' AND tblcomplaintofficer.services = '" + req.body.services + "' AND tblcomplaintofficer.complaintDate BETWEEN '" + req.body.startDate + "' AND '" + req.body.endDate + "'  ORDER BY complaintDate DESC";
 
     database.query(sql, function(err, result){
         if(err){
@@ -1352,7 +1352,7 @@ app.post('/setupBDKPI', function(req, res){
     'use strict';
 console.log(req.body.coID);
     var sql = "UPDATE tblcomplaintofficer SET bdKPI = '" + req.body.bdKPI + "', bdKPIAchieve = '" + req.body.bdKPIAchieve + "' WHERE coID = '" + req.body.coID + "'";
-console.log(sql);
+
     database.query(sql,function(err,result){
         if(err){
             throw err;

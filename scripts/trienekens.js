@@ -114,48 +114,81 @@ function bdKPIFunc(custDate, custTime, compDate, compTime){
 
         var operationStartTime = new Date(2000, 0, 1, 0, 00);
         var operationEndTime = new Date(2000, 0, 1, 24, 00);
+        var mondayStartTime = new Date(2000, 0, 1, 08, 30);
+        var fridayEndTime = new Date(2000, 0, 1, 17, 30);
 
-        if (bkBetweenDay == 0) {
-            bkBetweenTime = bdTimeFormat - complaintTimeFormat;
-
-            bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
-            bkBetweenTime = bkBetweenTime.toFixed(2); 
-            var splitHrsBK = "";
-            var splitMinBK = "";
-
-            var splitHrsBK = bkBetweenTime.split(".")[0];
-            var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
-
-            returnBdKPI = splitHrsBK + ":" + splitMinBK; 
-
-        } else if (bkBetweenDay >= 1) {
-
-            bkBetweenTime = (operationEndTime - complaintTimeFormat) + (bdTimeFormat - operationStartTime);
-            bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
-
-            for (var dayCounter = 1; dayCounter < bkBetweenDay; dayCounter++) {
-                bkBetweenTime += 24;
-            }
-            for(var x = 0; x < checkBetweenDay; x++){
-                var checkDate = new Date(complaintDateFormat);
-                checkDate.setDate(checkDate.getDate() + x);
-                if(checkDate.getDay() == '6' || checkDate.getDay() == '0'){
-                    bkBetweenTime -= 24;
+        if(
+            (complaintDateFormat.getDay() == '6' || complaintDateFormat.getDay() == '0') && (bdDateFormat.getDay() == '6' || bdDateFormat.getDay() == '0') ||
+            (complaintDateFormat.getDay() == '5' && complaintTimeFormat > fridayEndTime && bdDateFormat.getDay() == '1' && bdTimeFormat < mondayStartTime)    
+        ){
+            returnBdKPI = "0:00";
+        }else{
+            if (bkBetweenDay == 0) {
+                if(complaintDateFormat.getDay() == '5' && complaintTimeFormat > fridayEndTime){
+                    bkBetweenTime = 0;
+                }else if(bdTimeFormat.getDay() == '5' && bdTimeFormat > fridayEndTime){
+                    bkBetweenTime = fridayEndTime - complaintTimeFormat;
+                }else if(bdTimeFormat.getDay() == '1' && bdTimeFormat < mondayStartTime){
+                    bkBetweenTime = 0;
+                }else if(complaintDateFormat.getDay() == '1' && complaintTimeFormat < mondayStartTime){
+                    bkBetweenTime = bdTimeFormat - mondayStartTime;
+                }else{
+                    bkBetweenTime = bdTimeFormat - complaintTimeFormat;
                 }
+                bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
+                bkBetweenTime = bkBetweenTime.toFixed(2); 
+                var splitHrsBK = "";
+                var splitMinBK = "";
+
+                var splitHrsBK = bkBetweenTime.split(".")[0];
+                var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;         
+                var stayCondition = false;       
+
+                returnBdKPI = splitHrsBK + ":" + splitMinBK; 
+
+            } else if (bkBetweenDay >= 1) {
+                console.log("def");
+                if((complaintDateFormat.getDay() == '5' && complaintTimeFormat > fridayEndTime) || complaintDateFormat.getDay() == '6' || complaintDateFormat.getDay() == '0'){
+                    bkBetweenTime = bdTimeFormat - mondayStartTime;
+                    stayCondition = true;
+                }else if(complaintDateFormat.getDay() == '1' && complaintTimeFormat < mondayStartTime){
+                    bkBetweenTime = bdTimeFormat - mondayStartTime;
+                }else if((bdDateFormat.getDay() == '1' && bdTimeFormat < mondayStartTime) || (bdDateFormat.getDay() == '5' && bdTimeFormat > fridayEndTime) || bdDateFormat.getDay() == '6' || bdDateFormat.getDay() == '0'){
+                    bkBetweenTime = fridayEndTime - complaintTimeFormat;
+                }else if(complaintDateFormat.getDay() == '5' && complaintTimeFormat <= fridayEndTime && bdDateFormat.getDay() == '1' && bdTimeFormat >= mondayStartTime){
+                    bkBetweenTime = (fridayEndTime - complaintTimeFormat) + (bdTimeFormat - mondayStartTime);
+                    stayCondition = true;
+                }else{
+                    bkBetweenTime = (operationEndTime - complaintTimeFormat) + (bdTimeFormat - operationStartTime);
+                    stayCondition = true;
+                }
+                bkBetweenTime = bkBetweenTime / 60 / 60 / 1000;
+                for (var dayCounter = 1; dayCounter < bkBetweenDay; dayCounter++) {
+                    bkBetweenTime += 24;
+                }
+                
+                if(stayCondition == true){
+                    for(var x = 0; x < checkBetweenDay; x++){
+                        var checkDate = new Date(complaintDateFormat);
+                        checkDate.setDate(checkDate.getDate() + x);
+                        if(checkDate.getDay() == '6' || checkDate.getDay() == '0'){
+                            bkBetweenTime -= 24;
+                        }                
+                    }
+                }
+
+                bkBetweenTime = bkBetweenTime.toFixed(2);
+                var splitHrsBK = "";
+                var splitMinBK = "";
+
+                var splitHrsBK = bkBetweenTime.split(".")[0];
+                var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
+
+                returnBdKPI = splitHrsBK + ":" + splitMinBK;                    
+            } else {
+                returnBdKPI = "N/A";
             }
-
-            bkBetweenTime = bkBetweenTime.toFixed(2);
-            var splitHrsBK = "";
-            var splitMinBK = "";
-
-            var splitHrsBK = bkBetweenTime.split(".")[0];
-            var splitMinBK = bkBetweenTime.split(".")[1] / 100 * 60;                
-
-            returnBdKPI = splitHrsBK + ":" + splitMinBK;                    
-        } else {
-            returnBdKPI = "N/A";
-        }  
-        
+        }
         return returnBdKPI;
     }
 }
@@ -178,11 +211,16 @@ function lgKPIFunc(statusDate, statusTime, compDate, compTime){
 
         var complaintTimeFormat = new Date(2000, 0, 1, compTime.split(":")[0], compTime.split(":")[1]);
 
-        var operationStartTime = new Date(2000, 0, 1, 0, 00);
-        var operationEndTime = new Date(2000, 0, 1, 24, 00);
+        var operationStartTime = new Date(2000, 0, 1, 8, 30);
+        var operationEndTime = new Date(2000, 0, 1, 17, 30);
 
         if (lgBetweenDay == 0) {
-            lgBetweenTime = lgTimeFormat - complaintTimeFormat;
+            
+            if(complaintTimeFormat < operationEndTime && lgTimeFormat > operationStartTime){
+                lgBetweenTime = lgTimeFormat - complaintTimeFormat;
+            }else{
+                lgBetweenTime = 0;
+            }
 
             lgBetweenTime = lgBetweenTime / 60 / 60 / 1000;
             lgBetweenTime = lgBetweenTime.toFixed(2); 
@@ -196,18 +234,36 @@ function lgKPIFunc(statusDate, statusTime, compDate, compTime){
 
         } else if (lgBetweenDay >= 1) {
 
-            lgBetweenTime = (operationEndTime - complaintTimeFormat) + (lgTimeFormat - operationStartTime);
+            if(complaintTimeFormat > operationEndTime && lgTimeFormat > operationStartTime){
+                lgBetweenTime = lgTimeFormat - operationStartTime;
+            }else if(complaintTimeFormat < operationEndTime && lgTimeFormat < operationStartTime){
+                lgBetweenTime = operationEndTime - complaintTimeFormat;
+            }else if(complaintTimeFormat < operationEndTime && lgTimeFormat > operationStartTime){
+                lgBetweenTime = (operationEndTime - complaintTimeFormat) + (lgTimeFormat - operationStartTime);
+            }else{
+                lgBetweenTime = 0;
+            }
+            
             lgBetweenTime = lgBetweenTime / 60 / 60 / 1000;
+            
 
             for (var dayCounter = 1; dayCounter < lgBetweenDay; dayCounter++) {
-                lgBetweenTime += 24;
+                lgBetweenTime += 9;
             }
+
             for(var x = 0; x < checkBetweenDay; x++){
                 var checkDate = new Date(complaintDateFormat);
                 checkDate.setDate(checkDate.getDate() + x);
                 if(checkDate.getDay() == '0'){
-                    lgBetweenTime -= 24;
+                    lgBetweenTime -= 9;
                 }
+            }
+
+            if(lgBetweenTime < 0){
+                lgBetweenTime = operationEndTime - complaintTimeFormat
+            }
+            if(lgBetweenTime < 0){
+                lgBetweenTime = 0;
             }
 
             lgBetweenTime = lgBetweenTime.toFixed(2);
@@ -1971,7 +2027,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     $scope.sendNotifToDevice = function () {
         $scope.data = {
             // 'target': "LocalDeveloper",
-            'target': "TriAllUsers",
+           'target': "TriAllUsers",
             'title': $scope.notifTitle,
             'message': $scope.notifMessage,
             'link': $scope.notifLink
@@ -11206,7 +11262,6 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
                 $scope.cmsDataSheet[i].bdKPIAchieve = bdKPIAchieve;
 
                 $http.post('/setupBDKPI', {"coID": $scope.cmsDataSheet[i].coID, "bdKPI":  $scope.cmsDataSheet[i].bdKPI, "bdKPIAchieve": $scope.cmsDataSheet[i].bdKPIAchieve}).then(function(response){
-                    console.log("abc");
                 })
             }
         }
