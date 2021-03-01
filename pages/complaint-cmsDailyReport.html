@@ -46,7 +46,7 @@
 <div class="row">
     <div class="col-md-12">
         <button class="btn btn-primary" data-ng-click="objChange()" >Generate</button>
-        <button class="btn btn-danger" data-ng-click="setupLGKPI()" >DEV Setting up LG KPI (DONT TOUCH THIS)</button>
+        <!-- <button class="btn btn-danger" data-ng-click="setupLGKPI()" >DEV Setting up LG KPI (DONT TOUCH THIS)</button> -->
     </div>
 </div>
 <div class="row">
@@ -55,7 +55,7 @@
             <table class="table" id="cmsDailyReportTbl">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Serial No</th>
                         <th>CMS Lodged</th>
                         <th>Services</th>
                         <th>Name</th>
@@ -77,7 +77,7 @@
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="c in cmsDailyReportList" data-ng-click="viewComp(c.coID)">
-                        <td data-ng-bind="c.coID"></td>
+                        <td>{{c.serialNo}} ({{c.coID}})</td>
                         <td data-ng-bind="c.complaintDateTime"></td>
                         <td data-ng-bind="c.servicesType"></td>
                         <td data-ng-bind="c.name"></td>

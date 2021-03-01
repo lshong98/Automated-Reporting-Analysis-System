@@ -629,7 +629,7 @@ app.post('/getInitDriver', function (req, res) {
 app.post('/getReportOfficerTodayUnsubmitted', function (req, res) {
     'use strict';
     
-    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area FROM tblarea JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND tblarea.staffID = '" + req.body.officerid + "'";
+    var sql = "SELECT DISTINCT CONCAT(tblzone.zoneCode,tblarea.areaCode) AS area FROM tblarea JOIN tblzone on tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' AND tblarea.areaID NOT IN (SELECT tblreport.areaID FROM tblreport WHERE DATE(tblreport.creationDateTime) = CURDATE()) AND tblarea.collection_frequency LIKE '%" + req.body.day + "%' AND tblarea.staffID = '" + req.body.officerid + "'";
     
     database.query(sql, function (err, result) {
         if (err) {

@@ -84,12 +84,12 @@
                 <tbody>
                     <tr data-ng-repeat="c in complaintExportList">
                         <td data-ng-bind="c.zon"></td>
-                        <td data-ng-bind="c.coID"></td>
+                        <td>{{c.serialNo}} ({{c.coID}})</td>
                         <td data-ng-bind="c.complaintDate"></td>
                         <td data-ng-bind="c.logisticsDateTime"></td>
-                        <td data-ng-bind="c.lgkpi"></td>
+                        <td data-ng-bind="c.lgKPINum"></td>
                         <td data-ng-bind="c.customerDateTime"></td>
-                        <td data-ng-bind="c.bdkpi"></td>
+                        <td data-ng-bind="c.bdKPINum"></td>
                         <td data-ng-bind="c.services"></td>
                         <td data-ng-bind="c.complaintTypeFormatted"></td>
                         <td data-ng-bind="c.forwardedSub"></td>

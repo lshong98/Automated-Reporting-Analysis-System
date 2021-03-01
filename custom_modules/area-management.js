@@ -72,6 +72,20 @@ app.get('/getAreaList', function (req, res) {
     });
 }); // Complete
 //for staff list in area management
+
+app.get('/getAreaCFList', function(req, res){
+    'use strict';
+
+    var sql = "SELECT tblarea.areaID, CONCAT(tblzone.zoneCode, tblarea.areaCode) AS code, tblarea.collection_frequency AS 'cf' FROM tblzone JOIN tblarea ON tblzone.zoneID = tblarea.zoneID";
+
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+})
+
 app.get('/getReportingOfficerList', function (req, res) {
     'use strict';
     var sql = "SELECT tblstaff.staffID AS id, tblstaff.staffName AS name FROM tblstaff INNER JOIN tblaccess ON tblstaff.positionID = tblaccess.positionID INNER JOIN tblmanagement ON tblmanagement.mgmtID = tblaccess.mgmtID WHERE tblmanagement.mgmtName = 'create reporting' AND tblaccess.status = 'A' AND tblstaff.staffStatus = 'A'";
