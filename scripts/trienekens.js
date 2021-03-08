@@ -9724,7 +9724,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterWebComplaintList = angular.copy($scope.complaintOfficerList);
 
         $scope.searchWebComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.coID + complaint.customerDateTime + complaint.logisticsDateTime + complaint.bdKPIAchieveWord +  complaint.name + complaint.company + complaint.serviceType + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.coID + complaint.serialNo + complaint.customerDateTime + complaint.logisticsDateTime + complaint.bdKPINum + complaint.bdKPIAchieveWord +  complaint.name + complaint.company + complaint.serviceType + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchWebComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.webComptotalItems = $scope.filterWebComplaintList.length;
@@ -9927,7 +9927,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         $scope.filterLogComplaintList = angular.copy($scope.logisticsComplaintList);
 
         $scope.searchLogComplaint = function (complaint) {
-            return (complaint.complaintDate + complaint.coID + complaint.name + complaint.company + complaint.reason + complaint.serviceType + complaint.staff + complaint.department + complaint.status).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
+            return (complaint.complaintDate + complaint.coID + complaint.serialNo + complaint.name + complaint.company + complaint.reason + complaint.serviceType + complaint.staff + complaint.department + complaint.status + complaint.lgKPIAchieveWord + complaint.lgKPINum).toUpperCase().indexOf($scope.searchLogComplaintFilter.toUpperCase()) >= 0;
         }
 
         $scope.logComptotalItems = $scope.filterLogComplaintList.length;
@@ -11157,7 +11157,7 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
                 console.log($scope.cmsDataSheet[i]);
                 var bdKPI = bdKPIFunc($scope.cmsDataSheet[i].customerDate, $scope.cmsDataSheet[i].customerTime, $scope.cmsDataSheet[i].complaintDate, $scope.cmsDataSheet[i].complaintTime);
                 var bdKPIAchieve = 'A';
-                if(bdKPI.split(":")[0] > 24){
+                if(bdKPI.split(":")[0] >= 24){
                     bdKPIAchieve = 'N';
                 }else if(bdKPI == 'N/A'){
                     bdKPIAchieve = 'E';
@@ -11650,6 +11650,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     $scope.logistics = {
         'areaUnder': '',
         'areaCouncil': '',
+        'lgReport': '',
         'sub': '',
         'subDate': null,
         'subTime': null,
@@ -11685,7 +11686,8 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         "sub": '',
         "truck": '',
         "driver": '',
-        "reason": ''
+        "reason": '',
+        "lgReport": ''
     }
     $scope.editImages = false;
     $scope.showSubmitBtn = true;
@@ -11703,7 +11705,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
     $http.post('/getStaffName', {'id': $window.sessionStorage.getItem('owner')}).then(function (response) {
         $scope.lgStaff = response.data[0].staffName;
-    });    
+    });
 
     $http.post('/getLogisticsComplaintDetail', $scope.coIDobj).then(function (response) {
         $scope.detailObj = response.data.data[0];
@@ -11840,6 +11842,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                 'image04': false
             }
             $http.post('/getLogisticsFullComplaintDetail', $scope.coIDobj).then(function (response) {
+                
                 if (response.data.status == "success") {
                     $scope.fullComplaintDetail = response.data.data[0];
 
@@ -11987,6 +11990,9 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     }
                     $scope.editLogistics.driver = $scope.fullComplaintDetail.driver;
                     $scope.editLogistics.truck = $scope.fullComplaintDetail.truck;
+                    $scope.editLogistics.lgReport = $scope.fullComplaintDetail.lgReport;
+
+                    $scope.getLGReportListFunc('2');
 
                     $scope.updateLogisticsCMSEdit = function(){
 
@@ -12143,6 +12149,29 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                 }
             });
         });
+
+        $scope.getLGReportListFunc = function(marker){
+
+            var lgArea = {
+                "areaID": ""
+            }
+
+            if(marker == '1'){
+                lgArea.areaID = $scope.logistics.areaUnder.split(',')[0];
+            }else if(marker == '2'){
+                lgArea.areaID =  $scope.fullComplaintDetail.area.split(",")[0];
+            }else if(marker == '3'){
+                lgArea.areaID = $scope.editLogistics.area.split(",")[0];
+            }
+            
+            $http.post('/getReportListForComplaint', lgArea).then(function(response){
+                $scope.lgReportList = response.data;
+
+                $scope.lgReportList.forEach(function(item, index){
+                    item.date = $filter('date')(item.date, 'yyyy-MM-dd');
+                })
+            });
+        }
     
     });
 

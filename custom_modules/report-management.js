@@ -652,4 +652,17 @@ app.post('/getReportOfficerTodaySubmitted', function (req, res) {
     });
     
 });
+
+app.post('/getReportListForComplaint', function (req, res) {
+    'use strict';
+    
+    var sql = "SELECT reportID AS reportID, tblreport.areaID, reportCollectionDate AS date FROM tblreport WHERE tblreport.areaID = '" + req.body.areaID + "' ORDER BY tblreport.creationDateTime DESC LIMIT 10";
+    
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+}); // Complete
 module.exports = app;

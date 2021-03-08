@@ -293,7 +293,8 @@
     <div class="form-group row" data-ng-show="showAreaLogistics">
         <label for="inputUnder" class="col-xs-3 col-form-label form-label-width">Area Code</label>
         <div class="col-md-9">
-            <select class="form-control mx-sm-3" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%">
+            <select class="form-control mx-sm-3" id="inputUnder" data-ng-model="logistics.areaUnder" data-ng-change="getLGReportListFunc('1')" data-live-search="true" data-width="100%">
+            <!-- <select class="form-control mx-sm-3" id="inputUnder" data-ng-model="logistics.areaUnder" data-live-search="true" data-width="100%"> -->
                   <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
                       <option value="{{a.id}},{{a.code}}" subcon="{{a.subcon}}" data-ng-repeat="a in w.area">{{a.code}}</option>
                   </optgroup>
@@ -313,7 +314,15 @@
         </div>
     </div> -->
 
-    <!--original forwarded to sub-contractor-->
+    <div class="form-group row" data-ng-show="showAreaLogistics">
+        <label for="inputLGReport" class="col-xs-3 col-form-label form-label-width">LG Report:</label>
+        <div class="col-md-9">
+            <select class="form-control mx-sm-3" id="inputLGReport" data-ng-model="logistics.lgReport" data-live-search="true" data-width="100%">
+                <option data-ng-repeat="r in lgReportList" value="{{r.date}} - {{r.reportID}}">{{r.date}} - {{r.reportID}}</option>
+            </select>
+        </div>
+    </div>
+
     <div class="form-group row">
         <label for="inputSub" class="col-xs-3 col-form-label form-label-width">Area Under:</label>
         <div class="col-md-9">
@@ -392,7 +401,7 @@
             <input type="datetime-local" id="inputWasteCol" class="form-control mx-sm-3" data-ng-model="wasteColDT" />
         </div>
     </div>    
-
+    
     <hr/>
     <div class="form-group row">
         <label for="inputStatus" class="col-xs-3 col-form-label form-label-width">CMS Status:</label>
@@ -467,7 +476,7 @@
         <strong class="col-xs-3 form-label-width">Area Code:</strong>
         <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{areaCode}}</p>
         <div class="col-md-9" data-ng-show="showLogsEdit">
-            <select class="mx-sm-3 form-control" id="editUnder" data-ng-model="editLogistics.area" data-live-search="true" data-width="100%">
+            <select class="mx-sm-3 form-control" id="editUnder" data-ng-change="getLGReportListFunc('3')" data-ng-model="editLogistics.area" data-live-search="true" data-width="100%">
                   <optgroup data-ng-repeat="w in areaList" label="{{w.zone.name}}">
                       <option value="{{a.id}},{{a.code}}" subcon="{{a.subcon}}" data-ng-repeat="a in w.area">{{a.code}}</option>
                   </optgroup>
@@ -475,6 +484,16 @@
         </div>
     </div>
     
+    <div class="form-group row" data-ng-show="showAreaLogistics">
+        <strong class="col-xs-3 form-label-width">LG Report:</strong>
+        <p class="mx-sm-3" data-ng-show="!showLogsEdit"><a href="#/view-report/{{fullComplaintDetail.lgReport.split(' ')[2]}}">{{fullComplaintDetail.lgReport}}</a></p>
+        <div class="col-md-9"  data-ng-show="showLogsEdit">
+            <select class="form-control mx-sm-3"  data-ng-model="editLogistics.lgReport" data-live-search="true" data-width="100%">
+                <option data-ng-repeat="r in lgReportList" value="{{r.date}} - {{r.reportID}}">{{r.date}} - {{r.reportID}}</option>
+            </select>
+        </div>
+    </div>
+
     <div class="form-group row" data-ng-show="showAreaLogistics">
         <strong class="col-xs-3 form-label-width">Area by Council:</strong>
         <p class="mx-sm-3">{{fullComplaintDetail.council}}</p>

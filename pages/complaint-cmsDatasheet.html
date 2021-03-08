@@ -50,6 +50,7 @@
                 <thead>
                     <tr>
                         <th>Serial No</th>
+                        <th>CMS Status</th>
                         <th>CMS Lodged</th>
                         <th>Area Code</th>
                         <th>TS</th>
@@ -69,6 +70,7 @@
                 <tbody>
                     <tr data-ng-repeat="c in cmsDataSheet">
                         <td>{{c.serialNo}} ({{c.coID}})</td>
+                        <td data-ng-bind="c.cmsStatus"></td>
                         <td data-ng-bind="c.complaintDate"></td>
                         <td data-ng-bind="c.area"></td>
                         <td data-ng-bind="c.ts"></td>

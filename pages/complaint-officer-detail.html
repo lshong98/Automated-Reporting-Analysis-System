@@ -334,6 +334,11 @@
         <strong class="col-xs-3 form-label-width">Area Code:</strong>
         <p class="mx-sm-3">{{areaCode}}</p>
     </div>
+
+    <div class="form-group row" data-ng-show="showAreaControl">
+        <strong class="col-xs-3 form-label-width">LG Report:</strong>
+        <p class="mx-sm-3"><a href="#/view-report/{{detailObj.lgReport.split(' ')[2]}}">{{detailObj.lgReport}}</a></p>
+    </div>
     
     <div class="form-group row" data-ng-show="showAreaControl">
         <strong class="col-xs-3 form-label-width">Area by Council:</strong>
