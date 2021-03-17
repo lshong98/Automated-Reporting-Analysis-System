@@ -9,10 +9,10 @@ var fs = require('fs');
 const e = require('express');
 const { type } = require('os');
 
-app.get('/getAcrdbList',function(req, res){
+app.post('/getAcrdbList',function(req, res){
     'use strict';
 
-    var sql= "SELECT `id` AS 'id', `Serial_No` as 'serialNo', `Brand` AS 'brand', `Bin_Size` AS 'binSize', `council` AS 'council', `Date_of_Application` AS 'dateOfApplication', `status` AS 'binStatus', `area` AS 'area' ,`Name` AS 'name', `Tel_Contact` AS 'contact', `IC_Number` AS 'ic', `Company_Name` AS 'company', `Billing_Address` AS 'billAddress', `Place_of_Service_Lot_No` AS 'serviceAddress', `Frequency` AS 'frequency', `Type_of_Premise` AS 'typeOfPremise', `ACR_Serial_No` AS 'acrSerialNo', `Council_Serial_No` AS 'councilSerialNo', `Remarks` AS 'remarks', `Mon` AS 'mon', `Tue` AS 'tue', `Wed` AS 'wed', `Thu` AS 'thu', `Fri` AS 'fri', `Sat` AS 'sat', `Sun` AS 'sun' FROM tblacrdatabase ORDER BY council";
+    var sql= "SELECT `id` AS 'id', `Serial_No` as 'serialNo', `Brand` AS 'brand', `Bin_Size` AS 'binSize', `council` AS 'council', `Date_of_Application` AS 'dateOfApplication', `status` AS 'binStatus', `area` AS 'area' ,`Name` AS 'name', `Tel_Contact` AS 'contact', `IC_Number` AS 'ic', `Company_Name` AS 'company', `Billing_Address` AS 'billAddress', `Place_of_Service_Lot_No` AS 'serviceAddress', `Frequency` AS 'frequency', `Type_of_Premise` AS 'typeOfPremise', `ACR_Serial_No` AS 'acrSerialNo', `Council_Serial_No` AS 'councilSerialNo', `Remarks` AS 'remarks', `Mon` AS 'mon', `Tue` AS 'tue', `Wed` AS 'wed', `Thu` AS 'thu', `Fri` AS 'fri', `Sat` AS 'sat', `Sun` AS 'sun' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' ORDER BY council, company, binStatus, binSize";
 
     database.query(sql, function(err, result){
         if(err){
@@ -193,10 +193,12 @@ app.post('/deleteAcrdb', function(req, res){
     });
 })
 
-app.get('/getAcrdbCustList', function(req, res){
+app.post('/getAcrdbCustList', function(req, res){
     'use strict';
-    var sql="SELECT b.company, a.be, b.acr FROM (SELECT tblbindatabase.company AS 'company', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE' GROUP BY tblbindatabase.company)a RIGHT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'acr' FROM tblacrdatabase GROUP BY tblacrdatabase.Company_Name)b ON a.company = b.company;"
-
+    console.log(req.body);
+    //var sql="SELECT b.company, a.be, b.acr FROM (SELECT tblbindatabase.company AS 'company', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE' GROUP BY tblbindatabase.company)a RIGHT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'acr' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" +  req.body.status + "%' GROUP BY tblacrdatabase.Company_Name)b ON a.company = b.company;"
+    var sql = "SELECT s.company, s.council, a.be, s.bin1000L, s.bin660L, s.bin240L, s.bin120L, s.na FROM (SELECT tblbindatabase.company AS 'company', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE'  GROUP BY tblbindatabase.company)a RIGHT JOIN (SELECT z.company, z.council, b.bin1000L, c.bin660L, d.bin240L, e.bin120L, f.na FROM (SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.council AS 'council' FROM tblacrdatabase WHERE council LIKE '%%' AND status LIKE '%%' GROUP BY tblacrdatabase.Company_Name, tblacrdatabase.council)z LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'bin1000L' FROM tblacrdatabase WHERE council LIKE '%%' AND status LIKE '%%' AND Bin_Size = '1000L' GROUP BY tblacrdatabase.Company_Name)b ON z.company = b.company LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'bin660L' FROM tblacrdatabase WHERE council LIKE '%%' AND status LIKE '%%' AND Bin_Size = '660L' GROUP BY tblacrdatabase.Company_Name)c ON z.company = c.company LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'bin240L' FROM tblacrdatabase WHERE council LIKE '%%' AND status LIKE '%%' AND Bin_Size = '240L' GROUP BY tblacrdatabase.Company_Name)d ON z.company = d.company LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'bin120L' FROM tblacrdatabase WHERE council LIKE '%%' AND status LIKE '%%' AND Bin_Size = '120L' GROUP BY tblacrdatabase.Company_Name)e ON z.company = e.company LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'na' FROM tblacrdatabase WHERE council LIKE '%%' AND status LIKE '%%' AND Bin_Size IS NULL GROUP BY tblacrdatabase.Company_Name)f ON z.company = f.company)s ON a.company = s.company ORDER BY s.council, s.company;";
+    
     database.query(sql, function(err, result){
         if(err){
             throw err;
@@ -231,4 +233,28 @@ app.post('/getAcrdbCustDetails', function(req, res){
     });
 });
 
+app.post('/getAcrdbCouncilCustList', function(req, res){
+    'use strict';
+    var sql="SELECT b.company, a.be, b.acr, b.address FROM (SELECT tblbindatabase.company AS 'company', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE' AND tblbindatabase.council = '" + req.body.council + "' GROUP BY tblbindatabase.company)a RIGHT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.Place_of_Service_lot_no AS 'address', COUNT(tblacrdatabase.id) AS 'acr' FROM tblacrdatabase WHERE tblacrdatabase.status = '0' AND tblacrdatabase.council = '" + req.body.council + "' GROUP BY tblacrdatabase.Company_Name, tblacrdatabase.Place_of_Service_lot_no)b ON a.company = b.company;"
+console.log(sql);
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
+app.post('/getActiveACRList', function(req, res){
+    'use strict';
+    var sql="SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.Place_of_Service_lot_no AS 'address' FROM tblacrdatabase WHERE tblacrdatabase.status = '0' AND tblacrdatabase.council = '" + req.body.council + "' GROUP BY company, address";
+    // var sql="SELECT tblacrdatabase.Company_Name AS 'company' FROM tblacrdatabase WHERE tblacrdatabase.status = '0' AND tblacrdatabase.council = '" + req.body.council + "' GROUP BY company";
+console.log(sql);
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    });
+});
 module.exports = app;

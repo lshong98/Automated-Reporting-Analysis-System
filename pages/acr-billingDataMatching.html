@@ -157,30 +157,28 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <h5>ACR Database</h5>
+        <h5>ACR Billing Matching</h5>
     </div>
 </div>
 <br/>
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-3">
-        <select class="form-control" id="inputCouncil" data-ng-model="getAcrdbListParam.council" data-live-search="true" data-width="100%" >
-            <option value="">All</option>        
+        <select class="form-control" id="inputCouncil" data-ng-change="showUploadBtnChange();" data-ng-model="council" data-live-search="true" data-width="100%" >
+            <option value="" disabled selected>Council</option>        
             <option value="DBKU">DBKU</option>            
             <option value="MBKS">MBKS</option>
             <option value="MPP">MPP</option>
             <option value="MDS">MDS</option>
         </select>
     </div>
+</div> -->
+<br/>
+<div class="row">
     <div class="col-md-3">
-        <select class="form-control" id="inputCouncil" data-ng-model="getAcrdbListParam.status" data-live-search="true" data-width="100%" >
-            <option value="">All</option>        
-            <option value="0">Active</option>        
-            <option value="1">Postponed</option>            
-            <option value="2">Terminated</option>
-        </select>
+        <input class="form-control" type="file" id="excelInput"  file-model="billingExcel" accept=".xls,.xlsx"  > <!--accept excel-->
     </div>
     <div class="col-md-2" >
-        <button class="btn btn-primary" data-ng-click="getAcrdbList()">Submit</button>
+        <button class="btn btn-primary"  data-ng-click="importBillingAcrExcel()">Upload</button>
     </div>
 </div>
 <br/>
@@ -188,78 +186,60 @@
     <div class="col-md-2">
         <button class="btn btn-success" data-ng-show="show.create == 'A'" data-toggle="modal" data-target="#createAcrdb"><i class="fa fa-plus"></i> New</button>
     </div>
-    <div class="col-md-2">
-        <button class="btn btn-primary" data-ng-show="show.export == 'A'" data-ng-click="exportAcrDatabase('acrDBTable')">Export</button>
-    </div>
 </div>
 <br/>
 <div class="row">
-    <div class="col-md-2">
-        <button class="btn btn-primary" data-ng-click="acrCustomerList();">Customer List</button>
+    <div class="col-md-6">
+        <table class="table table-bordered" >
+            <thead>
+                <tr><th colspan="2">ACR List Not In Billing List</th></tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="a in listNotAppearInBill" >
+                    <td>{{a.company}}</td>
+                    <td>{{a.address}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <!-- <div class="col-md-2">
-        <button class="btn btn-primary" data-ng-click="acrCollectionList();">Collection List</button>
-    </div> -->
-    <div class="col-md-2">
-        <button class="btn btn-primary" data-ng-click="acrBillingMatchingPage();">Billing Matching</button>
+    <div class="col-md-6">
+        <table class="table table-bordered" >
+            <thead>
+                <tr><th colspan="2">Billing List Not Appear In ACR List</th></tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="b in billNotAppearInList">
+                    <td>{{b.companyName}}</td>
+                    <td>{{b.address}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 <br/>
 <div class="row">
     <div class="col-md-12">
-        <input type="text" class="form-control fas" data-ng-model="searchAcrdbListFilter" placeholder="&#XF002; Search here..." />
-    </div>
-</div>
-<br/>
-<div class="row">
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-clickable" id="acrDBTable">
-                <thead>
-                    <tr>
-                        <th>Serial No</th>
-                        <th>Brand</th>
-                        <th>Bin Size</th>
-                        <th>Date of Application</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Contact</th>
-                        <th>IC</th>
-                        <th>Company Name</th>
-                        <th>Billing Address</th>
-                        <th>Service Address</th>
-                        <th>Frequency</th>
-                        <th>Type of Premise</th>
-                        <th>ACR Serial No</th>
-                        <th>Council</th>
-                        <th>Council Serial No</th>
-                        <th>Remarks</th>
-                        <th>CF</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-ng-repeat="a in acrdbList | filter: searchAcrdb" data-ng-click="editAcrdbPage(a.id)">
-                        <td>{{a.serialNo}}</td>
-                        <td>{{a.brand}}</td>
-                        <td>{{a.binSize}}</td>
-                        <td>{{a.dateOfApplication}}</td>
-                        <td>{{a.name}}</td>
-                        <td>{{a.status}}</td>
-                        <td>{{a.contact}}</td>
-                        <td>{{a.ic}}</td>
-                        <td>{{a.company}}</td>
-                        <td>{{a.billAddress}}</td>
-                        <td>{{a.serviceAddress}}</td>
-                        <td>{{a.frequencyNum}}</td>
-                        <td>{{a.typeOfPremise}}</td>
-                        <td>{{a.acrSerialNo}}</td>
-                        <td>{{a.council}}</td>
-                        <td>{{a.councilSerialNo}}</td>
-                        <td>{{a.remarks}}</td>
-                        <td>{{a.cf}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <h5>Active ACR List</h5>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Count of Active ACR: {{matchList.length}}</p>
+            </div>
         </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>index</th>
+                    <th>Company</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="c in matchList" >
+                    <td>{{c.index}}</td>
+                    <td>{{c.company}}</td>
+                    <td>{{c.address}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

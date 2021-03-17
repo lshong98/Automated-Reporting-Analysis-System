@@ -497,6 +497,40 @@ app.directive('appFilereader', function ($q) {
 });
 
 /*
+    -upload excel
+*/
+
+app.directive('fileModel', ['$parse', function ($parse) { 
+    return { 
+        restrict: 'A', 
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel); 
+            var modelSetter = model.assign;
+            element.bind('change', function(){ 
+                scope.$apply(function(){
+                  modelSetter(scope, element[0].files[0]);
+                }); 
+            }); 
+        } 
+    }; 
+}]);
+
+//  app.service('fileUpload', ['$https:', function ($https) {
+//     this.uploadFileToUrl = function(file, uploadUrl) {
+//        var fd = new FormData();
+//        fd.append('file', file);
+    
+//        $https.post(uploadUrl, fd, {
+//           transformRequest: angular.identity,
+//           headers: {'Content-Type': undefined}
+//        })
+//        .success(function() {
+//        })
+//        .error(function() {
+//        });
+//     }
+//  }]);
+/*
     -Sharing Data
 */
 app.service('storeDataService', function () {
@@ -8840,6 +8874,8 @@ app.controller('bdbController', function($scope, $http, $filter, $window, storeD
             value = $scope.searchAddress;
         }else if(field == 'company'){
             value = $scope.searchCompany;
+        }else if(field == 'typeOfPro'){
+            value = $scope.searchTypeOfPro;
         }else if(field == 'date'){
             if($scope.searchDateStart == '' || $scope.searchDateStart == null){
                 value = null;
@@ -9213,155 +9249,162 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
         "sun": ""
     }
 
-    $http.get('/getAcrdbList').then(function(response){
+    $scope.getAcrdbListParam = {
+        "council": "",
+        "status": ""
+    }
 
-        $scope.acrdb = {
-            "serialNo": "",
-            "brand": "",
-            "binSize": "",
-            "dateOfApplication": "",
-            "name": "",
-            "contact": "",
-            "ic": "",
-            "company": "",
-            "billAddress": "",
-            "serviceAddress":"",
-            "frequency": "",
-            "typeOfPremise": "",
-            "acrSerialNo": "",
-            "council": "",
-            "councilSerialNo": "",
-            "remarks": "",
-            "mon": "",
-            "tue": "",
-            "wed": "",
-            "thu": "",
-            "fri": "",
-            "sat": "",
-            "sun": ""
+
+    $scope.acrdb = {
+        "serialNo": "",
+        "brand": "",
+        "binSize": "",
+        "dateOfApplication": "",
+        "name": "",
+        "contact": "",
+        "ic": "",
+        "company": "",
+        "billAddress": "",
+        "serviceAddress":"",
+        "frequency": "",
+        "typeOfPremise": "",
+        "acrSerialNo": "",
+        "council": "",
+        "councilSerialNo": "",
+        "remarks": "",
+        "mon": "",
+        "tue": "",
+        "wed": "",
+        "thu": "",
+        "fri": "",
+        "sat": "",
+        "sun": ""
+    }
+
+    $scope.getAcrdbList = function(){
+        $http.post('/getAcrdbList', $scope.getAcrdbListParam).then(function(response){
+
+            $scope.searchAcrdbListFilter = '';
+            $scope.acrdbList = response.data;
+
+            for(var i = 0; i < $scope.acrdbList.length; i++){
+                $scope.acrdbList[i].dateOfApplication = $filter('date')($scope.acrdbList[i].dateOfApplication, 'yyyy-MM-dd');
+                $scope.acrdbList[i].cf = '';
+                $scope.acrdbList[i].frequencyNum = 0;
+                if( $scope.acrdbList[i].mon == 'X'){
+                    $scope.acrdbList[i].cf += 'Mon,';
+                    $scope.acrdbList[i].frequencyNum++;
+                }
+                if( $scope.acrdbList[i].tue == 'X'){
+                    $scope.acrdbList[i].cf += ' Tue,';
+                    $scope.acrdbList[i].frequencyNum++;
+                }
+                if( $scope.acrdbList[i].wed == 'X'){
+                    $scope.acrdbList[i].cf += ' Wed,';
+                    $scope.acrdbList[i].frequencyNum++;
+                }
+                if( $scope.acrdbList[i].thu == 'X'){
+                    $scope.acrdbList[i].cf += ' Thu,';
+                    $scope.acrdbList[i].frequencyNum++;
+                }
+                if( $scope.acrdbList[i].fri == 'X'){
+                    $scope.acrdbList[i].cf += ' Fri,';
+                    $scope.acrdbList[i].frequencyNum++;
+                }
+                if( $scope.acrdbList[i].sat == 'X'){
+                    $scope.acrdbList[i].cf += ' Sat,';
+                    $scope.acrdbList[i].frequencyNum++;
+                }
+                if( $scope.acrdbList[i].sun == 'X'){
+                    $scope.acrdbList[i].cf += ' Sun';
+                    $scope.acrdbList[i].frequencyNum++;
+                }
+
+                if($scope.acrdbList[i].binStatus == '0'){
+                    $scope.acrdbList[i].status = "Active";
+                }else if($scope.acrdbList[i].binStatus == '1'){
+                    $scope.acrdbList[i].status = "Postponed";
+                }else if($scope.acrdbList[i].binStatus == '2'){
+                    $scope.acrdbList[i].status = "Terminated";
+                }
+            }
+
+            $scope.searchAcrdb = function (acrdb) {
+                return (acrdb.serialNo + acrdb.brand + acrdb.binSize + acrdb.dateOfApplication + acrdb.name + acrdb.contact + acrdb.ic + acrdb.company + acrdb.billingAddress + acrdb.serviceAddress + acrdb.frequency + acrdb.typeOfPremise + acrdb.acrSerialNo + acrdb.council + acrdb.councilSerialNo + acrdb.remarks + acrdb.cf).toUpperCase().indexOf($scope.searchAcrdbListFilter.toUpperCase()) >= 0;
+                
+            }
+
+            $scope.filterAcrdbList = angular.copy($scope.acrdbList);
+
+            $scope.getData = function () {
+                return $filter('filter')($scope.filterAcrdbList, $scope.searchAcrdbListFilter);
+            };
+
+        });
+    }
+
+    $scope.addAcrdb = function(){
+
+        $scope.acrdb.dateOfApplication = $filter('date')($scope.dateOfApplication, 'yyyy-MM-dd');
+        if($scope.cf.mon == true){
+            $scope.acrdb.mon = "X";
+        }else{
+            $scope.acrdb.mon = "I";
         }
-        $scope.searchAcrdbListFilter = '';
-        $scope.acrdbList = response.data;
-
-        for(var i = 0; i < $scope.acrdbList.length; i++){
-            $scope.acrdbList[i].dateOfApplication = $filter('date')($scope.acrdbList[i].dateOfApplication, 'yyyy-MM-dd');
-            $scope.acrdbList[i].cf = '';
-            $scope.acrdbList[i].frequencyNum = 0;
-            if( $scope.acrdbList[i].mon == 'X'){
-                $scope.acrdbList[i].cf += 'Mon,';
-                $scope.acrdbList[i].frequencyNum++;
-            }
-            if( $scope.acrdbList[i].tue == 'X'){
-                $scope.acrdbList[i].cf += ' Tue,';
-                $scope.acrdbList[i].frequencyNum++;
-            }
-            if( $scope.acrdbList[i].wed == 'X'){
-                $scope.acrdbList[i].cf += ' Wed,';
-                $scope.acrdbList[i].frequencyNum++;
-            }
-            if( $scope.acrdbList[i].thu == 'X'){
-                $scope.acrdbList[i].cf += ' Thu,';
-                $scope.acrdbList[i].frequencyNum++;
-            }
-            if( $scope.acrdbList[i].fri == 'X'){
-                $scope.acrdbList[i].cf += ' Fri,';
-                $scope.acrdbList[i].frequencyNum++;
-            }
-            if( $scope.acrdbList[i].sat == 'X'){
-                $scope.acrdbList[i].cf += ' Sat,';
-                $scope.acrdbList[i].frequencyNum++;
-            }
-            if( $scope.acrdbList[i].sun == 'X'){
-                $scope.acrdbList[i].cf += ' Sun';
-                $scope.acrdbList[i].frequencyNum++;
-            }
-
-            if($scope.acrdbList[i].binStatus == '0'){
-                $scope.acrdbList[i].status = "Active";
-            }else if($scope.acrdbList[i].binStatus == '1'){
-                $scope.acrdbList[i].status = "Postponed";
-            }else if($scope.acrdbList[i].binStatus == '2'){
-                $scope.acrdbList[i].status = "Terminated";
-            }
-        }
-
-        $scope.searchAcrdb = function (acrdb) {
-            return (acrdb.serialNo + acrdb.brand + acrdb.binSize + acrdb.dateOfApplication + acrdb.name + acrdb.contact + acrdb.ic + acrdb.company + acrdb.billingAddress + acrdb.serviceAddress + acrdb.frequency + acrdb.typeOfPremise + acrdb.acrSerialNo + acrdb.council + acrdb.councilSerialNo + acrdb.remarks + acrdb.cf).toUpperCase().indexOf($scope.searchAcrdbListFilter.toUpperCase()) >= 0;
-            
-        }
-
-        $scope.filterAcrdbList = angular.copy($scope.acrdbList);
-
-        $scope.getData = function () {
-            return $filter('filter')($scope.filterAcrdbList, $scope.searchAcrdbListFilter);
-        };
-
-
-
-        $scope.addAcrdb = function(){
-
-            $scope.acrdb.dateOfApplication = $filter('date')($scope.dateOfApplication, 'yyyy-MM-dd');
-            if($scope.cf.mon == true){
-                $scope.acrdb.mon = "X";
-            }else{
-                $scope.acrdb.mon = "I";
-            }
-            if($scope.cf.tue == true){
-                $scope.acrdb.tue = "X"
-            }else{
-                $scope.acrdb.tue = "I";
-            }
-
-            if($scope.cf.wed == true){
-                $scope.acrdb.wed = "X"
-            }else{
-                $scope.acrdb.wed = "I";
-            }
-
-            if($scope.cf.thu == true){
-                $scope.acrdb.thu = "X"
-            }else{
-                $scope.acrdb.thu = "I";
-            }
-
-            if($scope.cf.fri == true){
-                $scope.acrdb.fri = "X"
-            }else{
-                $scope.acrdb.fri = "I";
-            }
-
-            if($scope.cf.sat == true){
-                $scope.acrdb.sat = "X"
-            }else{
-                $scope.acrdb.sat = "I";
-            }
-
-            if($scope.cf.sun == true){
-                $scope.acrdb.sun = "X"
-            }else{
-                $scope.acrdb.sun = "I";
-            }
-
-            if($scope.acrdb.dateOfApplication == ""){
-                $scope.notify('error', 'don\'t leave the date of application blank.');
-            }else{
-                $http.post('/addAcrDB', $scope.acrdb).then(function(response){
-                    
-                    if(response.data.status == 'success'){
-                        $scope.notify('success', 'Insert Success');
-                        angular.element('#createAcrdb').modal('toggle');
-                    }
-                });
-            }
+        if($scope.cf.tue == true){
+            $scope.acrdb.tue = "X"
+        }else{
+            $scope.acrdb.tue = "I";
         }
 
-        $scope.editAcrdbPage = function(acrId){
-            window.location.href = '#/acr-database-edit/' + acrId;
+        if($scope.cf.wed == true){
+            $scope.acrdb.wed = "X"
+        }else{
+            $scope.acrdb.wed = "I";
         }
-    });
+
+        if($scope.cf.thu == true){
+            $scope.acrdb.thu = "X"
+        }else{
+            $scope.acrdb.thu = "I";
+        }
+
+        if($scope.cf.fri == true){
+            $scope.acrdb.fri = "X"
+        }else{
+            $scope.acrdb.fri = "I";
+        }
+
+        if($scope.cf.sat == true){
+            $scope.acrdb.sat = "X"
+        }else{
+            $scope.acrdb.sat = "I";
+        }
+
+        if($scope.cf.sun == true){
+            $scope.acrdb.sun = "X"
+        }else{
+            $scope.acrdb.sun = "I";
+        }
+
+        if($scope.acrdb.dateOfApplication == ""){
+            $scope.notify('error', 'don\'t leave the date of application blank.');
+        }else{
+            $http.post('/addAcrDB', $scope.acrdb).then(function(response){
+                
+                if(response.data.status == 'success'){
+                    $scope.notify('success', 'Insert Success');
+                    angular.element('#createAcrdb').modal('toggle');
+                }
+            });
+        }
+    }
+
+    $scope.editAcrdbPage = function(acrId){
+        window.location.href = '#/acr-database-edit/' + acrId;
+    }
 
     $scope.exportAcrDatabase = function(tableID, filename = ''){
-        console.log(tableID);
         var downloadLink;
         var dataType = 'application/vnd.ms-excel';
         var tableSelect = document.getElementById(tableID);
@@ -9395,6 +9438,16 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
     $scope.acrCustomerList = function(){
         window.location.href = '#/acr-database-custList';
     }
+
+    $scope.acrCollectionList = function(){
+        window.location.href = '#/acr-collectionList';
+    }
+
+    $scope.acrBillingMatchingPage = function(){
+        window.location.href = '#/acr-billingDataMatching';
+    }
+
+    $scope.getAcrdbList();
 });
 
 app.controller('acrdbEditController', function($scope, $http, $filter, storeDataService, $routeParams, $route){
@@ -9518,26 +9571,39 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
 app.controller('acrdbCustListController', function($scope, $http){
     'use strict'
     
-    $http.get('/getAcrdbCustList').then(function(response){
-        $scope.acrdbCustList = response.data;
-        $scope.searchAcrdbCustListFilter = '';
-        $scope.filterAcrdbCustList = [];
+    $scope.council = null;
+    $scope.showUploadBtn = false;
 
-        $scope.searchAcrdbCustList = function (acrdbCustList) {
-            return (acrdbCustList.company).toUpperCase().indexOf($scope.searchAcrdbCustListFilter.toUpperCase()) >= 0;
-        }
+    $scope.acrParam = {
+        "council": '',
+        "status": ''
+    }
 
-        $scope.filterAcrdbCustList = angular.copy($scope.acrdbCustList);
+    $scope.getAcrdbCustList = function(){
+        $http.post('/getAcrdbCustList', $scope.acrParam).then(function(response){
+            console.log(response.data);
+            $scope.acrdbCustList = response.data;
+            $scope.searchAcrdbCustListFilter = '';
+            $scope.filterAcrdbCustList = [];
 
-        $scope.getData = function () {
-            return $filter('filter')($scope.filterAcrdbCustList, $scope.searchAcrdbCustListFilter);
-        };
+            $scope.searchAcrdbCustList = function (acrdbCustList) {
+                return (acrdbCustList.company).toUpperCase().indexOf($scope.searchAcrdbCustListFilter.toUpperCase()) >= 0;
+            }
 
-    });
+            $scope.filterAcrdbCustList = angular.copy($scope.acrdbCustList);
+
+            $scope.getData = function () {
+                return $filter('filter')($scope.filterAcrdbCustList, $scope.searchAcrdbCustListFilter);
+            };
+
+        });
+    }
 
     $scope.acrdbCustDetails = function(company){
         window.location.href = '#/acr-database-custDetails/' + company
     }
+
+    $scope.getAcrdbCustList();
 });
 
 app.controller('acrdbCustDetailsController', function($scope, $http, $routeParams, $filter){
@@ -9594,6 +9660,209 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
             return $filter('filter')($scope.filterAcrdbCustDetails, $scope.searchAcrdbCustDetailsFilter);
         };        
     });　
+});
+
+app.controller('acrCollectionListController', function($scope, $http, $filter, storeDataService){
+
+    $scope.show = angular.copy(storeDataService.show.acrdb);
+
+    $scope.importACRExcel = function(){
+        var file = $scope.myFile;
+
+        var fileReader = new FileReader();
+        fileReader.readAsBinaryString(file);
+        fileReader.onload = (event)=>{
+            var excelData = event.target.result;
+            var workbook = XLSX.read(excelData,{type:"binary"});
+            console.log(workbook);
+            workbook.SheetNames.forEach(sheet=>{
+                // let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
+                let rawJsonObject = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+                
+                
+            });
+        }
+    }
+
+});
+
+app.controller('acrBillingDataMatchingController', function($scope, $http, $filter, storeDataService){
+
+    $scope.show = angular.copy(storeDataService.show.acrdb);
+    $scope.showUploadBtn = false;
+    
+    $scope.cf = {
+        "mon": "",
+        "tue": "",
+        "wed": "",
+        "thu": "",
+        "fri": "",
+        "sat": "",
+        "sun": ""
+    }
+
+    $scope.acrdb = {
+        "serialNo": "",
+        "brand": "",
+        "binSize": "",
+        "dateOfApplication": "",
+        "name": "",
+        "contact": "",
+        "ic": "",
+        "company": "",
+        "billAddress": "",
+        "serviceAddress":"",
+        "frequency": "",
+        "typeOfPremise": "",
+        "acrSerialNo": "",
+        "council": "",
+        "councilSerialNo": "",
+        "remarks": "",
+        "mon": "",
+        "tue": "",
+        "wed": "",
+        "thu": "",
+        "fri": "",
+        "sat": "",
+        "sun": ""
+    }
+
+    $scope.showUploadBtnChange = function(){
+        if($scope.council == null){
+            $scope.showUploadBtn = false;
+        }else{
+            $scope.showUploadBtn  = true;
+        }
+    }
+
+    $scope.importBillingAcrExcel = function(){
+
+        $scope.listNotAppearInBill = [];
+        $scope.billNotAppearInList = [];
+        $scope.listAppearInBill = [];
+        $scope.billAppearInList = [];
+        $scope.matchList = [];
+
+        var billingExcel = $scope.billingExcel;
+        
+        var fileReader = new FileReader();
+        fileReader.readAsBinaryString(billingExcel);
+        fileReader.onload = (event)=>{
+            var excelData = event.target.result;
+            var workbook = XLSX.read(excelData,{type:"binary"});
+            var council = {"council": workbook.SheetNames[0]}
+            workbook.SheetNames.forEach(sheet=>{
+                // let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
+                $scope.latestActiveBillingAcr = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+            });
+
+            $http.post('/getAcrdbCouncilCustList', council).then(function(response){
+                $scope.acrdbCouncilCustList = response.data;
+
+                $.each($scope.acrdbCouncilCustList , function (key1, value1) {
+                    var flag = false;
+                    $.each($scope.latestActiveBillingAcr , function (key2, value2) {
+                        if(value1.company.toUpperCase() == value2.companyName.toUpperCase()){
+                            flag = true;
+                            // $scope.listAppearInBill.push(value1);
+                            // $scope.matchList.push({
+                            //     "acr": value1.acr,
+                            //     "company": value1.company,
+                            //     "acrAddress": value1.address,
+                            //     "billAddress": value2.address
+                            // });
+                        }
+                    });
+                    if(flag == false){
+                        $scope.listNotAppearInBill.push(value1);
+                    }
+                });
+
+                $.each($scope.latestActiveBillingAcr , function (key3, value3) {
+                    var flag = false;
+                    $.each($scope.acrdbCouncilCustList , function (key4, value4) {
+                        if(value3.companyName.toUpperCase() == value4.company.toUpperCase()){
+                            flag = true;
+                            $scope.billAppearInList.push(value3);
+                        }
+                    });
+                    if(flag == false){
+                        $scope.billNotAppearInList.push(value3);
+                    }
+                });
+        
+            });
+
+            $http.post('/getActiveACRList', council).then(function(response){
+                $scope.matchList = response.data;
+
+                for(var i = 0; i<$scope.matchList.length; i++){
+                    $scope.matchList[i].index = i+1;
+                }
+            });
+        }
+    }
+    
+    $scope.addAcrdb = function(){
+
+        $scope.acrdb.dateOfApplication = $filter('date')($scope.dateOfApplication, 'yyyy-MM-dd');
+        if($scope.cf.mon == true){
+            $scope.acrdb.mon = "X";
+        }else{
+            $scope.acrdb.mon = "I";
+        }
+        if($scope.cf.tue == true){
+            $scope.acrdb.tue = "X"
+        }else{
+            $scope.acrdb.tue = "I";
+        }
+
+        if($scope.cf.wed == true){
+            $scope.acrdb.wed = "X"
+        }else{
+            $scope.acrdb.wed = "I";
+        }
+
+        if($scope.cf.thu == true){
+            $scope.acrdb.thu = "X"
+        }else{
+            $scope.acrdb.thu = "I";
+        }
+
+        if($scope.cf.fri == true){
+            $scope.acrdb.fri = "X"
+        }else{
+            $scope.acrdb.fri = "I";
+        }
+
+        if($scope.cf.sat == true){
+            $scope.acrdb.sat = "X"
+        }else{
+            $scope.acrdb.sat = "I";
+        }
+
+        if($scope.cf.sun == true){
+            $scope.acrdb.sun = "X"
+        }else{
+            $scope.acrdb.sun = "I";
+        }
+
+        if($scope.acrdb.dateOfApplication == ""){
+            $scope.notify('error', 'don\'t leave the date of application blank.');
+        }else{
+            $http.post('/addAcrDB', $scope.acrdb).then(function(response){
+                
+                if(response.data.status == 'success'){
+                    $scope.notify('success', 'Insert Success');
+                    angular.element('#createAcrdb').modal('toggle');
+                }
+            });
+        }
+    }
+    
+    $scope.editAcrdbPage = function(acrId){
+        window.location.href = '#/acr-database-edit/' + acrId;
+    }
 });
 
 app.controller('complaintController', function ($scope, $http, $filter, $window, storeDataService) {

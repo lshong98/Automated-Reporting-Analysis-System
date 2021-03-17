@@ -50,6 +50,7 @@ app.post('/getBinDatabaseList', function(req, res){
         
     }else{
         var sql = "SELECT * FROM tblbindatabase WHERE " + req.body.field + " LIKE '%" +req.body.value + "%'";
+        console.log(sql);
     }
 
     database.query(sql, function(err, result) {

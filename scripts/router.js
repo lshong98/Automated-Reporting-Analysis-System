@@ -505,6 +505,26 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'acrdbCustDetailsController',
         controllerAs:'acrdbCustDetails'
     })
+    .when('/acr-collectionList', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/acr-collectionList');
+            }
+        },
+        templateUrl: '/acr-collectionList',
+        controller: 'acrCollectionListController',
+        controllerAs:'acrCollectionList'
+    })
+    .when('/acr-billingDataMatching', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/acr-billingDataMatching');
+            }
+        },
+        templateUrl: '/acr-billingDataMatching',
+        controller: 'acrBillingDataMatchingController',
+        controllerAs:'acrBillingDataMatching'
+    })
     .when('/complaint-module', {
         resolve: {
             "check": function (routingService, $window, $location) {

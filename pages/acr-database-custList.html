@@ -4,6 +4,29 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-md-3">
+        <select class="form-control" id="inputCouncil" data-ng-model="acrParam.council" data-live-search="true" data-width="100%" >
+            <option value="">All</option>        
+            <option value="DBKU">DBKU</option>            
+            <option value="MBKS">MBKS</option>
+            <option value="MPP">MPP</option>
+            <option value="MDS">MDS</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select class="form-control" id="inputCouncil" data-ng-model="acrParam.status" data-live-search="true" data-width="100%" >
+            <option value="">All</option>        
+            <option value="0">Active</option>        
+            <option value="1">Postponed</option>            
+            <option value="2">Terminated</option>
+        </select>
+    </div>
+    <div class="col-md-2" >
+        <button class="btn btn-primary" data-ng-click="getAcrdbCustList()">Upload</button>
+    </div>
+</div>
+<br/>
+<div class="row">
     <div class="col-md-12">
         <input type="text" class="form-control fas" data-ng-model="searchAcrdbCustListFilter" placeholder="&#XF002; Search company here..." />
     </div>
@@ -15,18 +38,24 @@
             <table class="table table-hover table-striped table-clickable">
                 <thead>
                     <tr>
-                        <th>Company</th>
-                        <th>Acr Bin</th>
+                        <th>Company (Total Count: {{filterAcrdbCustList.length}})</th>
+                        <th>1000L</th>
+                        <th>660L</th>
+                        <th>240L</th>
+                        <th>120L</th>
+                        <th>NA</th>
                         <th>BE Bin</th>
-                        <th>Council</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr data-ng-repeat="a in filterAcrdbCustList | filter: searchAcrdbCustList" data-ng-click="acrdbCustDetails(a.company)">
                         <td>{{a.company}}</td>
-                        <td>{{a.acr}}</td>
-                        <td>{{a.be}}</td>
-                        <td>{{a.council}}</td>
+                        <td>{{a.bin1000L}}<span data-ng-if="a.bin1000L == null">0</span></td>
+                        <td>{{a.bin660L}}<span data-ng-if="a.bin660L == null">0</span></td>
+                        <td>{{a.bin240L}}<span data-ng-if="a.bin240L == null">0</span></td>
+                        <td>{{a.bin120L}}<span data-ng-if="a.bin120L == null">0</span></td>
+                        <td>{{a.na}}<span data-ng-if="a.na == null">0</span></td>
+                        <td>{{a.be}}<span data-ng-if="a.be == null">0</span></td>
                     </tr>
                 </tbody>
             </table>
