@@ -665,4 +665,18 @@ app.post('/getReportListForComplaint', function (req, res) {
         res.json(result);
     });
 }); // Complete
+
+app.post('/getReportGarbageAmount', function(req, res){
+    'use strict';
+
+    var sql="SELECT garbageAmount FROM tblreport WHERE reportID = '" + req.body.reportID + "'";
+console.log(sql);
+    database.query(sql, function (err, result) {
+        if (err) {
+            throw err;
+        }
+        res.json(result);
+    });
+});
+
 module.exports = app;

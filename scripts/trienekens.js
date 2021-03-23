@@ -9581,7 +9581,6 @@ app.controller('acrdbCustListController', function($scope, $http){
 
     $scope.getAcrdbCustList = function(){
         $http.post('/getAcrdbCustList', $scope.acrParam).then(function(response){
-            console.log(response.data);
             $scope.acrdbCustList = response.data;
             $scope.searchAcrdbCustListFilter = '';
             $scope.filterAcrdbCustList = [];
@@ -10326,7 +10325,6 @@ app.controller('complaintExportController', function ($scope, $http, $window, $f
 
     $scope.generateExportList = function(){
         $http.post('/getComplaintExportList', $scope.obj).then(function (response) {
-            
             $scope.complaintExportList = response.data;
             
             var splitType = "";
@@ -10336,11 +10334,12 @@ app.controller('complaintExportController', function ($scope, $http, $window, $f
             var areaCFList = [];
             $http.get('/getAreaCFList').then(function(response){
                 areaCFList = response.data;
-
-                for (var i = 0; i < response.data.length; i++) {
+                
+                for (var i = 0; i < $scope.complaintExportList.length; i++) {
                     $scope.detailType = "";
                     //formulate value for type of complaint
                     splitType = $scope.complaintExportList[i].type.split(":,:");
+                    
                     for (var n = 0; n < splitType.length; n++) {
                         if (splitType[n].length > 3) {
                             splitTypeSpecialContent = splitType[n].split(":::::");
@@ -10423,6 +10422,10 @@ app.controller('complaintExportController', function ($scope, $http, $window, $f
                         if($scope.complaintExportList[i].area == areaCFList[cf].code){
                             $scope.complaintExportList[i].area += " (" + areaCFList[cf].cf + ")";
                         }
+                    }  
+                    
+                    if($scope.complaintExportList[i].tonnage == null){
+                        $scope.complaintExportList[i].tonnage = 'N/A'
                     }
                 }
             });
@@ -12210,6 +12213,13 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                         }
                     }
                     
+                    if($scope.fullComplaintDetail.lgReport != null){
+                        $http.post('/getReportGarbageAmount', {"reportID": $scope.fullComplaintDetail.lgReport.split(' ')[2]}).then(function(response){
+                            if(response.data[0] != null){
+                                $scope.lgReportTonnage = response.data[0].garbageAmount;
+                            }
+                        })
+                    }
 
                     //                    review
                     if ($scope.fullComplaintDetail.logisticsReview !== null) {
@@ -13408,7 +13418,13 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                 $scope.logsStaffName = response.data[0].staffName;
             });
 
-
+            if($scope.detailObj.lgReport != null){
+                $http.post('/getReportGarbageAmount', {"reportID": $scope.detailObj.lgReport.split(' ')[2]}).then(function(response){
+                    if(response.data[0] != null){
+                        $scope.lgReportTonnage = response.data[0].garbageAmount;
+                    }
+                })
+            }
 
 
             if ($scope.viewControl >= 3) {
