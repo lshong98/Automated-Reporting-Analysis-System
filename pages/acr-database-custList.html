@@ -21,8 +21,11 @@
             <option value="2">Terminated</option>
         </select>
     </div>
-    <div class="col-md-2" >
+    <div class="col-md-1" >
         <button class="btn btn-primary" data-ng-click="getAcrdbCustList()">Upload</button>
+    </div>
+    <div class="col-md-1">
+        <a href="javascript:exportTableToExcel('acrCustListTbl')" class="btn btn-md btn-primary clearfix">Export</a>
     </div>
 </div>
 <br/>
@@ -35,30 +38,79 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
-            <table class="table table-hover table-striped table-clickable">
+            <table id="acrCustListTbl" class="table table-hover table-striped table-clickable">
                 <thead>
                     <tr>
                         <th>Company (Total Count: {{filterAcrdbCustList.length}})</th>
+                        <th>Active</th>
+                        <th>PostPoned</th>
+                        <th>Terminated</th>
+                        <th>Council</th>
                         <th>1000L</th>
                         <th>660L</th>
                         <th>240L</th>
                         <th>120L</th>
                         <th>NA</th>
                         <th>BE Bin</th>
+                        <th>Cost</th>
+                        <th>Entitlement</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="a in filterAcrdbCustList | filter: searchAcrdbCustList" data-ng-click="acrdbCustDetails(a.company)">
+                    <tr data-ng-repeat="a in filterAcrdbCustList | filter: searchAcrdbCustList" data-ng-click="acrdbCustDetails(a.acrCustID)">
                         <td>{{a.company}}</td>
+                        <td>{{a.activeCount}}<span data-ng-if="a.activeCount == null">0</span></td>
+                        <td>{{a.postponedCount}}<span data-ng-if="a.postponedCount == null">0</span></td>
+                        <td>{{a.terminatedCount}}<span data-ng-if="a.terminatedCount == null">0</span></td>
+                        <td>{{a.council}}</td>
                         <td>{{a.bin1000L}}<span data-ng-if="a.bin1000L == null">0</span></td>
                         <td>{{a.bin660L}}<span data-ng-if="a.bin660L == null">0</span></td>
                         <td>{{a.bin240L}}<span data-ng-if="a.bin240L == null">0</span></td>
                         <td>{{a.bin120L}}<span data-ng-if="a.bin120L == null">0</span></td>
                         <td>{{a.na}}<span data-ng-if="a.na == null">0</span></td>
                         <td>{{a.be}}<span data-ng-if="a.be == null">0</span></td>
+                        <td>{{a.cost}}</td>
+                        <td>{{a.entitlement}}</td>
+                        <td>{{a.total}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script src="/scripts/html2canvas.min.js"></script>
+<script>
+
+    function exportTableToExcel(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        
+        // Specify file name
+        filename = filename?filename+'.xls':'acrCustList.xls';
+        
+        // Create download link element
+        downloadLink = document.createElement("a");
+        
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+        
+            // Setting the file name
+            downloadLink.download = filename;
+            
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+</script>  

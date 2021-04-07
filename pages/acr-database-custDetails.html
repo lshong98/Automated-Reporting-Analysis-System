@@ -1,20 +1,142 @@
 <div class="row">
     <div class="col-md-12">
-        <h5>ACR Database Customer - {{companyName}}</h5>
+        <h5>ACR Database Customer - {{acrCustDetails.company}}</h5>
     </div>
 </div>
 <br/>
 
 <div class="row">
     <div class="col-md-12">
-        <h6>ACR Bin: {{acrBinCount}}</h6>
+        <h6>ACR Bin: {{acrDetailsList.length}}</h6>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <h6>BE Bin: {{beBinCount}}</h6>
+        <h6>BE Bin: {{acrBinList.length}}</h6>
     </div>
 </div>
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        <btn class="btn btn-primary" data-ng-show="!showEdit" data-ng-click="showEdit = true ">Edit</btn>
+        <btn class="btn btn-success" data-ng-show="showEdit" data-ng-click="submitAcrdbCustEdit()">Save</btn>
+        <btn class="btn btn-danger" data-ng-show="showEdit" data-ng-click="showEdit = false ">Cancel</btn>
+    </div>
+</div>
+<br/>
+<div class="form-group row">
+   <div class="col-md-1 form-label-width"><label for="editAcrCompany">Company:</label></div>
+   <div class="col-md-6">
+        <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.company}}</span>
+        <input class="form-control mx-sm-3" type="text" id="editAcrCompany" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.company"/>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-md-1 form-label-width"><label for="editAcrCouncil">Council:</label></div>
+    <div class="col-md-6">
+         <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.council}}</span>
+         <select class="form-control mx-sm-3" id="editAcrCouncil" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.council">
+             <option value="MBKS">MBKS</option>
+             <option value="DBKU">DBKU</option>
+             <option value="MPP">MPP</option>
+             <option value="MDS">MDS</option>
+         </select>
+     </div>
+ </div>
+
+<div class="form-group row">
+    <div class="col-md-1 form-label-width"><label for="editAcrName">Name:</label></div>
+    <div class="col-md-6">
+         <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.name}}</span>
+         <input class="form-control mx-sm-3" type="text" id="editAcrName" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.name"/>
+     </div>
+ </div>
+
+ <div class="form-group row">
+    <div class="col-md-1 form-label-width"><label for="editAcrIC">IC:</label></div>
+    <div class="col-md-6">
+         <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.ic}}</span>
+         <input class="form-control mx-sm-3" type="text" id="editAcrIC" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.ic"/>
+     </div>
+ </div>
+
+ <div class="form-group row">
+    <div class="col-md-1 form-label-width"><label for="editAcrContact">Contact:</label></div>
+    <div class="col-md-6">
+         <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.contact}}</span>
+         <input class="form-control mx-sm-3" type="text" id="editAcrContact" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.contact"/>
+     </div>
+ </div>
+
+ <div class="form-group row">
+    <div class="col-md-1 form-label-width"><label for="editAcrCost">Cost:</label></div>
+    <div class="col-md-6">
+         <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.cost}}</span>
+         <input class="form-control mx-sm-3" type="number" id="editAcrCost" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.cost"/>
+     </div>
+ </div>
+
+ <div class="form-group row">
+    <div class="col-md-1 form-label-width"><label for="editAcrEntitlement">Entitlement:</label></div>
+    <div class="col-md-6">
+         <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.entitlement}}</span>
+         <input class="form-control mx-sm-3" type="number" id="editAcrEntitlement" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.entitlement"/>
+     </div>
+ </div>
+
+ <div class="form-group row">
+    <div class="col-md-1 form-label-width"><label for="editAcrTotalCost">Total Cost:</label></div>
+    <div class="col-md-6">
+         <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.totalCost}}</span>
+         <input class="form-control mx-sm-3" type="numer" id="editAcrTotalCost" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.totalCost"/>
+     </div>
+ </div>
+<br/>
+<hr/>
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>ACR Database Record</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <input type="text" class="form-control fas" data-ng-model="searchAcrdbCustDetailsFilter" placeholder="&#XF002; Search here..." />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-clickable">
+                <thead>
+                    <tr>
+                        <th>Serial No</th>
+                        <th>Brand</th>
+                        <th>Size</th>
+                        <th>Frequency</th>
+                        <th>Service Address</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="b in filterAcrdbCustDetails | filter: searchAcrdbCustDetails" data-ng-click="editAcrdbPage(b.id)">
+                        <td>{{b.serialNo}}</td>
+                        <td>{{b.brand}}</td>
+                        <td>{{b.binSize}}</td>
+                        <td>{{b.frequency}}</td>
+                        <td>{{b.address}}</td>
+                        <td>{{b.date}}</td>
+                        <td>{{b.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <br/>
 <hr/>
 <br/>
@@ -52,47 +174,6 @@
                         <td>{{b.date}}</td>
                         <td>{{b.binStatus}}</td>
                         <td>{{b.binInUse}}</td>
-                        <td>{{b.name}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<br/>
-<hr/>
-<br/>
-
-<div class="row">
-    <div class="col-md-12">
-        <h5>ACR Database Record</h5>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <input type="text" class="form-control fas" data-ng-model="searchAcrdbCustDetailsFilter" placeholder="&#XF002; Search here..." />
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-clickable">
-                <thead>
-                    <tr>
-                        <th>Serial No</th>
-                        <th>Brand</th>
-                        <th>Size</th>
-                        <th>Date</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-ng-repeat="b in filterAcrdbCustDetails | filter: searchAcrdbCustDetails" >
-                        <td>{{b.serialNo}}</td>
-                        <td>{{b.brand}}</td>
-                        <td>{{b.size}}</td>
-                        <td>{{b.date}}</td>
                         <td>{{b.name}}</td>
                     </tr>
                 </tbody>

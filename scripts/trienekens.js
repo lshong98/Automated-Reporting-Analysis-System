@@ -9326,6 +9326,8 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
                     $scope.acrdbList[i].status = "Postponed";
                 }else if($scope.acrdbList[i].binStatus == '2'){
                     $scope.acrdbList[i].status = "Terminated";
+                }else if($scope.acrdbList[i].binStatus == '3'){
+                    $scope.acrdbList[i].status = "Terminated(Closed)";
                 }
             }
 
@@ -9581,9 +9583,36 @@ app.controller('acrdbCustListController', function($scope, $http){
 
     $scope.getAcrdbCustList = function(){
         $http.post('/getAcrdbCustList', $scope.acrParam).then(function(response){
+            
             $scope.acrdbCustList = response.data;
             $scope.searchAcrdbCustListFilter = '';
             $scope.filterAcrdbCustList = [];
+
+            if($scope.acrParam.status == '0'){
+                
+               for(var i=0; i<$scope.acrdbCustList.length; i++){
+                    if($scope.acrdbCustList[i].activeCount == null){
+                        $scope.acrdbCustList.splice(i,1);
+                        i--;
+                    }
+                };
+            }else if($scope.acrParam.status == '1'){
+                for(var i=0; i<$scope.acrdbCustList.length; i++){
+                    if($scope.acrdbCustList[i].postponedCount == null){
+                        $scope.acrdbCustList.splice(i,1);
+                        i--;
+                    }
+                };
+            }else if($scope.acrParam.status == '2'){
+                for(var i=0; i<$scope.acrdbCustList.length; i++){
+                    if($scope.acrdbCustList[i].terminatedCount == null){
+                        $scope.acrdbCustList.splice(i,1);
+                        i--;
+                    }
+                };
+            }
+            
+              
 
             $scope.searchAcrdbCustList = function (acrdbCustList) {
                 return (acrdbCustList.company).toUpperCase().indexOf($scope.searchAcrdbCustListFilter.toUpperCase()) >= 0;
@@ -9594,39 +9623,40 @@ app.controller('acrdbCustListController', function($scope, $http){
             $scope.getData = function () {
                 return $filter('filter')($scope.filterAcrdbCustList, $scope.searchAcrdbCustListFilter);
             };
+            
 
         });
     }
 
-    $scope.acrdbCustDetails = function(company){
-        window.location.href = '#/acr-database-custDetails/' + company
+    $scope.acrdbCustDetails = function(id){
+        window.location.href = '#/acr-database-custDetails/' + id
     }
 
     $scope.getAcrdbCustList();
 });
 
-app.controller('acrdbCustDetailsController', function($scope, $http, $routeParams, $filter){
+app.controller('acrdbCustDetailsController', function($scope, $http, $routeParams, $filter, $route){
     'use strict';
 
-    $scope.companyName = $routeParams.custID;
-    $scope.acrBinList = []
-    $scope.acrBinCount = 0;
-    $scope.beBinCount = 0;
+    $scope.acrCustID = {'acrCustID': $routeParams.custID};
+    $scope.acrBinList = [];
+    $scope.editAcr = false;
 
     $scope.acrDetailsList = []
 
-    $http.post('/getAcrdbCustBin', {'company': $scope.companyName}).then(function(response){
+    $http.post('/getAcrdbCustDetails', $scope.acrCustID).then(function(response){
+        $scope.acrCustDetails = response.data[0];
+        $scope.acrEditCustDetails = response.data[0];
+
+    });
+
+    $http.post('/getAcrdbCustBEBin', $scope.acrCustID).then(function(response){
         $scope.acrBinList = response.data;
         $scope.searchAcrdbCustBinFilter = '';
         $scope.filterAcrdbCustBin= [];
 
         for(var i = 0; i< $scope.acrBinList.length; i++){
             $scope.acrBinList[i].date = $filter('date')($scope.acrBinList[i].date, 'yyyy-MM-dd');
-            if($scope.acrBinList[i].binStatus == 'ACR'){
-                $scope.acrBinCount++;
-            }else if($scope.acrBinList[i].binStatus == 'BE'){
-                $scope.beBinCount++;
-            }
         }
 
         $scope.searchAcrdbCustBins = function (acrdbCustBin) {
@@ -9640,7 +9670,7 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
         };
     })
 
-    $http.post('/getAcrdbCustDetails', {'company': $scope.companyName}).then(function(response){
+    $http.post('/getAcrdbCustAcrBin', $scope.acrCustID).then(function(response){
         $scope.acrDetailsList = response.data;
         $scope.searchAcrdbCustDetailsFilter = '';
         $scope.filterAcrdbCustDetails= [];
@@ -9659,6 +9689,21 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
             return $filter('filter')($scope.filterAcrdbCustDetails, $scope.searchAcrdbCustDetailsFilter);
         };        
     });　
+
+    $scope.submitAcrdbCustEdit = function(){
+        console.log($scope.acrEditCustDetails);
+        $scope.acrEditCustDetails.acrCustID = $routeParams.custID;
+        $http.post('/submitAcrdbCustEdit', $scope.acrEditCustDetails).then(function(response){
+            if(response.data.status == 'success'){
+                $scope.notify('success', 'ACR Customer Details Updated');
+                $route.reload(); 
+            }
+        });
+    }
+
+    $scope.editAcrdbPage = function(acrId){
+        window.location.href = '#/acr-database-edit/' + acrId;
+    }
 });
 
 app.controller('acrCollectionListController', function($scope, $http, $filter, storeDataService){
@@ -10324,7 +10369,10 @@ app.controller('complaintExportController', function ($scope, $http, $window, $f
     $scope.complaintExportList = [];
 
     $scope.generateExportList = function(){
-        $http.post('/getComplaintExportList', $scope.obj).then(function (response) {
+        var obj = $scope.obj;
+        obj.endDate.setDate(obj.endDate.getDate() + 1);
+        console.log(obj);
+        $http.post('/getComplaintExportList', obj).then(function (response) {
             $scope.complaintExportList = response.data;
             
             var splitType = "";
@@ -10456,6 +10504,7 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
     };
 
     $scope.request = function(obj){
+        console.log(obj);
         $http.post('/getCmsDailyReportList', obj).then(function(response){
 
             if($scope.obj.services == '3'){
@@ -11959,7 +12008,9 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         "truck": '',
         "driver": '',
         "reason": '',
-        "lgReport": ''
+        "lgReport": '',
+        "subDate": '',
+        "subTime": ''
     }
     $scope.editImages = false;
     $scope.showSubmitBtn = true;
@@ -11972,8 +12023,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
     $scope.showAreaLogistics = false;
     $scope.wasteColDT = "";
     $scope.showLogsEdit = false;
-    $scope.subOthers = '';
-    $scope.subOthersEdit = '';
 
     $http.post('/getStaffName', {'id': $window.sessionStorage.getItem('owner')}).then(function (response) {
         $scope.lgStaff = response.data[0].staffName;
@@ -12032,6 +12081,10 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
 
         $scope.subTimeChange = function (time) {
             $scope.logistics.subTime = time == undefined ? "" : time;
+        };
+
+        $scope.editSubTimeChange = function (time) {
+            $scope.editLogistics.subTime = time == undefined ? "" : time;
         };
         $scope.statusTimeChange = function (time) {
             $scope.logistics.statusTime = time == undefined ? "" : time;
@@ -12119,7 +12172,7 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.fullComplaintDetail = response.data.data[0];
 
                     $scope.areaCode = $scope.fullComplaintDetail.area.split(",")[1];
-
+                    console.log($scope.fullComplaintDetail);
                     if($scope.fullComplaintDetail.subDate != null){
                         $scope.fullComplaintDetail.subDate = $filter('date')($scope.fullComplaintDetail.subDate, 'yyyy-MM-dd');
                     }else{
@@ -12261,25 +12314,17 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.editLogistics.coID = $routeParams.complaintCode;
                     $scope.editLogistics.area = $scope.fullComplaintDetail.area;
                     $scope.editLogistics.council = $scope.fullComplaintDetail.council;
-                    if($scope.fullComplaintDetail.sub != 'Trienekens' && $scope.fullComplaintDetail.sub != 'Mega Power' && $scope.fullComplaintDetail.sub != 'TAK'){
-                        $scope.editLogistics.sub = 'Others';
-                        $scope.subOthersEdit = $scope.fullComplaintDetail.sub;
-                    }else{
-                        $scope.editLogistics.sub = $scope.fullComplaintDetail.sub;
-                    }
+                    $scope.editLogistics.sub = $scope.fullComplaintDetail.sub;
                     $scope.editLogistics.driver = $scope.fullComplaintDetail.driver;
                     $scope.editLogistics.truck = $scope.fullComplaintDetail.truck;
                     $scope.editLogistics.lgReport = $scope.fullComplaintDetail.lgReport;
+                    console.log($scope.fullComplaintDetail.subDate);
+                    // $scope.editLogistics.subDate = $filter('date')($scope.fullComplaintDetail.subDate, 'yyyy-MM-dd');
+                    // $scope.editLogistics.subTime = $scope.fullComplaintDetail.subTime;
 
                     $scope.getLGReportListFunc('2');
 
                     $scope.updateLogisticsCMSEdit = function(){
-
-                        if($scope.editLogistics.sub == 'Others'){
-                            $scope.editLogistics.sub = $scope.subOthersEdit;
-                        }
-
-                        $scope.editLogistics.sub = $('#editSub').val();
 
                         $http.post('/updateLogisticsCMSEdit', $scope.editLogistics).then(function(response){
                             if (response.data.status == "success") {
@@ -12628,16 +12673,9 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         
         $scope.logistics.sub = $('#inputSub').val();
 
-        if ($scope.logistics.sub == "Others") {
-            if ($scope.logsSubDate == null || $scope.logsSubTime == null ||  $scope.subOthers == '') {
-                $scope.notify("error", "Please Fill In Sub-Contractor, Date and Time");
-                $scope.showSubmitBtn = true;
-            } else {
-                $scope.logistics.subDate = $filter('date')($scope.logsSubDate, 'yyyy-MM-dd');
-                $scope.logistics.subTime = $filter('date')($scope.logsSubTime, 'HH:mm:ss');
-                $scope.logistics.sub = $scope.subOthers;
-                
-            }
+        if ($scope.logistics.sub != "Trienekens") {
+            $scope.logistics.subDate = $filter('date')($scope.logsSubDate, 'yyyy-MM-dd');
+            $scope.logistics.subTime = $filter('date')($scope.logsSubTime, 'HH:mm:ss');
         } else {
             $scope.logistics.subDate = null;
             $scope.logistics.subTime = null;
