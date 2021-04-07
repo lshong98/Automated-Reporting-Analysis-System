@@ -556,7 +556,7 @@ app.post('/submitLogisticsComplaint', function(req, res) {
     } else {
         var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.areaUnder + "', lgReport = '" + req.body.lgReport + "', council = '" + req.body.areaCouncil + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', forwardedBy = '" + req.body.by + "', cmsStatus = '" + req.body.cmsStatus + "',  status = '" + req.body.status + "', statusDate = date(now()) , statusTime =  time(now()) , remarks = '" + remarkFormatted + "', logsImg = '" + images + "', step = 2, readState = 'u', logsReadState = 'r', driver = '" + req.body.driver + "', wasteColDT = '" + req.body.wasteColDT + "', truck = '" + req.body.truck + "', reason = '" + req.body.reason + "', lgKPI = '" + req.body.lgKPI + "', lgKPIAchieve = '" + req.body.lgKPIAchieve + "' WHERE coID = '" + req.body.coID + "' ";
     }
-console.log(sql);
+    
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
@@ -570,8 +570,11 @@ console.log(sql);
 
 app.post('/updateLogisticsCMSEdit', function(req, res){
     'use strict';
-    var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.area + "', council = '" + req.body.council + "', forwardedSub = '" + req.body.sub + "', truck = '" + req.body.truck + "', driver = '" + req.body.driver + "', reason = '" + req.body.reason + "', lgReport = '" + req.body.lgReport + "' WHERE coID = '" + req.body.coID + "'";
-
+    if (req.body.subDate == null || req.body.subTime == null) {
+        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.area + "', council = '" + req.body.council + "', forwardedSub = '" + req.body.sub + "', forwardedDate = " + req.body.subDate + ", forwardedTime = " + req.body.subTime + ", truck = '" + req.body.truck + "', driver = '" + req.body.driver + "', reason = '" + req.body.reason + "', lgReport = '" + req.body.lgReport + "' WHERE coID = '" + req.body.coID + "'";
+    } else{
+        var sql = "UPDATE tblcomplaintofficer SET under = '" + req.body.area + "', council = '" + req.body.council + "', forwardedSub = '" + req.body.sub + "', forwardedDate = '" + req.body.subDate + "', forwardedTime = '" + req.body.subTime + "', truck = '" + req.body.truck + "', driver = '" + req.body.driver + "', reason = '" + req.body.reason + "', lgReport = '" + req.body.lgReport + "' WHERE coID = '" + req.body.coID + "'";
+    }
     database.query(sql, function(err, result){
         if (err) {
             throw err;

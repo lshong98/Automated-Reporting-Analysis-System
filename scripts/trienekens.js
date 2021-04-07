@@ -12172,7 +12172,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.fullComplaintDetail = response.data.data[0];
 
                     $scope.areaCode = $scope.fullComplaintDetail.area.split(",")[1];
-                    console.log($scope.fullComplaintDetail);
                     if($scope.fullComplaintDetail.subDate != null){
                         $scope.fullComplaintDetail.subDate = $filter('date')($scope.fullComplaintDetail.subDate, 'yyyy-MM-dd');
                     }else{
@@ -12318,14 +12317,20 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.editLogistics.driver = $scope.fullComplaintDetail.driver;
                     $scope.editLogistics.truck = $scope.fullComplaintDetail.truck;
                     $scope.editLogistics.lgReport = $scope.fullComplaintDetail.lgReport;
-                    console.log($scope.fullComplaintDetail.subDate);
-                    // $scope.editLogistics.subDate = $filter('date')($scope.fullComplaintDetail.subDate, 'yyyy-MM-dd');
-                    // $scope.editLogistics.subTime = $scope.fullComplaintDetail.subTime;
-
+                    $scope.editLogistics.subDate = new Date($scope.fullComplaintDetail.subDate);
+                    $scope.editLogistics.subTime = new Date();
+                    $scope.editLogistics.subTime.setHours($scope.fullComplaintDetail.subTime.split(":")[0]);
+                    $scope.editLogistics.subTime.setMinutes($scope.fullComplaintDetail.subTime.split(":")[1]);
+                    $scope.editLogistics.subTime.setSeconds($scope.fullComplaintDetail.subTime.split(":")[2]);
+                    $scope.editLogistics.subTime.setMilliseconds(0);
+                    
                     $scope.getLGReportListFunc('2');
 
                     $scope.updateLogisticsCMSEdit = function(){
 
+                        $scope.editLogistics.subDate = $filter('date')($scope.editLogistics.subDate, 'yyyy-MM-dd');
+                        $scope.editLogistics.subTime = $filter('date')($scope.editLogistics.subTime, 'HH:mm:ss');
+                        
                         $http.post('/updateLogisticsCMSEdit', $scope.editLogistics).then(function(response){
                             if (response.data.status == "success") {
                                 $scope.notify(response.data.status, "Data has been updated");
