@@ -283,7 +283,7 @@ app.post('/getActiveACRList', function(req, res){
     'use strict';
     var sql="SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.Place_of_Service_lot_no AS 'address' FROM tblacrdatabase WHERE tblacrdatabase.status = '0' AND tblacrdatabase.council = '" + req.body.council + "' GROUP BY company, address";
     // var sql="SELECT tblacrdatabase.Company_Name AS 'company' FROM tblacrdatabase WHERE tblacrdatabase.status = '0' AND tblacrdatabase.council = '" + req.body.council + "' GROUP BY company";
-console.log(sql);
+
     database.query(sql, function(err, result){
         if(err){
             throw err;
@@ -291,4 +291,39 @@ console.log(sql);
         res.json(result);
     });
 });
+
+app.post('/submitTruckCollectionRecord', function(req,res){
+    'use strict';
+
+    var sql = "INSERT INTO tblTruckCollectionRecord (device, location, zoneIn, zoneOut, duration, position, distance, creationDateTime) VALUES ?";
+    var myObj = req.body;
+    var myData = [];
+
+    for(var i=0; i<myObj.length; i++){
+        for(var j=0; j<myObj[i].data.length; j++){
+            myData.push([myObj[i].device, myObj[i].data[j].location, myObj[i].data[j].zoneIn, myObj[i].data[j].zoneOut, myObj[i].data[j].duration, myObj[i].data[j].position, myObj[i].data[j].distance, myObj[i].data[j].myDate]);
+        }
+    }
+    database.query(sql,[myData], function(err){
+        if(err){
+            throw err;
+        }else{
+            res.json({status: "success"});
+        }
+    })
+
+});
+
+app.get('/getTruckCollectionRecord', function(req,res){
+    'use strict';
+
+    var sql="SELECT * FROM tblTruckCollectionRecord";
+
+    database.query(sql, function(err, result){
+        if(err){
+            throw err;
+        }
+        res.json(result);
+    })
+})
 module.exports = app;

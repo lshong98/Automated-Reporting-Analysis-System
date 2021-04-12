@@ -515,6 +515,16 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'acrCollectionListController',
         controllerAs:'acrCollectionList'
     })
+    .when('/acr-addCollectionList', {
+        resolve: {
+            "check": function (routingService, $window, $location) {
+                return routingService.auth($window, $location, '/acr-addCollectionList');
+            }
+        },
+        templateUrl: '/acr-addCollectionList',
+        controller: 'acrAddCollectionListController',
+        controllerAs:'acrAddCollectionList'
+    })
     .when('/acr-billingDataMatching', {
         resolve: {
             "check": function (routingService, $window, $location) {

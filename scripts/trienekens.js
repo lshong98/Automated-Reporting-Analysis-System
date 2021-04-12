@@ -9445,6 +9445,10 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
         window.location.href = '#/acr-collectionList';
     }
 
+    $scope.acrAddCollectionList = function(){
+        window.location.href = '#/acr-addCollectionList';
+    }
+
     $scope.acrBillingMatchingPage = function(){
         window.location.href = '#/acr-billingDataMatching';
     }
@@ -9705,25 +9709,91 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
         window.location.href = '#/acr-database-edit/' + acrId;
     }
 });
-
 app.controller('acrCollectionListController', function($scope, $http, $filter, storeDataService){
-
     $scope.show = angular.copy(storeDataService.show.acrdb);
 
-    $scope.importACRExcel = function(){
-        var file = $scope.myFile;
+    $http.get('/getTruckCollectionRecord').then(function(response){
+        console.log(response);
+    });
+});
+app.controller('acrAddCollectionListController', function($scope, $http, $filter, storeDataService){
 
-        var fileReader = new FileReader();
-        fileReader.readAsBinaryString(file);
-        fileReader.onload = (event)=>{
-            var excelData = event.target.result;
-            var workbook = XLSX.read(excelData,{type:"binary"});
-            console.log(workbook);
-            workbook.SheetNames.forEach(sheet=>{
-                // let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
-                let rawJsonObject = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
-                
-                
+    $scope.show = angular.copy(storeDataService.show.acrdb);
+    
+    var allowSubmit = false;
+    var myDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+
+    $scope.importACRExcel = function(){
+        if($scope.myFile != undefined){
+            $scope.formattedCollectionData = [];
+            var file = $scope.myFile;
+            var fileReader = new FileReader();
+            fileReader.readAsBinaryString(file);
+            fileReader.onload = (event)=>{
+                var excelData = event.target.result;
+                var workbook = XLSX.read(excelData,{type:"binary"});
+
+                workbook.SheetNames.forEach(sheet=>{
+                    // let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
+                    let rawJsonObject = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+                    if(Object.keys(rawJsonObject[0])[0] == "Device:"){
+                        var firstDevice = Object.keys(rawJsonObject[0])[1];
+                        var device = Object.keys(rawJsonObject[0])[1];
+                        var flag = 0;
+                        $scope.formattedCollectionData.push({
+                            "device": device,
+                            "data": []
+                        });
+                        for(var i=0; i<rawJsonObject.length; i++){
+                            if(rawJsonObject[i]["Device:"] != 'Zone in'){
+                                if(rawJsonObject[i]["Device:"] != undefined){
+                                    if(rawJsonObject[i]["Device:"] != "Device:"){
+                                        if(rawJsonObject[i]["__EMPTY"].length != 2){
+                                            $scope.formattedCollectionData[flag].data.push({
+                                                "location": rawJsonObject[i]["__EMPTY_2"],
+                                                "zoneIn": rawJsonObject[i]["Device:"],
+                                                "zoneOut": rawJsonObject[i][firstDevice],
+                                                "duration":rawJsonObject[i]["__EMPTY"],
+                                                "distance": rawJsonObject[i]["__EMPTY_1"],
+                                                "position": rawJsonObject[i]["__EMPTY_3"],
+                                                "date": myDate
+                                            });
+                                        }
+                                    }else{
+                                        device = rawJsonObject[i][firstDevice];
+                                        $scope.formattedCollectionData.push({
+                                            "device": device,
+                                            "data": []
+                                        })
+                                        flag++;
+                                    }
+                                }
+                            }
+                        }
+                        allowSubmit = true;
+                        $scope.$apply();
+                    }else{
+                        $scope.notify('error', 'This is wrong format, please consult IT support');
+                        allowSubmit = false;
+                    }               
+                });
+            }
+        }else{
+            $scope.notify('error', 'Please select your file before upload');
+            allowSubmit = false;
+        }
+    }
+
+    $scope.submitCollectionList = function(){
+        if(!allowSubmit){
+            $scope.notify('error', 'Please upload your data before submit');
+        }else{
+            $http.post("/submitTruckCollectionRecord", $scope.formattedCollectionData).then(function(response){
+                if(response.data.status == 'success'){
+                    $scope.notify('success', 'Insert Success');
+                }else{
+                    $scope.notify('error', 'Error');
+                }
             });
         }
     }

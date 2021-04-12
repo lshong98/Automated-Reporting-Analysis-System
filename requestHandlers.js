@@ -186,6 +186,10 @@ app.get('/acr-collectionList', function(req,res){
     'use strict';
     res.sendFile('pages/acr-collectionList.html', {root: __dirname});
 })
+app.get('/acr-addCollectionList', function(req,res){
+    'use strict';
+    res.sendFile('pages/acr-addCollectionList.html', {root: __dirname});
+})
 app.get('/acr-billingDataMatching', function(req,res){
     'use strict';
     res.sendFile('pages/acr-billingDataMatching.html', {root: __dirname});

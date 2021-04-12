@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-md-12">
+        <h5>ACR Collection</h5>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-3">
+        <input class="form-control" type="file" id="excelInput"  file-model="myFile" accept=".xls,.xlsx"  > <!--accept excel-->
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="importACRExcel()">Upload</button>
+    </div>
+    <div class="col-md-2 offset-md-5">
+        <button class="btn btn-success" data-ng-click="submitCollectionList()">Submit</button>
+    </div>
+</div>
+<div class="row" data-ng-repeat="(a,b) in formattedCollectionData">
+    <div class="col-md-12">
+        <br/>
+        <h5>Device: {{b.device}}</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Location</th>
+                        <th>Zone In</th>
+                        <th>Zone Out</th>
+                        <th>Duration</th>
+                        <th>Distance</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="c in b.data">
+                        <td>{{c.location}}</td>
+                        <td>{{c.zoneIn}}</td>
+                        <td>{{c.zoneOut}}</td>
+                        <td>{{c.duration}}</td>
+                        <td>{{c.distance}}</td>
+                        <td>{{c.position}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr/>
+        <br/>
+        <hr/>
+    </div>
+</div>
