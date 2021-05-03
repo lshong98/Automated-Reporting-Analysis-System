@@ -116,7 +116,6 @@ function bdKPIFunc(custDate, custTime, compDate, compTime){
         var operationEndTime = new Date(2000, 0, 1, 24, 00);
         var mondayStartTime = new Date(2000, 0, 1, 08, 30);
         var fridayEndTime = new Date(2000, 0, 1, 17, 30);
-
         if(
             (complaintDateFormat.getDay() == '6' || complaintDateFormat.getDay() == '0') && (bdDateFormat.getDay() == '6' || bdDateFormat.getDay() == '0') ||
             (complaintDateFormat.getDay() == '5' && complaintTimeFormat > fridayEndTime && bdDateFormat.getDay() == '1' && bdTimeFormat < mondayStartTime)    
@@ -147,9 +146,13 @@ function bdKPIFunc(custDate, custTime, compDate, compTime){
                 returnBdKPI = splitHrsBK + ":" + splitMinBK; 
 
             } else if (bkBetweenDay >= 1) {
-                console.log("def");
-                if((complaintDateFormat.getDay() == '5' && complaintTimeFormat > fridayEndTime) || complaintDateFormat.getDay() == '6' || complaintDateFormat.getDay() == '0'){
+                if(complaintDateFormat.getDay() == '5' && complaintTimeFormat > fridayEndTime){
                     bkBetweenTime = bdTimeFormat - mondayStartTime;
+                    stayCondition = true;
+                }else if(complaintDateFormat.getDay() == '6' || complaintDateFormat.getDay() == '0'){
+                    bkBetweenTime = bdTimeFormat - mondayStartTime;
+                    bkBetweenDay++;
+                    stayCondition = true;
                 }else if(complaintDateFormat.getDay() == '1' && complaintTimeFormat < mondayStartTime){
                     bkBetweenTime = bdTimeFormat - mondayStartTime;
                 }else if((bdDateFormat.getDay() == '1' && bdTimeFormat < mondayStartTime) || (bdDateFormat.getDay() == '5' && bdTimeFormat > fridayEndTime) || bdDateFormat.getDay() == '6' || bdDateFormat.getDay() == '0'){
@@ -165,7 +168,6 @@ function bdKPIFunc(custDate, custTime, compDate, compTime){
                 for (var dayCounter = 1; dayCounter < bkBetweenDay; dayCounter++) {
                     bkBetweenTime += 24;
                 }
-                console.log(bkBetweenTime);
                 if(stayCondition == true){
                     for(var x = 0; x < checkBetweenDay; x++){
                         var checkDate = new Date(complaintDateFormat);
@@ -185,11 +187,11 @@ function bdKPIFunc(custDate, custTime, compDate, compTime){
 
                 returnBdKPI = splitHrsBK + ":" + splitMinBK;                    
 
-                console.log(returnBdKPI);
             } else {
                 returnBdKPI = "N/A";
             }
         }
+        console.log(returnBdKPI);
         return returnBdKPI;
     }
 }
@@ -9615,9 +9617,7 @@ app.controller('acrdbCustListController', function($scope, $http){
                     }
                 };
             }
-            
               
-
             $scope.searchAcrdbCustList = function (acrdbCustList) {
                 return (acrdbCustList.company).toUpperCase().indexOf($scope.searchAcrdbCustListFilter.toUpperCase()) >= 0;
             }
@@ -9708,12 +9708,23 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
     $scope.editAcrdbPage = function(acrId){
         window.location.href = '#/acr-database-edit/' + acrId;
     }
+
+    $scope.editAcrBdbPage = function(id){
+        window.location.href = "#/bdb-edit/" + id;
+    }
 });
 app.controller('acrCollectionListController', function($scope, $http, $filter, storeDataService){
     $scope.show = angular.copy(storeDataService.show.acrdb);
 
     $http.get('/getTruckCollectionRecord').then(function(response){
-        console.log(response);
+        console.log(response.data);
+
+        
+        $scope.acrCollectionList = response.data;
+        for(var i=0; i<$scope.acrCollectionList.length; i++){
+            $scope.acrCollectionList[i].myDate = $filter('date')($scope.acrCollectionList[i].myDate, 'yyyy-MM-dd');    
+        }
+        
     });
 });
 app.controller('acrAddCollectionListController', function($scope, $http, $filter, storeDataService){
@@ -9721,7 +9732,6 @@ app.controller('acrAddCollectionListController', function($scope, $http, $filter
     $scope.show = angular.copy(storeDataService.show.acrdb);
     
     var allowSubmit = false;
-    var myDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
     $scope.importACRExcel = function(){
         if($scope.myFile != undefined){
@@ -9756,7 +9766,7 @@ app.controller('acrAddCollectionListController', function($scope, $http, $filter
                                                 "duration":rawJsonObject[i]["__EMPTY"],
                                                 "distance": rawJsonObject[i]["__EMPTY_1"],
                                                 "position": rawJsonObject[i]["__EMPTY_3"],
-                                                "date": myDate
+                                                "date": rawJsonObject[i]["Device:"].split(" ")[0]
                                             });
                                         }
                                     }else{
@@ -9801,10 +9811,9 @@ app.controller('acrAddCollectionListController', function($scope, $http, $filter
 });
 
 app.controller('acrBillingDataMatchingController', function($scope, $http, $filter, storeDataService){
-
     $scope.show = angular.copy(storeDataService.show.acrdb);
-    $scope.showUploadBtn = false;
-    
+    $scope.showUpdateNameBtn = true;
+
     $scope.cf = {
         "mon": "",
         "tue": "",
@@ -9841,80 +9850,126 @@ app.controller('acrBillingDataMatchingController', function($scope, $http, $filt
         "sun": ""
     }
 
-    $scope.showUploadBtnChange = function(){
-        if($scope.council == null){
-            $scope.showUploadBtn = false;
-        }else{
-            $scope.showUploadBtn  = true;
-        }
+    var council={
+        "council": ""
     }
 
     $scope.importBillingAcrExcel = function(){
 
-        $scope.listNotAppearInBill = [];
-        $scope.billNotAppearInList = [];
-        $scope.listAppearInBill = [];
-        $scope.billAppearInList = [];
-        $scope.matchList = [];
-
+        $scope.latestActiveBillingAcr = [];
         var billingExcel = $scope.billingExcel;
+        var excelRawData = [];
         
         var fileReader = new FileReader();
         fileReader.readAsBinaryString(billingExcel);
         fileReader.onload = (event)=>{
             var excelData = event.target.result;
             var workbook = XLSX.read(excelData,{type:"binary"});
-            var council = {"council": workbook.SheetNames[0]}
+            council["council"]= workbook.SheetNames[0];
+            // var council = {"council": workbook.SheetNames[0]}
             workbook.SheetNames.forEach(sheet=>{
                 // let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
-                $scope.latestActiveBillingAcr = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
-            });
-
-            $http.post('/getAcrdbCouncilCustList', council).then(function(response){
-                $scope.acrdbCouncilCustList = response.data;
-
-                $.each($scope.acrdbCouncilCustList , function (key1, value1) {
-                    var flag = false;
-                    $.each($scope.latestActiveBillingAcr , function (key2, value2) {
-                        if(value1.company.toUpperCase() == value2.companyName.toUpperCase()){
-                            flag = true;
-                            // $scope.listAppearInBill.push(value1);
-                            // $scope.matchList.push({
-                            //     "acr": value1.acr,
-                            //     "company": value1.company,
-                            //     "acrAddress": value1.address,
-                            //     "billAddress": value2.address
-                            // });
-                        }
-                    });
-                    if(flag == false){
-                        $scope.listNotAppearInBill.push(value1);
+                excelRawData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+                if(council.council == "DBKU"){
+                    for(var a=2; a<excelRawData.length - 1; a++){
+                        $scope.latestActiveBillingAcr.push({
+                            "company": excelRawData[a]["__EMPTY_1"],
+                            "amount": excelRawData[a]["__EMPTY_4"]
+                        })
                     }
-                });
-
-                $.each($scope.latestActiveBillingAcr , function (key3, value3) {
-                    var flag = false;
-                    $.each($scope.acrdbCouncilCustList , function (key4, value4) {
-                        if(value3.companyName.toUpperCase() == value4.company.toUpperCase()){
-                            flag = true;
-                            $scope.billAppearInList.push(value3);
-                        }
-                    });
-                    if(flag == false){
-                        $scope.billNotAppearInList.push(value3);
-                    }
-                });
-        
-            });
-
-            $http.post('/getActiveACRList', council).then(function(response){
-                $scope.matchList = response.data;
-
-                for(var i = 0; i<$scope.matchList.length; i++){
-                    $scope.matchList[i].index = i+1;
                 }
             });
+            $scope.refreshAcrdbMatch();
         }
+
+        
+    }
+
+
+    $scope.refreshAcrdbMatch = function(){
+        $scope.listNotAppearInBill = [];
+        $scope.billNotAppearInList = [];
+        $scope.listAppearInBill = [];
+        $scope.billAppearInList = [];
+        $scope.matchList = [];
+        
+        $http.post('/getAcrdbBillingMatchingList', council).then(function(response){
+            console.log(response.data);
+            $scope.acrdbCouncilCustList = response.data;
+
+            $.each($scope.acrdbCouncilCustList , function (key1, value1) {
+                var flag = false;
+                $.each($scope.latestActiveBillingAcr , function (key2, value2) {
+                    if(value1.company.replace(/\s/g, '').toUpperCase() == value2.company.replace(/\s/g, '').toUpperCase()){
+                        flag = true;
+                        $scope.listAppearInBill.push(value1);
+                        // $scope.editMatchACRCustCompanyName(value2.company,value1.acrCustID);
+
+                        
+                        var bin = "";
+                        if(value1.bin1000L != null){
+                            bin += "1000L x " + value1.bin1000L.toString() + "\n";
+                        }
+                        if(value1.bin660L != null){
+                            bin += "660L x " + value1.bin660L.toString() + "\n";
+                        }
+                        if(value1.bin240L != null){
+                            bin += "240L x " + value1.bin240L.toString() + "\n";
+                        }
+                        if(value1.bin120L != null){
+                            bin += "120L x " + value1.bin120L.toString() + "\n";
+                        }
+                        if(value1.na != null){
+                            bin += "NA x " + value1.na.toString() + "\n";
+                        }
+                        
+                        $scope.matchList.push({
+                            "acrCustID": value1.acrCustID,
+                            "company": value1.company,
+                            "bin": bin,
+                            "cost": value1.cost,
+                            "entitlement": value1.entitlement,
+                            "total": value1.totalCost,
+                            "histPayment": value1.histPayment,
+                            "payment": value2.amount
+                        });
+                    }
+                });
+                if(flag == false){
+                    $scope.listNotAppearInBill.push(value1);
+                }
+            });
+
+            console.log( $scope.matchList);
+
+            $.each($scope.latestActiveBillingAcr , function (key3, value3) {
+                var flag = false;
+                $.each($scope.acrdbCouncilCustList , function (key4, value4) {
+                    if(value3.company.replace(/\s/g, '').toUpperCase() == value4.company.replace(/\s/g, '').toUpperCase()){
+                        flag = true;
+                        $scope.billAppearInList.push(value3);
+                    }
+                });
+                
+                if(flag == false){
+                    $scope.billNotAppearInList.push(value3);
+                }
+            });
+        });
+    }
+    
+    $scope.editMatchACRCustCompanyName = function(company, id){
+        $http.post('/updateACRCustCompanyName', {"company": company, "id": id}).then(function(response){
+            console.log(response);
+        })
+    }
+
+    $scope.editACRCustCompanyName = function(id){
+        $http.post('/updateACRCustCompanyName', {"company": $('#inputComp-'+id).val(), "id": id}).then(function(response){
+            if(response.data.status=="success"){
+                $scope.notify('success', 'Name Updated');
+            }
+        })
     }
     
     $scope.addAcrdb = function(){
@@ -9976,6 +10031,27 @@ app.controller('acrBillingDataMatchingController', function($scope, $http, $filt
     
     $scope.editAcrdbPage = function(acrId){
         window.location.href = '#/acr-database-edit/' + acrId;
+    }
+
+    $scope.updateAcrBilling = function(){
+
+        var billingObj = [];
+        var date = $filter('date')(new Date(), "yyyy-MM-dd");   
+
+        for(var i=0; i<$scope.matchList.length; i++){
+            billingObj.push({
+                "acrCustID": $scope.matchList[i].acrCustID, 
+                "amount": $scope.matchList[i].payment,
+                "date": date
+            })
+        }
+
+        $http.post('/updateAcrBilling', billingObj).then(function(response){
+            if(response.data.status == 'success'){
+                $scope.notify('success', "Latest payment has been recorded");
+                $scope.refreshAcrdbMatch();
+            }
+        })
     }
 });
 
@@ -11555,7 +11631,6 @@ app.controller('cmsDatasheetController', function($scope, $filter, $http, $windo
                 }
                 $scope.cmsDataSheet[i].bdKPI = bdKPI;
                 $scope.cmsDataSheet[i].bdKPIAchieve = bdKPIAchieve;
-
                 $http.post('/setupBDKPI', {"coID": $scope.cmsDataSheet[i].coID, "bdKPI":  $scope.cmsDataSheet[i].bdKPI, "bdKPIAchieve": $scope.cmsDataSheet[i].bdKPIAchieve}).then(function(response){
                 })
             }

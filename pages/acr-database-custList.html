@@ -42,6 +42,7 @@
                 <thead>
                     <tr>
                         <th>Company (Total Count: {{filterAcrdbCustList.length}})</th>
+                        <th>Customer Status</th>
                         <th>Active</th>
                         <th>PostPoned</th>
                         <th>Terminated</th>
@@ -60,6 +61,7 @@
                 <tbody>
                     <tr data-ng-repeat="a in filterAcrdbCustList | filter: searchAcrdbCustList" data-ng-click="acrdbCustDetails(a.acrCustID)">
                         <td>{{a.company}}</td>
+                        <td>{{a.status}}</td>
                         <td>{{a.activeCount}}<span data-ng-if="a.activeCount == null">0</span></td>
                         <td>{{a.postponedCount}}<span data-ng-if="a.postponedCount == null">0</span></td>
                         <td>{{a.terminatedCount}}<span data-ng-if="a.terminatedCount == null">0</span></td>

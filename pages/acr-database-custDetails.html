@@ -167,7 +167,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="b in filterAcrdbCustBin | filter: searchAcrdbCustBins" >
+                    <tr data-ng-repeat="b in filterAcrdbCustBin | filter: searchAcrdbCustBins" data-ng-click="editAcrBdbPage(b.id)">
                         <td>{{b.serialNo}}</td>
                         <td>{{b.brand}}</td>
                         <td>{{b.size}}</td>

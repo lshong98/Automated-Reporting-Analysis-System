@@ -196,9 +196,8 @@ app.post('/deleteAcrdb', function(req, res){
 app.post('/getAcrdbCustList', function(req, res){
     'use strict';
     
-    var sql = "SELECT a.company, a.acrCustID, a.council, b.be, c.bin1000L, c.bin660L, c.bin240L, c.bin120L, c.na, a.cost, a.entitlement, a.total, d.activeCount, e.postponedCount, f.terminatedCount FROM (SELECT tblacrcust.company AS 'company', tblacrcust.acrCustID AS 'acrCustID', tblacrcust.council AS 'council', tblacrcust.cost AS 'cost', tblacrcust.entitlement AS 'entitlement', tblacrcust.totalCost AS 'total' FROM tblacrcust WHERE tblacrcust.council LIKE '%" + req.body.council + "%')a LEFT JOIN (SELECT tblbindatabase.company AS 'company', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE'  GROUP BY tblbindatabase.company)b ON a.company = b.company LEFT JOIN (SELECT a.company, a.council, b.bin1000L, c.bin660L, d.bin240L, e.bin120L, f.na FROM (SELECT tblacrcust.company AS 'company', tblacrcust.council AS 'council' FROM tblacrcust WHERE council LIKE '%" + req.body.council + "%' GROUP BY tblacrcust.company, tblacrcust.council)a LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'bin1000L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '1000L' GROUP BY tblacrdatabase.Company_Name)b ON a.company = b.company LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'bin660L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '660L' GROUP BY tblacrdatabase.Company_Name)c ON a.company = c.company LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'bin240L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '240L' GROUP BY tblacrdatabase.Company_Name)d ON a.company = d.company LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'bin120L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '120L' GROUP BY tblacrdatabase.Company_Name)e ON a.company = e.company LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', COUNT(tblacrdatabase.id) AS 'na' FROM tblacrdatabase WHERE status LIKE '%" + req.body.status + "%' AND Bin_Size IS NULL GROUP BY tblacrdatabase.Company_Name)f ON a.company = f.company)c ON a.company = c.company  AND a.council = c.council LEFT JOIN (SELECT COUNT(*) AS 'activeCount', tblacrdatabase.Company_Name AS 'company' FROM tblacrdatabase WHERE tblacrdatabase.status='0' GROUP BY tblacrdatabase.Company_Name)d ON a.company = d.company LEFT JOIN (SELECT COUNT(*) AS 'postponedCount', tblacrdatabase.Company_Name AS 'company' FROM tblacrdatabase WHERE tblacrdatabase.status='1' GROUP BY tblacrdatabase.Company_Name)e ON a.company = e.company LEFT JOIN (SELECT COUNT(*) AS 'terminatedCount', tblacrdatabase.Company_Name AS 'company' FROM tblacrdatabase WHERE tblacrdatabase.status='2' OR  tblacrdatabase.status='3' GROUP BY tblacrdatabase.Company_Name)f ON a.company = f.company ORDER BY  a.council, a.company ASC;";
-    // var sql = "SELECT a.company, a.acrCustID, a.council, b.be, c.bin1000L, c.bin660L, c.bin240L, c.bin120L, c.na, a.cost, a.entitlement, a.total, d.activeCount, e.postponedCount, f.terminatedCount FROM (SELECT tblacrcust.company AS 'company', tblacrcust.acrCustID AS 'acrCustID', tblacrcust.council AS 'council', tblacrcust.cost AS 'cost', tblacrcust.entitlement AS 'entitlement', tblacrcust.totalCost AS 'total' FROM tblacrcust WHERE tblacrcust.council LIKE '%" + req.body.council + "%')a LEFT JOIN (SELECT tblbindatabase.company AS 'company', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE'  GROUP BY tblbindatabase.company)b ON a.company = b.company LEFT JOIN (SELECT a.company, a.acrCustID, a.council, b.bin1000L, c.bin660L, d.bin240L, e.bin120L, f.na FROM (SELECT tblacrcust.company AS 'company', tblacrcust.acrCustID AS 'acrCustID', tblacrcust.council AS 'council' FROM tblacrcust WHERE council LIKE '%" + req.body.council + "%' GROUP BY tblacrcust.acrCustID, tblacrcust.council)a LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin1000L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '1000L' GROUP BY tblacrdatabase.acrCustID)b ON a.acrCustID = b.acrCustID LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin660L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '660L' GROUP BY tblacrdatabase.acrCustID)c ON a.acrCustID = c.acrCustID LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin240L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '240L' GROUP BY tblacrdatabase.acrCustID)d ON a.acrCustID = d.acrCustID LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin120L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '120L' GROUP BY tblacrdatabase.acrCustID)e ON a.acrCustID = e.acrCustID LEFT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'na' FROM tblacrdatabase WHERE status LIKE '%" + req.body.status + "%' AND Bin_Size IS NULL GROUP BY tblacrdatabase.acrCustID)f ON a.acrCustID = f.acrCustID)c ON a.acrCustID = c.acrCustID  AND a.council = c.council LEFT JOIN (SELECT COUNT(*) AS 'activeCount', tblacrdatabase.Company_Name AS 'company', tblacrdatabase.acrCustID AS 'acrCustID' FROM tblacrdatabase WHERE tblacrdatabase.status='0' GROUP BY tblacrdatabase.acrCustID)d ON a.acrCustID = d.acrCustID LEFT JOIN (SELECT COUNT(*) AS 'postponedCount', tblacrdatabase.Company_Name AS 'company', tblacrdatabase.acrCustID AS 'acrCustID' FROM tblacrdatabase WHERE tblacrdatabase.status='1' GROUP BY tblacrdatabase.acrCustID)e ON a.acrCustID = e.acrCustID LEFT JOIN (SELECT COUNT(*) AS 'terminatedCount', tblacrdatabase.Company_Name AS 'company', tblacrdatabase.acrCustID AS 'acrCustID' FROM tblacrdatabase WHERE tblacrdatabase.status='2' OR  tblacrdatabase.status='3' GROUP BY tblacrdatabase.acrCustID)f ON a.acrCustID = f.acrCustID ORDER BY  a.council, a.company ASC;";
-
+    var sql = "SELECT a.company, a.status, a.acrCustID, a.council, a.cost, a.entitlement, a.total, b.be, c.bin1000L, c.bin660L, c.bin240L, c.bin120L, c.na, d.activeCount, e.postponedCount, f.terminatedCount FROM (SELECT tblacrcust.company AS 'company', (CASE WHEN tblacrcust.custStatus = '0' THEN 'Active' WHEN tblacrcust.custStatus = '1' THEN 'Postponed' WHEN tblacrcust.custStatus = '2' THEN 'Terminated' WHEN tblacrcust.custStatus = '3' THEN 'Terminated' END) AS 'status', tblacrcust.acrCustID AS 'acrCustID', tblacrcust.council AS 'council', tblacrcust.cost AS 'cost', tblacrcust.entitlement AS 'entitlement', tblacrcust.totalCost AS 'total' FROM tblacrcust WHERE tblacrcust.council LIKE '%" + req.body.council + "%')a LEFT JOIN (SELECT tblbindatabase.acrCustID AS 'acrCustID', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE'  GROUP BY tblbindatabase.acrCustID)b ON a.acrCustID = b.acrCustID LEFT JOIN (SELECT a.acrCustID, a.council, b.bin1000L, c.bin660L, d.bin240L, e.bin120L, f.na FROM (SELECT tblacrcust.acrCustID AS 'acrCustID', tblacrcust.council AS 'council' FROM tblacrcust WHERE council LIKE '%" + req.body.council + "%' GROUP BY tblacrcust.acrCustID, tblacrcust.council)a LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin1000L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '1000L' GROUP BY tblacrdatabase.acrCustID)b ON a.acrCustID = b.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin660L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '660L' GROUP BY tblacrdatabase.acrCustID)c ON a.acrCustID = c.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin240L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '240L' GROUP BY tblacrdatabase.acrCustID)d ON a.acrCustID = d.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin120L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size = '120L' GROUP BY tblacrdatabase.acrCustID)e ON a.acrCustID = e.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'na' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status LIKE '%" + req.body.status + "%' AND Bin_Size IS NULL GROUP BY tblacrdatabase.acrCustID)f ON a.acrCustID = f.acrCustID)c ON a.acrCustID = c.acrCustID  AND a.council = c.council LEFT JOIN (SELECT COUNT(*) AS 'activeCount', tblacrdatabase.acrCustID AS 'acrCustID' FROM tblacrdatabase WHERE tblacrdatabase.status='0' GROUP BY tblacrdatabase.acrCustID)d ON a.acrCustID = d.acrCustID LEFT JOIN (SELECT COUNT(*) AS 'postponedCount', tblacrdatabase.acrCustID AS 'acrCustID' FROM tblacrdatabase WHERE tblacrdatabase.status='1' GROUP BY tblacrdatabase.acrCustID)e ON a.acrCustID = e.acrCustID LEFT JOIN (SELECT COUNT(*) AS 'terminatedCount', tblacrdatabase.acrCustID AS 'acrCustID' FROM tblacrdatabase WHERE tblacrdatabase.status='2' OR  tblacrdatabase.status='3' GROUP BY tblacrdatabase.acrCustID)f ON a.acrCustID = f.acrCustID ORDER BY  a.council, a.company ASC;";
+console.log(sql);
     database.query(sql, function(err, result){
         if(err){
             throw err;
@@ -222,7 +221,7 @@ app.post('/getAcrdbCustDetails', function(req, res){
 app.post('/getAcrdbCustBEBin', function(req, res){
     'use strict';
 
-    var sql = "SELECT serialNo AS 'serialNo', brand AS 'brand', size AS 'size', binInUse AS 'binInUse', date AS 'date', name AS 'name', binStatus AS 'binStatus' FROM tblbindatabase WHERE acrCustID = '" + req.body.acrCustID + "' ORDER BY 'binStatus'";
+    var sql = "SELECT id AS 'id', serialNo AS 'serialNo', brand AS 'brand', size AS 'size', binInUse AS 'binInUse', date AS 'date', name AS 'name', binStatus AS 'binStatus' FROM tblbindatabase WHERE acrCustID = '" + req.body.acrCustID + "' AND binStatus = 'BE' ORDER BY 'binStatus'";
 
     database.query(sql, function(err, result){
         if(err){
@@ -267,23 +266,12 @@ app.post('/submitAcrdbCustEdit', function(req,res){
     });
 })
 
-app.post('/getAcrdbCouncilCustList', function(req, res){
+app.post('/getAcrdbBillingMatchingList', function(req, res){
     'use strict';
-    var sql="SELECT b.company, a.be, b.acr, b.address FROM (SELECT tblbindatabase.company AS 'company', COUNT(tblbindatabase.id) AS 'be' FROM tblbindatabase WHERE tblbindatabase.binStatus = 'BE' AND tblbindatabase.council = '" + req.body.council + "' GROUP BY tblbindatabase.company)a RIGHT JOIN (SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.Place_of_Service_lot_no AS 'address', COUNT(tblacrdatabase.id) AS 'acr' FROM tblacrdatabase WHERE tblacrdatabase.status = '0' AND tblacrdatabase.council = '" + req.body.council + "' GROUP BY tblacrdatabase.Company_Name, tblacrdatabase.Place_of_Service_lot_no)b ON a.company = b.company;"
-
-    database.query(sql, function(err, result){
-        if(err){
-            throw err;
-        }
-        res.json(result);
-    });
-});
-
-app.post('/getActiveACRList', function(req, res){
-    'use strict';
-    var sql="SELECT tblacrdatabase.Company_Name AS 'company', tblacrdatabase.Place_of_Service_lot_no AS 'address' FROM tblacrdatabase WHERE tblacrdatabase.status = '0' AND tblacrdatabase.council = '" + req.body.council + "' GROUP BY company, address";
-    // var sql="SELECT tblacrdatabase.Company_Name AS 'company' FROM tblacrdatabase WHERE tblacrdatabase.status = '0' AND tblacrdatabase.council = '" + req.body.council + "' GROUP BY company";
-
+    
+    // var sql = "SELECT a.company, a.acrCustID, a.cost, a.entitlement, a.totalCost, a.council, b.bin1000L, b.bin660L, b.bin240L, b.bin120L, b.na, c.amount AS 'histPayment', c.date AS 'histPaymentDate' FROM tblacrcust a  LEFT JOIN (SELECT a.acrCustID, a.council, b.bin1000L, c.bin660L, d.bin240L, e.bin120L, f.na FROM (SELECT tblacrcust.acrCustID AS 'acrCustID', tblacrcust.council AS 'council' FROM tblacrcust WHERE council LIKE '%" + req.body.council + "%' GROUP BY tblacrcust.acrCustID, tblacrcust.council)a LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin1000L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size = '1000L' GROUP BY tblacrdatabase.acrCustID)b ON a.acrCustID = b.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin660L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size = '660L' GROUP BY tblacrdatabase.acrCustID)c ON a.acrCustID = c.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin240L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size = '240L' GROUP BY tblacrdatabase.acrCustID)d ON a.acrCustID = d.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin120L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size = '120L' GROUP BY tblacrdatabase.acrCustID)e ON a.acrCustID = e.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'na' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size IS NULL GROUP BY tblacrdatabase.acrCustID)f ON a.acrCustID = f.acrCustID)b ON a.acrCustID = b.acrCustID  AND a.council = b.council LEFT JOIN  (SELECT acrCustID AS 'acrCustID', amount AS 'amount', MAX(date) AS 'date' FROM tblacrpaymenthist GROUP BY acrCustID) c ON a.acrCustID = c.acrCustID WHERE a.council LIKE '%" + req.body.council + "%' AND a.custStatus = '0'";
+    var sql = "SELECT a.company, a.acrCustID, a.cost, a.entitlement, a.totalCost, a.council, b.bin1000L, b.bin660L, b.bin240L, b.bin120L, b.na, c.amount AS 'histPayment', c.date AS 'histPaymentDate' FROM tblacrcust a  LEFT JOIN (SELECT a.acrCustID, a.council, b.bin1000L, c.bin660L, d.bin240L, e.bin120L, f.na FROM (SELECT tblacrcust.acrCustID AS 'acrCustID', tblacrcust.council AS 'council' FROM tblacrcust WHERE council LIKE '%" + req.body.council + "%' GROUP BY tblacrcust.acrCustID, tblacrcust.council)a LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin1000L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size = '1000L' GROUP BY tblacrdatabase.acrCustID)b ON a.acrCustID = b.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin660L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size = '660L' GROUP BY tblacrdatabase.acrCustID)c ON a.acrCustID = c.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin240L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size = '240L' GROUP BY tblacrdatabase.acrCustID)d ON a.acrCustID = d.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'bin120L' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size = '120L' GROUP BY tblacrdatabase.acrCustID)e ON a.acrCustID = e.acrCustID LEFT JOIN (SELECT tblacrdatabase.acrCustID AS 'acrCustID', COUNT(tblacrdatabase.id) AS 'na' FROM tblacrdatabase WHERE council LIKE '%" + req.body.council + "%' AND status = '0' AND Bin_Size IS NULL GROUP BY tblacrdatabase.acrCustID)f ON a.acrCustID = f.acrCustID)b ON a.acrCustID = b.acrCustID  AND a.council = b.council LEFT JOIN  (SELECT a.id, a.acrCustID AS 'acrCustID', b.amount AS 'amount', b.date AS 'date' FROM (SELECT acrCustID AS 'acrCustID', MAX(id) AS 'id' FROM tblacrpaymenthist GROUP BY acrCustID)a LEFT JOIN tblacrpaymenthist b ON a.id = b.id) c ON a.acrCustID = c.acrCustID WHERE a.council LIKE '%" + req.body.council + "%' AND a.custStatus = '0'";
+    console.log(sql);
     database.query(sql, function(err, result){
         if(err){
             throw err;
@@ -295,13 +283,13 @@ app.post('/getActiveACRList', function(req, res){
 app.post('/submitTruckCollectionRecord', function(req,res){
     'use strict';
 
-    var sql = "INSERT INTO tblTruckCollectionRecord (device, location, zoneIn, zoneOut, duration, position, distance, creationDateTime) VALUES ?";
+    var sql = "INSERT INTO tbltruckcollectionrecord (device, location, zoneIn, zoneOut, duration, position, distance, myDate) VALUES ?";
     var myObj = req.body;
     var myData = [];
 
     for(var i=0; i<myObj.length; i++){
         for(var j=0; j<myObj[i].data.length; j++){
-            myData.push([myObj[i].device, myObj[i].data[j].location, myObj[i].data[j].zoneIn, myObj[i].data[j].zoneOut, myObj[i].data[j].duration, myObj[i].data[j].position, myObj[i].data[j].distance, myObj[i].data[j].myDate]);
+            myData.push([myObj[i].device, myObj[i].data[j].location, myObj[i].data[j].zoneIn, myObj[i].data[j].zoneOut, myObj[i].data[j].duration, myObj[i].data[j].position, myObj[i].data[j].distance, myObj[i].data[j].date]);
         }
     }
     database.query(sql,[myData], function(err){
@@ -317,7 +305,7 @@ app.post('/submitTruckCollectionRecord', function(req,res){
 app.get('/getTruckCollectionRecord', function(req,res){
     'use strict';
 
-    var sql="SELECT * FROM tblTruckCollectionRecord";
+    var sql="SELECT * FROM tbltruckcollectionrecord ORDER BY myDate DESC, device, zoneIn";
 
     database.query(sql, function(err, result){
         if(err){
@@ -325,5 +313,38 @@ app.get('/getTruckCollectionRecord', function(req,res){
         }
         res.json(result);
     })
-})
+});
+
+app.post('/updateACRCustCompanyName', function(req,res){
+    var sql="UPDATE tblacrcust SET company = '" + req.body.company + "' WHERE acrCustID = '" + req.body.id + "'";
+
+    database.query(sql, function(err){
+        if(err){
+            throw err;
+        }else{
+            res.json({status: "success"});
+        }
+    })
+});
+
+app.post('/updateAcrBilling', function(req,res){
+    'use strict';
+
+    var sql = 'INSERT INTO tblacrpaymenthist(acrCustID, amount, date) VALUES ?';
+    var myObj = req.body;
+    var myData = [];
+
+    for(var i=0; i<myObj.length; i++){
+        myData.push([myObj[i].acrCustID, myObj[i].amount, myObj[i].date])
+    }
+   
+    database.query(sql,[myData], function(err){
+        if(err){
+            throw err;
+        }else{
+            res.json({status: "success"});
+        }
+    })
+});
+
 module.exports = app;

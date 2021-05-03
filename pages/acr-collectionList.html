@@ -1,1 +1,41 @@
-test
+<div class="row">
+    <div class="col-md-12">
+        <h5>ACR Collection List</h5>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Device</th>
+                        <th>Location</th>
+                        <th>Zone In</th>
+                        <th>Zone Out</th>
+                        <th>Duration</th>
+                        <th>Distance</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="a in acrCollectionList">
+                        <td>{{a.myDate}}</td>
+                        <td>{{a.device}}</td>
+                        <td>{{a.location}}</td>
+                        <td>{{a.zoneIn}}</td>
+                        <td>{{a.zoneOut}}</td>
+                        <td>{{a.duration}}</td>
+                        <td>{{a.distance}}</td>
+                        <td>{{a.position}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr/>
+        <br/>
+        <hr/>
+    </div>
+</div>
