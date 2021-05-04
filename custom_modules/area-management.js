@@ -63,7 +63,8 @@ app.get('/getAllArea', function (req, res) {
 // Used in comboBox - Zone with area
 app.get('/getAreaList', function (req, res) {
     'use strict';
-    var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS code,  GROUP_CONCAT((CASE WHEN tblarea.transporter = '0' THEN 'N/A' WHEN tblarea.transporter = '1' THEN 'TS' WHEN tblarea.transporter = '2' THEN 'TAK' WHEN tblarea.transporter = '3' THEN 'MP' END)) AS subcon,MAX(tblarea.branch) AS branch FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
+    // var sql = "SELECT tblzone.zoneID AS zoneID, tblzone.zoneName AS zoneName, GROUP_CONCAT(tblarea.areaID) AS id, GROUP_CONCAT(tblarea.areaName) AS name, GROUP_CONCAT(CONCAT(tblzone.zoneCode, tblarea.areaCode)) AS code,  GROUP_CONCAT((CASE WHEN tblarea.transporter = '0' THEN 'N/A' WHEN tblarea.transporter = '1' THEN 'TS' WHEN tblarea.transporter = '2' THEN 'TAK' WHEN tblarea.transporter = '3' THEN 'MP' END)) AS subcon,MAX(tblarea.branch) AS branch FROM tblarea JOIN tblzone ON tblarea.zoneID = tblzone.zoneID WHERE tblarea.areaStatus = 'A' GROUP BY tblzone.zoneID";
+    var sql = "SELECT concat(z.zoneCode, a.areaCode) AS 'code', a.areaID AS 'id', a.areaName AS 'name', (CASE WHEN a.transporter = '0' THEN 'N/A' WHEN a.transporter = '1' THEN 'TS' WHEN a.transporter = '2' THEN 'TAK' WHEN a.transporter = '3' THEN 'MP' END) AS 'subcon', a.branch AS 'branch' from tblzone z inner join tblarea a on z.zoneID = a.zoneID where a.areaStatus = 'A' ORDER BY code";
     database.query(sql, function (err, result) {
         if (err) {
             throw err;

@@ -163,6 +163,7 @@ app.post('/saveAcrdbEdit', function(req, res){
 
 
     var sql = "UPDATE tblacrdatabase SET `Serial_No` = '" + serialNo + "', `Brand` = '" + brand + "', `Bin_Size` = '" + binSize + "', `Date_of_Application` = '" + dateOfApplication + "', `status` = '" + binStatus1 + "', `area` = '" + area + "', `Name` = '" + name + "', `Tel_Contact` = '" + contact + "', `IC_Number` = '" + ic + "', `Company_Name`= '" + company + "', `Billing_Address` = '" + billingAddress + "', `Place_of_Service_Lot_No` = '" + serviceAddress + "', `Type_of_Premise` = '" + typeOfPremise + "', `ACR_Serial_No` = '" + acrSerialNo + "', `Council_Serial_No` = '" + councilSerialNo +"', `Remarks` = '" + remarks + "', `Mon` = '" + mon + "', `Tue` = '" + tue + "', `Wed`= '" + wed + "', `Thu` = '" + thu + "', `Fri` = '" + fri + "', `Sat` = '" + sat + "', `Sun` = '" + sun + "', `council` = '" + council + "' WHERE id = '" + req.body.id + "'";
+    console.log(sql);
     database.query(sql, function(err, result){
         if(err){
             throw err;

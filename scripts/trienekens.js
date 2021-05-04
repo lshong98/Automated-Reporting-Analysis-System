@@ -5154,35 +5154,6 @@ app.controller('truckController', function ($scope, $http, $filter, storeDataSer
             return vm;
         }, true);
     });
-//
-//    $http.get('/getDriverList').then(function (response) {
-//        $scope.driverList = response.data;
-//        $scope.truck.driver = $scope.driverList[0];
-//    });
-//    $http.get('/getAreaList').then(function (response) {
-//        $scope.renderSltPicker();
-//        $.each(response.data, function (index, value) {
-//            var areaID = value.id.split(",");
-//            var areaName = value.name.split(",");
-//            var area = [];
-//            $.each(areaID, function (index, value) {
-//                area.push({
-//                    "id": areaID[index],
-//                    "name": areaName[index]
-//                });
-//            });
-//            $scope.areaList.push({
-//                "zone": {
-//                    "id": value.zoneID,
-//                    "name": value.zoneName
-//                },
-//                "area": area
-//            });
-//        });
-//        $('.selectpicker').on('change', function () {
-//            $scope.renderSltPicker();
-//        });
-//    });
 
     $scope.addTruck = function () {
         $scope.showCreateBtn = false;
@@ -9468,29 +9439,32 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
     $scope.areaList = [];
     
     $http.get('/getAreaList').then(function (response) {
-        $.each(response.data, function (index, value) {
-            var areaID = value.id.split(",");
-            var areaName = value.name.split(",");
-            var code = value.code.split(",");
-            var area = [];
-            $.each(areaID, function (index, value) {
-                area.push({
-                    "id": areaID[index],
-                    "name": areaName[index],
-                    "code": code[index]
-                });
-            });
-            area.sort(function(a, b) {
-                return (a[code] > b[code]) ? 1 : ((a[code] < b[code]) ? -1 : 0);
-            });
-            $scope.areaList.push({
-                "zone": {
-                    "id": value.zoneID,
-                    "name": value.zoneName
-                },
-                "area": area
-            });
-        });
+        // $.each(response.data, function (index, value) {
+        //     var areaID = value.id.split(",");
+        //     var areaName = value.name.split(",");
+        //     var code = value.code.split(",");
+        //     var area = [];
+        //     $.each(areaID, function (index, value) {
+        //         area.push({
+        //             "id": areaID[index],
+        //             "name": areaName[index],
+        //             "code": code[index]
+        //         });
+        //     });
+        //     area.sort(function(a, b) {
+        //         return (a[code] > b[code]) ? 1 : ((a[code] < b[code]) ? -1 : 0);
+        //     });
+        //     $scope.areaList.push({
+        //         "zone": {
+        //             "id": value.zoneID,
+        //             "name": value.zoneName
+        //         },
+        //         "area": area
+        //     });
+        // });
+        for(var i=0; i< response.data.length; i++){
+            $scope.areaList.push(response.data[i]);
+        }
     });  
 
     $http.post('/getAcrDbDetail', acrID).then(function(response){
@@ -12538,38 +12512,47 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         }
 
         $http.get('/getAreaList').then(function (response) {
-            $.each(response.data, function (index, value) {
-                if(value.branch == $scope.detailObj.zon){
-                    var areaID = value.id.split(",");
-                    var areaName = value.name.split(",");
-                    var code = value.code.split(",");
-                    var subcon = value.subcon.split(",");
-                    var area = [];
-                    $.each(areaID, function (index, value) {
-                        area.push({
-                            "id": areaID[index],
-                            "name": areaName[index],
-                            "code": code[index],
-                            "subcon": subcon[index]
-                        });
-                    });
+            // console.log(response.data);
+            // $.each(response.data, function (index, value) {
+            //     if(value.branch == $scope.detailObj.zon){
+            //         var areaID = value.id.split(",");
+            //         var areaName = value.name.split(",");
+            //         var code = value.code.split(",");
+            //         var subcon = value.subcon.split(",");
+            //         var area = [];
+            //         $.each(areaID, function (index, value) {
+            //             area.push({
+            //                 "id": areaID[index],
+            //                 "name": areaName[index],
+            //                 "code": code[index],
+            //                 "subcon": subcon[index]
+            //             });
+            //         });
 
-                    area.sort(function(a, b) {
-                        return (a[code] > b[code]) ? 1 : ((a[code] < b[code]) ? -1 : 0);
-                    });
+            //         area.sort(function(a, b) {
+            //             return (a[code] > b[code]) ? 1 : ((a[code] < b[code]) ? -1 : 0);
+            //         });
 
-                    $scope.areaList.push({
-                        "zone": {
-                            "id": value.zoneID,
-                            "name": value.zoneName
-                        },
-                        "area": area
-                    });
+            //         $scope.areaList.push({
+            //             "zone": {
+            //                 "id": value.zoneID,
+            //                 "name": value.zoneName
+            //             },
+            //             "area": area
+            //         });
+            //     }
+            // });
+            for(var i=0; i< response.data.length; i++){
+                if(response.data[i].branch == $scope.detailObj.zon){
+                    $scope.areaList.push(response.data[i]);
                 }
-            });
+            }
+            console.log($scope.areaList);
 
             $('#inputUnder').on('change', function(){
-                $scope.logistics.areaCouncil = $(':selected', this).closest('optgroup').attr('label');
+                $scope.logistics.areaCouncil = $(':selected', this).attr('council');
+                console.log($(':selected', this).attr('council'));
+                console.log($scope.logistics.areaCouncil);
                 $scope.subcon = $(':selected', this).attr('subcon');
                 if($scope.subcon == 'TS'){
                     $scope.subcon2 = "Trienekens";
@@ -12584,9 +12567,10 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
             })
 
             $('#editUnder').on('change', function(){
-                $scope.editLogistics.council = $(':selected', this).closest('optgroup').attr('label');
+                $scope.editLogistics.council = $(':selected', this).attr('council');
                 $scope.subcon = $(':selected', this).attr('subcon');
-                
+                console.log($(':selected', this).attr('council'));
+                console.log($scope.editLogistics.council);
                 if($scope.subcon == 'TS'){
                     $scope.subcon2 = "Trienekens";
                 }else if($scope.subcon == 'MP'){
