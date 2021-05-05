@@ -12,6 +12,7 @@ var FCMAdmin = variable.FCMAdmin;
 var FCMServiceAccount = variable.FCMServiceAccount;
 var dateTime = require('node-datetime');
 var nodemailer = require('nodemailer');
+var schedule = variable.schedule;
 var util = variable.util;
 var webpush = variable.webpush;
 var bodyParser = variable.bodyParser;
@@ -45,6 +46,40 @@ var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
 var custApp = require('./custom_modules/cust-app');
 var general = require('./custom_modules/general');
+
+//mail credential
+const {
+    google
+} = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
+const mailer_cred = require('./custapp-mailer-credentials.json');
+const mailer_id = mailer_cred.client_id;
+const mailer_sec = mailer_cred.client_secret;
+const mailer_ref_tkn = mailer_cred.refresh_token;
+
+const oauth2Client = new OAuth2(
+    mailer_id,
+    mailer_sec,
+    "https://developers.google.com/oauthplayground"
+);
+
+oauth2Client.setCredentials({
+    refresh_token: mailer_ref_tkn
+});
+
+const accessToken = oauth2Client.getAccessToken();
+
+const smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        type: "OAuth2",
+        user: "trienekensmobileapp@gmail.com",
+        clientId: mailer_id,
+        clientSecret: mailer_sec,
+        refreshToken: mailer_ref_tkn,
+        accessToken: accessToken
+    }
+});
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json({
@@ -87,6 +122,55 @@ app.post('/subscribe', (req,res) =>{
 
     //pass object into sendNotification
     webpush.sendNotification(subscription, payload).catch(err => console.error(err));
+});
+
+//bin request daily notification to supervisor
+
+const job = schedule.scheduleJob('25 17 * * *', function(){
+    mailOptions = {
+        from: 'trienekensmobileapp@gmail.com',
+        to: 'melody.christine@trienekens.com.my',
+        subject: 'Bin Request Daily Alert',
+        text: ''
+    };
+
+    database.query("SELECT tblbinrequest.reqID AS 'reqID', tbluser.userEmail AS 'userEmail', tblbinrequest.dateRequest AS 'dateRequest', tblbinrequest.status AS 'status' FROM tblbinrequest JOIN tbluser ON tblbinrequest.userID = tbluser.userID WHERE tblbinrequest.status = 'PENDING' OR tblbinrequest.status = 'In Progress' ORDER BY dateRequest DESC;", function(err, result) {
+        if (!err && result.length>0) {
+            var text = 'There are still\n';
+            var binReqPendingCount = 0;
+            var binReqInProgressCount = 0;
+            for(var a=0; a<result.length; a++){
+                if(result[a].status == 'PENDING'){
+                    binReqPendingCount++;
+                }else if(result[a].status == 'In Progress'){
+                    binReqInProgressCount++;
+                }
+            }
+            text += binReqPendingCount + ' Bin Request Pending and \n';
+            text += binReqInProgressCount + ' Bin Request In Progress \n';
+            text += 'Please kindly proceed it.';
+            mailOptions.text = text;
+            smtpTransport.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    throw error;
+                }
+            });
+            mailOptions.to = "hansen.shim@trienekens.com.my";
+            smtpTransport.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    throw error;
+                }
+            });
+            mailOptions.to = "lshong9899@gmail.com";
+            smtpTransport.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    throw error;
+                }
+            });
+        }else{
+            throw err;
+        }
+    });
 });
 
 //FCM
