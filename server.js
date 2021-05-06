@@ -125,11 +125,17 @@ app.post('/subscribe', (req,res) =>{
 });
 
 //bin request daily notification to supervisor
+const job = schedule.scheduleJob('00 08 * * *', function(){
 
-const job = schedule.scheduleJob('25 17 * * *', function(){
+    var emailList = [
+        "melody.christine@trienekens.com.my",
+        "hansen.shim@trienekens.com.my",
+        "lshong9899@gmail.com"
+    ];
+
     mailOptions = {
         from: 'trienekensmobileapp@gmail.com',
-        to: 'melody.christine@trienekens.com.my',
+        to: '',
         subject: 'Bin Request Daily Alert',
         text: ''
     };
@@ -150,22 +156,14 @@ const job = schedule.scheduleJob('25 17 * * *', function(){
             text += binReqInProgressCount + ' Bin Request In Progress \n';
             text += 'Please kindly proceed it.';
             mailOptions.text = text;
-            smtpTransport.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    throw error;
-                }
-            });
-            mailOptions.to = "hansen.shim@trienekens.com.my";
-            smtpTransport.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    throw error;
-                }
-            });
-            mailOptions.to = "lshong9899@gmail.com";
-            smtpTransport.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    throw error;
-                }
+
+            emailList.forEach(function (to) {
+                mailOptions.to = to;
+                smtpTransport.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        throw error;
+                    }
+                });
             });
         }else{
             throw err;
