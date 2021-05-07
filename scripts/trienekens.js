@@ -3507,55 +3507,29 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
 
         var doc = new jsPDF();
         var canvas, context, imgData;
+        doc.text("Bin Request Detail: " + $routeParams.reqID, 10, 10);
 
-
+        console.log($scope.imgArray);
         loadImages($scope.imgArray,function(images){
                 //create a canvas
-                canvas = document.createElement('canvas');
-                document.body.appendChild(canvas);
-                canvas.width = 1100;
-                canvas.height =1700;   
-                //add the images
-                context = canvas.getContext('2d');
-                context.fillStyle = "white";
-                context.fillRect(0, 0, canvas.width, canvas.height);
-                for(var item in images){
-                    var x, y;                                             
-                    if(item == 0){
-                        x = 50;
-                        y = 5;
-                    }
-                    else if(item == 1){
-                        x = 400;
-                        y = 5;
-                    }
-                    else if(item == 2){
-                        x = 50;
-                        y = 325;
-                    }
-                    else if(item == 3){
-                        x = 400;
-                        y = 325;
-                    }
-                    else if(item == 4){
-                        x = 50;
-                        y = 650;
-                    }
-                    else if(item == 15){
-                        x = 400;
-                        y = 650;
-                    }
-                    context.drawImage(images[item], x, y, 300, 300);
+                for( var image in images){
+                    canvas = document.createElement('canvas');
+                    canvas.width = 1100;
+                    canvas.height =1700;   
+                    //add the images
+                    context = canvas.getContext('2d');
+                    context.fillStyle = "white";
+                    context.fillRect(0, 0, canvas.width, canvas.height);                
+                    context.drawImage(images[image], 50, 50, 800, 1400);
+                    imgData = canvas.toDataURL('image/jpeg');
+                    doc.addImage(imgData, 'JPEG', 20, 20,200, 250);
+                    doc.addPage();
                 }
-
-                imgData = canvas.toDataURL('image/jpeg');
-                document.body.removeChild(canvas);      
-
-                doc.addImage(imgData, 'JPEG', 0, 0,300, 500);  
             // doc.addImage(base64Img, 'JPEG', 10, 10, 50, 50, 'monkey');
                 // doc.output('datauri');
                 // doc.save('testing.pdf');
                 var string = doc.output('datauristring');
+                doc.save('testing.pdf');
                 var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
                 var x = window.open();
                 x.document.open();
@@ -3574,6 +3548,7 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
             }
             for(var src in sources) {
                 images[src] = new Image();
+                images[src].crossOrigin = "anonymous";
                 images[src].onload = function() {
                     if(++loadedImages >= numImages) {
                         callback(images);
