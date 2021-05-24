@@ -822,6 +822,12 @@ app.post('/getCmsStatistics', function(req,res){
         return f.waterfallQuery("SELECT COUNT(*) AS 'scheduledCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND services = '3' AND cmsStatus = '1' AND activeStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(scheduledCount){
         result.scheduledCount = scheduledCount.scheduledCount;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'swTsCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub = 'Trienekens' AND services = '3' AND cmsStatus = '1' AND activeStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(swTsCount){
+        result.swTsCount = swTsCount.swTsCount;
+        return f.waterfallQuery("SELECT COUNT(*) AS 'swOtherCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND forwardedSub != 'Trienekens' AND services = '3' AND cmsStatus = '1' AND activeStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
+    }).then(function(swOtherCount){
+        result.swOtherCount = swOtherCount.swOtherCount;
         return f.waterfallQuery("SELECT COUNT(*) AS 'validMWCount' FROM tblcomplaintofficer WHERE tblcomplaintofficer.zon = '" + req.body.zon + "' AND cmsStatus = '1' AND services = '1' AND activeStatus = '1' AND complaintDate BETWEEN '" + startDate + "' AND '" + endDate + "'");
     }).then(function(validMWCount){
         result.validMWCount = validMWCount.validMWCount;
