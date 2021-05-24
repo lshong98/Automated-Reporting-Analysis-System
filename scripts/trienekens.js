@@ -12694,12 +12694,9 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.areaList.push(response.data[i]);
                 }
             }
-            console.log($scope.areaList);
 
             $('#inputUnder').on('change', function(){
                 $scope.logistics.areaCouncil = $(':selected', this).attr('council');
-                console.log($(':selected', this).attr('council'));
-                console.log($scope.logistics.areaCouncil);
                 $scope.subcon = $(':selected', this).attr('subcon');
                 if($scope.subcon == 'TS'){
                     $scope.subcon2 = "Trienekens";
