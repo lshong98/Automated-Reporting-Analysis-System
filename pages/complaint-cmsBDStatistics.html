@@ -139,7 +139,7 @@
                             <td>{{mwData.takValid}}</td>
                             <td>{{ mwData.takValid / (mwData.tsValid + mwData.takValid + mwData.mpValid) * 100 | number:2}} %</td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th colspan="3">
                                 Legend of category codes
                             </th>
@@ -168,6 +168,56 @@
                             <td>Others</td>
                             <td>{{mwData.otherType}}</td>
                             <td>{{mwData.otherType / (mwData.wasteNotCollected + mwData.binNotPushBack + mwData.spillageWaste + mwData.spillageLeachate + mwData.otherType) * 100 | number:2}} %</td>
+                        </tr> -->
+                        <tr>
+                            <th colspan="3">
+                                Reason
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Waste Not Collected</td>
+                            <td>{{mwData.missColCount}}</td>
+                            <td>{{mwData.missColCount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.lechateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Shortage of Manpower</td>
+                            <td>{{mwData.shortageMPCount}}</td>
+                            <td>{{mwData.shortageMPCount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.echateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Truck Breakdown</td>
+                            <td>{{mwData.truckBDCount}}</td>
+                            <td>{{mwData.truckBDCount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.lechateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Truck Full</td>
+                            <td>{{mwData.truckFullCount}}</td>
+                            <td>{{mwData.truckFullCount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.lechateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Spillage of Waste</td>
+                            <td>{{mwData.spillageCount}}</td>
+                            <td>{{mwData.spillageCount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.lechateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Spillage of Leachate Water</td>
+                            <td>{{mwData.lechateCount}}</td>
+                            <td>{{mwData.lechateCount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.lechateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Not Wearing PPE / Uniform</td>
+                            <td>{{mwData.notWearingPPECount}}</td>
+                            <td>{{mwData.notWearingPPECount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.lechateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Bin Not Sent Back</td>
+                            <td>{{mwData.binNSBCount}}</td>
+                            <td>{{mwData.binNSBCount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.lechateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Other</td>
+                            <td>{{mwData.otherCount}}</td>
+                            <td>{{mwData.otherCount / (mwData.missColCount + mwData.shortageMPCount + mwData.truckBDCount + mwData.truckFullCount + mwData.spillageCount + mwData.lechateCount + mwData.notWearingPPECount + mwData.binNSBCount + mwData.otherCount) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
                             <th colspan="3">Complaints By Council</th>
@@ -237,7 +287,7 @@
                             <td>{{roroData.takValid}}</td>
                             <td>{{roroData.mpValid / (roroData.tsValid + roroData.takValid + roroData.mpValid) * 100 | number:2}} %</td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th colspan="3">
                                 Legend of category codes
                             </th>
@@ -266,6 +316,36 @@
                             <td>Others</td>
                             <td>{{roroData.otherType}}</td>
                             <td>{{roroData.otherType / (roroData.containerNotSent + roroData.containerNotExchanged + roroData.containerNotPulled + roroData.containerNotEmptied + roroData.otherType) * 100 | number:2}} %</td>
+                        </tr> -->
+                        <tr>
+                            <th colspan="3">
+                                Reason
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>Truck Breakdown</td>
+                            <td>{{roroData.roroTruckBDCount}}</td>
+                            <td>{{roroData.roroTruckBDCount / (roroData.roroTruckBDCount + roroData.roroShortageMPCount + roroData.roroShortageOfContainter + roroData.roroNotWearingPPECount + roroData.roroOtherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Shortage of Manpower</td>
+                            <td>{{roroData.roroShortageMPCount}}</td>
+                            <td>{{roroData.roroShortageMPCount / (roroData.roroTruckBDCount + roroData.roroShortageMPCount + roroData.roroShortageOfContainter + roroData.roroNotWearingPPECount + roroData.roroOtherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Shortage of Container</td>
+                            <td>{{roroData.roroShortageOfContainter}}</td>
+                            <td>{{roroData.roroShortageOfContainter / (roroData.roroTruckBDCount + roroData.roroShortageMPCount + roroData.roroShortageOfContainter + roroData.roroNotWearingPPECount + roroData.roroOtherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Not Wearing PPE / Uniform</td>
+                            <td>{{roroData.roroNotWearingPPECount}}</td>
+                            <td>{{roroData.roroNotWearingPPECount / (roroData.roroTruckBDCount + roroData.roroShortageMPCount + roroData.roroShortageOfContainter + roroData.roroNotWearingPPECount + roroData.roroOtherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Other</td>
+                            <td>{{roroData.roroOtherCount}}</td>
+                            <td>{{roroData.roroOtherCount / (roroData.roroTruckBDCount + roroData.roroShortageMPCount + roroData.roroShortageOfContainter + roroData.roroNotWearingPPECount + roroData.roroOtherCount) * 100 | number:2}} %</td>
                         </tr>
                     </table>
                 </div>
@@ -309,28 +389,38 @@
                         </tr>
                         <tr>
                             <th colspan="3">
-                                Legend of category codes
+                                Reason
                             </th>
                         </tr>
                         <tr>
-                            <td>Waste not collected</td>
-                            <td>{{swData.wasteNotCollected}}</td>
-                            <td>{{swData.wasteNotCollected  / (swData.wasteNotCollected + swData.spillage + swData.incompleteDocs + swData.others) * 100 | number:2}} %</td>
+                            <td>Truck Breakdown</td>
+                            <td>{{swData.swTruckBDCount}}</td>
+                            <td>{{swData.swTruckBDCount  / (swData.swTruckBDCount + swData.swShortageMPCount + swData.swIncompleteDocCount + swData.swSpillageCount + swData.swNotWearingPPECount + swData.swOtherCount) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>Spillage during collection</td>
-                            <td>{{swData.spillage}}</td>
-                            <td>{{swData.spillage  / (swData.wasteNotCollected + swData.spillage + swData.incompleteDocs + swData.others) * 100 | number:2}} %</td>
+                            <td>Shortage of Manpower</td>
+                            <td>{{swData.swShortageMPCount}}</td>
+                            <td>{{swData.swShortageMPCount  / (swData.swTruckBDCount + swData.swShortageMPCount + swData.swIncompleteDocCount + swData.swSpillageCount + swData.swNotWearingPPECount + swData.swOtherCount) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>Incomplete documents/td>
-                            <td>{{swData.incompleteDocs}}</td>
-                            <td>{{swData.incompleteDocs  / (swData.wasteNotCollected + swData.spillage + swData.incompleteDocs + swData.others) * 100 | number:2}} %</td>
+                            <td>Incomplete Documents</td>
+                            <td>{{swData.swIncompleteDocCount}}</td>
+                            <td>{{swData.swIncompleteDocCount  / (swData.swTruckBDCount + swData.swShortageMPCount + swData.swIncompleteDocCount + swData.swSpillageCount + swData.swNotWearingPPECount + swData.swOtherCount) * 100 | number:2}} %</td>
                         </tr>
                         <tr>
-                            <td>Others</td>
-                            <td>{{swData.others}}</td>
-                            <td>{{swData.others  / (swData.wasteNotCollected + swData.spillage + swData.incompleteDocs + swData.others) * 100 | number:2}} %</td>
+                            <td>Spillage During Collection</td>
+                            <td>{{swData.swSpillageCount}}</td>
+                            <td>{{swData.swSpillageCount  / (swData.swTruckBDCount + swData.swShortageMPCount + swData.swIncompleteDocCount + swData.swSpillageCount + swData.swNotWearingPPECount + swData.swOtherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Not Wearing PPE / Uniform</td>
+                            <td>{{swData.swNotWearingPPECount}}</td>
+                            <td>{{swData.swNotWearingPPECount  / (swData.swTruckBDCount + swData.swShortageMPCount + swData.swIncompleteDocCount + swData.swSpillageCount + swData.swNotWearingPPECount + swData.swOtherCount) * 100 | number:2}} %</td>
+                        </tr>
+                        <tr>
+                            <td>Other</td>
+                            <td>{{swData.swOtherCount}}</td>
+                            <td>{{swData.swOtherCount  / (swData.swTruckBDCount + swData.swShortageMPCount + swData.swIncompleteDocCount + swData.swSpillageCount + swData.swNotWearingPPECount + swData.swOtherCount) * 100 | number:2}} %</td>
                         </tr>
                     </table>
                 </div>

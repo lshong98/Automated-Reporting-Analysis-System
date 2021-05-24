@@ -10294,26 +10294,46 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
                 //formulate reason
                 if($scope.logisticsComplaintList[i].reason == 1){
-                    $scope.logisticsComplaintList[i].reason = "Waste Not Collected(1)";
+                    $scope.logisticsComplaintList[i].reason = "Waste Not Collected (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 2){
-                    $scope.logisticsComplaintList[i].reason = "Shortage Manpower(1)";
+                    $scope.logisticsComplaintList[i].reason = "Shortage Manpower (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 3){
-                    $scope.logisticsComplaintList[i].reason = "Truck Breakdown(1)";
+                    $scope.logisticsComplaintList[i].reason = "Truck Breakdown (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 4){
-                    $scope.logisticsComplaintList[i].reason = "Truck Full(1)";
+                    $scope.logisticsComplaintList[i].reason = "Truck Full (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 5){
-                    $scope.logisticsComplaintList[i].reason = "Bin Not Sent Back(2)";
+                    $scope.logisticsComplaintList[i].reason = "Bin Not Sent Back (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 6){
-                    $scope.logisticsComplaintList[i].reason = "Spillage of Leachate(3)";
+                    $scope.logisticsComplaintList[i].reason = "Spillage of Leachate (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 7){
-                    $scope.logisticsComplaintList[i].reason = "Other(4)";
+                    $scope.logisticsComplaintList[i].reason = "Others (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 8){
-                    $scope.logisticsComplaintList[i].reason = "RORO(5)";
+                    $scope.logisticsComplaintList[i].reason = "Not wearing PPE / Uniform (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 9){
-                    $scope.logisticsComplaintList[i].reason = "Spillage of waste";
+                    $scope.logisticsComplaintList[i].reason = "Spillage of waste (CW)";
                 }else if($scope.logisticsComplaintList[i].reason == 10){
-                    $scope.logisticsComplaintList[i].reason = "Not wearing PPE / Uniform";
-                }               
+                    $scope.logisticsComplaintList[i].reason = "Truck Breakdown (Roro)";
+                }else if($scope.logisticsComplaintList[i].reason == 11){
+                    $scope.logisticsComplaintList[i].reason = "Shortage Manpower (Roro)";
+                }else if($scope.logisticsComplaintList[i].reason == 12){
+                    $scope.logisticsComplaintList[i].reason = "Not wearing PPE / Uniform (Roro)";
+                }else if($scope.logisticsComplaintList[i].reason == 13){
+                    $scope.logisticsComplaintList[i].reason = "Shortage of Container (Roro)";
+                }else if($scope.logisticsComplaintList[i].reason == 14){
+                    $scope.logisticsComplaintList[i].reason = "Others (Roro)";
+                }else if($scope.logisticsComplaintList[i].reason == 15){
+                    $scope.logisticsComplaintList[i].reason = "Truck Breakdown (SW)";
+                }else if($scope.logisticsComplaintList[i].reason == 16){
+                    $scope.logisticsComplaintList[i].reason = "Shortage Manpower (SW)";
+                }else if($scope.logisticsComplaintList[i].reason == 17){
+                    $scope.logisticsComplaintList[i].reason = "Incomplete Documents (SW)";
+                }else if($scope.logisticsComplaintList[i].reason == 18){
+                    $scope.logisticsComplaintList[i].reason = "Spillage During Collection (SW)";
+                }else if($scope.logisticsComplaintList[i].reason == 19){
+                    $scope.logisticsComplaintList[i].reason = "Not waring PPE / Uniform (SW)";
+                }else if($scope.logisticsComplaintList[i].reason == 20){
+                    $scope.logisticsComplaintList[i].reason = "Others (SW)";
+                }
 
                 if($scope.logisticsComplaintList[i].lgKPI != null){                
                     $scope.logisticsComplaintList[i].lgKPINum = $scope.logisticsComplaintList[i].lgKPI.split(":")[0] + ":" + parseInt($scope.logisticsComplaintList[i].lgKPI.split(":")[1]);
@@ -10534,25 +10554,45 @@ app.controller('complaintExportController', function ($scope, $http, $window, $f
                     }
 
                     if($scope.complaintExportList[i].reason == 1){
-                        $scope.complaintExportList[i].reason = "Waste Not Collected";
+                        $scope.complaintExportList[i].reason = "Waste Not Collected (CW)";
                     }else if($scope.complaintExportList[i].reason == 2){
-                        $scope.complaintExportList[i].reason = "Shortage Manpower";
+                        $scope.complaintExportList[i].reason = "Shortage Manpower (CW)";
                     }else if($scope.complaintExportList[i].reason == 3){
-                        $scope.complaintExportList[i].reason = "Truck Breakdown";
+                        $scope.complaintExportList[i].reason = "Truck Breakdown (CW)";
                     }else if($scope.complaintExportList[i].reason == 4){
-                        $scope.complaintExportList[i].reason = "Truck Full";
+                        $scope.complaintExportList[i].reason = "Truck Full (CW)";
                     }else if($scope.complaintExportList[i].reason == 5){
-                        $scope.complaintExportList[i].reason = "Bin Not Sent Back";
+                        $scope.complaintExportList[i].reason = "Bin Not Sent Back (CW)";
                     }else if($scope.complaintExportList[i].reason == 6){
-                        $scope.complaintExportList[i].reason = "Spillage of Leachate";
+                        $scope.complaintExportList[i].reason = "Spillage of Leachate (CW)";
                     }else if($scope.complaintExportList[i].reason == 7){
-                        $scope.complaintExportList[i].reason = "Other";
+                        $scope.complaintExportList[i].reason = "Others (CW)";
                     }else if($scope.complaintExportList[i].reason == 8){
-                        $scope.complaintExportList[i].reason = "RORO";
+                        $scope.complaintExportList[i].reason = "Not wearing PPE / Uniform (CW)";
                     }else if($scope.complaintExportList[i].reason == 9){
-                        $scope.complaintExportList[i].reason = "Spillage of waste";
+                        $scope.complaintExportList[i].reason = "Spillage of waste (CW)";
                     }else if($scope.complaintExportList[i].reason == 10){
-                        $scope.complaintExportList[i].reason = "Not wearing PPE / Uniform";
+                        $scope.complaintExportList[i].reason = "Truck Breakdown (Roro)";
+                    }else if($scope.complaintExportList[i].reason == 11){
+                        $scope.complaintExportList[i].reason = "Shortage Manpower (Roro)";
+                    }else if($scope.complaintExportList[i].reason == 12){
+                        $scope.complaintExportList[i].reason = "Not wearing PPE / Uniform (Roro)";
+                    }else if($scope.complaintExportList[i].reason == 13){
+                        $scope.complaintExportList[i].reason = "Shortage of Container (Roro)";
+                    }else if($scope.complaintExportList[i].reason == 14){
+                        $scope.complaintExportList[i].reason = "Others (Roro)";
+                    }else if($scope.complaintExportList[i].reason == 15){
+                        $scope.complaintExportList[i].reason = "Truck Breakdown (SW)";
+                    }else if($scope.complaintExportList[i].reason == 16){
+                        $scope.complaintExportList[i].reason = "Shortage Manpower (SW)";
+                    }else if($scope.complaintExportList[i].reason == 17){
+                        $scope.complaintExportList[i].reason = "Incomplete Documents (SW)";
+                    }else if($scope.complaintExportList[i].reason == 18){
+                        $scope.complaintExportList[i].reason = "Spillage During Collection (SW)";
+                    }else if($scope.complaintExportList[i].reason == 19){
+                        $scope.complaintExportList[i].reason = "Not waring PPE / Uniform (SW)";
+                    }else if($scope.complaintExportList[i].reason == 20){
+                        $scope.complaintExportList[i].reason = "Others (SW)";
                     }
 
                     if($scope.complaintExportList[i].bdKPI != null){                
@@ -10674,26 +10714,47 @@ app.controller('complaintcmsDailyReportController', function($scope, $filter, $h
                 }
 
                 //formulate reason
+                
                 if($scope.cmsDailyReportList[i].reason == 1){
-                    $scope.cmsDailyReportList[i].reason = "Waste Not Collected(1)";
+                    $scope.cmsDailyReportList[i].reason = "Waste Not Collected (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 2){
-                    $scope.cmsDailyReportList[i].reason = "Shortage Manpower(1)";
+                    $scope.cmsDailyReportList[i].reason = "Shortage Manpower (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 3){
-                    $scope.cmsDailyReportList[i].reason = "Truck Breakdown(1)";
+                    $scope.cmsDailyReportList[i].reason = "Truck Breakdown (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 4){
-                    $scope.cmsDailyReportList[i].reason = "Truck Full(1)";
+                    $scope.cmsDailyReportList[i].reason = "Truck Full (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 5){
-                    $scope.cmsDailyReportList[i].reason = "Bin Not Sent Back(2)";
+                    $scope.cmsDailyReportList[i].reason = "Bin Not Sent Back (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 6){
-                    $scope.cmsDailyReportList[i].reason = "Spillage of Leachate(3)";
+                    $scope.cmsDailyReportList[i].reason = "Spillage of Leachate (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 7){
-                    $scope.cmsDailyReportList[i].reason = "Other(4)";
+                    $scope.cmsDailyReportList[i].reason = "Others (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 8){
-                    $scope.cmsDailyReportList[i].reason = "RORO(5)";
+                    $scope.cmsDailyReportList[i].reason = "Not wearing PPE / Uniform (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 9){
-                    $scope.cmsDailyReportList[i].reason = "Spillage of waste";
+                    $scope.cmsDailyReportList[i].reason = "Spillage of waste (CW)";
                 }else if($scope.cmsDailyReportList[i].reason == 10){
-                    $scope.cmsDailyReportList[i].reason = "Not wearing PPE / Uniform";
+                    $scope.cmsDailyReportList[i].reason = "Truck Breakdown (Roro)";
+                }else if($scope.cmsDailyReportList[i].reason == 11){
+                    $scope.cmsDailyReportList[i].reason = "Shortage Manpower (Roro)";
+                }else if($scope.cmsDailyReportList[i].reason == 12){
+                    $scope.cmsDailyReportList[i].reason = "Not wearing PPE / Uniform (Roro)";
+                }else if($scope.cmsDailyReportList[i].reason == 13){
+                    $scope.cmsDailyReportList[i].reason = "Shortage of Container (Roro)";
+                }else if($scope.cmsDailyReportList[i].reason == 14){
+                    $scope.cmsDailyReportList[i].reason = "Others (Roro)";
+                }else if($scope.cmsDailyReportList[i].reason == 15){
+                    $scope.cmsDailyReportList[i].reason = "Truck Breakdown (SW)";
+                }else if($scope.cmsDailyReportList[i].reason == 16){
+                    $scope.cmsDailyReportList[i].reason = "Shortage Manpower (SW)";
+                }else if($scope.cmsDailyReportList[i].reason == 17){
+                    $scope.cmsDailyReportList[i].reason = "Incomplete Documents (SW)";
+                }else if($scope.cmsDailyReportList[i].reason == 18){
+                    $scope.cmsDailyReportList[i].reason = "Spillage During Collection (SW)";
+                }else if($scope.cmsDailyReportList[i].reason == 19){
+                    $scope.cmsDailyReportList[i].reason = "Not waring PPE / Uniform (SW)";
+                }else if($scope.cmsDailyReportList[i].reason == 20){
+                    $scope.cmsDailyReportList[i].reason = "Others (SW)";
                 }
 
                 //formulate review date
@@ -11190,9 +11251,19 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.binNSBCountTS = 0;
         $scope.lechateCountTS = 0;
         $scope.otherCountTS = 0;
-        $scope.roroReasonCountTS = 0;
         $scope.spillageCountTS = 0;
         $scope.notWearingPPECountTS = 0;
+        $scope.roroTruckBDCountTS = 0;
+        $scope.roroShortageMPCountTS = 0;
+        $scope.roroNotWearingPPECountTS = 0;
+        $scope.roroShortageOfContainterTS = 0;
+        $scope.roroOtherCountTS = 0;
+        $scope.swTruckBDCountTS = 0;
+        $scope.swShortageMPCountTS = 0;
+        $scope.swIncompleteDocCountTS = 0;
+        $scope.swSpillageCountTS = 0;
+        $scope.swNotWearingPPECountTS = 0;
+        $scope.swOtherCountTS = 0;
         $scope.missColCountMP = 0;
         $scope.shortageMPCountMP = 0;
         $scope.truckBDCountMP = 0;
@@ -11200,9 +11271,19 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.binNSBCountMP = 0;
         $scope.lechateCountMP = 0;
         $scope.otherCountMP = 0;
-        $scope.roroReasonCountMP = 0;
         $scope.spillageCountMP = 0;
         $scope.notWearingPPECountMP = 0;
+        $scope.roroTruckBDCountMP = 0;
+        $scope.roroShortageMPCountMP = 0;
+        $scope.roroNotWearingPPECountMP = 0;
+        $scope.roroShortageOfContainterMP = 0;
+        $scope.roroOtherCountMP = 0;
+        $scope.swTruckBDCountMP = 0;
+        $scope.swShortageMPCountMP = 0;
+        $scope.swIncompleteDocCountMP = 0;
+        $scope.swSpillageCountMP = 0;
+        $scope.swNotWearingPPECountMP = 0;
+        $scope.swOtherCountMP = 0;
         $scope.missColCountTAK = 0;
         $scope.shortageMPCountTAK = 0;
         $scope.truckBDCountTAK = 0;
@@ -11210,9 +11291,19 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.binNSBCountTAK = 0;
         $scope.lechateCountTAK = 0;
         $scope.otherCountTAK = 0;
-        $scope.roroReasonCountTAK = 0;
         $scope.spillageCountTAK = 0;
         $scope.notWearingPPECountTAK = 0;
+        $scope.roroTruckBDCountTAK = 0;
+        $scope.roroShortageMPCountTAK = 0;
+        $scope.roroNotWearingPPECountTAK = 0;
+        $scope.roroShortageOfContainterTAK = 0;
+        $scope.roroOtherCountTAK = 0;
+        $scope.swTruckBDCountTAK = 0;
+        $scope.swShortageMPCountTAK = 0;
+        $scope.swIncompleteDocCountTAK = 0;
+        $scope.swSpillageCountTAK = 0;
+        $scope.swNotWearingPPECountTAK = 0;
+        $scope.swOtherCountTAK = 0;
         $scope.missColCountOther = 0;
         $scope.shortageMPCountOther = 0;
         $scope.truckBDCountOther = 0;
@@ -11220,9 +11311,19 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
         $scope.binNSBCountOther = 0;
         $scope.lechateCountOther = 0;
         $scope.otherCountOther = 0;
-        $scope.roroReasonCountOther = 0;
         $scope.spillageCountOther = 0;
         $scope.notWearingPPECountOther = 0;
+        $scope.roroTruckBDCountOther = 0;
+        $scope.roroShortageMPCountOther = 0;
+        $scope.roroNotWearingPPECountOther = 0;
+        $scope.roroShortageOfContainterOther = 0;
+        $scope.roroOtherCountOther = 0;
+        $scope.swTruckBDCountOther = 0;
+        $scope.swShortageMPCountOther = 0;
+        $scope.swIncompleteDocCountOther = 0;
+        $scope.swSpillageCountOther = 0;
+        $scope.swNotWearingPPECountOther = 0;
+        $scope.swOtherCountOther = 0;
         $scope.scheduledCount = 0;
         $http.post('/getCmsStatistics', obj).then(function(response){
             var myData = response.data;
@@ -11249,9 +11350,19 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.binNSBCountTS = myData.binNSBCountTS;
             $scope.lechateCountTS = myData.lechateCountTS;
             $scope.otherCountTS = myData.otherCountTS;
-            $scope.roroReasonCountTS = myData.roroReasonCountTS;
             $scope.spillageCountTS = myData.spillageCountTS;
             $scope.notWearingPPECountTS = myData.notWearingPPECountTS;
+            $scope.roroTruckBDCountTS = myData.roroTruckBDCountTS;
+            $scope.roroShortageMPCountTS = myData.roroShortageMPCountTS;
+            $scope.roroNotWearingPPECountTS = myData.roroNotWearingPPECountTS;
+            $scope.roroShortageOfContainterTS = myData.roroShortageOfContainterTS;
+            $scope.roroOtherCountTS = myData.roroOtherCountTS;
+            $scope.swTruckBDCountTS = myData.swTruckBDCountTS;
+            $scope.swShortageMPCountTS = myData.swShortageMPCountTS;
+            $scope.swIncompleteDocCountTS = myData.swIncompleteDocCountTS;
+            $scope.swSpillageCountTS = myData.swSpillageCountTS;
+            $scope.swNotWearingPPECountTS = myData.swNotWearingPPECountTS;
+            $scope.swOtherCountTS = myData.swOtherCountTS;
             $scope.missColCountMP = myData.missColCountMP;
             $scope.shortageMPCountMP = myData.shortageMPCountMP;
             $scope.truckBDCountMP = myData.truckBDCountMP;
@@ -11259,9 +11370,19 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.binNSBCountMP = myData.binNSBCountMP;
             $scope.lechateCountMP = myData.lechateCountMP;
             $scope.otherCountMP = myData.otherCountMP;
-            $scope.roroReasonCountMP = myData.roroReasonCountMP;
             $scope.spillageCountMP = myData.spillageCountMP;
             $scope.notWearingPPECountMP = myData.notWearingPPECountMP;
+            $scope.roroTruckBDCountMP = myData.roroTruckBDCountMP;
+            $scope.roroShortageMPCountMP = myData.roroShortageMPCountMP;
+            $scope.roroNotWearingPPECountMP = myData.roroNotWearingPPECountMP;
+            $scope.roroShortageOfContainterMP = myData.roroShortageOfContainterMP;
+            $scope.roroOtherCountMP = myData.roroOtherCountMP;
+            $scope.swTruckBDCountMP = myData.swTruckBDCountMP;
+            $scope.swShortageMPCountMP = myData.swShortageMPCountMP;
+            $scope.swIncompleteDocCountMP = myData.swIncompleteDocCountMP;
+            $scope.swSpillageCountMP = myData.swSpillageCountMP;
+            $scope.swNotWearingPPECountMP = myData.swNotWearingPPECountMP;
+            $scope.swOtherCountMP = myData.swOtherCountMP;
             $scope.missColCountTAK = myData.missColCountTAK;
             $scope.shortageMPCountTAK = myData.shortageMPCountTAK;
             $scope.truckBDCountTAK = myData.truckBDCountTAK;
@@ -11269,9 +11390,19 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.binNSBCountTAK = myData.binNSBCountTAK;
             $scope.lechateCountTAK = myData.lechateCountTAK;
             $scope.otherCountTAK = myData.otherCountTAK;
-            $scope.roroReasonCountTAK = myData.roroReasonCountTAK;
             $scope.spillageCountTAK = myData.spillageCountTAK;
             $scope.notWearingPPECountTAK = myData.notWearingPPECountTAK;
+            $scope.roroTruckBDCountTAK = myData.roroTruckBDCountTAK;
+            $scope.roroShortageMPCountTAK = myData.roroShortageMPCountTAK;
+            $scope.roroNotWearingPPECountTAK = myData.roroNotWearingPPECountTAK;
+            $scope.roroShortageOfContainterTAK = myData.roroShortageOfContainterTAK;
+            $scope.roroOtherCountTAK = myData.roroOtherCountTAK;
+            $scope.swTruckBDCountTAK = myData.swTruckBDCountTAK;
+            $scope.swShortageMPCountTAK = myData.swShortageMPCountTAK;
+            $scope.swIncompleteDocCountTAK = myData.swIncompleteDocCountTAK;
+            $scope.swSpillageCountTAK = myData.swSpillageCountTAK;
+            $scope.swNotWearingPPECountTAK = myData.swNotWearingPPECountTAK;
+            $scope.swOtherCountTAK = myData.swOtherCountTAK;
             $scope.missColCountOther = myData.missColCountOther;
             $scope.shortageMPCountOther = myData.shortageMPCountOther;
             $scope.truckBDCountOther = myData.truckBDCountOther;
@@ -11279,9 +11410,19 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             $scope.binNSBCountOther = myData.binNSBCountOther;
             $scope.lechateCountOther = myData.lechateCountOther;
             $scope.otherCountOther = myData.otherCountOther;
-            $scope.roroReasonCountOther = myData.roroReasonCountOther;
             $scope.spillageCountOther = myData.spillageCountOther;
             $scope.notWearingPPECountOther = myData.notWearingPPECountOther;
+            $scope.roroTruckBDCountOther = myData.roroTruckBDCountOther;
+            $scope.roroShortageMPCountOther = myData.roroShortageMPCountOther;
+            $scope.roroNotWearingPPECountOther = myData.roroNotWearingPPECountOther;
+            $scope.roroShortageOfContainterOther = myData.roroShortageOfContainterOther;
+            $scope.roroOtherCountOther = myData.roroOtherCountOther;
+            $scope.swTruckBDCountOther = myData.swTruckBDCountOther;
+            $scope.swShortageMPCountOther = myData.swShortageMPCountOther;
+            $scope.swIncompleteDocCountOther = myData.swIncompleteDocCountOther;
+            $scope.swSpillageCountOther = myData.swSpillageCountOther;
+            $scope.swNotWearingPPECountOther = myData.swNotWearingPPECountOther;
+            $scope.swOtherCountOther = myData.swOtherCountOther;
         });
 
         $http.post('/getCmsStatisticsCategoryTruckBreakdown', obj).then(function(response){
@@ -11366,7 +11507,7 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             }
         });
 
-        $http.post('/getCmsStatisticsCategoryRoro', obj).then(function(response){
+        $http.post('/getCmsStatisticsCategoryRoroTruckBD', obj).then(function(response){
             $scope.roroRootCause = "";
             if(response.data.length == 0){
                 $scope.roroRootCause = "N/A";
@@ -11374,6 +11515,17 @@ app.controller('complaintscmsStatisticsController', function($scope, $filter, $h
             for(var i=0; i<response.data.length; i++){
                 var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
                 $scope.roroRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategorySWTruckBD', obj).then(function(response){
+            $scope.swRootCause = "";
+            if(response.data.length == 0){
+                $scope.swRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.swRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
             }
         });
 
@@ -11742,7 +11894,7 @@ app.controller('complaintDetailController', function ($scope, $http, $filter, $w
 
             $.each(data, function (key, value) {
                 position = window.sessionStorage.getItem('owner') === value.sender ? "right" : "left";
-                chatContent += '<div class="message ' + position + '"><div class="message-text">' + value.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + value.date + '</small></div></div></div>';
+                chatContent += '<div class="message ' + position + '"><div class="message-text">' + value.content + '<div class="message-time text-right"><small class="text-muted"><i class="fa fa-clock"></i> ' + value.creationDateTime + '</small></div></div></div>';
             });
             angular.element('.chat-box').html(chatContent);
             $('.chat-box').animate({
@@ -12283,26 +12435,46 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                     $scope.editLogistics.reason = $scope.fullComplaintDetail.reason;
                     
                     if($scope.fullComplaintDetail.reason == 1){
-                        $scope.fullComplaintDetail.reason = "Waste Not Collected(1)";
+                        $scope.fullComplaintDetail.reason = "Waste Not Collected (CW)";
                     }else if($scope.fullComplaintDetail.reason == 2){
-                        $scope.fullComplaintDetail.reason = "Shortage Manpower(1)";
+                        $scope.fullComplaintDetail.reason = "Shortage Manpower (CW)";
                     }else if($scope.fullComplaintDetail.reason == 3){
-                        $scope.fullComplaintDetail.reason = "Truck Breakdown(1)";
+                        $scope.fullComplaintDetail.reason = "Truck Breakdown (CW)";
                     }else if($scope.fullComplaintDetail.reason == 4){
-                        $scope.fullComplaintDetail.reason = "Truck Full(1)";
+                        $scope.fullComplaintDetail.reason = "Truck Full (CW)";
                     }else if($scope.fullComplaintDetail.reason == 5){
-                        $scope.fullComplaintDetail.reason = "Bin Not Sent Back(2)";
+                        $scope.fullComplaintDetail.reason = "Bin Not Sent Back (CW)";
                     }else if($scope.fullComplaintDetail.reason == 6){
-                        $scope.fullComplaintDetail.reason = "Spillage of Leachate(3)";
+                        $scope.fullComplaintDetail.reason = "Spillage of Leachate (CW)";
                     }else if($scope.fullComplaintDetail.reason == 7){
-                        $scope.fullComplaintDetail.reason = "Other(4)";
+                        $scope.fullComplaintDetail.reason = "Others (CW)";
                     }else if($scope.fullComplaintDetail.reason == 8){
-                        $scope.fullComplaintDetail.reason = "RORO(5)";
+                        $scope.fullComplaintDetail.reason = "Not wearing PPE / Uniform (CW)";
                     }else if($scope.fullComplaintDetail.reason == 9){
-                        $scope.fullComplaintDetail.reason = "Spillage of waste";
-                    }else if($scope.fullComplaintDetail[i].reason == 10){
-                        $scope.fullComplaintDetail[i].reason = "Not wearing PPE / Uniform";
-                    }   
+                        $scope.fullComplaintDetail.reason = "Spillage of waste (CW)";
+                    }else if($scope.fullComplaintDetail.reason == 10){
+                        $scope.fullComplaintDetail.reason = "Truck Breakdown (Roro)";
+                    }else if($scope.fullComplaintDetail.reason == 11){
+                        $scope.fullComplaintDetail.reason = "Shortage Manpower (Roro)";
+                    }else if($scope.fullComplaintDetail.reason == 12){
+                        $scope.fullComplaintDetail.reason = "Not wearing PPE / Uniform (Roro)";
+                    }else if($scope.fullComplaintDetail.reason == 13){
+                        $scope.fullComplaintDetail.reason = "Shortage of Container (Roro)";
+                    }else if($scope.fullComplaintDetail.reason == 14){
+                        $scope.fullComplaintDetail.reason = "Others (Roro)";
+                    }else if($scope.fullComplaintDetail.reason == 15){
+                        $scope.fullComplaintDetail.reason = "Truck Breakdown (SW)";
+                    }else if($scope.fullComplaintDetail.reason == 16){
+                        $scope.fullComplaintDetail.reason = "Shortage Manpower (SW)";
+                    }else if($scope.fullComplaintDetail.reason == 17){
+                        $scope.fullComplaintDetail.reason = "Incomplete Documents (SW)";
+                    }else if($scope.fullComplaintDetail.reason == 18){
+                        $scope.fullComplaintDetail.reason = "Spillage During Collection (SW)";
+                    }else if($scope.fullComplaintDetail.reason == 19){
+                        $scope.fullComplaintDetail.reason = "Not waring PPE / Uniform (SW)";
+                    }else if($scope.fullComplaintDetail.reason == 20){
+                        $scope.fullComplaintDetail.reason = "Others (SW)";
+                    } 
                     
                     $scope.wcdEditBtn = false;
 
@@ -13227,26 +13399,46 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
 
         if($scope.detailObj.reason == 1){
-            $scope.detailObj.reason = "Waste Not Collected(1)";
+            $scope.detailObj.reason = "Waste Not Collected (CW)";
         }else if($scope.detailObj.reason == 2){
-            $scope.detailObj.reason = "Shortage Manpower(1)";
+            $scope.detailObj.reason = "Shortage Manpower (CW)";
         }else if($scope.detailObj.reason == 3){
-            $scope.detailObj.reason = "Truck Breakdown(1)";
+            $scope.detailObj.reason = "Truck Breakdown (CW)";
         }else if($scope.detailObj.reason == 4){
-            $scope.detailObj.reason = "Truck Full(1)";
+            $scope.detailObj.reason = "Truck Full (CW)";
         }else if($scope.detailObj.reason == 5){
-            $scope.detailObj.reason = "Bin Not Sent Back(2)";
+            $scope.detailObj.reason = "Bin Not Sent Back (CW)";
         }else if($scope.detailObj.reason == 6){
-            $scope.detailObj.reason = "Spillage of Leachate(3)";
+            $scope.detailObj.reason = "Spillage of Leachate (CW)";
         }else if($scope.detailObj.reason == 7){
-            $scope.detailObj.reason = "Other(4)";
+            $scope.detailObj.reason = "Others (CW)";
         }else if($scope.detailObj.reason == 8){
-            $scope.detailObj.reason = "RORO(5)";
+            $scope.detailObj.reason = "Not wearing PPE / Uniform (CW)";
         }else if($scope.detailObj.reason == 9){
-            $scope.detailObj.reason = "Spillage of waste";
+            $scope.detailObj.reason = "Spillage of waste (CW)";
         }else if($scope.detailObj.reason == 10){
-            $scope.detailObj.reason = "Not wearing PPE / Uniform";
-        }
+            $scope.detailObj.reason = "Truck Breakdown (Roro)";
+        }else if($scope.detailObj.reason == 11){
+            $scope.detailObj.reason = "Shortage Manpower (Roro)";
+        }else if($scope.detailObj.reason == 12){
+            $scope.detailObj.reason = "Not wearing PPE / Uniform (Roro)";
+        }else if($scope.detailObj.reason == 13){
+            $scope.detailObj.reason = "Shortage of Container (Roro)";
+        }else if($scope.detailObj.reason == 14){
+            $scope.detailObj.reason = "Others (Roro)";
+        }else if($scope.detailObj.reason == 15){
+            $scope.detailObj.reason = "Truck Breakdown (SW)";
+        }else if($scope.detailObj.reason == 16){
+            $scope.detailObj.reason = "Shortage Manpower (SW)";
+        }else if($scope.detailObj.reason == 17){
+            $scope.detailObj.reason = "Incomplete Documents (SW)";
+        }else if($scope.detailObj.reason == 18){
+            $scope.detailObj.reason = "Spillage During Collection (SW)";
+        }else if($scope.detailObj.reason == 19){
+            $scope.detailObj.reason = "Not waring PPE / Uniform (SW)";
+        }else if($scope.detailObj.reason == 20){
+            $scope.detailObj.reason = "Others (SW)";
+        } 
 
         //init images
         $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];

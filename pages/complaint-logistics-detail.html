@@ -182,7 +182,10 @@
         <strong class="col-xs-3 form-label-width">Source:</strong>
         <p  class="mx-sm-3">{{detailObj.sorce}}</p>
     </div>
-
+    <div class="form-group row">
+        <strong class="col-xs-3 form-label-width">Serial No:</strong>
+        <p  class="mx-sm-3">{{detailObj.serialNo}}</p>
+    </div>
     <div class="form-group row">
         <strong class="col-xs-3 form-label-width">Reference No:</strong>
         <p  class="mx-sm-3">{{detailObj.refNo}}</p>
@@ -358,16 +361,26 @@
         <label for="inputReason" class="col-xs-3 col-form-label form-label-width">Reason</label>
         <div class="col-md-9">
             <select class="form-control mx-sm-3" id="inputReason" data-ng-model="logistics.reason" data-width="100%">
-                <option value="1">Waste Not Collected</option>
-                <option value="2">Shortage Manpower</option>
-                <option value="3">Truck Breakdown</option>
-                <option value="4">Truck Full</option>
-                <option value="5">Bin Not Sent Back</option>
-                <option value="6">Spillage of Leachate</option>
-                <option value="7">Other</option>
-                <option value="8">RORO</option>
-                <option value="9">Spillage of waste</option>
-                <option value="10">Not wearing PPE / Uniform</option>
+                <option data-ng-show="detailObj.services == '1'" value="1">Waste Not Collected (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="2">Shortage Manpower (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="3">Truck Breakdown (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="4">Truck Full (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="5">Bin Not Sent Back (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="6">Spillage of Leachate (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="9">Spillage of waste (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="8">Not wearing PPE / Uniform (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="7">Other (cw)</option>
+                <option data-ng-show="detailObj.services == '2'" value="10">Truck Breakdown (roro)</option>
+                <option data-ng-show="detailObj.services == '2'" value="11">Shortage Manpower (roro)</option>
+                <option data-ng-show="detailObj.services == '2'" value="12">Not wearing PPE / Uniform (roro)</option>
+                <option data-ng-show="detailObj.services == '2'" value="13">Shortage of Container (roro)</option>
+                <option data-ng-show="detailObj.services == '2'" value="14">Other (roro)</option>
+                <option data-ng-show="detailObj.services == '3'" value="15">Truck Breakdown (sw)</option>
+                <option data-ng-show="detailObj.services == '3'" value="16">Shortage Manpower (sw)</option>
+                <option data-ng-show="detailObj.services == '3'" value="17">Incomplete Documents</option>
+                <option data-ng-show="detailObj.services == '3'" value="18">Spillage During Collection (sw)</option>
+                <option data-ng-show="detailObj.services == '3'" value="19">Not wearing PPE (sw)</option>
+                <option data-ng-show="detailObj.services == '3'" value="20">Other (sw)</option>
             </select>
         </div>
     </div>
@@ -609,16 +622,26 @@
         <p class="mx-sm-3" data-ng-show="!showLogsEdit">{{fullComplaintDetail.reason}}</p>
         <div class="col-md-9" data-ng-show="showLogsEdit">
             <select class="form-control mx-sm-3" id="editReason" data-ng-model="editLogistics.reason" data-width="100%">
-                <option value="1">Waste Not Collected</option>
-                <option value="2">Shortage Manpower</option>
-                <option value="3">Truck Breakdown</option>
-                <option value="4">Truck Full</option>
-                <option value="5">Bin Not Sent Back</option>
-                <option value="6">Spillage of Leachate</option>
-                <option value="7">Other</option>
-                <option value="8">RORO</option>
-                <option value="9">Spillage of waste</option>
-                <option value="10">Not wearing PPE / Uniform</option>
+                <option data-ng-show="detailObj.services == '1'" value="1">Waste Not Collected (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="2">Shortage Manpower (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="3">Truck Breakdown (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="4">Truck Full (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="5">Bin Not Sent Back (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="6">Spillage of Leachate (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="9">Spillage of waste (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="8">Not wearing PPE / Uniform (cw)</option>
+                <option data-ng-show="detailObj.services == '1'" value="7">Other (cw)</option>
+                <option data-ng-show="detailObj.services == '2'" value="10">Truck Breakdown (roro)</option>
+                <option data-ng-show="detailObj.services == '2'" value="11">Shortage Manpower (roro)</option>
+                <option data-ng-show="detailObj.services == '2'" value="12">Not wearing PPE / Uniform (roro)</option>
+                <option data-ng-show="detailObj.services == '2'" value="13">Shortage of Container (roro)</option>
+                <option data-ng-show="detailObj.services == '2'" value="14">Other (roro)</option>
+                <option data-ng-show="detailObj.services == '3'" value="15">Truck Breakdown (sw)</option>
+                <option data-ng-show="detailObj.services == '3'" value="16">Shortage Manpower (sw)</option>
+                <option data-ng-show="detailObj.services == '3'" value="17">Incomplete Documents</option>
+                <option data-ng-show="detailObj.services == '3'" value="18">Spillage During Collection (sw)</option>
+                <option data-ng-show="detailObj.services == '3'" value="19">Not wearing PPE (sw)</option>
+                <option data-ng-show="detailObj.services == '3'" value="20">Other (sw)</option>
             </select>
         </div>
     </div>    

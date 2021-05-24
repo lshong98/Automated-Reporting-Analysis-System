@@ -152,113 +152,283 @@
 <div class="row">
     <div class="col-md-12">
         <h2>Valid CMS Reasons</h2>
-        <a href="javascript:exportTableToExcel('cmsCategoryTbl', 'CMSCategory')" class="btn btn-md btn-primary clearfix">Export to Excel</a>
-        <div class="table-responsive">
-            <table class="table table-bordered" id="cmsCategoryTbl">
-                <thead>
-                    <tr>
-                        <th rowspan="2">Reasons</th>
-                        <th rowspan="2">Amount</th>
-                        <th colspan="3">Council</th>
-                    </tr>
-                    <tr>
-                        <th>TS</th>
-                        <th>MP</th>
-                        <th>TAK</th>
-                        <th>Other</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td data-container="body" title="Truck Breakdown" data-toggle="popover" data-placement="left" data-content="{{truckBreakDownRootCause}}">Truck breakdown</td>
-                        <td>{{truckBDCountTS + truckBDCountMP + truckBDCountTAK + truckBDCountOther}}</td>
-                        <td>{{truckBDCountTS}}</td>
-                        <td>{{truckBDCountMP}}</td>
-                        <td>{{truckBDCountTAK}}</td>
-                        <td>{{truckBDCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="Truck Full" data-toggle="popover" data-placement="left" data-content="{{truckFullRootCause}}">Truck full</td>
-                        <td>{{truckFullCountTS + truckFullCountMP + truckFullCountTAK + truckFullCountOther}}</td>
-                        <td>{{truckFullCountTS}}</td>
-                        <td>{{truckFullCountMP}}</td>
-                        <td>{{truckFullCountTAK}}</td>
-                        <td>{{truckFullCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="Shortage manpower" data-toggle="popover" data-placement="left" data-content="{{shortageManpowerRootCause}}">Shortage manpower</td>
-                        <td>{{shortageMPCountTS + shortageMPCountMP + shortageMPCountTAK + shortageMPCountOther}}</td>
-                        <td>{{shortageMPCountTS}}</td>
-                        <td>{{shortageMPCountMP}}</td>
-                        <td>{{shortageMPCountTAK}}</td>
-                        <td>{{shortageMPCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="Waste Not Collected" data-toggle="popover" data-placement="left" data-content="{{wasteNotCollectedRootCause}}">Waste not collected</td>
-                        <td>{{missColCountTS + missColCountMP + missColCountTAK + missColCountOther}}</td>
-                        <td>{{missColCountTS}}</td>
-                        <td>{{missColCountMP}}</td>
-                        <td>{{missColCountTAK}}</td>
-                        <td>{{missColCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="Bin Not Send Back" data-toggle="popover" data-placement="left" data-content="{{binNSBRootCause}}">Bin not send back</td>
-                        <td>{{binNSBCountTS + binNSBCountMP + binNSBCountTAK + binNSBCountOther}}</td>
-                        <td>{{binNSBCountTS}}</td>
-                        <td>{{binNSBCountMP}}</td>
-                        <td>{{binNSBCountTAK}}</td>
-                        <td>{{binNSBCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="Other" data-toggle="popover" data-placement="left" data-content="{{otherRootCause}}">Other</td>
-                        <td>{{otherCountTS + otherCountMP + otherCountTAK + otherCountOther}}</td>
-                        <td>{{otherCountTS}}</td>
-                        <td>{{otherCountMP}}</td>
-                        <td>{{otherCountTAK}}</td>
-                        <td>{{otherCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="Leachate" data-toggle="popover" data-placement="left" data-content="{{leachateRootCause}}">Spillage of Leachate</td>
-                        <td>{{lechateCountTS + lechateCountMP + lechateCountTAK + lechateCountOther}}</td>
-                        <td>{{lechateCountTS}}</td>
-                        <td>{{lechateCountMP}}</td>
-                        <td>{{lechateCountTAK}}</td>
-                        <td>{{lechateCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="RoRo" data-toggle="popover" data-placement="left" data-content="{{roroRootCause}}">RORO</td>
-                        <td>{{roroReasonCountTS + roroReasonCountMP + roroReasonCountTAK + roroReasonCountOther}}</td>
-                        <td>{{roroReasonCountTS}}</td>
-                        <td>{{roroReasonCountMP}}</td>
-                        <td>{{roroReasonCountTAK}}</td>
-                        <td>{{roroReasonCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="Spillage of Waste" data-toggle="popover" data-placement="left" data-content="{{spillageRootCause}}">Spillage of Waste</td>
-                        <td>{{spillageCountTS + spillageCountMP + spillageCountTAK + spillageCountOther}}</td>
-                        <td>{{spillageCountTS}}</td>
-                        <td>{{spillageCountMP}}</td>
-                        <td>{{spillageCountTAK}}</td>
-                        <td>{{spillageCountOther}}</td>
-                    </tr>
-                    <tr>
-                        <td data-container="body" title="Not wearing PPE or Uniform" data-toggle="popover" data-placement="left" data-content="{{notWearingPPERootCause}}">Not wearing PPE / Uniform</td>
-                        <td>{{notWearingPPECountTS + notWearingPPECountMP + notWearingPPECountTAK + notWearingPPECountOther}}</td>
-                        <td>{{notWearingPPECountTS}}</td>
-                        <td>{{notWearingPPECountMP}}</td>
-                        <td>{{notWearingPPECountTAK}}</td>
-                        <td>{{notWearingPPECountOther}}</td>
-                    </tr>
-                    <tr>
-                        <th>Total</th>
-                        <td>{{ truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS + spillageCountTS + truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP + spillageCountMP + truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK + spillageCountTAK + truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + roroReasonCountOther + spillageCountOther + notWearingPPECountTS + notWearingPPECountMP + notWearingPPECountTAK + notWearingPPECountOther}}</td>
-                        <td>{{truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + roroReasonCountTS + spillageCountTS + notWearingPPECountTS }}</td>
-                        <td>{{truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + roroReasonCountMP + spillageCountMP + notWearingPPECountMP }}</td>
-                        <td>{{truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + roroReasonCountTAK + spillageCountTAK + notWearingPPECountTAK }}</td>
-                        <td>{{truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + roroReasonCountOther + spillageCountOther + notWearingPPECountOther}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" data-toggle="tab" data-target="#mw">MW</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" data-target="#roro">RORO</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" data-target="#sw">SW</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="mw" class="tab-pane fade show active">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5>Municipal Waste Services</h5>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascript:exportTableToExcel('cmsCategoryMWTbl', 'CMSCategoryMW')" class="btn btn-md btn-primary clearfix">Export to Excel</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="cmsCategoryMWTbl">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Reasons</th>
+                                <th rowspan="2">Amount</th>
+                                <th colspan="3">Council</th>
+                            </tr>
+                            <tr>
+                                <th>TS</th>
+                                <th>MP</th>
+                                <th>TAK</th>
+                                <th>Other</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-container="body" title="Truck Breakdown" data-toggle="popover" data-placement="left" data-content="{{truckBreakDownRootCause}}">Truck breakdown</td>
+                                <td>{{truckBDCountTS + truckBDCountMP + truckBDCountTAK + truckBDCountOther}}</td>
+                                <td>{{truckBDCountTS}}</td>
+                                <td>{{truckBDCountMP}}</td>
+                                <td>{{truckBDCountTAK}}</td>
+                                <td>{{truckBDCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Truck Full" data-toggle="popover" data-placement="left" data-content="{{truckFullRootCause}}">Truck full</td>
+                                <td>{{truckFullCountTS + truckFullCountMP + truckFullCountTAK + truckFullCountOther}}</td>
+                                <td>{{truckFullCountTS}}</td>
+                                <td>{{truckFullCountMP}}</td>
+                                <td>{{truckFullCountTAK}}</td>
+                                <td>{{truckFullCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Shortage manpower" data-toggle="popover" data-placement="left" data-content="{{shortageManpowerRootCause}}">Shortage manpower</td>
+                                <td>{{shortageMPCountTS + shortageMPCountMP + shortageMPCountTAK + shortageMPCountOther}}</td>
+                                <td>{{shortageMPCountTS}}</td>
+                                <td>{{shortageMPCountMP}}</td>
+                                <td>{{shortageMPCountTAK}}</td>
+                                <td>{{shortageMPCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Waste Not Collected" data-toggle="popover" data-placement="left" data-content="{{wasteNotCollectedRootCause}}">Waste not collected</td>
+                                <td>{{missColCountTS + missColCountMP + missColCountTAK + missColCountOther}}</td>
+                                <td>{{missColCountTS}}</td>
+                                <td>{{missColCountMP}}</td>
+                                <td>{{missColCountTAK}}</td>
+                                <td>{{missColCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Bin Not Send Back" data-toggle="popover" data-placement="left" data-content="{{binNSBRootCause}}">Bin not send back</td>
+                                <td>{{binNSBCountTS + binNSBCountMP + binNSBCountTAK + binNSBCountOther}}</td>
+                                <td>{{binNSBCountTS}}</td>
+                                <td>{{binNSBCountMP}}</td>
+                                <td>{{binNSBCountTAK}}</td>
+                                <td>{{binNSBCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Other" data-toggle="popover" data-placement="left" data-content="{{otherRootCause}}">Other</td>
+                                <td>{{otherCountTS + otherCountMP + otherCountTAK + otherCountOther}}</td>
+                                <td>{{otherCountTS}}</td>
+                                <td>{{otherCountMP}}</td>
+                                <td>{{otherCountTAK}}</td>
+                                <td>{{otherCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Leachate" data-toggle="popover" data-placement="left" data-content="{{leachateRootCause}}">Spillage of Leachate</td>
+                                <td>{{lechateCountTS + lechateCountMP + lechateCountTAK + lechateCountOther}}</td>
+                                <td>{{lechateCountTS}}</td>
+                                <td>{{lechateCountMP}}</td>
+                                <td>{{lechateCountTAK}}</td>
+                                <td>{{lechateCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Spillage of Waste" data-toggle="popover" data-placement="left" data-content="{{spillageRootCause}}">Spillage of Waste</td>
+                                <td>{{spillageCountTS + spillageCountMP + spillageCountTAK + spillageCountOther}}</td>
+                                <td>{{spillageCountTS}}</td>
+                                <td>{{spillageCountMP}}</td>
+                                <td>{{spillageCountTAK}}</td>
+                                <td>{{spillageCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Not wearing PPE or Uniform" data-toggle="popover" data-placement="left" data-content="{{notWearingPPERootCause}}">Not wearing PPE / Uniform</td>
+                                <td>{{notWearingPPECountTS + notWearingPPECountMP + notWearingPPECountTAK + notWearingPPECountOther}}</td>
+                                <td>{{notWearingPPECountTS}}</td>
+                                <td>{{notWearingPPECountMP}}</td>
+                                <td>{{notWearingPPECountTAK}}</td>
+                                <td>{{notWearingPPECountOther}}</td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td>{{ truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + spillageCountTS + truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + spillageCountMP + truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + spillageCountTAK + truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + spillageCountOther + notWearingPPECountTS + notWearingPPECountMP + notWearingPPECountTAK + notWearingPPECountOther}}</td>
+                                <td>{{truckBDCountTS + truckFullCountTS + shortageMPCountTS + missColCountTS + binNSBCountTS + otherCountTS + lechateCountTS + spillageCountTS + notWearingPPECountTS }}</td>
+                                <td>{{truckBDCountMP + truckFullCountMP + shortageMPCountMP + missColCountMP + binNSBCountMP + otherCountMP + lechateCountMP + spillageCountMP + notWearingPPECountMP }}</td>
+                                <td>{{truckBDCountTAK + truckFullCountTAK + shortageMPCountTAK + missColCountTAK + binNSBCountTAK + otherCountTAK + lechateCountTAK + spillageCountTAK + notWearingPPECountTAK }}</td>
+                                <td>{{truckBDCountOther + truckFullCountOther + shortageMPCountOther + missColCountOther + binNSBCountOther + otherCountOther + lechateCountOther + spillageCountOther + notWearingPPECountOther}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="roro" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5>Roro Services</h5>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascript:exportTableToExcel('cmsCategoryRoroTbl', 'CMSCategoryRoro')" class="btn btn-md btn-primary clearfix">Export to Excel</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="cmsCategoryRoroTbl">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Reasons</th>
+                                <th rowspan="2">Amount</th>
+                                <th colspan="3">Council</th>
+                            </tr>
+                            <tr>
+                                <th>TS</th>
+                                <th>MP</th>
+                                <th>TAK</th>
+                                <th>Other</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-container="body" title="Truck Breakdown" data-toggle="popover" data-placement="left" data-content="{{roroRootCause}}">Truck breakdown</td>
+                                <td>{{roroTruckBDCountTS + roroTruckBDCountMP + roroTruckBDCountTAK + roroTruckBDCountOther}}</td>
+                                <td>{{roroTruckBDCountTS}}</td>
+                                <td>{{roroTruckBDCountMP}}</td>
+                                <td>{{roroTruckBDCountTAK}}</td>
+                                <td>{{roroTruckBDCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Shortage manpower" data-toggle="popover" data-placement="left">Shortage manpower</td>
+                                <td>{{roroShortageMPCountTS + roroShortageMPCountMP + roroShortageMPCountTAK + roroShortageMPCountOther}}</td>
+                                <td>{{roroShortageMPCountTS}}</td>
+                                <td>{{roroShortageMPCountMP}}</td>
+                                <td>{{roroShortageMPCountTAK}}</td>
+                                <td>{{roroShortageMPCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Not wearing PPE or Uniform" data-toggle="popover" data-placement="left">Not wearing PPE / Uniform</td>
+                                <td>{{roroNotWearingPPECountTS + roroNotWearingPPECountMP + roroNotWearingPPECountTAK + roroNotWearingPPECountOther}}</td>
+                                <td>{{roroNotWearingPPECountTS}}</td>
+                                <td>{{roroNotWearingPPECountMP}}</td>
+                                <td>{{roroNotWearingPPECountTAK}}</td>
+                                <td>{{roroNotWearingPPECountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Waste Not Collected" data-toggle="popover" data-placement="left">Shortage of Container</td>
+                                <td>{{roroShortageOfContainterTS + roroShortageOfContainterMP + roroShortageOfContainterTAK + roroShortageOfContainterOther}}</td>
+                                <td>{{roroShortageOfContainterTS}}</td>
+                                <td>{{roroShortageOfContainterMP}}</td>
+                                <td>{{roroShortageOfContainterTAK}}</td>
+                                <td>{{roroShortageOfContainterOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Other" data-toggle="popover" data-placement="left">Other</td>
+                                <td>{{roroOtherCountTS + roroOtherCountMP + roroOtherCountTAK + roroOtherCountOther}}</td>
+                                <td>{{roroOtherCountTS}}</td>
+                                <td>{{roroOtherCountMP}}</td>
+                                <td>{{roroOtherCountTAK}}</td>
+                                <td>{{roroOtherCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td>{{roroTruckBDCountTS + roroShortageMPCountTS + roroNotWearingPPECountTS + roroShortageOfContainterTS + roroOtherCountTS + roroTruckBDCountMP + roroShortageMPCountMP + roroNotWearingPPECountMP + roroShortageOfContainterMP + roroOtherCountMP + roroTruckBDCountTAK + roroShortageMPCountTAK + roroNotWearingPPECountTAK + roroShortageOfContainterTAK + roroOtherCountTAK + roroTruckBDCountOther + roroShortageMPCountOther + roroNotWearingPPECountOther + roroShortageOfContainterOther + roroOtherCountOther}}</td>
+                                <td>{{roroTruckBDCountTS + roroShortageMPCountTS + roroNotWearingPPECountTS + roroShortageOfContainterTS + roroOtherCountTS }}</td>
+                                <td>{{roroTruckBDCountMP + roroShortageMPCountMP + roroNotWearingPPECountMP + roroShortageOfContainterMP + roroOtherCountMP }}</td>
+                                <td>{{roroTruckBDCountTAK + roroShortageMPCountTAK + roroNotWearingPPECountTAK + roroShortageOfContainterTAK + roroOtherCountTAK }}</td>
+                                <td>{{roroTruckBDCountOther + roroShortageMPCountOther + roroNotWearingPPECountOther + roroShortageOfContainterOther + roroOtherCountOther }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="sw" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5>Scheduled Waste Services</h5>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascript:exportTableToExcel('cmsCategorySWTbl', 'CMSCategorySW')" class="btn btn-md btn-primary clearfix">Export to Excel</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="cmsCategorySWTbl">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Reasons</th>
+                                <th rowspan="2">Amount</th>
+                                <th colspan="3">Council</th>
+                            </tr>
+                            <tr>
+                                <th>TS</th>
+                                <th>MP</th>
+                                <th>TAK</th>
+                                <th>Other</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-container="body" title="Truck Breakdown" data-toggle="popover" data-placement="left">Truck breakdown</td>
+                                <td>{{swTruckBDCountTS + swTruckBDCountMP + swTruckBDCountTAK + swTruckBDCountOther}}</td>
+                                <td>{{swTruckBDCountTS}}</td>
+                                <td>{{swTruckBDCountMP}}</td>
+                                <td>{{swTruckBDCountTAK}}</td>
+                                <td>{{swTruckBDCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Shortage manpower" data-toggle="popover" data-placement="left">Shortage manpower</td>
+                                <td>{{swShortageMPCountTS + swShortageMPCountMP + swShortageMPCountTAK + swShortageMPCountOther}}</td>
+                                <td>{{swShortageMPCountTS}}</td>
+                                <td>{{swShortageMPCountMP}}</td>
+                                <td>{{swShortageMPCountTAK}}</td>
+                                <td>{{swShortageMPCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Bin Not Send Back" data-toggle="popover" data-placement="left">Incomplete Documents</td>
+                                <td>{{swIncompleteDocCountTS + swIncompleteDocCountMP + swIncompleteDocCountTAK + swIncompleteDocCountOther}}</td>
+                                <td>{{swIncompleteDocCountTS}}</td>
+                                <td>{{swIncompleteDocCountMP}}</td>
+                                <td>{{swIncompleteDocCountTAK}}</td>
+                                <td>{{swIncompleteDocCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Leachate" data-toggle="popover" data-placement="left">Spillage During Collection</td>
+                                <td>{{swSpillageCountTS + swSpillageCountMP + swSpillageCountTAK + swSpillageCountOther}}</td>
+                                <td>{{swSpillageCountTS}}</td>
+                                <td>{{swSpillageCountMP}}</td>
+                                <td>{{swSpillageCountTAK}}</td>
+                                <td>{{swSpillageCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Not wearing PPE or Uniform" data-toggle="popover" data-placement="left">Not wearing PPE / Uniform</td>
+                                <td>{{swNotWearingPPECountTS + swNotWearingPPECountMP + swNotWearingPPECountTAK + swNotWearingPPECountOther}}</td>
+                                <td>{{swNotWearingPPECountTS}}</td>
+                                <td>{{swNotWearingPPECountMP}}</td>
+                                <td>{{swNotWearingPPECountTAK}}</td>
+                                <td>{{swNotWearingPPECountOther}}</td>
+                            </tr>
+                            <tr>
+                                <td data-container="body" title="Other" data-toggle="popover" data-placement="left">Other</td>
+                                <td>{{swOtherCountTS + swOtherCountMP + swOtherCountTAK + swOtherCountOther}}</td>
+                                <td>{{swOtherCountTS}}</td>
+                                <td>{{swOtherCountMP}}</td>
+                                <td>{{swOtherCountTAK}}</td>
+                                <td>{{swOtherCountOther}}</td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td>{{ swTruckBDCountTS + swShortageMPCountTS + swIncompleteDocCountTS + swSpillageCountTS + swNotWearingPPECountTS + swOtherCountTS + swTruckBDCountMP + swShortageMPCountMP + swIncompleteDocCountMP + swSpillageCountMP + swNotWearingPPECountMP + swOtherCountMP + lechateCountMP + swTruckBDCountTAK + swShortageMPCountTAK + swIncompleteDocCountTAK + swSpillageCountTAK + swNotWearingPPECountTAK + swOtherCountTAK + lechateCountTAK + swTruckBDCountOther + swShortageMPCountOther + swIncompleteDocCountOther + swSpillageCountOther + swNotWearingPPECountOther + swOtherCountOther}}</td>
+                                <td>{{ swTruckBDCountTS + swShortageMPCountTS + swIncompleteDocCountTS + swSpillageCountTS + swNotWearingPPECountTS + swOtherCountTS }}</td>
+                                <td>{{ swTruckBDCountMP + swShortageMPCountMP + swIncompleteDocCountMP + swSpillageCountMP + swNotWearingPPECountMP + swOtherCountMP }}</td>
+                                <td>{{ swTruckBDCountTAK + swShortageMPCountTAK + swIncompleteDocCountTAK + swSpillageCountTAK + swNotWearingPPECountTAK + swOtherCountTAK }}</td>
+                                <td>{{ swTruckBDCountOther + swShortageMPCountOther + swIncompleteDocCountOther + swSpillageCountOther + swNotWearingPPECountOther + swOtherCountOther }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
