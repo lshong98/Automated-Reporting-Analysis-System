@@ -13508,16 +13508,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             $scope.showAreaControl = false;
         }
 
-        //review
-        if ($scope.detailObj.customerReview !== null) {
-            var staffID = {
-                'id': $scope.detailObj.customerReview
-            };
-            $http.post('/getStaffName', staffID).then(function (response) {
-                $scope.complaintReview = "BD Reviewed by " + response.data[0].staffName;
-            });
-        }
-
         //initialize staff
         var staffID = {
             'id': $scope.detailObj.logisticsBy
@@ -14038,26 +14028,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
     $scope.backList = function () {
         window.location.href = '#/complaint-module';
-    }
-
-    $scope.reviewComplaintBD = function () {
-        if (confirm("Are you sure you want to review this complaint?")) {
-            var reviewComplaint = {
-                'coID': $routeParams.coID,
-                'department': "BD",
-                'staffID': window.sessionStorage.getItem('owner')
-            }
-
-            $http.post('/updateComplaintReview', reviewComplaint).then(function (response) {
-                if (response.data.status == "success") {
-                    $scope.notify(response.data.status, response.data.message);
-                    $route.reload();
-                } else {
-                    $scope.notify("error", "There are some ERROR reviewing the complaint");
-                }
-            });
-        }
-
     }
     
     $scope.deleteComplaint = function() {
