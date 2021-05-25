@@ -317,6 +317,7 @@
             <select class="form-control mx-sm-3" id="inputSub" data-ng-model="logistics.sub" data-live-search="true" data-width="100%">
                 <option data-ng-repeat="x in areaUnderList" value="{{x}}">{{x}}</option>
             </select>
+            <input type="text" placeholder="Please Specify Subcon Name Here" id="inputSubOther" class="form-control mx-sm-3" data-ng-if="logistics.sub == 'Others'" data-ng-model="logistics.subOthers"/>
         </div>
     </div>
     
@@ -514,6 +515,7 @@
             <select class="mx-sm-3 form-control" id="editSub" data-ng-model="editLogistics.sub" data-live-search="true" data-width="100%">
                 <option data-ng-repeat="x in areaUnderList" value="{{x}}">{{x}}</option>
             </select>
+            <input type="text" placeholder="Please Specify Subcon Name Here" id="inputEditSubOther" class="form-control mx-sm-3" data-ng-if="editLogistics.sub == 'Others'" data-ng-model="editLogistics.subEditOthers"/>
         </div>
     </div>
     <div class="form-group row">

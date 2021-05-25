@@ -12602,6 +12602,11 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                         $scope.editLogistics.subDate = $filter('date')($scope.editLogistics.subDate, 'yyyy-MM-dd');
                         $scope.editLogistics.subTime = $filter('date')($scope.editLogistics.subTime, 'HH:mm:ss');
                         
+                        if($scope.editLogistics.sub == 'Others'){
+                            $scope.editLogistics.sub = $scope.editLogistics.subEditOthers;
+                        }
+                        
+
                         $http.post('/updateLogisticsCMSEdit', $scope.editLogistics).then(function(response){
                             if (response.data.status == "success") {
                                 $scope.notify(response.data.status, "Data has been updated");
@@ -12986,6 +12991,10 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
                 $scope.logistics.wasteColDT = $filter('date')($scope.wasteColDT, 'yyyy-MM-dd HH:mm:ss') + "," + $scope.lgStaff + ";";
             }else{
                 $scope.logistics.wasteColDT = ""
+            }
+
+            if($scope.logistics.sub == 'Others'){
+                $scope.logistics.sub = $scope.logistics.subOthers;
             }
             
             $scope.showSubmitBtn = true;
