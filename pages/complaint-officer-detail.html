@@ -150,447 +150,385 @@
         <div class="col-md-11"></div>
         <div class="col-md-1">
             <button class="btn btn-danger" data-ng-click="backList()" >Back</button>
-            <a href="javascript:exportPdf()" class="btn btn-md btn-success ">Print</a>
+            <button class="btn btn-md btn-success" data-ng-click="complaintDetailExportPDF()">Print</a>
             <button class="btn btn-danger" data-ng-show="showDeleteKch == 'A' || showDeleteBtu == 'A'" data-ng-click="deleteComplaint()" >Delete</button>         
         </div>
     </div>
-<div id="nodeToRenderAsPDF" style="padding-left: 20px;">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>CMS Details</h2>        
-        </div>
-    </div>
-
-    <br/>
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Date:</strong>
-        <p  class="mx-sm-3">{{detailObj.complaintDate}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Time:</strong>
-        <p  class="mx-sm-3">{{detailObj.complaintTime}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Source:</strong>
-        <p  class="mx-sm-3">{{detailObj.sorce}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Serial No:</strong>
-        <p  class="mx-sm-3">{{detailObj.serialNo}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Reference No:</strong>
-        <p  class="mx-sm-3">{{detailObj.refNo}}</p>
-    </div>
-
-    <br/>
-    <hr/>
-    <br/>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Name:</strong>
-        <p  class="mx-sm-3">{{detailObj.name}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Company:</strong>
-        <p  class="mx-sm-3">{{detailObj.company}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Tel No:</strong>
-        <p  class="mx-sm-3">{{detailObj.telNo}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Address:</strong>
-        <p  class="mx-sm-3">{{detailObj.address}}</p>
-    </div>
-    <div class="row">
-        <button data-ng-click="editCompImages()" type="button" class="btn btn-info" data-ng-show="!editImages"><i class="fas fa-pencil-alt"></i> Edit Images</button>     
-    </div>
-    <div class="form-group row" data-ng-show="showCompImg">
-        <div class="col-xs-3 form-label-width">
-            <strong >Image:</strong>   
-        </div>
-        <div class="col-md-9">
-            <div class="row">
-                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image01 && !editImages">
-                    <img id="myCompImage01" src="{{complaintImages.image01}}" alt="{{complaintImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
-                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image02 && !editImages">
-                    <img id="myCompImage02" src="{{complaintImages.image02}}" alt="{{complaintImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image03 && !editImages">
-                    <img id="myCompImage03" src="{{complaintImages.image03}}" alt="{{complaintImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
-                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image04 && !editImages">
-                    <img id="myCompImage04" src="{{complaintImages.image04}}" alt="{{complaintImages.image04}}" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
+<div>
+    <div id="cmsPart1" style="padding-left: 20px;">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>CMS Details</h2>        
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-3 form-label-width"></div>
-        <div class="col-md-9">
-            <div class="row">
-                <div class="col-md-6" data-ng-show="editImages">
-                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg01"></canvas>
-                    <button data-ng-click="clearImage('uploadImg01')" type="button" class="btn btn-danger" style="margin-left:25% ; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
-                </div>
-                <div class="col-md-6" data-ng-show="editImages">
-                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 70px;" id="uploadImg02"></canvas>
-                    <button data-ng-click="clearImage('uploadImg02')" type="button" class="btn btn-danger" style="margin-left:30% ; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6" data-ng-show="editImages">
-                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; " id="uploadImg03"></canvas>
-                    <button data-ng-click="clearImage('uploadImg03')" type="button" class="btn btn-danger" style="margin-left:25%; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
-                </div>
-                <div class="col-md-6" data-ng-show="editImages">
-                    <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 70px;" id="uploadImg04"></canvas>
-                    <button data-ng-click="clearImage('uploadImg04')" type="button" class="btn btn-danger" style="margin-left:30%; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
-                </div>
-            </div>
-
+        <br/>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Date:</strong>
+            <p  class="mx-sm-3">{{detailObj.complaintDate}}</p>
         </div>
-            
-    </div>
-
-    <br/>
-    <div class="row">
-        <div class="col-xs-3 form-label-width"></div>
-        <div class="col-md-9">
-            <button data-ng-click="updateCompImages()" type="button" class="btn btn-success" style="width: 120%; padding: 7px;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Save Images</button>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Time:</strong>
+            <p  class="mx-sm-3">{{detailObj.complaintTime}}</p>
         </div>
-    </div>
-    <br />
-
-   <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Type of Service:</strong>
-        <div class="mx-sm-3">
-            <p data-ng-if="detailObj.services == '1'">Municipal Waste</p>
-            <p data-ng-if="detailObj.services == '2'">Roro Container</p>
-            <p data-ng-if="detailObj.services == '3'">Scheduled Waste</p>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Source:</strong>
+            <p  class="mx-sm-3">{{detailObj.sorce}}</p>
         </div>
-    </div>
-    
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Type of Complaint:</strong>
-        <div class="col-md-8">
-            <p data-ng-show="showEditTOC == false">{{detailType}}</p>
-            <div data-ng-show="showEditTOC == true">
-                <div data-ng-show = "typeOption==1">
-                    <label for="tc1">Waste not collected <input id="tc1" type="checkbox" data-ng-model="tc1"/> <input type="text" placeholder="Specify days" data-ng-show="tc1 == true" data-ng-model="tc1days"/></label><br/>
-                    <label for="tc2">Bin not pushed back to its original location <input id="tc2" type="checkbox" data-ng-model="tc2"/></label><br/>
-                    <label for="tc3">Spillage of waste <input id="tc3" type="checkbox" data-ng-model="tc3"/></label><br/>
-                    <label for="tc4">Spillage of leachate water <input id="tc4" type="checkbox" data-ng-model="tc4"/></label><br/>
-                    <label for="tc12">Others <input id="tc12" type="checkbox" data-ng-model="tc12"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc12 == true" data-ng-model="tc12others" rows="5" cols="100"></textarea></label>
-                </div>
-                <div data-ng-show="typeOption==2">
-                    <label for="tc5">RoRo not sent <input id="tc5" type="checkbox" data-ng-model="tc5"/></label><br/>
-                    <label for="tc6">RoRo not exchanged <input id="tc6" type="checkbox" data-ng-model="tc6"/></label><br/>
-                    <label for="tc7">RoRo not pulled <input id="tc7" type="checkbox" data-ng-model="tc7"/></label><br/>
-                    <label for="tc8">RoRo not emptied <input id="tc8" type="checkbox" data-ng-model="tc8"/></label><br/> 
-                    <label for="tc13">Others <input id="tc13" type="checkbox" data-ng-model="tc13"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc13 == true" data-ng-model="tc13others" rows="5" cols="100"></textarea></label>            
-                </div>
-                <div data-ng-show="typeOption==3">
-                    <label for="tc9">Waste not collected on time<input id="tc9" type="checkbox" data-ng-model="tc9"/></label><br/>
-                    <label for="tc10">Spillage during collection<input id="tc10" type="checkbox" data-ng-model="tc10"/></label><br/>
-                    <label for="tc11">Incomplete documents<input id="tc11" type="checkbox" data-ng-model="tc11"/></label><br/>
-                    <label for="tc14">Others <input id="tc14" type="checkbox" data-ng-model="tc14"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc14 == true" data-ng-model="tc14others" rows="5" cols="100"></textarea></label>            
-                </div>    
-            </div>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Serial No:</strong>
+            <p  class="mx-sm-3">{{detailObj.serialNo}}</p>
         </div>
-        <div class="col-md-1">
-            <button class="btn btn-primary" data-ng-show="showEditTOC == false" data-ng-click="editTypeOfComplaint()" >Edit</button>
-            <button class="btn btn-success" data-ng-show="showEditTOC == true" data-ng-click="submitEditTOC()" >Submit</button>
-            <button class="btn btn-danger" data-ng-show="showEditTOC == true"data-ng-click="editTypeOfComplaint()" >Cancel</button>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Reference No:</strong>
+            <p  class="mx-sm-3">{{detailObj.refNo}}</p>
         </div>
-    </div>
-
-    <br/>
-    <hr/>
-    <br/>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Forwarded to Logistics By:</strong>
-        <p  class="mx-sm-3">{{staffName}}</p>
-    </div>
-
-<div data-ng-show="viewControl >= 2">
-    <br/>
-    <hr/>
-    <br/>
-
-    <h4>Action Taken By Logistics</h4>
-
-    <!--original area  under-->
-    <div class="form-group row" data-ng-show="showAreaControl">
-        <strong class="col-xs-3 form-label-width">Area Code:</strong>
-        <p class="mx-sm-3">{{areaCode}}</p>
-    </div>
-
-    <div class="form-group row" data-ng-show="showAreaControl">
-        <strong class="col-xs-3 form-label-width">LG Report:</strong>
-        <p class="mx-sm-3"><a href="#/view-report/{{detailObj.lgReport.split(' ')[2]}}">{{detailObj.lgReport}}</a></p>
-    </div>
-
-    <div class="form-group row" data-ng-show="showAreaControl">
-        <strong class="col-xs-3 form-label-width">Tonnage:</strong>
-        <p class="mx-sm-3">{{lgReportTonnage}}</p>
-    </div>
-    
-    <div class="form-group row" data-ng-show="showAreaControl">
-        <strong class="col-xs-3 form-label-width">Area by Council:</strong>
-        <p class="mx-sm-3">{{detailObj.council}}</p>
-    </div>
-
-    <!--original forwarded to sub-contractor-->
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Area Under:</strong>
-        <p  class="mx-sm-3">{{detailObj.forwardedSub}}</p>
-    </div>
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Date:</strong>
-        <p  class="mx-sm-3">{{detailObj.forwardedDate}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Time:</strong>
-        <p  class="mx-sm-3">{{detailObj.forwardedTime}}</p>
-    </div>
-
-    <div class="form-group row" data-ng-show="showLogsImg">
-        <strong class="col-xs-3 form-label-width">Image from Logistics:</strong>
-        <div class="col-md-9">
-            <div class="row">
-                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image01">
-                    <img id="myLogsImage01" src="{{logsImages.image01}}" alt="{{logsImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
-                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image02">
-                    <img id="myLogsImage02" src="{{logsImages.image02}}" alt="{{logsImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
-            </div>
-            <div class="row">                
-                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image03">
-                    <img id="myLogsImage03" src="{{logsImages.image03}}" alt="{{logsImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
-                <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image04">
-                    <img id="myLogsImage04" src="{{logsImages.image04}}" alt="{{logsImages.image04}}" style="width: 100%;height: 100%;object-fit: contain;" />
-                </div>
-            </div>      
-        </div>  
-    </div>    
-    
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Driver:</strong>
-        <p class="mx-sm-3">{{driverName}}</p>
-    </div>
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Truck:</strong>
-        <p class="mx-sm-3">{{detailObj.truck}}</p>
-    </div>    
-    
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Reason:</strong>
-        <p class="mx-sm-3">{{detailObj.reason}}</p>
-    </div>  
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Remark:</strong>
-        <p  class="mx-sm-3">{{detailObj.remarks}}</p>
-    </div>
-    
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Feedback to BD (Date):</strong>
-        <p  class="mx-sm-3">{{detailObj.statusDate}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Feedback to BD (Time):</strong>
-        <p  class="mx-sm-3">{{detailObj.statusTime}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Responded By:</strong>
-        <p  class="mx-sm-3">{{logsStaffName}}</p>
-    </div>  
-    
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Waste Collected On:<br/>(If Applicable)</strong>
-        <div class="mx-sm-3"><span data-ng-repeat="w in wasteData">{{w.date}} - {{w.reporter}}<br/></span></div>
-    </div>
-    
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">CMS Status:</strong>
-        <p  class="mx-sm-3">{{detailObj.status}}</p>
-    </div>
-    
-    <div data-ng-show="viewControl == 2">
         <br/>
         <hr/>
-        <h4>Action Taken By BD</h4>         
         <br/>
-
         <div class="form-group row">
-            <label for="custStatus" class="col-xs-3 col-form-label form-label-width">Status:</label>
+            <strong class="col-xs-3 form-label-width">Name:</strong>
+            <p  class="mx-sm-3">{{detailObj.name}}</p>
+        </div>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Company:</strong>
+            <p  class="mx-sm-3">{{detailObj.company}}</p>
+        </div>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Tel No:</strong>
+            <p  class="mx-sm-3">{{detailObj.telNo}}</p>
+        </div>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Address:</strong>
+            <p  class="mx-sm-3">{{detailObj.address}}</p>
+        </div>
+        <div class="row">
+            <button data-ng-click="editCompImages()" type="button" class="btn btn-info" data-ng-show="!editImages"><i class="fas fa-pencil-alt"></i> Edit Images</button>     
+        </div>
+        <div class="form-group row" data-ng-show="showCompImg">
+            <div class="col-xs-3 form-label-width">
+                <strong >Image:</strong>   
+            </div>
             <div class="col-md-9">
-                <select class="form-control mx-sm-3" id="custStatus" data-ng-model="custStatus.status" data-live-search="true" data-width="100%">
-                        <option value="open">Open</option>
-                        <option value="closed">Closed</option>
+                <div class="row">
+                    <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image01 && !editImages">
+                        <img id="myCompImage01" src="{{complaintImages.image01}}" alt="{{complaintImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;"/>
+                    </div>
+                    <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image02 && !editImages">
+                        <img id="myCompImage02" src="{{complaintImages.image02}}" alt="{{complaintImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image03 && !editImages">
+                        <img id="myCompImage03" src="{{complaintImages.image03}}" alt="{{complaintImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;"/>
+                    </div>
+                    <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showComplaintImages.image04 && !editImages">
+                        <img id="myCompImage04" src="{{complaintImages.image04}}" alt="{{complaintImages.image04}}" style="width: 100%;height: 100%;object-fit: contain;"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 form-label-width"></div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-6" data-ng-show="editImages">
+                        <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px;" id="uploadImg01"></canvas>
+                        <button data-ng-click="clearImage('uploadImg01')" type="button" class="btn btn-danger" style="margin-left:25% ; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+                    </div>
+                    <div class="col-md-6" data-ng-show="editImages">
+                        <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 70px;" id="uploadImg02"></canvas>
+                        <button data-ng-click="clearImage('uploadImg02')" type="button" class="btn btn-danger" style="margin-left:30% ; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" data-ng-show="editImages">
+                        <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; " id="uploadImg03"></canvas>
+                        <button data-ng-click="clearImage('uploadImg03')" type="button" class="btn btn-danger" style="margin-left:25%; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+                    </div>
+                    <div class="col-md-6" data-ng-show="editImages">
+                        <canvas class="target" style="border:1px solid grey; width: 380px; height: 300px; margin: 15px; margin-left: 70px;" id="uploadImg04"></canvas>
+                        <button data-ng-click="clearImage('uploadImg04')" type="button" class="btn btn-danger" style="margin-left:30%; width: 50%;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Delete Image</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-xs-3 form-label-width"></div>
+            <div class="col-md-9">
+                <button data-ng-click="updateCompImages()" type="button" class="btn btn-success" style="width: 120%; padding: 7px;" data-ng-show="editImages"><i class="fas fa-floppy-o"></i> Save Images</button>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Type of Service:</strong>
+            <div class="mx-sm-3">
+                <p data-ng-if="detailObj.services == '1'">Municipal Waste</p>
+                <p data-ng-if="detailObj.services == '2'">Roro Container</p>
+                <p data-ng-if="detailObj.services == '3'">Scheduled Waste</p>
+            </div>
+        </div>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Type of Complaint:</strong>
+            <div class="col-md-8">
+                <p data-ng-show="showEditTOC == false">{{detailType}}</p>
+                <div data-ng-show="showEditTOC == true">
+                    <div data-ng-show = "typeOption==1">
+                        <label for="tc1">Waste not collected <input id="tc1" type="checkbox" data-ng-model="tc1"/> <input type="text" placeholder="Specify days" data-ng-show="tc1 == true" data-ng-model="tc1days"/></label><br/>
+                        <label for="tc2">Bin not pushed back to its original location <input id="tc2" type="checkbox" data-ng-model="tc2"/></label><br/>
+                        <label for="tc3">Spillage of waste <input id="tc3" type="checkbox" data-ng-model="tc3"/></label><br/>
+                        <label for="tc4">Spillage of leachate water <input id="tc4" type="checkbox" data-ng-model="tc4"/></label><br/>
+                        <label for="tc12">Others <input id="tc12" type="checkbox" data-ng-model="tc12"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc12 == true" data-ng-model="tc12others" rows="5" cols="100"></textarea></label>
+                    </div>
+                    <div data-ng-show="typeOption==2">
+                        <label for="tc5">RoRo not sent <input id="tc5" type="checkbox" data-ng-model="tc5"/></label><br/>
+                        <label for="tc6">RoRo not exchanged <input id="tc6" type="checkbox" data-ng-model="tc6"/></label><br/>
+                        <label for="tc7">RoRo not pulled <input id="tc7" type="checkbox" data-ng-model="tc7"/></label><br/>
+                        <label for="tc8">RoRo not emptied <input id="tc8" type="checkbox" data-ng-model="tc8"/></label><br/> 
+                        <label for="tc13">Others <input id="tc13" type="checkbox" data-ng-model="tc13"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc13 == true" data-ng-model="tc13others" rows="5" cols="100"></textarea></label>            
+                    </div>
+                    <div data-ng-show="typeOption==3">
+                        <label for="tc9">Waste not collected on time<input id="tc9" type="checkbox" data-ng-model="tc9"/></label><br/>
+                        <label for="tc10">Spillage during collection<input id="tc10" type="checkbox" data-ng-model="tc10"/></label><br/>
+                        <label for="tc11">Incomplete documents<input id="tc11" type="checkbox" data-ng-model="tc11"/></label><br/>
+                        <label for="tc14">Others <input id="tc14" type="checkbox" data-ng-model="tc14"/> <textarea type="text" placeholder="Specify others" data-ng-show="tc14 == true" data-ng-model="tc14others" rows="5" cols="100"></textarea></label>            
+                    </div>    
+                </div>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-primary" data-ng-show="showEditTOC == false" data-ng-click="editTypeOfComplaint()" >Edit</button>
+                <button class="btn btn-success" data-ng-show="showEditTOC == true" data-ng-click="submitEditTOC()" >Submit</button>
+                <button class="btn btn-danger" data-ng-show="showEditTOC == true"data-ng-click="editTypeOfComplaint()" >Cancel</button>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <br/>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Forwarded to Logistics By:</strong>
+            <p  class="mx-sm-3">{{staffName}}</p>
+        </div>
+        <br/>
+        <hr/>
+        <br/>
+    </div>
+    <div data-ng-show="viewControl >= 2">
+        <div id="cmsPart2" style="padding-left: 20px;">
+            <h4>Action Taken By Logistics</h4>
+            <div class="form-group row" data-ng-show="showAreaControl">
+                <strong class="col-xs-3 form-label-width">Area Code:</strong>
+                <p class="mx-sm-3">{{areaCode}}</p>
+            </div>
+            <div class="form-group row" data-ng-show="showAreaControl">
+                <strong class="col-xs-3 form-label-width">LG Report:</strong>
+                <p class="mx-sm-3"><a href="#/view-report/{{detailObj.lgReport.split(' ')[2]}}">{{detailObj.lgReport}}</a></p>
+            </div>
+            <div class="form-group row" data-ng-show="showAreaControl">
+                <strong class="col-xs-3 form-label-width">Tonnage:</strong>
+                <p class="mx-sm-3">{{lgReportTonnage}}</p>
+            </div>
+            <div class="form-group row" data-ng-show="showAreaControl">
+                <strong class="col-xs-3 form-label-width">Area by Council:</strong>
+                <p class="mx-sm-3">{{detailObj.council}}</p>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Area Under:</strong>
+                <p  class="mx-sm-3">{{detailObj.forwardedSub}}</p>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Date:</strong>
+                <p  class="mx-sm-3">{{detailObj.forwardedDate}}</p>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Forwarded to Sub-Contractor Time:</strong>
+                <p  class="mx-sm-3">{{detailObj.forwardedTime}}</p>
+            </div>
+            <div class="form-group row" data-ng-show="showLogsImg">
+                <strong class="col-xs-3 form-label-width">Image from Logistics:</strong>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image01">
+                            <img id="myLogsImage01" src="{{logsImages.image01}}" alt="{{logsImages.image01}}" style="width: 100%;height: 100%;object-fit: contain;" />
+                        </div>
+                        <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image02">
+                            <img id="myLogsImage02" src="{{logsImages.image02}}" alt="{{logsImages.image02}}" style="width: 100%;height: 100%;object-fit: contain;" />
+                        </div>
+                    </div>
+                    <div class="row">                
+                        <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image03">
+                            <img id="myLogsImage03" src="{{logsImages.image03}}" alt="{{logsImages.image03}}" style="width: 100%;height: 100%;object-fit: contain;" />
+                        </div>
+                        <div class="col-md-6" style="width: 350px;height: 350px;" data-ng-show="showLogsImages.image04">
+                            <img id="myLogsImage04" src="{{logsImages.image04}}" alt="{{logsImages.image04}}" style="width: 100%;height: 100%;object-fit: contain;" />
+                        </div>
+                    </div>      
+                </div>  
+            </div>    
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Driver:</strong>
+                <p class="mx-sm-3">{{driverName}}</p>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Truck:</strong>
+                <p class="mx-sm-3">{{detailObj.truck}}</p>
+            </div>    
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Reason:</strong>
+                <p class="mx-sm-3">{{detailObj.reason}}</p>
+            </div>  
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Remark:</strong>
+                <p  class="mx-sm-3">{{detailObj.remarks}}</p>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Feedback to BD (Date):</strong>
+                <p  class="mx-sm-3">{{detailObj.statusDate}}</p>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Feedback to BD (Time):</strong>
+                <p  class="mx-sm-3">{{detailObj.statusTime}}</p>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Responded By:</strong>
+                <p  class="mx-sm-3">{{logsStaffName}}</p>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">Waste Collected On:<br/>(If Applicable)</strong>
+                <div class="mx-sm-3"><span data-ng-repeat="w in wasteData">{{w.date}} - {{w.reporter}}<br/></span></div>
+            </div>
+            <div class="form-group row">
+                <strong class="col-xs-3 form-label-width">CMS Status:</strong>
+                <p  class="mx-sm-3">{{detailObj.status}}</p>
+            </div>
+        </div>
+        <div data-ng-show="viewControl == 2">
+            <br/>
+            <hr/>
+            <h4>Action Taken By BD</h4>         
+            <br/>
+            <div class="form-group row">
+                <label for="custStatus" class="col-xs-3 col-form-label form-label-width">Status:</label>
+                <div class="col-md-9">
+                    <select class="form-control mx-sm-3" id="custStatus" data-ng-model="custStatus.status" data-live-search="true" data-width="100%">
+                            <option value="open">Open</option>
+                            <option value="closed">Closed</option>
+                    </select>
+                </div>
+            </div>        
+            <div class="form-group row">
+                <label for="custDate" class="col-xs-3 col-form-label form-label-width">Customer Informed Date:</label>
+                <div class="col-md-9">
+                    <input type="date" id="custDate" class="form-control mx-sm-3" data-ng-model="custDate" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="custTime" class="col-xs-3 col-form-label form-label-width">Customer Informed Time</label>
+                <div class="col-md-9">
+                    <input type="time" id="custTime" class="form-control mx-sm-3" data-ng-model="custTime" data-ng-change="custTimeChange(custTime)" str-to-time="" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="checkCustContactStatus" class="col-xs-3 col-form-label form-label-width">Customer Not Contactable <input id="checkCustContactStatus" type="checkbox" data-ng-model="checkCustContactStatus"/></label>
+                <div class="col-md-3">      
+                    <select class="form-control mx-sm-3" data-ng-show="checkCustContactStatus" data-ng-model="custContactableStatus" data-width="100%">
+                        <option value="1">Customer cannot be contacted after 3 times calling</option>
+                        <option value="2">Contact number given was wrong</option>
+                        <option value="3">No contact number was given</option>
+                        <option value="4">Others</option>
+                    </select>            
+                </div>
+                <div class="col-md-3">
+                    <input type="text" data-ng-model="custContactableStatusOthers" data-ng-show="custContactableStatus == '4'" />
+                </div>
+            </div>
+            <br/>        
+            <div class="row">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                <button class="btn btn-danger"data-ng-click="cancelCreate()" >Cancel</button>
+                    <button class="btn btn-success" data-ng-click="updateCust()" >Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="cmsPart3" style="padding-left: 20px;" data-ng-show="viewControl >= 3">
+        <br/>
+        <hr/>
+        <h4>Action Taken By BD</h4> 
+        <br/>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Status:</strong>
+            <div class="col-md-3">
+                <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="custStatus.status" data-live-search="true" data-width="100%">
+                    <option value="open">Open</option>
+                    <option value="closed">Closed</option>
                 </select>
             </div>
-        </div>        
-        <div class="form-group row">
-            <label for="custDate" class="col-xs-3 col-form-label form-label-width">Customer Informed Date:</label>
-            <div class="col-md-9">
-                <input type="date" id="custDate" class="form-control mx-sm-3" data-ng-model="custDate" />
+            <div class="col-md-3">
+                <button class="btn btn-success" data-ng-click="updateStatus()" >Update</button>
             </div>
+        </div>
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Customer Informed Date:</strong>
+            <p  class="mx-sm-3">{{custStatus.statusDate}}</p>
         </div>
 
         <div class="form-group row">
-            <label for="custTime" class="col-xs-3 col-form-label form-label-width">Customer Informed Time</label>
-            <div class="col-md-9">
-                <input type="time" id="custTime" class="form-control mx-sm-3" data-ng-model="custTime" data-ng-change="custTimeChange(custTime)" str-to-time="" />
-            </div>
+            <strong class="col-xs-3 form-label-width">Customer Informed Time:</strong>
+            <p  class="mx-sm-3">{{custStatus.statusTime}}</p>
+        </div>
+
+        <div class="form-group row">
+            <strong class="col-xs-3 form-label-width">Customer Informed By:</strong>
+            <p  class="mx-sm-3">{{informCustStaffName}}</p>
         </div>
         
         <div class="form-group row">
-            <label for="checkCustContactStatus" class="col-xs-3 col-form-label form-label-width">Customer Not Contactable <input id="checkCustContactStatus" type="checkbox" data-ng-model="checkCustContactStatus"/></label>
-            <div class="col-md-3">      
-                <select class="form-control mx-sm-3" data-ng-show="checkCustContactStatus" data-ng-model="custContactableStatus" data-width="100%">
-                    <option value="1">Customer cannot be contacted after 3 times calling</option>
-                    <option value="2">Contact number given was wrong</option>
-                    <option value="3">No contact number was given</option>
-                    <option value="4">Others</option>
-                </select>            
+            <strong class="col-xs-3 form-label-width">Customer Not Contactable:</strong>
+            <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '0'">N/A</p>
+            <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '1'">Customer cannot be contacted after 3 times calling</p>
+            <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '2'">Contact number given was wrong</p>
+            <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '3'">No contact number was given</p>
+            <p class="mx-sm-3" data-ng-if="detailObj.contactStatus.split(':')[0] == '4'">Others: <span data-ng-if="detailObj.contactStatus.split(':')[0] == '4'">{{detailObj.contactStatus.split(':')[1]}}</span></p>
+        </div>
+        <br/>
+        <hr/>
+        <h4>Action Taken By CMS Comittee</h4> 
+        <br/>
+        <div class="form-group row">
+            <label for="cmsStatus2" class="col-xs-3 col-form-label form-label-width">CMS Validity:</label>
+            <div class="col-md-3">
+                <select class="form-control mx-sm-3" id="cmsStatus2" data-ng-model="cmsUpdateStatus" data-width="100%" data-live-search="true">
+                    <option value="1">Valid</option>
+                    <option value="2">Invalid</option>
+                    <option value="3">To Be Reviewed</option>
+                </select>
             </div>
             <div class="col-md-3">
-                <input type="text" data-ng-model="custContactableStatusOthers" data-ng-show="custContactableStatus == '4'" />
-            </div>
-        </div>
-        
-        <br/>        
+                <button class="btn btn-success" data-ng-click="updateCMSStatus()" data-ng-show="showcmsupdatebtnKch ==  'A' || showcmsupdatebtnBtu ==  'A'">Update</button>
+            </div>        
+        </div>     
+    </div>
+    <div id="cmsPart3" data-ng-show="showhiststatuslistKch == 'A' || showhiststatuslistBtu == 'A'">
+        <br/>
+        <hr/>
+        <br/>
         
         <div class="row">
-            <div class="col-md-10"></div>
-            <div class="col-md-2">
-               <button class="btn btn-danger"data-ng-click="cancelCreate()" >Cancel</button>
-                <button class="btn btn-success" data-ng-click="updateCust()" >Submit</button>
+            <div class="col-md-3">
+                <p>Updates History:</p>
+            </div>
+            <div class="col-md-9">
+                <div  data-ng-repeat="histitem in  histUpdateList">
+                    {{histitem}}
+                </div>            
             </div>
         </div>
     </div>
-</div>
-
-<div data-ng-show="viewControl >= 3">
-    
-    
-    <br/>
-    <hr/>
-    <h4>Action Taken By BD</h4> 
-    <br/>
-    
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Status:</strong>
-        <div class="col-md-3">
-            <select class="form-control mx-sm-3" id="inputStatus" data-ng-model="custStatus.status" data-live-search="true" data-width="100%">
-                <option value="open">Open</option>
-                <option value="closed">Closed</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <button class="btn btn-success" data-ng-click="updateStatus()" >Update</button>
-        </div>
-    </div>
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Customer Informed Date:</strong>
-        <p  class="mx-sm-3">{{custStatus.statusDate}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Customer Informed Time:</strong>
-        <p  class="mx-sm-3">{{custStatus.statusTime}}</p>
-    </div>
-
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Customer Informed By:</strong>
-        <p  class="mx-sm-3">{{informCustStaffName}}</p>
-    </div>
-    
-    <div class="form-group row">
-        <strong class="col-xs-3 form-label-width">Customer Not Contactable:</strong>
-        <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '0'">N/A</p>
-        <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '1'">Customer cannot be contacted after 3 times calling</p>
-        <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '2'">Contact number given was wrong</p>
-        <p class="mx-sm-3" data-ng-if="detailObj.contactStatus == '3'">No contact number was given</p>
-        <p class="mx-sm-3" data-ng-if="detailObj.contactStatus.split(':')[0] == '4'">Others: <span data-ng-if="detailObj.contactStatus.split(':')[0] == '4'">{{detailObj.contactStatus.split(':')[1]}}</span></p>
-    </div>
-    
-    <br/>
-    <hr/>
-    <h4>Action Taken By CMS Comittee</h4> 
-    <br/>
-    
-    <div class="form-group row">
-        <label for="cmsStatus2" class="col-xs-3 col-form-label form-label-width">CMS Validity:</label>
-        <div class="col-md-3">
-            <select class="form-control mx-sm-3" id="cmsStatus2" data-ng-model="cmsUpdateStatus" data-width="100%" data-live-search="true">
-                <option value="1">Valid</option>
-                <option value="2">Invalid</option>
-                <option value="3">To Be Reviewed</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <button class="btn btn-success" data-ng-click="updateCMSStatus()" data-ng-show="showcmsupdatebtnKch ==  'A' || showcmsupdatebtnBtu ==  'A'">Update</button>
-        </div>        
-    </div>     
-    
-</div>
-
-<div data-ng-show="showhiststatuslistKch == 'A' || showhiststatuslistBtu == 'A'">
-    <br/>
-    <hr/>
-    <br/>
-    
-    <div class="row">
-        <div class="col-md-3">
-            <p>Updates History:</p>
-        </div>
-        <div class="col-md-9">
-            <div  data-ng-repeat="histitem in  histUpdateList">
-                {{histitem}}
-            </div>            
-        </div>
-    </div>
-</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 <script src="/scripts/html2canvas.min.js"></script>
-<script>
-    function exportPdf(quality = 10) {
-        var filename = 'ComplaintExport.pdf';
-
-        html2canvas(document.querySelector('#nodeToRenderAsPDF'), {
-            useCORS: true,
-            imageTimeout: 2000,
-            scale: quality,
-            background :'#FFFFFF'
-        }).then(function(canvas) {
-            var img = canvas.toDataURL("image/jpeg", 1.0);
-            window.URL.revokeObjectURL(img);
-            var pdf = new jsPDF('p', 'mm', 'a4');
-            pdf.addImage(img, 'JPEG', 5, 5, 200, 275);
-            pdf.save(filename);
-        });
-    }
-    
+<script>    
     // Get the modal
     var modal = document.getElementById("myModal");
 

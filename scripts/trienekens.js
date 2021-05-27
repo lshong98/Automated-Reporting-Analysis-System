@@ -3525,9 +3525,6 @@ app.controller('binReqDetailCtrl', function ($scope, $filter, $http, $routeParam
                     doc.addImage(imgData, 'JPEG', 20, 20,200, 250);
                     doc.addPage();
                 }
-            // doc.addImage(base64Img, 'JPEG', 10, 10, 50, 50, 'monkey');
-                // doc.output('datauri');
-                // doc.save('testing.pdf');
                 var string = doc.output('datauristring');
                 doc.save('testing.pdf');
                 var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
@@ -12669,36 +12666,6 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         }
 
         $http.get('/getAreaList').then(function (response) {
-            // console.log(response.data);
-            // $.each(response.data, function (index, value) {
-            //     if(value.branch == $scope.detailObj.zon){
-            //         var areaID = value.id.split(",");
-            //         var areaName = value.name.split(",");
-            //         var code = value.code.split(",");
-            //         var subcon = value.subcon.split(",");
-            //         var area = [];
-            //         $.each(areaID, function (index, value) {
-            //             area.push({
-            //                 "id": areaID[index],
-            //                 "name": areaName[index],
-            //                 "code": code[index],
-            //                 "subcon": subcon[index]
-            //             });
-            //         });
-
-            //         area.sort(function(a, b) {
-            //             return (a[code] > b[code]) ? 1 : ((a[code] < b[code]) ? -1 : 0);
-            //         });
-
-            //         $scope.areaList.push({
-            //             "zone": {
-            //                 "id": value.zoneID,
-            //                 "name": value.zoneName
-            //             },
-            //             "area": area
-            //         });
-            //     }
-            // });
             for(var i=0; i< response.data.length; i++){
                 if(response.data[i].branch == $scope.detailObj.zon){
                     $scope.areaList.push(response.data[i]);
@@ -13077,6 +13044,55 @@ app.controller('complaintLogisticsDetailController', function ($scope, $http, $f
         $scope.showLogsEdit = value;
     }
 
+    $scope.ComplaintLGExportPDF = function(){
+            
+    var filename = 'lgComplaintExport.pdf';
+    var pdf = new jsPDF('p', 'mm', 'a4');
+    if($scope.detailObj.step >= 1){
+        html2canvas($("#lgCMSPart1"), {
+            useCORS: true,
+            imageTimeout: 2000,
+            scale: 10,
+            background :'#FFFFFF'
+        }).then(function(canvas) {
+            var img = canvas.toDataURL("image/jpeg", 1.0);
+            window.URL.revokeObjectURL(img);
+            pdf.addImage(img, 'JPEG', 5, 5, 350, 250);
+            if($scope.detailObj.step >= 2){
+                html2canvas($("#lgCMSPart2"), {
+                    useCORS: true,
+                    imageTimeout: 2000,
+                    scale: 1,
+                    background :'#FFFFFF'
+                }).then(function(canvas) {
+                    var img = canvas.toDataURL("image/jpeg", 1.0);
+                    window.URL.revokeObjectURL(img);
+                    pdf.addPage();
+                    pdf.addImage(img, 'JPEG', 5, 5, 325, 275);
+                    if($scope.detailObj.step >= 3){
+                        html2canvas($("#lgCMSPart3"), {
+                            useCORS: true,
+                            imageTimeout: 2000,
+                            scale: 1,
+                            background :'#FFFFFF'
+                        }).then(function(canvas) {
+                            var img = canvas.toDataURL("image/jpeg", 1.0);
+                            window.URL.revokeObjectURL(img);
+                            pdf.addPage();
+                            pdf.addImage(img, 'JPEG', 5, 5, 350, 150);
+                            pdf.save(filename);
+                        });
+                    }else{
+                        pdf.save(filename);
+                    }
+                });
+            }else{
+                pdf.save(filename);
+            }
+        });
+    }        
+        
+    }
 });
 
 app.controller('complaintOfficercreateController', function ($scope, $http, $filter, $window, storeDataService) {
@@ -14048,6 +14064,56 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
                 window.location.href = '#/complaint-module/';
             });
         }
+    }
+
+    $scope.complaintDetailExportPDF = function(){
+            
+        var filename = 'ComplaintExport.pdf';
+        var pdf = new jsPDF('p', 'mm', 'a4');
+        if($scope.detailObj.step >= 1){
+            html2canvas($("#cmsPart1"), {
+                useCORS: true,
+                imageTimeout: 2000,
+                scale: 10,
+                background :'#FFFFFF'
+            }).then(function(canvas) {
+                var img = canvas.toDataURL("image/jpeg", 1.0);
+                window.URL.revokeObjectURL(img);
+                pdf.addImage(img, 'JPEG', 5, 5, 350, 250);
+                if($scope.detailObj.step >= 2){
+                    html2canvas($("#cmsPart2"), {
+                        useCORS: true,
+                        imageTimeout: 2000,
+                        scale: 1,
+                        background :'#FFFFFF'
+                    }).then(function(canvas) {
+                        var img = canvas.toDataURL("image/jpeg", 1.0);
+                        window.URL.revokeObjectURL(img);
+                        pdf.addPage();
+                        pdf.addImage(img, 'JPEG', 5, 5, 325, 275);
+                        if($scope.detailObj.step >= 3){
+                            console.log("c");
+                            html2canvas($("#cmsPart3"), {
+                                useCORS: true,
+                                imageTimeout: 2000,
+                                scale: 1,
+                                background :'#FFFFFF'
+                            }).then(function(canvas) {
+                                var img = canvas.toDataURL("image/jpeg", 1.0);
+                                window.URL.revokeObjectURL(img);
+                                pdf.addPage();
+                                pdf.addImage(img, 'JPEG', 5, 5, 350, 100);
+                                pdf.save(filename);
+                            });
+                        }else{
+                            pdf.save(filename);
+                        }
+                    });
+                }else{
+                    pdf.save(filename);
+                }
+            });
+        }        
     }
 });
 

@@ -130,6 +130,7 @@ const job = schedule.scheduleJob('00 08 * * *', function(){
     var emailList = [
         "melody.christine@trienekens.com.my",
         "hansen.shim@trienekens.com.my",
+        "esther.wee@trienekens.com.my",
         "lshong9899@gmail.com"
     ];
 
