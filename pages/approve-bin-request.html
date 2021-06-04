@@ -26,7 +26,7 @@
                             <table class="table table-striped table-clickable table-responsive">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
+                                        <th>ID</th>
                                         <th>Requested By</th>
                                         <th>Contact Number</th>
                                         <th>Reason for Request</th>
@@ -38,7 +38,7 @@
                                 </thead>
                                 <tbody>
                                     <tr data-ng-repeat="pReq in nonRoroEnquiry | filter:searchBinReq | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index">
-                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{$index+1}}</td>
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.reqID}}</td>
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.name}}</td>
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.contactNumber}}</td>
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.reason}}</td>
@@ -76,7 +76,7 @@
                             <table class="table table-striped table-clickable table-responsive">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
+                                        <th>ID</th>
                                         <th>Requested By</th>
                                         <th>Contact Number</th>
                                         <th>Reason for Request</th>
@@ -88,7 +88,7 @@
                                 </thead>
                                 <tbody>
                                     <tr data-ng-repeat="rReq in roroEnquiry | filter:searchRoroEnq | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index" >
-                                        <td data-ng-click="binReqDetail(rReq.reqID)">{{$index+1}}</td>
+                                        <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.reqID}}</td>
                                         <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.name}}</td>
                                         <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.contactNumber}}</td>
                                         <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.reason}}</td>

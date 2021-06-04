@@ -2183,7 +2183,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
             //search non roro request
             $scope.searchBinReq = function (br) {
-                return (br.name + br.contactNumber).toUpperCase().indexOf($scope.searchBinReqFilter.toUpperCase()) >= 0;
+                return (br.reqID + br.name + br.contactNumber).toUpperCase().indexOf($scope.searchBinReqFilter.toUpperCase()) >= 0;
             }
 
             //$scope.totalItemsEnquiry = $scope.filterEnquiryList.length;
@@ -2203,7 +2203,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
             //search roro enquiries
             $scope.searchRoroEnq = function (br) {
-                return (br.name + br.contactNumber).toUpperCase().indexOf($scope.searchRoroEnqFilter.toUpperCase()) >= 0;
+                return (br.reqID + br.name + br.contactNumber).toUpperCase().indexOf($scope.searchRoroEnqFilter.toUpperCase()) >= 0;
             }
 
             //$scope.totalItemsEnquiry = $scope.filterEnquiryList.length;

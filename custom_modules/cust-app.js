@@ -71,32 +71,6 @@ const smtpTransport = nodemailer.createTransport({
     }
 });
 
-//const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: 'registercustomerapp@gmail.com',
-//         pass: 'trienekens321'
-//     }
-// });
-
-// var socket = io.connect();
-
-// var mysql = require('mysql');
-// var bcrypt = require('bcryptjs');
-// var dateTime = require('node-datetime');
-
-//var EventEmitter = require('events');
-//var emitter = new EventEmitter();
-//var express = require('express');
-//var app = express();
-//var dateTime = require('node-datetime');
-//var f = require('./function-management');
-//var database = require('./database-management');
-//var upload = require('express-fileupload');
-//var nodemailer = require('nodemailer');
-//var path = require('path');
-//var fs = require('fs');
-
 app.use(upload());
 app.use('/img', express.static(__dirname + '/img'));
 //app.use(express.static(__dirname + '/pendingImg'));
@@ -126,13 +100,6 @@ app.post('/loginCustServiceApp', function (req, resp) {
                         if (result[0].status == 1) {
                             resp.send("Login Success");
                         } else {
-                            // transporter = nodemailer.createTransport({
-                            //     service: 'gmail',
-                            //     auth: {
-                            //         user: 'trienekensmobileapp@gmail.com',
-                            //         pass: 'trienekens321'
-                            //     }
-                            // });
                             vCode = Math.floor(Math.random() * 90000) + 10000;
                             subject = "Trienekens App Verification Code";
                             text = "Your Verification Code is: " + vCode;
@@ -166,127 +133,11 @@ app.post('/loginCustServiceApp', function (req, resp) {
                         resp.send("Failed");
                     }
                 });
-                /*
-                if ((result[0].userEmail == data.email) && (isPassMatch)) {
-                    if (result[0].status == 1) {
-                        resp.send("Login Success");
-                    } else {
-                        // transporter = nodemailer.createTransport({
-                        //     service: 'gmail',
-                        //     auth: {
-                        //         user: 'trienekensmobileapp@gmail.com',
-                        //         pass: 'trienekens321'
-                        //     }
-                        // });
-                        vCode = Math.floor(Math.random() * 90000) + 10000;
-                        subject = "Trienekens App Verification Code";
-                        text = "Your Verification Code is: " + vCode;
-                        email = data.email;
-                        console.log("vCode: " + vCode);
-                        mailOptions = {
-                            from: 'trienekensmobileapp@gmail.com',
-                            to: email,
-                            subject: subject,
-                            text: text
-                        };
-
-
-                        var updateCode = "UPDATE tbluser SET vCode ='" + vCode + "' WHERE userEmail ='" + data.email + "'";
-
-                        smtpTransport.sendMail(mailOptions, function (error, info) {
-                            if (error) {
-                                console.log(error);
-                                resp.send("Mail Failed");
-                            }
-                            //console.log("Email sent: " + info.response);
-                            database.query(updateCode, function (err, res) {
-                                if (err) {
-                                    throw err;
-                                } else {
-                                    //console.log("Registered");
-                                    resp.send("Activate Acc " + data.email);
-                                }
-                            });
-                        });
-                    }
-                } else {
-                    console.log("login failed");
-                    resp.send("Failed");
-                }*/
             }
         });
     });
 });
 
-//unused method - commented for reference
-//get customer's area ID
-// app.post('/getAreaID', function (req, resp) {
-//     'use strict';
-//     var data, tamanID, areaID;
-
-//     req.addListener('data', function (postDataChunk) {
-//         data = JSON.parse(postDataChunk);
-//     });
-
-//     req.addListener('end', function () {
-//         var sql = "SELECT tamanID FROM tbluser WHERE userEmail = '" + data.email + "'";
-//         database.query(sql, function (err, res) {
-//             console.log(res);
-//             if(err){
-//                 console.log(err);
-//             }
-//             if (res[0].tamanID != null) {
-//                 tamanID = res[0].tamanID;
-//                 var getAreaSql = "SELECT areaID FROM tbltaman WHERE tamanID = " + tamanID;
-//                 database.query(getAreaSql, function (err, res) {
-//                     console.log(res[0]);
-//                     areaID = res[0].areaID;
-//                     resp.send(areaID);
-//                 });
-//             }else{
-//                 resp.send("");
-//             }
-//         });
-//     });
-// });
-
-//unused method - commented for reference
-//insert fcm token to db
-// app.post('/insertToken', function (req, resp) {
-//     'use strict';
-//     var data, msg;
-
-//     req.addListener('data', function (postDataChunk) {
-//         data = JSON.parse(postDataChunk);
-//     });
-//     req.addListener('end', function () {
-//         console.log(data);
-//         var checkSql = "SELECT fcm_token FROM fcm_info";
-//         var insertSql = "INSERT INTO fcm_info(fcm_token) values('" + data.token + "')";
-//         database.query(checkSql, function (err, res) {
-//             for (var i = 0; i < res.length; i++) {
-//                 var existingTokens = res[i].fcm_token;
-//                 //console.log(res[i].fcm_token);
-//                 if (data.token == existingTokens) {
-//                     msg = "Token already exists";
-//                     resp.send(msg);
-//                 }
-//             }
-
-//             if (msg != "Token already exists") {
-//                 database.query(insertSql, function (error, result) {
-//                     if (!error) {
-//                         resp.send("inserted");
-//                     } else {
-//                         console.log(error);
-//                         resp.send("failed to insert");
-//                     }
-//                 });
-//             }
-//         });
-//     });
-
-// });
 
 app.get('/getImages', function (req, resp) {
     'use strict';
@@ -523,9 +374,44 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
     var data, sql, userID;
     data = JSON.parse(req.rawBody);
     var urlArray = [];
+
+    var imgEmailAttach = [];
+    var myKeyName = Object.keys(data);
+
+    for(var myCount = 0; myCount<myKeyName.length; myCount++){
+        if(myKeyName[myCount] != 'cID'){
+            imgEmailAttach.push({
+                filename: myCount + '.jpg',
+                content: Buffer.from(data[myKeyName[myCount]], 'base64')
+            });
+        }
+    }
+
+    var mailOptions = {
+        from: 'trienekensmobileapp@gmail.com',
+        to: '',
+        subject: 'Bin Request Img Backup',
+        text: 'This is from Bin Request ID:' + data['cID'],
+        attachments: imgEmailAttach
+    };
+    var emailList = [
+        "melody.christine@trienekens.com.my",
+        "esther.wee@trienekens.com.my",
+        "lshong9899@gmail.com"
+    ];
+
+    emailList.forEach(function (to) {
+        mailOptions.to = to;
+        smtpTransport.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                throw error;
+            }
+        });
+    });
+    
+
     //Lost bin
     if (typeof data.BinRequestICLost !== 'undefined' && typeof data.BinRequestPolice !== 'undefined' && typeof data.BinRequestUtility !== 'undefined') { 
-console.log("lostbin image");
        var async = require('async');
        if (typeof data.BinRequestAssessment !== 'undefined') { // lost residential with Assessment bill image
            async.each(["BinRequestICLost", "BinRequestPolice", "BinRequestUtility", "BinRequestAssessment"], function (file, callback) {
@@ -609,7 +495,6 @@ console.log("lostbin image");
                    sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',utilityImg ='" + urlArray[2] + "',policeImg ='" + urlArray[1] + "'  WHERE reqID =" + data.cID + "";
                    database.query(sql, function (err, res) {
                        if (!err) {
-                           console.log(urlArray);
                            emitter.emit('binrequest');
                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                        } else {
@@ -659,7 +544,6 @@ console.log("lostbin image");
                    sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',policeImg ='" + urlArray[1] + "',utilityImg ='" + urlArray[2] + "', assessmentImg = '" + urlArray[3] + "', tradingImg = '" + urlArray[4] + "'  WHERE reqID =" + data.cID + "";
                    database.query(sql, function (err, res) {
                        if (!err) {
-                           console.log(urlArray);
                            emitter.emit('binrequest');
                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                        } else {
@@ -706,7 +590,6 @@ console.log("lostbin image");
                    sql = "UPDATE tblbinrequest SET icImg ='" + urlArray[0] + "',policeImg ='" + urlArray[1] + "',utilityImg ='" + urlArray[2] + "', assessmentImg = '" + urlArray[3] + "' WHERE reqID =" + data.cID + "";
                    database.query(sql, function (err, res) {
                        if (!err) {
-                           console.log(urlArray);
                            emitter.emit('binrequest');
                            resp.send("Your Request has been submitted. We will review the request and get back to you shortly.");
                        } else {
@@ -1627,13 +1510,6 @@ app.post('/NewRegister', function (req, resp) {
     });
 
     req.addListener('end', function () {
-        // transporter = nodemailer.createTransport({
-        //     service: 'gmail',
-        //     auth: {
-        //         user: 'trienekensmobileapp@gmail.com',
-        //         pass: 'trienekens321'
-        //     }
-        // });
         vCode = Math.floor(Math.random() * 90000) + 10000;
         subject = "Trienekens App Verification Code";
         text = "Thank You for Signing Up to the Trienekens App. Your Verification Code is: " + vCode;
