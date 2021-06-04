@@ -2191,15 +2191,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             $scope.getBinReq = function () {
                 return $filter('filter')($scope.filterBinReqList, $scope.searchBinReqFilter);
             }
-    
-            // $scope.$watch('searchBinReqFilter', function (newVal, oldVal) {
-            //     var vm = this;
-            //     if (oldVal !== newVal) {
-            //         $scope.currentPage = 1;
-            //         $scope.totalItemsBinReq = $scope.getBinReq().length;
-            //     }
-            //     return vm;
-            // }, true);
 
             //search roro enquiries
             $scope.searchRoroEnq = function (br) {
@@ -11158,6 +11149,335 @@ app.controller('complaintscmsBDStatisticsController', function($scope, $filter, 
         $http.post("/getCmsSource", obj).then(function(response){
             $scope.source = response.data;
         });
+
+        $scope.tsCount = 0;
+        $scope.mpCount = 0;
+        $scope.takCount = 0;
+        $scope.roroTSCount = 0;
+        $scope.roroMPCount = 0;
+        $scope.roroTAKCount = 0;
+        $scope.totalROROCount = 0;
+        $scope.mbksCount = 0;
+        $scope.dbkuCount = 0;
+        $scope.mppCount = 0;
+        $scope.mdsCount = 0;
+        $scope.validMWCount = 0;
+        $scope.validROROCount = 0;
+        $scope.validScheduledCount = 0;
+        $scope.invalidCount = 0;
+        $scope.missColCountTS = 0;
+        $scope.shortageMPCountTS = 0;
+        $scope.truckBDCountTS = 0;
+        $scope.truckFullCountTS = 0;
+        $scope.binNSBCountTS = 0;
+        $scope.lechateCountTS = 0;
+        $scope.otherCountTS = 0;
+        $scope.spillageCountTS = 0;
+        $scope.notWearingPPECountTS = 0;
+        $scope.roroTruckBDCountTS = 0;
+        $scope.roroShortageMPCountTS = 0;
+        $scope.roroNotWearingPPECountTS = 0;
+        $scope.roroShortageOfContainterTS = 0;
+        $scope.roroOtherCountTS = 0;
+        $scope.swTruckBDCountTS = 0;
+        $scope.swShortageMPCountTS = 0;
+        $scope.swIncompleteDocCountTS = 0;
+        $scope.swSpillageCountTS = 0;
+        $scope.swNotWearingPPECountTS = 0;
+        $scope.swOtherCountTS = 0;
+        $scope.missColCountMP = 0;
+        $scope.shortageMPCountMP = 0;
+        $scope.truckBDCountMP = 0;
+        $scope.truckFullCountMP = 0;
+        $scope.binNSBCountMP = 0;
+        $scope.lechateCountMP = 0;
+        $scope.otherCountMP = 0;
+        $scope.spillageCountMP = 0;
+        $scope.notWearingPPECountMP = 0;
+        $scope.roroTruckBDCountMP = 0;
+        $scope.roroShortageMPCountMP = 0;
+        $scope.roroNotWearingPPECountMP = 0;
+        $scope.roroShortageOfContainterMP = 0;
+        $scope.roroOtherCountMP = 0;
+        $scope.swTruckBDCountMP = 0;
+        $scope.swShortageMPCountMP = 0;
+        $scope.swIncompleteDocCountMP = 0;
+        $scope.swSpillageCountMP = 0;
+        $scope.swNotWearingPPECountMP = 0;
+        $scope.swOtherCountMP = 0;
+        $scope.missColCountTAK = 0;
+        $scope.shortageMPCountTAK = 0;
+        $scope.truckBDCountTAK = 0;
+        $scope.truckFullCountTAK = 0;
+        $scope.binNSBCountTAK = 0;
+        $scope.lechateCountTAK = 0;
+        $scope.otherCountTAK = 0;
+        $scope.spillageCountTAK = 0;
+        $scope.notWearingPPECountTAK = 0;
+        $scope.roroTruckBDCountTAK = 0;
+        $scope.roroShortageMPCountTAK = 0;
+        $scope.roroNotWearingPPECountTAK = 0;
+        $scope.roroShortageOfContainterTAK = 0;
+        $scope.roroOtherCountTAK = 0;
+        $scope.swTruckBDCountTAK = 0;
+        $scope.swShortageMPCountTAK = 0;
+        $scope.swIncompleteDocCountTAK = 0;
+        $scope.swSpillageCountTAK = 0;
+        $scope.swNotWearingPPECountTAK = 0;
+        $scope.swOtherCountTAK = 0;
+        $scope.missColCountOther = 0;
+        $scope.shortageMPCountOther = 0;
+        $scope.truckBDCountOther = 0;
+        $scope.truckFullCountOther = 0
+        $scope.binNSBCountOther = 0;
+        $scope.lechateCountOther = 0;
+        $scope.otherCountOther = 0;
+        $scope.spillageCountOther = 0;
+        $scope.notWearingPPECountOther = 0;
+        $scope.roroTruckBDCountOther = 0;
+        $scope.roroShortageMPCountOther = 0;
+        $scope.roroNotWearingPPECountOther = 0;
+        $scope.roroShortageOfContainterOther = 0;
+        $scope.roroOtherCountOther = 0;
+        $scope.swTruckBDCountOther = 0;
+        $scope.swShortageMPCountOther = 0;
+        $scope.swIncompleteDocCountOther = 0;
+        $scope.swSpillageCountOther = 0;
+        $scope.swNotWearingPPECountOther = 0;
+        $scope.swOtherCountOther = 0;
+        $scope.scheduledCount = 0;
+        $scope.swTsCount = 0;
+        $scope.swOtherCount = 0;
+        $http.post('/getCmsStatistics', obj).then(function(response){
+            var myData = response.data;
+            $scope.tsCount = myData.tsCount;
+            $scope.mpCount = myData.mpCount;
+            $scope.takCount = myData.takCount;
+            $scope.roroTSCount = myData.roroTSCount;
+            $scope.roroMPCount = myData.roroMPCount;
+            $scope.roroTAKCount = myData.roroTAKCount;
+            $scope.totalROROCount = $scope.roroTSCount + $scope.roroMPCount + $scope.roroTAKCount;
+            $scope.mbksCount = myData.mbksCount;
+            $scope.dbkuCount = myData.dbkuCount;
+            $scope.mppCount = myData.mppCount;
+            $scope.mdsCount = myData.mdsCount;
+            $scope.scheduledCount = myData.scheduledCount;
+            $scope.swTsCount = myData.swTsCount;
+            $scope.swOtherCount = myData.swOtherCount;
+            $scope.scheduledCount = myData.scheduledCount;
+            $scope.validMWCount = myData.validMWCount;
+            $scope.validROROCount = myData.validROROCount;
+            $scope.validScheduledCount = myData.validScheduledCount;
+            $scope.invalidCount = myData.invalidCount;
+            $scope.missColCountTS = myData.missColCountTS;
+            $scope.shortageMPCountTS = myData.shortageMPCountTS;
+            $scope.truckBDCountTS = myData.truckBDCountTS;
+            $scope.truckFullCountTS = myData.truckFullCountTS;
+            $scope.binNSBCountTS = myData.binNSBCountTS;
+            $scope.lechateCountTS = myData.lechateCountTS;
+            $scope.otherCountTS = myData.otherCountTS;
+            $scope.spillageCountTS = myData.spillageCountTS;
+            $scope.notWearingPPECountTS = myData.notWearingPPECountTS;
+            $scope.roroTruckBDCountTS = myData.roroTruckBDCountTS;
+            $scope.roroShortageMPCountTS = myData.roroShortageMPCountTS;
+            $scope.roroNotWearingPPECountTS = myData.roroNotWearingPPECountTS;
+            $scope.roroShortageOfContainterTS = myData.roroShortageOfContainterTS;
+            $scope.roroOtherCountTS = myData.roroOtherCountTS;
+            $scope.swTruckBDCountTS = myData.swTruckBDCountTS;
+            $scope.swShortageMPCountTS = myData.swShortageMPCountTS;
+            $scope.swIncompleteDocCountTS = myData.swIncompleteDocCountTS;
+            $scope.swSpillageCountTS = myData.swSpillageCountTS;
+            $scope.swNotWearingPPECountTS = myData.swNotWearingPPECountTS;
+            $scope.swOtherCountTS = myData.swOtherCountTS;
+            $scope.missColCountMP = myData.missColCountMP;
+            $scope.shortageMPCountMP = myData.shortageMPCountMP;
+            $scope.truckBDCountMP = myData.truckBDCountMP;
+            $scope.truckFullCountMP = myData.truckFullCountMP;
+            $scope.binNSBCountMP = myData.binNSBCountMP;
+            $scope.lechateCountMP = myData.lechateCountMP;
+            $scope.otherCountMP = myData.otherCountMP;
+            $scope.spillageCountMP = myData.spillageCountMP;
+            $scope.notWearingPPECountMP = myData.notWearingPPECountMP;
+            $scope.roroTruckBDCountMP = myData.roroTruckBDCountMP;
+            $scope.roroShortageMPCountMP = myData.roroShortageMPCountMP;
+            $scope.roroNotWearingPPECountMP = myData.roroNotWearingPPECountMP;
+            $scope.roroShortageOfContainterMP = myData.roroShortageOfContainterMP;
+            $scope.roroOtherCountMP = myData.roroOtherCountMP;
+            $scope.swTruckBDCountMP = myData.swTruckBDCountMP;
+            $scope.swShortageMPCountMP = myData.swShortageMPCountMP;
+            $scope.swIncompleteDocCountMP = myData.swIncompleteDocCountMP;
+            $scope.swSpillageCountMP = myData.swSpillageCountMP;
+            $scope.swNotWearingPPECountMP = myData.swNotWearingPPECountMP;
+            $scope.swOtherCountMP = myData.swOtherCountMP;
+            $scope.missColCountTAK = myData.missColCountTAK;
+            $scope.shortageMPCountTAK = myData.shortageMPCountTAK;
+            $scope.truckBDCountTAK = myData.truckBDCountTAK;
+            $scope.truckFullCountTAK = myData.truckFullCountTAK;
+            $scope.binNSBCountTAK = myData.binNSBCountTAK;
+            $scope.lechateCountTAK = myData.lechateCountTAK;
+            $scope.otherCountTAK = myData.otherCountTAK;
+            $scope.spillageCountTAK = myData.spillageCountTAK;
+            $scope.notWearingPPECountTAK = myData.notWearingPPECountTAK;
+            $scope.roroTruckBDCountTAK = myData.roroTruckBDCountTAK;
+            $scope.roroShortageMPCountTAK = myData.roroShortageMPCountTAK;
+            $scope.roroNotWearingPPECountTAK = myData.roroNotWearingPPECountTAK;
+            $scope.roroShortageOfContainterTAK = myData.roroShortageOfContainterTAK;
+            $scope.roroOtherCountTAK = myData.roroOtherCountTAK;
+            $scope.swTruckBDCountTAK = myData.swTruckBDCountTAK;
+            $scope.swShortageMPCountTAK = myData.swShortageMPCountTAK;
+            $scope.swIncompleteDocCountTAK = myData.swIncompleteDocCountTAK;
+            $scope.swSpillageCountTAK = myData.swSpillageCountTAK;
+            $scope.swNotWearingPPECountTAK = myData.swNotWearingPPECountTAK;
+            $scope.swOtherCountTAK = myData.swOtherCountTAK;
+            $scope.missColCountOther = myData.missColCountOther;
+            $scope.shortageMPCountOther = myData.shortageMPCountOther;
+            $scope.truckBDCountOther = myData.truckBDCountOther;
+            $scope.truckFullCountOther = myData.truckFullCountOther;
+            $scope.binNSBCountOther = myData.binNSBCountOther;
+            $scope.lechateCountOther = myData.lechateCountOther;
+            $scope.otherCountOther = myData.otherCountOther;
+            $scope.spillageCountOther = myData.spillageCountOther;
+            $scope.notWearingPPECountOther = myData.notWearingPPECountOther;
+            $scope.roroTruckBDCountOther = myData.roroTruckBDCountOther;
+            $scope.roroShortageMPCountOther = myData.roroShortageMPCountOther;
+            $scope.roroNotWearingPPECountOther = myData.roroNotWearingPPECountOther;
+            $scope.roroShortageOfContainterOther = myData.roroShortageOfContainterOther;
+            $scope.roroOtherCountOther = myData.roroOtherCountOther;
+            $scope.swTruckBDCountOther = myData.swTruckBDCountOther;
+            $scope.swShortageMPCountOther = myData.swShortageMPCountOther;
+            $scope.swIncompleteDocCountOther = myData.swIncompleteDocCountOther;
+            $scope.swSpillageCountOther = myData.swSpillageCountOther;
+            $scope.swNotWearingPPECountOther = myData.swNotWearingPPECountOther;
+            $scope.swOtherCountOther = myData.swOtherCountOther;
+        });
+
+        $http.post('/getCmsStatisticsCategoryTruckBreakdown', obj).then(function(response){
+            $scope.truckBreakDownRootCause = "";
+            if(response.data.length == 0){
+                $scope.truckBreakDownRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.truckBreakDownRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryTruckFull', obj).then(function(response){
+            $scope.truckFullRootCause = "";
+            if(response.data.length == 0){
+                $scope.truckFullRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.truckFullRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryShortageManpower', obj).then(function(response){
+            $scope.shortageManpowerRootCause = "";
+            if(response.data.length == 0){
+                $scope.shortageManpowerRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.shortageManpowerRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryWasteNotCollected', obj).then(function(response){
+            $scope.wasteNotCollectedRootCause = "";
+            if(response.data.length == 0){
+                $scope.wasteNotCollectedRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.wasteNotCollectedRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area  + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryBinNSB', obj).then(function(response){
+            $scope.binNSBRootCause = "";
+            if(response.data.length == 0){
+                $scope.binNSBRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.binNSBRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryOther', obj).then(function(response){
+            $scope.otherRootCause = "";
+            if(response.data.length == 0){
+                $scope.otherRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.otherRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryLeachate', obj).then(function(response){
+            $scope.leachateRootCause = "";
+            if(response.data.length == 0){
+                $scope.leachateRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.leachateRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryRoroTruckBD', obj).then(function(response){
+            $scope.roroRootCause = "";
+            if(response.data.length == 0){
+                $scope.roroRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.roroRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategorySWTruckBD', obj).then(function(response){
+            $scope.swRootCause = "";
+            if(response.data.length == 0){
+                $scope.swRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.swRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategorySpillage', obj).then(function(response){
+            $scope.spillageRootCause = "";
+            if(response.data.length == 0){
+                $scope.spillageRootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                var area = response.data[i].area.split(",")[1];
+                $scope.spillageRootCause += compDate + " - " + response.data[i].forwardedSub + " - " + response.data[i].truck + " - " + area + "<br />";
+            }
+        });
+
+        $http.post('/getCmsStatisticsCategoryNotWearingPPE', obj).then(function(response){
+            $scope.notWearingPPERootCause = "";
+            if(response.data.length == 0){
+                $scope.notWearingPPERootCause = "N/A";
+            }
+            for(var i=0; i<response.data.length; i++){
+                var compDate = $filter('date')(response.data[i].complaintDate, "yyyy-MM-dd");
+                $scope.notWearingPPERootCause += compDate + " - " + response.data[i].forwardedSub + "<br />";
+            }
+        });
+
     }
 
     $scope.requestStatistics($scope.obj);
