@@ -73,7 +73,8 @@ const smtpTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
         type: "OAuth2",
-        user: "trienekensmobileapp@gmail.com",
+        // user: "trienekensmobileapp@gmail.com",
+        user: "donotreply@trienekensroro.work",
         clientId: mailer_id,
         clientSecret: mailer_sec,
         refreshToken: mailer_ref_tkn,
@@ -135,7 +136,8 @@ const job = schedule.scheduleJob('00 08 * * *', function(){
     ];
 
     mailOptions = {
-        from: 'trienekensmobileapp@gmail.com',
+        // from: 'trienekensmobileapp@gmail.com',
+        from: 'donotreply@trienekensroro.work',
         to: '',
         subject: 'Bin Request Daily Alert',
         text: ''
