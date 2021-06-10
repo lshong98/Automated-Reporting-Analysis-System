@@ -375,41 +375,6 @@ app.post('/uploadBinRequestImage', rawBody, function (req, resp) {
     data = JSON.parse(req.rawBody);
     var urlArray = [];
 
-    var imgEmailAttach = [];
-    var myKeyName = Object.keys(data);
-
-    for(var myCount = 0; myCount<myKeyName.length; myCount++){
-        if(myKeyName[myCount] != 'cID'){
-            imgEmailAttach.push({
-                filename: myCount + '.jpg',
-                content: Buffer.from(data[myKeyName[myCount]], 'base64')
-            });
-        }
-    }
-
-    var mailOptions = {
-        from: 'trienekensmobileapp@gmail.com',
-        to: '',
-        subject: 'Bin Request Img Backup',
-        text: 'This is from Bin Request ID:' + data['cID'],
-        attachments: imgEmailAttach
-    };
-    var emailList = [
-        "melody.christine@trienekens.com.my",
-        "esther.wee@trienekens.com.my",
-        "lshong9899@gmail.com"
-    ];
-
-    emailList.forEach(function (to) {
-        mailOptions.to = to;
-        smtpTransport.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                throw error;
-            }
-        });
-    });
-    
-
     //Lost bin
     if (typeof data.BinRequestICLost !== 'undefined' && typeof data.BinRequestPolice !== 'undefined' && typeof data.BinRequestUtility !== 'undefined') { 
        var async = require('async');
