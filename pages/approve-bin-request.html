@@ -44,17 +44,7 @@
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.reason}}</td>
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.type}}</td>
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.dateRequest | date: "dd-MM-y"}}</td>
-                                        <td data-ng-click="binReqDetail(pReq.reqID)">
-                                            <div editable>
-                                                <select name="binReqStatus" data-ng-model="pReq.status" class="form-control" data-ng-show="!showBinRequest">
-                                                    <option value="PENDING">Pending</option>
-                                                    <option value="Settled">Settled</option>
-                                                    <option value="In Progress">In Progress</option>
-                                                    <option value="No Response">No Response</option>
-                                                </select>
-                                                <span data-ng-show="showBinRequest">{{pReq.status}}</span>
-                                            </div>
-                                        </td>
+                                        <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.status}}</td>
                                         <td data-ng-show="showDeleteBinReq == 'A'"><button class="btn btn-sm btn-danger" data-ng-show="true" data-ng-click="deleteBinReq(pReq.reqID);"><i class="fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>

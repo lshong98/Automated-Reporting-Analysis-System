@@ -1939,7 +1939,7 @@ app.post('/getRequestList', function (req, resp) {
         database.query(sqlUser, function (err, res) {
             if (!err) {
                 userID = res[0].userID;
-                var sql = "SELECT * FROM tblbinrequest WHERE userID = '" + userID + "' ORDER BY reqID DESC, requestDate DESC";
+                var sql = "SELECT * FROM tblbinrequest WHERE userID = '" + userID + "' AND status != 'deleted' ORDER BY reqID DESC, requestDate DESC";
                 //var sql2 = "SELECT message as offmsg, createdAt as offtime from tblchat WHERE complaintID ='"+data.id+"' AND sender!='"+userID+"' ORDER BY createdAt ASC";
                 database.query(sql, function (err, res) {
                     if (res != undefined) {
@@ -1968,7 +1968,7 @@ app.post('/getRequestList', function (req, resp) {
 app.post('/deleteBinReq', function(req, res){
     'use strict';
     console.log(req.body.binReqID);
-    var sql = "DELETE FROM tblbinrequest WHERE reqID = '" + req.body.binReqID + "'";
+    var sql = "UPDATE tblbinrequest SET status = 'deleted' WHERE reqID = '" + req.body.binReqID + "'";
 
     database.query(sql, function (err, result){
         if(err){
@@ -1982,7 +1982,7 @@ app.post('/deleteBinReq', function(req, res){
 
 app.post('/getFilterExportBinReqReport', function (req, res){
     'use strict';
-    var sql = "SELECT tblbinrequest.reqID AS 'reqID',  tbluser.name AS 'name', tblbinrequest.dateRequest AS 'dateRequest', tblbinrequest.companyName AS 'companyName', tblbinrequest.contactNumber AS 'contactNumber', tblbinrequest.reason AS 'reason', tblbinrequest.type AS 'type', tblbinrequest.requestAddress AS 'requestAddress', tblbinrequest.remarks AS 'remarks', tblbinrequest.status AS 'status', tblbinrequest.rejectReason AS 'rejectReason', tblbinrequest.rejectExtraInfo AS 'rejectExtraInfo' FROM tblbinrequest JOIN tbluser ON tblbinrequest.userID = tbluser.userID WHERE dateRequest between '" + req.body.startDate +"' AND '" + req.body.endDate + "' ORDER BY dateRequest";
+    var sql = "SELECT tblbinrequest.reqID AS 'reqID',  tbluser.name AS 'name', tblbinrequest.dateRequest AS 'dateRequest', tblbinrequest.companyName AS 'companyName', tblbinrequest.contactNumber AS 'contactNumber', tblbinrequest.reason AS 'reason', tblbinrequest.type AS 'type', tblbinrequest.requestAddress AS 'requestAddress', tblbinrequest.remarks AS 'remarks', tblbinrequest.status AS 'status', tblbinrequest.rejectReason AS 'rejectReason', tblbinrequest.rejectExtraInfo AS 'rejectExtraInfo' FROM tblbinrequest JOIN tbluser ON tblbinrequest.userID = tbluser.userID WHERE status != 'deleted' AND dateRequest between '" + req.body.startDate +"' AND '" + req.body.endDate + "' ORDER BY dateRequest";
 
     database.query(sql, function (err, result) {
         if (err) {
@@ -2455,7 +2455,7 @@ app.get('/unreadEnquiryCount', function (req, res) {
 
 app.get('/unreadBinRequestCount', function (req, res) {
     'use strict';
-    var sql = "SELECT count(readStat) as unread, (SELECT count(readStat) FROM tblbinrequest WHERE readStat = 'u' AND reason LIKE 'Roro%') as unreadRoro FROM tblbinrequest WHERE readStat = 'u'";
+    var sql = "SELECT count(readStat) as unread, (SELECT count(readStat) FROM tblbinrequest WHERE readStat = 'u' AND status != 'deleted' AND reason LIKE 'Roro%') as unreadRoro FROM tblbinrequest WHERE readStat = 'u' AND status != 'deleted'";
     database.query(sql, function (err, result) {
         // io.sockets.in(roomManager).emit('new enquiry', {
         //     "unread": result[0].unread

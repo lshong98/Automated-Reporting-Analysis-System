@@ -312,7 +312,7 @@ app.get('/getPendingBinRequest', function(req, res) {
         output = [],
         i = 0;
 
-    sql = "SELECT * FROM tblbinrequest ORDER BY reqID DESC";
+    sql = "SELECT * FROM tblbinrequest WHERE status != 'deleted' ORDER BY reqID DESC";
     database.query(sql, function(err, result) {
         if (result != undefined) {
             for (i = 0; i < result.length; i += 1) {

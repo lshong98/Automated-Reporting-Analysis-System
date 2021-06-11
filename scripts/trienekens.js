@@ -2183,7 +2183,7 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
 
             //search non roro request
             $scope.searchBinReq = function (br) {
-                return (br.reqID + br.name + br.contactNumber).toUpperCase().indexOf($scope.searchBinReqFilter.toUpperCase()) >= 0;
+                return (br.reqID + br.name + br.contactNumber + br.status + br.type + br.dateRequest + br.reason).toUpperCase().indexOf($scope.searchBinReqFilter.toUpperCase()) >= 0;
             }
 
             //$scope.totalItemsEnquiry = $scope.filterEnquiryList.length;
