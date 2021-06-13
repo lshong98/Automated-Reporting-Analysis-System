@@ -15,6 +15,7 @@ const bucketName = 'trienekens-management-portal-images';
 const local_directory = './images/complaintOfficer';
 const local_lg_directory = './images/complaintOfficer/lg-images';
 const local_bd_directory = './images/complaintOfficer/bd-images';
+const local_test_directory = './images/complaintOfficer/test-images';
 
 app.post('/updateComplaintStatus', function(req, res) {
     'use strict';
@@ -271,8 +272,8 @@ app.post('/submitOfficeMadeComplaint', function(req, res) {
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
     }
-    if (!fs.existsSync(local_lg_directory)) {
-        fs.mkdirSync(local_lg_directory);
+    if (!fs.existsSync(local_bd_directory)) {
+        fs.mkdirSync(local_bd_directory);
     }
 
     f.makeID("complaint", req.body.creationDate).then(function(ID) {
@@ -282,7 +283,7 @@ app.post('/submitOfficeMadeComplaint', function(req, res) {
                 let base64Image = image.split(';base64,').pop();
                 var extension = image.split(';base64,')[0].split('/')[1];
                 var image_path = '/' + ID + '(' + index + ')' + '.' + extension;
-                var local_store_path = 'images/complaintOfficer/lg-images' + image_path,
+                var local_store_path = 'images/complaintOfficer/bd-images' + image_path,
                     public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
 
                 fs.writeFile(local_store_path, base64Image, { encoding: 'base64' }, async function(err) {
@@ -516,8 +517,8 @@ app.post('/submitLogisticsComplaint', function(req, res) {
     if (!fs.existsSync(local_directory)) {
         fs.mkdirSync(local_directory);
     }
-    if (!fs.existsSync(local_bd_directory)) {
-        fs.mkdirSync(local_bd_directory);
+    if (!fs.existsSync(local_lg_directory)) {
+        fs.mkdirSync(local_lg_directory);
     }
 
     images.forEach(function(image, index){
@@ -525,7 +526,7 @@ app.post('/submitLogisticsComplaint', function(req, res) {
             let base64Image = image.split(';base64,').pop();
             var extension = image.split(';base64,')[0].split('/')[1];
             var image_path = '/' + req.body.coID + '(' + index + ')' + '.' + extension;
-            var local_store_path = 'images/complaintOfficer/bd-images' + image_path,
+            var local_store_path = 'images/complaintOfficer/lg-images' + image_path,
                 public_url = 'https://storage.googleapis.com/' + bucketName + '/' + local_store_path;
 
             fs.writeFile(local_store_path, base64Image, { encoding: 'base64' }, async function(err) {

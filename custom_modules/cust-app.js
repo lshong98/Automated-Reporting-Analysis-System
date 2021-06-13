@@ -63,8 +63,8 @@ const smtpTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
         type: "OAuth2",
-        // user: "trienekensmobileapp@gmail.com",
-        user: "donotreply@trienekensroro.work",
+        user: "trienekensmobileapp@gmail.com",
+        // user: "donotreply@trienekensroro.work",
         clientId: mailer_id,
         clientSecret: mailer_sec,
         refreshToken: mailer_ref_tkn,
@@ -106,8 +106,8 @@ app.post('/loginCustServiceApp', function (req, resp) {
                             text = "Your Verification Code is: " + vCode;
                             email = data.email;
                             mailOptions = {
-                                // from: 'trienekensmobileapp@gmail.com',
-                                from: 'donotreply@trienekensroro.work',
+                                from: 'trienekensmobileapp@gmail.com',
+                                // from: 'donotreply@trienekensroro.work',
                                 to: email,
                                 subject: subject,
                                 text: text
@@ -1194,8 +1194,8 @@ app.post('/enquiry', function (req, resp) {
                 phone = res[0].contactNumber;
 
                 var mailOptions = {
-                    // from: "trienekensmobileapp@gmail.com",
-                    from: "donotreply@trienekensroro.work",
+                    from: "trienekensmobileapp@gmail.com",
+                    // from: "donotreply@trienekensroro.work",
                     to: "customercare@trienekens.com.my",
                     subject: data.subject,
                     generateTextFromHTML: true,
@@ -1483,8 +1483,8 @@ app.post('/NewRegister', function (req, resp) {
         text = "Thank You for Signing Up to the Trienekens App. Your Verification Code is: " + vCode;
         email = data.email;
         mailOptions = {
-            // from: 'trienekensmobileapp@gmail.com',
-            from: 'donotreply@trienekensroro.work',
+            from: 'trienekensmobileapp@gmail.com',
+            // from: 'donotreply@trienekensroro.work',
             to: email,
             subject: subject,
             text: text
@@ -1890,8 +1890,8 @@ app.post('/updateAcc', function (req, resp) {
         //        console.log("CHANGES TEXT:::::" + changesText);
 
         var mailOptions = {
-            // from: "trienekensmobileapp@gmail.com",
-            from: "donotreply@trienekensroro.work",
+            from: "trienekensmobileapp@gmail.com",
+            // from: "donotreply@trienekensroro.work",
             to: data.email,
             subject: "Trienekens Customer App Account Details Updated",
             generateTextFromHTML: true,
@@ -2217,8 +2217,8 @@ app.post('/resetPassword', function (req, resp) {
         email = data.email;
 
         mailOptions = {
-            // from: 'trienekensmobileapp@gmail.com',
-            from: 'donotreply@trienekensroro.work',
+            from: 'trienekensmobileapp@gmail.com',
+            // from: 'donotreply@trienekensroro.work',
             to: email,
             subject: subject,
             text: text
