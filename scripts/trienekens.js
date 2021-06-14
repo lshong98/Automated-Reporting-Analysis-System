@@ -14364,7 +14364,7 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
             'department': "LG",
             'images': $scope.complaintImages.image01 + "|" + $scope.complaintImages.image02 + "|" + $scope.complaintImages.image03 + "|" + $scope.complaintImages.image04
         }
-console.log(updateImages);
+
         $http.post('/updateComplaintImages', updateImages).then(function (response) {
             if (response.data.status == "success") {
                 $scope.notify(response.data.status, response.data.message);
