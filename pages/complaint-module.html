@@ -88,6 +88,7 @@
                                                 <th width="8%" data-ng-click="webOrderBy('lgStatus');">LG Status <i class="fas fa-sort-down"></i></th>
                                                 <th width="8%" data-ng-click="webOrderBy('bdStatus');">BD Status <i class="fas fa-sort-down"></i></th>
                                                 <th width="10%" data-ng-click="webOrderBy('cmsStatus');">CMS Review Status <i class="fas fa-sort-down"></i></th>
+                                                <th width="10%">BD Remarks</th>
                                             </tr>
                                         </thead>
                                         <tbody>               
@@ -108,6 +109,7 @@
                                                 <div data-ng-if="c.cmsStatus == '2'">Invalid</div>
                                                 <div data-ng-if="c.cmsStatus == '3'">To Be Reviewed</div>
                                                 </td>
+                                                <td data-ng-bind="c.cmsBDRemarks"></td>
                                             </tr>
                                         </tbody>
                                     </table>

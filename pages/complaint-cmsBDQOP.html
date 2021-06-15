@@ -58,7 +58,8 @@
                     <tr>
                         <td rowspan="3">Date</td>
                         <td colspan="3">Total CMS Received</td>
-                        <td colspan="4">Municipal</td>
+                        <td colspan="4" data-ng-show="!showBDRemarks">Municipal</td>
+                        <td colspan="6" data-ng-show="showBDRemarks">Municipal</td>
                         <td colspan="4">RoRo</td>
                         <td colspan="4">SW</td>
                     </tr>
@@ -69,6 +70,7 @@
                         <td rowspan="2">Total Response BD to customer within 24 Hours of Complaint Lodged</td>
                         <td rowspan="2">Total Response BD to customer after 24 Hours of Complaint Lodged</td>
                         <td colspan=2>Percentage(%) of Compliance Achieved</td>
+                        <td colspan="2" data-ng-show="showBDRemarks">Quarantine Case Count</td>
                         <td rowspan="2">Total Response BD to customer within 24 Hours of Complaint Lodged</td>
                         <td rowspan="2">Total Response BD to customer after 24 Hours of Complaint Lodged</td>
                         <td colspan="2">Percentage(%) of Compliance Achieved</td>
@@ -79,6 +81,8 @@
                     <tr>
                         <td>Yes</td>
                         <td>No</td>
+                        <td data-ng-show="showBDRemarks">Count</td>
+                        <td data-ng-show="showBDRemarks">Percentage</td>
                         <td>Yes</td>
                         <td>No</td>
                         <td>Yes</td>
@@ -95,6 +99,8 @@
                         <td>{{firstMWNotAchieved}}</td>
                         <td>{{firstMWAchieved/(firstMWAchieved + firstMWNotAchieved)*100 | number:2}} %</td>
                         <td>{{firstMWNotAchieved/(firstMWAchieved + firstMWNotAchieved)*100 | number:2}} %</td>
+                        <td data-ng-show="showBDRemarks">{{firstMWBDRemarks}}</td>
+                        <td data-ng-show="showBDRemarks">{{firstMWBDRemarks/(firstMW)*100 | number:2}} %</td>
                         <td>{{firstRoroAchieved}}</td>
                         <td>{{firstRoroNotAchieved}}</td>
                         <td>{{firstRoroAchieved/(firstRoroAchieved + firstRoroNotAchieved)*100 | number:2}} %</td>
@@ -113,6 +119,8 @@
                         <td>{{secondMWNotAchieved}}</td>
                         <td>{{secondMWAchieved/(secondMWAchieved + secondMWNotAchieved)*100 | number:2}} %</td>
                         <td>{{secondMWNotAchieved/(secondMWAchieved + secondMWNotAchieved)*100 | number:2}} %</td>
+                        <td data-ng-show="showBDRemarks">{{secondMWBDRemarks}}</td>
+                        <td data-ng-show="showBDRemarks">{{secondMWBDRemarks/(secondMW)*100 | number:2}} %</td>
                         <td>{{secondRoroAchieved}}</td>
                         <td>{{secondRoroNotAchieved}}</td>
                         <td>{{secondRoroAchieved/(secondRoroAchieved + secondRoroNotAchieved)*100 | number:2}} %</td>
@@ -131,6 +139,8 @@
                         <td>{{thirdMWNotAchieved}}</td>
                         <td>{{thirdMWAchieved/(thirdMWAchieved + thirdMWNotAchieved)*100 | number:2}} %</td>
                         <td>{{thirdMWNotAchieved/(thirdMWAchieved + thirdMWNotAchieved)*100 | number:2}} %</td>
+                        <td data-ng-show="showBDRemarks">{{thirdMWBDRemarks}}</td>
+                        <td data-ng-show="showBDRemarks">{{thirdMWBDRemarks/(thirdMW)*100 | number:2}} %</td>
                         <td>{{thirdRoroAchieved}}</td>
                         <td>{{thirdRoroNotAchieved}}</td>
                         <td>{{thirdRoroAchieved/(thirdRoroAchieved + thirdRoroNotAchieved)*100 | number:2}} %</td>
@@ -149,6 +159,8 @@
                         <td>{{fourthMWNotAchieved}}</td>
                         <td>{{fourthMWAchieved/(fourthMWAchieved + fourthMWNotAchieved)*100 | number:2}} %</td>
                         <td>{{fourthMWNotAchieved/(fourthMWAchieved + fourthMWNotAchieved)*100 | number:2}} %</td>
+                        <td data-ng-show="showBDRemarks">{{fourthMWBDRemarks}}</td>
+                        <td data-ng-show="showBDRemarks">{{fourthMWBDRemarks/(fourthMW)*100 | number:2}} %</td>
                         <td>{{fourthRoroAchieved}}</td>
                         <td>{{fourthRoroNotAchieved}}</td>
                         <td>{{fourthRoroAchieved/(fourthRoroAchieved + fourthRoroNotAchieved)*100 | number:2}} %</td>
@@ -167,6 +179,8 @@
                         <td>{{fifthMWNotAchieved}}</td>
                         <td>{{fifthMWAchieved/(fifthMWAchieved + fifthMWNotAchieved)*100 | number:2}} %</td>
                         <td>{{fifthMWNotAchieved/(fifthMWAchieved + fifthMWNotAchieved)*100 | number:2}} %</td>
+                        <td data-ng-show="showBDRemarks">{{fifthMWBDRemarks}}</td>
+                        <td data-ng-show="showBDRemarks">{{fifthMWBDRemarks/(fifthMW)*100 | number:2}} %</td>
                         <td>{{fifthRoroAchieved}}</td>
                         <td>{{fifthRoroNotAchieved}}</td>
                         <td>{{fifthRoroAchieved/(fifthRoroAchieved + fifthRoroNotAchieved)*100 | number:2}} %</td>

@@ -310,7 +310,7 @@ app.post('/submitOfficeMadeComplaint', function(req, res) {
         var companyFormatted = req.body.compCompany.replace(/'/g,"\\'");
         var addressFormatted = req.body.compAddress.replace(/'/g,"\\'");
         var compTypeFormatted = req.body.compType.replace(/'/g,"\\'");
-        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, typeCode, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, status, custStatus, activeStatus, zon) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + nameFormatted + "', '" + companyFormatted + "', '" + req.body.compPhone + "', '" + addressFormatted + "','" + compTypeFormatted + "', '" + req.body.compTypeCode + "', date(now()), time(now()), '" + req.body.compLogBy + "', now(), '" + images + "', 1, '" + req.body.services + "', 'r', 'u', 'open', 'open', '1', '" + req.body.zon + "')";
+        var sql = "INSERT INTO tblcomplaintofficer(coID,complaintDate, complaintTime, sorce, refNo, name, company, telNo, address, type, typeCode, logisticsDate, logisticsTime, logisticsBy, creationDateTime, compImg, step, services, readState, logsReadState, status, custStatus, activeStatus, zon, bdRemarks) VALUE ('" + ID + "', date(now()), time(now()), '" + req.body.compSource + "', '" + req.body.compRefNo + "', '" + nameFormatted + "', '" + companyFormatted + "', '" + req.body.compPhone + "', '" + addressFormatted + "','" + compTypeFormatted + "', '" + req.body.compTypeCode + "', date(now()), time(now()), '" + req.body.compLogBy + "', now(), '" + images + "', 1, '" + req.body.services + "', 'r', 'u', 'open', 'open', '1', '" + req.body.zon + "', '" + req.body.cmsBDRemarks + "')";
 
         database.query(sql, function(err, result) {
             if (err) {
@@ -353,13 +353,13 @@ app.post('/updateWCD', function(req,res){
 app.post('/submitEditTOC', function(req,res){
     'use strict';
     
-    var sql="UPDATE tblcomplaintofficer SET type = '" + req.body.type + "' WHERE coID = '" + req.body.coID + "'";
+    var sql="UPDATE tblcomplaintofficer SET type = '" + req.body.type + "', bdRemarks = '" + req.body.bdRemarks + "' WHERE coID = '" + req.body.coID + "'";
     
     database.query(sql, function(err, result) {
         if (err) {
             throw err;
         }
-        res.json({ "status": "success", "message": "Type of Services Editted" });
+        res.json({ "status": "success", "message": "CMS Editted" });
     });    
 });
 
@@ -367,9 +367,9 @@ app.post('/getComplaintOfficerList', function(req, res) {
     'use strict';
 
     if(req.body.zon == ''){
-        var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.serialNo AS 'serialNo', CONCAT(tblcomplaintofficer.complaintDate,' (', DAYNAME(tblcomplaintofficer.complaintDate) ,') ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.bdKPI AS 'bdKPI', bdKPIAchieve AS 'bdKPIAchieve', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' (', DAYNAME(tblcomplaintofficer.statusDate) ,') ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' (', DAYNAME(tblcomplaintofficer.customerDate) ,') ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState', tblcomplaintofficer.contactStatus AS 'contactStatus' FROM tblcomplaintofficer WHERE tblcomplaintofficer.activeStatus = '1' ORDER BY tblcomplaintofficer.serialNo DESC";
+        var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.serialNo AS 'serialNo', CONCAT(tblcomplaintofficer.complaintDate,' (', DAYNAME(tblcomplaintofficer.complaintDate) ,') ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.bdKPI AS 'bdKPI', bdKPIAchieve AS 'bdKPIAchieve', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' (', DAYNAME(tblcomplaintofficer.statusDate) ,') ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' (', DAYNAME(tblcomplaintofficer.customerDate) ,') ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState', tblcomplaintofficer.contactStatus AS 'contactStatus', tblcomplaintofficer.bdRemarks AS 'cmsBDRemarks' FROM tblcomplaintofficer WHERE tblcomplaintofficer.activeStatus = '1' ORDER BY tblcomplaintofficer.serialNo DESC";
     }else{
-        var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.serialNo AS 'serialNo', CONCAT(tblcomplaintofficer.complaintDate,' (',  DAYNAME(tblcomplaintofficer.complaintDate) ,') ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.bdKPI AS 'bdKPI', bdKPIAchieve AS 'bdKPIAchieve', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' (', DAYNAME(tblcomplaintofficer.statusDate) ,') ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' (', DAYNAME(tblcomplaintofficer.customerDate) ,') ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState', tblcomplaintofficer.contactStatus AS 'contactStatus' FROM tblcomplaintofficer WHERE tblcomplaintofficer.activeStatus = '1' AND zon = '" + req.body.zon + "' ORDER BY tblcomplaintofficer.serialNo DESC";
+        var sql = "SELECT tblcomplaintofficer.coID AS 'coID', tblcomplaintofficer.serialNo AS 'serialNo', CONCAT(tblcomplaintofficer.complaintDate,' (',  DAYNAME(tblcomplaintofficer.complaintDate) ,') ',tblcomplaintofficer.complaintTime) AS 'complaintDate', tblcomplaintofficer.bdKPI AS 'bdKPI', bdKPIAchieve AS 'bdKPIAchieve', tblcomplaintofficer.name AS 'name', tblcomplaintofficer.company AS 'company', tblcomplaintofficer.step AS 'step', tblcomplaintofficer.services  AS 'services', tblcomplaintofficer.creationDateTime, CONCAT(tblcomplaintofficer.statusDate,' (', DAYNAME(tblcomplaintofficer.statusDate) ,') ',tblcomplaintofficer.statusTime) AS logisticsDateTime, CONCAT(tblcomplaintofficer.customerDate,' (', DAYNAME(tblcomplaintofficer.customerDate) ,') ',tblcomplaintofficer.customerTime) AS customerDateTime, tblcomplaintofficer.status AS 'lgStatus', tblcomplaintofficer.custStatus AS 'bdStatus', tblcomplaintofficer.cmsStatus AS 'cmsStatus', tblcomplaintofficer.readState AS 'readState', tblcomplaintofficer.contactStatus AS 'contactStatus', tblcomplaintofficer.bdRemarks AS 'cmsBDRemarks' FROM tblcomplaintofficer WHERE tblcomplaintofficer.activeStatus = '1' AND zon = '" + req.body.zon + "' ORDER BY tblcomplaintofficer.serialNo DESC";
     }
 
     database.query(sql, function(err, result) {
@@ -1532,7 +1532,7 @@ app.post('/getCMSQOP', function(req, res){
     'use strict';
     var startDate = req.body.startDate;
     var endDate = req.body.endDate;
-    var sql="SELECT coID AS 'coID', complaintDate AS 'complaintDate', services AS 'services', bdKPI AS 'bdKPI', bdKPIAchieve AS 'bdKPIAchieve' FROM tblcomplaintofficer WHERE activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'";
+    var sql="SELECT bdRemarks AS 'bdRemarks', coID AS 'coID', complaintDate AS 'complaintDate', services AS 'services', bdKPI AS 'bdKPI', bdKPIAchieve AS 'bdKPIAchieve' FROM tblcomplaintofficer WHERE activeStatus = '1' AND zon = '" + req.body.zon + "' AND complaintDate BETWEEN  '" + startDate + "' AND '" + endDate + "'";
 console.log(sql);
     database.query(sql,function(err,result){
         if(err){
@@ -1541,7 +1541,7 @@ console.log(sql);
             res.json(result);
         }
     });
-})
+});
 
 app.post('/changeCompTypeCode', function(req, res){
     'use strict';

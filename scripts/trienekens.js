@@ -10886,6 +10886,7 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
     }
     $scope.obj.year = new Date().getFullYear();
     $scope.obj.month = new Date().getMonth().toString();
+    $scope.showBDRemarks = false;
 
     $scope.objChange = function(){
 
@@ -10898,6 +10899,7 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         $scope.firstMWNotAchieved = 0;
         $scope.firstRoroNotAchieved = 0;
         $scope.firstSWNotAchieved = 0;
+        $scope.firstMWBDRemarks = 0;
         
         $scope.secondMW = 0;
         $scope.secondRoro = 0;
@@ -10908,6 +10910,7 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         $scope.secondMWNotAchieved = 0;
         $scope.secondRoroNotAchieved = 0;
         $scope.secondSWNotAchieved = 0;
+        $scope.secondMWBDRemarks = 0;
 
         $scope.thirdMW = 0;
         $scope.thirdRoro = 0;
@@ -10918,6 +10921,7 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         $scope.thirdMWNotAchieved = 0;
         $scope.thirdRoroNotAchieved = 0;
         $scope.thirdSWNotAchieved = 0;
+        $scope.thirdMWBDRemarks = 0;
 
         $scope.fourthMW = 0;
         $scope.fourthRoro = 0;
@@ -10928,6 +10932,7 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         $scope.fourthMWNotAchieved = 0;
         $scope.fourthRoroNotAchieved = 0;
         $scope.fourthSWNotAchieved = 0;
+        $scope.fourthMWBDRemarks = 0;
 
         $scope.fifthMW = 0;
         $scope.fifthRoro = 0;
@@ -10938,6 +10943,7 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         $scope.fifthMWNotAchieved = 0;
         $scope.fifthRoroNotAchieved = 0;
         $scope.fifthSWNotAchieved = 0;
+        $scope.fifthMWBDRemarks = 0;
 
         $scope.obj.startDate = new Date(parseInt($scope.obj.year), parseInt($scope.obj.month), 1);
         $scope.obj.endDate = new Date(parseInt($scope.obj.year), parseInt($scope.obj.month) + 1, 0);
@@ -10992,10 +10998,10 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
         $scope.fifthWeekEnd = $filter('date')(fifthWeekLastDayDate, "yyyy-MM-dd");
         
         $http.post('/getCMSQOP', $scope.obj).then(function(response){
-
+            
             for(var i =0; i<response.data.length; i++){
                 var compDate = new Date($filter('date')(response.data[i].complaintDate, "yyyy-MM-dd"));
-
+                
                 if(compDate >= $scope.obj.startDate && compDate <= firstWeekLastDayDate){
                     if(response.data[i].services == '1'){
                         $scope.firstMW += 1;
@@ -11003,6 +11009,10 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
                             $scope.firstMWAchieved += 1;
                         }else if(response.data[i].bdKPIAchieve == 'N'){
                             $scope.firstMWNotAchieved += 1;
+                        }
+                        if(response.data[i].bdRemarks != ""){
+                            $scope.firstMWBDRemarks += 1;
+                            $scope.showBDRemarks = true;
                         }
                     }else if(response.data[i].services == '2'){
                         $scope.firstRoro += 1;
@@ -11028,6 +11038,10 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
                         }else if(response.data[i].bdKPIAchieve == 'N'){
                             $scope.secondMWNotAchieved += 1;
                         }
+                        if(response.data[i].bdRemarks != ""){
+                            $scope.secondMWBDRemarks += 1;
+                            $scope.showBDRemarks = true;
+                        }
                     }else if(response.data[i].services == '2'){
                         $scope.secondRoro += 1;
                         if(response.data[i].bdKPIAchieve == 'A'){
@@ -11050,6 +11064,10 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
                             $scope.thirdMWAchieved += 1;
                         }else if(response.data[i].bdKPIAchieve == 'N'){
                             $scope.thirdMWNotAchieved += 1;
+                        }
+                        if(response.data[i].bdRemarks != ""){
+                            $scope.thirdMWBDRemarks += 1;
+                            $scope.showBDRemarks = true;
                         }
                     }else if(response.data[i].services == '2'){
                         $scope.thirdRoro += 1;
@@ -11074,6 +11092,10 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
                         }else if(response.data[i].bdKPIAchieve == 'N'){
                             $scope.fourthMWNotAchieved += 1;
                         }
+                        if(response.data[i].bdRemarks != ""){
+                            $scope.fourthMWBDRemarks += 1;
+                            $scope.showBDRemarks = true;
+                        }
                     }else if(response.data[i].services == '2'){
                         $scope.fourthRoro += 1;
                         if(response.data[i].bdKPIAchieve == 'A'){
@@ -11097,6 +11119,10 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
                         }else if(response.data[i].bdKPIAchieve == 'N'){
                             $scope.fifthMWNotAchieved += 1;
                         }
+                        if(response.data[i].bdRemarks != ""){
+                            $scope.fifthMWBDRemarks += 1;
+                            $scope.showBDRemarks = true;
+                        }
                     }else if(response.data[i].services == '2'){
                         $scope.fifthRoro += 1;
                         if(response.data[i].bdKPIAchieve == 'A'){
@@ -11113,11 +11139,8 @@ app.controller('complaintscmsBDQOPController', function($scope, $filter, $http){
                         }
                     }    
                 }
-                
-                
             }
-            
-        })
+        });
     }
 });
 
@@ -13451,6 +13474,13 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
     $scope.tc6 = false;
     $scope.tc7 = false;
     $scope.tc8 = false;
+    $scope.tc9 = false;
+    $scope.tc10 = false;
+    $scope.tc11 = false;
+    $scope.tc12 = false;
+    $scope.tc13 = false;
+    $scope.tc14 = false;
+    $scope.cmsBDRemarks = false;
 
     $scope.compDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
     $scope.compLogDate = new Date($filter("date")(Date.now(), 'yyyy-MM-dd'));
@@ -13648,6 +13678,11 @@ app.controller('complaintOfficercreateController', function ($scope, $http, $fil
             $scope.comp.compRefNo = 'N/A';
         }
 
+        if($scope.cmsBDRemarks == true){
+            $scope.comp.cmsBDRemarks = 'Collection disrupted due to quarantine cases. Customer has been informed accordingly.';
+        }else{
+            $scope.comp.cmsBDRemarks = "";
+        }
 
         if ($scope.comp.compDate == '' || $scope.comp.compTime == '' || $scope.comp.compSource == '' || $scope.comp.compRefNo == '' || $scope.comp.compName == '' || $scope.comp.compPhone == '' || $scope.comp.compAddress == '' || $scope.comp.compType == '' || $scope.comp.compLogDate == '' || $scope.comp.compLogTime == '' || $scope.comp.compLogBy == '' || $scope.comp.services == '' || $scope.comp.compCompany == '') {
             console.log($scope.comp);
@@ -13744,7 +13779,6 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         $scope.detailObj = response.data.data[0];
         $scope.typeOption = $scope.detailObj.services;
 
-
         if($scope.detailObj.reason == 1){
             $scope.detailObj.reason = "Waste Not Collected (MW)";
         }else if($scope.detailObj.reason == 2){
@@ -13786,6 +13820,12 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
         }else if($scope.detailObj.reason == 20){
             $scope.detailObj.reason = "Others (SW)";
         } 
+
+        if($scope.detailObj.bdRemarks != ""){
+            $scope.cmsBDRemarks = true;            
+        }else{
+            $scope.cmsBDRemarks = false;
+        }
 
         //init images
         $scope.complaintImages.image01 = $scope.detailObj.compImg.split("|")[0];
@@ -14062,8 +14102,14 @@ app.controller('complaintOfficerdetailController', function ($scope, $http, $rou
 
 
             $scope.editTypeString = $scope.editTypeString.substring(0, $scope.editTypeString.length - 3);
-            
-            $http.post('/submitEditTOC',{"type": $scope.editTypeString, "coID" : $routeParams.coID}).then(function(response){
+
+            if($scope.cmsBDRemarks == true){
+                $scope.editBDRemarks = 'Collection disrupted due to quarantine cases. Customer has been informed accordingly.';
+            }else{
+                $scope.editBDRemarks = '';
+            }
+
+            $http.post('/submitEditTOC',{"type": $scope.editTypeString, "bdRemarks":$scope.editBDRemarks, "coID" : $routeParams.coID}).then(function(response){
                 if (response.data.status == "success") {
                     $scope.notify(response.data.status, response.data.message);
                     $route.reload();
