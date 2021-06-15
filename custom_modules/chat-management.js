@@ -13,6 +13,38 @@ var io = variable.io;
 var FCMAdmin = variable.FCMAdmin;
 var FCMServiceAccount = variable.FCMServiceAccount;
 
+var nodemailer = variable.nodemailer;
+const {
+    google
+} = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
+const mailer_cred = require('../custapp-mailer-credentials.json');
+const mailer_id = mailer_cred.client_id;
+const mailer_sec = mailer_cred.client_secret;
+const mailer_ref_tkn = mailer_cred.refresh_token;
+const oauth2Client = new OAuth2(
+    mailer_id,
+    mailer_sec,
+    "https://developers.google.com/oauthplayground"
+);
+oauth2Client.setCredentials({
+    refresh_token: mailer_ref_tkn
+});
+const accessToken = oauth2Client.getAccessToken();
+
+const smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        type: "OAuth2",
+        // user: "trienekensmobileapp@gmail.com",
+        user: "donotreply@trienekensroro.work",
+        clientId: mailer_id,
+        clientSecret: mailer_sec,
+        refreshToken: mailer_ref_tkn,
+        accessToken: accessToken
+    }
+});
+
 //FCM to send notification to user when staff sends new message
 // FCMAdmin.initializeApp({
 //     credential: FCMAdmin.credential.cert(FCMServiceAccount),
@@ -205,36 +237,50 @@ app.post('/getChats', function (req, resp) {
 
     req.addListener('end', function () {
         var sqlUser = "SELECT userID FROM tbluser WHERE userEmail ='" + data.user + "'";
-        database.query(sqlUser, function (err, res) {
-            if (!err) {
-                console.log("Chat-Management.js - ln210: " + sqlUser);
-                console.log("Chat-Management.js - ln211: " + data.user);
-                console.log("Chat-Management.js - ln212: " + res[0].userID);
-                userID = res[0].userID;
-                var sql = "SELECT complaintID,userID,staffID, DATE_FORMAT(complaintDate, '%Y-%m-%d %T') AS date,premiseType,complaint,days,remarks,status,status,complaintAddress,readStat FROM tblcomplaint WHERE userID = '" + userID + "' ORDER BY complaintID DESC, complaintDate DESC";
-                database.query(sql, function (err, res) {
-                    if (err) {
-                        resp.send("Error");
-                        resp.end();
-                    }
-                    for (i = 0; i < res.length; i += 1) {
-                        info.push(res[i]);
-                    }
-                    //console.log(info);
-                    if (info == null) {
-                        resp.send("No Chats");
-                        resp.end();
-                    }
-                    resp.json(info);
+        console.log("Chat-Management.js - ln240: " + sqlUser);
+        if(data.user != ''){
+            database.query(sqlUser, function (err, res) {
+                if (!err) {
+                    userID = res[0].userID;
+                    var sql = "SELECT complaintID,userID,staffID, DATE_FORMAT(complaintDate, '%Y-%m-%d %T') AS date,premiseType,complaint,days,remarks,status,status,complaintAddress,readStat FROM tblcomplaint WHERE userID = '" + userID + "' ORDER BY complaintID DESC, complaintDate DESC";
+                    database.query(sql, function (err, res) {
+                        if (err) {
+                            resp.send("Error");
+                            resp.end();
+                        }
+                        for (i = 0; i < res.length; i += 1) {
+                            info.push(res[i]);
+                        }
+                        //console.log(info);
+                        if (info == null) {
+                            resp.send("No Chats");
+                            resp.end();
+                        }
+                        resp.json(info);
+                        resp.end();                        
+                    });
+                } else {
+                    resp.send("error getting user id");
                     resp.end();
-                    console.log(sql);
-                    console.log(info);
-                });
-            } else {
-                resp.send("error getting user id");
-                resp.end();
-            }
-        });
+                }
+            });
+        }else{
+            console.log("Chat-Management.js - ln268: " + data.user);
+            console.log("Chat-Management.js - ln269: " + res);
+            var mailOptions = {
+                // from: "trienekensmobileapp@gmail.com",
+                from: "donotreply@trienekensroro.work",
+                to: 'lshong9899@gmail.com',
+                subject: "TCC App Bug Info: chat management - 212",
+                text: "SQL: " + sqlUser
+            };
+    
+            smtpTransport.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                }
+            });
+        }
     });
 });
 

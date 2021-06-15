@@ -1093,12 +1093,12 @@ app.post('/complaint', function (req, resp) {
 
                     if (data.compRemarks == null || data.compRemarks == "") {
                         var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat, premiseComp, status, zon) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p', '')";
+                        var sql = "INSERT IGNORE INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat, premiseComp, status, zon) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p', '')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
                         var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
                         var remarks = data.compRemarks.replace(/'/g,"\\'");
-                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat, premiseComp, status, zon) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p', '')";
+                        var sql = "INSERT IGNORE INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat, premiseComp, status, zon) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p', '')";
                         //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
                     database.query(sql, function (err, res) {
@@ -1513,6 +1513,7 @@ app.post('/NewRegister', function (req, resp) {
                 } else {
                     sql3 = "INSERT INTO tbluser (userID, name, userEmail, password, contactNumber, address, vCode, creationDateTime) VALUES ('" + userID + "','" + name + "','" + data.email + "','" + hash + "','" + data.pno + "','" + address + "','" + vCode + "','" + date + "')";
                 }
+                console.log(sql3);
 
                 smtpTransport.sendMail(mailOptions, function (error, info) {
                     try{
@@ -1701,10 +1702,9 @@ app.post('/getInfo', function (req, resp) {
 
     req.addListener('end', function () {
         var sql = "SELECT * FROM tbluser WHERE userEmail = '" + data.user + "'";
+        console.log( "getInfo:" + sql);
+        
         database.query(sql, function (err, res) {
-            console.log( "getInfo:" + sql);
-            console.log( "getInfo:" + util.inspect(res[0], false, null, true));
-            console.log( "getInfo:" + res[0].address);
             if (res != undefined) {
                 if (res[0].address == undefined || res[0].address == null) {
                     info["pno"] = res[0].contactNumber;
@@ -1714,6 +1714,24 @@ app.post('/getInfo', function (req, resp) {
                     info["add"] = res[0].address;
                     resp.json(info);
                 }
+            }else{
+                console.log( "getInfo:" + sql);
+                console.log( "getInfo:" + util.inspect(res[0], false, null, true));
+                console.log( "getInfo:" + res[0].address);
+
+                var mailOptions = {
+                    // from: "trienekensmobileapp@gmail.com",
+                    from: "donotreply@trienekensroro.work",
+                    to: 'lshong9899@gmail.com',
+                    subject: "TCC App Bug Info: cust app - 1726",
+                    text: "SQL: " + sql
+                };
+        
+                smtpTransport.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error);
+                    }
+                });
             }
         });
     });
