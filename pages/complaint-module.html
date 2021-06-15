@@ -149,7 +149,7 @@
                                         </thead>
                                         <tbody>                                         
                                             <tr data-ng-repeat="c in complaintList | filter: searchComplaint | offset: (paginationAppComp.currentPage - 1) * paginationAppComp.itemsPerPage | limitTo: paginationAppComp.itemsPerPage" data-ng-click="complaintDetail(c.complaintID)" data-ng-class="{{unreadAppRowControl}}">
-                                                <td data-nd-bind="c.complaintID"></td>
+                                                <td data-ng-bind="c.complaintID"></td>
                                                 <td data-ng-bind="c.date"></td>
                                                 <td data-ng-bind="c.detailType"></td>
                                                 <td data-ng-bind="c.customer"></td>

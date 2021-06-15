@@ -10144,7 +10144,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
     //get app complaint list
     $http.post('/getComplaintList', $scope.zonReqApp).then(function (response) {
-        
+
         $scope.searchComplaintFilter = '';
         $scope.filterComplaintList = [];
         $scope.complaintList = response.data;
@@ -10153,7 +10153,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
         var splitTypeSpecialContent = "";
 
         for (var i = 0; i < $scope.complaintList.length; i++) {
-
+            
             if ($scope.complaintList[i].readStat == 'u') {
                 $scope.unreadAppComplaintCount++;
             }
@@ -10202,10 +10202,6 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
                     }
                     $scope.complaintList[i].detailType += splitTypeContent;
                 }
-
-                //                if(j < (splitType.length - 1)){
-                //                    $scope.complaintList[i]detailType += ", ";
-                //                }
 
                 if ($scope.complaintList[i].type == 1) {
                     $scope.complaintList[i].serviceType = "Municipal waste";
