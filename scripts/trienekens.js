@@ -347,14 +347,11 @@ socket.on('new enquiry', function (data) {
 socket.on('new binrequest', function (data) {
     console.log(data);
     if (data.unread > 0) {
-        $('.binrequest').addClass("badge badge-danger").html(data.unread);
+        $('.binrequest').addClass("badge badge-danger").html(data.unsolvedCount);
     }
 
     lobi_notify('info', 'New Bin Request', 'New Bin Request Received', '');
-    webNotification('Trienekens-web-portal', 'New Bin Request Received');
-    // if('serviceWorker' in navigator){
-    //     send().catch(err => console.error(err));
-    // }     
+    webNotification('Trienekens-web-portal', 'New Bin Request Received');  
 });
 
 socket.on('new message', function (data) {
@@ -2051,9 +2048,7 @@ app.run(function ($rootScope) {
 
 //Customer Service Pages Controller
 app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http, $window, $filter, storeDataService) {
-    $scope.loggedUser = localStorage.getItem('user');
-
-    $scope.itemsPerPageBinReq = 10;
+    
     $scope.itemsPerPageEnquiry = 10;
     $scope.itemsPerPageAnnouncement = 10;
 
@@ -2086,42 +2081,42 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         };
     };
 
-    $scope.uploadImg = function () {
-        var fd = new FormData();
-        angular.forEach($scope.files, function (file) {
-            fd.append('file[]', file);
-        });
+    // $scope.uploadImg = function () {
+    //     var fd = new FormData();
+    //     angular.forEach($scope.files, function (file) {
+    //         fd.append('file[]', file);
+    //     });
 
-        console.log($scope.files);
-        $http.post('/uploadCarouselImg').then(function (response) {
-            console.log(response.data);
-        }, function (error) {
-            console.log(error);
-        });
-    };
+    //     console.log($scope.files);
+    //     $http.post('/uploadCarouselImg').then(function (response) {
+    //         console.log(response.data);
+    //     }, function (error) {
+    //         console.log(error);
+    //     });
+    // };
 
-    $scope.displayImg = function () {
-        $http.get('/fetchCarouselImg').then(function (response) {
-            console.log(response.data.output);
-            $scope.imgs = response.data.output;
-        }, function (error) {
-            console.log(error);
-        });
-    };
+    // $scope.displayImg = function () {
+    //     $http.get('/fetchCarouselImg').then(function (response) {
+    //         console.log(response.data.output);
+    //         $scope.imgs = response.data.output;
+    //     }, function (error) {
+    //         console.log(error);
+    //     });
+    // };
 
-    $scope.deleteImg = function (id, name) {
-        $scope.delCarouselImg = {
-            "id": id,
-            "name": name
-        };
+    // $scope.deleteImg = function (id, name) {
+    //     $scope.delCarouselImg = {
+    //         "id": id,
+    //         "name": name
+    //     };
 
-        $http.post('/deleteCarouselImg', $scope.delCarouselImg).then(function (response) {
-            alert(response.data);
-            $scope.displayImg();
-        }, function (error) {
-            console.log(error);
-        });
-    };
+    //     $http.post('/deleteCarouselImg', $scope.delCarouselImg).then(function (response) {
+    //         alert(response.data);
+    //         $scope.displayImg();
+    //     }, function (error) {
+    //         console.log(error);
+    //     });
+    // };
 
     $scope.getSchedule = function () {
         $http.get('/getAllSchedule').then(function (response) {
@@ -2130,125 +2125,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
         }, function (error) {
             console.log(error);
         });
-    };
-
-    $scope.getPendingBinRequest = function () {
-        $http.get('/getPendingBinRequest').then(function (response) {
-            $scope.pendingBinRequests = response.data;
-            $scope.roroEnquiry = [];
-            $scope.nonRoroEnquiry = [];
-            $scope.searchBinReqFilter = '';
-            $scope.searchRoroEnqFilter = '';
-            $scope.filterBinReqList = [];
-            $scope.filterRoroEnqList = [];
-
-            for (var i=0; i<$scope.pendingBinRequests.length; i++){
-                if (($scope.pendingBinRequests[i].reason).toLowerCase().includes("roro")){
-                    $scope.roroEnquiry.push($scope.pendingBinRequests[i]);
-                } else {
-                    $scope.nonRoroEnquiry.push($scope.pendingBinRequests[i]);
-                }
-            }
-
-            $scope.totalItemsBinReq = $scope.nonRoroEnquiry.length;
-            $scope.totalItemsBinReqRoro = $scope.roroEnquiry.length;
-
-            $scope.exportBinReqPage = function(){
-                setTimeout(function(){
-                    window.location.href = '#/export-bin-request';
-                }, 500);
-            }            
-
-            $scope.showDeleteBinReq = angular.copy(storeDataService.show.binrequest.delete);
-            $scope.showExportBinReq = angular.copy(storeDataService.show.binrequest.export);
-            $scope.deleteBinReq = function(binReqID){
-
-                if(confirm("Do you want to Delete the Bin Request / RoRo Request?")){
-                    $http.post('/deleteBinReq', {'binReqID': binReqID}).then(function (response){
-                        if(response.data.status == "success"){
-                            $scope.notify(response.data.status, response.data.message);
-                            
-                        }else{
-                            $scope.notify("error","There is something wrong!");
-                        }
-                        location.reload();
-                    })
-                }
-            }
-
-            $http.get('/unreadBinRequestCount').then(function (response) {
-                $scope.unreadRoro = response.data[0].unreadRoro;
-                $scope.unreadNonRoro = response.data[0].unread - response.data[0].unreadRoro;
-            });
-
-            //search non roro request
-            $scope.searchBinReq = function (br) {
-                return (br.reqID + br.name + br.contactNumber + br.status + br.type + br.dateRequest + br.reason).toUpperCase().indexOf($scope.searchBinReqFilter.toUpperCase()) >= 0;
-            }
-
-            //$scope.totalItemsEnquiry = $scope.filterEnquiryList.length;
-
-            $scope.getBinReq = function () {
-                return $filter('filter')($scope.filterBinReqList, $scope.searchBinReqFilter);
-            }
-
-            //search roro enquiries
-            $scope.searchRoroEnq = function (br) {
-                return (br.reqID + br.name + br.contactNumber).toUpperCase().indexOf($scope.searchRoroEnqFilter.toUpperCase()) >= 0;
-            }
-
-            //$scope.totalItemsEnquiry = $scope.filterEnquiryList.length;
-
-            $scope.getRoroEnq = function () {
-                return $filter('filter')($scope.filterRoroEnqList, $scope.searchRoroEnqFilter);
-            }
-    
-            // $scope.$watch('searchRoroEnqFilter', function (newVal, oldVal) {
-            //     var vm = this;
-            //     if (oldVal !== newVal) {
-            //         $scope.currentPage = 1;
-            //         $scope.totalItemsBinReqRoro = $scope.getRoroEnq().length;
-            //     }
-            //     return vm;
-            // }, true);
-
-            $scope.readBinReq = function(category){
-                $http.post('/readBinRequest', {'category':category}).then(function (response) {
-                    if (response.data == "Binrequest Read") {
-                        if (category == 'nonroro') {
-                            $('.nonrorotab').html('0');
-                        } else {
-                            $('.rorotab').html('0');
-                        }
-                        
-                        socket.emit('binrequest read');
-                    }
-                }, function (err) {
-                    console.log(err);
-                });
-            }
-        }, function (error) {
-            console.log(error);
-        });
-    };
-
-    $scope.updateBinRequest = function (id, status) {
-        $scope.pReqs = {
-            "reqID": id,
-            "status": status
-        };
-
-        $http.post('/updateBinRequest', $scope.pReqs).then(function (response) {
-            alert(response.data);
-            $scope.getPendingBinRequest();
-        }, function (error) {
-            console.log(error);
-        });
-    };
-
-    $scope.binReqDetail = function (reqID) {
-        window.location.href = '#/bin-request-detail/' + reqID;
-
     };
 
     $scope.getAnnouncements = function () {
@@ -2287,15 +2163,6 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
             $scope.getWebData = function () {
                 return $filter('filter')($scope.filterEnquiryList, $scope.searchEnquiryFilter);
             }
-    
-            // $scope.$watch('searchEnquiryFilter', function (newVal, oldVal) {
-            //     var vm = this;
-            //     if (oldVal !== newVal) {
-            //         $scope.currentPage = 1;
-            //         $scope.totalItemsEnquiry = $scope.getWebData().length;
-            //     }
-            //     return vm;
-            // }, true);
         }, function (error) {
             console.log(error);
         });
@@ -2320,10 +2187,120 @@ app.controller('custServiceCtrl', function($scope, $rootScope, $location, $http,
     $scope.getDataHeaderScheduled = function () {
         return ["Team Efficiency Unsatisfied", "Team Efficiency Satisfied", "Team Efficiency Very Satisfied", "Company Rating Unsatisfied", "Company Rating Satisfied", "Company Rating Very Satisfied", "Health Adherence Unsatisfied", "Health Adherence Satisfied", "Health Adherence Very Satisfied", "Regulations Adherence Unsatisfied", "Regulations Adherence Satisfied", "Regulations Adherence Very Satisfied", "Query Response Unsatisfied", "Query Response Satisfied", "Query Response Very Satisfied"];
     };
+});
+
+app.controller('binRequestController', function($scope, $http, $filter, storeDataService){
+
+    $scope.searchBinReqStatus = "";
+    $scope.searchRoroReqStatus = "";
+    
+    $scope.getBinRoroRequest = function(reqStatus){
+        $http.post('/getBinRequest', {"status": reqStatus}).then(function (response) {
+            $scope.itemsPerPageBin = 8;
+            $scope.itemsPerPageRoro = 8;
+            $scope.currentBinPage = 1; //Initial current page to 1
+            $scope.currentRoroPage = 1; //Initial current page to 1
+            $scope.maxSize = 8; //Show the number in page
+
+            $scope.roroEnquiry = [];
+            $scope.nonRoroEnquiry = [];
+            $scope.searchBinReqFilter = '';
+            $scope.searchRoroEnqFilter = '';
+            $scope.filterBinReqList = [];
+            $scope.filterRoroEnqList = [];
+
+            $scope.pendingBinRequests = response.data;
+            for (var i=0; i<$scope.pendingBinRequests.length; i++){
+                if (($scope.pendingBinRequests[i].reason).toLowerCase().includes("roro")){
+                    $scope.roroEnquiry.push($scope.pendingBinRequests[i]);
+                } else {
+                    $scope.nonRoroEnquiry.push($scope.pendingBinRequests[i]);
+                }
+            }
+            //search non roro request
+            $scope.searchBinReq = function (br) {
+                return (br.reqID + br.name + br.contactNumber + br.status + br.type + br.dateRequest + br.reason).toUpperCase().indexOf($scope.searchBinReqFilter.toUpperCase()) >= 0;
+            }
+            
+            //search roro enquiries
+            $scope.searchRoroEnq = function (br) {
+                return (br.reqID + br.name + br.contactNumber).toUpperCase().indexOf($scope.searchRoroEnqFilter.toUpperCase()) >= 0;
+            }
+
+            $scope.filterBinReqList = angular.copy($scope.nonRoroEnquiry);
+            $scope.filterRoroEnqList = angular.copy($scope.roroEnquiry);
+
+            $scope.totalItemsBinReq = $scope.filterBinReqList.length;
+            $scope.totalItemsBinReqRoro = $scope.filterRoroEnqList.length;         
+
+            $scope.showDeleteBinReq = angular.copy(storeDataService.show.binrequest.delete);
+            $scope.showExportBinReq = angular.copy(storeDataService.show.binrequest.export);
+
+            $scope.getBinReq = function () {
+                return $filter('filter')($scope.filterBinReqList, $scope.searchBinReqFilter);
+            }        
 
 
 
+            $scope.getRoroEnq = function () {
+                return $filter('filter')($scope.filterRoroEnqList, $scope.searchRoroEnqFilter);
+            }
 
+            $scope.$watch('searchBinReqFilter', function (newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.currentBinPage = 1;
+                    $scope.totalItemsBinReq = $scope.getBinReq().length;
+                }
+                return vm;
+            }, true);
+
+            $scope.$watch('searchRoroEnqFilter', function (newVal, oldVal) {
+                var vm = this;
+                if (oldVal !== newVal) {
+                    $scope.currentRoroPage = 1;
+                    $scope.totalItemsBinReqRoro = $scope.getRoroEnq().length;
+                }
+                return vm;
+            }, true);
+        });
+    }
+
+    $scope.getBinRoroRequest("");
+
+    $http.get('/binRequestUnsolvedCount').then(function (response) {
+        $scope.unsolvedBin = response.data[0].unsolvedBin;
+    });
+
+    $http.get('/roroRequestUnsolvedCount').then(function (response) {
+        $scope.unsolvedRoro = response.data[0].unsolvedRoro;
+    });
+
+    $scope.deleteBinReq = function(binReqID){
+
+        if(confirm("Do you want to Delete the Bin Request / RoRo Request?")){
+            $http.post('/deleteBinReq', {'binReqID': binReqID}).then(function (response){
+                if(response.data.status == "success"){
+                    $scope.notify(response.data.status, response.data.message);
+                    
+                }else{
+                    $scope.notify("error","There is something wrong!");
+                }
+                location.reload();
+            })
+        }
+    }
+
+    $scope.binReqDetail = function (reqID) {
+        window.location.href = '#/bin-request-detail/' + reqID;
+
+    };
+
+    $scope.exportBinReqPage = function(){
+        setTimeout(function(){
+            window.location.href = '#/export-bin-request';
+        }, 500);
+    }   
 });
 
 app.controller('cssInfoCtrl', function($scope, $http, $filter, storeDataService) {
@@ -3623,10 +3600,11 @@ app.controller('navigationController', function ($scope, $http, $window, storeDa
         }
     });
 
-    $http.get('/unreadBinRequestCount').then(function (response) {
-        if (response.data[0].unread != 0) {
-            $('.binrequest').addClass("badge badge-danger").html(response.data.unread);
-        }
+    $http.get('/binRequestUnsolvedCount').then(function (response) {
+        $http.get('/roroRequestUnsolvedCount').then(function (response1) {
+            $scope.unsolvedCount = response.data[0].unsolvedBin + response1.data[0].unsolvedRoro;
+            $('.binrequest').addClass("badge badge-danger").html($scope.unsolvedCount);
+        });
     });
 
     $http.get('/unreadComplaintCount').then(function (response) {
@@ -10352,7 +10330,7 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
             var vm = this;
             if (oldVal !== newVal) {
                 $scope.paginationLogComp.currentPage = 1;
-                $scope.logComptotalItems = $scope.getWebData().length;
+                $scope.logComptotalItems = $scope.getLogData().length;
             }
             return vm;
         }, true);

@@ -738,8 +738,8 @@ app.config(function($routeProvider, $locationProvider){
             }
         },
         templateUrl: '/manage-bin-request',
-        controller: 'custServiceCtrl',
-        controllerAs:'custService'
+        controller: 'binRequestController',
+        controllerAs:'binRequest'
     })
     .when('/export-bin-request', {
         resolve: {

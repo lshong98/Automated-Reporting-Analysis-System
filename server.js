@@ -305,14 +305,14 @@ app.get('/getPendingUser', function(req, res) {
     });
 });
 
-app.get('/getPendingBinRequest', function(req, res) {
+app.post('/getBinRequest', function(req, res) {
     'use strict';
 
     var sql = "",
         output = [],
         i = 0;
 
-    sql = "SELECT * FROM tblbinrequest WHERE status != 'deleted' ORDER BY reqID DESC";
+    sql = "SELECT * FROM tblbinrequest WHERE status LIKE '%" + req.body.status + "%' AND status != 'deleted'  ORDER BY reqID DESC";
     database.query(sql, function(err, result) {
         if (result != undefined) {
             for (i = 0; i < result.length; i += 1) {
@@ -1192,8 +1192,6 @@ app.post('/customerFeedbackScheduled', function(req, res) {
 
 app.post('/countSatisfaction', function(req, res) {
     'use strict';
-    //var commercial = "SELECT count(readStat) as unread FROM tblsatisfaction_commercial WHERE readStat = 'u'";
-    //var scheduled = "SELECT count(readStat) as unread FROM tblsatisfaction_scheduled WHERE readStat = 'u'";
     var countMunicipal, countCommercial, countScheduled, json = {};
     var countWOmonth = "";
     if (req.body.month == undefined && req.body.year != undefined) {
@@ -1275,21 +1273,6 @@ app.post('/readEnquiry', function(req, res) {
     var sql = "UPDATE tblenquiry SET readStat = 'r'";
     database.query(sql, function(err, result) {
         res.send("Enquiry Read");
-        res.end();
-    });
-});
-
-app.post('/readBinRequest', function(req, res) {
-    'use strict';
-    var sql = "";
-    if (req.body.category == 'nonroro') {
-        sql = "UPDATE tblbinrequest SET readStat = 'r' WHERE reason LIKE 'Lost%' OR reason LIKE 'Damaged%' OR reason LIKE 'New%'";
-    } else {
-        sql = "UPDATE tblbinrequest SET readStat = 'r' WHERE reason LIKE 'Roro%'";
-    }
-    
-    database.query(sql, function(err, result) {
-        res.send("Binrequest Read");
         res.end();
     });
 });

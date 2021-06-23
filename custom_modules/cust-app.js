@@ -1094,12 +1094,10 @@ app.post('/complaint', function (req, resp) {
                     if (data.compRemarks == null || data.compRemarks == "") {
                         var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
                         var sql = "INSERT IGNORE INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat, premiseComp, status, zon) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p', '')";
-                        //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + date + "','" + data.compAdd + "', 'u')";
                     } else {
                         var formattedcomplaint = data.complaint.replace(/'/g,"\\'");
                         var remarks = data.compRemarks.replace(/'/g,"\\'");
                         var sql = "INSERT IGNORE INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat, premiseComp, status, zon) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + formattedcomplaint + "','" + data.days + "','" + remarks + "', NOW(),'" + data.compAdd + "', 'u', '" + premiseComp + "', 'p', '')";
-                        //                        var sql = "INSERT INTO tblcomplaint (complaintID, userID, premiseType, complaint, days, remarks, complaintDate, complaintAddress, readStat) VALUES ('" + complaintID + "','" + userID + "','" + data.premise + "','" + data.complaint + "','" + data.days + "','" + data.compRemarks + "','" + date + "','" + data.compAdd + "', 'u')";
                     }
                     database.query(sql, function (err, res) {
                         if (!err) {
@@ -2471,21 +2469,18 @@ app.get('/unreadEnquiryCount', function (req, res) {
         });
 });
 
-app.get('/unreadBinRequestCount', function (req, res) {
+app.get('/binRequestUnsolvedCount', function (req, res) {
     'use strict';
-    var sql = "SELECT count(readStat) as unread, (SELECT count(readStat) FROM tblbinrequest WHERE readStat = 'u' AND status != 'deleted' AND reason LIKE 'Roro%') as unreadRoro FROM tblbinrequest WHERE readStat = 'u' AND status != 'deleted'";
+    var sql = "SELECT count(*) as 'unsolvedBin' FROM tblbinrequest WHERE (reason LIKE 'Lost%' OR reason LIKE 'Damaged%' OR reason LIKE 'New%') AND status = 'PENDING'";
     database.query(sql, function (err, result) {
-        // io.sockets.in(roomManager).emit('new enquiry', {
-        //     "unread": result[0].unread
-        // });
-        // var unread = result[0].unread;
-        // var unreadRoro = result[0].unreadRoro;
-        // var unreadNonRoro = unread - unreadRoro;
-        // var json = {
-        //     'unread': unread,
-        //     'unreadRoro': unreadRoro,
-        //     'unreadNonRoro': unreadNonRoro
-        // };
+        res.json(result);
+    });
+});
+
+app.get('/roroRequestUnsolvedCount', function (req, res) {
+    'use strict';
+    var sql = "SELECT count(*) as 'unsolvedRoro' FROM tblbinrequest WHERE reason LIKE 'Roro%' AND status = 'PENDING'";
+    database.query(sql, function (err, result) {
         res.json(result);
     });
 });

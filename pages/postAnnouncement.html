@@ -5,11 +5,6 @@
             <form  method="post" role="form">
                 <p>Title: <br /><input type="text" name="title" data-ng-model="notifTitle" class="form-control"/></p>
                 <p>Message: <br /><textarea name="message" data-ng-model="notifMessage" class="form-control"></textarea></p>
-                <!-- <p>Select target customers</p> -->
-                <!-- <select name="target" data-ng-model="notifTarget" data-ng-init="getAreas()" class="form-control">
-                    <option data-ng-repeat="area in areaList" value="{{area.areaID}}">Area {{area.areaID}}</option>
-                    <option value="TriAllUsers" >All Customers</option>
-                </select><br/><br/><br/> -->
                 <p>Link (Optional): <br /><input type="text" name="link" data-ng-model="notifLink" class="form-control"/></p>
                 <input type="submit" value="Submit" data-ng-click="sendNotifToDevice()" class="btn btn-primary" />
             </form>

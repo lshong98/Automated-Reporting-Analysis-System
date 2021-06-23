@@ -1,4 +1,4 @@
-<div class="container" data-ng-controller="custServiceCtrl" data-ng-init="getPendingBinRequest()">
+<div class="container">
     <div class="row">
         <div class="col-md-12">
             <h1>Bin Requests</h1><br/><br/>
@@ -13,8 +13,8 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item"><a class="nav-link active" role="tab" href="#manage-bin-request" data-target="#bin-request" data-toggle="tab" data-ng-click="readBinReq('nonroro')">Bin Requests <span class="badge badge-danger nonrorotab">{{unreadNonRoro}}</span></a></li>
-                <li class="nav-item"><a class="nav-link" role="tab" href="#manage-bin-request" data-target="#roro-enquiries" data-toggle="tab" data-ng-click="readBinReq('roro')">Roro Enquiries <span class="badge badge-danger rorotab">{{unreadRoro}}</span></a></li>
+                <li class="nav-item"><a class="nav-link active" role="tab" data-target="#bin-request" data-toggle="tab"  data-ng-click="getBinRoroRequest(searchBinReqStatus)">Bin Requests <span class="badge badge-danger nonrorotab">{{unsolvedBin}}</span></a></li>
+                <li class="nav-item"><a class="nav-link" role="tab" data-target="#roro-enquiries" data-toggle="tab" data-ng-click="getBinRoroRequest(searchRoroReqStatus)">Roro Enquiries <span class="badge badge-danger rorotab">{{unsolvedRoro}}</span></a></li>
             </ul>
 
             <div class="tab-content">
@@ -22,6 +22,15 @@
                 <div role="tabpanel" class="tab-pane fade show active" id="bin-request"><br/>
                     <div class="row">
                         <div class="col-md-12">
+                            <select class="form-control" data-ng-model="searchBinReqStatus" data-ng-change="getBinRoroRequest(searchBinReqStatus)">
+                                <option value="">All</option>
+                                <option value="PENDING">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
                             <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchBinReqFilter"/>
                             <table class="table table-striped table-clickable table-responsive">
                                 <thead>
@@ -37,7 +46,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="pReq in nonRoroEnquiry | filter:searchBinReq | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index">
+                                    <tr data-ng-repeat="pReq in nonRoroEnquiry | filter: searchBinReq | offset: (currentBinPage - 1) * itemsPerPageBin | limitTo: itemsPerPageBin">
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.reqID}}</td>
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.name}}</td>
                                         <td data-ng-click="binReqDetail(pReq.reqID)">{{pReq.contactNumber}}</td>
@@ -53,7 +62,7 @@
                     </div><br/><br/><br/>
                     <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
                         <div class="col-md-12">
-                            <ul uib-pagination boundary-links="true" total-items="totalItemsBinReq" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPageBinReq" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                            <ul uib-pagination boundary-links="true" total-items="totalItemsBinReq" ng-model="currentBinPage" data-max-size="maxSize" items-per-page="itemsPerPageBin" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
                         </div>
                     </div>
                 </div>
@@ -62,6 +71,13 @@
                 <div role="tabpanel" class="tab-pane fade" id="roro-enquiries"><br/>
                     <div class="row">
                         <div class="col-md-12">
+                            <select class="form-control" data-ng-model="searchRoroReqStatus" data-ng-change="getBinRoroRequest(searchRoroReqStatus)">
+                                <option value="">All</option>
+                                <option value="PENDING">Pending</option>
+                                <option value="Quoted">Quoted</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
                             <input type="text" class="form-control fas" placeholder="&#XF002; Search here..." data-ng-model="searchRoroEnqFilter"/>
                             <table class="table table-striped table-clickable table-responsive">
                                 <thead>
@@ -77,7 +93,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="rReq in roroEnquiry | filter:searchRoroEnq | offset: (currentPage - 1) * itemsPerPageBinReq | limitTo: itemsPerPageBinReq track by $index" >
+                                    <tr data-ng-repeat="rReq in roroEnquiry | filter: searchRoroEnq | offset: (currentRoroPage - 1) * itemsPerPageRoro | limitTo: itemsPerPageRoro" >
                                         <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.reqID}}</td>
                                         <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.name}}</td>
                                         <td data-ng-click="binReqDetail(rReq.reqID)">{{rReq.contactNumber}}</td>
@@ -103,7 +119,7 @@
                     </div><br/><br/><br/>
                     <div class="row" style="position: fixed;bottom: 0; margin-bottom: 56px;">
                         <div class="col-md-12">
-                            <ul uib-pagination boundary-links="true" total-items="totalItemsBinReqRoro" ng-model="currentPage" data-max-size="maxSize" items-per-page="itemsPerPageBinReq" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
+                            <ul uib-pagination boundary-links="true" total-items="totalItemsBinReqRoro" ng-model="currentRoroPage" data-max-size="maxSize" items-per-page="itemsPerPageRoro" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" boundary-link-numbers="true"></ul>
                         </div>
                     </div>
                 </div>

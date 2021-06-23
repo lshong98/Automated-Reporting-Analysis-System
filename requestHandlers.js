@@ -276,7 +276,7 @@ app.get('/upload-image-carousel', function (req, res) {
 });
 app.get('/manage-bin-request', function (req, res) {
     'use strict';
-    res.sendFile('pages/approve-bin-request.html', {root: __dirname});
+    res.sendFile('pages/manage-bin-request.html', {root: __dirname});
 });
 app.get('/export-bin-request', function (req, res) {
     'use strict';
