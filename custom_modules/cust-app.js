@@ -1699,11 +1699,9 @@ app.post('/getInfo', function (req, resp) {
     });
 
     req.addListener('end', function () {
-        var sql = "SELECT * FROM tbluser WHERE userEmail = '" + data.user + "'";
-        console.log( "getInfo:" + sql);
-        
+        var sql = "SELECT * FROM tbluser WHERE userEmail = '" + data.user + "'";        
         database.query(sql, function (err, res) {
-            if (res != undefined) {
+            if (res[0] != undefined) {
                 if (res[0].address == undefined || res[0].address == null) {
                     info["pno"] = res[0].contactNumber;
                     resp.json(info);
@@ -1712,24 +1710,6 @@ app.post('/getInfo', function (req, resp) {
                     info["add"] = res[0].address;
                     resp.json(info);
                 }
-            }else{
-                console.log( "getInfo:" + sql);
-                console.log( "getInfo:" + util.inspect(res[0], false, null, true));
-                console.log( "getInfo:" + res[0].address);
-
-                var mailOptions = {
-                    // from: "trienekensmobileapp@gmail.com",
-                    from: "donotreply@trienekensroro.work",
-                    to: 'lshong9899@gmail.com',
-                    subject: "TCC App Bug Info: cust app - 1726",
-                    text: "SQL: " + sql
-                };
-        
-                smtpTransport.sendMail(mailOptions, function (error, info) {
-                    if (error) {
-                        console.log(error);
-                    }
-                });
             }
         });
     });
@@ -1802,7 +1782,6 @@ app.post('/checkUpdate', function (req, resp) {
 
         var sql = "SELECT * FROM tbluser WHERE userEmail !='" + data.oriemail + "'";
         var mailMatch = false;
-        var pnoMatch = false;
         var passError = false;
         var error = "OK";
         database.query(sql, function (err, res) {
@@ -1814,17 +1793,13 @@ app.post('/checkUpdate', function (req, resp) {
                     error = "";
                 }
 
-                if (res[i].contactNumber == data.pno) {
-                    pnoMatch = true;
-                    error = "";
-                }
-
             }
 
             var sqlCheckPass = "SELECT password FROM tbluser WHERE userEmail = '" + data.oriemail + "'";
             
             database.query(sqlCheckPass, function (err, res) {
 
+                
                 bcrypt.compare(data.oldp, res[0].password, function(err, compRes) {
                     
                     if (!(compRes)) {
@@ -1833,26 +1808,19 @@ app.post('/checkUpdate', function (req, resp) {
                     } else {
                         passError = false;
                     }
+                
+                    if (mailMatch) {
+                        error = error + "Mail";
+                    } else if (passError) {
+                        error = error + "Pass";
+                    }
+
+                    resp.send(error);
+
+                    if (err) {
+                        throw err;
+                    }
                 });
-
-                if (mailMatch) {
-                    error = error + "Mail";
-                }
-
-                if (pnoMatch) {
-                    error = error + "Phone";
-                }
-
-                if (passError) {
-                    error = error + "Pass";
-                }
-
-                console.log(error);
-                resp.send(error);
-
-                if (err) {
-                    throw err;
-                }
             });
 
             if (err) {
