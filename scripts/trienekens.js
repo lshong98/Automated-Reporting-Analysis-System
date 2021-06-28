@@ -9673,7 +9673,7 @@ app.controller('acrAddCollectionListController', function($scope, $http, $filter
                             if(rawJsonObject[i]["Device:"] != 'Zone in'){
                                 if(rawJsonObject[i]["Device:"] != undefined){
                                     if(rawJsonObject[i]["Device:"] != "Device:"){
-                                        if(rawJsonObject[i]["__EMPTY"].length != 2){
+                                        if(rawJsonObject[i]["__EMPTY"].length > 3){ //above 1 min
                                             $scope.formattedCollectionData[flag].data.push({
                                                 "location": rawJsonObject[i]["__EMPTY_2"],
                                                 "zoneIn": rawJsonObject[i]["Device:"],
@@ -9683,6 +9683,18 @@ app.controller('acrAddCollectionListController', function($scope, $http, $filter
                                                 "position": rawJsonObject[i]["__EMPTY_3"],
                                                 "date": rawJsonObject[i]["Device:"].split(" ")[0]
                                             });
+                                        }else{ //below 1 min
+                                            if(parseInt(rawJsonObject[i]["__EMPTY"].slice(0,2))>20){
+                                                $scope.formattedCollectionData[flag].data.push({
+                                                    "location": rawJsonObject[i]["__EMPTY_2"],
+                                                    "zoneIn": rawJsonObject[i]["Device:"],
+                                                    "zoneOut": rawJsonObject[i][firstDevice],
+                                                    "duration":rawJsonObject[i]["__EMPTY"],
+                                                    "distance": rawJsonObject[i]["__EMPTY_1"],
+                                                    "position": rawJsonObject[i]["__EMPTY_3"],
+                                                    "date": rawJsonObject[i]["Device:"].split(" ")[0]
+                                                });
+                                            }
                                         }
                                     }else{
                                         device = rawJsonObject[i][firstDevice];
@@ -9695,6 +9707,7 @@ app.controller('acrAddCollectionListController', function($scope, $http, $filter
                                 }
                             }
                         }
+                        console.log($scope.formattedCollectionData);
                         allowSubmit = true;
                         $scope.$apply();
                     }else{
