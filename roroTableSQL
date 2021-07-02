@@ -1,0 +1,5 @@
+CREATE TABLE tblrororequest (roroReqID INT(15) AUTO_INCREMENT PRIMARY KEY, reqDate DATETIME, address MEDIUMTEXT, remarks MEDIUMTEXT, type CHAR(1), userID VARCHAR(15), image MEDIUMTEXT, status INT(1), cancelReason VARCHAR(200), amount INT(2), size VARCHAR(20), recordDate DATETIME);
+CREATE TABLE tblroroplacement (placementID INT(15) AUTO_INCREMENT PRIMARY KEY, pullDate DATE, sendDate DATE, roroReqID INT(15), serviceDayCount INT(3));
+CREATE TABLE tblrororental (rentalID INT(15) AUTO_INCREMENT PRIMARY KEY, numberMonthsRequested INT(3), numberTripsRequired INT(3), weeklyCollectionDay VARCHAR(30), roroReqID INT(15));
+CREATE TABLE tblroroinvoice (roroInvoiceID INT(15) AUTO_INCREMENT PRIMARY KEY, roroReqID INT(15), invoiceNo INT(20), invoiceDate DATE, pdf MEDIUMTEXT, amount VARCHAR(20));
+CREATE TABLE tblrororeceipt (roroReceiptID INT(15) AUTO_INCREMENT PRIMARY KEY, roroReqID INT(15), receiptDate DATE, pdf MEDIUMTEXT);

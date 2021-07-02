@@ -46,6 +46,7 @@ var socketManagement = require('./custom_modules/socket-management');
 var complaintManagement = require('./custom_modules/complaint-management');
 var custApp = require('./custom_modules/cust-app');
 var general = require('./custom_modules/general');
+var roroRequestManagement = require('./custom_modules/roro-request-management');
 
 //mail credential
 const {
@@ -1954,3 +1955,4 @@ app.use('/', complaintManagement);
 app.use('/', custApp);
 app.use('/', lostBin);
 app.use('/', general);
+app.use('/',roroRequestManagement);
