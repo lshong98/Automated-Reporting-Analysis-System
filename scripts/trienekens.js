@@ -9056,10 +9056,6 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
             }
         });
     }
-
-    $http.post("/addRoroRequest",{"reqDate": "2021-06-06", "address": "Taman ABC", "remarks": "My Remarks", "type": "1", "userID": "20", "status": "1", "amount":"1", "size":"16"}).then(function(response){
-        console.log(response.data);
-    });
 });
 
 app.controller('acrdbCustListController', function($scope, $http, storeDataService, $route){
