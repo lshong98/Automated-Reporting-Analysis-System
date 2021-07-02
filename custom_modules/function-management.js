@@ -314,7 +314,7 @@ function menuItem(keyword, status) {
             }
         case "view acrdb":
             if(status == 'A'){
-                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/acr-database"><i class="fas fa-dumpster"></i> ACR Database </a></li>';
+                return '<li class="menu__item" role="menuitem"><a class="menu__link" href="#/acr-database-custList"><i class="fas fa-dumpster"></i> ACR Database </a></li>';
             }
         // case "view enquiry":
         //     if (status == 'A') {

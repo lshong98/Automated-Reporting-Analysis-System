@@ -1,3 +1,136 @@
+<div class="modal fade" id="addAcrBin" tabindex="-1" role="dialog" aria-labelledby="addAcrBin" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add ACR Bin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="addSerialNo form-label">Serial No</label>
+                    <input type="text" class="form-control" id="addSerialNo" data-ng-model="addAcr.serialNo" />
+                </div>
+                <div class="form-group">
+                    <label for="addBrand form-label">Brand</label>
+                    <select id="addBrand" class="form-control" data-ng-model="addAcr.brand">
+                        <option value="SULO" selected>SULO</option>
+                        <option value="SCHAFER">SCHAFER</option>
+                        <option value="CONTENUR">CONTENUR</option>
+                        <option value="N/A">N/A</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addBinSize form-label">Bin Size</label>
+                    <select id="addBinSize" class="form-control" data-ng-model="addAcr.binSize">
+                        <option value="120L" selected>120L</option>
+                        <option value="240L">240L</option>
+                        <option value="660L">660L</option>
+                        <option value="1000L">1000L</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addDateOfApplication form-label">Date of Application</label>
+                    <input type="date" class="form-control" id="addDateOfApplication " data-ng-model="dateOfApplication" />
+                </div>
+                <div>
+                    <lable for="addBillAddress form-label">Billing Address</lable>
+                    <input type="text" class="form-control" id="addBillAddress" data-ng-model="addAcr.billAddress" />
+                </div>
+                <div>
+                    <lable for="addServiceAddress form-label">Service Address</lable>
+                    <input type="text" class="form-control" id="addServiceAddress" data-ng-model="addAcr.serviceAddress" />
+                </div>
+                <div>
+                    <lable for="addFrequency form-label">Frequency</lable>
+                    <input type="text" class="form-control" id="addFrequency" data-ng-model="addAcr.frequency" />
+                </div>
+                <div class="form-group">
+                    <label for="addTypeOfPremise form-label">Type of Premise</label>
+                    <select id="addTypeOfPremise" class="form-control" data-ng-model="addAcr.typeOfPremise">
+                        <option value="Shophouse" selected>Shophouse</option>
+                        <option value="Private Comm">Private Comm</option>
+                        <option value="Hospital,Clinic">Hospital, Clinic</option>
+                        <option value="Workshop,Petrol Station">Workshop, Petrol Station</option>
+                        <option value="Household">Household</option>
+                        <option value="Construction Site">Construction Site</option>
+                        <option value="Uni,School,Kindergarden">Uni,School,Kindergarden</option>
+                        <option value="Utility">Utility</option>
+                        <option value="Condo,Apart,Flat">Condo,Apart,Flat</option>
+                        <option value="Hotel,Resort">Hotel,Resort</option>
+                        <option value="DBKU">DBKU</option>
+                        <option value="Gov Entity">Gov Entity</option>
+                        <option value="Market Hawker">Market Hawker</option>
+                        <option value="Placeofworship">Placeofworship</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addAcrSerialNo form-label">ACR Serial No</label>
+                    <input type="text" class="form-control" id="addAcrSerialNo" data-ng-model="addAcr.acrSerialNo" />
+                </div>
+                <div class="form-group">
+                    <label for="addCouncilSerialNo form-label">Council Serial No</label>
+                    <input type="text" class="form-control" id="addCouncilSerialNo" data-ng-model="addAcr.councilSerialNo" />
+                </div>
+                <div class="form-group">
+                    <label for="addRemarks form-label">Remarks</label>
+                    <textarea id="addRemarks" class="form-control" data-ng-model="addAcr.remarks"></textarea>
+                </div>
+                <div class="form-group">
+                    Collection Frequency
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="monCheck" data-ng-model="cf.mon">
+                        <label class="form-check-label" for="monCheck">
+                            Mon
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="tueCheck" data-ng-model="cf.tue">
+                        <label class="form-check-label" for="monCheck">
+                            Tue
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="wedCheck" data-ng-model="cf.wed">
+                        <label class="form-check-label" for="wedCheck">
+                            Wed
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="thuCheck" data-ng-model="cf.thu">
+                        <label class="form-check-label" for="thuCheck">
+                            Thu
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="friCheck" data-ng-model="cf.fri">
+                        <label class="form-check-label" for="friCheck">
+                            Fri
+                        </label>
+                    </div>                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="satCheck" data-ng-model="cf.sat">
+                        <label class="form-check-label" for="satCheck">
+                            Sat
+                        </label>
+                    </div>                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="sunCheck" data-ng-model="cf.sun">
+                        <label class="form-check-label" for="sunCheck">
+                            Sun
+                        </label>
+                    </div>                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"  data-ng-show="show.create == 'A'" data-ng-click="addAcrBin();">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <h5>ACR Database Customer - {{acrCustDetails.company}}</h5>
@@ -6,8 +139,14 @@
 <br/>
 
 <div class="row">
-    <div class="col-md-12">
-        <h6>ACR Bin: {{acrDetailsList.length}}</h6>
+    <div class="col-md-2">
+        <h6>ACR Bin: {{acrBinActiveCount + acrBinPostponedCount + acrBinTerminatedCount}}</h6>
+    </div>
+    <div class="col-md-10">
+        <p>Active: {{acrBinActiveCount}}</p>
+        <p>Postponed: {{acrBinPostponedCount}}</p>
+        <p>Terminated: {{acrBinTerminatedCount}}</p>
+        <p>Terminated(Closed): {{acrBinTerminatedClosedCount}}</p>
     </div>
 </div>
 <div class="row">
@@ -41,6 +180,18 @@
              <option value="DBKU">DBKU</option>
              <option value="MPP">MPP</option>
              <option value="MDS">MDS</option>
+         </select>
+     </div>
+ </div>
+
+ <div class="form-group row">
+    <div class="col-md-1 form-label-width"><label for="editAcrCustStatus">Status:<span class="badge badge-danger" data-ng-show="acrCustDetails.custStatus != recommendCustStatus">!!!</span></label></div>
+    <div class="col-md-6">
+         <span class="mx-sm-3" data-ng-show="!showEdit">{{acrCustDetails.statusWord}}</span>
+         <select class="form-control mx-sm-3" id="editAcrCustStatus" data-ng-show="showEdit" data-ng-model="acrEditCustDetails.custStatus">
+             <option value="0">Active</option>
+             <option value="1">Postponed</option>
+             <option value="2">Terminated</option>
          </select>
      </div>
  </div>
@@ -97,8 +248,11 @@
 <br/>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-11">
         <h5>ACR Database Record</h5>
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-success" data-ng-show="show.create == 'A'" data-toggle="modal" data-target="#addAcrBin"><i class="fa fa-plus"></i>Add</button>
     </div>
 </div>
 <div class="row">
@@ -117,8 +271,8 @@
                         <th>Size</th>
                         <th>Frequency</th>
                         <th>Service Address</th>
+                        <th>Status</th>
                         <th>Date</th>
-                        <th>Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -128,8 +282,8 @@
                         <td>{{b.binSize}}</td>
                         <td>{{b.frequency}}</td>
                         <td>{{b.address}}</td>
+                        <td>{{b.status}}</td>
                         <td>{{b.date}}</td>
-                        <td>{{b.name}}</td>
                     </tr>
                 </tbody>
             </table>

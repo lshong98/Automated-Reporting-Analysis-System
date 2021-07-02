@@ -1,8 +1,68 @@
-<div class="row">
-    <div class="col-md-12">
-        <h5>ACR Database - customer List</h5>
+<div class="modal fade" id="createAcrdbCust" tabindex="-1" role="dialog" aria-labelledby="createAcrdbCust" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Create ACR Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="acrCompany form-label">Company</label>
+                    <input type="text" class="form-control" id="acrCompany" data-ng-model="addCustDetail.company" />
+                </div>
+                <div class="form-group">
+                    <label for="acrName form-label">Name</label>
+                    <input type="text" class="form-control" id="acrName" data-ng-model="addCustDetail.name" />
+                </div>
+                <div class="form-group">
+                    <label for="acrIC form-label">IC</label>
+                    <input type="text" class="form-control" id="acrIC" data-ng-model="addCustDetail.ic" />
+                </div>
+                <div class="form-group">
+                    <label for="acrContact form-label">Contact</label>
+                    <input type="text" class="form-control" id="acrContact" data-ng-model="addCustDetail.contact" />
+                </div>
+                <div class="form-group">
+                    <label for="acrCouncil form-label">Council</label>
+                    <select id="acrCouncil" class="form-control" data-ng-model="addCustDetail.council">
+                        <option value="DBKU" selected>DBKU</option>
+                        <option value="MBKS">MBKS</option>
+                        <option value="MPP">MPP</option>
+                        <option value="MDS">MDS</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"  data-ng-show="show.create == 'A'" data-ng-click="addAcrdbCust();">Create</button>
+            </div>
+        </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h5>ACR Database - Customer List</h5>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="acrDatabasePage();">ACR Database</button>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="acrBillingMatchingPage();">Billing Matching</button>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="acrCollectionList();">Collection List</button>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary" data-ng-click="acrAddCollectionList();">Add Collection List</button>
+    </div>
+</div>
+<br/>
 <div class="row">
     <div class="col-md-3">
         <select class="form-control" id="inputCouncil" data-ng-model="acrParam.council" data-live-search="true" data-width="100%" >
@@ -22,10 +82,13 @@
         </select>
     </div>
     <div class="col-md-1" >
-        <button class="btn btn-primary" data-ng-click="getAcrdbCustList()">Upload</button>
+        <button class="btn btn-primary" data-ng-click="getAcrdbCustList()">Refresh</button>
     </div>
     <div class="col-md-1">
         <a href="javascript:exportTableToExcel('acrCustListTbl')" class="btn btn-md btn-primary clearfix">Export</a>
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-success" data-ng-show="show.create == 'A'" data-toggle="modal" data-target="#createAcrdbCust"><i class="fa fa-plus"></i> New</button>
     </div>
 </div>
 <br/>

@@ -332,12 +332,6 @@ socket.on('receive form authorize action', function (data) {
     }
 });
 
-// socket.on('new satisfaction', function (data) {
-//     if (data.unread > 0) {
-//         $('.satisfaction').addClass("badge badge-danger").html(data.unread);
-//     }
-// });
-
 socket.on('new enquiry', function (data) {
     if (data.unread > 0) {
         $('.enquiry').addClass("badge badge-danger").html(data.unread);
@@ -385,9 +379,6 @@ socket.on('new complaint', function (data) {
     }
     lobi_notify('info', 'New App Complaint', 'New App Complaint Received', '');
     webNotification('Trienekens-web-portal', 'New App Complaint Received');
-    // if('serviceWorker' in navigator){
-    //     send().catch(err => console.error(err));
-    // } 
 });
 
 socket.on('read complaint', function (data) {
@@ -514,21 +505,6 @@ app.directive('fileModel', ['$parse', function ($parse) {
     }; 
 }]);
 
-//  app.service('fileUpload', ['$https:', function ($https) {
-//     this.uploadFileToUrl = function(file, uploadUrl) {
-//        var fd = new FormData();
-//        fd.append('file', file);
-    
-//        $https.post(uploadUrl, fd, {
-//           transformRequest: angular.identity,
-//           headers: {'Content-Type': undefined}
-//        })
-//        .success(function() {
-//        })
-//        .error(function() {
-//        });
-//     }
-//  }]);
 /*
     -Sharing Data
 */
@@ -3233,7 +3209,6 @@ app.controller('cssInfoCtrl', function($scope, $http, $filter, storeDataService)
         return {"yearMonth": myYearMonth, "location": myLoc};
     }
 });
-
 
 //export bin request page controller
 app.controller('exportBinReqCtrl', function($scope, $http, $filter, storeDataService){
@@ -6575,379 +6550,6 @@ app.controller('historyDetailController', function ($scope, $http, $routeParams)
 });
 
 //-----------Check Line------------------
-//acr controller
-app.controller('acrController', function ($scope, $http, $filter, storeDataService) {
-    'use strict';
-    $scope.areaList = [];
-    $scope.dcsList = [];
-    $scope.driverList = [];
-    $scope.areaList = [];
-    $scope.acrList = [];
-    $scope.filteredCustomerList = [];
-
-
-
-    $scope.currentPage = 1; //Initial current page to 1
-    $scope.itemPerPage = 8; //Record number each page
-    $scope.maxSize = 10;
-
-
-    $scope.viewdcs = function (dcsID) {
-        window.location.href = '#/dcs-details/' + dcsID;
-    }
-
-    function initializeDcs() {
-        $scope.dcs = {
-            "id": '',
-            "creationDateTime": '',
-            "driverID": '',
-            "periodFrom": '',
-            "periodTo": '',
-            "replacementDriverID": '',
-            "replacementPeriodFrom": '',
-            "replacementPeriodTo": ''
-        };
-    }
-    initializeDcs();
-
-    $scope.show = angular.copy(storeDataService.show.acr);
-    var driverPosition = angular.copy(storeDataService.positionID.driverPosition);
-
-    var today = new Date();
-
-    $scope.currentStatus = {
-        "status": true,
-        "date": formatDateDash(today)
-    }
-
-    var getAreaList = function () {
-        $http.post('/getAreaList').then(function (response) {
-            $scope.areaList = response.data;
-            console.log($scope.areaList);
-
-            $scope.areaButton = true;
-            $scope.dcsList.areaCode = [];
-        });
-    }
-
-    function getAllDcs() {
-        $http.post('/completeDcs', $scope.currentStatus).then(function (response) {
-
-        });
-
-        $http.post('/getAllAcr', $scope.currentStatus).then(function (response) {
-            $scope.searchAcrFilter = '';
-            $scope.acrList = response.data;
-
-            console.log("ACR retrieved!");
-            console.log(response.data);
-        });
-
-        $http.get('/getCustomerList', $scope.dcsID).then(function (response) {
-            $scope.customerList = response.data;
-        });
-
-        $http.post('/getAllDcs', $scope.currentStatus).then(function (response) {
-            $scope.dcsList = response.data;
-
-            console.log("DCS data received by controller");
-        });
-
-        $http.post('/getStaffList', {
-            "position": 'Driver'
-        }).then(function (response) {
-            $scope.driverList = response.data;
-        });
-
-        getAreaList();
-
-    }
-    getAllDcs(); //call
-
-
-
-    $scope.area = '';
-    $scope.areaCode = '';
-    $scope.assignArea = function (areaCode, index) {
-        $scope.areaButton = false;
-
-        //$scope.dcsList.areaCode.push(areaCode.areaID);
-        $scope.areaList.splice(index, 1);
-
-        if ($scope.area == '') {
-            $scope.area = areaCode.areaID;
-            $scope.areaCode = areaCode.areaCode;
-        } else {
-            $scope.area = $scope.area.concat(", ", areaCode.areaID);
-            $scope.areaCode = $scope.areaCode.concat(", ", areaCode.areaCode);
-        }
-
-        console.log($scope.area);
-    }
-
-    $scope.clearArea = function () {
-        $scope.generalWorkerButton = true;
-
-        $scope.dcsList.areaList = [];
-        $scope.area = '';
-
-
-        getAreaList();
-    }
-
-    $scope.filterArea = function () {
-
-        $scope.enableArea();
-        console.log($scope.dcs);
-        $http.post('/filterArea', $scope.dcs).then(function (response) {
-
-            $scope.areaList = response.data;
-            console.log($scope.areaList);
-        });
-    }
-
-    $scope.statusList = true;
-    $scope.updateStatusList = function () {
-        if ($scope.statusList) {
-            $scope.currentStatus.status = true;
-        } else {
-            $scope.currentStatus.status = false;
-        }
-        getAllDcs(); //call
-    }
-
-    angular.element('.datepicker').datepicker();
-
-    $scope.addDcs = function () {
-        $scope.dcs.creationDate = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        $scope.dcs.formattedPeriodFrom = $filter('date')($scope.dcs.periodFrom, 'yyyy-MM-dd');
-        $scope.dcs.formattedPeriodTo = $filter('date')($scope.dcs.periodTo, 'yyyy-MM-dd');
-        $scope.dcs.formattedReplacementPeriodFrom = $filter('date')($scope.dcs.replacementPeriodFrom, 'yyyy-MM-dd');
-        $scope.dcs.formattedReplacementPeriodTo = $filter('date')($scope.dcs.replacementPeriodTo, 'yyyy-MM-dd');
-        $scope.dcs.preparedBy = window.sessionStorage.getItem('owner');
-        $scope.dcs.areaID = $scope.area;
-
-        console.log($scope.dcs.preparedBy);
-        $http.post('/addDcs', $scope.dcs).then(function (response) {
-            var returnedData = response.data;
-            var newDcsID = returnedData.details.dcsID;
-            var today = new Date();
-
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "DCS added successfully!"
-                });
-
-                //     var area = $('.selectpicker option:selected').text();
-                //    var areastr = area.split(" ")[2];
-                //                console.log(areastr);
-                $scope.dcsList.push({
-                    "id": newDcsID,
-                    "creationDateTime": today,
-                    "driverID": $scope.dcs.driverID,
-                    "periodFrom": $scope.dcs.periodFrom,
-                    "periodTo": $scope.dcs.periodTo,
-                    "replacementDriver": $scope.dcs.replacementDriver,
-                    "replacementPeriodFrom": $scope.dcs.replacementPeriodFrom,
-                    "replacementPeriodTo": $scope.dcs.replacementPeriodTo,
-                    "status": 'ACTIVE'
-                });
-                // $scope.filterAcrList = angular.copy($scope.acrList);
-                angular.element('#createDcs').modal('toggle');
-                // $scope.totalItems = $scope.filterAcrList.length;
-            }
-        });
-    }
-
-
-    $scope.addAcr = function () {
-
-        if ($scope.acr.mon) {
-            $scope.acr.mon = 1;
-        } else {
-            $scope.acr.mon = 0;
-        }
-
-        if ($scope.acr.tue) {
-            $scope.acr.tue = 1;
-        } else {
-            $scope.acr.tue = 0;
-        }
-
-        if ($scope.acr.wed) {
-            $scope.acr.wed = 1;
-        } else {
-            $scope.acr.wed = 0;
-        }
-
-        if ($scope.acr.thu) {
-            $scope.acr.thu = 1;
-        } else {
-            $scope.acr.thu = 0;
-        }
-
-        if ($scope.acr.fri) {
-            $scope.acr.fri = 1;
-        } else {
-            $scope.acr.fri = 0;
-        }
-
-        if ($scope.acr.sat) {
-            $scope.acr.sat = 1;
-        } else {
-            $scope.acr.sat = 0;
-        }
-
-        $http.post('/addAcr', $scope.acr).then(function (response) {
-
-            var returnedData = response.data;
-
-            if (returnedData.status === "success") {
-                angular.element('body').overhang({
-                    type: "success",
-                    "message": "DCS Entry added successfully!"
-                });
-
-                getAllDcs(); //REFRESH DETAILS
-
-                angular.element('#createAcr').modal('toggle');
-            }
-        });
-    }
-
-    $scope.deleteAcr = function (a, index) {
-
-        $http.post('/deleteAcr', a).then(function (response) {
-
-            if (response.data.status === "success") {
-                angular.element('body').overhang({
-                    type: "danger",
-                    "message": "ACR deleted!"
-                });
-
-                $scope.acrList.splice(index, 1);
-            };
-        });
-    }
-
-    $scope.resetForm = function () {
-        $scope.acr.companyName = '';
-        $scope.acr.customerID = '';
-        $scope.acr.beBins = '';
-        $scope.acr.acrBins = '';
-        $scope.acr.mon = '';
-        $scope.acr.tue = '';
-        $scope.acr.wed = '';
-        $scope.acr.thu = '';
-        $scope.acr.fri = '';
-        $scope.acr.sat = '';
-        $scope.acr.remarks = '';
-
-        $scope.disableAddress();
-    }
-
-    $scope.disableAddress = function () {
-        document.getElementById("txtAddress").disabled = true;
-    }
-
-    $scope.enableAddress = function () {
-        document.getElementById("txtAddress").disabled = false;
-    }
-
-    $scope.filterAddress = function () {
-
-        $scope.enableAddress();
-        console.log($scope.acr);
-        $http.post('/filterAddress', $scope.acr).then(function (response) {
-
-            $scope.filteredCustomerList = response.data;
-        });
-    }
-
-    $scope.editAcr = function (acrID) {
-        $scope.disableAddress();
-
-        var i = 0;
-
-        for (i = 0; i < $scope.acrList.length; i++) {
-            if ($scope.acrList[i].acrID == acrID) {
-
-                $scope.acr.acrID = $scope.acrList[i].acrID;
-                $scope.acr.from = $scope.acrList[i].from;
-                $scope.acr.to = $scope.acrList[i].to;
-                $scope.acr.company = $scope.acrList[i].companyName;
-                $scope.acr.beBins = $scope.acrList[i].beBins;
-                $scope.acr.acrBins = $scope.acrList[i].acrBins;
-
-                if ($scope.acrList[i].mon == 1) {
-                    document.getElementById("mon").checked = true;
-                    $scope.acr.mon = true;
-                } else {
-                    document.getElementById("mon").checked = false;
-                    $scope.acr.mon = false;
-                }
-                if ($scope.acrList[i].tue == 1) {
-                    document.getElementById("tue").checked = true;
-                    $scope.acr.tue = true;
-                } else {
-                    document.getElementById("tue").checked = false;
-                    $scope.acr.tue = false;
-                }
-                if ($scope.acrList[i].wed == 1) {
-                    document.getElementById("wed").checked = true;
-                    $scope.acr.wed = true;
-                } else {
-                    document.getElementById("wed").checked = false;
-                    $scope.acr.wed = false;
-                }
-                if ($scope.acrList[i].thu == 1) {
-                    document.getElementById("thu").checked = true;
-                    $scope.acr.thu = true;
-                } else {
-                    document.getElementById("thu").checked = false;
-                    $scope.acr.thu = false;
-                }
-                if ($scope.acrList[i].fri == 1) {
-                    document.getElementById("fri").checked = true;
-                    $scope.acr.fri = true;
-                } else {
-                    document.getElementById("fri").checked = false;
-                    $scope.acr.fri = false;
-                }
-                if ($scope.acrList[i].sat == 1) {
-                    document.getElementById("sat").checked = true;
-                    $scope.acr.sat = true;
-                } else {
-                    document.getElementById("sat").checked = false;
-                    $scope.acr.sat = false;
-                }
-
-                $scope.acr.remarks = $scope.acrList[i].remarks;
-            }
-        }
-
-    }
-
-    $scope.saveAcr = function (acr) {
-
-        console.log(acr);
-        if ($scope.acr.customerID != null || $scope.acr.from != null || $scope.acr.to != null) {
-            $http.post('/updateAcr', acr).then(function (response) {
-
-                getAllDcs();
-            });
-
-            //angular.element('#editAcr').modal('toggle');
-        } else {
-            window.alert("Please fill all fields.");
-        }
-
-    }
-
-
-
-});
 
 app.controller('dcsDetailsController', function ($scope, $http, $filter, storeDataService, $routeParams) {
 
@@ -7972,6 +7574,7 @@ app.controller('databaseBinController', function ($scope, $http, $filter, storeD
 
 
 });
+
 app.filter("dateFilter", function () {
     return function (binDatabase, dateFrom, dateTo) {
         var filtered = [];
@@ -7988,6 +7591,7 @@ app.filter("dateFilter", function () {
         return filtered;
     };
 });
+
 app.filter("yearMonthFilter", function () {
     return function (inventoryRecordList, yearMonth) {
         var filtered = [];
@@ -8556,6 +8160,7 @@ function convertToCSV(objArray) {
 
     return str;
 }
+//-----------Check Line End------------------
 
 app.controller('taskAuthorizationController', function ($scope, $window, $http, $filter, storeDataService) {
     'use strict';
@@ -9351,22 +8956,6 @@ app.controller('acrdbController', function($scope, $http, $filter, storeDataServ
         }
     }     
 
-    $scope.acrCustomerList = function(){
-        window.location.href = '#/acr-database-custList';
-    }
-
-    $scope.acrCollectionList = function(){
-        window.location.href = '#/acr-collectionList';
-    }
-
-    $scope.acrAddCollectionList = function(){
-        window.location.href = '#/acr-addCollectionList';
-    }
-
-    $scope.acrBillingMatchingPage = function(){
-        window.location.href = '#/acr-billingDataMatching';
-    }
-
     $scope.getAcrdbList();
 });
 
@@ -9380,29 +8969,6 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
     $scope.areaList = [];
     
     $http.get('/getAreaList').then(function (response) {
-        // $.each(response.data, function (index, value) {
-        //     var areaID = value.id.split(",");
-        //     var areaName = value.name.split(",");
-        //     var code = value.code.split(",");
-        //     var area = [];
-        //     $.each(areaID, function (index, value) {
-        //         area.push({
-        //             "id": areaID[index],
-        //             "name": areaName[index],
-        //             "code": code[index]
-        //         });
-        //     });
-        //     area.sort(function(a, b) {
-        //         return (a[code] > b[code]) ? 1 : ((a[code] < b[code]) ? -1 : 0);
-        //     });
-        //     $scope.areaList.push({
-        //         "zone": {
-        //             "id": value.zoneID,
-        //             "name": value.zoneName
-        //         },
-        //         "area": area
-        //     });
-        // });
         for(var i=0; i< response.data.length; i++){
             $scope.areaList.push(response.data[i]);
         }
@@ -9485,13 +9051,14 @@ app.controller('acrdbEditController', function($scope, $http, $filter, storeData
 
         $http.post('/saveAcrdbEdit', $scope.acrdbDetail).then(function(response){
             if(response.data.status == 'success'){
-                window.location.href = '#/acr-database';
+                $route.reload();
+                $scope.notify('success', 'Updated Successfully');
             }
         });
     }
 });
 
-app.controller('acrdbCustListController', function($scope, $http){
+app.controller('acrdbCustListController', function($scope, $http, storeDataService, $route){
     'use strict'
     
     $scope.council = null;
@@ -9501,6 +9068,16 @@ app.controller('acrdbCustListController', function($scope, $http){
         "council": '',
         "status": ''
     }
+
+    $scope.addCustDetail = {
+        "name": "",
+        "company": "",
+        "ic": "",
+        "contact": "",
+        "council": ""
+    }
+
+    $scope.show = angular.copy(storeDataService.show.acrdb);
 
     $scope.getAcrdbCustList = function(){
         $http.post('/getAcrdbCustList', $scope.acrParam).then(function(response){
@@ -9547,8 +9124,37 @@ app.controller('acrdbCustListController', function($scope, $http){
         });
     }
 
+    $scope.addAcrdbCust = function(){
+        if($scope.addCustDetail.name == "" || $scope.addCustDetail.company == "" || $scope.addCustDetail.contact == "" || $scope.addCustDetail.council == "" || $scope.addCustDetail.ic == ""){
+            $scope.notify("error","Please Fill In All Column");
+        }else{
+            $http.post("/addAcrdbCust", $scope.addCustDetail).then(function(response){
+                if(response.data.status == 'success'){
+                    $scope.notify('success', 'ACR Customer Added');
+                    angular.element('#createAcrdbCust').modal('toggle');
+                }
+            })
+        }
+    }
+
     $scope.acrdbCustDetails = function(id){
         window.location.href = '#/acr-database-custDetails/' + id
+    }
+
+    $scope.acrDatabasePage = function(){
+        window.location.href = '#/acr-database';
+    }
+
+    $scope.acrCollectionList = function(){
+        window.location.href = '#/acr-collectionList';
+    }
+
+    $scope.acrAddCollectionList = function(){
+        window.location.href = '#/acr-addCollectionList';
+    }
+
+    $scope.acrBillingMatchingPage = function(){
+        window.location.href = '#/acr-billingDataMatching';
     }
 
     $scope.getAcrdbCustList();
@@ -9561,11 +9167,25 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
     $scope.acrBinList = [];
     $scope.editAcr = false;
 
-    $scope.acrDetailsList = []
+    $scope.acrDetailsList = [];
+    $scope.acrBinActiveCount = 0;
+    $scope.acrBinPostponedCount = 0;
+    $scope.acrBinTerminatedCount = 0;
+    $scope.acrBinTerminatedClosedCount = 0;
+
+    $scope.recommendCustStatus = "";
 
     $http.post('/getAcrdbCustDetails', $scope.acrCustID).then(function(response){
         $scope.acrCustDetails = response.data[0];
         $scope.acrEditCustDetails = response.data[0];
+
+        if($scope.acrCustDetails.custStatus == '0'){
+            $scope.acrCustDetails.statusWord = "Active"
+        }else if($scope.acrCustDetails.custStatus == '1'){
+            $scope.acrCustDetails.statusWord = "Postponed"
+        }else if($scope.acrCustDetails.custStatus == '2'){
+            $scope.acrCustDetails.statusWord = "Terminated"
+        }
 
     });
 
@@ -9596,10 +9216,27 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
 
         for(var j = 0; j< $scope.acrDetailsList.length; j++){
             $scope.acrDetailsList[j].date = $filter('date')($scope.acrDetailsList[j].date, 'yyyy-MM-dd');
+            if($scope.acrDetailsList[j].status == 'Active'){
+                $scope.acrBinActiveCount++;
+            }else if($scope.acrDetailsList[j].status == 'Postponed'){
+                $scope.acrBinPostponedCount++;
+            }else if($scope.acrDetailsList[j].status == 'Terminated'){
+                $scope.acrBinTerminatedCount++;
+            }else if($scope.acrDetailsList[j].status == 'Terminated (Closed)'){
+                $scope.acrBinTerminatedClosedCount++;
+            }
         }
 
+        if($scope.acrBinActiveCount>0){
+            $scope.recommendCustStatus = "0";
+        }else if($scope.acrBinPostponedCount>0){
+            $scope.recommendCustStatus = "1";
+        }else if($scope.acrBinTerminatedCount>0 || $scope.acrBinTerminatedClosedCount>0){
+            $scope.recommendCustStatus = "2";
+        }
+        
         $scope.searchAcrdbCustDetails = function (acrdbCustDetails) {
-            return (acrdbCustDetails.serialNo + acrdbCustDetails.brand + acrdbCustDetails.binSize + acrdbCustDetails.date + acrdbCustDetails.name).toUpperCase().indexOf($scope.searchAcrdbCustDetailsFilter.toUpperCase()) >= 0;
+            return (acrdbCustDetails.serialNo + acrdbCustDetails.brand + acrdbCustDetails.binSize + acrdbCustDetails.date + acrdbCustDetails.name + acrdbCustDetails.status).toUpperCase().indexOf($scope.searchAcrdbCustDetailsFilter.toUpperCase()) >= 0;
         }
 
         $scope.filterAcrdbCustDetails = angular.copy($scope.acrDetailsList);
@@ -9610,7 +9247,6 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
     });　
 
     $scope.submitAcrdbCustEdit = function(){
-        console.log($scope.acrEditCustDetails);
         $scope.acrEditCustDetails.acrCustID = $routeParams.custID;
         $http.post('/submitAcrdbCustEdit', $scope.acrEditCustDetails).then(function(response){
             if(response.data.status == 'success'){
@@ -9628,6 +9264,7 @@ app.controller('acrdbCustDetailsController', function($scope, $http, $routeParam
         window.location.href = "#/bdb-edit/" + id;
     }
 });
+
 app.controller('acrCollectionListController', function($scope, $http, $filter, storeDataService){
     $scope.show = angular.copy(storeDataService.show.acrdb);
 
@@ -9642,6 +9279,7 @@ app.controller('acrCollectionListController', function($scope, $http, $filter, s
         
     });
 });
+
 app.controller('acrAddCollectionListController', function($scope, $http, $filter, storeDataService){
 
     $scope.show = angular.copy(storeDataService.show.acrdb);
@@ -9740,7 +9378,8 @@ app.controller('acrAddCollectionListController', function($scope, $http, $filter
 
 app.controller('acrBillingDataMatchingController', function($scope, $http, $filter, storeDataService){
     $scope.show = angular.copy(storeDataService.show.acrdb);
-    $scope.showUpdateNameBtn = true;
+    $scope.showUpdateBtnAcrList = true;
+    $scope.showUpdateBtnBillList = true;
 
     $scope.cf = {
         "mon": "",
@@ -9752,64 +9391,56 @@ app.controller('acrBillingDataMatchingController', function($scope, $http, $filt
         "sun": ""
     }
 
-    $scope.acrdb = {
-        "serialNo": "",
-        "brand": "",
-        "binSize": "",
-        "dateOfApplication": "",
+    $scope.addCustDetail = {
         "name": "",
-        "contact": "",
-        "ic": "",
         "company": "",
-        "billAddress": "",
-        "serviceAddress":"",
-        "frequency": "",
-        "typeOfPremise": "",
-        "acrSerialNo": "",
-        "council": "",
-        "councilSerialNo": "",
-        "remarks": "",
-        "mon": "",
-        "tue": "",
-        "wed": "",
-        "thu": "",
-        "fri": "",
-        "sat": "",
-        "sun": ""
+        "ic": "",
+        "contact": "",
+        "council": ""
     }
 
     var council={
         "council": ""
     }
 
+    $scope.council = "";
+
     $scope.importBillingAcrExcel = function(){
 
         $scope.latestActiveBillingAcr = [];
         var billingExcel = $scope.billingExcel;
         var excelRawData = [];
-        
-        var fileReader = new FileReader();
-        fileReader.readAsBinaryString(billingExcel);
-        fileReader.onload = (event)=>{
-            var excelData = event.target.result;
-            var workbook = XLSX.read(excelData,{type:"binary"});
-            council["council"]= workbook.SheetNames[0];
-            // var council = {"council": workbook.SheetNames[0]}
-            workbook.SheetNames.forEach(sheet=>{
-                // let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
-                excelRawData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
-                if(council.council == "DBKU"){
-                    for(var a=2; a<excelRawData.length - 1; a++){
-                        $scope.latestActiveBillingAcr.push({
-                            "company": excelRawData[a]["__EMPTY_1"],
-                            "amount": excelRawData[a]["__EMPTY_4"]
-                        })
-                    }
-                }
-            });
-            $scope.refreshAcrdbMatch();
-        }
 
+        if(billingExcel != null){
+            var fileReader = new FileReader();
+            fileReader.readAsBinaryString(billingExcel);
+            fileReader.onload = (event)=>{
+                var excelData = event.target.result;
+                var workbook = XLSX.read(excelData,{type:"binary"});
+                council["council"]= workbook.SheetNames[0];
+                $scope.council = workbook.SheetNames[0];
+                workbook.SheetNames.forEach(sheet=>{
+                    excelRawData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+                    if(council.council == "DBKU"){
+                        for(var a=2; a<excelRawData.length - 1; a++){
+                            $scope.latestActiveBillingAcr.push({
+                                "company": excelRawData[a]["__EMPTY_1"],
+                                "amount": excelRawData[a]["__EMPTY_4"]
+                            })
+                        }
+                    }if(council.council == "MBKS"){
+                        for(var a=0; a<excelRawData.length; a++){
+                            $scope.latestActiveBillingAcr.push({
+                                "company": excelRawData[a]["company"]
+                            })
+                        }
+                    }
+                });
+                $scope.refreshAcrdbMatch();
+            }
+        }else{
+            $scope.notify("error","Please insert excel file before upload.")
+        }
         
     }
 
@@ -9822,17 +9453,14 @@ app.controller('acrBillingDataMatchingController', function($scope, $http, $filt
         $scope.matchList = [];
         
         $http.post('/getAcrdbBillingMatchingList', council).then(function(response){
-            console.log(response.data);
             $scope.acrdbCouncilCustList = response.data;
 
             $.each($scope.acrdbCouncilCustList , function (key1, value1) {
                 var flag = false;
                 $.each($scope.latestActiveBillingAcr , function (key2, value2) {
-                    if(value1.company.replace(/\s/g, '').toUpperCase() == value2.company.replace(/\s/g, '').toUpperCase()){
+                    if(value1.company.replace(/\s/g, '').toUpperCase() == value2.company.replace(/\s/g, '').toUpperCase() && value1.custStatus == '0'){
                         flag = true;
                         $scope.listAppearInBill.push(value1);
-                        // $scope.editMatchACRCustCompanyName(value2.company,value1.acrCustID);
-
                         
                         var bin = "";
                         if(value1.bin1000L != null){
@@ -9859,30 +9487,36 @@ app.controller('acrBillingDataMatchingController', function($scope, $http, $filt
                             "entitlement": value1.entitlement,
                             "total": value1.totalCost,
                             "histPayment": value1.histPayment,
+                            "histPaymentDate": $filter('date')(value1.histPaymentDate, 'yyyy-MM-dd'),
                             "payment": value2.amount
                         });
                     }
                 });
-                if(flag == false){
+                if(flag == false && value1.custStatus == '0'){
                     $scope.listNotAppearInBill.push(value1);
                 }
             });
 
-            console.log( $scope.matchList);
-
             $.each($scope.latestActiveBillingAcr , function (key3, value3) {
                 var flag = false;
                 $.each($scope.acrdbCouncilCustList , function (key4, value4) {
-                    if(value3.company.replace(/\s/g, '').toUpperCase() == value4.company.replace(/\s/g, '').toUpperCase()){
+                    if(value3.company.replace(/\s/g, '').toUpperCase() == value4.company.replace(/\s/g, '').toUpperCase() && value4.custStatus == '0'){
                         flag = true;
                         $scope.billAppearInList.push(value3);
+                    }else if(value3.company.replace(/\s/g, '').toUpperCase() == value4.company.replace(/\s/g, '').toUpperCase() && value4.custStatus != '0'){
+                        flag = true;
+                        value4.type = '1'
+                        $scope.billNotAppearInList.push(value4);
                     }
                 });
                 
                 if(flag == false){
+                    value3.type = '0';
                     $scope.billNotAppearInList.push(value3);
                 }
             });
+            // console.log($scope.billAppearInList);
+            console.log($scope.billNotAppearInList);
         });
     }
     
@@ -9892,73 +9526,33 @@ app.controller('acrBillingDataMatchingController', function($scope, $http, $filt
         })
     }
 
-    $scope.editACRCustCompanyName = function(id){
-        $http.post('/updateACRCustCompanyName', {"company": $('#inputComp-'+id).val(), "id": id}).then(function(response){
+    $scope.editACRCustCompanyNameStatus = function(id){
+        $http.post('/updateACRCustCompanyName', {"company": $('#inputCompanyName-'+id).val(), "status":$('#inputCompanyStatus-'+id).val(), "id": id}).then(function(response){
             if(response.data.status=="success"){
-                $scope.notify('success', 'Name Updated');
+                $scope.notify('success', 'Information Updated');
+            }
+        })
+    }
+
+    $scope.editBillingCustCompanyNameStatus = function(id){
+        $http.post('/updateBillCompanyStatus', {"status":$('#inputBillingStatus-'+id).val(), "id": id}).then(function(response){
+            if(response.data.status=="success"){
+                $scope.notify('success', 'Information Updated');
             }
         })
     }
     
-    $scope.addAcrdb = function(){
-
-        $scope.acrdb.dateOfApplication = $filter('date')($scope.dateOfApplication, 'yyyy-MM-dd');
-        if($scope.cf.mon == true){
-            $scope.acrdb.mon = "X";
+    $scope.addAcrdbCust = function(){
+        if($scope.addCustDetail.name == "" || $scope.addCustDetail.company == "" || $scope.addCustDetail.contact == "" || $scope.addCustDetail.council == "" || $scope.addCustDetail.ic == ""){
+            $scope.notify("error","Please Fill In All Column");
         }else{
-            $scope.acrdb.mon = "I";
-        }
-        if($scope.cf.tue == true){
-            $scope.acrdb.tue = "X"
-        }else{
-            $scope.acrdb.tue = "I";
-        }
-
-        if($scope.cf.wed == true){
-            $scope.acrdb.wed = "X"
-        }else{
-            $scope.acrdb.wed = "I";
-        }
-
-        if($scope.cf.thu == true){
-            $scope.acrdb.thu = "X"
-        }else{
-            $scope.acrdb.thu = "I";
-        }
-
-        if($scope.cf.fri == true){
-            $scope.acrdb.fri = "X"
-        }else{
-            $scope.acrdb.fri = "I";
-        }
-
-        if($scope.cf.sat == true){
-            $scope.acrdb.sat = "X"
-        }else{
-            $scope.acrdb.sat = "I";
-        }
-
-        if($scope.cf.sun == true){
-            $scope.acrdb.sun = "X"
-        }else{
-            $scope.acrdb.sun = "I";
-        }
-
-        if($scope.acrdb.dateOfApplication == ""){
-            $scope.notify('error', 'don\'t leave the date of application blank.');
-        }else{
-            $http.post('/addAcrDB', $scope.acrdb).then(function(response){
-                
+            $http.post("/addAcrdbCust", $scope.addCustDetail).then(function(response){
                 if(response.data.status == 'success'){
-                    $scope.notify('success', 'Insert Success');
-                    angular.element('#createAcrdb').modal('toggle');
+                    $scope.notify('success', 'ACR Customer Added');
+                    angular.element('#createAcrdbCust').modal('toggle');
                 }
-            });
+            })
         }
-    }
-    
-    $scope.editAcrdbPage = function(acrId){
-        window.location.href = '#/acr-database-edit/' + acrId;
     }
 
     $scope.updateAcrBilling = function(){
@@ -10442,7 +10036,6 @@ app.controller('complaintController', function ($scope, $http, $filter, $window,
 
 
 });
-
 
 app.controller('complaintExportController', function ($scope, $http, $window, $filter) {
     'use strict';
@@ -11499,6 +11092,7 @@ app.controller('complaintscmsBDStatisticsController', function($scope, $filter, 
         }
     }
 });
+
 app.controller('complaintcmsSubconDataController', function ($scope, $filter, $http, $window) {
     'use strict';
 

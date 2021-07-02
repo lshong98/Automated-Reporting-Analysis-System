@@ -243,16 +243,6 @@ app.config(function($routeProvider, $locationProvider){
         controller: 'visualizationController',
         controllerAs: 'visualization'
     })
-    .when('/acr-management', {
-        resolve: {
-            "check": function (routingService, $window, $location) {
-                return routingService.auth($window, $location, '/acr-management');
-            }
-        },
-        templateUrl: '/acr-management',
-        controller: 'acrController',
-        controllerAs:'acr'
-    })
     .when('/notification', {
         resolve: {
             "check": function (routingService, $window, $location) {
